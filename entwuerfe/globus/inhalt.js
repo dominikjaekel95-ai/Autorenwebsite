@@ -1,6 +1,24 @@
-/* Gemeinsame Inhalte für die Entwürfe E1 bis E3: Orte, Stationen, Länder, eigene Werke. */
+/* Gemeinsame Inhalte für die Entwürfe E1 bis F: Orte, Stationen, Länder, eigene Werke.
+   Quellen für Vita, Satoshi und Ursprung: Dominiks Exposés (Satoshi, August 2026; Kreise ohne Wiederkehr)
+   und die Vorhabensbeschreibung zu Satoshi (September 2026). Keine privaten Kontaktdaten. */
 window.INHALT = {
   person: { name: 'Dominik Jäkel', rolle: 'Schriftsteller und Reisender' },
+
+  // Fakten für die Vita. Beruf nur allgemein nennen (Wunsch von Dominik): kein Ghostwriting, keine Firma, keine Medien.
+  vita: {
+    einstieg: 'Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen.',
+    geboren: { jahr: 1995, ort: 'Dortmund' },
+    studium: [
+      { ort: 'Freiburg', fach: 'Liberal Arts & Sciences' },
+      { ort: 'Potsdam', fach: 'IT-Systems Engineering am Hasso-Plattner-Institut' }
+    ],
+    taiwan: 'Vier Jahre in Taiwan, in Kaohsiung. Dort arbeitete er als Lektor und freier Autor, unter anderem für Sprachassistenten und unabhängige Spielestudios. In Taiwan begann seine Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Ursprungstrilogie.',
+    berlin: 'Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen.',
+    werkstattbuehne: 'Viele seiner Geschichten hat er auf der Werkstattbühne des Autorenforums Berlin e. V. gelesen; seit einigen Jahren moderiert er sie.',
+    preis: { name: 'A.-E.-Johann-Preis', jahr: 2022 },
+    foerderung: 'Gefördert in der Meisterklasse des Schreibhains und in Seminaren der Bundesakademie für kulturelle Bildung, mit Mentorinnen und Mentoren wie Ursula Poznanski, Wulf Dorn und Klaus N. Frick.',
+    debuet: 'Gerade schließt er seinen Debütroman Satoshi ab.'
+  },
 
   // Bereiste Länder und Gebiete (Rubbelkarte plus Argentinien, Uruguay, Westjordanland), Landesteile des UK einzeln
   bereist: [
@@ -33,7 +51,7 @@ window.INHALT = {
   ],
 
   satoshi: {
-    notiz: 'Die Kernhandlung spielt 2007 bis 2010 in Patagonien.',
+    notiz: 'Die Kernhandlung spielt 2007 bis 2010.',
     orte: [
       { name: 'Buenos Aires', lat: -34.60, lon: -58.38 },
       { name: 'Black Rock Desert', notiz: 'Nevada', lat: 40.79, lon: -119.20 },
@@ -42,35 +60,101 @@ window.INHALT = {
       { name: 'Kobe', lat: 34.69, lon: 135.20 },
       { name: 'London', lat: 51.51, lon: -0.13 },
       { name: 'Penang', lat: 5.41, lon: 100.33 },
-      { name: 'Bariloche', notiz: 'Patagonien, Kernhandlung 2007 bis 2010', lat: -41.13, lon: -71.31 },
+      { name: 'Bariloche', notiz: 'Patagonien', lat: -41.13, lon: -71.31 },
       { name: 'Anden an der Grenze zu Chile', kurz: 'Anden', notiz: 'Patagonien', lat: -41.16, lon: -71.88, rang: 3 },
       { name: 'Temple City', notiz: 'San Gabriel Valley', lat: 34.11, lon: -118.06, rang: 2 },
       { name: 'Fort Meade', notiz: 'Maryland', lat: 39.11, lon: -76.73, rang: 2 }
-    ]
+    ],
+    // Der Roman der Reihe nach, ohne das Ende zu verraten (für eine Chronik auf dem Globus)
+    szenen: [
+      { ort: 'Buenos Aires', jahr: '2001', text: 'Dezember 2001. Die siebzehnjährige Lana erlebt, wie die Ersparnisse ihrer Familie per Dekret verschwinden.' },
+      { ort: 'London', jahr: '2007', text: 'Lana rechnet bei Lehman Brothers Bilanzen durch und erkennt darin das Muster von Buenos Aires.' },
+      { ort: 'Black Rock Desert', jahr: '2007', text: 'Burning Man. In den Nächten des Festivals lösen Lana, Arthur und Samuel ein Problem, an dem Mathematiker seit Jahrzehnten scheitern, und schließen einen Pakt.' },
+      { ort: 'London', jahr: '2007', text: 'September 2007. Ein Bankrun vor einer Filiale von Northern Rock.' },
+      { ort: 'Kobe', jahr: '2007', text: 'In Japan bekommt der Pakt seinen Namen: Satoshi Nakamoto.' },
+      { ort: 'New York', jahr: '2008', text: 'Samuel ist CTO eines Quant-Fonds an der Wall Street, als die anderen ihn nach Berlin holen.' },
+      { ort: 'Berlin', jahr: '2008', text: 'Eine Kreuzberger Fabriketage. Hier entsteht das erste digitale Geld, das niemandem gehört. An Halloween 2008 stehen neun Seiten im Netz.' },
+      { ort: 'Buenos Aires', jahr: '2009', text: '3. Januar 2009. Ein Internetcafé mit wackeligem Strom, zwischen zwei Stromausfällen der erste Block.' },
+      { ort: 'Bariloche', jahr: '2010', text: 'Patagonien, 2010.' },
+      { ort: 'Penang', jahr: '2013', text: 'Der Epilog, 2013.' }
+    ],
+    hook: 'Am 31. Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.',
+    // Klappentext aus dem Exposé; der Absatz über das Ende ist bewusst weggelassen
+    klappentext: [
+      'Satoshi erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen, die einander nicht vertrauen können – und die deshalb Geld bauen, das ohne Vertrauen funktioniert.',
+      'Jeder von ihnen baut an der Maschine, um etwas nicht tun zu müssen. Lana, die Ökonomin, deren Familie der argentinische Staat 2001 über Nacht enteignet hat, muss sich nicht entscheiden – zwischen zwei Männern, zwei Kontinenten und zwei Leben –, solange die Arbeit am Projekt sie davon abhält. Arthur, ein Kryptograph, der beim Zusammenbruch der UdSSR heimatlos wurde, muss nichts fühlen, solange er im Code versinkt. Samuel, ein Quant an der Wall Street, dessen Vater an der Finanzkrise zerbricht, muss niemandem mehr vertrauen, solange er nur die Mathematik kontrolliert.',
+      'Kennengelernt haben sie sich 2007 auf dem Burning-Man-Festival in Nevada: Zwei Männer verlieben sich in dieselbe Frau – und alle drei in dieselbe Idee. Im Rausch des Festivals finden sie eine Lösung für ein Problem, an dem Mathematiker seit Jahrzehnten scheitern – Geld ohne zentrale Instanz – und schließen einen gemeinsamen Pakt. Die oberste Regel: Wer enttarnt wird, verschwindet.',
+      'Unter dem Pseudonym Satoshi Nakamoto bauen sie in einer Kreuzberger Fabriketage das erste digitale Geld, das niemandem gehört: keiner Bank und keiner Regierung. Die Arbeit gibt ihnen den perfekten Vorwand, nie auszusprechen, was zwischen ihnen ist. Doch im Herbst 2008, als die neun Seiten erscheinen, ist Lana schwanger – von einem der beiden Männer. Sie will nicht wissen, von wem.'
+    ],
+    schluss: 'Die Erfindung von Bitcoin gelingt, gerade weil sie ohne Vertrauen auskommt. Die drei scheitern aus demselben Grund. Davon erzählt dieser Roman.',
+    frage: 'Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug – gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die 2020er Jahre sind das Jahrzehnt, in dem der Ausstieg zum ersten Mal massentauglich wurde – bis hin zum Ausstieg aus dem Geldsystem.',
+    warumJetzt: 'Wer war Satoshi Nakamoto? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto nie eine Person. Satoshi ist ein Versprechen – und dieser Roman erzählt, was es gekostet hat.',
+    bau: 'Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten Bitcoin-Block signiert.',
+    poetik: 'Satoshi ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand – Satoshi Nakamotos Mails, Forenbeiträgen, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin – und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.',
+    tradition: 'Eine Erzähltradition, die ihre Wurzeln in Borges’ Ficciones hat und zu deren heutigen Vertretern Hernan Diaz und Benjamín Labatut gehören: Literatur in den Leerstellen des Verbürgten.',
+    // Echte Daten, mit denen die Kapitel geschnitten sind
+    daten: [
+      { datum: '14. September 2007', text: 'Bankrun auf Northern Rock' },
+      { datum: '15. September 2008', text: 'Lehman Brothers meldet Insolvenz an' },
+      { datum: '31. Oktober 2008', text: 'Das Whitepaper erscheint, neun Seiten' },
+      { datum: '3. Januar 2009', text: 'Der erste Block' },
+      { datum: '15. August 2010', text: 'Ein Fehler im Code erzeugt Milliarden Bitcoins aus dem Nichts' },
+      { datum: 'Dezember 2010', text: 'Die Banken sperren WikiLeaks die Konten' }
+    ],
+    figuren: [
+      { name: 'Satoshi Nakamoto', rolle: 'Das Pseudonym', text: 'Das berühmteste Phantom der Gegenwart. Die Faktenlage passt auf eine Karteikarte: ein Whitepaper, gut fünfhundert Forenposts, der erklärte Wunsch, sich selbst überflüssig zu machen. Dieser Roman gibt dem Pseudonym, was ihm bisher fehlte: eine Stimme – und drei Gesichter.' },
+      { name: 'Lana Álvarez', alter: 23, rolle: 'Die Schöpferin', text: 'Lana steht mit einem Fuß in der Welt, die sie retten, und mit dem anderen in der, die sie zerstören will. Als Tochter eines ruinierten argentinischen Bauunternehmers, die bei Lehman Brothers Bilanzen rechnet, kennt sie das Finanzsystem von beiden Seiten – als Opfer und als Komplizin.' },
+      { name: 'Arthur Volkov', alter: 32, rolle: 'Der Visionär', text: 'Arthur vertraut Algorithmen mehr als Menschen – was ihn zu einem der brillantesten Kryptographen seiner Generation und zum schwierigsten Menschen macht, den man lieben kann.' },
+      { name: 'Samuel Vaughn', alter: 31, rolle: 'Der Anker', text: 'Samuel ist der Realist des Trios – Sohn eines Ex-Army-Offiziers und einer deutschen Mutter, großgezogen in einer Familie, in der man Pflichten erfüllt, statt über sie zu sprechen.' }
+    ],
+    eckdaten: { gattung: 'Roman, Debüt', perspektive: 'personal, Lana und kontrapunktisch Samuel', zeit: 'Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013', stand: 'Das Manuskript liegt vollständig vor; gerade entsteht die Endfassung.' }
   },
 
   // Ursprungstrilogie in zeitlicher Reihenfolge (für die Chronik)
+  // Laut Exposé: Band I um 8000 v. Chr. in Göbekli Tepe, Band II in Uruk (Gilgamesch), Band III in Jerusalem zur Zeit des ersten Tempels
   ursprung: [
-    { name: 'Göbekli Tepe', band: 'I', jahr: 'um 9500 v. Chr.', lat: 37.22, lon: 38.92 },
-    { name: 'Ur', band: 'II', jahr: '3. Jahrtausend v. Chr.', volk: 'die Sumerer', lat: 30.96, lon: 46.10 },
-    { name: 'Tyros', band: 'III', jahr: '1. Jahrtausend v. Chr.', volk: 'die Phönizier', lat: 33.27, lon: 35.20 },
-    { name: 'Jerusalem', band: 'III', jahr: '1. Jahrtausend v. Chr.', volk: 'die Phönizier', lat: 31.78, lon: 35.22 }
+    { name: 'Göbekli Tepe', band: 'I', jahr: 'um 8000 v. Chr.', lat: 37.22, lon: 38.92 },
+    { name: 'Uruk', band: 'II', jahr: 'um 2700 v. Chr.', volk: 'die Sumerer', lat: 31.32, lon: 45.64 },
+    { name: 'Tyros', band: 'III', jahr: 'um 940 v. Chr.', volk: 'die Phönizier', lat: 33.27, lon: 35.20 },
+    { name: 'Jerusalem', band: 'III', jahr: 'um 940 v. Chr.', volk: 'die Phönizier', lat: 31.78, lon: 35.22 }
   ],
   baende: {
-    I: 'Göbekli Tepe in Südostanatolien, um 9500 v. Chr. Älter als Schrift, Rad und Töpferei.',
-    II: 'Die Sumerer. Ur im Süden Mesopotamiens, bekannt für seine Zikkurat und die Königsgräber.',
-    III: 'Die Phönizier. Tyros an der Küste des heutigen Libanon und Jerusalem im Hinterland.'
+    I: 'Göbekli Tepe in Südostanatolien, um 8000 v. Chr. Der älteste Tempel der Menschheit, und warum er begraben wurde.',
+    II: 'Uruk im Süden Mesopotamiens, um 2700 v. Chr. König Gilgamesch und die Geburt der Literatur.',
+    III: 'Jerusalem zur Zeit des ersten Tempels, um 940 v. Chr. Eine phönizische Gelehrte und die Geburt der Heiligen Schrift.'
+  },
+  // Die Trilogie im Einzelnen. Stand nach Dominiks Wunsch nur „in Arbeit“.
+  trilogie: {
+    titel: 'Ursprung',
+    untertitel: 'Eine Trilogie über die Anfänge der Zivilisation',
+    stand: 'in Arbeit',
+    herkunft: 'In Taiwan begann Dominik Jäkels Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Trilogie.',
+    baende: [
+      { band: 'I', titel: 'Kreise ohne Wiederkehr', ort: 'Göbekli Tepe', zeit: 'um 8000 v. Chr.', thema: 'Die Geburt der organisierten Religion und die Sesshaftwerdung',
+        pitch: 'Als die Menschheit ihre Götter erfand – und beschloss, sie zu begraben.',
+        frage: 'Warum wurde der älteste Tempel der Menschheit nach zweitausend Jahren Blütezeit absichtlich unter Unmengen von Schutt und Erde begraben?',
+        text: 'Am ersten Tempel der Menschheit kämpft der Priester Jaromir – der mit nur 37 Sommern den Titel des „Ältesten“ trägt – um das Überleben seines Volkes. Die Winter werden kälter, die Ahnen wenden sich von den Menschen ab und die Jagdgründe versiegen. Zwischen den ersten sesshaften Bauern und den nomadischen Jägern des Umlands droht ein Krieg auszubrechen. Verzweifelt sucht Jaromir nach einem Schüler und Nachfolger, um die Verbindung zu den Ahnen wiederherzustellen. Doch als er gezwungen wird, die gefangene Jägerin Kannika in sein Dorf aufzunehmen, gerät nicht nur sein Glaube, sondern alles, wofür er jemals einstand, ins Wanken.',
+        figuren: [
+          { name: 'Jaromir', rolle: 'der Älteste', text: 'Seit er in jungen Jahren unerwartet zum „Ältesten“ wurde, fühlt sich Jaromir wie ein Hochstapler.' },
+          { name: 'Kannika', rolle: 'die Wanderin', text: 'In ihrer frühen Kindheit ermordeten die Priester ihre Eltern. Sie wächst am Berg Karazak in der Obhut einiger Wanderer auf.' }
+        ] },
+      { band: 'II', titel: 'Von dem König, der niemals sterben wollte', arbeitstitel: true, ort: 'Uruk', zeit: 'um 2700 v. Chr.', thema: 'Die Geburt der Literatur: Die Schrift wird von einer Sprache der Verwaltung zu einer Sprache der Mythen und Legenden',
+        text: 'Der junge Schreiberlehrling Harran bricht auf, um seine Schwester Samhat zu retten, die König Gilgamesch entführt hat. Er trifft auf einen Herrscher, der von der Angst vor dem Tod besessen ist und nach Unsterblichkeit strebt. Harran erkennt, dass er den König nicht mit Gewalt besiegen kann.' },
+      { band: 'III', titel: 'Das steinerne Wort', arbeitstitel: true, ort: 'Jerusalem', zeit: 'um 940 v. Chr.', thema: 'Die Geburt der Heiligen Schrift als politisches Werkzeug',
+        text: 'Die phönizische Gelehrte Thyra, eine Meisterin aller Mythen der Mittelmeervölker, strandet in Jerusalem. Dort zwingt sie der alternde König Salomo, ihm bei seinem Monumentalwerk zu helfen: aus den vielen Göttern seines zerfallenden Reiches einen einzigen, allmächtigen Gott zu schaffen, um sein zerstrittenes Volk zu einen.' }
+    ]
   },
 
   // Eigene Werke für die Bibliothek
   werke: [
-    { id: 'satoshi', titel: 'Satoshi', art: 'Roman', stand: 'in Arbeit', text: 'Ein Roman mit vielen Schauplätzen. Die Kernhandlung spielt 2007 bis 2010 in Patagonien.', ebene: 'satoshi' },
-    { id: 'ursprung-1', titel: 'Ursprung I', art: 'Roman, Band I der Ursprungstrilogie', stand: 'in Arbeit', band: 'I', ebene: 'ursprung' },
-    { id: 'ursprung-2', titel: 'Ursprung II', art: 'Roman, Band II der Ursprungstrilogie', stand: 'in Arbeit', band: 'II', ebene: 'ursprung' },
-    { id: 'ursprung-3', titel: 'Ursprung III', art: 'Roman, Band III der Ursprungstrilogie', stand: 'in Arbeit', band: 'III', ebene: 'ursprung' },
-    { id: 'erzaehlungen', titel: 'Erzählungen', art: 'Kurzgeschichten', stand: 'erscheinen nach und nach', text: 'Kürzere Prosa, nach und nach hier veröffentlicht.' },
-    { id: 'untertext', titel: 'Untertext', art: 'Journal', stand: 'alle drei bis vier Wochen', text: 'Texte über Reisen, Bücher und das, was darunter liegt. Selten. Dann sorgfältig.' },
-    { id: 'laender', titel: 'Länder', art: 'Länderguides', stand: 'in Arbeit', text: 'Ehrlich, praktisch, ohne Werbung. Jeder Guide endet mit einer Leseliste und dem Kapitel „Was ich falsch gemacht habe“.' }
+    // titel ist der kurze Rückentitel, buchtitel der Titel des Romans
+    { id: 'satoshi', titel: 'Satoshi', buchtitel: 'Satoshi', art: 'Roman', stand: 'wird gerade abgeschlossen', text: 'Am 31. Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.', ebene: 'satoshi' },
+    { id: 'ursprung-1', titel: 'Ursprung I', buchtitel: 'Kreise ohne Wiederkehr', art: 'Roman, Band I der Ursprungstrilogie', stand: 'in Arbeit', band: 'I', ebene: 'ursprung' },
+    { id: 'ursprung-2', titel: 'Ursprung II', buchtitel: 'Von dem König, der niemals sterben wollte', arbeitstitel: true, art: 'Roman, Band II der Ursprungstrilogie', stand: 'in Arbeit', band: 'II', ebene: 'ursprung' },
+    { id: 'ursprung-3', titel: 'Ursprung III', buchtitel: 'Das steinerne Wort', arbeitstitel: true, art: 'Roman, Band III der Ursprungstrilogie', stand: 'in Arbeit', band: 'III', ebene: 'ursprung' },
+    { id: 'erzaehlungen', titel: 'Erzählungen', buchtitel: 'Erzählungen', art: 'Kurzgeschichten', stand: '', text: 'Viele davon hat er auf der Werkstattbühne des Autorenforums Berlin gelesen.' },
+    { id: 'untertext', titel: 'Untertext', buchtitel: 'Untertext', art: 'Journal', stand: '' },
+    { id: 'laender', titel: 'Länder', buchtitel: 'Länder', art: 'Länderguides', stand: 'in Arbeit' }
   ],
 
   // Beispieltexte für das Journal Untertext

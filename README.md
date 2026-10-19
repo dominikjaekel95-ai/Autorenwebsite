@@ -34,3 +34,8 @@ Alle Texte sind Beispieltexte, die Formulare verschicken nichts. Jede Seite ist 
 2. Eine Richtung wählen oder mischen.
 3. Inhalte sammeln: drei bis fünf echte Texte, ein Länderguide als Vorlage, Fotos, ein Text für „Über mich“.
 4. Die echte Seite bauen: statischer Seitengenerator mit Markdown-Inhalten (zum Beispiel Astro), Deutsch und Englisch, Newsletter mit Double-Opt-in, Impressum und Datenschutz.
+
+## Für später
+
+- Goodreads ergänzen: einige hundert gelesene Kurzgeschichten und ein paar Anthologien nachtragen (Wunsch von Dominik, Oktober 2026). Danach `entwuerfe/daten/buecher.js` neu erzeugen.
+- LinkedIn-Profil als Richtung für ein kommerzielles Publikum mitdenken; Text dafür liefert Dominik.

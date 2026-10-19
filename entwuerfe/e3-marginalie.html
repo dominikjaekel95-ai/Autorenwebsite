@@ -513,10 +513,10 @@
   // Ursprung: drei Bände, langsam. Jeder Band erscheint, wenn der Globus bei ihm ankommt.
   const baendeEl = $('#baende');
   const BAND_ORTE = { I: I.ursprung.filter(o => o.band === 'I'), II: I.ursprung.filter(o => o.band === 'II'), III: I.ursprung.filter(o => o.band === 'III') };
-  const BAND_KOPF = { I: 'Göbekli Tepe, um 9500 v. Chr.', II: 'Ur, die Sumerer.', III: 'Tyros und Jerusalem, die Phönizier.' };
+  const BAND_KOPF = { I: 'Göbekli Tepe, um 8000 v. Chr.', II: 'Uruk, die Sumerer.', III: 'Tyros und Jerusalem, die Phönizier.' };
   const BAND_TEXT = {
     I: 'In Südostanatolien. Älter als Schrift, Rad und Töpferei.',
-    II: 'Im Süden Mesopotamiens, bekannt für seine Zikkurat und die Königsgräber.',
+    II: 'Im Süden Mesopotamiens, die Stadt des Königs Gilgamesch.',
     III: 'Tyros an der Küste des heutigen Libanon, Jerusalem im Hinterland.'
   };
   baendeEl.innerHTML = ['I', 'II', 'III'].map(b => `<button type="button" class="band verborgen" data-band="${b}"><span class="bd">Band ${b}.</span> ${z(BAND_KOPF[b])} ${z(BAND_TEXT[b])}${BAND_ORTE[b].map(o => `<span class="koord" data-ort="${esc(o.name)}">${BAND_ORTE[b].length > 1 ? '<i>' + esc(o.name) + '</i>, ' : ''}${z(koord(o))}</span>`).join('')}</button>`).join('');

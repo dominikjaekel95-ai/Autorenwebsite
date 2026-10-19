@@ -14,19 +14,23 @@
  *     daten50: 'daten/welt-50m.js', pendeln: true,
  *     beimAnsichtWechsel: teile => {}, beimEingriff: () => {}, beiChronikEnde: grund => {}
  *   });
- *   g.ebene({ orte: [{ name, lat, lon, rang, kurz }], laender: true, blick: { mitte: [lon, lat], k } }, { fliegen: true });
+ *   g.ebene({ orte: [{ name, lat, lon, rang, kurz }], laender: true, blick: { mitte: [lon, lat], k }, farben: { akzent } }, { fliegen: true });
+ *                                 // farben in der Ebene überschreiben die Grundfarben, solange die Ebene gilt
  *   g.fliegen([lon, lat], k)      -> Promise 'fertig' | 'abgebrochen'
  *   g.ortAnfliegen(ort, k), g.landAnfliegen(iso), g.aktiv('Name' | 'A · B' | null), g.auswahl(iso | null)
  *   g.zoomen(faktor), g.ganz()
- *   g.chronik(stationen, { beiStation(station, i), pause, zoom }) -> Promise 'fertig' | 'abgebrochen'
+ *   g.chronik(stationen, { beiStation(station, i), pause, zoom, dauer }) -> Promise 'fertig' | 'abgebrochen'
+ *   g.chronikSchritt(stationen, i, { zoom, dauer })  // eine Station von Hand, die Spur wächst oder schrumpft bis i
+ *   g.routeZeigen(stationen)                          // ganze Spur stehen lassen, ohne Flug
  *   g.chronikStoppen(), g.pendelnStoppen(), g.zeichnen(), g.k(), g.land(iso)
+ *   Optional: tippText: (land, bereist) => 'Text' für den Länder-Tooltip
  */
 (function () {
   const RAD = Math.PI / 180;
 
   function erstellen(o) {
     const { canvas, flaeche, tipp, hinweis } = o;
-    const farben = Object.assign({
+    const grundfarben = Object.assign({
       papier: '#fff', land: '#F1F1F2', reise: '#D5D8F5', grenze: '#BFC1C5', kueste: '#9B9DA2', rand: '#1D1E21',
       text: '#1D1E21', textLeise: '#63656B', akzent: '#2C3CCB', akzentHauch: 'rgba(44, 60, 203, .14)', gradnetz: '#EDEEEF'
     }, o.farben || {});
@@ -137,6 +141,7 @@
     }
 
     function zeichnen() {
+      const farben = ebene.farben ? Object.assign({}, grundfarben, ebene.farben) : grundfarben;
       projektion.translate([seite / 2, seite / 2]).scale(R * k).rotate([-mitte[0], -mitte[1]]).clipExtent([[0, 0], [seite, seite]]);
       const d = daten();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -195,12 +200,14 @@
         const aktiv = !!aktiverOrt && aktiverOrt.split(' · ').includes(ort.name);
         ctx.beginPath(); ctx.arc(p[0], p[1], aktiv ? 7 : 5.5, 0, Math.PI * 2); ctx.fillStyle = farben.akzentHauch; ctx.fill();
         ctx.beginPath(); ctx.arc(p[0], p[1], 2.6, 0, Math.PI * 2); ctx.fillStyle = farben.akzent; ctx.fill();
+        belegt.push([p[0] - 3, p[1] - 3, p[0] + 3, p[1] + 3]);   // Beschriftungen sollen keine Punkte verdecken
         const name = ort.beschriftung || ort.kurz || ort.name;
         const nah = gruppen.find(g => Math.hypot(g.p[0] - p[0], g.p[1] - p[1]) < 16);
         if (nah) { nah.namen.push(name); nah.aktiv = nah.aktiv || aktiv; } else gruppen.push({ p, namen: [name], aktiv });
       });
-      const frei = b => !belegt.some(x => b[0] < x[2] && b[2] > x[0] && b[1] < x[3] && b[3] > x[1]);
-      gruppen.forEach(({ p, namen, aktiv }) => {
+      // Kollision mit 4 px Luft, der aktive Ort wird zuerst beschriftet
+      const frei = b => !belegt.some(x => b[0] - 4 < x[2] && b[2] + 4 > x[0] && b[1] < x[3] && b[3] > x[1]);
+      gruppen.sort((a, b) => b.aktiv - a.aktiv).forEach(({ p, namen, aktiv }) => {
         const text = versalien ? namen.join(' · ').toUpperCase() : namen.join(' · ');
         const breite = ctx.measureText(text).width + 2;
         const boxRechts = [p[0] + 9, p[1] - 8, p[0] + 9 + breite, p[1] + 8];
@@ -339,7 +346,7 @@
         const treffer = lonlat ? daten().laender.find(f => d3.geoContains(f, lonlat)) || null : null;
         if (treffer !== hover) { hover = treffer; zeichnen(); }
         if (!treffer) { tipp.hidden = true; return; }
-        tipp.textContent = treffer.name + (treffer.bereist && ebene.laender ? ' · bereist' : '');
+        tipp.textContent = o.tippText ? o.tippText(treffer, treffer.bereist && ebene.laender) : treffer.name + (treffer.bereist && ebene.laender ? ' · bereist' : '');
         tipp.hidden = false;
         tipp.classList.toggle('links', x + tipp.offsetWidth + 24 > seite);
         tipp.style.left = x + 'px';
@@ -401,13 +408,14 @@
       sichtbarBis = 0;
       aktiverOrt = stationen[0].name;
       if (typeof einst.beiStation === 'function') einst.beiStation(stationen[0], 0);
-      let ergebnis = await fliegen([stationen[0].lon, stationen[0].lat], zoomZiel);
+      let ergebnis = await fliegen([stationen[0].lon, stationen[0].lat], zoomZiel, einst.dauer ? { dauer: einst.dauer } : undefined);
       for (let i = 1; i < stationen.length; i++) {
         if (chronikNummer !== nummer || ergebnis === 'abgebrochen') return 'abgebrochen';
         await new Promise(r => setTimeout(r, pause));
         if (chronikNummer !== nummer) return 'abgebrochen';
         const s = stationen[i];
         ergebnis = await fliegen([s.lon, s.lat], zoomZiel, {
+          dauer: einst.dauer,
           jeBild: e => {
             route.fortschritt = i - 1 + e;
             if (e > .55 && sichtbarBis < i) {
@@ -431,6 +439,25 @@
       zeichnen();
       melden('beiChronikEnde', 'fertig');
       return 'fertig';
+    }
+
+    function routeSetzen(stationen) {
+      const punkte = stationen.map(s => [s.lon, s.lat]);
+      const gleich = route && route.punkte.length === punkte.length && route.punkte.every((p, j) => p[0] === punkte[j][0] && p[1] === punkte[j][1]);
+      if (!gleich) route = { punkte, fortschritt: 0 };
+    }
+    function chronikSchritt(stationen, i, einst = {}) {
+      chronikStoppen('abgebrochen');
+      routeSetzen(stationen);
+      const s = stationen[i], von = route.fortschritt;
+      aktiverOrt = s.name;
+      return fliegen([s.lon, s.lat], einst.zoom || Math.max(k, 2.6), { dauer: einst.dauer, jeBild: e => { route.fortschritt = von + (i - von) * e; } });
+    }
+    function routeZeigen(stationen) {
+      chronikStoppen('abgebrochen');
+      routeSetzen(stationen);
+      route.fortschritt = stationen.length - 1;
+      zeichnen();
     }
 
     // ---------- Leerlauf: sanftes Pendeln, pausiert außer Sicht ----------
@@ -475,7 +502,7 @@
       auswahl(iso) { auswahl = iso ? (fein || grob).laender.find(x => x.iso === iso) || null : null; zeichnen(); },
       zoomen(faktor) { chronikStoppen('abgebrochen'); return fliegen(mitte.slice(), Math.max(.9, Math.min(24, k * faktor))); },
       ganz() { chronikStoppen('abgebrochen'); auswahl = null; return fliegen(ebene.blick.mitte, 1); },
-      chronik, chronikStoppen: () => chronikStoppen('abgebrochen'),
+      chronik, chronikSchritt, routeZeigen, chronikStoppen: () => chronikStoppen('abgebrochen'),
       pendelnStoppen, zeichnen,
       k: () => k,
       land: iso => (fein || grob).laender.find(x => x.iso === iso) || null

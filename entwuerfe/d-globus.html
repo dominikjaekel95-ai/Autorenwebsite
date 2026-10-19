@@ -16,7 +16,8 @@
   --grund: #F6F6F5;
   --graphit: #1D1E21;
   --graphit-2: #63656B;
-  --graphit-3: #9B9DA2;
+  --graphit-3: #74767B;
+  --kueste: #9B9DA2;
   --linie: #DEDFE1;
   --land: #F1F1F2;
   --bereist: #D3D5D9;
@@ -37,6 +38,7 @@ body { margin: 0; background: var(--papier); color: var(--graphit); font-family:
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 1.5px solid var(--akzent); outline-offset: 3px; }
+@media (max-width: 360px) { .buch { width: calc(var(--b) * .68); } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -107,9 +109,11 @@ button { font: inherit; color: inherit; }
   padding: .3rem .55rem; background: var(--graphit); color: var(--papier); border-radius: 3px;
   font-family: var(--f-code); font-size: .72rem; white-space: nowrap; transform: translate(12px, -130%);
 }
+.tipp.links { transform: translate(calc(-100% - 12px), -130%); }
 .regler { position: absolute; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 1px; background: var(--linie); border: 1px solid var(--linie); border-radius: 4px; overflow: hidden; }
 .regler button { width: 2.2rem; height: 2.2rem; border: 0; background: var(--papier); cursor: pointer; font-family: var(--f-code); font-size: .95rem; color: var(--graphit-2); }
 .regler button:hover { color: var(--graphit); background: var(--grund); }
+.regler button:focus-visible { outline-offset: -3px; }
 .globus figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1.5rem; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--linie); color: var(--graphit-2); }
 .globus__ersatz { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 2rem; color: var(--graphit-2); border: 1px solid var(--linie); border-radius: 50%; }
 .zahl { font-variant-numeric: tabular-nums; color: var(--graphit); }
@@ -158,7 +162,7 @@ button { font: inherit; color: inherit; }
 .buch:hover { transform: translateY(-8px); }
 .buch[aria-expanded="true"] { transform: translateY(-2rem) rotate(-3deg); box-shadow: 0 14px 24px -14px rgba(29, 30, 33, .45); z-index: 2; }
 .regal__brett.hat-auswahl .buch:not([aria-expanded="true"]) { opacity: .55; }
-.buch--lehnt { transform: rotate(9deg); margin-left: .9rem; }
+.buch--lehnt { transform: rotate(9deg); transform-origin: 100% 100%; margin-left: .9rem; }
 .buch--lehnt:hover { transform: rotate(9deg) translateY(-6px); }
 .buch--lehnt[aria-expanded="true"] { transform: rotate(0deg) translateY(-2rem); }
 
@@ -212,6 +216,8 @@ button { font: inherit; color: inherit; }
   .blatt { grid-template-columns: minmax(0, 9rem) minmax(0, 1fr); }
 }
 @media (max-width: 600px) {
+  .buch { width: calc(var(--b) * .78); }
+  .buch__titel { font-size: .88rem; }
   .blatt { grid-template-columns: minmax(0, 1fr); }
   .umschlag { max-width: 10rem; }
   .journal li { grid-template-columns: minmax(0, 1fr); }
@@ -274,7 +280,7 @@ button { font: inherit; color: inherit; }
         </div>
         <figcaption class="code">
           <span><span class="zahl" id="zahlLaender">0</span> Länder und Gebiete bereist <span class="leise">· nach meiner Zählung</span></span>
-          <span id="ansicht" class="leise">Welt</span>
+          <span id="ansicht" class="leise" aria-live="polite">Welt</span>
         </figcaption>
         <details class="register" id="register">
           <summary class="code">Alle Länder und Gebiete</summary>
@@ -316,7 +322,7 @@ button { font: inherit; color: inherit; }
           </div>
         </div>
 
-        <div class="aufgeschlagen" id="aufgeschlagen" aria-live="polite">
+        <div class="aufgeschlagen" id="aufgeschlagen" aria-live="polite" inert>
           <div class="aufgeschlagen__innen" id="aufgeschlagenInnen"></div>
         </div>
       </div>
@@ -534,7 +540,7 @@ button { font: inherit; color: inherit; }
   const ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const css = getComputedStyle(document.documentElement);
   const F = n => css.getPropertyValue(n).trim();
-  const FARBE = { papier: F('--papier'), graphit: F('--graphit'), graphit2: F('--graphit-2'), graphit3: F('--graphit-3'), linie: F('--linie'), land: F('--land'), bereist: F('--bereist'), grenze: F('--grenze'), akzent: F('--akzent') };
+  const FARBE = { papier: F('--papier'), graphit: F('--graphit'), graphit2: F('--graphit-2'), graphit3: F('--graphit-3'), kueste: F('--kueste'), linie: F('--linie'), land: F('--land'), bereist: F('--bereist'), grenze: F('--grenze'), akzent: F('--akzent') };
   const koord = o => Math.abs(o.lat).toFixed(2) + '° ' + (o.lat >= 0 ? 'N' : 'S') + ' · ' + Math.abs(o.lon).toFixed(2) + '° ' + (o.lon >= 0 ? 'E' : 'W');
 
   let ebene = 'leben';
@@ -573,7 +579,7 @@ button { font: inherit; color: inherit; }
         b.querySelector('.orte__name').appendChild(n);
       }
       b.querySelector('.orte__koord').textContent = koord(o);
-      b.addEventListener('click', () => { rundflugStoppen(); ortAnfliegen(o); });
+      b.addEventListener('click', () => { rundflugStoppen(); globusZeigen(); ortAnfliegen(o); });
       li.appendChild(b);
       liste.appendChild(li);
     });
@@ -581,6 +587,10 @@ button { font: inherit; color: inherit; }
     rundflugStoppen();
     if (globus && fliegenErlaubt) globus.fliegen(EBENEN[name].blick.mitte, EBENEN[name].blick.k);
     if (globus) globus.zeichnen();
+  }
+  function globusZeigen() {
+    const r = $('globusFlaeche').getBoundingClientRect();
+    if (r.top < 0 || r.bottom > window.innerHeight) $('globusFlaeche').scrollIntoView({ block: 'center', behavior: ruhig ? 'auto' : 'smooth' });
   }
   function ortAnfliegen(o, zielK) {
     aktiverOrt = o.name;
@@ -599,13 +609,15 @@ button { font: inherit; color: inherit; }
   async function rundflug() {
     if (rundflugLaeuft) { rundflugStoppen(); return; }
     const nummer = rundflugLaeuft = Date.now();
+    globusZeigen();
     const knopf = $('rundflug');
     knopf.textContent = 'Rundflug anhalten';
     knopf.setAttribute('aria-pressed', 'true');
     for (const o of EBENEN[ebene].orte) {
       if (rundflugLaeuft !== nummer) return;
-      await ortAnfliegen(o, 5);
+      const ergebnis = await ortAnfliegen(o, 5);
       if (rundflugLaeuft !== nummer) return;
+      if (ergebnis === 'abgebrochen') { rundflugStoppen(); return; }
       await new Promise(r => setTimeout(r, ruhig ? 2500 : 1400));
     }
     if (rundflugLaeuft === nummer) { rundflugStoppen(); if (globus) globus.fliegen(EBENEN[ebene].blick.mitte, EBENEN[ebene].blick.k); }
@@ -629,6 +641,8 @@ button { font: inherit; color: inherit; }
   if (!window.d3 || !window.topojson || !window.WELT_110M) {
     $('globusErsatz').hidden = false;
     $('globusCanvas').hidden = true;
+    document.querySelector('.regler').hidden = true;
+    document.querySelector('.bedienung').hidden = true;
   } else {
     globus = baueGlobus();
   }
@@ -669,7 +683,12 @@ button { font: inherit; color: inherit; }
         const westlich = p => d3.geoCentroid({ type: 'Polygon', coordinates: p })[0] < 34.7;
         return teil('PS-WB', 'Westjordanland', polys.filter(p => !westlich(p))).concat(teil('PS-GZ', 'Gazastreifen', polys.filter(westlich)));
       });
-      laender.forEach(f => { f.bereist = BEREIST.includes(f.iso); });
+      laender.forEach(f => {
+        f.bereist = BEREIST.includes(f.iso);
+        // Beschriftungspunkt: Mitte des größten Teilstücks, damit Überseegebiete ihn nicht verschieben
+        const teile = f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates.map(c => ({ type: 'Polygon', coordinates: c })) : [f.geometry];
+        f.punkt = d3.geoCentroid(teile.reduce((a, b) => d3.geoArea(b) > d3.geoArea(a) ? b : a));
+      });
       return {
         laender,
         grenzen: UK ? { type: 'MultiLineString', coordinates: topojson.mesh(topo, topo.objects.countries, (a, b) => a !== b).coordinates.concat(UK.innen.coordinates) } : topojson.mesh(topo, topo.objects.countries, (a, b) => a !== b),
@@ -708,7 +727,7 @@ button { font: inherit; color: inherit; }
     }
 
     function zeichnen() {
-      projektion.translate([seite / 2, seite / 2]).scale(R * k).rotate([-mitte[0], -mitte[1]]);
+      projektion.translate([seite / 2, seite / 2]).scale(R * k).rotate([-mitte[0], -mitte[1]]).clipExtent([[0, 0], [seite, seite]]);
       const d = daten();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, seite, seite);
@@ -723,7 +742,7 @@ button { font: inherit; color: inherit; }
       if (hover) { ctx.beginPath(); pfad(hover); ctx.fillStyle = 'rgba(44, 60, 203, .12)'; ctx.fill(); }
 
       ctx.beginPath(); pfad(d.grenzen); ctx.strokeStyle = FARBE.grenze; ctx.lineWidth = k > 3 ? .7 : .45; ctx.stroke();
-      ctx.beginPath(); pfad(d.kueste); ctx.strokeStyle = FARBE.graphit3; ctx.lineWidth = .6; ctx.stroke();
+      ctx.beginPath(); pfad(d.kueste); ctx.strokeStyle = FARBE.kueste; ctx.lineWidth = .6; ctx.stroke();
       if (hover) { ctx.beginPath(); pfad(hover); ctx.strokeStyle = FARBE.akzent; ctx.lineWidth = 1; ctx.stroke(); }
       if (auswahl && auswahl !== hover && ebene === 'leben') {
         const a = d.laender.find(x => x.iso === auswahl.iso) || auswahl;
@@ -738,22 +757,8 @@ button { font: inherit; color: inherit; }
         const p = projektion(pos);
         ctx.beginPath(); ctx.arc(p[0], p[1], 2.4, 0, Math.PI * 2);
         ctx.fillStyle = FARBE.bereist; ctx.fill();
-        ctx.lineWidth = .8; ctx.strokeStyle = FARBE.graphit3; ctx.stroke();
+        ctx.lineWidth = .8; ctx.strokeStyle = FARBE.kueste; ctx.stroke();
       });
-
-      // Ländernamen bereister Länder ab mittlerem Zoom
-      if (k >= 2.6 && zeigeBereist) {
-        ctx.font = 'italic 300 13px Newsreader, Georgia, serif';
-        ctx.fillStyle = FARBE.graphit2;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        d.bereist.features.forEach(f => {
-          const c = d3.geoCentroid(f);
-          if (d3.geoDistance(c, mitte) > 1.3) return;
-          const p = projektion(c);
-          if (p) ctx.fillText(f.name, p[0], p[1]);
-        });
-      }
 
       // Orte der aktiven Ebene, Beschriftungen ohne Überlappung
       const belegt = [];
@@ -778,8 +783,8 @@ button { font: inherit; color: inherit; }
         const frei = b => !belegt.some(x => b[0] < x[2] && b[2] > x[0] && b[1] < x[3] && b[3] > x[1]);
         const boxRechts = [p[0] + 9, p[1] - 8, p[0] + 9 + breite, p[1] + 8];
         const boxLinks = [p[0] - 9 - breite, p[1] - 8, p[0] - 9, p[1] + 8];
-        const passtRechts = p[0] < seite - breite - 24 && frei(boxRechts);
-        const passtLinks = p[0] > breite + 24 && frei(boxLinks);
+        const passtRechts = imKreis(boxRechts) && frei(boxRechts);
+        const passtLinks = imKreis(boxLinks) && frei(boxLinks);
         if (!passtRechts && !passtLinks) return;
         const rechts = passtRechts;
         belegt.push(rechts ? boxRechts : boxLinks);
@@ -790,7 +795,29 @@ button { font: inherit; color: inherit; }
         ctx.fillText(text, rechts ? p[0] + 9 : p[0] - 9, p[1]);
       });
 
+      // Ländernamen bereister Länder ab mittlerem Zoom, nach den Orten und ohne Überlappung
+      if (k >= 2.6 && zeigeBereist) {
+        ctx.font = 'italic 300 13px Newsreader, Georgia, serif';
+        ctx.fillStyle = FARBE.graphit2;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        d.bereist.features.forEach(f => {
+          if (d3.geoDistance(f.punkt, mitte) > 1.3) return;
+          const p = projektion(f.punkt);
+          if (!p) return;
+          const b = ctx.measureText(f.name).width / 2 + 2;
+          const box = [p[0] - b, p[1] - 8, p[0] + b, p[1] + 8];
+          if (!imKreis(box) || belegt.some(x => box[0] < x[2] && box[2] > x[0] && box[1] < x[3] && box[3] > x[1])) return;
+          belegt.push(box);
+          ctx.fillText(f.name, p[0], p[1]);
+        });
+      }
       if (!bewegt) brotkrumen();
+    }
+    // Liegt ein Beschriftungskasten ganz im runden Fenster?
+    function imKreis(b) {
+      const r = seite / 2 - 4;
+      return [[b[0], b[1]], [b[2], b[1]], [b[0], b[3]], [b[2], b[3]]].every(([x, y]) => Math.hypot(x - seite / 2, y - seite / 2) < r);
     }
     function brotkrumen() {
       const teile = ['Welt'];
@@ -873,16 +900,18 @@ button { font: inherit; color: inherit; }
 
     // Kamerafahrt: über den Großkreis drehen, unterwegs kurz herauszoomen
     let flugEnde = null;
-    function flugBeenden() { if (flug) { flug.stop(); flug = null; } if (flugEnde) { const f = flugEnde; flugEnde = null; f(); } }
+    function flugBeenden(grund = 'abgebrochen') { if (flug) { flug.stop(); flug = null; } if (flugEnde) { const f = flugEnde; flugEnde = null; f(grund); } }
     function fliegen(ziel, zielK) {
       flugBeenden();
+      leerlaufStoppen();
+      tippVerstecken();
       if (zielK > 1.6) feinLaden();
       const start = mitte.slice(), startK = k;
       const weg = d3.geoInterpolate(start, ziel);
       const abstand = d3.geoDistance(start, ziel);
       const dauer = ruhig ? 0 : Math.min(2400, 900 + abstand * 700);
       const delle = Math.min(Math.log(Math.max(startK, zielK)), abstand * 1.1);
-      if (!dauer) { mitte = ziel.slice(); k = zielK; zoomStandSetzen(); zeichnen(); return Promise.resolve(); }
+      if (!dauer) { mitte = ziel.slice(); k = zielK; zoomStandSetzen(); zeichnen(); return Promise.resolve('fertig'); }
       return new Promise(fertig => {
         flugEnde = fertig;
         flug = d3.timer(verstrichen => {
@@ -893,7 +922,7 @@ button { font: inherit; color: inherit; }
           zoomStandSetzen();
           bewegung();
           zeichnen();
-          if (t >= 1) flugBeenden();
+          if (t >= 1) flugBeenden('fertig');
         });
       });
     }
@@ -913,7 +942,8 @@ button { font: inherit; color: inherit; }
         const treffer = lonlat ? daten().laender.find(f => d3.geoContains(f, lonlat)) || null : null;
         if (treffer !== hover) { hover = treffer; zeichnen(); }
         if (treffer) {
-          tipp.textContent = treffer.name + (treffer.bereist ? ' · bereist' : '');
+          tipp.textContent = treffer.name + (treffer.bereist && ebene === 'leben' ? ' · bereist' : '');
+          tipp.classList.toggle('links', x + tipp.offsetWidth + 24 > seite);
           tipp.style.left = x + 'px';
           tipp.style.top = y + 'px';
           tipp.hidden = false;
@@ -924,6 +954,7 @@ button { font: inherit; color: inherit; }
 
     // Tastatur
     canvas.addEventListener('keydown', e => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
       const schritt = 10 / k;
       const tasten = {
         ArrowLeft: () => { mitte[0] -= schritt; }, ArrowRight: () => { mitte[0] += schritt; },
@@ -932,25 +963,36 @@ button { font: inherit; color: inherit; }
       };
       if (!tasten[e.key]) return;
       e.preventDefault();
+      rundflugStoppen();
+      flugBeenden();
+      tippVerstecken();
       tasten[e.key]();
       zoomStandSetzen();
       bewegung();
       zeichnen();
     });
-    $('zoomRein').addEventListener('click', () => fliegen(mitte.slice(), Math.min(24, k * 1.8)));
-    $('zoomRaus').addEventListener('click', () => fliegen(mitte.slice(), Math.max(.9, k / 1.8)));
-    $('zoomGanz').addEventListener('click', () => fliegen(EBENEN[ebene].blick.mitte, 1));
+    $('zoomRein').addEventListener('click', () => { rundflugStoppen(); fliegen(mitte.slice(), Math.min(24, k * 1.8)); });
+    $('zoomRaus').addEventListener('click', () => { rundflugStoppen(); fliegen(mitte.slice(), Math.max(.9, k / 1.8)); });
+    $('zoomGanz').addEventListener('click', () => { rundflugStoppen(); auswahl = null; registerMarkieren(null); fliegen(EBENEN[ebene].blick.mitte, 1); });
 
     // Sanftes Pendeln um die Ausgangsansicht, bis jemand eingreift
     let leerlauf = null;
     function leerlaufStoppen() { if (leerlauf) { leerlauf.stop(); leerlauf = null; } $('bewegungAus').hidden = true; }
     if (!ruhig) {
       const basis = mitte[0];
-      leerlauf = d3.timer(t => { if (!flug && k < 1.2 && ebene === 'leben') { mitte[0] = basis + Math.sin(t / 5200) * 14; zeichnen(); } });
+      let sichtbar = true;
+      if ('IntersectionObserver' in window) new IntersectionObserver(e => { sichtbar = e[0].isIntersecting; }).observe(canvas);
+      leerlauf = d3.timer(t => {
+        if (flug || k >= 1.2 || ebene !== 'leben' || !sichtbar || document.hidden) return;
+        mitte[0] = basis + Math.sin(t / 5200) * 14;
+        tippVerstecken();
+        bewegung();
+        zeichnen();
+      });
       $('bewegungAus').hidden = false;
       $('bewegungAus').addEventListener('click', leerlaufStoppen);
       ['pointerdown', 'keydown'].forEach(t => canvas.addEventListener(t, leerlaufStoppen, { passive: true }));
-      document.querySelectorAll('.ebene, #orteListe, .regler, #register').forEach(el => el.addEventListener('click', leerlaufStoppen));
+      document.querySelectorAll('.ebene, #orteListe, .regler, #register, #rundflug').forEach(el => el.addEventListener('click', leerlaufStoppen));
     }
     setTimeout(feinLaden, 1200);
 
@@ -1000,6 +1042,7 @@ button { font: inherit; color: inherit; }
           rundflugStoppen();
           if (ebene !== 'leben') ebeneZeigen('leben', false);
           registerMarkieren(iso);
+          globusZeigen();
           if (globus) globus.landAnfliegen(iso);
         });
         li.appendChild(b);
@@ -1024,15 +1067,18 @@ button { font: inherit; color: inherit; }
   const innen = $('aufgeschlagenInnen');
   let offen = null;
 
-  function buchZu() {
+  function buchZu(fokusZurueck = false) {
+    const ausloeser = document.querySelector('.buch[aria-expanded="true"]');
     document.querySelectorAll('.buch').forEach(b => b.setAttribute('aria-expanded', 'false'));
     document.querySelectorAll('.regal__brett').forEach(r => r.classList.remove('hat-auswahl'));
     panel.classList.remove('ist-offen');
+    panel.inert = true;
     offen = null;
+    if (fokusZurueck && ausloeser) ausloeser.focus();
   }
   function buchAuf(knopf) {
     const id = knopf.dataset.buch;
-    if (offen === id) { buchZu(); return; }
+    if (offen === id) { buchZu(true); return; }
     buchZu();
     offen = id;
     knopf.setAttribute('aria-expanded', 'true');
@@ -1054,10 +1100,21 @@ button { font: inherit; color: inherit; }
       inhalt.querySelector('[data-notiz]').textContent = g.notiz;
     }
     innen.replaceChildren(inhalt);
-    requestAnimationFrame(() => panel.classList.add('ist-offen'));
+    panel.inert = false;
+    const ueberschrift = innen.querySelector('h3');
+    if (ueberschrift) ueberschrift.tabIndex = -1;
+    requestAnimationFrame(() => {
+      panel.classList.add('ist-offen');
+      if (ueberschrift) ueberschrift.focus({ preventScroll: true });
+      // Auf schmalen Bildschirmen liegt das Blatt unter beiden Regalen: ins Bild holen
+      setTimeout(() => {
+        const r = panel.getBoundingClientRect();
+        if (r.top > window.innerHeight * .6) panel.scrollIntoView({ block: 'start', behavior: ruhig ? 'auto' : 'smooth' });
+      }, 120);
+    });
   }
   document.querySelectorAll('.buch').forEach(b => b.addEventListener('click', () => buchAuf(b)));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && offen) buchZu(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && offen) buchZu(true); });
 
   // Aus einem Buch zurück auf den Globus
   innen.addEventListener('click', e => {
@@ -1065,13 +1122,19 @@ button { font: inherit; color: inherit; }
     const ortLink = e.target.closest('[data-fliege]');
     if (!ebenenKnopf && !ortLink) return;
     e.preventDefault();
+    rundflugStoppen();
     document.getElementById('globus').scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
     if (ebenenKnopf) {
       ebeneZeigen(ebenenKnopf.dataset.zeigeEbene);
+      $('tab-' + ebenenKnopf.dataset.zeigeEbene).focus({ preventScroll: true });
     } else {
       if (ebene !== 'leben') ebeneZeigen('leben', false);
       const o = EBENEN.leben.orte.find(x => x.name === ortLink.dataset.fliege);
-      if (o) ortAnfliegen(o);
+      if (o) {
+        ortAnfliegen(o);
+        const knopf = document.querySelector('#orteListe button[data-ort="' + o.name + '"]');
+        if (knopf) knopf.focus({ preventScroll: true });
+      }
     }
   });
 

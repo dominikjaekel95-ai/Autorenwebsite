@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bibliothek – Dominik Jäkel</title>
+<meta name="description" content="Die Bibliothek von Dominik Jäkel: was er gelesen hat, im Regal nach dem Jahr der Erstveröffentlichung gestellt, dazu seine eigenen Werke, der Nachttisch und was noch wartet.">
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="stylesheet" href="f-stil.css">
+<style>
+/* Bibliothek von Entwurf F: das ganze Regal aus E1. Rückenbreite aus der Seitenzahl, Höhe aus der Bindung, Farben nach Verlagsfamilien,
+   die Zeiten nach dem Jahr der Erstveröffentlichung über die Bretter, Buchstützen und Schilder in Kapitälchen.
+   Siena nur für die eigenen Werke. Was noch wartet, ist mit Bleistift vorgezeichnet (daten/leseliste.js). */
+
+.vorspann { padding-top: var(--z); }
+.vorspann .spalte > p + p { margin-top: calc(var(--z) * .5); }
+.zeichen { font-size: .9375em; }
+/* Breit steht die Lesehilfe als Randnotiz rechts neben der Einleitung, auf deren erster Zeile; die Einleitung behält ihr Maß.
+   Erst ab 70rem, wo die Notiz etwa 20em breit wird; darunter steht sie wie auf dem Telefon unter der Einleitung. */
+@media (min-width: 70rem) {
+  .vorspann .spalte { max-width: none; display: grid; grid-template-columns: min(var(--mass), 100% - 15em) minmax(0, 23em); column-gap: 2em; align-items: first baseline; }
+  .vorspann .spalte > p + p { margin-top: 0; }
+}
+
+/* ---------- Regal ---------- */
+.regal { position: relative; padding-top: var(--z); }
+.faecher, .kinderzimmer, .wartet { position: relative; }
+.faecher { margin-top: calc(var(--z) * .5); }
+.kinderzimmer, .wartet { margin-top: calc(var(--z) * 1.5); }
+.reihe { margin-bottom: calc(var(--z) * .5); }
+.buecher { display: flex; align-items: flex-end; height: var(--h); min-width: 0; }
+.gruppe { display: flex; align-items: flex-end; flex: none; }
+.brett { height: 7px; background: var(--brett); border-top: 1px solid var(--brettkante); }
+.schilder { display: flex; align-items: flex-start; min-height: calc(1.225rem + .4rem); padding-top: .4rem; }
+.schild { flex: none; font-family: var(--sc); font-size: .875rem; line-height: 1.4; letter-spacing: .04em; text-transform: lowercase; color: var(--grau-2); padding-right: 1em; hyphens: manual; text-wrap: balance; }
+.schild .jahre { font-family: var(--schrift); text-transform: none; letter-spacing: 0; white-space: nowrap; }
+/* Buchstütze zwischen zwei Zeiten: von vorn nur ein schmaler Metallstreifen */
+.stuetze { flex: none; width: 3px; margin: 0 4px 0 5px; background: #8C8E92; border-left: 1px solid #A6A8AB; }
+
+.ruecken {
+  position: relative; flex: none; appearance: none; margin: 0; padding: 0; border: 0; border-radius: 0;
+  border-right: 1px solid rgba(0, 0, 0, .07);
+  background: var(--grund, #EAE7DF); color: var(--tinte, #2A2B2E); font: inherit; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; overflow: visible;
+  transition: transform .2s ease; -webkit-tap-highlight-color: transparent;
+}
+.ruecken:hover, .ruecken:focus-visible, .ruecken.ist-offen { transform: translateY(-6px); }
+.ruecken:focus-visible { outline-offset: 1px; z-index: 1; }
+.ruecken.lehnt { transform-origin: 0 100%; transform: rotate(var(--neigung)); }
+.ruecken.lehnt:hover, .ruecken.lehnt:focus-visible, .ruecken.lehnt.ist-offen { transform: translateY(-6px) rotate(var(--neigung)); }
+/* Rückenschrift wird nie mit Auslassungspunkten gekürzt: Größe und Fassung kommen aus der Messung */
+.aufschrift { display: block; writing-mode: vertical-rl; line-height: 1.12; white-space: nowrap; overflow: hidden; max-height: calc(100% - 20px); pointer-events: none; font-variant-numeric: oldstyle-nums; }
+.aufschrift .z { display: block; }
+.de .aufschrift { transform: rotate(180deg); }
+.aufschrift .nn { font-family: var(--sc); letter-spacing: .04em; }
+.aufschrift .nn + .t { margin-inline-start: .5em; }
+/* Bleistift: ein Strich für ein Lieblingsbuch, zwei für wiedergelesen */
+.strich-1::after, .strich-2::after, .strich-2::before { content: ""; position: absolute; bottom: 5px; width: 1px; height: 6px; background: currentColor; opacity: .32; transform: rotate(20deg); pointer-events: none; }
+.strich-1::after { left: calc(50% - .5px); }
+.strich-2::after { left: calc(50% + 1px); }
+.strich-2::before { left: calc(50% - 2.5px); }
+/* Lesezeichen: ragt oben aus einem Buch, das ich nicht zu Ende gelesen habe */
+.lesezeichen { position: absolute; top: -10px; width: 3px; height: 10px; background: #55575C; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%); pointer-events: none; }
+/* Was noch wartet: mit Bleistift vorgezeichnet */
+.geist { background: transparent; border-right: 0; }
+.geist svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.geist path { fill: none; stroke: #8E9094; stroke-width: .75; stroke-linecap: round; opacity: .8; }
+.geist:hover path, .geist:focus-visible path, .geist.ist-offen path { stroke: var(--grau-1); }
+.geist .aufschrift { color: #A2A4A7; font-style: italic; }
+.geist:hover .aufschrift, .geist:focus-visible .aufschrift, .geist.ist-offen .aufschrift { color: var(--grau-1); }
+
+/* Was gerade gelesen wird, liegt quer */
+.stapelgruppe { gap: 12px; }
+.stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; }
+.liegt { --versatz: 0px; border-right: 0; border-top: 1px solid rgba(0, 0, 0, .07); transform: translateX(var(--versatz)); }
+.liegt:hover, .liegt:focus-visible, .liegt.ist-offen { transform: translateX(calc(var(--versatz) + 7px)); }
+.liegt .aufschrift { writing-mode: horizontal-tb; max-height: none; max-width: calc(100% - 20px); }
+.liegt.de .aufschrift { transform: none; }
+
+/* Eigene Werke wie Insel-Bücherei: gleiches Schild für alle, eigenes Muster, die Trilogie im Schuber */
+.eigen { --muster: color-mix(in srgb, var(--siena) 36%, transparent); background-color: #F6F2EA; border-right: 1px solid color-mix(in srgb, var(--siena) 26%, transparent); }
+.eigen .titelschild { position: absolute; left: 50%; top: 13%; width: var(--sw); height: var(--sh); transform: translateX(-50%); background: #FDFBF7; border: 1px solid color-mix(in srgb, var(--siena) 70%, transparent); display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none; }
+.eigen .titelschild span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; color: var(--graphit); line-height: 1; font-size: var(--sf); }
+.muster-hoehen { background-image: repeating-radial-gradient(ellipse 150% 62% at 28% 96%, transparent 0 4.6px, var(--muster) 4.6px 5.2px); }
+.muster-schraeg { background-image: repeating-linear-gradient(-62deg, transparent 0 5.4px, var(--muster) 5.4px 6px); }
+.muster-pfeiler { background-image: linear-gradient(0deg, transparent 0 70%, var(--muster) 70% calc(70% + .6px), transparent calc(70% + .6px)), repeating-linear-gradient(90deg, transparent 0 5.4px, var(--muster) 5.4px 6px); }
+.muster-ton { background-image: repeating-linear-gradient(40deg, transparent 0 6px, var(--muster) 6px 6.5px), repeating-linear-gradient(-40deg, transparent 0 6px, var(--muster) 6px 6.5px); }
+.muster-wellen { background-image: radial-gradient(circle at 50% 0, transparent 0 3px, var(--muster) 3px 3.55px, transparent 3.55px); background-size: 8px 6px; }
+.muster-punkte { background-image: radial-gradient(circle, var(--muster) 0 .7px, transparent .9px); background-size: 6px 6px; }
+.muster-zeilen { background-image: repeating-linear-gradient(0deg, transparent 0 5.4px, var(--muster) 5.4px 6px); }
+.muster-netz { background-image: repeating-linear-gradient(90deg, transparent 0 5.4px, var(--muster) 5.4px 6px), repeating-linear-gradient(0deg, transparent 0 8.4px, var(--muster) 8.4px 9px); }
+.eigenes .gruppe.eigen-gruppe { gap: 1px; }
+.schuber-platz { position: relative; flex: none; width: var(--zu); height: var(--hc); transition: width .9s ease; }
+.schuber-platz.offen { width: var(--auf); }
+.schuber-platz .schuber { position: absolute; left: 0; bottom: 0; z-index: 2; }
+.schuber-platz .bandbuch { position: absolute; bottom: 0; left: var(--innen); z-index: 1; transition: transform .8s cubic-bezier(.3, .1, .2, 1); transition-delay: var(--zurueck); }
+.schuber-platz.offen .bandbuch { transform: translateX(var(--weg)); transition-delay: var(--hin); }
+.schuber-platz.offen .bandbuch:hover, .schuber-platz.offen .bandbuch:focus-visible, .schuber-platz.offen .bandbuch.ist-offen { transform: translateX(var(--weg)) translateY(-6px); transition-delay: 0s; }
+
+/* Name des Buchs über dem Rücken, gesetzt wie die Zeile unter dem Band der Startseite: gerade, der Titel kursiv, auf Papier */
+.rueckentipp { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; width: max-content; max-width: min(36em, calc(100% - 32px)); text-wrap: balance; hyphens: manual; font-size: .875rem; line-height: 1.3; padding: 0 .3em; background: var(--papier); color: var(--graphit); }
+.rueckentipp[hidden] { display: none; }
+
+.zur-startseite { margin-top: calc(var(--z) * 1.5); max-width: var(--mass); }
+
+@media (max-width: 40rem) {
+  .schild { font-size: .8125rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ruecken, .schuber-platz, .schuber-platz .bandbuch { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="kopf">
+  <p class="briefkopf"><a class="name" href="f-start.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
+  <nav class="nav" aria-label="Website">
+    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
+    <ul class="nav-liste" id="nav-liste">
+      <li><a href="f-satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="f-ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="f-start.html#erzaehlungen">Erzählungen</a></li>
+      <li><a href="f-start.html#untertext"><i>Untertext</i></a></li>
+      <li><a href="f-start.html#laender">Länder</a></li>
+      <li><a href="f-bibliothek.html" aria-current="page">Bibliothek</a></li>
+      <li><a href="f-vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inhalt">
+<div class="abschnitt vorspann">
+  <h1 class="seitentitel">Bibliothek</h1>
+  <div class="spalte">
+    <p>Oben steht, woran ich schreibe und was auf dem Nachttisch liegt. Darunter steht, was ich gelesen habe, nach dem Jahr geordnet, in dem ein Buch zuerst erschien. Es ist eine Auswahl und wird nie vollständig sein.</p>
+    <p class="zeichen leise">Ein Bleistiftstrich unten auf dem Rücken: eines meiner liebsten. Zwei Striche: mehr als einmal gelesen. Ein Lesezeichen steckt in den Büchern, die ich nicht zu Ende gelesen habe. Zu jedem Rücken gibt es eine Karteikarte.</p>
+  </div>
+</div>
+
+<section class="abschnitt regal" id="regal" aria-label="Regal">
+  <h2 class="unsichtbar">Was ich schreibe und was auf dem Nachttisch liegt</h2>
+  <div class="eigenes" id="eigenes"></div>
+  <h2 class="unsichtbar">Was ich gelesen habe</h2>
+  <div class="faecher" id="faecher"></div>
+  <h2 class="unsichtbar">Kinderzimmer</h2>
+  <div class="kinderzimmer" id="kinderzimmer"></div>
+  <h2 class="unsichtbar">Was noch wartet</h2>
+  <div class="wartet" id="wartet"></div>
+  <noscript><p class="leise">Das Regal wird mit JavaScript gezeichnet.</p></noscript>
+  <p class="rueckentipp" id="rueckentipp" aria-hidden="true" hidden></p>
+  <p class="zur-startseite"><a href="f-start.html#gelesen">Auf der Startseite</a> stehen dieselben Bücher auf einer Zeitachse.</p>
+</section>
+</main>
+
+<footer class="fuss" id="kontakt">
+  <section class="kontakt" aria-labelledby="kontakt-titel">
+    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
+    <p><span class="platzhalter">Adresse folgt</span></p>
+  </section>
+  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen. Entwurf F. <a href="index.html">Alle Entwürfe</a></p>
+</footer>
+
+<script src="globus/inhalt.js"></script>
+<script src="daten/buecher.js"></script>
+<script src="daten/leseliste.js"></script>
+<script src="f-seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+  const { $, $$, esc, hash, wert } = F;
+  const regal = $('#regal');
+
+  // ---------- Bücher ----------
+  // Die gemeinsame Liste mit drei Berichtigungen, solange FSeite.buch.alle() sie nicht selbst macht (ist sie dort berichtigt, ändert sich hier nichts):
+  // Was schon im Regal steht oder auf dem Nachttisch liegt, wartet nicht noch einmal. „Ghostwritten“ bleibt draußen, bis Dominik es freigibt.
+  // Titel, Namen und Verlage im deutschen Satz: Halbgeviertstrich in Spannen, typografische Apostrophe und Anführungszeichen, „T. S. Eliot“, „C. H. Beck“.
+  const ROH = F.buch.alle();
+  const titelSchluessel = b => b.nn + '|' + b.t.toLowerCase().replace(/^(der|die|das|the|a|an|ein|eine)\s+/, '').replace(/[^\p{L}\p{N}]+/gu, '');
+  const IM_REGAL = new Set(ROH.filter(b => b.r !== 'leseliste').map(titelSchluessel));
+  const satz = s => String(s || '').replace(/(\d)-(\d)/g, '$1–$2').replace(/"([^"]*)"/g, '“$1”').replace(/'/g, '’');
+  const initialen = v => satz(v).replace(/\b([A-Z])\.\s?(?=[A-Z])/g, '$1.' + F.NBSP);
+  const bleibt = ROH.filter(b => !/^Ghostwritten$/i.test(b.t) && !(b.r === 'leseliste' && IM_REGAL.has(titelSchluessel(b))));
+  const BUECHER = bleibt.map(b => Object.assign({}, b, { t: satz(b.t), u: satz(b.u), v: initialen(b.v), a: initialen(b.a), autor: initialen(b.autor), nn: satz(b.nn) }));
+  // Signaturen der Gruppen, aus denen ein Buch herausgenommen wurde, neu buchstabieren: a, b, c … ohne Lücke
+  const behalten = new Set(bleibt);
+  new Set(ROH.filter(b => !behalten.has(b) && b.sig).map(b => b.sig.replace(/[a-z]$/, ''))).forEach(basis => {
+    const gr = BUECHER.filter(b => b.sig === basis || (b.sig && b.sig.length === basis.length + 1 && b.sig.startsWith(basis) && /[a-z]$/.test(b.sig)))
+      .sort((x, y) => x.sig.localeCompare(y.sig));
+    gr.forEach((b, i) => { b.sig = basis + (gr.length > 1 ? 'abcdefghijklmnopqrstuvwxyz'[i] : ''); });
+  });
+  // Noch kürzer, nur wenn der Platz fehlt: ohne „oder …“, ohne „and Other Stories“, ohne Artikel
+  const titelKuerzer = s => s.replace(/,? (or|oder),? .+$/i, '').replace(/,? (and|und|&) (other|andere) .+$/i, '').replace(/^(The|A|An|Der|Die|Das|Ein|Eine) (?=\S)/, '').trim();
+  // Deutsche Rücken laufen von unten nach oben
+  const DE_VERLAG = /suhrkamp|rowohlt|diogenes|kiepenheuer|kiwi|deutscher taschenbuch|\bdtv\b|hanser|fischer|insel|reclam|piper|ullstein|aufbau|luchterhand|wagenbach|klett|heyne|goldmann|\bbtb\b|kein & aber|\bmare\b|matthes|beck|thienemann|arena|bastei|droemer|knaur|scherz|dumont|hoffmann und campe|arche|kirschbuch|cornelsen|rediroma|carlsen|oetinger|ravensburger|blessing|verlag/i;
+  const DE_TITEL = /[äöüß]|\b(der|die|das|und|ein|eine|im|vom|zum|nicht|ich|wir|über|mit)\b/i;
+  // Verlagsfamilien: Farben, wie man sie im Regal wiedererkennt
+  const FAMILIEN = {
+    schwarz: { farben: ['#262628', '#2D2D2F'], tinte: '#ECE8DE' },
+    suhrkamp: { farben: ['#C9BBAF', '#B8C2AF', '#C6C0D2', '#D8CC9F', '#AABAC6', '#CDB5B2', '#B4C7C0'], tinte: '#2A2B2E' },
+    reclam: { farben: ['#E2D38D', '#DCCB80'], tinte: '#2A2B2E' },
+    vintage: { farben: ['#EFEDE7', '#E7E5DF'], tinte: '#1D1E21' },
+    nyrb: { farben: ['#D7D6D0', '#CACCC7', '#DCD9CF'], tinte: '#1D1E21' },
+    dunkel: { farben: ['#3D4045', '#55585D', '#6E7175', '#8D8F92', '#A4A5A6'], tinte: '#F1EFEA' },
+    genre: { farben: ['#5A6A7B', '#76857E', '#8A8F96', '#9EA3A6', '#B5B5B0', '#4F5961'], tinte: '#F1EFEA' },
+    leinen: { farben: ['#DCD5C6', '#D1CAB9', '#E4DED1', '#C8C1B1'], tinte: '#2A2B2E' },
+    creme: { farben: ['#F2EFE7', '#EAE7DF', '#E1DDD4', '#D5D2CA', '#E7E5E0', '#C9C7C2', '#BAB8B3'], tinte: '#2A2B2E' }
+  };
+  function familie(b) {
+    const v = (b.v || '').toLowerCase();
+    if (/penguin (classics|modern classics|english library|twentieth)/.test(v)) return 'schwarz';
+    if (/suhrkamp|insel/.test(v)) return 'suhrkamp';
+    if (/reclam/.test(v)) return 'reclam';
+    if (/vintage/.test(v)) return 'vintage';
+    if (/new directions|nyrb|new york review/.test(v)) return 'nyrb';
+    if (b.b === 'm' || /bantam|signet|del rey|orbit|ballantine|\btor\b|\bace\b|\bdaw\b|scholastic|puffin|speak|walker|hodder|philomel|amulet|hyperion|miramax|voyager|gollancz|pocket|\bdell\b|avon/.test(v)) return 'genre';
+    if (DE_VERLAG.test(v)) return 'leinen';
+    if (b.b === 'h' && /knopf|farrar|straus|scribner|little, brown|random house|harper|ecco|grove|pantheon|doubleday|houghton|picador|riverhead|viking|penguin press|simon|norton|crown|bloomsbury/.test(v)) return 'dunkel';
+    return 'creme';
+  }
+  // Alles, was im Regal einen Rücken hat; die Nummer ist data-id am Knopf
+  const ALLE = [];
+  function buch(b, fach) {
+    const key = b.key, geist = b.r === 'leseliste';
+    const fam = FAMILIEN[familie(b)];
+    const seiten = b.p > 0 ? b.p : 260;
+    const mm = {
+      b: (seiten * 0.06 + (b.b === 'h' ? 5 : 1)) * wert(key + 'b', .94, 1.06),
+      h: (b.b === 'h' ? 225 : b.b === 'm' ? 175 : b.b === 'e' ? 198 : 185) * (geist ? wert(key + 'h', .94, 1.05) : wert(key + 'h', .965, 1.03))
+    };
+    const titel = F.buch.titelKurz(b.t);
+    const x = {
+      b, key, mm, fach, titel, kurz: titelKuerzer(titel), nn: b.nn, autor: b.autor,
+      de: DE_VERLAG.test(b.v || '') || DE_TITEL.test(b.t),
+      grund: fam.farben[hash(key + 'f') % fam.farben.length], tinte: fam.tinte, geist
+    };
+    x.label = (x.autor ? x.autor + ', ' : '') + b.t;
+    x.id = ALLE.length;
+    ALLE.push(x);
+    return x;
+  }
+  const nachJahr = (x, y) => F.buch.ordnung(x.b, y.b);
+
+  // Zeiten: die frühe Zeit ist dünn, deshalb ein gemeinsames Fach bis zur Jahrhundertwende; Name und Anfangsjahr aus den Daten.
+  // Bücher ohne bekanntes Jahr lassen sich nicht einstellen und bleiben draußen.
+  const GELESEN = BUECHER.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort(F.buch.ordnung);
+  const erstes = GELESEN[0];
+  const EPOCHEN = [
+    { z: 'A', name: 'Von ' + (erstes ? F.buch.titelKurz(erstes.t) : 'Gilgamesch') + ' bis zur Jahrhundertwende', jahre: (erstes ? F.jahrText(erstes.j) : '') + ' bis 1899', bis: 1899 },
+    { z: 'B', name: 'Bis zum Ende des Zweiten Weltkriegs', jahre: '1900–1945', bis: 1945 },
+    { z: 'C', name: 'Bis zum Fall der Mauer', jahre: '1946–1989', bis: 1989 },
+    { z: 'D', name: 'Um die Jahrtausendwende', jahre: '1990–2009', bis: 2009 },
+    { z: 'E', name: 'Die Gegenwart', jahre: 'seit 2010', bis: Infinity }
+  ];
+  EPOCHEN.forEach(f => { f.buecher = []; });
+  GELESEN.forEach(b => { EPOCHEN.find(f => b.j <= f.bis).buecher.push(buch(b, null)); });
+  EPOCHEN.forEach(f => { f.buecher.forEach(x => { x.fach = f; }); f.buecher.sort(nachJahr); });
+  const KIND = { z: 'K', name: 'Kinderzimmer', jahre: 'nur die wichtigsten aus Kindheit und Jugend', art: 'kind' };
+  KIND.buecher = BUECHER.filter(b => b.r === 'kindheit').map(b => buch(b, KIND)).sort(nachJahr);
+  const TISCH = { z: 'N', name: 'Auf dem Nachttisch' };
+  TISCH.buecher = BUECHER.filter(b => b.r === 'gerade').map(b => buch(b, TISCH)).sort(nachJahr);
+  // Was noch wartet: Dominiks eigene Liste, nach Jahr; ohne Jahr am Ende
+  const WARTET = { z: 'W', name: 'Was noch wartet', jahre: '', art: 'wartet' };
+  WARTET.buecher = BUECHER.filter(b => b.r === 'leseliste').map(b => buch(b, WARTET)).sort(nachJahr);
+
+  // Eigene Werke: gleiches Format, eigenes Muster, die Trilogie im Schuber
+  const werk = id => (I.werke || []).find(w => w.id === id) || {};
+  const EIGENE = [
+    { id: 'satoshi', muster: 'hoehen', dicke: 40, hoehe: 185 },
+    { id: 'ursprung', schuber: true, muster: 'schraeg', dicke: 96, hoehe: 191 },
+    { id: 'erzaehlungen', muster: 'punkte', dicke: 30, hoehe: 185 },
+    { id: 'untertext', muster: 'zeilen', dicke: 21, hoehe: 185 },
+    { id: 'laender', muster: 'netz', dicke: 21, hoehe: 220 }
+  ];
+  const BAENDE = [
+    { id: 'ursprung-1', band: 'I', muster: 'pfeiler' },
+    { id: 'ursprung-2', band: 'II', muster: 'ton' },
+    { id: 'ursprung-3', band: 'III', muster: 'wellen' }
+  ];
+  function eigenEintrag(e) { const x = Object.assign({ eigen: true, werk: werk(e.id), werkId: e.id }, e); x.id = ALLE.length; ALLE.push(x); return x; }
+  EIGENE.forEach(e => { if (!e.schuber) e.eintrag = eigenEintrag(e); });
+  BAENDE.forEach(e => { e.eintrag = eigenEintrag(e); });
+  let schuberOffen = false;
+  let offenId = null;
+
+  // Maßstab: auf dem Telefon nicht unter 0,64 px je Millimeter, kein Rücken schmaler als 7 px
+  const massstab = () => window.innerWidth < 640 ? .64 : window.innerWidth < 1000 ? .66 : .72;
+  const minBreite = () => window.innerWidth < 640 ? 7 : 5;
+  // KOPF: Luft über dem höchsten Rücken für Lesezeichen und das Anheben; die eigenen Werke tragen kein Lesezeichen, ihnen reicht das Anheben
+  const LUECKE_MAX = 18, LEHNE = 26, STUETZE = 12, KOPF = 14, KOPF_EIGEN = 8;
+
+  // ---------- Rückenschrift aus der Messung ----------
+  const mctx = document.createElement('canvas').getContext('2d');
+  const MESS = new Map();
+  function breite100(text, sc) {
+    const key = (sc ? 'S|' : 'R|') + text;
+    let v = MESS.get(key);
+    if (v === undefined) { mctx.font = sc ? '100px "Vollkorn SC"' : '100px "Vollkorn"'; v = mctx.measureText(text).width + (sc ? text.length * 4 : 0); MESS.set(key, v); }
+    return v;
+  }
+  const zeile100 = (nn, t) => (nn ? breite100(nn, true) + (t ? 50 : 0) : 0) + (t ? breite100(t, false) : 0);
+  const zeileHtml = (nn, t) => `<span class="z">${nn ? `<span class="nn">${esc(nn)}</span>` : ''}${t ? `<span class="t">${esc(t)}</span>` : ''}</span>`;
+  // Erst die volle Zeile, dann zwei Zeilen, dann kleiner, dann kürzer; nie mit Auslassungspunkten
+  function aufschrift(x, w, L, nurName) {
+    const SICHER = .94, MIN = 6.5;
+    const f1Max = Math.min(10, (w - 3) / 1.12);
+    if (f1Max < MIN || L < 20) return '';
+    const fuer = (nn, t, fmax) => Math.min(fmax, L * SICHER * 100 / Math.max(1, zeile100(nn, t)));
+    const eine = (nn, t, f) => `<span class="aufschrift" style="font-size:${f.toFixed(2)}px">${zeileHtml(nn, t)}</span>`;
+    if (nurName) { const f = fuer('', x.nn, Math.min(9, f1Max)); return x.nn && f >= MIN ? eine('', x.nn, f) : ''; }
+    const voll = fuer(x.nn, x.titel, f1Max);
+    if (voll >= 7.5) return eine(x.nn, x.titel, voll);
+    const f2Max = Math.min(9.5, (w - 4) / 2.3);
+    let best2 = 0, zeilen2 = null;
+    if (f2Max >= MIN) {
+      const pruefen = zs => { const f = Math.min(f2Max, L * SICHER * 100 / Math.max(...zs.map(z => zeile100(z[0], z[1])))); if (f > best2) { best2 = f; zeilen2 = zs; } };
+      if (x.nn) pruefen([[x.nn, ''], ['', x.titel]]);
+      const worte = x.titel.split(' ');
+      for (let i = 1; i < worte.length; i++) pruefen([[x.nn, worte.slice(0, i).join(' ')], ['', worte.slice(i).join(' ')]]);
+    }
+    if (best2 >= Math.max(voll, 7)) return `<span class="aufschrift" style="font-size:${best2.toFixed(2)}px">${zeilen2.map(z => zeileHtml(z[0], z[1])).join('')}</span>`;
+    if (voll >= MIN) return eine(x.nn, x.titel, voll);
+    const versuche = [[x.nn, x.kurz], ['', x.titel], ['', x.kurz], [x.nn, '']];
+    for (const [nn, t] of versuche) {
+      if (!nn && !t) continue;
+      const f = fuer(nn, t, f1Max);
+      if (f >= MIN) return eine(nn, t, f);
+    }
+    return '';
+  }
+
+  // Ein Rücken in Pixeln; was noch wartet, steht mit etwas Luft
+  function stueck(x, s) {
+    return { x, w: Math.max(minBreite(), Math.round(x.mm.b * s)), h: Math.round(x.mm.h * s), abstand: x.geist ? 3 + hash(x.key + 'ab') % 3 : hash(x.key + 'a') % 3 === 0 ? 1 : 0 };
+  }
+
+  // ---------- Packen: die Zeiten fließen über die Bretter, eine Buchstütze markiert den Wechsel ----------
+  function elementeAus(abschnitte, s) {
+    const el = [];
+    abschnitte.forEach(ab => ab.buecher.forEach((x, j) => { const it = stueck(x, s); if (j === 0) it.beginnt = ab; el.push(it); }));
+    return el;
+  }
+  const breiteIn = (it, erstes) => it.w + it.abstand + (it.beginnt && !erstes ? STUETZE : 0);
+  // Wie breit ein Schild mindestens sein muss: kein Wort steht über, höchstens zwei Zeilen, auf dem Telefon drei.
+  // Gemessen in der Schrift des Schilds (Kapitälchen mit .04em Sperrung, die Jahre in einem Stück), dazu der rechte Innenabstand von 1em.
+  function schildBreite(f) {
+    const px = window.matchMedia('(max-width: 40rem)').matches ? 13 : 14;
+    const zeilenMax = F.schmal() ? 3 : 2;
+    const kap = w => { mctx.font = px + 'px "Vollkorn SC"'; return mctx.measureText(w.toLowerCase()).width + w.length * px * .04; };
+    mctx.font = px + 'px "Vollkorn"';
+    const leer = mctx.measureText(' ').width;
+    const teile = f.name.split(' ').map((w, i, a) => kap(i === a.length - 1 && f.jahre ? w + ',' : w));
+    if (f.jahre) teile.push(mctx.measureText(f.jahre).width);
+    const zeilen = b => { let n = 1, z = 0; teile.forEach(t => { if (!z) z = t; else if (z + leer + t <= b) z += leer + t; else { n++; z = t; } }); return n; };
+    let lo = Math.max(...teile), hi = teile.reduce((a, t) => a + t + leer, 0);
+    if (zeilen(lo) > zeilenMax) { for (let k = 0; k < 16; k++) { const m = (lo + hi) / 2; if (zeilen(m) <= zeilenMax) hi = m; else lo = m; } lo = hi; }
+    return Math.ceil(lo + px + 2);
+  }
+  function gierig(el, C) {
+    const reihen = [];
+    let r = [], x = 0;
+    for (const it of el) {
+      if (r.length) {
+        // Eine neue Zeit braucht Platz für ihr Schild, sonst beginnt sie auf dem nächsten Brett. Das Schild reicht bis ans Ende des Bretts
+        // (W = C + 44) und beginnt höchstens 18 px Lücke und 5 px Stütze hinter x: es hat also mindestens C − x + 21 px.
+        const eng = it.beginnt && C - x < STUETZE + Math.max(0, it.beginnt.schild - 33);
+        if (x + breiteIn(it, false) > C || eng) { reihen.push(r); r = []; x = 0; }
+      }
+      r.push(it); x += breiteIn(it, r.length === 1);
+    }
+    if (r.length) reihen.push(r);
+    return reihen;
+  }
+  // Gibt die Bretter zurück und in .fuellung die Breite, bis zu der sie gefüllt sind
+  function packen(abschnitte, W, s, fuellung) {
+    abschnitte.forEach(ab => { ab.schild = Math.min(schildBreite(ab.fach), W); });
+    const el = elementeAus(abschnitte, s);
+    const C = W - LUECKE_MAX - LEHNE;
+    let breite = C;
+    let reihen = gierig(el, C);
+    const n = reihen.length;
+    if (abschnitte.length > 1) {
+      // Über mehrere Zeiten den Rest gleichmäßig verteilen: die kleinste Breite suchen, die mit derselben Zahl Bretter auskommt
+      if (n > 1) {
+        let lo = C * (n - 1) / n, hi = C;
+        for (let k = 0; k < 14; k++) { const mitte = (lo + hi) / 2; if (gierig(el, mitte).length <= n) hi = mitte; else lo = mitte; }
+        breite = hi;
+        reihen = gierig(el, hi);
+      }
+    } else if (fuellung) {
+      // Eine einzelne Gruppe (Kinderzimmer, was noch wartet) füllt ihre Bretter so weit wie die Bretter darüber; nur das letzte bleibt kurz.
+      // Stünden auf dem letzten dann nur ein paar Bücher, rücken sie mit vollen Brettern noch auf das vorletzte.
+      const so = gierig(el, Math.min(C, fuellung));
+      const rest = so[so.length - 1].reduce((a, it) => a + breiteIn(it, false), 0);
+      if (so.length > reihen.length && rest < C * .25) breite = C;
+      else { breite = Math.min(C, fuellung); reihen = so; }
+    }
+    reihen.fuellung = breite;
+    return reihen;
+  }
+
+  function rueckenHtml(it, o) {
+    const x = it.x;
+    let cls = 'ruecken';
+    if (x.geist) cls += ' geist';
+    if (x.de) cls += ' de';
+    if (!x.geist && x.b.w) cls += ' strich-2';
+    else if (!x.geist && x.b.s === 5) cls += ' strich-1';
+    let st = `width:${it.w}px;height:${it.h}px;--grund:${x.grund};--tinte:${x.tinte}`;
+    const rechts = it.abstand + (o.luecke || 0);
+    if (rechts) st += `;margin-right:${rechts}px`;
+    if (o.neigung) { cls += ' lehnt'; st += `;margin-left:${o.versatz}px;--neigung:${(-o.neigung).toFixed(2)}deg`; }
+    if (offenId === x.id) cls += ' ist-offen';
+    const schrift = aufschrift(x, it.w, it.h - 24, x.geist);
+    const band = x.b.r === 'abgebrochen' ? `<span class="lesezeichen" style="left:${Math.round(wert(x.key + 'z', 18, 62))}%"></span>` : '';
+    const strich = x.geist ? geistLinien(it, x.key) : '';
+    return `<button type="button" class="${cls}" style="${st}" data-id="${x.id}" tabindex="-1" aria-label="${esc(x.label)}">${strich}${schrift}${band}</button>`;
+  }
+  // Bleistiftumriss: vier einzelne Striche, die an den Ecken leicht überstehen; manchmal fehlt der obere
+  function geistLinien(it, key) {
+    const { w, h } = it;
+    const j = (n, a) => wert(key + 'g' + n, -a, a);
+    const ue = n => wert(key + 'u' + n, 0, 2.6);
+    const f = v => v.toFixed(2);
+    let d = `M${f(.5 + j(1, .6))} ${f(h + ue(2))}L${f(.5 + j(3, .6))} ${f(-ue(4))}`;
+    d += `M${f(w - .5 + j(5, .6))} ${f(h + ue(6))}L${f(w - .5 + j(7, .6))} ${f(-ue(8))}`;
+    if (wert(key + 'oben', 0, 1) > .3) d += `M${f(-ue(9))} ${f(.5 + j(10, .5))}L${f(w + ue(11))} ${f(.5 + j(12, .5))}`;
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
+  }
+  const schildHtml = (f, x, bis, erstes) => `<p class="schild" style="${erstes && x ? `margin-left:${x}px;` : ''}width:${Math.max(60, bis - x)}px">${esc(f.name)}${f.jahre ? ', <span class="jahre">' + esc(f.jahre) + '</span>' : ''}</p>`;
+
+  function reiheHtml(reihe, schluessel, W, s, lehnt) {
+    const hmax = Math.max(...reihe.map(it => it.h));
+    const n = reihe.length;
+    // die eine Lücke auf dem Brett: nicht am Rand und nicht neben einer Buchstütze
+    const kand = [];
+    for (let j = 1; j < n - 2; j++) if (!reihe[j].beginnt && !reihe[j + 1].beginnt) kand.push(j);
+    const lueckeBei = kand.length ? kand[hash(schluessel + 'l') % kand.length] : -1;
+    const lueckeBreite = Math.round(wert(schluessel + 'lb', 10, 18));
+    const mitJahr = reihe.filter(it => it.x.b.j != null);
+    const von = mitJahr.length ? F.jahrText(mitJahr[0].x.b.j) : '', bis = mitJahr.length ? F.jahrText(mitJahr[mitJahr.length - 1].x.b.j) : '';
+    const spanne = !von ? '' : von === bis ? ', ' + von : `, ${von} bis ${bis}`;
+    const fach = reihe[0].x.fach;
+    const name = (fach === KIND ? 'Kinderzimmer' : fach === WARTET ? 'Was noch wartet' : 'Brett') + spanne;
+    let html = `<div class="reihe"><div class="buecher" data-gruppe role="group" aria-label="${esc(name)}" style="--h:${hmax + KOPF}px">`;
+    const marken = [];
+    let x = 0;
+    reihe.forEach((it, j) => {
+      if (it.beginnt && j > 0) { html += `<span class="stuetze" style="height:${Math.round(150 * s)}px" aria-hidden="true"></span>`; marken.push({ x: x + 5, fach: it.beginnt.fach || it.beginnt }); x += STUETZE; }
+      else if (it.beginnt) marken.push({ x: 0, fach: it.beginnt.fach || it.beginnt });
+      const o = {};
+      if (j === lueckeBei) o.luecke = lueckeBreite;
+      if (lehnt && j === n - 1 && j > 0) {
+        const nachbar = reihe[j - 1];
+        o.neigung = wert(schluessel + 'w', 4, 9);
+        const r = o.neigung * Math.PI / 180;
+        const kontakt = Math.min(it.h * Math.cos(r), nachbar.h);
+        o.versatz = Math.max(0, Math.round(kontakt * Math.tan(r) - nachbar.abstand));
+      }
+      html += rueckenHtml(it, o);
+      x += it.w + it.abstand + (o.luecke || 0) + (o.versatz || 0);
+    });
+    html += '</div><div class="brett"></div><div class="schilder">';
+    marken.forEach((m, i) => { html += schildHtml(m.fach, m.x, i < marken.length - 1 ? marken[i + 1].x : W, i === 0); });
+    return html + '</div></div>';
+  }
+
+  // Abschnitte für das Packen: jede Zeit ist ein Abschnitt mit eigenem Schild
+  const abschnitt = fach => ({ fach, buecher: fach.buecher });
+
+  // Lehnende Bücher: nur auf drei oder vier Brettern, nur schmale Taschenbücher am Ende einer Reihe
+  function lehnendeWaehlen(alleReihen) {
+    const geeignet = alleReihen.filter(({ reihe }) => {
+      const it = reihe[reihe.length - 1];
+      return reihe.length >= 6 && it.w < 20 && it.x.b.b !== 'h' && !(it.x.b.p > 900) && !it.beginnt;
+    }).sort((a, b) => hash(a.schluessel + 'lehne') - hash(b.schluessel + 'lehne'));
+    const zahl = alleReihen.length >= 12 ? 4 : 3;
+    const gewaehlt = new Set(), nummern = [];
+    for (const r of geeignet) {
+      if (gewaehlt.size >= zahl) break;
+      if (nummern.some(nr => Math.abs(nr - r.nr) < 2)) continue;
+      gewaehlt.add(r.schluessel); nummern.push(r.nr);
+    }
+    return gewaehlt;
+  }
+
+  // ---------- Das oberste Brett: eigene Werke mit dem Schuber, daneben der Nachttisch ----------
+  function eigeneHtml(W, s) {
+    // Die eigenen Bücher stehen etwas größer als die gelesenen. Alle tragen dasselbe Schild in derselben Größe.
+    const se = s * 1.3;
+    const klein = F.schmal();
+    const SW = klein ? 13 : 14, SH = klein ? 62 : 74, SF = klein ? 8.75 : 9.5;
+    const px = mm => Math.max(SW + 6, Math.round(mm * se));
+    const H = Math.round(185 * se), VB = px(28);
+    const schild = text => `<span class="titelschild"><span>${esc(text)}</span></span>`;
+    const offenCls = e => offenId === e.eintrag.id ? ' ist-offen' : '';
+    let werke = '', breiteOffen = 0;
+    EIGENE.forEach(e => {
+      if (e.schuber) {
+        const cw = px(e.dicke), hc = Math.round(e.hoehe * se);
+        const auf = cw + 3 + BAENDE.length * (VB + 1);
+        breiteOffen += auf + 1;
+        werke += `<div class="schuber-platz${schuberOffen ? ' offen' : ''}" style="--zu:${cw}px;--auf:${auf}px;--hc:${hc}px">`;
+        werke += `<button type="button" class="ruecken eigen schuber muster-${e.muster}" style="width:${cw}px;height:${hc}px" tabindex="-1" aria-expanded="${schuberOffen}" aria-label="Ursprungstrilogie, Schuber mit drei Bänden">${schild('Ursprung I–III')}</button>`;
+        BAENDE.forEach((b, k) => {
+          const innen = 3 + k * VB;
+          const weg = cw + 3 + k * (VB + 1) - innen;
+          const n = BAENDE.length;
+          const w = b.eintrag.werk;
+          werke += `<button type="button" class="ruecken eigen bandbuch muster-${b.muster}${offenCls(b)}" data-id="${b.eintrag.id}" style="width:${VB}px;height:${H}px;--innen:${innen}px;--weg:${weg}px;--hin:${(k * .55).toFixed(2)}s;--zurueck:${((n - 1 - k) * .3).toFixed(2)}s" tabindex="-1"${schuberOffen ? '' : ' aria-hidden="true"'} aria-label="${esc('Ursprung, Band ' + b.band + ': ' + (w.buchtitel || ''))}">${schild(w.titel || 'Ursprung ' + b.band)}</button>`;
+        });
+        werke += '</div>';
+      } else {
+        const w = px(e.dicke), h = Math.round(e.hoehe * se);
+        const wk = e.eintrag.werk;
+        breiteOffen += w + 1;
+        werke += `<button type="button" class="ruecken eigen muster-${e.muster}${offenCls(e)}" data-id="${e.eintrag.id}" style="width:${w}px;height:${h}px" tabindex="-1" aria-label="${esc((wk.buchtitel || wk.titel || e.id) + ', ' + (wk.art || ''))}">${schild(wk.titel || e.id)}</button>`;
+      }
+    });
+    const stilEigen = `--sw:${SW}px;--sh:${SH}px;--sf:${SF}px`;
+    const hoeheEigen = Math.max(...EIGENE.map(e => Math.round(e.hoehe * se)));
+
+    // Der Nachttisch: zwei Stapel quer, unten das längste Buch. Ist der Platz zu schmal, liegt er etwas kleiner.
+    // Jedes liegende Buch ist mindestens 11 px dick: so trägt auch ein dünnes wenigstens den Namen in 6,5 px.
+    function tisch(m) {
+      const liegend = TISCH.buecher.map(x => ({ x, dicke: Math.max(11, Math.round(x.mm.b * m)), laenge: Math.round(x.mm.h * m) }))
+        .sort((a, b) => b.laenge - a.laenge || b.dicke - a.dicke);
+      const stapel = [[], []], hoehe = [0, 0];
+      liegend.forEach(it => { const k = hoehe[0] <= hoehe[1] ? 0 : 1; stapel[k].push(it); hoehe[k] += it.dicke; });
+      // versetzt gelegt: der Versatz verschiebt nur das Bild, deshalb zählt er beim rechten Stapel zur Breite
+      stapel.forEach(st => st.forEach((it, j) => { it.v = Math.round(wert(it.x.key + 'v', 2, 6)) * (j % 2 ? -1 : 1) + 6; }));
+      const breite = Math.max(0, ...stapel[0].map(it => it.laenge)) + 12 + Math.max(0, ...stapel[1].map(it => it.laenge + it.v)) + 7;
+      return { stapel, hoehe, breite };
+    }
+    let T = tisch(s);
+    if (T.breite > W) T = tisch(s * W / T.breite);
+    const { stapel, hoehe } = T;
+    const tischHtml = stapel.map(st => '<div class="stapel">' + st.map(it => {
+      const x = it.x;
+      const schrift = aufschrift(x, it.dicke, it.laenge - 22);
+      return `<button type="button" class="ruecken liegt${x.de ? ' de' : ''}${offenId === x.id ? ' ist-offen' : ''}" data-id="${x.id}" style="width:${it.laenge}px;height:${it.dicke}px;--grund:${x.grund};--tinte:${x.tinte};--versatz:${it.v}px" tabindex="-1" aria-label="${esc(x.label)}">${schrift}</button>`;
+    }).join('') + '</div>').join('');
+    const tischBreite = T.breite;
+    const tischHoehe = Math.max(...hoehe);
+    // Die Gruppe hält den Platz für den offenen Schuber frei: so rückt der Nachttisch nicht, wenn die Bände herausgleiten
+    const eigenGruppe = `<div class="gruppe eigen-gruppe" data-gruppe role="group" aria-label="Was ich schreibe" style="${stilEigen};width:${breiteOffen}px">${werke}</div>`;
+    const tischGruppe = links => `<div class="gruppe stapelgruppe" data-gruppe role="group" aria-label="Auf dem Nachttisch"${links ? ` style="margin-left:${links}px"` : ''}>${tischHtml}</div>`;
+    const SCHREIBE = { name: 'Was ich schreibe' };
+    const luft = Math.round(W * .06);
+    if (W >= breiteOffen + tischBreite + luft + 8) {
+      return `<div class="reihe"><div class="buecher" style="--h:${Math.max(hoeheEigen + KOPF_EIGEN, tischHoehe + KOPF)}px">${eigenGruppe}${tischGruppe(luft)}</div><div class="brett"></div>` +
+        `<div class="schilder">${schildHtml(SCHREIBE, 0, breiteOffen + luft, true)}${schildHtml(TISCH, 0, tischBreite, false)}</div></div>`;
+    }
+    return `<div class="reihe"><div class="buecher" style="--h:${hoeheEigen + KOPF_EIGEN}px">${eigenGruppe}</div><div class="brett"></div><div class="schilder">${schildHtml(SCHREIBE, 0, W, true)}</div></div>` +
+      `<div class="reihe"><div class="buecher" style="--h:${tischHoehe + KOPF}px">${tischGruppe(0)}</div><div class="brett"></div><div class="schilder">${schildHtml(TISCH, 0, W, true)}</div></div>`;
+  }
+
+  // ---------- Bauen ----------
+  let breiteVorher = 0;
+  function regalBauen(erzwingen) {
+    const ziel = $('#faecher');
+    const W = Math.floor(ziel.clientWidth);
+    if (!W || (!erzwingen && W === breiteVorher)) return;
+    breiteVorher = W;
+    // Fokus merken: nach dem Neubau steht derselbe Rücken wieder im Fokus
+    const fokus = document.activeElement && document.activeElement.closest && document.activeElement.closest('.regal button.ruecken');
+    const fokusId = fokus ? (fokus.classList.contains('schuber') ? 'schuber' : fokus.dataset.id) : null;
+    tippZu();
+    const s = massstab();
+    $('#eigenes').innerHTML = eigeneHtml(W, s);
+    const gelesen = packen(EPOCHEN.filter(f => f.buecher.length).map(abschnitt), W, s);
+    const lesen = gelesen.map((reihe, i) => ({ reihe, schluessel: 'g' + i, nr: i }));
+    const kind = packen([abschnitt(KIND)], W, s, gelesen.fuellung).map((reihe, i) => ({ reihe, schluessel: 'k' + i, nr: 100 + i }));
+    const warte = WARTET.buecher.length ? packen([abschnitt(WARTET)], W, s, gelesen.fuellung).map((reihe, i) => ({ reihe, schluessel: 'w' + i, nr: 200 + i })) : [];
+    const lehnen = lehnendeWaehlen(lesen.concat(kind));
+    ziel.innerHTML = lesen.map(r => reiheHtml(r.reihe, r.schluessel, W, s, lehnen.has(r.schluessel))).join('');
+    $('#kinderzimmer').innerHTML = kind.map(r => reiheHtml(r.reihe, r.schluessel, W, s, lehnen.has(r.schluessel))).join('');
+    $('#wartet').innerHTML = warte.map(r => reiheHtml(r.reihe, r.schluessel, W, s, false)).join('');
+    rovingSetzen();
+    if (offenId != null && F.karteikarte.offen()) {
+      const el = regal.querySelector('[data-id="' + offenId + '"]');
+      if (el) karteAuf(ALLE[offenId], el); else F.karteikarte.schliessen();
+    } else if (fokusId != null) {
+      const el = fokusId === 'schuber' ? $('.schuber', regal) : regal.querySelector('[data-id="' + fokusId + '"]');
+      if (el) { gruppeZeigen(el); el.focus({ preventScroll: true }); }
+    }
+  }
+
+  // ---------- Tastatur: ein Tab-Halt je Brett, die Pfeiltasten gehen von Buch zu Buch ----------
+  const knoepfe = gr => $$('button.ruecken', gr).filter(b => b.getAttribute('aria-hidden') !== 'true');
+  function rovingSetzen() { $$('[data-gruppe]', regal).forEach(gr => knoepfe(gr).forEach((b, i) => { b.tabIndex = i === 0 ? 0 : -1; })); }
+  function gruppeZeigen(b) { const gr = b.closest('[data-gruppe]'); if (gr) knoepfe(gr).forEach(k => { k.tabIndex = k === b ? 0 : -1; }); }
+  regal.addEventListener('focusin', e => { const b = e.target.closest('button.ruecken'); if (b) gruppeZeigen(b); });
+  regal.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const b = e.target.closest('button.ruecken');
+    const gr = b && b.closest('[data-gruppe]');
+    if (!gr) return;
+    const kn = knoepfe(gr), i = kn.indexOf(b);
+    let ziel = null;
+    if (e.key === 'ArrowRight') ziel = kn[Math.min(kn.length - 1, i + 1)];
+    else if (e.key === 'ArrowLeft') ziel = kn[Math.max(0, i - 1)];
+    else if (e.key === 'Home') ziel = kn[0];
+    else if (e.key === 'End') ziel = kn[kn.length - 1];
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      const alle = $$('[data-gruppe]', regal);
+      const ng = alle[alle.indexOf(gr) + (e.key === 'ArrowDown' ? 1 : -1)];
+      if (ng) {
+        const mx = b.getBoundingClientRect().left + b.offsetWidth / 2;
+        let bester = null;
+        knoepfe(ng).forEach(k => { const r = k.getBoundingClientRect(); const d = Math.abs(r.left + r.width / 2 - mx); if (!bester || d < bester.d) bester = { k, d }; });
+        ziel = bester && bester.k;
+      }
+    }
+    if (!ziel) return;
+    e.preventDefault();
+    if (ziel !== b) ziel.focus();
+  });
+
+  // ---------- Name über dem Rücken ----------
+  const tipp = $('#rueckentipp');
+  function tippText(x) {
+    if (x.eigen) {
+      // Titel kursiv wie unter „Was ich schreibe“ auf der Startseite; Erzählungen und Länder stehen gerade
+      const w = x.werk || {};
+      if (x.band) return `<i>${esc(w.buchtitel || '')}</i>, Band ${esc(x.band)} der Trilogie`;
+      const t = w.buchtitel || w.titel || '';
+      if (x.werkId === 'erzaehlungen') return esc(t);
+      return x.werkId === 'satoshi' || x.werkId === 'untertext' ? `<i>${esc(t)}</i>, ${esc(w.art || '')}` : esc(w.art || t);
+    }
+    // Auf dem Nachttisch sagt schon das Schild, dass ich es gerade lese
+    return F.buch.zeile(x.fach === TISCH ? Object.assign({}, x.b, { r: '' }) : x.b).html;
+  }
+  function tippAuf(el) {
+    if (!tipp || F.karteikarte.offen()) return;
+    const x = el.classList.contains('schuber') ? null : ALLE[+el.dataset.id];
+    tipp.innerHTML = x ? tippText(x) : '<i>Ursprung</i>, drei Bände im Schuber';
+    tipp.hidden = false;
+    const rr = regal.getBoundingClientRect(), r = el.getBoundingClientRect();
+    const tb = tipp.offsetWidth, th = tipp.offsetHeight;
+    // mittig über dem Rücken, aber innerhalb der Kanten des Regals
+    const st = getComputedStyle(regal), pl = parseFloat(st.paddingLeft) || 0, pr = parseFloat(st.paddingRight) || 0;
+    const mittig = mitte => Math.max(pl, Math.min(rr.width - pr - tb, mitte - tb / 2));
+    let links = mittig(r.left - rr.left + r.width / 2);
+    // über dem Rücken, der beim Zeigen um 6 px steigt
+    let oben = r.top - rr.top - th - 10;
+    if (el.classList.contains('liegt')) {
+      // Liegende Bücher: der Name steht rechts neben dem Stapel auf der Höhe des Buchs und deckt so die Bücher darüber nicht zu.
+      // Fehlt dort der Platz, steht er über dem ganzen Stapel.
+      const gruppe = el.closest('.stapelgruppe');
+      const kanten = $$('button.liegt', gruppe).map(b => b.getBoundingClientRect());
+      const rechts = Math.max(...kanten.map(k => k.right)) - rr.left + 8;
+      if (rechts + tb <= rr.width - pr) { links = rechts; oben = r.top - rr.top + r.height / 2 - th / 2; }
+      else oben = Math.min(...kanten.map(k => k.top)) - rr.top - th - 4;
+    }
+    tipp.style.transform = `translate(${Math.round(links)}px, ${Math.round(oben)}px)`;
+  }
+  function tippZu() { if (tipp) tipp.hidden = true; }
+  const zeigtMaus = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  regal.addEventListener('pointerover', e => {
+    if (e.pointerType && e.pointerType !== 'mouse') return;
+    const b = e.target.closest('button.ruecken');
+    if (b && zeigtMaus()) tippAuf(b);
+  });
+  regal.addEventListener('pointerout', e => {
+    const b = e.target.closest('button.ruecken');
+    if (b && !(e.relatedTarget && b.contains(e.relatedTarget))) tippZu();
+  });
+  regal.addEventListener('focusin', e => { const b = e.target.closest('button.ruecken'); if (b && b.matches(':focus-visible')) tippAuf(b); });
+  regal.addEventListener('focusout', tippZu);
+
+  // ---------- Karteikarte ----------
+  // Erzählungen und Länder haben noch keine eigene Seite: die Karte führt zu ihrem Eintrag unter „Was ich schreibe“ auf der Startseite.
+  // Der Eintrag zu Untertext sagt nur, was die Karte schon sagt; dort gibt es keinen Verweis, bis das Journal eine Seite hat.
+  const AUF_DER_STARTSEITE = { erzaehlungen: 'erzaehlungen', laender: 'laender' };
+  function inhaltFuer(x) {
+    if (x.eigen) {
+      const k = F.werkKarte(x.werkId) || { signatur: 'DJ', titel: (x.werk && x.werk.titel) || '', eigen: true };
+      // Die Seite sagt überall „Erzählungen“; die Gattung „Kurzgeschichten“ wiederholt nur den Titel
+      if (x.werkId === 'erzaehlungen') k.unter = '';
+      if (AUF_DER_STARTSEITE[x.werkId] && !k.verweis) k.verweis = { href: F.SEITEN.start + '#' + AUF_DER_STARTSEITE[x.werkId], text: 'Auf der Startseite' };
+      // Das Thema eines Bandes ist ein Satz und endet mit einem Punkt
+      if (typeof k.notiz === 'string' && k.notiz && !/[.!?…]$/.test(k.notiz)) k.notiz += '.';
+      return k;
+    }
+    return F.buch.karte(x.b);
+  }
+  function karteAuf(x, el) {
+    tippZu();
+    offenId = x.id;
+    const inhalt = inhaltFuer(x);
+    inhalt.beimSchliessen = () => { offenId = null; };
+    F.karteikarte.oeffnen(inhalt, el);
+    // Auf dem Telefon liegt die Karte unten: das Buch rückt darüber, damit man sieht, welches es ist
+    const k = $('#karteikarte');
+    if (k && k.classList.contains('als-blatt')) {
+      const r = el.getBoundingClientRect(), frei = window.innerHeight - k.offsetHeight - 16;
+      const dy = r.bottom > frei ? r.bottom - frei : r.top < 24 ? r.top - 24 : 0;
+      if (dy) window.scrollBy({ top: dy, behavior: F.ruhig() ? 'auto' : 'smooth' });
+    }
+  }
+  function schuberUmschalten(t) {
+    schuberOffen = !schuberOffen;
+    const platz = t.parentElement;
+    platz.classList.toggle('offen', schuberOffen);
+    t.setAttribute('aria-expanded', String(schuberOffen));
+    $$('.bandbuch', platz).forEach(b => { b.tabIndex = -1; if (schuberOffen) b.removeAttribute('aria-hidden'); else b.setAttribute('aria-hidden', 'true'); });
+    if (!schuberOffen && offenId != null && ALLE[offenId] && ALLE[offenId].band) F.karteikarte.schliessen();
+    gruppeZeigen(t);
+  }
+  // Die Karte hängt am Ende der Seite: wer mit Tab aus ihr herausgeht, kommt zum Buch zurück und nicht ans Seitenende.
+  // Gehört in FSeite.karteikarte (siehe Bericht); macht die gemeinsame Karte es selbst, tritt dieser Teil zurück.
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Tab' || e.defaultPrevented || !F.karteikarte.offen()) return;
+    const k = $('#karteikarte'), a = document.activeElement;
+    if (!k || !k.contains(a)) return;
+    const fokusbar = $$('button, a[href]', k);
+    const raus = e.shiftKey ? (a === k || a === fokusbar[0]) : (a === fokusbar[fokusbar.length - 1] || !fokusbar.length);
+    if (!raus) return;
+    e.preventDefault();
+    F.karteikarte.schliessen();
+  });
+
+  regal.addEventListener('click', e => {
+    const t = e.target.closest('button.ruecken');
+    if (!t) return;
+    if (t.classList.contains('schuber')) { schuberUmschalten(t); return; }
+    const x = ALLE[+t.dataset.id];
+    if (!x) return;
+    if (F.karteikarte.offen() && F.karteikarte.ausloeser() === t) { F.karteikarte.schliessen(); return; }
+    karteAuf(x, t);
+  });
+
+  regalBauen(true);
+  // Die Rückenschrift wird gemessen: nach dem Laden der Schriften neu bauen
+  F.schriften(3000).then(() => { MESS.clear(); regalBauen(true); });
+  let warte = null;
+  window.addEventListener('resize', () => { clearTimeout(warte); warte = setTimeout(() => regalBauen(false), 140); });
+})();
+</script>
+</body>
+</html>

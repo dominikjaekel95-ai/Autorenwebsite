@@ -88,6 +88,8 @@ button { font: inherit; color: inherit; }
 .orte button:hover .orte__name, .orte button[aria-current="true"] .orte__name { color: var(--akzent); }
 .orte__name { font-size: .95rem; }
 .orte__koord { font-family: var(--f-code); font-size: .75rem; color: var(--graphit-3); font-variant-numeric: tabular-nums; align-self: center; }
+.orte__notiz { display: block; font-family: var(--f-code); font-size: .7rem; color: var(--graphit-3); }
+.rundflug { margin-top: 1rem; }
 .orte__leer { padding: .9rem 0; color: var(--graphit-2); font-size: .95rem; border-bottom: 1px solid var(--linie); }
 .bedienung { margin: 0; color: var(--graphit-3); }
 
@@ -240,6 +242,7 @@ button { font: inherit; color: inherit; }
         <div id="ebene-panel" role="tabpanel" aria-labelledby="tab-leben">
           <p class="ebene__text" id="ebeneText"></p>
           <ul class="orte" id="orteListe"></ul>
+          <button class="knopf knopf--leise rundflug" type="button" id="rundflug" aria-pressed="false" hidden>Alle Orte abfliegen</button>
         </div>
 
         <p class="bedienung code">Ziehen zum Drehen · Scrollen oder zwei Finger zum Zoomen · Ort antippen zum Hinfliegen</p>
@@ -445,14 +448,23 @@ button { font: inherit; color: inherit; }
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <script src="daten/laender-de.js"></script>
 <script src="daten/welt-110m.js"></script>
+<script src="daten/uk-landesteile.js"></script>
 <script>
 (() => {
   // ---------- Daten, die Dominik pflegt ----------
-  // Bereiste Länder als ISO-Codes. Hier kommt die Liste aus dem Couchsurfing-Profil hinein.
-  const BEREIST = ['DE', 'ES', 'TW', 'LK', 'BJ'];
+  // Bereiste Länder als ISO-Codes, abgelesen von der Rubbelkarte. Landesteile des Vereinigten Königreichs einzeln.
+  const BEREIST = [
+    'AM', 'AT', 'BE', 'BG', 'HR', 'CZ', 'DK', 'EE', 'FI', 'FR', 'GE', 'DE', 'HU', 'IE', 'IT', 'LV', 'LT', 'MC', 'NL', 'PL', 'PT', 'RO', 'RU', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH', 'TR', 'VA',
+    'GB-ENG', 'GB-SCT', 'GB-NIR',
+    'BD', 'CN', 'HK', 'IN', 'ID', 'IL', 'KW', 'MY', 'OM', 'KR', 'LK', 'TW', 'TH', 'AE', 'VN',
+    'BJ', 'CV', 'EG', 'ET', 'GH', 'KE', 'MA', 'ZA', 'TZ', 'TG', 'TN',
+    'CA', 'US', 'AR', 'UY'
+  ];
+  // Zu klein für die grobe Weltkarte: dort als Punkt, beim Zoomen als Fläche
+  const WINZIG = { MC: [7.42, 43.73], VA: [12.45, 41.90], HK: [114.17, 22.32], CV: [-23.6, 15.1] };
   const EBENEN = {
     leben: {
-      text: 'Orte, an denen ich gelebt, geschrieben oder länger Station gemacht habe. Die grau gefüllten Länder habe ich bereist.',
+      text: 'Orte, die zu meinem Leben gehören. Die grau gefüllten Länder habe ich bereist.',
       blick: { mitte: [52, 26], k: 1 },
       orte: [
         { name: 'Berlin', lat: 52.52, lon: 13.40, rang: 1 },
@@ -466,9 +478,21 @@ button { font: inherit; color: inherit; }
       ]
     },
     satoshi: {
-      text: 'Die Schauplätze des Romans <em>Satoshi</em>. Beim Umschalten fliegt der Globus zum ersten Ort, danach von Kapitel zu Kapitel.',
-      blick: { mitte: [20, 20], k: 1 },
-      orte: []
+      text: 'Die Schauplätze des Romans <em>Satoshi</em>. Die Kernhandlung spielt 2007 bis 2010 in Patagonien.',
+      blick: { mitte: [-72, 2], k: 1 },
+      orte: [
+        { name: 'Buenos Aires', lat: -34.60, lon: -58.38, rang: 1 },
+        { name: 'Black Rock Desert', notiz: 'Nevada', lat: 40.79, lon: -119.20, rang: 1 },
+        { name: 'Berlin', lat: 52.52, lon: 13.40, rang: 1 },
+        { name: 'New York', lat: 40.71, lon: -74.01, rang: 1 },
+        { name: 'Kobe', lat: 34.69, lon: 135.20, rang: 1 },
+        { name: 'London', lat: 51.51, lon: -0.13, rang: 1 },
+        { name: 'Penang', lat: 5.41, lon: 100.33, rang: 1 },
+        { name: 'Bariloche', notiz: 'Patagonien · Kernhandlung 2007–2010', lat: -41.13, lon: -71.31, rang: 1 },
+        { name: 'Anden an der Grenze zu Chile', kurz: 'Anden', notiz: 'Patagonien', lat: -41.16, lon: -71.88, rang: 3 },
+        { name: 'Temple City', notiz: 'San Gabriel Valley', lat: 34.11, lon: -118.06, rang: 2 },
+        { name: 'Fort Meade', notiz: 'Maryland', lat: 39.11, lon: -76.73, rang: 2 }
+      ]
     },
     ursprung: {
       text: '<em>Göbekli Tepe</em>, Südostanatolien. Rund 11.500 Jahre alt, älter als Schrift, Rad und Töpferei. Ein Ort der Ursprungstrilogie.',
@@ -513,21 +537,54 @@ button { font: inherit; color: inherit; }
       const li = document.createElement('li');
       const b = document.createElement('button');
       b.type = 'button';
+      b.dataset.ort = o.name;
       b.innerHTML = '<span class="orte__name"></span><span class="orte__koord"></span>';
       b.querySelector('.orte__name').textContent = o.name;
+      if (o.notiz) {
+        const n = document.createElement('span');
+        n.className = 'orte__notiz';
+        n.textContent = o.notiz;
+        b.querySelector('.orte__name').appendChild(n);
+      }
       b.querySelector('.orte__koord').textContent = koord(o);
-      b.addEventListener('click', () => ortAnfliegen(o));
+      b.addEventListener('click', () => { rundflugStoppen(); ortAnfliegen(o); });
       li.appendChild(b);
       liste.appendChild(li);
     });
+    $('rundflug').hidden = !globus || EBENEN[name].orte.length < 2;
+    rundflugStoppen();
     if (globus && fliegenErlaubt) globus.fliegen(EBENEN[name].blick.mitte, EBENEN[name].blick.k);
     if (globus) globus.zeichnen();
   }
-  function ortAnfliegen(o) {
+  function ortAnfliegen(o, zielK) {
     aktiverOrt = o.name;
-    document.querySelectorAll('#orteListe button').forEach(b => b.setAttribute('aria-current', String(b.querySelector('.orte__name').textContent === o.name)));
-    if (globus) globus.fliegen([o.lon, o.lat], Math.max(globus.k(), 7));
+    document.querySelectorAll('#orteListe button').forEach(b => b.setAttribute('aria-current', String(b.dataset.ort === o.name)));
+    return globus ? globus.fliegen([o.lon, o.lat], zielK || Math.max(globus.k(), 7)) : Promise.resolve();
   }
+
+  // Rundflug: alle Orte der Ebene nacheinander, jede Berührung des Globus bricht ab
+  let rundflugLaeuft = 0;
+  function rundflugStoppen() {
+    rundflugLaeuft = 0;
+    const knopf = $('rundflug');
+    knopf.textContent = 'Alle Orte abfliegen';
+    knopf.setAttribute('aria-pressed', 'false');
+  }
+  async function rundflug() {
+    if (rundflugLaeuft) { rundflugStoppen(); return; }
+    const nummer = rundflugLaeuft = Date.now();
+    const knopf = $('rundflug');
+    knopf.textContent = 'Rundflug anhalten';
+    knopf.setAttribute('aria-pressed', 'true');
+    for (const o of EBENEN[ebene].orte) {
+      if (rundflugLaeuft !== nummer) return;
+      await ortAnfliegen(o, 5);
+      if (rundflugLaeuft !== nummer) return;
+      await new Promise(r => setTimeout(r, ruhig ? 2500 : 1400));
+    }
+    if (rundflugLaeuft === nummer) { rundflugStoppen(); if (globus) globus.fliegen(EBENEN[ebene].blick.mitte, EBENEN[ebene].blick.k); }
+  }
+  $('rundflug').addEventListener('click', rundflug);
   document.querySelectorAll('.ebene').forEach((b, i, alle) => {
     b.addEventListener('click', () => ebeneZeigen(b.dataset.ebene));
     b.addEventListener('keydown', e => {
@@ -565,19 +622,25 @@ button { font: inherit; color: inherit; }
     let hover = null;
     let flug = null;
 
+    // Das Vereinigte Königreich wird durch England, Schottland, Wales und Nordirland ersetzt
+    const UK = window.UK_LANDESTEILE;
     function datensatz(topo) {
-      const laender = topojson.feature(topo, topo.objects.countries).features;
+      let laender = topojson.feature(topo, topo.objects.countries).features;
       laender.forEach(f => {
         const eintrag = DE.nach_id[f.id] || DE.nach_name[f.properties.name] || ['', f.properties.name];
         f.iso = eintrag[0];
         f.name = eintrag[1] || f.properties.name;
-        f.bereist = BEREIST.includes(f.iso);
       });
+      if (UK) {
+        laender = laender.filter(f => f.iso !== 'GB').concat(UK.features.map(f => ({ ...f, iso: f.properties.iso, name: f.properties.name })));
+      }
+      laender.forEach(f => { f.bereist = BEREIST.includes(f.iso); });
       return {
         laender,
-        grenzen: topojson.mesh(topo, topo.objects.countries, (a, b) => a !== b),
+        grenzen: UK ? { type: 'MultiLineString', coordinates: topojson.mesh(topo, topo.objects.countries, (a, b) => a !== b).coordinates.concat(UK.innen.coordinates) } : topojson.mesh(topo, topo.objects.countries, (a, b) => a !== b),
         kueste: topojson.mesh(topo, topo.objects.countries, (a, b) => a === b),
-        bereist: { type: 'FeatureCollection', features: laender.filter(f => f.bereist) }
+        bereist: { type: 'FeatureCollection', features: laender.filter(f => f.bereist) },
+        isos: new Set(laender.map(f => f.iso))
       };
     }
     const grob = datensatz(window.WELT_110M);
@@ -613,7 +676,8 @@ button { font: inherit; color: inherit; }
       flaeche.classList.toggle('ist-gezoomt', k > 1.15);
 
       ctx.beginPath(); d.laender.forEach(f => pfad(f)); ctx.fillStyle = FARBE.land; ctx.fill();
-      ctx.beginPath(); pfad(d.bereist); ctx.fillStyle = FARBE.bereist; ctx.fill();
+      const zeigeBereist = ebene === 'leben';
+      if (zeigeBereist) { ctx.beginPath(); pfad(d.bereist); ctx.fillStyle = FARBE.bereist; ctx.fill(); }
       if (hover) { ctx.beginPath(); pfad(hover); ctx.fillStyle = 'rgba(44, 60, 203, .12)'; ctx.fill(); }
 
       ctx.beginPath(); pfad(d.grenzen); ctx.strokeStyle = FARBE.grenze; ctx.lineWidth = k > 3 ? .7 : .45; ctx.stroke();
@@ -622,8 +686,17 @@ button { font: inherit; color: inherit; }
 
       ctx.beginPath(); pfad({ type: 'Sphere' }); ctx.strokeStyle = FARBE.graphit; ctx.lineWidth = 1; ctx.stroke();
 
+      // Bereiste Kleinstaaten, die in diesem Maßstab keine Fläche haben
+      Object.entries(WINZIG).forEach(([iso, pos]) => {
+        if (!zeigeBereist || !BEREIST.includes(iso) || d.isos.has(iso) || d3.geoDistance(pos, mitte) > Math.PI / 2 - .02) return;
+        const p = projektion(pos);
+        ctx.beginPath(); ctx.arc(p[0], p[1], 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = FARBE.bereist; ctx.fill();
+        ctx.lineWidth = .8; ctx.strokeStyle = FARBE.graphit3; ctx.stroke();
+      });
+
       // Ländernamen bereister Länder ab mittlerem Zoom
-      if (k >= 2.6) {
+      if (k >= 2.6 && zeigeBereist) {
         ctx.font = 'italic 300 13px Newsreader, Georgia, serif';
         ctx.fillStyle = FARBE.graphit2;
         ctx.textAlign = 'center';
@@ -648,7 +721,7 @@ button { font: inherit; color: inherit; }
         const aktiv = o.name === aktiverOrt;
         ctx.beginPath(); ctx.arc(p[0], p[1], aktiv ? 7 : 5.5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(44, 60, 203, .14)'; ctx.fill();
         ctx.beginPath(); ctx.arc(p[0], p[1], 2.6, 0, Math.PI * 2); ctx.fillStyle = FARBE.akzent; ctx.fill();
-        const text = o.name.toUpperCase();
+        const text = (o.kurz || o.name).toUpperCase();
         const breite = ctx.measureText(text).width + 2;
         const rechts = p[0] < seite - breite - 24;
         const box = rechts ? [p[0] + 9, p[1] - 8, p[0] + 9 + breite, p[1] + 8] : [p[0] - 9 - breite, p[1] - 8, p[0] - 9, p[1] + 8];
@@ -667,7 +740,7 @@ button { font: inherit; color: inherit; }
     // Ziehen dreht, Scrollen und Pinch zoomen (ein d3.zoom für beides)
     const zoom = d3.zoom().scaleExtent([.9, 24]).filter(e => !e.button && e.type !== 'dblclick');
     let letzte = d3.zoomIdentity;
-    zoom.on('start', () => { flug && flug.stop(); flug = null; });
+    zoom.on('start', () => { flugBeenden(); rundflugStoppen(); });
     zoom.on('zoom', e => {
       const t = e.transform;
       if (t.k !== letzte.k) {
@@ -689,23 +762,28 @@ button { font: inherit; color: inherit; }
     }
 
     // Kamerafahrt: über den Großkreis drehen, unterwegs kurz herauszoomen
+    let flugEnde = null;
+    function flugBeenden() { if (flug) { flug.stop(); flug = null; } if (flugEnde) { const f = flugEnde; flugEnde = null; f(); } }
     function fliegen(ziel, zielK) {
-      flug && flug.stop();
+      flugBeenden();
       if (zielK > 1.6) feinLaden();
       const start = mitte.slice(), startK = k;
       const weg = d3.geoInterpolate(start, ziel);
       const abstand = d3.geoDistance(start, ziel);
-      const dauer = ruhig ? 0 : Math.min(2200, 900 + abstand * 700);
+      const dauer = ruhig ? 0 : Math.min(2400, 900 + abstand * 700);
       const delle = Math.min(Math.log(Math.max(startK, zielK)), abstand * 1.1);
-      if (!dauer) { mitte = ziel.slice(); k = zielK; zoomStandSetzen(); zeichnen(); return; }
-      flug = d3.timer(verstrichen => {
-        const t = Math.min(1, verstrichen / dauer);
-        const e = d3.easeCubicInOut(t);
-        mitte = weg(e);
-        k = Math.max(.9, Math.exp((1 - e) * Math.log(startK) + e * Math.log(zielK) - delle * Math.sin(Math.PI * e)));
-        zoomStandSetzen();
-        zeichnen();
-        if (t >= 1) { flug.stop(); flug = null; }
+      if (!dauer) { mitte = ziel.slice(); k = zielK; zoomStandSetzen(); zeichnen(); return Promise.resolve(); }
+      return new Promise(fertig => {
+        flugEnde = fertig;
+        flug = d3.timer(verstrichen => {
+          const t = Math.min(1, verstrichen / dauer);
+          const e = d3.easeCubicInOut(t);
+          mitte = weg(e);
+          k = Math.max(.9, Math.exp((1 - e) * Math.log(startK) + e * Math.log(zielK) - delle * Math.sin(Math.PI * e)));
+          zoomStandSetzen();
+          zeichnen();
+          if (t >= 1) flugBeenden();
+        });
       });
     }
 

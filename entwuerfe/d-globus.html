@@ -21,6 +21,7 @@
   --linie: #DEDFE1;
   --land: #F1F1F2;
   --bereist: #D3D5D9;
+  --reise: #D5D8F5;
   --grenze: #BFC1C5;
   --akzent: #2C3CCB;
 
@@ -117,16 +118,14 @@ button { font: inherit; color: inherit; }
 .globus figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1.5rem; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--linie); color: var(--graphit-2); }
 .globus__ersatz { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 2rem; color: var(--graphit-2); border: 1px solid var(--linie); border-radius: 50%; }
 .zahl { font-variant-numeric: tabular-nums; color: var(--graphit); }
-.register { margin-top: .9rem; border-top: 1px solid var(--linie); }
-.register summary { cursor: pointer; padding: .7rem 0; color: var(--graphit-2); list-style: none; }
-.register summary::-webkit-details-marker { display: none; }
-.register summary::before { content: "+"; display: inline-block; width: 1.1rem; color: var(--graphit-3); }
-.register[open] summary::before { content: "−"; }
-.register__inhalt { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 1.4rem 2rem; padding: .4rem 0 1rem; }
-.register h3 { margin: 0 0 .4rem; font-family: var(--f-code); font-size: .72rem; font-weight: 500; color: var(--graphit-3); }
-.register ul { list-style: none; margin: 0; padding: 0; }
-.register li button { display: block; width: 100%; padding: .22rem 0; border: 0; background: none; cursor: pointer; text-align: left; font-size: .92rem; color: var(--graphit); }
-.register li button:hover, .register li button[aria-current="true"] { color: var(--akzent); }
+.register__inhalt { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: 1.2rem 1.5rem; padding-top: .9rem; border-top: 1px solid var(--linie); }
+.register__inhalt h3 { margin: 0 0 .35rem; font-family: var(--f-code); font-size: .72rem; font-weight: 500; color: var(--graphit-3); }
+.register__inhalt ul { list-style: none; margin: 0; padding: 0; }
+.register__inhalt li button { display: block; width: 100%; padding: .2rem 0; border: 0; background: none; cursor: pointer; text-align: left; font-size: .92rem; color: var(--graphit); }
+.register__inhalt li button:hover, .register__inhalt li button[aria-current="true"] { color: var(--akzent); }
+.zahl-knopf { padding: 0; border: 0; background: none; cursor: pointer; font: inherit; color: inherit; text-align: left; }
+.zahl-knopf:hover .zahl { color: var(--akzent); }
+.ebene { flex: 1 1 auto; }
 
 /* Abschnitte */
 .abschnitt { border-top: 1px solid var(--linie); }
@@ -251,6 +250,7 @@ button { font: inherit; color: inherit; }
         <div>
           <div class="ebenen" role="tablist" aria-label="Ebenen des Globus">
             <button class="ebene" role="tab" id="tab-leben" aria-controls="ebene-panel" aria-selected="true" data-ebene="leben"><span class="ebene__punkt" aria-hidden="true"></span>Mein Leben</button>
+            <button class="ebene" role="tab" id="tab-reisen" aria-controls="ebene-panel" aria-selected="false" data-ebene="reisen"><span class="ebene__punkt" aria-hidden="true"></span>Reisen</button>
             <button class="ebene" role="tab" id="tab-satoshi" aria-controls="ebene-panel" aria-selected="false" data-ebene="satoshi"><span class="ebene__punkt" aria-hidden="true"></span>Satoshi</button>
             <button class="ebene" role="tab" id="tab-ursprung" aria-controls="ebene-panel" aria-selected="false" data-ebene="ursprung"><span class="ebene__punkt" aria-hidden="true"></span>Ursprung</button>
           </div>
@@ -259,6 +259,7 @@ button { font: inherit; color: inherit; }
         <div id="ebene-panel" role="tabpanel" aria-labelledby="tab-leben">
           <p class="ebene__text" id="ebeneText"></p>
           <ul class="orte" id="orteListe"></ul>
+          <div class="register__inhalt" id="registerInhalt" hidden></div>
           <button class="knopf knopf--leise rundflug" type="button" id="rundflug" aria-pressed="false" hidden>Alle Orte abfliegen</button>
         </div>
 
@@ -279,13 +280,9 @@ button { font: inherit; color: inherit; }
           <div class="globus__ersatz" id="globusErsatz" hidden><p>Der Globus braucht zwei Bibliotheken aus dem Netz, die gerade nicht laden. Die Orte stehen in der Liste.</p></div>
         </div>
         <figcaption class="code">
-          <span><span class="zahl" id="zahlLaender">0</span> Länder und Gebiete bereist <span class="leise">· nach meiner Zählung</span></span>
+          <button class="zahl-knopf code" type="button" id="zuReisen"><span class="zahl" id="zahlLaender">0</span> Länder und Gebiete bereist <span class="leise">· nach meiner Zählung</span></button>
           <span id="ansicht" class="leise" aria-live="polite">Welt</span>
         </figcaption>
-        <details class="register" id="register">
-          <summary class="code">Alle Länder und Gebiete</summary>
-          <div class="register__inhalt" id="registerInhalt"></div>
-        </details>
       </figure>
     </div>
   </section>
@@ -388,14 +385,14 @@ button { font: inherit; color: inherit; }
     <div class="umschlag" style="--u-farbe: var(--graphit); --u-tinte: #fff;">
       <p class="umschlag__autor">Dominik Jäkel</p>
       <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="30" y="18" width="16" height="64" fill="none" stroke="#fff" stroke-width=".8"/><rect x="24" y="14" width="28" height="9" fill="none" stroke="#fff" stroke-width=".8"/><rect x="58" y="30" width="12" height="52" fill="none" stroke="#fff" stroke-width=".6"/><rect x="54" y="26" width="20" height="7" fill="none" stroke="#fff" stroke-width=".6"/><line x1="8" y1="82" x2="92" y2="82" stroke="#fff" stroke-width=".8"/></svg>
-      <p class="umschlag__titel">Ursprung</p>
+      <p class="umschlag__titel" data-band-titel>Ursprung</p>
     </div>
     <div class="blatt__text">
-      <p class="code leise">Trilogie · drei Bände</p>
-      <h3>Die Ursprungstrilogie</h3>
-      <p>Drei Romane über die Anfänge der menschlichen Zivilisation. Daran habe ich einen Großteil meiner Zwanziger gearbeitet. Es gab Gespräche mit großen Agenturen. Am Ende hieß es, so etwas lasse sich nicht verkaufen.</p>
-      <p>Wenn sich tausend Leute finden, die sie lesen wollen, erscheint sie hier.</p>
-      <div class="knopf-reihe"><button class="knopf" type="button" data-zeige-ebene="ursprung">Göbekli Tepe auf dem Globus</button><a class="knopf knopf--leise" href="#ueber">Auf die Liste</a></div>
+      <p class="code leise" data-band-zeile>Ursprungstrilogie · in Arbeit</p>
+      <h3 data-band-ueberschrift>Die Ursprungstrilogie</h3>
+      <p data-band-text></p>
+      <p class="leise">Drei Romane über die Anfänge der menschlichen Zivilisation. In Arbeit.</p>
+      <div class="knopf-reihe"><button class="knopf" type="button" data-zeige-ebene="ursprung" data-zeige-ort="">Auf dem Globus zeigen</button></div>
     </div>
   </div>
 </template>
@@ -436,9 +433,9 @@ button { font: inherit; color: inherit; }
       <h3>Länder</h3>
       <p>Ehrlich, praktisch, ohne Werbung. Jeder Guide hat dieselben Kapitel und endet mit einer Leseliste und dem Kapitel „Was ich falsch gemacht habe“.</p>
       <ul class="texte">
-        <li><a href="#globus" data-fliege="Kaohsiung">Taiwan</a><span class="code">in Arbeit</span></li>
-        <li><a href="#globus" data-fliege="Cotonou">Benin</a><span class="code">in Arbeit</span></li>
-        <li><a href="#globus" data-fliege="Colombo">Sri Lanka</a><span class="code">Notizen</span></li>
+        <li><a href="#globus" data-land="TW">Taiwan</a><span class="code">in Arbeit</span></li>
+        <li><a href="#globus" data-land="BJ">Benin</a><span class="code">in Arbeit</span></li>
+        <li><a href="#globus" data-land="LK">Sri Lanka</a><span class="code">Notizen</span></li>
       </ul>
     </div>
   </div>
@@ -492,11 +489,17 @@ button { font: inherit; color: inherit; }
   };
   // Feste Ansichten für Länder mit fernen Überseegebieten oder sehr großer Ausdehnung
   const ANSICHT = { FR: [2.5, 46.6, 5.5], NL: [5.3, 52.2, 12], US: [-98, 39, 2.1], RU: [70, 60, 1.5], PT: [-8.1, 39.7, 9], ES: [-3.7, 40.2, 6], CN: [104, 35, 2.4], CA: [-96, 58, 1.8], DK: [10, 56, 10] };
+  // Texte zu den drei Bänden der Ursprungstrilogie (Regal und Globus)
+  const BAENDE = {
+    'ursprung-1': { band: 'I', ort: 'Göbekli Tepe', text: 'Göbekli Tepe in Südostanatolien, um 9500 v. Chr. Älter als Schrift, Rad und Töpferei.' },
+    'ursprung-2': { band: 'II', ort: 'Uruk', text: 'Die Sumerer. Uruk im Süden Mesopotamiens, eine der ersten Städte der Welt. Hier fand man die ältesten Keilschrifttafeln.' },
+    'ursprung-3': { band: 'III', ort: 'Jerusalem', text: 'Die Phönizier, rund um Jerusalem.' }
+  };
   // Zu klein für die grobe Weltkarte: dort als Punkt, beim Zoomen als Fläche
   const WINZIG = { MC: [7.42, 43.73], VA: [12.45, 41.90], HK: [114.17, 22.32], CV: [-23.6, 15.1] };
   const EBENEN = {
     leben: {
-      text: 'Orte, die zu meinem Leben gehören. Die grau gefüllten Länder habe ich bereist.',
+      text: 'Orte, die zu meinem Leben gehören.',
       blick: { mitte: [52, 26], k: 1 },
       orte: [
         { name: 'Berlin', lat: 52.52, lon: 13.40, rang: 1 },
@@ -508,6 +511,12 @@ button { font: inherit; color: inherit; }
         { name: 'Colombo', lat: 6.93, lon: 79.86, rang: 1 },
         { name: 'Cotonou', lat: 6.37, lon: 2.43, rang: 1 }
       ]
+    },
+    reisen: {
+      text: 'Die Länder und Gebiete, die ich bereist habe. Antippen fliegt hin.',
+      blick: { mitte: [35, 28], k: 1 },
+      orte: [],
+      laender: true
     },
     satoshi: {
       text: 'Die Schauplätze des Romans <em>Satoshi</em>. Die Kernhandlung spielt 2007 bis 2010 in Patagonien.',
@@ -527,10 +536,12 @@ button { font: inherit; color: inherit; }
       ]
     },
     ursprung: {
-      text: '<em>Göbekli Tepe</em>, Südostanatolien. Rund 11.500 Jahre alt, älter als Schrift, Rad und Töpferei. Ein Ort der Ursprungstrilogie.',
-      blick: { mitte: [38.92, 37.22], k: 7 },
+      text: 'Die <em>Ursprungstrilogie</em>, in Arbeit: drei Bände über die Anfänge der Zivilisation, je ein Ort pro Band.',
+      blick: { mitte: [40.6, 34.4], k: 5.2 },
       orte: [
-        { name: 'Göbekli Tepe', lat: 37.22, lon: 38.92, rang: 1 }
+        { name: 'Göbekli Tepe', notiz: 'Band I · um 9500 v. Chr.', lat: 37.22, lon: 38.92, rang: 1 },
+        { name: 'Uruk', notiz: 'Band II · die Sumerer', lat: 31.32, lon: 45.64, rang: 1 },
+        { name: 'Jerusalem', notiz: 'Band III · die Phönizier', lat: 31.78, lon: 35.22, rang: 1 }
       ]
     }
   };
@@ -540,7 +551,7 @@ button { font: inherit; color: inherit; }
   const ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const css = getComputedStyle(document.documentElement);
   const F = n => css.getPropertyValue(n).trim();
-  const FARBE = { papier: F('--papier'), graphit: F('--graphit'), graphit2: F('--graphit-2'), graphit3: F('--graphit-3'), kueste: F('--kueste'), linie: F('--linie'), land: F('--land'), bereist: F('--bereist'), grenze: F('--grenze'), akzent: F('--akzent') };
+  const FARBE = { reise: F('--reise'), papier: F('--papier'), graphit: F('--graphit'), graphit2: F('--graphit-2'), graphit3: F('--graphit-3'), kueste: F('--kueste'), linie: F('--linie'), land: F('--land'), bereist: F('--bereist'), grenze: F('--grenze'), akzent: F('--akzent') };
   const koord = o => Math.abs(o.lat).toFixed(2) + '° ' + (o.lat >= 0 ? 'N' : 'S') + ' · ' + Math.abs(o.lon).toFixed(2) + '° ' + (o.lon >= 0 ? 'E' : 'W');
 
   let ebene = 'leben';
@@ -559,7 +570,10 @@ button { font: inherit; color: inherit; }
     $('ebeneText').innerHTML = EBENEN[name].text;
     const liste = $('orteListe');
     liste.innerHTML = '';
-    if (!EBENEN[name].orte.length) {
+    const laenderEbene = !!EBENEN[name].laender;
+    liste.hidden = laenderEbene;
+    $('registerInhalt').hidden = !laenderEbene;
+    if (!EBENEN[name].orte.length && !laenderEbene) {
       const li = document.createElement('li');
       li.className = 'orte__leer';
       li.textContent = 'Noch keine Orte eingetragen.';
@@ -637,6 +651,7 @@ button { font: inherit; color: inherit; }
   let globus = null;
   const zahl = BEREIST.length;
   $('zahlLaender').textContent = zahl;
+  $('zuReisen').addEventListener('click', () => { ebeneZeigen('reisen'); $('tab-reisen').focus({ preventScroll: true }); });
 
   if (!window.d3 || !window.topojson || !window.WELT_110M) {
     $('globusErsatz').hidden = false;
@@ -737,14 +752,14 @@ button { font: inherit; color: inherit; }
       flaeche.classList.toggle('ist-gezoomt', k > 1.15);
 
       ctx.beginPath(); d.laender.forEach(f => pfad(f)); ctx.fillStyle = FARBE.land; ctx.fill();
-      const zeigeBereist = ebene === 'leben';
-      if (zeigeBereist) { ctx.beginPath(); pfad(d.bereist); ctx.fillStyle = FARBE.bereist; ctx.fill(); }
+      const zeigeBereist = ebene === 'reisen';
+      if (zeigeBereist) { ctx.beginPath(); pfad(d.bereist); ctx.fillStyle = FARBE.reise; ctx.fill(); }
       if (hover) { ctx.beginPath(); pfad(hover); ctx.fillStyle = 'rgba(44, 60, 203, .12)'; ctx.fill(); }
 
       ctx.beginPath(); pfad(d.grenzen); ctx.strokeStyle = FARBE.grenze; ctx.lineWidth = k > 3 ? .7 : .45; ctx.stroke();
       ctx.beginPath(); pfad(d.kueste); ctx.strokeStyle = FARBE.kueste; ctx.lineWidth = .6; ctx.stroke();
       if (hover) { ctx.beginPath(); pfad(hover); ctx.strokeStyle = FARBE.akzent; ctx.lineWidth = 1; ctx.stroke(); }
-      if (auswahl && auswahl !== hover && ebene === 'leben') {
+      if (auswahl && auswahl !== hover && ebene === 'reisen') {
         const a = d.laender.find(x => x.iso === auswahl.iso) || auswahl;
         ctx.beginPath(); pfad(a); ctx.strokeStyle = FARBE.akzent; ctx.lineWidth = 1.2; ctx.stroke();
       }
@@ -756,8 +771,8 @@ button { font: inherit; color: inherit; }
         if (!zeigeBereist || !BEREIST.includes(iso) || d.isos.has(iso) || d3.geoDistance(pos, mitte) > Math.PI / 2 - .02) return;
         const p = projektion(pos);
         ctx.beginPath(); ctx.arc(p[0], p[1], 2.4, 0, Math.PI * 2);
-        ctx.fillStyle = FARBE.bereist; ctx.fill();
-        ctx.lineWidth = .8; ctx.strokeStyle = FARBE.kueste; ctx.stroke();
+        ctx.fillStyle = FARBE.reise; ctx.fill();
+        ctx.lineWidth = .8; ctx.strokeStyle = FARBE.akzent; ctx.stroke();
       });
 
       // Orte der aktiven Ebene, Beschriftungen ohne Überlappung
@@ -942,7 +957,7 @@ button { font: inherit; color: inherit; }
         const treffer = lonlat ? daten().laender.find(f => d3.geoContains(f, lonlat)) || null : null;
         if (treffer !== hover) { hover = treffer; zeichnen(); }
         if (treffer) {
-          tipp.textContent = treffer.name + (treffer.bereist && ebene === 'leben' ? ' · bereist' : '');
+          tipp.textContent = treffer.name + (treffer.bereist && ebene === 'reisen' ? ' · bereist' : '');
           tipp.classList.toggle('links', x + tipp.offsetWidth + 24 > seite);
           tipp.style.left = x + 'px';
           tipp.style.top = y + 'px';
@@ -992,7 +1007,7 @@ button { font: inherit; color: inherit; }
       $('bewegungAus').hidden = false;
       $('bewegungAus').addEventListener('click', leerlaufStoppen);
       ['pointerdown', 'keydown'].forEach(t => canvas.addEventListener(t, leerlaufStoppen, { passive: true }));
-      document.querySelectorAll('.ebene, #orteListe, .regler, #register, #rundflug').forEach(el => el.addEventListener('click', leerlaufStoppen));
+      document.querySelectorAll('.ebene, #orteListe, .regler, #registerInhalt, #rundflug, #zuReisen').forEach(el => el.addEventListener('click', leerlaufStoppen));
     }
     setTimeout(feinLaden, 1200);
 
@@ -1040,7 +1055,7 @@ button { font: inherit; color: inherit; }
         b.textContent = name;
         b.addEventListener('click', () => {
           rundflugStoppen();
-          if (ebene !== 'leben') ebeneZeigen('leben', false);
+          if (ebene !== 'reisen') ebeneZeigen('reisen', false);
           registerMarkieren(iso);
           globusZeigen();
           if (globus) globus.landAnfliegen(iso);
@@ -1086,6 +1101,16 @@ button { font: inherit; color: inherit; }
     let inhalt;
     if (VORLAGE[id]) {
       inhalt = $(VORLAGE[id]).content.cloneNode(true);
+      const band = BAENDE[id];
+      if (band) {
+        inhalt.querySelector('[data-band-titel]').textContent = 'Ursprung · ' + band.band;
+        inhalt.querySelector('[data-band-zeile]').textContent = 'Ursprungstrilogie · Band ' + band.band + ' · in Arbeit';
+        inhalt.querySelector('[data-band-ueberschrift]').textContent = 'Ursprung · Band ' + band.band;
+        inhalt.querySelector('[data-band-text]').textContent = band.text;
+        const knopf = inhalt.querySelector('[data-zeige-ort]');
+        knopf.dataset.zeigeOrt = band.ort;
+        knopf.textContent = band.ort + ' auf dem Globus';
+      }
     } else {
       const g = GELESEN[id];
       inhalt = $('buch-gelesen').content.cloneNode(true);
@@ -1119,22 +1144,30 @@ button { font: inherit; color: inherit; }
   // Aus einem Buch zurück auf den Globus
   innen.addEventListener('click', e => {
     const ebenenKnopf = e.target.closest('[data-zeige-ebene]');
-    const ortLink = e.target.closest('[data-fliege]');
-    if (!ebenenKnopf && !ortLink) return;
+    const landLink = e.target.closest('[data-land]');
+    if (!ebenenKnopf && !landLink) return;
     e.preventDefault();
     rundflugStoppen();
     document.getElementById('globus').scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
     if (ebenenKnopf) {
-      ebeneZeigen(ebenenKnopf.dataset.zeigeEbene);
-      $('tab-' + ebenenKnopf.dataset.zeigeEbene).focus({ preventScroll: true });
-    } else {
-      if (ebene !== 'leben') ebeneZeigen('leben', false);
-      const o = EBENEN.leben.orte.find(x => x.name === ortLink.dataset.fliege);
+      const ziel = ebenenKnopf.dataset.zeigeEbene;
+      const o = ebenenKnopf.dataset.zeigeOrt && EBENEN[ziel].orte.find(x => x.name === ebenenKnopf.dataset.zeigeOrt);
       if (o) {
-        ortAnfliegen(o);
+        if (ebene !== ziel) ebeneZeigen(ziel, false);
+        ortAnfliegen(o, 7);
         const knopf = document.querySelector('#orteListe button[data-ort="' + o.name + '"]');
-        if (knopf) knopf.focus({ preventScroll: true });
+        (knopf || $('tab-' + ziel)).focus({ preventScroll: true });
+      } else {
+        ebeneZeigen(ziel);
+        $('tab-' + ziel).focus({ preventScroll: true });
       }
+    } else {
+      const iso = landLink.dataset.land;
+      if (ebene !== 'reisen') ebeneZeigen('reisen', false);
+      registerMarkieren(iso);
+      if (globus) globus.landAnfliegen(iso);
+      const knopf = document.querySelector('#registerInhalt button[data-iso="' + iso + '"]');
+      if (knopf) knopf.focus({ preventScroll: true });
     }
   });
 

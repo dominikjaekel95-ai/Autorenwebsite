@@ -95,7 +95,8 @@ button { font: inherit; color: inherit; }
 
 .globus { position: relative; margin: 0; }
 .globus__flaeche { position: relative; width: 100%; max-width: 46rem; margin-inline: auto; aspect-ratio: 1 / 1; }
-.globus canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; border-radius: 50%; }
+.globus canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; border-radius: 50%; }
+.globus__hinweis { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 4; pointer-events: none; padding: .55rem .85rem; border-radius: 4px; background: rgba(29, 30, 33, .86); color: var(--papier); font-family: var(--f-code); font-size: .75rem; white-space: nowrap; }
 .globus canvas:active { cursor: grabbing; }
 .globus canvas:focus-visible { outline-offset: 6px; }
 /* Im Zoom wird der Globus zum runden Fenster mit feinem Rand */
@@ -112,6 +113,16 @@ button { font: inherit; color: inherit; }
 .globus figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1.5rem; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--linie); color: var(--graphit-2); }
 .globus__ersatz { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 2rem; color: var(--graphit-2); border: 1px solid var(--linie); border-radius: 50%; }
 .zahl { font-variant-numeric: tabular-nums; color: var(--graphit); }
+.register { margin-top: .9rem; border-top: 1px solid var(--linie); }
+.register summary { cursor: pointer; padding: .7rem 0; color: var(--graphit-2); list-style: none; }
+.register summary::-webkit-details-marker { display: none; }
+.register summary::before { content: "+"; display: inline-block; width: 1.1rem; color: var(--graphit-3); }
+.register[open] summary::before { content: "−"; }
+.register__inhalt { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 1.4rem 2rem; padding: .4rem 0 1rem; }
+.register h3 { margin: 0 0 .4rem; font-family: var(--f-code); font-size: .72rem; font-weight: 500; color: var(--graphit-3); }
+.register ul { list-style: none; margin: 0; padding: 0; }
+.register li button { display: block; width: 100%; padding: .22rem 0; border: 0; background: none; cursor: pointer; text-align: left; font-size: .92rem; color: var(--graphit); }
+.register li button:hover, .register li button[aria-current="true"] { color: var(--akzent); }
 
 /* Abschnitte */
 .abschnitt { border-top: 1px solid var(--linie); }
@@ -245,24 +256,30 @@ button { font: inherit; color: inherit; }
           <button class="knopf knopf--leise rundflug" type="button" id="rundflug" aria-pressed="false" hidden>Alle Orte abfliegen</button>
         </div>
 
-        <p class="bedienung code">Ziehen zum Drehen · Scrollen oder zwei Finger zum Zoomen · Ort antippen zum Hinfliegen</p>
+        <p class="bedienung code">Ziehen zum Drehen · Strg + Scrollen oder zwei Finger zum Zoomen · Ort antippen zum Hinfliegen</p>
       </div>
 
       <figure class="globus">
         <div class="globus__flaeche" id="globusFlaeche">
           <canvas id="globusCanvas" tabindex="0" role="img" aria-label="Globus. Pfeiltasten drehen, Plus und Minus zoomen. Die Orte stehen in der Liste daneben."></canvas>
           <div class="tipp" id="tipp" hidden></div>
+          <div class="globus__hinweis" id="globusHinweis" role="status" hidden></div>
           <div class="regler" role="group" aria-label="Zoom">
             <button type="button" id="zoomRein" aria-label="Hineinzoomen">+</button>
             <button type="button" id="zoomRaus" aria-label="Herauszoomen">−</button>
             <button type="button" id="zoomGanz" aria-label="Ganze Erde zeigen">○</button>
+            <button type="button" id="bewegungAus" aria-label="Drehung anhalten" hidden>❚❚</button>
           </div>
           <div class="globus__ersatz" id="globusErsatz" hidden><p>Der Globus braucht zwei Bibliotheken aus dem Netz, die gerade nicht laden. Die Orte stehen in der Liste.</p></div>
         </div>
         <figcaption class="code">
           <span><span class="zahl" id="zahlLaender">0</span> Länder und Gebiete bereist <span class="leise">· nach meiner Zählung</span></span>
-          <span id="ansicht" class="leise">Ganze Erde</span>
+          <span id="ansicht" class="leise">Welt</span>
         </figcaption>
+        <details class="register" id="register">
+          <summary class="code">Alle Länder und Gebiete</summary>
+          <div class="register__inhalt" id="registerInhalt"></div>
+        </details>
       </figure>
     </div>
   </section>
@@ -460,6 +477,15 @@ button { font: inherit; color: inherit; }
     'BJ', 'CV', 'EG', 'ET', 'GH', 'KE', 'MA', 'ZA', 'TZ', 'TG', 'TN',
     'CA', 'US', 'AR', 'UY'
   ];
+  // Gruppen für das Register (nach UN-Geoschema; Kaukasus und Türkei bei Asien)
+  const KONTINENTE = {
+    Europa: ['AT', 'BE', 'BG', 'DK', 'DE', 'GB-ENG', 'EE', 'FI', 'FR', 'IE', 'IT', 'HR', 'LV', 'LT', 'MC', 'NL', 'GB-NIR', 'PL', 'PT', 'RO', 'RU', 'GB-SCT', 'SE', 'CH', 'RS', 'SK', 'SI', 'ES', 'CZ', 'HU', 'VA'],
+    Asien: ['AM', 'BD', 'CN', 'GE', 'HK', 'IN', 'ID', 'IL', 'KW', 'MY', 'OM', 'KR', 'LK', 'TW', 'TH', 'TR', 'AE', 'VN', 'PS-WB'],
+    Afrika: ['EG', 'ET', 'BJ', 'GH', 'CV', 'KE', 'MA', 'ZA', 'TZ', 'TG', 'TN'],
+    Amerika: ['AR', 'CA', 'UY', 'US']
+  };
+  // Feste Ansichten für Länder mit fernen Überseegebieten oder sehr großer Ausdehnung
+  const ANSICHT = { FR: [2.5, 46.6, 5.5], NL: [5.3, 52.2, 12], US: [-98, 39, 2.1], RU: [70, 60, 1.5], PT: [-8.1, 39.7, 9], ES: [-3.7, 40.2, 6], CN: [104, 35, 2.4], CA: [-96, 58, 1.8], DK: [10, 56, 10] };
   // Zu klein für die grobe Weltkarte: dort als Punkt, beim Zoomen als Fläche
   const WINZIG = { MC: [7.42, 43.73], VA: [12.45, 41.90], HK: [114.17, 22.32], CV: [-23.6, 15.1] };
   const EBENEN = {
@@ -620,6 +646,7 @@ button { font: inherit; color: inherit; }
     let mitte = EBENEN.leben.blick.mitte.slice();
     let k = 1, seite = 600, R = 280, dpr = 1;
     let hover = null;
+    let auswahl = null;
     let flug = null;
 
     // Das Vereinigte Königreich wird durch England, Schottland, Wales und Nordirland ersetzt
@@ -663,7 +690,14 @@ button { font: inherit; color: inherit; }
       s.onload = fertig;
       document.head.appendChild(s);
     }
-    const daten = () => (k > 1.8 && fein) ? fein : grob;
+    // In Bewegung grob zeichnen, in Ruhe fein (wie earth.nullschool)
+    let bewegt = false, ruheTimer = null;
+    function bewegung() {
+      bewegt = true;
+      clearTimeout(ruheTimer);
+      ruheTimer = setTimeout(() => { bewegt = false; zeichnen(); brotkrumen(); }, 220);
+    }
+    const daten = () => (fein && (k > 1.8 || !bewegt)) ? fein : grob;
 
     function messen() {
       dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -691,6 +725,10 @@ button { font: inherit; color: inherit; }
       ctx.beginPath(); pfad(d.grenzen); ctx.strokeStyle = FARBE.grenze; ctx.lineWidth = k > 3 ? .7 : .45; ctx.stroke();
       ctx.beginPath(); pfad(d.kueste); ctx.strokeStyle = FARBE.graphit3; ctx.lineWidth = .6; ctx.stroke();
       if (hover) { ctx.beginPath(); pfad(hover); ctx.strokeStyle = FARBE.akzent; ctx.lineWidth = 1; ctx.stroke(); }
+      if (auswahl && auswahl !== hover && ebene === 'leben') {
+        const a = d.laender.find(x => x.iso === auswahl.iso) || auswahl;
+        ctx.beginPath(); pfad(a); ctx.strokeStyle = FARBE.akzent; ctx.lineWidth = 1.2; ctx.stroke();
+      }
 
       ctx.beginPath(); pfad({ type: 'Sphere' }); ctx.strokeStyle = FARBE.graphit; ctx.lineWidth = 1; ctx.stroke();
 
@@ -722,6 +760,7 @@ button { font: inherit; color: inherit; }
       const orte = EBENEN[ebene].orte.slice().sort((a, b) => a.rang - b.rang);
       ctx.font = '500 10.5px "Geist Mono", ui-monospace, monospace';
       ctx.textBaseline = 'middle';
+      const gruppen = [];
       orte.forEach(o => {
         if (d3.geoDistance([o.lon, o.lat], mitte) > Math.PI / 2 - .02) return;
         const p = projektion([o.lon, o.lat]);
@@ -729,12 +768,21 @@ button { font: inherit; color: inherit; }
         const aktiv = o.name === aktiverOrt;
         ctx.beginPath(); ctx.arc(p[0], p[1], aktiv ? 7 : 5.5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(44, 60, 203, .14)'; ctx.fill();
         ctx.beginPath(); ctx.arc(p[0], p[1], 2.6, 0, Math.PI * 2); ctx.fillStyle = FARBE.akzent; ctx.fill();
-        const text = (o.kurz || o.name).toUpperCase();
+        // Orte, die näher als 16 px beieinander liegen, teilen sich eine Beschriftung
+        const nah = gruppen.find(g => Math.hypot(g.p[0] - p[0], g.p[1] - p[1]) < 16);
+        if (nah) { nah.namen.push(o.kurz || o.name); nah.aktiv = nah.aktiv || aktiv; } else gruppen.push({ p, namen: [o.kurz || o.name], aktiv });
+      });
+      gruppen.forEach(({ p, namen, aktiv }) => {
+        const text = namen.join(' · ').toUpperCase();
         const breite = ctx.measureText(text).width + 2;
-        const rechts = p[0] < seite - breite - 24;
-        const box = rechts ? [p[0] + 9, p[1] - 8, p[0] + 9 + breite, p[1] + 8] : [p[0] - 9 - breite, p[1] - 8, p[0] - 9, p[1] + 8];
-        if (belegt.some(b => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return;
-        belegt.push(box);
+        const frei = b => !belegt.some(x => b[0] < x[2] && b[2] > x[0] && b[1] < x[3] && b[3] > x[1]);
+        const boxRechts = [p[0] + 9, p[1] - 8, p[0] + 9 + breite, p[1] + 8];
+        const boxLinks = [p[0] - 9 - breite, p[1] - 8, p[0] - 9, p[1] + 8];
+        const passtRechts = p[0] < seite - breite - 24 && frei(boxRechts);
+        const passtLinks = p[0] > breite + 24 && frei(boxLinks);
+        if (!passtRechts && !passtLinks) return;
+        const rechts = passtRechts;
+        belegt.push(rechts ? boxRechts : boxLinks);
         ctx.textAlign = rechts ? 'left' : 'right';
         ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeStyle = FARBE.papier;
         ctx.strokeText(text, rechts ? p[0] + 9 : p[0] - 9, p[1]);
@@ -742,13 +790,30 @@ button { font: inherit; color: inherit; }
         ctx.fillText(text, rechts ? p[0] + 9 : p[0] - 9, p[1]);
       });
 
-      $('ansicht').textContent = k < 1.3 ? 'Ganze Erde' : 'Zoom ' + k.toFixed(1) + '×';
+      if (!bewegt) brotkrumen();
+    }
+    function brotkrumen() {
+      const teile = ['Welt'];
+      if (k >= 1.3) {
+        const land = daten().laender.find(f => d3.geoContains(f, mitte));
+        if (land) teile.push(land.name);
+        if (aktiverOrt && k >= 3) teile.push(aktiverOrt);
+      }
+      $('ansicht').textContent = teile.join(' › ');
     }
 
-    // Ziehen dreht, Scrollen und Pinch zoomen (ein d3.zoom für beides)
-    const zoom = d3.zoom().scaleExtent([.9, 24]).filter(e => !e.button && e.type !== 'dblclick');
+    // Maus: Ziehen dreht, Strg/Cmd + Rad zoomt. Touch: ein Finger scrollt die Seite, zwei Finger drehen und zoomen.
+    const zoom = d3.zoom().scaleExtent([.9, 24]).filter(e => {
+      if (e.type === 'wheel') {
+        if (e.ctrlKey || e.metaKey) return true;
+        hinweisZeigen(/Mac|iPhone|iPad/.test(navigator.platform) ? 'Zum Zoomen ⌘ halten und scrollen' : 'Zum Zoomen Strg halten und scrollen');
+        return false;
+      }
+      if (e.type.startsWith('touch') || e.type === 'dblclick') return false;
+      return !e.button;
+    });
     let letzte = d3.zoomIdentity;
-    zoom.on('start', () => { flugBeenden(); rundflugStoppen(); });
+    zoom.on('start', () => { flugBeenden(); rundflugStoppen(); auswahl = null; registerMarkieren(null); });
     zoom.on('zoom', e => {
       const t = e.transform;
       if (t.k !== letzte.k) {
@@ -761,9 +826,46 @@ button { font: inherit; color: inherit; }
       }
       letzte = t;
       tippVerstecken();
+      bewegung();
       zeichnen();
     });
     d3.select(canvas).call(zoom);
+
+    const hinweis = $('globusHinweis');
+    let hinweisTimer = null;
+    function hinweisZeigen(text) {
+      hinweis.textContent = text;
+      hinweis.hidden = false;
+      clearTimeout(hinweisTimer);
+      hinweisTimer = setTimeout(() => { hinweis.hidden = true; }, 1600);
+    }
+
+    let finger = null;
+    const fingerLage = t => {
+      const r = canvas.getBoundingClientRect();
+      const [a, b] = [t[0], t[1]];
+      return { x: (a.clientX + b.clientX) / 2 - r.left, y: (a.clientY + b.clientY) / 2 - r.top, abstand: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) };
+    };
+    canvas.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) { finger = fingerLage(e.touches); flugBeenden(); rundflugStoppen(); leerlaufStoppen(); }
+    }, { passive: true });
+    canvas.addEventListener('touchmove', e => {
+      if (e.touches.length === 1 && !finger) { hinweisZeigen('Zwei Finger zum Drehen und Zoomen'); return; }
+      if (e.touches.length !== 2 || !finger) return;
+      e.preventDefault();
+      const jetzt = fingerLage(e.touches);
+      const tempo = .25 / k;
+      mitte[0] -= (jetzt.x - finger.x) * tempo;
+      mitte[1] = Math.max(-85, Math.min(85, mitte[1] + (jetzt.y - finger.y) * tempo));
+      k = Math.max(.9, Math.min(24, k * jetzt.abstand / finger.abstand));
+      if (k > 1.6) feinLaden();
+      finger = jetzt;
+      zoomStandSetzen();
+      tippVerstecken();
+      bewegung();
+      zeichnen();
+    }, { passive: false });
+    canvas.addEventListener('touchend', e => { if (e.touches.length < 2) finger = null; });
     function zoomStandSetzen() {
       letzte = d3.zoomIdentity.translate(letzte.x, letzte.y).scale(k);
       canvas.__zoom = letzte;
@@ -789,6 +891,7 @@ button { font: inherit; color: inherit; }
           mitte = weg(e);
           k = Math.max(.9, Math.exp((1 - e) * Math.log(startK) + e * Math.log(zielK) - delle * Math.sin(Math.PI * e)));
           zoomStandSetzen();
+          bewegung();
           zeichnen();
           if (t >= 1) flugBeenden();
         });
@@ -831,6 +934,7 @@ button { font: inherit; color: inherit; }
       e.preventDefault();
       tasten[e.key]();
       zoomStandSetzen();
+      bewegung();
       zeichnen();
     });
     $('zoomRein').addEventListener('click', () => fliegen(mitte.slice(), Math.min(24, k * 1.8)));
@@ -839,19 +943,74 @@ button { font: inherit; color: inherit; }
 
     // Sanftes Pendeln um die Ausgangsansicht, bis jemand eingreift
     let leerlauf = null;
+    function leerlaufStoppen() { if (leerlauf) { leerlauf.stop(); leerlauf = null; } $('bewegungAus').hidden = true; }
     if (!ruhig) {
       const basis = mitte[0];
       leerlauf = d3.timer(t => { if (!flug && k < 1.2 && ebene === 'leben') { mitte[0] = basis + Math.sin(t / 5200) * 14; zeichnen(); } });
-      ['pointerdown', 'wheel', 'keydown', 'touchstart'].forEach(t => canvas.addEventListener(t, () => { leerlauf && leerlauf.stop(); leerlauf = null; }, { passive: true }));
-      document.querySelectorAll('.ebene, #orteListe, .regler').forEach(el => el.addEventListener('click', () => { leerlauf && leerlauf.stop(); leerlauf = null; }));
+      $('bewegungAus').hidden = false;
+      $('bewegungAus').addEventListener('click', leerlaufStoppen);
+      ['pointerdown', 'keydown'].forEach(t => canvas.addEventListener(t, leerlaufStoppen, { passive: true }));
+      document.querySelectorAll('.ebene, #orteListe, .regler, #register').forEach(el => el.addEventListener('click', leerlaufStoppen));
     }
+    setTimeout(feinLaden, 1200);
 
     messen();
     zeichnen();
     window.addEventListener('resize', () => { messen(); zeichnen(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(zeichnen);
-    return { fliegen, zeichnen, k: () => k, orte: () => EBENEN[ebene].orte };
+    function landAnfliegen(iso) {
+      const satz = fein || grob;
+      const f = satz.laender.find(x => x.iso === iso);
+      auswahl = f || null;
+      if (ANSICHT[iso]) return fliegen(ANSICHT[iso].slice(0, 2), ANSICHT[iso][2]);
+      if (!f) return WINZIG[iso] ? fliegen(WINZIG[iso], 20) : Promise.resolve();
+      const radius = Math.sqrt(d3.geoArea(f) / Math.PI);
+      const zielK = Math.max(1, Math.min(22, .5 / Math.sin(Math.min(radius * 1.4, 1.4))));
+      return fliegen(d3.geoCentroid(f), zielK);
+    }
+    return { fliegen, zeichnen, landAnfliegen, k: () => k, orte: () => EBENEN[ebene].orte };
   }
+
+  // ---------- Länderregister ----------
+  function landName(iso) {
+    const sonder = { 'GB-ENG': 'England', 'GB-SCT': 'Schottland', 'GB-NIR': 'Nordirland', 'GB-WLS': 'Wales', 'PS-WB': 'Westjordanland', 'XK': 'Kosovo' };
+    if (sonder[iso]) return sonder[iso];
+    const eintrag = Object.values((window.LAENDER_DE || {}).nach_id || {}).find(e => e[0] === iso);
+    return eintrag ? eintrag[1] : iso;
+  }
+  function registerMarkieren(iso) {
+    document.querySelectorAll('#registerInhalt button').forEach(b => b.setAttribute('aria-current', String(b.dataset.iso === iso)));
+  }
+  (function registerBauen() {
+    const ziel = $('registerInhalt');
+    const sammler = new Intl.Collator('de');
+    Object.entries(KONTINENTE).forEach(([kontinent, liste]) => {
+      const isos = [...new Set(liste)].filter(i => BEREIST.includes(i));
+      const block = document.createElement('div');
+      const titel = document.createElement('h3');
+      titel.textContent = kontinent + ' · ' + isos.length;
+      const ul = document.createElement('ul');
+      isos.map(i => [i, landName(i)]).sort((a, b) => sammler.compare(a[1], b[1])).forEach(([iso, name]) => {
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.iso = iso;
+        b.textContent = name;
+        b.addEventListener('click', () => {
+          rundflugStoppen();
+          if (ebene !== 'leben') ebeneZeigen('leben', false);
+          registerMarkieren(iso);
+          if (globus) globus.landAnfliegen(iso);
+        });
+        li.appendChild(b);
+        ul.appendChild(li);
+      });
+      block.append(titel, ul);
+      ziel.appendChild(block);
+    });
+    const summe = Object.values(KONTINENTE).reduce((n, l) => n + [...new Set(l)].filter(i => BEREIST.includes(i)).length, 0);
+    if (summe !== BEREIST.length) console.warn('Register: ' + summe + ' von ' + BEREIST.length + ' Ländern einem Kontinent zugeordnet');
+  })();
 
   // ---------- Bibliothek ----------
   const GELESEN = {

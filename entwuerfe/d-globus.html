@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dominik Jäkel · Entwurf D</title>
+<meta name="description" content="Entwurf D der Autorenwebsite von Dominik Jäkel: ein zoombarer Globus mit Lebensorten, Reiseländern und den Schauplätzen der Bücher, darunter eine Bibliothek.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,300..500&display=swap">
+<style>
+/* Layout: ein weißes Blatt mit Graphitlinien. Der Globus ist das Bild der Seite, links daneben eine Spalte wie ein Legendenkasten. Darunter ein Regal. Bewusst nur hell. */
+:root {
+  color-scheme: light;
+  --papier: #FFFFFF;
+  --grund: #F6F6F5;
+  --graphit: #1D1E21;
+  --graphit-2: #63656B;
+  --graphit-3: #9B9DA2;
+  --linie: #DEDFE1;
+  --land: #F1F1F2;
+  --bereist: #D3D5D9;
+  --grenze: #BFC1C5;
+  --akzent: #2C3CCB;
+
+  --f-ui: "Geist", "Helvetica Neue", Arial, sans-serif;
+  --f-code: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --f-buch: "Newsreader", "Iowan Old Style", Georgia, serif;
+
+  --breite: 76rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; background: var(--papier); color: var(--graphit); font-family: var(--f-ui); font-size: 1rem; line-height: 1.6; font-weight: 400; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 1.5px solid var(--akzent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+.huelle {
+  max-width: var(--breite); margin-inline: auto;
+  padding-left: max(clamp(16px, 4vw, 48px), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(16px, 4vw, 48px), env(safe-area-inset-right, 0px));
+}
+.code { font-family: var(--f-code); font-size: .78rem; letter-spacing: .02em; }
+.leise { color: var(--graphit-2); }
+.sprung { position: absolute; left: -999px; top: 0; }
+.sprung:focus { left: 16px; top: 16px; z-index: 100; background: var(--graphit); color: var(--papier); padding: .5rem .8rem; }
+
+/* Kopf */
+.kopf__innen { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .5rem 2rem; padding-block: 1.4rem; }
+.marke { font-weight: 500; letter-spacing: -.01em; text-decoration: none; }
+.nav { display: flex; flex-wrap: wrap; gap: .25rem 1.6rem; font-size: .95rem; }
+.nav a { text-decoration: none; color: var(--graphit-2); }
+.nav a:hover { color: var(--graphit); }
+.nav .sprache { color: var(--graphit-3); }
+.nav .sprache b { color: var(--graphit); font-weight: 500; }
+
+/* Globus */
+.held__raster { display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: 2rem clamp(2rem, 5vw, 5rem); align-items: start; padding-block: clamp(1.5rem, 4vw, 3rem) clamp(3rem, 7vw, 5rem); }
+.legende { display: flex; flex-direction: column; gap: 1.6rem; padding-top: clamp(0rem, 3vw, 3rem); }
+.ort-zeile { margin: 0; color: var(--graphit-2); }
+.held h1 { margin: .4rem 0 0; font-weight: 300; font-size: clamp(2.6rem, 5.4vw, 4.4rem); line-height: .98; letter-spacing: -.035em; }
+.held__unter { margin: .9rem 0 0; font-family: var(--f-buch); font-style: italic; font-weight: 300; font-size: 1.3rem; color: var(--graphit-2); }
+
+.ebenen { display: flex; gap: 0; border-bottom: 1px solid var(--linie); }
+.ebene {
+  flex: 1; padding: .6rem 0 .65rem; border: 0; background: none; cursor: pointer; text-align: left;
+  font-family: var(--f-code); font-size: .78rem; color: var(--graphit-3);
+  border-bottom: 1.5px solid transparent; margin-bottom: -1px;
+}
+.ebene:hover { color: var(--graphit); }
+.ebene[aria-selected="true"] { color: var(--graphit); border-bottom-color: var(--graphit); }
+.ebene__punkt { display: inline-block; width: .45rem; height: .45rem; border-radius: 50%; margin-right: .45rem; border: 1px solid currentColor; vertical-align: .05em; }
+.ebene[aria-selected="true"] .ebene__punkt { background: var(--akzent); border-color: var(--akzent); }
+.ebene__text { margin: 0; font-size: .95rem; color: var(--graphit-2); max-width: 30rem; }
+.ebene__text em { font-family: var(--f-buch); font-size: 1.05rem; color: var(--graphit); }
+.orte { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linie); }
+.orte li { border-bottom: 1px solid var(--linie); }
+.orte button {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; width: 100%;
+  padding: .55rem 0; border: 0; background: none; cursor: pointer; text-align: left;
+}
+.orte button:hover .orte__name, .orte button[aria-current="true"] .orte__name { color: var(--akzent); }
+.orte__name { font-size: .95rem; }
+.orte__koord { font-family: var(--f-code); font-size: .75rem; color: var(--graphit-3); font-variant-numeric: tabular-nums; align-self: center; }
+.orte__leer { padding: .9rem 0; color: var(--graphit-2); font-size: .95rem; border-bottom: 1px solid var(--linie); }
+.bedienung { margin: 0; color: var(--graphit-3); }
+
+.globus { position: relative; margin: 0; }
+.globus__flaeche { position: relative; width: 100%; max-width: 46rem; margin-inline: auto; aspect-ratio: 1 / 1; }
+.globus canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; border-radius: 50%; }
+.globus canvas:active { cursor: grabbing; }
+.globus canvas:focus-visible { outline-offset: 6px; }
+/* Im Zoom wird der Globus zum runden Fenster mit feinem Rand */
+.globus__flaeche::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--graphit); pointer-events: none; opacity: 0; transition: opacity .3s ease; }
+.globus__flaeche.ist-gezoomt::after { opacity: 1; }
+.tipp {
+  position: absolute; left: 0; top: 0; pointer-events: none; z-index: 3;
+  padding: .3rem .55rem; background: var(--graphit); color: var(--papier); border-radius: 3px;
+  font-family: var(--f-code); font-size: .72rem; white-space: nowrap; transform: translate(12px, -130%);
+}
+.regler { position: absolute; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 1px; background: var(--linie); border: 1px solid var(--linie); border-radius: 4px; overflow: hidden; }
+.regler button { width: 2.2rem; height: 2.2rem; border: 0; background: var(--papier); cursor: pointer; font-family: var(--f-code); font-size: .95rem; color: var(--graphit-2); }
+.regler button:hover { color: var(--graphit); background: var(--grund); }
+.globus figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1.5rem; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--linie); color: var(--graphit-2); }
+.globus__ersatz { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 2rem; color: var(--graphit-2); border: 1px solid var(--linie); border-radius: 50%; }
+.zahl { font-variant-numeric: tabular-nums; color: var(--graphit); }
+
+/* Abschnitte */
+.abschnitt { border-top: 1px solid var(--linie); }
+.abschnitt > .huelle { padding-block: clamp(3rem, 7vw, 5.5rem); }
+.abschnitt__kopf { display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: .75rem clamp(2rem, 5vw, 5rem); align-items: baseline; margin-bottom: clamp(1.75rem, 4vw, 2.75rem); }
+.abschnitt h2 { margin: 0; font-weight: 300; font-size: clamp(2rem, 4.2vw, 3rem); line-height: 1.05; letter-spacing: -.03em; }
+.abschnitt__text { margin: 0; color: var(--graphit-2); max-width: 36rem; }
+
+/* Bibliothek */
+.bibliothek { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+.regal { position: relative; min-width: 0; }
+.regal__name { margin: 0 0 .6rem; color: var(--graphit-3); }
+.regal__brett {
+  display: flex; align-items: flex-end; gap: 3px; min-height: 15rem;
+  padding: 0 .5rem; border-bottom: 2px solid var(--graphit);
+  overflow-x: auto; overflow-y: visible; scrollbar-width: thin;
+  padding-top: 2.25rem;
+}
+.regal__brett::after { content: ""; flex: 1 0 1rem; }
+.buch {
+  --h: 12rem; --b: 2.6rem; --farbe: var(--papier); --tinte: var(--graphit); --kante: var(--graphit);
+  position: relative; flex: none; width: var(--b); height: var(--h);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .7rem;
+  padding: 1rem 0; border: 1px solid var(--kante); border-bottom: 0; border-radius: 2px 2px 0 0;
+  background: var(--farbe); color: var(--tinte); cursor: pointer;
+  transform-origin: 50% 100%;
+  transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .3s ease, box-shadow .3s ease;
+}
+.buch::before { content: ""; position: absolute; left: 0; right: 0; top: .55rem; height: 1px; background: currentColor; opacity: .35; }
+.buch::after { content: ""; position: absolute; left: 0; right: 0; bottom: .55rem; height: 1px; background: currentColor; opacity: .35; }
+.buch__titel { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--f-buch); font-size: .98rem; line-height: 1; white-space: nowrap; letter-spacing: .01em; }
+.buch__autor { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--f-code); font-size: .58rem; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; opacity: .7; }
+.buch:hover { transform: translateY(-8px); }
+.buch[aria-expanded="true"] { transform: translateY(-2rem) rotate(-3deg); box-shadow: 0 14px 24px -14px rgba(29, 30, 33, .45); z-index: 2; }
+.regal__brett.hat-auswahl .buch:not([aria-expanded="true"]) { opacity: .55; }
+.buch--lehnt { transform: rotate(9deg); margin-left: .9rem; }
+.buch--lehnt:hover { transform: rotate(9deg) translateY(-6px); }
+.buch--lehnt[aria-expanded="true"] { transform: rotate(0deg) translateY(-2rem); }
+
+.aufgeschlagen { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s cubic-bezier(.2, .8, .2, 1); }
+.aufgeschlagen.ist-offen { grid-template-rows: 1fr; }
+.aufgeschlagen__innen { overflow: hidden; }
+.blatt { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: 1.5rem clamp(1.5rem, 4vw, 3.5rem); padding: 2rem 0 .5rem; }
+.umschlag {
+  aspect-ratio: 2 / 3; padding: 1.1rem 1rem; display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--u-farbe, var(--grund)); color: var(--u-tinte, var(--graphit)); border: 1px solid var(--graphit);
+  box-shadow: 6px 6px 0 -1px var(--papier), 6px 6px 0 0 var(--graphit);
+}
+.umschlag__titel { margin: 0; font-family: var(--f-buch); font-size: 1.5rem; line-height: 1.05; }
+.umschlag__autor { margin: 0; font-family: var(--f-code); font-size: .68rem; }
+.umschlag svg { width: 100%; height: auto; display: block; }
+.blatt__text { min-width: 0; }
+.blatt__text h3 { margin: .2rem 0 .7rem; font-weight: 300; font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.1; letter-spacing: -.025em; }
+.blatt__text p { margin: 0 0 1rem; max-width: 38rem; }
+.blatt__auszug { font-family: var(--f-buch); font-size: 1.15rem; line-height: 1.55; }
+.texte { list-style: none; margin: 0 0 1rem; padding: 0; border-top: 1px solid var(--linie); max-width: 38rem; }
+.texte li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--linie); }
+.texte a { text-decoration: none; font-family: var(--f-buch); font-size: 1.1rem; }
+.texte a:hover { color: var(--akzent); }
+.texte span { color: var(--graphit-3); align-self: center; }
+.knopf {
+  display: inline-flex; align-items: center; gap: .5rem; padding: .6rem 1rem;
+  border: 1px solid var(--graphit); border-radius: 999px; background: var(--papier); color: var(--graphit);
+  font-size: .9rem; text-decoration: none; cursor: pointer;
+}
+.knopf:hover { background: var(--graphit); color: var(--papier); }
+.knopf--leise { border-color: var(--linie); color: var(--graphit-2); }
+.knopf-reihe { display: flex; flex-wrap: wrap; gap: .6rem; }
+
+/* Journal, Briefe, Fuß */
+.journal { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linie); }
+.journal li { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto; gap: .3rem 2rem; padding: 1.1rem 0; border-bottom: 1px solid var(--linie); align-items: baseline; }
+.journal a { text-decoration: none; font-family: var(--f-buch); font-size: 1.3rem; line-height: 1.3; }
+.journal a:hover { color: var(--akzent); }
+.journal p { margin: .25rem 0 0; color: var(--graphit-2); font-size: .95rem; }
+.formular { display: flex; flex-wrap: wrap; gap: .6rem; max-width: 30rem; }
+.formular input { flex: 1 1 14rem; min-width: 0; padding: .65rem 1rem; border: 1px solid var(--linie); border-radius: 999px; font: inherit; background: var(--papier); color: var(--graphit); }
+.formular__status { flex-basis: 100%; min-height: 1.4em; margin: 0; color: var(--akzent); font-size: .9rem; }
+.fuss__innen { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; padding-block: 2rem; color: var(--graphit-3); font-size: .9rem; border-top: 1px solid var(--linie); }
+.fuss__innen nav { display: flex; gap: 1.4rem; }
+.fuss__innen a { text-decoration: none; }
+
+@media (max-width: 900px) {
+  .held__raster, .abschnitt__kopf { grid-template-columns: minmax(0, 1fr); }
+  .legende { padding-top: 0; }
+  .globus { order: -1; }
+  .blatt { grid-template-columns: minmax(0, 9rem) minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .blatt { grid-template-columns: minmax(0, 1fr); }
+  .umschlag { max-width: 10rem; }
+  .journal li { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="huelle kopf__innen">
+  <a class="marke" href="#inhalt">Dominik Jäkel</a>
+  <nav class="nav" aria-label="Hauptnavigation">
+    <a href="#journal">Untertext</a>
+    <a href="#globus">Länder</a>
+    <a href="#bibliothek">Bibliothek</a>
+    <a href="#ueber">Über mich</a>
+    <span class="sprache"><b>DE</b> / EN</span>
+  </nav>
+</header>
+
+<main id="inhalt">
+  <section class="held" id="globus" aria-labelledby="held-titel">
+    <div class="huelle held__raster">
+      <div class="legende">
+        <div>
+          <p class="ort-zeile code">52.52° N · 13.40° E · Berlin</p>
+          <h1 id="held-titel">Dominik Jäkel</h1>
+          <p class="held__unter">Autor und Reisender</p>
+        </div>
+
+        <div>
+          <div class="ebenen" role="tablist" aria-label="Ebenen des Globus">
+            <button class="ebene" role="tab" id="tab-leben" aria-controls="ebene-panel" aria-selected="true" data-ebene="leben"><span class="ebene__punkt" aria-hidden="true"></span>Mein Leben</button>
+            <button class="ebene" role="tab" id="tab-satoshi" aria-controls="ebene-panel" aria-selected="false" data-ebene="satoshi"><span class="ebene__punkt" aria-hidden="true"></span>Satoshi</button>
+            <button class="ebene" role="tab" id="tab-ursprung" aria-controls="ebene-panel" aria-selected="false" data-ebene="ursprung"><span class="ebene__punkt" aria-hidden="true"></span>Ursprung</button>
+          </div>
+        </div>
+
+        <div id="ebene-panel" role="tabpanel" aria-labelledby="tab-leben">
+          <p class="ebene__text" id="ebeneText"></p>
+          <ul class="orte" id="orteListe"></ul>
+        </div>
+
+        <p class="bedienung code">Ziehen zum Drehen · Scrollen oder zwei Finger zum Zoomen · Ort antippen zum Hinfliegen</p>
+      </div>
+
+      <figure class="globus">
+        <div class="globus__flaeche" id="globusFlaeche">
+          <canvas id="globusCanvas" tabindex="0" role="img" aria-label="Globus. Pfeiltasten drehen, Plus und Minus zoomen. Die Orte stehen in der Liste daneben."></canvas>
+          <div class="tipp" id="tipp" hidden></div>
+          <div class="regler" role="group" aria-label="Zoom">
+            <button type="button" id="zoomRein" aria-label="Hineinzoomen">+</button>
+            <button type="button" id="zoomRaus" aria-label="Herauszoomen">−</button>
+            <button type="button" id="zoomGanz" aria-label="Ganze Erde zeigen">○</button>
+          </div>
+          <div class="globus__ersatz" id="globusErsatz" hidden><p>Der Globus braucht zwei Bibliotheken aus dem Netz, die gerade nicht laden. Die Orte stehen in der Liste.</p></div>
+        </div>
+        <figcaption class="code">
+          <span><span class="zahl" id="zahlLaender">0</span> Länder eingetragen <span class="leise">· über 60 bereist, Liste folgt</span></span>
+          <span id="ansicht" class="leise">Ganze Erde</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="bibliothek" aria-labelledby="bibliothek-titel">
+    <div class="huelle">
+      <div class="abschnitt__kopf">
+        <h2 id="bibliothek-titel">Bibliothek</h2>
+        <p class="abschnitt__text">Zieh ein Buch aus dem Regal. Dahinter liegen die Texte: Romane, Erzählungen, das Journal und die Länderguides.</p>
+      </div>
+
+      <div class="bibliothek">
+        <div class="regal">
+          <p class="regal__name code">Eigenes</p>
+          <div class="regal__brett" role="group" aria-label="Eigene Bücher">
+            <button class="buch" type="button" data-buch="satoshi" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 13.2rem; --b: 3.1rem; --farbe: var(--akzent); --tinte: #fff; --kante: var(--akzent);"><span class="buch__titel">Satoshi</span></button>
+            <button class="buch" type="button" data-buch="ursprung-1" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 12.4rem; --b: 2.9rem; --farbe: var(--graphit); --tinte: #fff;"><span class="buch__titel">Ursprung · I</span></button>
+            <button class="buch" type="button" data-buch="ursprung-2" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 12.4rem; --b: 3.2rem; --farbe: var(--graphit); --tinte: #fff;"><span class="buch__titel">Ursprung · II</span></button>
+            <button class="buch" type="button" data-buch="ursprung-3" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 12.4rem; --b: 2.7rem; --farbe: var(--graphit); --tinte: #fff;"><span class="buch__titel">Ursprung · III</span></button>
+            <button class="buch" type="button" data-buch="erzaehlungen" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 10.6rem; --b: 2.1rem;"><span class="buch__titel">Erzählungen</span></button>
+            <button class="buch" type="button" data-buch="journal" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 11.6rem; --b: 2.5rem; --farbe: var(--grund);"><span class="buch__titel">Untertext · Journal</span></button>
+            <button class="buch" type="button" data-buch="laender" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 9.8rem; --b: 3.4rem; --farbe: var(--bereist);"><span class="buch__titel">Länder</span></button>
+            <button class="buch buch--lehnt" type="button" data-buch="untertagebuch" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 9.2rem; --b: 1.7rem;"><span class="buch__titel">Untertagebuch</span></button>
+          </div>
+        </div>
+
+        <div class="regal">
+          <p class="regal__name code">Gelesen</p>
+          <div class="regal__brett" role="group" aria-label="Gelesene Bücher">
+            <button class="buch" type="button" data-buch="borges" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 11.2rem; --b: 2.3rem; --farbe: var(--grund);"><span class="buch__titel">Ficciones</span><span class="buch__autor">Borges</span></button>
+            <button class="buch" type="button" data-buch="labatut" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 12.6rem; --b: 2.4rem;"><span class="buch__titel">Das blinde Licht</span><span class="buch__autor">Labatut</span></button>
+            <button class="buch" type="button" data-buch="chiang" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 11.8rem; --b: 2.8rem; --farbe: var(--bereist);"><span class="buch__titel">Exhalation</span><span class="buch__autor">Chiang</span></button>
+            <button class="buch" type="button" data-buch="herrndorf" aria-expanded="false" aria-controls="aufgeschlagen" style="--h: 14rem; --b: 2.6rem; --farbe: var(--graphit); --tinte: #fff;"><span class="buch__titel">Arbeit und Struktur</span><span class="buch__autor">Herrndorf</span></button>
+          </div>
+        </div>
+
+        <div class="aufgeschlagen" id="aufgeschlagen" aria-live="polite">
+          <div class="aufgeschlagen__innen" id="aufgeschlagenInnen"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="journal" aria-labelledby="journal-titel">
+    <div class="huelle">
+      <div class="abschnitt__kopf">
+        <h2 id="journal-titel">Untertext</h2>
+        <p class="abschnitt__text">Das Journal. Alle drei bis vier Wochen ein Text über Reisen, Bücher und das, was darunter liegt. Selten. Dann sorgfältig.</p>
+      </div>
+      <ul class="journal">
+        <li><span class="code leise">12.10.2026</span><div><a href="#journal">Der blinde Bibliothekar</a><p>Warum Borges mehr über das Reisen wusste als jeder Reiseführer.</p></div><span class="code leise">Literatur</span></li>
+        <li><span class="code leise">14.09.2026</span><div><a href="#journal">Die leise Erosion</a><p>Institutionen sterben selten an einem Tag.</p></div><span class="code leise">Politik</span></li>
+        <li><span class="code leise">17.08.2026</span><div><a href="#journal">Das langsamste Medium der Welt</a><p>Ein Plädoyer für Bücher, die man nicht nebenbei lesen kann.</p></div><span class="code leise">Aufmerksamkeit</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="ueber" aria-labelledby="ueber-titel">
+    <div class="huelle abschnitt__kopf">
+      <h2 id="ueber-titel">Briefe</h2>
+      <div>
+        <p class="abschnitt__text">Ein Brief alle drei bis vier Wochen: ein neuer Text, manchmal ein Länderguide, manchmal eine Erzählung.</p>
+        <form class="formular" id="briefForm" novalidate style="margin-top: 1.2rem;">
+          <label class="code leise" for="briefMail" style="flex-basis: 100%;">E-Mail-Adresse</label>
+          <input id="briefMail" type="email" autocomplete="email" placeholder="name@beispiel.de" required>
+          <button class="knopf" type="submit">Abonnieren</button>
+          <p class="formular__status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="huelle">
+  <div class="fuss__innen">
+    <span>Dominik Jäkel · Entwurf D · Beispieltexte</span>
+    <nav aria-label="Rechtliches"><a href="index.html">Alle Entwürfe</a><a href="#">Instagram</a><a href="#">Impressum</a></nav>
+  </div>
+</footer>
+
+<!-- Inhalte der Bücher: werden beim Herausziehen ins aufgeschlagene Blatt kopiert -->
+<template id="buch-satoshi">
+  <div class="blatt">
+    <div class="umschlag" style="--u-farbe: var(--akzent); --u-tinte: #fff;">
+      <p class="umschlag__autor">Dominik Jäkel</p>
+      <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="38" fill="none" stroke="#fff" stroke-width=".8"/><ellipse cx="50" cy="50" rx="14" ry="38" fill="none" stroke="#fff" stroke-width=".6"/><line x1="12" y1="50" x2="88" y2="50" stroke="#fff" stroke-width=".6"/></svg>
+      <p class="umschlag__titel">Satoshi</p>
+    </div>
+    <div class="blatt__text">
+      <p class="code leise">Roman · in Arbeit</p>
+      <h3>Satoshi</h3>
+      <p>Ein Roman mit vielen Schauplätzen. Auf dem Globus oben bekommt er eine eigene Ebene: Beim Umschalten fliegt die Erde von Ort zu Ort.</p>
+      <p class="leise">Entwurf: Die Schauplätze trage ich ein, sobald die Liste da ist.</p>
+      <div class="knopf-reihe"><button class="knopf" type="button" data-zeige-ebene="satoshi">Auf dem Globus zeigen</button></div>
+    </div>
+  </div>
+</template>
+<template id="buch-ursprung">
+  <div class="blatt">
+    <div class="umschlag" style="--u-farbe: var(--graphit); --u-tinte: #fff;">
+      <p class="umschlag__autor">Dominik Jäkel</p>
+      <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="30" y="18" width="16" height="64" fill="none" stroke="#fff" stroke-width=".8"/><rect x="24" y="14" width="28" height="9" fill="none" stroke="#fff" stroke-width=".8"/><rect x="58" y="30" width="12" height="52" fill="none" stroke="#fff" stroke-width=".6"/><rect x="54" y="26" width="20" height="7" fill="none" stroke="#fff" stroke-width=".6"/><line x1="8" y1="82" x2="92" y2="82" stroke="#fff" stroke-width=".8"/></svg>
+      <p class="umschlag__titel">Ursprung</p>
+    </div>
+    <div class="blatt__text">
+      <p class="code leise">Trilogie · drei Bände</p>
+      <h3>Die Ursprungstrilogie</h3>
+      <p>Drei Romane über die Anfänge der menschlichen Zivilisation. Daran habe ich einen Großteil meiner Zwanziger gearbeitet. Es gab Gespräche mit großen Agenturen. Am Ende hieß es, so etwas lasse sich nicht verkaufen.</p>
+      <p>Wenn sich tausend Leute finden, die sie lesen wollen, erscheint sie hier.</p>
+      <div class="knopf-reihe"><button class="knopf" type="button" data-zeige-ebene="ursprung">Göbekli Tepe auf dem Globus</button><a class="knopf knopf--leise" href="#ueber">Auf die Liste</a></div>
+    </div>
+  </div>
+</template>
+<template id="buch-erzaehlungen">
+  <div class="blatt">
+    <div class="umschlag"><p class="umschlag__autor">Dominik Jäkel</p><svg viewBox="0 0 100 100" aria-hidden="true"><line x1="14" y1="30" x2="86" y2="30" stroke="#1D1E21" stroke-width=".6"/><line x1="14" y1="45" x2="70" y2="45" stroke="#1D1E21" stroke-width=".6"/><line x1="14" y1="60" x2="80" y2="60" stroke="#1D1E21" stroke-width=".6"/><line x1="14" y1="75" x2="52" y2="75" stroke="#1D1E21" stroke-width=".6"/></svg><p class="umschlag__titel">Erzählungen</p></div>
+    <div class="blatt__text">
+      <p class="code leise">Kurzgeschichten · erscheinen nach und nach</p>
+      <h3>Erzählungen</h3>
+      <p>Kürzere Prosa, die hier nach und nach erscheint. Jede bekommt eine eigene Seite und, wenn sie an einem echten Ort spielt, einen Punkt auf dem Globus.</p>
+      <ul class="texte">
+        <li><a href="#bibliothek">Erste Erzählung</a><span class="code">bald</span></li>
+        <li><a href="#bibliothek">Zweite Erzählung</a><span class="code">bald</span></li>
+      </ul>
+    </div>
+  </div>
+</template>
+<template id="buch-journal">
+  <div class="blatt">
+    <div class="umschlag" style="--u-farbe: var(--grund);"><p class="umschlag__autor">Journal</p><svg viewBox="0 0 100 100" aria-hidden="true"><text x="50" y="58" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-size="15" fill="#1D1E21">Untertext</text><text x="50" y="72" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-style="italic" font-size="9" fill="#9B9DA2">Untertext</text></svg><p class="umschlag__titel">Untertext</p></div>
+    <div class="blatt__text">
+      <p class="code leise">Journal · alle drei bis vier Wochen</p>
+      <h3>Untertext</h3>
+      <ul class="texte">
+        <li><a href="#journal">Der blinde Bibliothekar</a><span class="code">Literatur</span></li>
+        <li><a href="#journal">Die leise Erosion</a><span class="code">Politik</span></li>
+        <li><a href="#journal">Das langsamste Medium der Welt</a><span class="code">Aufmerksamkeit</span></li>
+      </ul>
+      <a class="knopf knopf--leise" href="#journal">Alle Texte</a>
+    </div>
+  </div>
+</template>
+<template id="buch-laender">
+  <div class="blatt">
+    <div class="umschlag" style="--u-farbe: var(--bereist);"><p class="umschlag__autor">Guides</p><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="36" fill="none" stroke="#1D1E21" stroke-width=".7"/><path d="M14 50h72M50 14v72M24 30h52M24 70h52" fill="none" stroke="#1D1E21" stroke-width=".4"/></svg><p class="umschlag__titel">Länder</p></div>
+    <div class="blatt__text">
+      <p class="code leise">Länderguides · über 60 Länder bereist</p>
+      <h3>Länder</h3>
+      <p>Ehrlich, praktisch, ohne Werbung. Jeder Guide hat dieselben Kapitel und endet mit einer Leseliste und dem Kapitel „Was ich falsch gemacht habe“.</p>
+      <ul class="texte">
+        <li><a href="#globus" data-fliege="Kaohsiung">Taiwan</a><span class="code">in Arbeit</span></li>
+        <li><a href="#globus" data-fliege="Cotonou">Benin</a><span class="code">in Arbeit</span></li>
+        <li><a href="#globus" data-fliege="Colombo">Sri Lanka</a><span class="code">Notizen</span></li>
+      </ul>
+    </div>
+  </div>
+</template>
+<template id="buch-untertagebuch">
+  <div class="blatt">
+    <div class="umschlag"><p class="umschlag__autor">Tagebuch</p><svg viewBox="0 0 100 100" aria-hidden="true"><text x="50" y="60" text-anchor="middle" font-family="Geist Mono, monospace" font-size="16" fill="#1D1E21">03:12</text></svg><p class="umschlag__titel">Untertage­buch</p></div>
+    <div class="blatt__text">
+      <p class="code leise">Notizen, meistens nach Mitternacht</p>
+      <h3>Untertagebuch</h3>
+      <p class="blatt__auszug">Mittwoch, 03:12, Neukölln. Seit zwei Stunden an einem einzigen Satz. Er war vorher besser.</p>
+      <p class="blatt__auszug">Samstag, 23:40, im Nachtzug. Der Mann gegenüber liest Borges und schläft dabei ein. Ich halte das für die höchste Form der Zustimmung.</p>
+      <p class="leise">Beispieleinträge.</p>
+    </div>
+  </div>
+</template>
+<template id="buch-gelesen">
+  <div class="blatt">
+    <div class="umschlag" data-umschlag></div>
+    <div class="blatt__text">
+      <p class="code leise">Gelesen</p>
+      <h3 data-titel></h3>
+      <p data-notiz></p>
+      <p class="leise">Entwurf: Hier steht später, warum ich das Buch lese und was es mit meinen Texten zu tun hat.</p>
+    </div>
+  </div>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script>
+(() => {
+  // ---------- Daten, die Dominik pflegt ----------
+  // Bereiste Länder als ISO-Codes. Hier kommt die Liste aus dem Couchsurfing-Profil hinein.
+  const BEREIST = ['DE', 'ES', 'TW', 'LK', 'BJ'];
+  const EBENEN = {
+    leben: {
+      text: 'Orte, an denen ich gelebt, geschrieben oder länger Station gemacht habe. Die grau gefüllten Länder habe ich bereist.',
+      blick: { mitte: [52, 26], k: 1 },
+      orte: [
+        { name: 'Berlin', lat: 52.52, lon: 13.40, rang: 1 },
+        { name: 'Potsdam', lat: 52.39, lon: 13.06, rang: 3 },
+        { name: 'Dortmund', lat: 51.51, lon: 7.47, rang: 2 },
+        { name: 'Freiburg', lat: 47.99, lon: 7.85, rang: 2 },
+        { name: 'Mallorca', lat: 39.57, lon: 2.65, rang: 2 },
+        { name: 'Kaohsiung', lat: 22.63, lon: 120.30, rang: 1 },
+        { name: 'Colombo', lat: 6.93, lon: 79.86, rang: 1 },
+        { name: 'Cotonou', lat: 6.37, lon: 2.43, rang: 1 }
+      ]
+    },
+    satoshi: {
+      text: 'Die Schauplätze des Romans <em>Satoshi</em>. Beim Umschalten fliegt der Globus zum ersten Ort, danach von Kapitel zu Kapitel.',
+      blick: { mitte: [20, 20], k: 1 },
+      orte: []
+    },
+    ursprung: {
+      text: '<em>Göbekli Tepe</em>, Südostanatolien. Rund 11.500 Jahre alt, älter als Schrift, Rad und Töpferei. Ein Ort der Ursprungstrilogie.',
+      blick: { mitte: [38.92, 37.22], k: 7 },
+      orte: [
+        { name: 'Göbekli Tepe', lat: 37.22, lon: 38.92, rang: 1 }
+      ]
+    }
+  };
+
+  // ---------- Hilfen ----------
+  const $ = id => document.getElementById(id);
+  const ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css = getComputedStyle(document.documentElement);
+  const F = n => css.getPropertyValue(n).trim();
+  const FARBE = { papier: F('--papier'), graphit: F('--graphit'), graphit2: F('--graphit-2'), graphit3: F('--graphit-3'), linie: F('--linie'), land: F('--land'), bereist: F('--bereist'), grenze: F('--grenze'), akzent: F('--akzent') };
+  const koord = o => Math.abs(o.lat).toFixed(2) + '° ' + (o.lat >= 0 ? 'N' : 'S') + ' · ' + Math.abs(o.lon).toFixed(2) + '° ' + (o.lon >= 0 ? 'E' : 'W');
+
+  let ebene = 'leben';
+  let aktiverOrt = null;
+
+  // ---------- Ebenen und Ortsliste ----------
+  function ebeneZeigen(name, fliegenErlaubt = true) {
+    ebene = name;
+    aktiverOrt = null;
+    document.querySelectorAll('.ebene').forEach(b => {
+      const an = b.dataset.ebene === name;
+      b.setAttribute('aria-selected', String(an));
+      b.tabIndex = an ? 0 : -1;
+    });
+    $('ebene-panel').setAttribute('aria-labelledby', 'tab-' + name);
+    $('ebeneText').innerHTML = EBENEN[name].text;
+    const liste = $('orteListe');
+    liste.innerHTML = '';
+    if (!EBENEN[name].orte.length) {
+      const li = document.createElement('li');
+      li.className = 'orte__leer';
+      li.textContent = 'Noch keine Orte eingetragen.';
+      liste.appendChild(li);
+    }
+    EBENEN[name].orte.forEach(o => {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.innerHTML = '<span class="orte__name"></span><span class="orte__koord"></span>';
+      b.querySelector('.orte__name').textContent = o.name;
+      b.querySelector('.orte__koord').textContent = koord(o);
+      b.addEventListener('click', () => ortAnfliegen(o));
+      li.appendChild(b);
+      liste.appendChild(li);
+    });
+    if (globus && fliegenErlaubt) globus.fliegen(EBENEN[name].blick.mitte, EBENEN[name].blick.k);
+    if (globus) globus.zeichnen();
+  }
+  function ortAnfliegen(o) {
+    aktiverOrt = o.name;
+    document.querySelectorAll('#orteListe button').forEach(b => b.setAttribute('aria-current', String(b.querySelector('.orte__name').textContent === o.name)));
+    if (globus) globus.fliegen([o.lon, o.lat], Math.max(globus.k(), 7));
+  }
+  document.querySelectorAll('.ebene').forEach((b, i, alle) => {
+    b.addEventListener('click', () => ebeneZeigen(b.dataset.ebene));
+    b.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const n = alle[(i + (e.key === 'ArrowRight' ? 1 : alle.length - 1)) % alle.length];
+      n.focus();
+      n.click();
+    });
+  });
+
+  // ---------- Globus ----------
+  let globus = null;
+  const zahl = BEREIST.length;
+  $('zahlLaender').textContent = zahl;
+
+  if (!window.d3 || !window.topojson || !window.WELT_110M) {
+    $('globusErsatz').hidden = false;
+    $('globusCanvas').hidden = true;
+  } else {
+    globus = baueGlobus();
+  }
+  ebeneZeigen('leben', false);
+
+  function baueGlobus() {
+    const canvas = $('globusCanvas');
+    const flaeche = $('globusFlaeche');
+    const ctx = canvas.getContext('2d');
+    const tipp = $('tipp');
+    const DE = window.LAENDER_DE || { nach_id: {}, nach_name: {} };
+    const projektion = d3.geoOrthographic().clipAngle(90).precision(.4);
+    const pfad = d3.geoPath(projektion, ctx);
+    const gradnetz = d3.geoGraticule10();
+    let mitte = EBENEN.leben.blick.mitte.slice();
+    let k = 1, seite = 600, R = 280, dpr = 1;
+    let hover = null;
+    let flug = null;
+
+    function datensatz(topo) {
+      const laender = topojson.feature(topo, topo.objects.countries).features;
+      laender.forEach(f => {
+        const eintrag = DE.nach_id[f.id] || DE.nach_name[f.properties.name] || ['', f.properties.name];
+        f.iso = eintrag[0];
+        f.name = eintrag[1] || f.properties.name;
+        f.bereist = BEREIST.includes(f.iso);
+      });
+      return {
+        laender,
+        grenzen: topojson.mesh(topo, topo.objects.countries, (a, b) => a !== b),
+        kueste: topojson.mesh(topo, topo.objects.countries, (a, b) => a === b),
+        bereist: { type: 'FeatureCollection', features: laender.filter(f => f.bereist) }
+      };
+    }
+    const grob = datensatz(window.WELT_110M);
+    let fein = null;
+    function feinLaden() {
+      if (fein || feinLaden.laeuft) return;
+      feinLaden.laeuft = true;
+      const fertig = () => { if (window.WELT_50M) { fein = datensatz(window.WELT_50M); zeichnen(); } };
+      if (window.WELT_50M) return fertig();
+      const s = document.createElement('script');
+      s.src = 'daten/welt-50m.js';
+      s.onload = fertig;
+      document.head.appendChild(s);
+    }
+    const daten = () => (k > 1.8 && fein) ? fein : grob;
+
+    function messen() {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      seite = canvas.clientWidth || 600;
+      canvas.width = Math.round(seite * dpr);
+      canvas.height = Math.round(seite * dpr);
+      R = seite / 2 - 2;
+    }
+
+    function zeichnen() {
+      projektion.translate([seite / 2, seite / 2]).scale(R * k).rotate([-mitte[0], -mitte[1]]);
+      const d = daten();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, seite, seite);
+
+      ctx.beginPath(); pfad({ type: 'Sphere' }); ctx.fillStyle = FARBE.papier; ctx.fill();
+      if (k < 2.2) { ctx.beginPath(); pfad(gradnetz); ctx.strokeStyle = '#EDEEEF'; ctx.lineWidth = .5; ctx.stroke(); }
+      flaeche.classList.toggle('ist-gezoomt', k > 1.15);
+
+      ctx.beginPath(); d.laender.forEach(f => pfad(f)); ctx.fillStyle = FARBE.land; ctx.fill();
+      ctx.beginPath(); pfad(d.bereist); ctx.fillStyle = FARBE.bereist; ctx.fill();
+      if (hover) { ctx.beginPath(); pfad(hover); ctx.fillStyle = 'rgba(44, 60, 203, .12)'; ctx.fill(); }
+
+      ctx.beginPath(); pfad(d.grenzen); ctx.strokeStyle = FARBE.grenze; ctx.lineWidth = k > 3 ? .7 : .45; ctx.stroke();
+      ctx.beginPath(); pfad(d.kueste); ctx.strokeStyle = FARBE.graphit3; ctx.lineWidth = .6; ctx.stroke();
+      if (hover) { ctx.beginPath(); pfad(hover); ctx.strokeStyle = FARBE.akzent; ctx.lineWidth = 1; ctx.stroke(); }
+
+      ctx.beginPath(); pfad({ type: 'Sphere' }); ctx.strokeStyle = FARBE.graphit; ctx.lineWidth = 1; ctx.stroke();
+
+      // Ländernamen bereister Länder ab mittlerem Zoom
+      if (k >= 2.6) {
+        ctx.font = 'italic 300 13px Newsreader, Georgia, serif';
+        ctx.fillStyle = FARBE.graphit2;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        d.bereist.features.forEach(f => {
+          const c = d3.geoCentroid(f);
+          if (d3.geoDistance(c, mitte) > 1.3) return;
+          const p = projektion(c);
+          if (p) ctx.fillText(f.name, p[0], p[1]);
+        });
+      }
+
+      // Orte der aktiven Ebene, Beschriftungen ohne Überlappung
+      const belegt = [];
+      const orte = EBENEN[ebene].orte.slice().sort((a, b) => a.rang - b.rang);
+      ctx.font = '500 10.5px "Geist Mono", ui-monospace, monospace';
+      ctx.textBaseline = 'middle';
+      orte.forEach(o => {
+        if (d3.geoDistance([o.lon, o.lat], mitte) > Math.PI / 2 - .02) return;
+        const p = projektion([o.lon, o.lat]);
+        if (!p) return;
+        const aktiv = o.name === aktiverOrt;
+        ctx.beginPath(); ctx.arc(p[0], p[1], aktiv ? 7 : 5.5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(44, 60, 203, .14)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(p[0], p[1], 2.6, 0, Math.PI * 2); ctx.fillStyle = FARBE.akzent; ctx.fill();
+        const text = o.name.toUpperCase();
+        const breite = ctx.measureText(text).width + 2;
+        const rechts = p[0] < seite - breite - 24;
+        const box = rechts ? [p[0] + 9, p[1] - 8, p[0] + 9 + breite, p[1] + 8] : [p[0] - 9 - breite, p[1] - 8, p[0] - 9, p[1] + 8];
+        if (belegt.some(b => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return;
+        belegt.push(box);
+        ctx.textAlign = rechts ? 'left' : 'right';
+        ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeStyle = FARBE.papier;
+        ctx.strokeText(text, rechts ? p[0] + 9 : p[0] - 9, p[1]);
+        ctx.fillStyle = aktiv ? FARBE.akzent : FARBE.graphit;
+        ctx.fillText(text, rechts ? p[0] + 9 : p[0] - 9, p[1]);
+      });
+
+      $('ansicht').textContent = k < 1.3 ? 'Ganze Erde' : 'Zoom ' + k.toFixed(1) + '×';
+    }
+
+    // Ziehen dreht, Scrollen und Pinch zoomen (ein d3.zoom für beides)
+    const zoom = d3.zoom().scaleExtent([.9, 24]).filter(e => !e.button && e.type !== 'dblclick');
+    let letzte = d3.zoomIdentity;
+    zoom.on('start', () => { flug && flug.stop(); flug = null; });
+    zoom.on('zoom', e => {
+      const t = e.transform;
+      if (t.k !== letzte.k) {
+        k = t.k;
+        if (k > 1.6) feinLaden();
+      } else {
+        const tempo = .25 / k;
+        mitte[0] -= (t.x - letzte.x) * tempo;
+        mitte[1] = Math.max(-85, Math.min(85, mitte[1] + (t.y - letzte.y) * tempo));
+      }
+      letzte = t;
+      tippVerstecken();
+      zeichnen();
+    });
+    d3.select(canvas).call(zoom);
+    function zoomStandSetzen() {
+      letzte = d3.zoomIdentity.translate(letzte.x, letzte.y).scale(k);
+      canvas.__zoom = letzte;
+    }
+
+    // Kamerafahrt: über den Großkreis drehen, unterwegs kurz herauszoomen
+    function fliegen(ziel, zielK) {
+      flug && flug.stop();
+      if (zielK > 1.6) feinLaden();
+      const start = mitte.slice(), startK = k;
+      const weg = d3.geoInterpolate(start, ziel);
+      const abstand = d3.geoDistance(start, ziel);
+      const dauer = ruhig ? 0 : Math.min(2200, 900 + abstand * 700);
+      const delle = Math.min(Math.log(Math.max(startK, zielK)), abstand * 1.1);
+      if (!dauer) { mitte = ziel.slice(); k = zielK; zoomStandSetzen(); zeichnen(); return; }
+      flug = d3.timer(verstrichen => {
+        const t = Math.min(1, verstrichen / dauer);
+        const e = d3.easeCubicInOut(t);
+        mitte = weg(e);
+        k = Math.max(.9, Math.exp((1 - e) * Math.log(startK) + e * Math.log(zielK) - delle * Math.sin(Math.PI * e)));
+        zoomStandSetzen();
+        zeichnen();
+        if (t >= 1) { flug.stop(); flug = null; }
+      });
+    }
+
+    // Hover: Land unter dem Zeiger
+    function tippVerstecken() { tipp.hidden = true; if (hover) { hover = null; zeichnen(); } }
+    let wartet = false;
+    canvas.addEventListener('pointermove', e => {
+      if (e.buttons || wartet) return;
+      wartet = true;
+      requestAnimationFrame(() => {
+        wartet = false;
+        const r = canvas.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        const innen = Math.hypot(x - seite / 2, y - seite / 2) < R * k;
+        const lonlat = innen ? projektion.invert([x, y]) : null;
+        const treffer = lonlat ? daten().laender.find(f => d3.geoContains(f, lonlat)) || null : null;
+        if (treffer !== hover) { hover = treffer; zeichnen(); }
+        if (treffer) {
+          tipp.textContent = treffer.name + (treffer.bereist ? ' · bereist' : '');
+          tipp.style.left = x + 'px';
+          tipp.style.top = y + 'px';
+          tipp.hidden = false;
+        } else tipp.hidden = true;
+      });
+    });
+    canvas.addEventListener('pointerleave', tippVerstecken);
+
+    // Tastatur
+    canvas.addEventListener('keydown', e => {
+      const schritt = 10 / k;
+      const tasten = {
+        ArrowLeft: () => { mitte[0] -= schritt; }, ArrowRight: () => { mitte[0] += schritt; },
+        ArrowUp: () => { mitte[1] = Math.min(85, mitte[1] + schritt); }, ArrowDown: () => { mitte[1] = Math.max(-85, mitte[1] - schritt); },
+        '+': () => { k = Math.min(24, k * 1.4); feinLaden(); }, '=': () => { k = Math.min(24, k * 1.4); feinLaden(); }, '-': () => { k = Math.max(.9, k / 1.4); }
+      };
+      if (!tasten[e.key]) return;
+      e.preventDefault();
+      tasten[e.key]();
+      zoomStandSetzen();
+      zeichnen();
+    });
+    $('zoomRein').addEventListener('click', () => fliegen(mitte.slice(), Math.min(24, k * 1.8)));
+    $('zoomRaus').addEventListener('click', () => fliegen(mitte.slice(), Math.max(.9, k / 1.8)));
+    $('zoomGanz').addEventListener('click', () => fliegen(EBENEN[ebene].blick.mitte, 1));
+
+    // Sanftes Pendeln um die Ausgangsansicht, bis jemand eingreift
+    let leerlauf = null;
+    if (!ruhig) {
+      const basis = mitte[0];
+      leerlauf = d3.timer(t => { if (!flug && k < 1.2 && ebene === 'leben') { mitte[0] = basis + Math.sin(t / 5200) * 14; zeichnen(); } });
+      ['pointerdown', 'wheel', 'keydown', 'touchstart'].forEach(t => canvas.addEventListener(t, () => { leerlauf && leerlauf.stop(); leerlauf = null; }, { passive: true }));
+      document.querySelectorAll('.ebene, #orteListe, .regler').forEach(el => el.addEventListener('click', () => { leerlauf && leerlauf.stop(); leerlauf = null; }));
+    }
+
+    messen();
+    zeichnen();
+    window.addEventListener('resize', () => { messen(); zeichnen(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(zeichnen);
+    return { fliegen, zeichnen, k: () => k, orte: () => EBENEN[ebene].orte };
+  }
+
+  // ---------- Bibliothek ----------
+  const GELESEN = {
+    borges: { titel: 'Jorge Luis Borges: Ficciones', notiz: 'Das Buch, aus dem Uqbar stammt, das Land aus einem einzigen Lexikon.', farbe: 'var(--grund)' },
+    labatut: { titel: 'Benjamín Labatut: Das blinde Licht', notiz: 'Wissenschaft, erzählt wie ein Abgrund.', farbe: 'var(--papier)' },
+    chiang: { titel: 'Ted Chiang: Exhalation', notiz: 'Erzählungen, in denen Gedankenexperimente eine Moral haben.', farbe: 'var(--bereist)' },
+    herrndorf: { titel: 'Wolfgang Herrndorf: Arbeit und Struktur', notiz: 'Ein Tagebuch, das zeigt, was ein Blog sein kann.', farbe: 'var(--graphit)', tinte: '#fff' }
+  };
+  const VORLAGE = { satoshi: 'buch-satoshi', 'ursprung-1': 'buch-ursprung', 'ursprung-2': 'buch-ursprung', 'ursprung-3': 'buch-ursprung', erzaehlungen: 'buch-erzaehlungen', journal: 'buch-journal', laender: 'buch-laender', untertagebuch: 'buch-untertagebuch' };
+  const panel = $('aufgeschlagen');
+  const innen = $('aufgeschlagenInnen');
+  let offen = null;
+
+  function buchZu() {
+    document.querySelectorAll('.buch').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    document.querySelectorAll('.regal__brett').forEach(r => r.classList.remove('hat-auswahl'));
+    panel.classList.remove('ist-offen');
+    offen = null;
+  }
+  function buchAuf(knopf) {
+    const id = knopf.dataset.buch;
+    if (offen === id) { buchZu(); return; }
+    buchZu();
+    offen = id;
+    knopf.setAttribute('aria-expanded', 'true');
+    knopf.closest('.regal__brett').classList.add('hat-auswahl');
+    let inhalt;
+    if (VORLAGE[id]) {
+      inhalt = $(VORLAGE[id]).content.cloneNode(true);
+    } else {
+      const g = GELESEN[id];
+      inhalt = $('buch-gelesen').content.cloneNode(true);
+      const u = inhalt.querySelector('[data-umschlag]');
+      u.style.setProperty('--u-farbe', g.farbe);
+      if (g.tinte) u.style.setProperty('--u-tinte', g.tinte);
+      const [autor, titel] = g.titel.split(': ');
+      u.innerHTML = '<p class="umschlag__autor"></p><span></span><p class="umschlag__titel"></p>';
+      u.querySelector('.umschlag__autor').textContent = autor;
+      u.querySelector('.umschlag__titel').textContent = titel;
+      inhalt.querySelector('[data-titel]').textContent = g.titel;
+      inhalt.querySelector('[data-notiz]').textContent = g.notiz;
+    }
+    innen.replaceChildren(inhalt);
+    requestAnimationFrame(() => panel.classList.add('ist-offen'));
+  }
+  document.querySelectorAll('.buch').forEach(b => b.addEventListener('click', () => buchAuf(b)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && offen) buchZu(); });
+
+  // Aus einem Buch zurück auf den Globus
+  innen.addEventListener('click', e => {
+    const ebenenKnopf = e.target.closest('[data-zeige-ebene]');
+    const ortLink = e.target.closest('[data-fliege]');
+    if (!ebenenKnopf && !ortLink) return;
+    e.preventDefault();
+    document.getElementById('globus').scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+    if (ebenenKnopf) {
+      ebeneZeigen(ebenenKnopf.dataset.zeigeEbene);
+    } else {
+      if (ebene !== 'leben') ebeneZeigen('leben', false);
+      const o = EBENEN.leben.orte.find(x => x.name === ortLink.dataset.fliege);
+      if (o) ortAnfliegen(o);
+    }
+  });
+
+  // Formular: im Entwurf ohne Versand
+  $('briefForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const feld = $('briefMail');
+    const status = e.target.querySelector('.formular__status');
+    status.textContent = feld.value && feld.checkValidity()
+      ? 'Entwurf: Hier ginge jetzt eine Bestätigungsmail raus (Double-Opt-in).'
+      : 'Bitte eine gültige E-Mail-Adresse eingeben, zum Beispiel name@beispiel.de.';
+  });
+})();
+</script>
+</body>
+</html>

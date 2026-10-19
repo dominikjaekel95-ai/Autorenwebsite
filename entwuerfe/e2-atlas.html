@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dominik Jäkel</title>
+<meta name="description" content="Entwurf E2, Atlastafel: Dominik Jäkel, Schriftsteller und Reisender. Eine Doppelseite mit Tafel und Globus, darunter die gelesenen Bücher als Zeitband.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..700;1,400..700&family=Alegreya+SC:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Entwurf E2 „Atlastafel“: eine Doppelseite nach dem Muster eines Atlas, jede Tafel gleich gebaut:
+   Kopfzeile mit dem Namen, eine Zeile in Kapitälchen, eine Datenzeile, ein Satz.
+   Maßeinheit ist die Zeile (--z). Farben: Papier, Graphit, Grautöne und genau eine Sonderfarbe,
+   Siena, die nur die Ursprungstrilogie bezeichnet. */
+:root {
+  --papier: #FBFBF8;
+  --tinte: #1C1C1B;
+  --graphit: #3A3A38;
+  --grau: #6B6B67;
+  --grau-2: #9A9A95;
+  --grau-3: #C4C4BF;
+  --grau-4: #E4E4DF;
+  --siena: #9C4A2F;
+  --karte: #F6F3EA;
+  --karte-rand: #D6D0C1;
+  --z: 1.5rem;
+  --schrift: "Alegreya", "Iowan Old Style", Palatino, Georgia, serif;
+  --sc: "Alegreya SC", "Alegreya", Palatino, Georgia, serif;
+  --rand-l: clamp(16px, 9vw, 10rem);
+  --rand-r: clamp(16px, 4vw, 4rem);
+  --tafel: 20rem;
+  --bund: calc(var(--z) * 3);
+  --globus: min(46rem, calc(100svh - 8.5rem), calc(100vw - var(--rand-l) - var(--rand-r) - var(--tafel) - var(--bund)));
+  --satz: calc(var(--tafel) + var(--bund) + var(--globus));
+  /* Was an Breite übrig bleibt, verteilt sich drei zu zwei auf den linken und den rechten Rand */
+  --links: max(var(--rand-l), calc((100vw - var(--satz)) * .6));
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 112.5%; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--papier); color: var(--graphit);
+  font-family: var(--schrift); font-size: 1rem; line-height: var(--z);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  font-kerning: normal; hyphens: auto; -webkit-hyphens: auto;
+  text-rendering: optimizeLegibility;
+}
+p, h1, h2, h3 { margin: 0; font-weight: 400; }
+p { text-wrap: pretty; }
+i, em { font-style: italic; }
+a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; text-decoration-color: var(--grau-2); }
+a:hover { text-decoration-color: currentColor; }
+.sc { font-family: var(--sc); text-transform: lowercase; letter-spacing: .04em; }
+.nw { white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--graphit); outline-offset: 3px; }
+
+/* Wörter, die etwas tun: unterstrichen, ohne Knopfgestalt */
+.wort {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: pointer;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; text-decoration-color: var(--grau-3);
+  -webkit-tap-highlight-color: transparent;
+}
+.wort:hover { text-decoration-color: currentColor; }
+.wort[aria-current="true"] { color: var(--tinte); text-decoration: none; cursor: default; }
+.wort:disabled { color: var(--grau-3); text-decoration: none; cursor: default; }
+
+/* ---------- Doppelseite ---------- */
+.doppelseite {
+  display: grid;
+  grid-template-columns: var(--tafel) var(--bund) var(--globus);
+  grid-template-areas: "kl . kr" "sl . sr";
+  row-gap: var(--z);
+  margin: 0 0 0 var(--links);
+  padding-top: var(--z);
+}
+.kolumne { display: flex; align-items: baseline; gap: 1.5em; font-size: .9rem; color: var(--grau); }
+.kolumne h1, .kolumne p { font-family: var(--sc); font-size: inherit; line-height: var(--z); text-transform: lowercase; letter-spacing: .05em; color: var(--graphit); }
+.kolumne-l { grid-area: kl; }
+.kolumne-r { grid-area: kr; justify-content: flex-end; }
+.pagina { font-variant-numeric: oldstyle-nums tabular-nums; color: var(--grau); min-width: 1.4em; }
+.kolumne-r .pagina { text-align: right; }
+
+.seite-l { grid-area: sl; display: flex; flex-direction: column; min-height: var(--globus); }
+.seite-r { grid-area: sr; }
+
+/* Inhaltsverzeichnis: vier Wörter in Kapitälchen */
+.inhalt { font-family: var(--sc); font-size: .9rem; display: flex; flex-wrap: wrap; column-gap: 1.1em; }
+.inhalt .wort { text-transform: lowercase; letter-spacing: .04em; color: var(--grau); }
+.inhalt .wort[aria-current="true"] { color: var(--tinte); }
+
+.tafel { margin-top: calc(var(--z) * 2); }
+.neu { animation: blatt 130ms ease-out; }
+@keyframes blatt { from { opacity: .3; } }
+
+/* Die Tafel, für alle vier Seiten gleich gebaut */
+.platte + .platte, .platz { margin-top: calc(var(--z) * 1.5); }
+.kopf { position: relative; font-size: 1.6rem; line-height: calc(var(--z) * 1.5); font-style: italic; color: var(--tinte); hyphens: manual; }
+.unter { font-family: var(--sc); text-transform: lowercase; letter-spacing: .04em; color: var(--grau); }
+.unter i { font-family: var(--sc); }
+.daten { font-variant-numeric: oldstyle-nums; }
+.satz { color: var(--grau); }
+.text + .text, .platte .text { margin-top: calc(var(--z) * .5); }
+.ist-neben .kopf { color: var(--grau); }
+.haengend { display: none; }
+.platz { min-height: calc(var(--z) * 5.5); }
+
+/* Leben: die Vita bleibt stehen, die Chronik wandert durch ihre Ortsnamen */
+.vita p { font-size: 1.08rem; line-height: calc(var(--z) * 1.08); }
+.vita .neben-satz { color: var(--grau); }
+.vita.laeuft p, .buch.laeuft .text { color: var(--grau); }
+.o.jetzt { color: var(--tinte); }
+
+.laender { margin-top: calc(var(--z) * .5); font-style: italic; color: var(--grau); font-size: .95rem; }
+.laender .wort { text-decoration-color: var(--grau-4); }
+.laender .wort:hover { text-decoration-color: currentColor; }
+
+/* Ursprung: drei Bände, die sich nacheinander öffnen */
+.baende { margin-top: calc(var(--z) * .5); }
+.band-eintrag { margin-top: calc(var(--z) * .75); transition: opacity 900ms ease; }
+.band-eintrag.zu { opacity: 0; visibility: hidden; }
+.band-eintrag.vorbei { color: var(--grau); }
+.band-kopf { display: flex; align-items: baseline; gap: .6rem; }
+.band-nr { font-family: var(--sc); font-size: 1.35rem; color: var(--siena); min-width: 1.9em; letter-spacing: .02em; flex: none; }
+.band-ort { font-size: 1.3rem; font-style: italic; color: var(--tinte); }
+.band-eintrag.vorbei .band-ort { color: var(--grau); }
+.band-zeit, .band-koord, .band-text { padding-left: 3.17rem; }
+.band-zeit { color: var(--grau); }
+.band-text { margin-top: calc(var(--z) * .25); font-size: .95rem; line-height: calc(var(--z) * .95); }
+.band-koord:empty { display: none; }
+
+.blaettern { padding-top: var(--z); min-height: calc(var(--z) * 2); display: flex; gap: 1.4em; }
+.kustode { margin-top: auto; align-self: flex-end; font-style: italic; color: var(--grau-2); min-height: var(--z); }
+
+/* Globus */
+.globus { position: relative; width: var(--globus); aspect-ratio: 1; }
+.globus canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; }
+.globus canvas:active { cursor: grabbing; }
+.globus.ist-gezoomt { outline: 1px solid var(--graphit); outline-offset: 0; }
+.tipp {
+  position: absolute; left: 0; top: 0; transform: translate(14px, -50%); pointer-events: none; white-space: nowrap;
+  font-style: italic; font-size: .9rem; line-height: 1.2; padding: .05em .3em; background: var(--papier); color: var(--tinte);
+}
+.tipp.links { transform: translate(calc(-100% - 14px), -50%); }
+.hinweis { position: absolute; left: 0; bottom: -1.6rem; font-size: .8rem; font-style: italic; color: var(--grau-2); line-height: 1.2; background: var(--papier); padding: 0 .3em 0 0; }
+.ohne-globus { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 2rem; font-style: italic; color: var(--grau); }
+.legende:empty { display: none; }
+
+/* ---------- Bibliothek: das Zeitband ---------- */
+.bibliothek {
+  margin: calc(var(--z) * 4) 0 0 var(--links);
+  width: var(--satz);
+  max-width: calc(100vw - var(--links) - var(--rand-r));
+}
+.bib-kopf { max-width: var(--tafel); }
+.bib-kopf h2 { font-size: 1.6rem; line-height: calc(var(--z) * 1.5); color: var(--tinte); }
+.bib-kopf p { margin-top: calc(var(--z) * .5); }
+.zeitband { margin-top: calc(var(--z) * 2); position: relative; }
+.zeitband-roll { position: relative; }
+.band { display: block; overflow: visible; }
+.band:focus { outline: none; }
+.band:focus-visible { outline: 2px solid var(--graphit); outline-offset: 6px; }
+.band rect { shape-rendering: geometricPrecision; }
+.band .lieb { fill: var(--graphit); }
+.band .grau { fill: #B7B7B2; }
+.band .ab { fill: #CACAC5; }
+.band .wieder { stroke: var(--graphit); stroke-width: 1; }
+.band .werk { fill: var(--papier); stroke: var(--tinte); stroke-width: 1.2; }
+.band .werk.siena { stroke: var(--siena); transition: opacity 900ms ease; }
+.band .werk.verborgen { opacity: 0; }
+/* Liegende Bücher wie Papier mit feiner Kante, damit sie als Bücher und nicht als Balken lesen */
+.band .quer { fill: #EFEDE7; stroke: #5F5E5A; stroke-width: .8; vector-effect: non-scaling-stroke; }
+.band .haar { stroke: var(--grau-2); stroke-width: .75; }
+.band .bruch { stroke: var(--graphit); stroke-width: .9; fill: none; }
+.band .jahr { font-family: var(--schrift); font-style: italic; font-size: 13px; fill: var(--grau); font-variant-numeric: oldstyle-nums; }
+.band .marke { stroke: var(--tinte); stroke-width: 1; }
+.band-kind rect { fill: #ABABA6; }
+.band-warte rect { fill: var(--papier); stroke: #BDBDB8; stroke-width: .6; }
+.band rect.an { fill: var(--tinte); }
+.band-warte rect.an { fill: var(--tinte); stroke: var(--tinte); }
+.bandzeile { min-height: var(--z); margin-top: calc(var(--z) * .25); white-space: nowrap; font-size: .95rem; }
+.bandzeile span { display: inline-block; }
+.bandzeile .wort { text-decoration-color: var(--grau-3); }
+.bandname { margin-top: var(--z); font-style: italic; color: var(--grau); font-size: .95rem; position: sticky; left: 0; width: max-content; max-width: 100%; }
+.band-kind, .band-warte { margin-top: calc(var(--z) * .25); }
+
+/* Karteikarte, A6 quer */
+.karte { border: 0; padding: 0; background: transparent; max-width: none; max-height: none; overflow: visible; color: var(--graphit); }
+.karte::backdrop { background: rgba(251, 251, 248, .55); }
+.karte-blatt {
+  width: min(27rem, calc(100vw - 32px)); aspect-ratio: 148 / 105; overflow: auto;
+  background: var(--karte); border: 1px solid var(--karte-rand); padding: calc(var(--z) * .75) 1.4rem calc(var(--z) * .5);
+  display: flex; flex-direction: column; font-size: .98rem;
+}
+.karte-kopf { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: calc(var(--z) * .25); border-bottom: 1px solid #A9A290; margin-bottom: calc(var(--z) * .5); }
+.karte-sig { font-variant-numeric: oldstyle-nums; color: var(--tinte); letter-spacing: .02em; }
+.karte-regal { color: var(--grau); }
+.karte-titel { font-size: 1.3rem; line-height: calc(var(--z) * 1.1); font-style: italic; color: var(--tinte); hyphens: manual; }
+.karte-unter { color: var(--grau); font-size: .95rem; line-height: 1.3; margin-top: .15rem; }
+.karte-autor { margin-top: calc(var(--z) * .5); }
+.karte-daten { color: var(--grau); }
+.karte-notiz { font-style: italic; color: var(--grau); }
+.karte-fuss { margin-top: auto; padding-top: calc(var(--z) * .5); }
+.karte-siena .karte-sig { color: var(--siena); }
+
+/* ---------- Kolophon ---------- */
+.kolophon { margin: calc(var(--z) * 4) 0 calc(var(--z) * 2) var(--links); max-width: min(34rem, calc(100vw - var(--links) - var(--rand-r))); font-size: .85rem; line-height: calc(var(--z) * .9); color: var(--grau); }
+.kolophon p + p { margin-top: calc(var(--z) * .5); }
+
+.nur-vorleser { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Breite Bildschirme: die Jahreszahl hängt wie eine Marginalie im linken Rand */
+@media (min-width: 85em) {
+  .haengend { display: block; position: absolute; right: 100%; top: 0; margin-right: .65em; white-space: nowrap; font-style: normal; color: var(--grau); font-variant-numeric: oldstyle-nums; }
+  .haengend .bis { font-style: italic; font-size: .6em; margin-right: .15em; }
+  .jahr-u { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+/* Mittlere Breite: schmalere Tafel */
+@media (max-width: 68em) {
+  :root { --tafel: 18.5rem; --bund: calc(var(--z) * 2); --rand-l: clamp(16px, 5vw, 4rem); }
+  .inhalt { font-size: .85rem; column-gap: .9em; }
+}
+/* Telefon: eine Spalte, Tafel über dem Globus; die Tafel hat eine feste Mindesthöhe, damit der Globus nie springt */
+@media (max-width: 47.49em) {
+  :root { --z: 1.45rem; --rand-l: 16px; --rand-r: 16px; --globus: calc(100vw - 32px); --links: 16px; }
+  html { font-size: 106.25%; }
+  .doppelseite { display: block; padding-top: calc(var(--z) * .75); margin-right: 16px; }
+  .kolumne-l, .kolumne-r { display: inline-flex; }
+  .kolumnen { display: flex; justify-content: space-between; gap: 1em; }
+  .pagina { display: none; }
+  .kolumne { font-size: .82rem; }
+  .seite-l { min-height: 0; margin-top: var(--z); }
+  .inhalt { font-size: .92rem; }
+  .tafel { margin-top: var(--z); }
+  .kopf { font-size: 1.45rem; line-height: calc(var(--z) * 1.25); }
+  .platz { margin-top: var(--z); min-height: 0; }
+  .vita p { font-size: 1rem; line-height: var(--z); }
+  .blaettern { padding-top: calc(var(--z) * .5); min-height: calc(var(--z) * 1.5); }
+  .kustode { display: none; }
+  .seite-r { margin-top: var(--z); }
+  .hinweis { bottom: auto; top: calc(var(--z) * -1); left: 0; }
+  .band-eintrag { margin-top: calc(var(--z) * .5); }
+  .band-eintrag:not(.offen) .band-zeit, .band-eintrag:not(.offen) .band-text, .band-eintrag:not(.offen) .band-koord { display: none; }
+  .band-eintrag.zu { display: none; }
+  /* Satoshi auf dem Telefon: auf der Titelseite die Liste der Schauplätze, sonst die Tafel des Schauplatzes */
+  .buch.laeuft .weitere, .buch:not(.laeuft) + .platz { display: none; }
+  .legende { margin-top: calc(var(--z) * .75); }
+  .zeitband { margin-top: var(--z); }
+  .bibliothek { margin-top: calc(var(--z) * 3); width: auto; max-width: none; margin-right: 16px; }
+  .zeitband-roll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; padding-bottom: .5rem; margin: 0 -16px; padding-left: 16px; padding-right: 16px; scroll-padding: 0 16px; }
+  .kolophon { margin-right: 16px; max-width: none; }
+  .karte { margin: auto 0 0 0; width: 100%; }
+  .karte-blatt { width: 100%; aspect-ratio: auto; min-height: 15rem; border-width: 1px 0 0 0; padding-bottom: calc(var(--z) * 1); }
+}
+@media (min-width: 47.5em) {
+  .kolumnen { display: contents; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .neu { animation: none; }
+  .band-eintrag, .band .werk.siena { transition: none; }
+}
+</style>
+</head>
+<body>
+<main>
+  <section class="doppelseite" aria-label="Orte">
+    <div class="kolumnen">
+      <header class="kolumne kolumne-l"><span class="pagina" id="paginaL">2</span><h1>Dominik Jäkel</h1></header>
+      <div class="kolumne kolumne-r"><p>Schriftsteller und Reisender</p><span class="pagina" id="paginaR">3</span></div>
+    </div>
+
+    <div class="seite-l">
+      <nav class="inhalt" aria-label="Inhalt">
+        <button class="wort" type="button" data-ebene="leben" aria-current="true">Leben</button>
+        <button class="wort" type="button" data-ebene="reisen">Reisen</button>
+        <button class="wort" type="button" data-ebene="satoshi"><i>Satoshi</i></button>
+        <button class="wort" type="button" data-ebene="ursprung"><i>Ursprung</i></button>
+      </nav>
+      <article class="tafel" id="tafel" aria-live="polite">
+        <div class="vita" id="vita">
+          <p>Dominik Jäkel lebte bis 2014 in Dortmund, danach in Freiburg, Potsdam und Kaohsiung; seit 2022 lebt er in Berlin. <span class="neben-satz">Längere Zeit verbrachte er in Colombo, Cotonou und auf Mallorca.</span> Er schreibt Romane und Erzählungen, Länderguides und das Journal <i>Untertext</i>.</p>
+        </div>
+      </article>
+      <p class="blaettern" id="blaettern"></p>
+      <p class="kustode" id="kustode" aria-hidden="true"></p>
+    </div>
+
+    <div class="seite-r">
+      <div class="globus" id="flaeche">
+        <canvas id="globus" tabindex="0" aria-label="Globus mit den Orten der gewählten Seite; Pfeiltasten drehen, Plus und Minus zoomen"></canvas>
+        <p class="tipp" id="tipp" hidden></p>
+        <p class="hinweis" id="hinweis" hidden></p>
+      </div>
+      <div class="legende" id="legende"></div>
+    </div>
+  </section>
+
+  <section class="bibliothek" aria-labelledby="bib-titel">
+    <div class="bib-kopf">
+      <h2 id="bib-titel">Von Gilgamesch bis Labatut</h2>
+      <p>Was ich gelesen habe, gestellt nach dem Jahr, in dem es zuerst erschien, jeder Strich so breit wie sein Rücken. Dunkel die liebsten, halb so hoch, was ich nicht zu Ende gelesen habe, ein kleiner Strich darüber, wenn ich es wieder gelesen habe. Quer darauf liegt, was ich gerade lese, ganz rechts steht, woran ich selbst schreibe. Eine Auswahl, längst nicht alles.</p>
+    </div>
+    <div class="zeitband" id="zeitband">
+      <div class="zeitband-roll" id="zeitband-roll"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="kolophon">
+  <p>Gesetzt aus der Alegreya und der Alegreya SC von Juan Pablo del Peral. Ländergrenzen nach Natural Earth, die Bücher aus dem eigenen Goodreads-Konto.</p>
+  <p>Entwurf E2, Atlastafel. <a href="index.html">Alle Entwürfe</a></p>
+</footer>
+
+<dialog class="karte" id="karte" aria-labelledby="karte-titel">
+  <div class="karte-blatt" id="karte-blatt">
+    <p class="karte-kopf"><span class="karte-sig" id="karte-sig"></span><span class="karte-regal sc" id="karte-regal"></span></p>
+    <h3 class="karte-titel" id="karte-titel"></h3>
+    <p class="karte-unter" id="karte-unter"></p>
+    <p class="karte-autor" id="karte-autor"></p>
+    <p class="karte-daten" id="karte-daten"></p>
+    <p class="karte-notiz" id="karte-notiz"></p>
+    <p class="karte-fuss"><button class="wort" id="karte-zu" type="button">zurücklegen</button></p>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="daten/buecher.js"></script>
+<script src="globus/kern.js"></script>
+<script src="globus/inhalt.js"></script>
+<script>
+(function () {
+  'use strict';
+  const I = window.INHALT;
+  if (!I) return;
+  const $ = s => document.querySelector(s);
+  const ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SIENA = '#9C4A2F';
+  const NNBSP = '\u202F', NBSP = '\u00A0';
+
+  // ---------- Hilfen ----------
+  function hash(s) { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const tausender = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, NNBSP);
+  function grad(w, pos, neg) {
+    const a = Math.abs(w); let d = Math.floor(a), m = Math.round((a - d) * 60);
+    if (m === 60) { d += 1; m = 0; }
+    return d + '°' + NBSP + m + '′' + NBSP + (w >= 0 ? pos : neg);
+  }
+  const koord = (lat, lon) => grad(lat, 'N', 'S') + ', ' + grad(lon, 'O', 'W');
+  function luftlinie(a, b) {
+    const r = Math.PI / 180, dLat = (b.lat - a.lat) * r, dLon = (b.lon - a.lon) * r;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
+    return Math.round(2 * 6371 * Math.asin(Math.sqrt(h)) / 10) * 10;
+  }
+  const km = (a, b) => tausender(luftlinie(a, b)) + NBSP + 'km';
+  function zahlwort(n) {
+    const e = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn'];
+    const z = ['', '', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+    if (n < 20) return e[n];
+    const zehner = Math.floor(n / 10), einer = n % 10;
+    return einer ? (einer === 1 ? 'ein' : e[einer]) + 'und' + z[zehner] : z[zehner];
+  }
+  const gross = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const chr = t => t.replace(/(\d) v\. Chr\./g, '$1' + NBSP + 'v.' + NBSP + 'Chr.').replace(/\bum (\d)/g, 'um' + NBSP + '$1');
+  const warte = ms => new Promise(r => setTimeout(r, ms));
+
+  // ---------- Inhalte ----------
+  const STATIONEN = I.leben.map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, jahr: s.jahr, land: s.land }));
+  const AUSGANG = STATIONEN[0];   // alle Entfernungen der Lebenstafeln von hier aus, wie im Atlas von einem festen Ort
+  // Die Spur auf dem Globus führt nur durch die Wohnorte. Der Kern bekommt alle acht Orte in zeitlicher Folge;
+  // vor dem ersten Wohnort nach einem Nebenort steht ein Anschlusspunkt am letzten Wohnort, und die Abschnitte
+  // zu und von Nebenorten (im Kern gestrichelt) zeichnet diese Seite nicht. So bleiben die Nebenorte offene Punkte ohne Verbindung.
+  const SPUR = [], SPUR_INDEX = [];
+  (() => {
+    let letzter = null, nachNeben = false;
+    STATIONEN.forEach((s, n) => {
+      if (!s.neben && nachNeben && letzter) SPUR.push({ name: letzter.name, lat: letzter.lat, lon: letzter.lon });
+      SPUR_INDEX[n] = SPUR.length;
+      SPUR.push(s);
+      if (s.neben) nachNeben = true; else { nachNeben = false; letzter = s; }
+    });
+  })();
+  const REIHE = Object.fromEntries(STATIONEN.map((s, i) => [s.name, i]));
+  const SATOSHI = (() => {
+    const o = I.satoshi.orte.slice();
+    const vorn = o.filter(x => /Patagonien/.test(x.notiz || ''));
+    return vorn.concat(o.filter(x => !vorn.includes(x)));
+  })();
+  const BARILOCHE = SATOSHI.find(x => x.name === 'Bariloche') || SATOSHI[0];
+  const BUENOS_AIRES = SATOSHI.find(x => x.name === 'Buenos Aires') || SATOSHI[1];
+  const URSPRUNG = I.ursprung.slice();
+  const BAENDE = ['I', 'II', 'III'];
+  const BLICK = {
+    leben: { mitte: [55, 28], k: 1 },
+    reisen: { mitte: [30, 25], k: 1 },
+    satoshi: { mitte: [-45, 12], k: 1 },
+    ursprung: { mitte: [40, 33], k: 1.4 }
+  };
+  // Berlin zuerst, damit eine Gruppe nah beieinander liegender Orte an Berlin beschriftet wird
+  const ORTE_LEBEN = STATIONEN.map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: s.neben, rang: s.name === 'Berlin' ? .5 : 1 }));
+  const EBENE = {
+    leben: { orte: ORTE_LEBEN.slice(), laender: false, blick: BLICK.leben },
+    reisen: { orte: [], laender: true, blick: BLICK.reisen },
+    satoshi: { orte: SATOSHI.map(o => ({ name: o.name, lat: o.lat, lon: o.lon, kurz: o.kurz, rang: o.rang })), laender: false, blick: BLICK.satoshi },
+    ursprung: { orte: URSPRUNG.map(o => ({ name: o.name, lat: o.lat, lon: o.lon })), laender: false, blick: BLICK.ursprung, farben: { akzent: SIENA, akzentHauch: 'rgba(156, 74, 47, .15)' } }
+  };
+  // Der Kern liest die Orte der Ebene bei jedem Bild neu; die Liste wird hier an Ort und Stelle gekürzt oder ergänzt
+  function orteZeigen(bis) {
+    const o = EBENE.leben.orte;
+    o.length = 0;
+    ORTE_LEBEN.forEach((x, i) => { if (bis == null || i <= bis) o.push(x); });
+  }
+  const SEITE = { leben: 2, reisen: 20, satoshi: 22, ursprung: 46 };
+
+  // Ländernamen ohne Globus: aus laender-de.js, Landesteile aus INHALT
+  const LANDNAME = {};
+  if (window.LAENDER_DE) Object.values(window.LAENDER_DE.nach_id).forEach(([iso, name]) => { LANDNAME[iso] = name; });
+  Object.assign(LANDNAME, I.sondernamen || {});
+  const KONTINENT_BLICK = { Europa: [14, 50, 3.1], Asien: [92, 28, 1.7], Afrika: [17, 3, 1.85], Amerika: [-78, 12, 1.25] };
+  const kontinentVon = iso => Object.keys(I.kontinente).find(k => I.kontinente[k].includes(iso)) || null;
+
+  // ---------- Zustand ----------
+  let ebeneJetzt = 'leben';
+  let g = null, unterZeiger = null;
+  let lebenIndex = 0, satoshiIndex = 0;
+  let gelaufen = false, benutzt = false, autoStart = null;
+  let lebenLauf = 0, lebenLaeuft = false, ursprungLauf = 0;
+  let reisenKontinent = null, reisenLand = null;
+  let ursprungSichtbar = 0, ursprungAktiv = -1, ursprungLaeuft = false, ursprungOffen = 2;
+  const schmalMQ = window.matchMedia('(max-width: 47.49em)');
+
+  // Beschriftung auf dem Globus: Gruppen wie auf Karten mit Komma, in zeitlicher Folge.
+  // Im Überblick steht für die europäischen Wohnorte nur Berlin, der letzte Wohnort.
+  function beschriftung(t) {
+    if (typeof t !== 'string' || t.indexOf(' · ') < 0) return t;
+    let n = t.split(' · ');
+    if (ebeneJetzt === 'leben') {
+      n.sort((a, b) => (REIHE[a] ?? 99) - (REIHE[b] ?? 99));
+      if (n.includes('Berlin') && g && g.k() < 1.8) n = ['Berlin'];
+    }
+    return n.join(', ');
+  }
+
+  // ---------- Globus ----------
+  const flaeche = $('#flaeche'), canvas = $('#globus'), tipp = $('#tipp');
+  // Der Kern zeigt den Bedienhinweis bei jedem Wischen; hier höchstens alle dreißig Sekunden
+  const hinweisEl = $('#hinweis'), hinweisRoh = document.createElement('p');
+  hinweisRoh.hidden = true;
+  let hinweisZuletzt = -Infinity, hinweisTimer = null;
+  new MutationObserver(() => {
+    if (hinweisRoh.hidden) return;
+    const jetzt = performance.now();
+    if (jetzt - hinweisZuletzt < 30000) return;
+    hinweisZuletzt = jetzt;
+    hinweisEl.textContent = hinweisRoh.textContent;
+    hinweisEl.hidden = false;
+    clearTimeout(hinweisTimer);
+    hinweisTimer = setTimeout(() => { hinweisEl.hidden = true; }, 2000);
+  }).observe(hinweisRoh, { attributes: true, attributeFilter: ['hidden'] });
+
+  const KEIN = () => Promise.resolve('fertig');
+  const leer = { ebene: KEIN, fliegen: KEIN, ortAnfliegen: KEIN, landAnfliegen: KEIN, chronik: () => Promise.resolve('abgebrochen'), chronikSchritt: KEIN, routeZeigen() {}, aktiv() {}, auswahl() {}, zeichnen() {}, chronikStoppen() {}, land: () => null, k: () => 1 };
+  if (window.d3 && window.topojson && window.Globus && window.WELT_110M) {
+    const ctx = canvas.getContext('2d');
+    const org = {};
+    ['fillText', 'strokeText', 'measureText', 'setLineDash', 'stroke'].forEach(m => { org[m] = ctx[m].bind(ctx); });
+    let gestrichelt = false;
+    ctx.setLineDash = a => { gestrichelt = !!(a && a.length); org.setLineDash(a); };
+    ctx.stroke = (...a) => { if (!gestrichelt) org.stroke(...a); };
+    ctx.measureText = (t, ...r) => org.measureText(beschriftung(t), ...r);
+    // Lage der Beschriftung: Berlin im Überblick oben rechts vom Punkt, über der ankommenden Spur;
+    // Tyros auf der Seeseite, weil die Spur von Ur her von Osten kommt
+    const lage = (s, x, y) => {
+      if (ebeneJetzt === 'leben' && s === 'Berlin' && g && g.k() < 1.8) return [x, y - 9];
+      if (ebeneJetzt === 'ursprung' && s === 'Tyros' && ctx.textAlign === 'left') { ctx.textAlign = 'right'; return [x - 18, y]; }
+      return [x, y];
+    };
+    ctx.fillText = (t, x, y, ...r) => { const s = beschriftung(t); const a = ctx.textAlign; const [u, v] = lage(s, x, y); org.fillText(s, u, v, ...r); ctx.textAlign = a; };
+    // ein breiterer Papierrand um die Ortsnamen hält die Spur von den Buchstaben fern
+    ctx.strokeText = (t, x, y, ...r) => { const s = beschriftung(t); const a = ctx.textAlign, lw = ctx.lineWidth; ctx.lineWidth = Math.max(lw, 6.5); const [u, v] = lage(s, x, y); org.strokeText(s, u, v, ...r); ctx.lineWidth = lw; ctx.textAlign = a; };
+    try {
+      g = Globus.erstellen({
+        canvas, flaeche, tipp, hinweis: hinweisRoh,
+        bereist: I.bereist, winzig: I.winzig, ansichten: I.ansichten,
+        farben: {
+          papier: '#FFFFFF', land: '#F1F1EE', reise: '#DADAD4', grenze: '#C6C6C1', kueste: '#96968F', rand: '#3A3A38',
+          text: '#5E5E5A', textLeise: '#9A9A95', akzent: '#2A2A28', akzentHauch: 'rgba(42, 42, 40, .10)', gradnetz: '#EEEEEA'
+        },
+        schrift: { ort: 'italic 15px "Alegreya"', land: 'italic 13px "Alegreya"' },
+        versalien: false, pendeln: false, daten50: 'daten/welt-50m.js',
+        tippText: land => { unterZeiger = land; return land.name; },
+        beimEingriff: () => { stoppeAuto(); if (lebenLaeuft) lebenAbbruch(); }
+      });
+    } catch (e) { g = null; }
+  }
+  const G = g || leer;
+  if (!g) {
+    canvas.hidden = true;
+    const p = document.createElement('p');
+    p.className = 'ohne-globus';
+    p.textContent = 'Hier stünde der Globus. Er ließ sich nicht laden; die Tafeln nebenan lassen sich trotzdem aufschlagen.';
+    flaeche.appendChild(p);
+  } else if (document.fonts) {
+    document.fonts.load('italic 15px "Alegreya"').then(() => g.zeichnen()).catch(() => {});
+  }
+  // Ursprung ist Siena; ein Zeigerzustand soll nie Siena sein, also dort kein Hover auf Ländern
+  flaeche.addEventListener('pointermove', e => { if (ebeneJetzt === 'ursprung') e.stopPropagation(); }, true);
+
+  // ---------- Tafeln ----------
+  const tafel = $('#tafel'), blaettern = $('#blaettern'), kustodeEl = $('#kustode'), legende = $('#legende');
+  const paginaL = $('#paginaL'), paginaR = $('#paginaR');
+
+  function seiteSetzen(seite) { paginaL.textContent = seite; paginaR.textContent = seite + 1; }
+  // Umblättern: ein kurzer Wechsel, kein Hereinschieben
+  function blatt(el, still) { if (!still && !ruhig) { el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu'); } }
+  function aufschlagen(html, seite, fuss, kustode, still) {
+    tafel.innerHTML = html;
+    blaettern.innerHTML = fuss || '';
+    kustodeEl.textContent = kustode || '';
+    legende.innerHTML = '';
+    seiteSetzen(seite);
+    blatt(tafel, still);
+  }
+  const knopf = (text, attr, aus) => aus ? `<button class="wort" type="button" disabled>${text}</button>` : `<button class="wort" type="button" ${attr}>${text}</button>`;
+
+  // Leben: die Vita steht oben, darunter die Tafel der jeweiligen Station
+  const ortsname = s => s.land ? `${s.name}, ${s.land}` : s.name;
+  function vitaHtml() {
+    const o = name => `<span class="o" data-n="${REIHE[name]}">${name}</span>`;
+    return `<div class="vita" id="vita"><p>Dominik Jäkel lebte bis 2014 in ${o('Dortmund')}, danach in ${o('Freiburg')}, ${o('Potsdam')} und ${o('Kaohsiung')}; seit 2022 lebt er in ${o('Berlin')}. <span class="neben-satz">Längere Zeit verbrachte er in ${o('Colombo')}, ${o('Cotonou')} und auf ${o('Mallorca')}.</span> Er schreibt Romane und Erzählungen, Länderguides und das Journal <i>Untertext</i>.</p></div>`;
+  }
+  function stationHtml(n) {
+    const s = STATIONEN[n];
+    const bis = /^bis /.test(s.jahr);
+    const jahrH = bis ? `<span class="bis">bis</span>${s.jahr.slice(4)}` : s.jahr;
+    const satz = n === 0 ? 'Von hier aus sind alle Entfernungen gemessen.' : `${km(AUSGANG, s)} Luftlinie von ${AUSGANG.name}.`;
+    return `<section class="platte${s.neben ? ' ist-neben' : ''}">
+      <h2 class="kopf"><span class="haengend" aria-hidden="true">${jahrH}</span>${esc(ortsname(s))}</h2>
+      <p class="unter"><span class="jahr-u">${esc(s.jahr)}, </span>${s.neben ? 'längerer Aufenthalt' : 'Wohnort'}</p>
+      <p class="daten">${koord(s.lat, s.lon)}</p>
+      <p class="satz">${satz}</p>
+    </section>`;
+  }
+  // Vor und nach der Chronik: eine Tafel über alle acht Orte, aus den Daten gerechnet
+  function uebersichtHtml() {
+    const wohn = STATIONEN.filter(s => !s.neben).length, neben = STATIONEN.length - wohn;
+    const breiten = STATIONEN.map(s => s.lat);
+    const fern = STATIONEN.reduce((a, s) => luftlinie(AUSGANG, s) > luftlinie(AUSGANG, a) ? s : a);
+    return `<section class="platte">
+      <h2 class="kopf">${gross(zahlwort(STATIONEN.length))} Orte</h2>
+      <p class="unter">${zahlwort(wohn)} Wohnorte, ${zahlwort(neben)} auf Zeit</p>
+      <p class="daten">zwischen ${grad(Math.min(...breiten), 'N', 'S')} und ${grad(Math.max(...breiten), 'N', 'S')}</p>
+      <p class="satz">Am weitesten von ${AUSGANG.name}: ${fern.name}, ${km(AUSGANG, fern)} Luftlinie.</p>
+    </section>`;
+  }
+  function lebenTafel(i, still) {
+    lebenIndex = i;
+    const n = STATIONEN.length;
+    if (!tafel.querySelector('#vita') || !tafel.querySelector('#platz')) {
+      tafel.innerHTML = vitaHtml() + '<div class="platz" id="platz"></div>';
+      legende.innerHTML = '';
+      blatt(tafel, still);
+      still = true;
+    }
+    const vita = tafel.querySelector('#vita');
+    vita.classList.toggle('laeuft', i > 0);
+    vita.querySelectorAll('.o').forEach(el => el.classList.toggle('jetzt', +el.dataset.n === i - 1));
+    const platz = tafel.querySelector('#platz');
+    platz.innerHTML = i === 0 ? uebersichtHtml() : stationHtml(i - 1);
+    blatt(platz, still);
+    let fuss = knopf('früher', `data-blatt="${i - 1}"`, i === 0) + knopf('später', `data-blatt="${i + 1}"`, i === n);
+    if (i === 0 && gelaufen) fuss += knopf('von vorn', 'data-vorn="leben"');
+    blaettern.innerHTML = fuss;
+    // Kustode: wie in alten Büchern steht am Fuß der Seite das erste Wort der nächsten
+    kustodeEl.textContent = i < n ? STATIONEN[i].name : '';
+    seiteSetzen(SEITE.leben + 2 * i);
+  }
+  // Eine Station von Hand: die Spur wächst oder schrumpft bis zum letzten Wohnort, die Orte erscheinen bis hierher
+  function lebenGehe(i) {
+    stoppeAuto();
+    lebenLauf++; lebenLaeuft = false;
+    tafel.setAttribute('aria-live', 'polite');
+    lebenTafel(i);
+    if (i === 0) {
+      orteZeigen(null);
+      if (gelaufen) G.routeZeigen(SPUR);
+      G.fliegen(BLICK.leben.mitte, BLICK.leben.k);
+      G.aktiv(null);
+    } else {
+      gelaufen = true;
+      orteZeigen(i - 1);
+      G.chronikSchritt(SPUR, SPUR_INDEX[i - 1], { zoom: 2.4, dauer: 900 });
+    }
+  }
+  // Die Chronik: ein kurzer Sprung, dann ein Halt; die Tafel wechselt, wenn der Ort erscheint
+  async function lebenAbspielen() {
+    if (!g) return;
+    stoppeAuto();
+    const lauf = ++lebenLauf;
+    gelaufen = true; lebenLaeuft = true;
+    tafel.setAttribute('aria-live', 'off');
+    orteZeigen(-1);
+    const DAUER = 900, PAUSE = 2200, ZOOM = 2.4;
+    for (let n = 0; n < STATIONEN.length; n++) {
+      const zeigen = () => { if (lauf === lebenLauf) { orteZeigen(n); lebenTafel(n + 1); } };
+      const t = setTimeout(zeigen, ruhig ? 0 : DAUER * .55);
+      // die erste Station mit einer eigenen, kurzen Liste: so beginnt die Spur auch beim zweiten Mal von vorn
+      const erg = await g.chronikSchritt(n === 0 ? [SPUR[0]] : SPUR, n === 0 ? 0 : SPUR_INDEX[n], { zoom: ZOOM, dauer: DAUER });
+      if (lauf !== lebenLauf) { clearTimeout(t); return; }
+      if (erg === 'abgebrochen') { clearTimeout(t); lebenAbbruch(); return; }
+      await warte(PAUSE);
+      if (lauf !== lebenLauf) return;
+    }
+    await G.fliegen(BLICK.leben.mitte, BLICK.leben.k);
+    if (lauf !== lebenLauf) return;
+    lebenLaeuft = false;
+    tafel.setAttribute('aria-live', 'polite');
+    orteZeigen(null);
+    G.aktiv(null);
+    lebenTafel(0);
+  }
+  // Abbruch durch Ziehen, Tasten oder zwei Finger: die Tafel bleibt stehen, früher und später blättern weiter
+  function lebenAbbruch() {
+    lebenLauf++; lebenLaeuft = false;
+    tafel.setAttribute('aria-live', 'polite');
+    if (ebeneJetzt === 'leben') lebenTafel(lebenIndex, true);
+  }
+  function stoppeAuto() { benutzt = true; if (autoStart) { clearTimeout(autoStart); autoStart = null; } }
+
+  // Reisen
+  function reisenSaetze() {
+    const k = I.kontinente;
+    const namen = Object.keys(k);
+    const teile = namen.map((name, i) => {
+      const zeichen = i < namen.length - 2 ? ',' : i === namen.length - 1 ? '.' : '';
+      const wort = i === 0 ? gross(zahlwort(k[name].length)) : zahlwort(k[name].length);
+      return `${wort} in <span class="nw"><button class="wort" type="button" data-kontinent="${name}"${reisenKontinent === name ? ' aria-current="true"' : ''}>${name}</button>${zeichen}</span>`;
+    });
+    return `<p class="text">Auf dem Globus sind es ${zahlwort(I.bereist.length)} Länder und Gebiete, nach meiner eigenen Zählung siebenundsechzig.</p>
+      <p class="text">${teile.slice(0, -1).join(' ') + ' und ' + teile[teile.length - 1]}</p>`;
+  }
+  function reisenTafel(still) {
+    const k = I.kontinente;
+    let liste = '';
+    if (reisenKontinent) {
+      const isos = k[reisenKontinent].slice().sort((a, b) => (LANDNAME[a] || a).localeCompare(LANDNAME[b] || b, 'de'));
+      liste = `<p class="laender">${isos.map((iso, i) => `<span class="nw"><button class="wort" type="button" data-land="${iso}"${reisenLand === iso ? ' aria-current="true"' : ''}>${esc(LANDNAME[iso] || iso)}</button>${i < isos.length - 1 ? ',' : ''}</span>`).join(' ')}</p>`;
+    }
+    let auswahl = '';
+    if (reisenLand) {
+      const f = G.land(reisenLand);
+      const pos = f && f.punkt ? { lon: f.punkt[0], lat: f.punkt[1] } : I.winzig[reisenLand] ? { lon: I.winzig[reisenLand][0], lat: I.winzig[reisenLand][1] } : null;
+      const bereist = I.bereist.includes(reisenLand);
+      const name = (f && f.name) || LANDNAME[reisenLand] || reisenLand;
+      auswahl = `<div class="platz"><section class="platte"><h2 class="kopf">${esc(name)}</h2><p class="unter">${bereist ? 'bereist' : 'nicht bereist'}</p>${pos ? `<p class="daten">${koord(pos.lat, pos.lon)}</p>` : ''}</section></div>`;
+    }
+    const schmal = schmalMQ.matches;
+    aufschlagen(`<div class="reisen">${reisenSaetze()}${schmal ? '' : liste}${auswahl}</div>`, SEITE.reisen, '', '', still);
+    // auf dem Telefon steht die Länderliste wie eine Legende unter dem Globus, damit der Globus an seinem Platz bleibt
+    if (schmal) legende.innerHTML = liste;
+  }
+  function landWaehlen(iso, fliegen) {
+    reisenLand = iso;
+    const k = kontinentVon(iso);
+    if (k) reisenKontinent = k;
+    reisenTafel(true);
+    if (fliegen) landFliegen(iso); else G.auswahl(iso);
+  }
+  // Wie landAnfliegen im Kern, aber höchstens bis Faktor 7, damit die Nachbarn sichtbar bleiben
+  function landFliegen(iso) {
+    const f = G.land(iso);
+    let ziel = null, k = 7;
+    if (I.ansichten[iso]) { const a = I.ansichten[iso]; ziel = [a[0], a[1]]; k = Math.min(7, a[2]); }
+    else if (f && window.d3) {
+      const radius = Math.sqrt(d3.geoArea(f) / Math.PI);
+      ziel = f.punkt || d3.geoCentroid(f);
+      k = Math.max(1.2, Math.min(7, .5 / Math.sin(Math.min(radius * 1.4, 1.4))));
+    } else if (I.winzig[iso]) ziel = I.winzig[iso];
+    if (ziel) G.fliegen(ziel, k);
+    G.auswahl(iso);
+  }
+
+  // Satoshi: oben das Buch, darunter die Tafel des Schauplatzes, gemessen von Bariloche aus.
+  // Wie bei der Vita bleibt der Text stehen, und der aktuelle Ort wird im Satz schwarz.
+  function satoshiTextHtml() {
+    const rest = SATOSHI.filter(o => o !== BARILOCHE);
+    const zusatz = o => o.notiz && !/Patagonien/.test(o.notiz) ? ` ${o.notiz === 'Nevada' ? 'in Nevada' : o.notiz === 'Maryland' ? 'in Maryland' : 'im ' + o.notiz}` : '';
+    const nameI = o => `<i class="o" data-n="${SATOSHI.indexOf(o)}">${esc(o.name)}</i>`;
+    const namen = rest.map(o => (o.name === 'Black Rock Desert' || o.kurz ? 'die ' : '') + nameI(o) + zusatz(o));
+    return `<section class="platte buch" id="buch"><h2 class="kopf">Satoshi</h2><p class="unter">Roman, in Arbeit</p>
+      <p class="text">Die Kernhandlung spielt 2007 bis 2010 in Patagonien, in ${nameI(BARILOCHE)}.</p>
+      <p class="text weitere">Weitere Schauplätze sind ${namen.slice(0, -1).join(', ')} und ${namen[namen.length - 1]}.</p></section>`;
+  }
+  function schauplatzHtml(o) {
+    const kern = o === BARILOCHE;
+    const gegend = kern ? 'Patagonien' : o.notiz;
+    const kopf = (o.kurz || o.name) + (gegend ? ', ' + gegend : '');
+    const lage = o.kurz ? gross(o.name.slice(o.kurz.length).trim()) + ', ' : '';
+    const satz = kern ? `${km(BUENOS_AIRES, o)} Luftlinie von ${BUENOS_AIRES.name}.` : `${lage}${km(BARILOCHE, o)} Luftlinie von ${BARILOCHE.name}.`;
+    return `<section class="platte"><h2 class="kopf">${esc(kopf)}</h2>
+      <p class="unter">${kern ? 'Kernhandlung, 2007–2010' : 'Schauplatz in <i>Satoshi</i>'}</p>
+      <p class="daten">${koord(o.lat, o.lon)}</p>
+      <p class="satz">${satz}</p></section>`;
+  }
+  function satoshiTafel(i, still) {
+    satoshiIndex = i;
+    if (!tafel.querySelector('#buch')) {
+      aufschlagen(satoshiTextHtml() + '<div class="platz" id="platz"></div>', SEITE.satoshi, '', '', still);
+      still = true;
+    }
+    const buch = tafel.querySelector('#buch');
+    buch.classList.toggle('laeuft', i > 0);
+    buch.querySelectorAll('.o').forEach(el => el.classList.toggle('jetzt', +el.dataset.n === i - 1));
+    const platz = tafel.querySelector('#platz');
+    platz.innerHTML = i === 0 ? '' : schauplatzHtml(SATOSHI[i - 1]);
+    if (i > 0) blatt(platz, still);
+    blaettern.innerHTML = knopf('zurück', `data-schauplatz="${i - 1}"`, i === 0) + knopf('weiter', `data-schauplatz="${i + 1}"`, i === SATOSHI.length);
+    kustodeEl.textContent = i < SATOSHI.length ? (SATOSHI[i].kurz || SATOSHI[i].name) : '';
+    seiteSetzen(SEITE.satoshi + 2 * i);
+  }
+  function satoshiGehe(i) {
+    satoshiTafel(i);
+    if (i === 0) { G.fliegen(BLICK.satoshi.mitte, BLICK.satoshi.k); G.aktiv(null); }
+    else G.ortAnfliegen(SATOSHI[i - 1], SATOSHI[i - 1].rang ? 5 : 3.4);
+  }
+
+  // Ursprung: drei Bände, die sich nacheinander öffnen
+  const bandVon = i => URSPRUNG[i].band;
+  // Was schon in Kopf- und Zeitzeile steht, wird im Satz nicht wiederholt
+  function bandText(band) {
+    const orte = URSPRUNG.filter(o => o.band === band);
+    let t = I.baende[band] || '';
+    if (orte[0].volk) t = t.replace(new RegExp('^' + gross(orte[0].volk) + '\\.\\s*'), '');
+    t = t.split(', ' + orte[0].jahr).join(/\.$/.test(orte[0].jahr) ? '.' : '');
+    if (orte.length === 1) t = t.replace(new RegExp('^' + orte[0].name + '\\s+'), '');
+    return gross(t);
+  }
+  function ursprungHtml() {
+    const eintraege = BAENDE.map((band, b) => {
+      const orte = URSPRUNG.filter(o => o.band === band);
+      const ortWorte = orte.map(o => `<span class="nw"><button class="wort" type="button" data-urort="${URSPRUNG.indexOf(o)}">${esc(o.name)}</button></span>`).join(' und ');
+      return `<section class="band-eintrag" data-band="${band}">
+        <p class="band-kopf"><span class="band-nr">${band}</span><span class="band-ort">${ortWorte}</span></p>
+        <p class="band-zeit">${chr(esc(orte[0].jahr))}${orte[0].volk ? ', ' + esc(orte[0].volk) : ''}</p>
+        <p class="band-koord"></p>
+        <p class="band-text">${chr(esc(bandText(band)))}</p>
+      </section>`;
+    }).join('');
+    return `<section class="platte ursprung"><h2 class="kopf">Ursprung</h2><p class="unter">Trilogie, alle drei Bände in Arbeit</p><div class="baende">${eintraege}</div></section>`;
+  }
+  function ursprungTafel(still) {
+    aufschlagen(ursprungHtml(), SEITE.ursprung, '', '', still);
+    ursprungAktualisieren();
+  }
+  // Nur die Bände umschalten, ohne die Tafel neu zu setzen; so kann sich der neue Band langsam öffnen
+  function ursprungAktualisieren() {
+    const aktivOrt = ursprungAktiv >= 0 ? URSPRUNG[ursprungAktiv] : null;
+    tafel.querySelectorAll('.band-eintrag').forEach((el, b) => {
+      const band = BAENDE[b];
+      const istAktiv = !!aktivOrt && aktivOrt.band === band;
+      el.classList.toggle('zu', b >= ursprungSichtbar);
+      el.classList.toggle('vorbei', ursprungLaeuft && b < ursprungSichtbar && !istAktiv);
+      el.classList.toggle('offen', b === ursprungOffen);
+      el.querySelector('.band-koord').innerHTML = istAktiv ? koord(aktivOrt.lat, aktivOrt.lon) : '';
+      el.querySelectorAll('[data-urort]').forEach(k => {
+        if (+k.dataset.urort === ursprungAktiv) k.setAttribute('aria-current', 'true'); else k.removeAttribute('aria-current');
+      });
+    });
+    blaettern.innerHTML = !ursprungLaeuft ? knopf('von vorn', 'data-vorn="ursprung"') : '';
+  }
+  function ursprungAbspielen() {
+    const lauf = ++ursprungLauf;
+    ursprungSichtbar = 0; ursprungAktiv = -1; ursprungLaeuft = true; ursprungOffen = 0;
+    ursprungTafel(true);
+    trilogieZeigen(0);
+    if (!g) { ursprungEnde(lauf); return; }
+    tafel.setAttribute('aria-live', 'off');
+    g.chronik(URSPRUNG, {
+      dauer: 2600, pause: 3800, zoom: 4.5, schluss: { mitte: [39.5, 33.2], k: 3.6 },
+      beiStation: (s, i) => {
+        if (lauf !== ursprungLauf) return;
+        ursprungAktiv = i;
+        ursprungSichtbar = BAENDE.indexOf(bandVon(i)) + 1;
+        ursprungOffen = ursprungSichtbar - 1;
+        ursprungAktualisieren();
+        trilogieZeigen(ursprungSichtbar);
+      }
+    }).then(() => ursprungEnde(lauf));
+  }
+  // Am Ende alle drei Bände offen; auf dem Telefon bleibt nur der zuletzt geöffnete aufgeklappt
+  function ursprungEnde(lauf) {
+    tafel.setAttribute('aria-live', 'polite');
+    if (lauf !== ursprungLauf) return;
+    ursprungLaeuft = false; ursprungSichtbar = 3; ursprungAktiv = -1;
+    trilogieZeigen(3);
+    if (ebeneJetzt === 'ursprung') ursprungAktualisieren();
+  }
+
+  // Auf dem Telefon steht die Tafel über dem Globus. Damit der Globus beim Blättern, in der Chronik und beim
+  // Wechsel der Seiten nie springt, bekommt die Tafel die Höhe ihres längsten Zustands bei der jetzigen Breite.
+  function tafelHoeheFestlegen() {
+    tafel.style.minHeight = '';
+    if (!schmalMQ.matches || !tafel.clientWidth) return;
+    const probe = document.createElement('div');
+    probe.className = 'tafel';
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:-9999px;top:0;margin:0;min-height:0;width:${tafel.clientWidth}px`;
+    tafel.parentNode.appendChild(probe);
+    const messen = html => { probe.innerHTML = html; return probe.getBoundingClientRect().height; };
+    const hoehen = [];
+    const vita = vitaHtml().replace(' id="vita"', '');
+    hoehen.push(messen(vita + `<div class="platz">${uebersichtHtml()}</div>`));
+    STATIONEN.forEach((s, n) => hoehen.push(messen(vita.replace('class="vita"', 'class="vita laeuft"') + `<div class="platz">${stationHtml(n)}</div>`)));
+    const buch = satoshiTextHtml().replace(' id="buch"', '');
+    hoehen.push(messen(buch + '<div class="platz"></div>'));
+    SATOSHI.forEach(o => hoehen.push(messen(buch.replace('platte buch', 'platte buch laeuft') + `<div class="platz">${schauplatzHtml(o)}</div>`)));
+    BAENDE.forEach((band, b) => {
+      probe.innerHTML = ursprungHtml();
+      const el = probe.querySelectorAll('.band-eintrag')[b];
+      el.classList.add('offen');
+      const o = URSPRUNG.find(x => x.band === band);
+      el.querySelector('.band-koord').textContent = koord(o.lat, o.lon);
+      hoehen.push(probe.getBoundingClientRect().height);
+    });
+    const langes = Object.values(LANDNAME).reduce((a, n) => n.length > a.length ? n : a, '');
+    hoehen.push(messen('<div class="reisen">' + reisenSaetze() + `<div class="platz"><section class="platte"><h2 class="kopf">${esc(langes)}</h2><p class="unter">nicht bereist</p><p class="daten">${koord(-10, -100)}</p></section></div></div>`));
+    probe.remove();
+    tafel.style.minHeight = Math.ceil(Math.max(...hoehen)) + 'px';
+  }
+
+  // ---------- Inhaltsverzeichnis ----------
+  const tocKnoepfe = Array.from(document.querySelectorAll('.inhalt .wort'));
+  function ebeneWaehlen(name) {
+    stoppeAuto();
+    lebenLauf++; lebenLaeuft = false;
+    tafel.setAttribute('aria-live', 'polite');
+    if (ebeneJetzt === 'ursprung' && name !== 'ursprung') { ursprungLauf++; ursprungLaeuft = false; trilogieZeigen(3); }
+    ebeneJetzt = name;
+    tocKnoepfe.forEach(b => { if (b.dataset.ebene === name) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+    if (name === 'leben') {
+      tafel.innerHTML = '';
+      lebenTafel(0);
+      orteZeigen(null);
+      G.ebene(EBENE.leben);
+      if (gelaufen) G.routeZeigen(SPUR);
+    } else if (name === 'reisen') {
+      reisenKontinent = null; reisenLand = null;
+      reisenTafel();
+      G.ebene(EBENE.reisen);
+    } else if (name === 'satoshi') {
+      satoshiTafel(0);
+      G.ebene(EBENE.satoshi);
+    } else if (name === 'ursprung') {
+      G.ebene(EBENE.ursprung);
+      ursprungAbspielen();
+    }
+  }
+  tocKnoepfe.forEach(b => b.addEventListener('click', () => { if (b.getAttribute('aria-current') !== 'true') ebeneWaehlen(b.dataset.ebene); }));
+
+  // Alle Wörter auf der Tafel, am Fuß und in der Legende
+  function wortKlick(e) {
+    const b = e.target.closest('button');
+    if (!b || b.disabled) return;
+    const d = b.dataset;
+    if (d.blatt !== undefined) lebenGehe(Math.max(0, Math.min(STATIONEN.length, +d.blatt)));
+    else if (d.vorn === 'leben') lebenAbspielen();
+    else if (d.vorn === 'ursprung') { G.ebene(EBENE.ursprung); ursprungAbspielen(); }
+    else if (d.schauplatz !== undefined) satoshiGehe(Math.max(0, Math.min(SATOSHI.length, +d.schauplatz)));
+    else if (d.kontinent) {
+      reisenKontinent = reisenKontinent === d.kontinent ? null : d.kontinent;
+      reisenLand = null; G.auswahl(null);
+      reisenTafel(true);
+      const v = KONTINENT_BLICK[d.kontinent];
+      if (reisenKontinent) G.fliegen([v[0], v[1]], v[2]); else G.fliegen(BLICK.reisen.mitte, 1);
+    } else if (d.land) landWaehlen(d.land, true);
+    else if (d.urort !== undefined) {
+      ursprungLauf++; ursprungLaeuft = false; ursprungSichtbar = 3;
+      ursprungAktiv = +d.urort;
+      ursprungOffen = BAENDE.indexOf(bandVon(ursprungAktiv));
+      trilogieZeigen(3);
+      ursprungAktualisieren();
+      G.ortAnfliegen(URSPRUNG[ursprungAktiv], 5);
+    }
+  }
+  tafel.addEventListener('click', wortKlick);
+  blaettern.addEventListener('click', wortKlick);
+  legende.addEventListener('click', wortKlick);
+
+  // Klick auf ein Land des Globus (nur auf der Seite Reisen)
+  canvas.addEventListener('click', () => {
+    if (ebeneJetzt !== 'reisen' || !unterZeiger || tipp.hidden) return;
+    landWaehlen(unterZeiger.iso, false);
+  });
+  // Wechsel zwischen Telefon und breiter Ansicht: die Länderliste zieht um, die Tafelhöhe wird neu gemessen
+  schmalMQ.addEventListener('change', () => { if (ebeneJetzt === 'reisen') reisenTafel(true); tafelHoeheFestlegen(); });
+  tafelHoeheFestlegen();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(tafelHoeheFestlegen);
+  {
+    let breite = window.innerWidth, t = null;
+    window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { if (window.innerWidth !== breite) { breite = window.innerWidth; tafelHoeheFestlegen(); } }, 150); });
+  }
+
+  // Anfangszustand und einmaliger Start der Chronik, sobald der Globus im Bild ist
+  tafel.innerHTML = '';
+  lebenTafel(0, true);
+  if (g) {
+    g.ebene(EBENE.leben, { fliegen: false });
+    if ('IntersectionObserver' in window) {
+      let gesehen = false;
+      const io = new IntersectionObserver(eintr => {
+        if (gesehen || !eintr.some(x => x.isIntersecting)) return;
+        gesehen = true; io.disconnect();
+        const bereit = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+        bereit.then(() => {
+          if (benutzt) return;
+          autoStart = setTimeout(() => {
+            autoStart = null;
+            if (!benutzt && ebeneJetzt === 'leben' && lebenIndex === 0) lebenAbspielen();
+          }, 1600);
+        });
+      }, { threshold: .55 });
+      io.observe(flaeche);
+    }
+  }
+
+  // ---------- Bibliothek: Zeitband ----------
+  const NACHNAMEN = {
+    'Gabriel García Márquez': 'García Márquez', 'Carlos Ruiz Zafón': 'Ruiz Zafón', 'Adolfo Bioy Casares': 'Bioy Casares',
+    'Daphne du Maurier': 'du Maurier', 'Ursula K. Le Guin': 'Le Guin', 'John le Carré': 'le Carré', 'Antoine de Saint-Exupéry': 'Saint-Exupéry',
+    'Sun Tzu': 'Sunzi', 'Jin Yong': 'Jin Yong', 'Luo Guanzhong': 'Luo Guanzhong', 'Han Kang': 'Han Kang', 'Lieutenant X': 'Lieutenant X'
+  };
+  function nachname(a) {
+    if (!a || /^Anonym/.test(a) || /^Die \d/.test(a)) return '';
+    if (NACHNAMEN[a]) return NACHNAMEN[a];
+    const t = a.replace(/,?\s+(Jr\.|Sr\.)$/, '').trim().split(/\s+/);
+    return t[t.length - 1];
+  }
+  const jahrText = j => j < 0 ? `um ${-j} v.${NBSP}Chr.` : String(j);
+  const ROH = (window.BUECHER || []).filter(b => b.r !== 'lieber-nicht' && !(b.r === 'abgebrochen' && /porn/i.test(b.t)));
+  ROH.forEach(b => {
+    const p = b.p > 0 ? b.p : 280;
+    const h = hash(b.t + '|' + b.a);
+    b.mm = { breite: p * 0.06 + (b.b === 'h' ? 5 : 1), hoehe: (b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185) * (0.975 + (h % 997) / 997 * 0.05) };
+    b.h = h;
+    b.nn = nachname(b.a);
+  });
+  const ordnung = (x, y) => (x.j - y.j) || x.nn.localeCompare(y.nn, 'de') || x.t.localeCompare(y.t, 'de');
+  const HAUPT = ROH.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort(ordnung);
+  const GERADE = ROH.filter(b => b.r === 'gerade' && b.j != null).sort(ordnung);
+  const KIND = ROH.filter(b => b.r === 'kindheit' && b.j != null).sort(ordnung);
+  const WARTE = ROH.filter(b => b.r === 'leseliste' && b.j != null).sort(ordnung);
+  const WERKE = I.werke.map(w => ({ werk: true, ...w }));
+  // Signaturen wie im Zettelkasten: Anfangsbuchstabe des Nachnamens und laufende Nummer in zeitlicher Folge
+  (() => {
+    const zaehler = {};
+    ROH.slice().filter(b => b.j != null).sort(ordnung).concat(ROH.filter(b => b.j == null)).forEach(b => {
+      const basis = (b.nn || b.t).normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const buchst = (basis.match(/[A-Za-z]/) || ['X'])[0].toUpperCase();
+      zaehler[buchst] = (zaehler[buchst] || 0) + 1;
+      b.sig = buchst + NBSP + zaehler[buchst];
+    });
+    WERKE.forEach((w, i) => { w.sig = 'DJ' + NBSP + (i + 1); });
+  })();
+
+  function zeile(b) {
+    if (b.werk) return { text: `Jäkel, ${b.titel}, ${b.stand}`, html: `Jäkel, <i>${esc(b.titel)}</i>, ${esc(b.stand)}` };
+    const zusatz = b.r === 'abgebrochen' ? 'nicht zu Ende gelesen' : b.r === 'gerade' ? 'lese ich gerade' : b.r === 'leseliste' ? 'wartet noch' : '';
+    const t = [b.nn, b.t, b.j != null ? jahrText(b.j) : '', zusatz].filter(Boolean);
+    const h = [b.nn ? esc(b.nn) : '', `<i>${esc(b.t)}</i>`, b.j != null ? jahrText(b.j) : '', zusatz].filter(Boolean);
+    return { text: t.join(', '), html: h.join(', ') };
+  }
+
+  const roll = $('#zeitband-roll');
+  const BAND = { items: [], folgen: {}, aktiv: null, breite: 0, marke: null };
+  let trilogieSichtbar = 3;
+  const messCtx = document.createElement('canvas').getContext('2d');
+  function textBreite(text, font) { messCtx.font = font; return messCtx.measureText(text).width; }
+
+  function bandBauen() {
+    if (!roll || !HAUPT.length) return;
+    const schmal = schmalMQ.matches;
+    const verfuegbar = roll.clientWidth - (schmal ? 32 : 0);
+    if (verfuegbar <= 0) return;
+    const sy = schmal ? 0.4 : Math.max(0.36, Math.min(0.5, verfuegbar / 2300));   // px je mm in der Höhe
+    let minL = schmal ? 0.45 : 0.5;              // kleinste Lücke zwischen zwei Rücken in px
+    let minB = schmal ? 0.7 : 0.8;
+    const BRUCH = 40;                            // Lücke für ausgelassene Jahrhunderte
+    const WERKLUECKE = 22, BODEN = 7;
+    const luecke = d => d <= 0 ? 0 : 1.8 * Math.pow(d, 0.85);   // in mm, mit dem Abstand der Jahre wachsend, gestaucht
+    const liegeLaenge = b => b.mm.hoehe * sy;
+    const liegeDicke = b => Math.max(5, b.mm.breite * sy);
+    function anordnen(sx) {
+      const pos = [], brueche = [], amBoden = []; let x = 0, vor = null;
+      HAUPT.forEach(b => {
+        if (vor) {
+          const d = b.j - vor.j;
+          if (d > 150) {
+            // was gerade gelesen wird und in diese Lücke fällt, liegt hier flach auf dem Boden
+            GERADE.forEach(l => {
+              if (l.j > vor.j && l.j < b.j) { x += BODEN; amBoden.push({ b: l, x, len: liegeLaenge(l), dick: liegeDicke(l) }); x += liegeLaenge(l); }
+            });
+            brueche.push({ von: x, bis: x + BRUCH });
+            x += BRUCH;
+          } else x += Math.max(minL, sx * luecke(d));
+        }
+        const w = Math.max(minB, sx * b.mm.breite);
+        pos.push({ b, x, w }); x += w; vor = b;
+      });
+      const buecherEnde = x;
+      x += WERKLUECKE;
+      const ww = Math.max(6, 40 * sx), wl = 2;
+      const werke = WERKE.map(b => { const o = { b, x, w: ww }; x += ww + wl; return o; });
+      return { pos, werke, brueche, amBoden, buecherEnde, ende: x - wl };
+    }
+    // Desktop: das Band füllt die Satzbreite; Telefon: gut doppelt so breit, seitlich verschiebbar
+    let zielBreite = verfuegbar;
+    if (schmal) zielBreite = Math.round(Math.max(verfuegbar * 2.2, anordnen(0).ende * 1.15));
+    else for (let n = 0; n < 30 && anordnen(0).ende > zielBreite * .8; n++) { minB *= .9; minL *= .9; }
+    let lo = 0, hi = 1.5;
+    for (let n = 0; n < 40; n++) { const m = (lo + hi) / 2; if (anordnen(m).ende > zielBreite) hi = m; else lo = m; }
+    const sx = lo;
+    const A = anordnen(sx);
+    const W = Math.ceil(zielBreite);
+    const pos = A.pos;
+
+    // Zeitachse aus den gelesenen Büchern: X(jahr)
+    function X(jahr) {
+      let lo = 0, hi = pos.length;
+      while (lo < hi) { const m = (lo + hi) >> 1; if (pos[m].b.j < jahr) lo = m + 1; else hi = m; }
+      if (lo === 0) return pos[0].x;
+      if (lo === pos.length) return pos[lo - 1].x + pos[lo - 1].w;
+      const a = pos[lo - 1], c = pos[lo];
+      if (c.b.j === jahr) return c.x;
+      const t = (jahr - a.b.j) / (c.b.j - a.b.j);
+      return a.x + a.w + (c.x - a.x - a.w) * t;
+    }
+    // Nebenbänder auf derselben Achse; dichte Jahre schieben nach rechts, am Ende zurück nach links
+    function nebenband(liste, grenze) {
+      const out = []; let ende = -Infinity;
+      liste.forEach(b => {
+        const w = Math.max(minB, sx * b.mm.breite);
+        const x = Math.max(X(b.j), ende + minL);
+        out.push({ b, x, w }); ende = x + w;
+      });
+      let rechts = grenze;
+      for (let i = out.length - 1; i >= 0; i--) {
+        if (out[i].x + out[i].w > rechts) out[i].x = rechts - out[i].w;
+        rechts = out[i].x - minL;
+      }
+      return out;
+    }
+    const kind = nebenband(KIND, A.buecherEnde);
+    const warte = nebenband(WARTE, A.buecherEnde);
+
+    const maxH = 225 * 1.025 * sy;
+    const hoehe = (b, f) => b.mm.hoehe * sy * (f || 1);
+    const stehendHoehe = (x0, x1) => {
+      let m = 0;
+      for (const p of pos) { if (p.x > x1) break; if (p.x + p.w >= x0) m = Math.max(m, hoehe(p.b, p.b.r === 'abgebrochen' ? .5 : 1)); }
+      return m;
+    };
+    // Liegende Bücher: an ihrem Jahr quer auf den Rücken, höchstens drei aufeinander, die dicksten zuunterst
+    const amBoden = new Set(A.amBoden.map(l => l.b));
+    const liegend = GERADE.filter(b => !amBoden.has(b)).map(b => ({ b, len: liegeLaenge(b), dick: liegeDicke(b), mitte: X(b.j) }))
+      .sort((a, b) => a.mitte - b.mitte);
+    const MAXDICK = maxH * .5;
+    const stapel = [];
+    liegend.forEach(l => {
+      const st = stapel[stapel.length - 1];
+      if (st) {
+        const mitte = st.buecher.reduce((a, x) => a + x.mitte, 0) / st.buecher.length;
+        const dicke = st.buecher.reduce((a, x) => a + x.dick, 0);
+        if (st.buecher.length < 3 && dicke + l.dick <= MAXDICK && Math.abs(l.mitte - mitte) < l.len * .6) { st.buecher.push(l); return; }
+      }
+      stapel.push({ buecher: [l] });
+    });
+    // Stapel nebeneinander, nie übereinander geschoben: was zu nah kommt, rückt ein Stück weiter
+    stapel.forEach(st => {
+      st.lang = Math.max(...st.buecher.map(l => l.len));
+      st.x0 = st.buecher.reduce((a, l) => a + l.mitte, 0) / st.buecher.length - st.lang / 2;
+    });
+    for (let n = 0; n < stapel.length; n++) {
+      const vor = stapel[n - 1];
+      stapel[n].x0 = Math.max(stapel[n].x0, vor ? vor.x0 + vor.lang + 10 : 4);
+    }
+    for (let n = stapel.length - 1; n >= 0; n--) {
+      const nach = stapel[n + 1];
+      stapel[n].x0 = Math.min(stapel[n].x0, nach ? nach.x0 - stapel[n].lang - 10 : A.buecherEnde - stapel[n].lang);
+    }
+    const gelegt = [];
+    stapel.forEach(st => {
+      const x0 = st.x0, lang = st.lang;
+      let boden = stehendHoehe(x0, x0 + lang) + 0.5;
+      st.buecher.sort((a, b) => b.dick - a.dick || ordnung(a.b, b.b)).forEach((l, n) => {
+        // zwei bis sechs Pixel Versatz, Richtung und Maß aus Titel und Autor abgeleitet
+        const spiel = n === 0 ? 0 : (2 + (l.b.h % 5)) * ((l.b.h >> 4) & 1 ? 1 : -1);
+        l.x = Math.max(0, Math.min(W - l.len, x0 + (lang - l.len) / 2 + spiel));
+        l.boden = boden;
+        boden += l.dick + 1;
+        gelegt.push(l);
+      });
+    });
+    A.amBoden.forEach(l => { l.boden = 0; gelegt.push(l); });
+    const oben = Math.max(maxH, ...gelegt.map(l => l.boden + l.dick)) + 4;
+    const y0 = Math.ceil(oben);
+
+    const items = []; const folgen = { quer: [], haupt: [], kind: [], warte: [] };
+    let sHaupt = '', sQuer = '', sKind = '', sWarte = '';
+    const rect = (x, y, w, h) => `x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${w.toFixed(2)}" height="${h.toFixed(2)}"`;
+    function eintragen(folge, o) {
+      o.id = 'zb' + items.length; o.folge = folge; o.idx = folgen[folge].length;
+      items.push(o); folgen[folge].push(o);
+      return o.id;
+    }
+    pos.forEach(p => {
+      const b = p.b, halb = b.r === 'abgebrochen';
+      const h = hoehe(b, halb ? .5 : 1);
+      const cls = halb ? 'ab' : b.s === 5 ? 'lieb' : 'grau';
+      const id = eintragen('haupt', { b, x: p.x, w: p.w, y: y0 - h, h });
+      sHaupt += `<rect id="${id}" role="option" aria-label="${esc(zeile(b).text)}" class="${cls}" ${rect(p.x, y0 - h, p.w, h)}/>`;
+      if (b.w) sHaupt += `<line class="wieder" x1="${(p.x - 1.5).toFixed(2)}" x2="${(p.x + p.w + 1.5).toFixed(2)}" y1="${(y0 - h - 3).toFixed(2)}" y2="${(y0 - h - 3).toFixed(2)}"/>`;
+    });
+    // Eigenes: offene Striche in voller Höhe, die Trilogie in Siena
+    const werkH = maxH;
+    A.werke.forEach(p => {
+      const b = p.b, tri = /^ursprung/.test(b.id);
+      const id = eintragen('haupt', { b, x: p.x, w: p.w, y: y0 - werkH, h: werkH });
+      const verborgen = tri && BAENDE.indexOf(b.band) >= trilogieSichtbar;
+      sHaupt += `<rect id="${id}" role="option" aria-label="${esc(zeile(b).text)}" class="werk${tri ? ' siena' : ''}${verborgen ? ' verborgen' : ''}"${tri ? ` data-band="${b.band}"` : ''} ${rect(p.x + .6, y0 - werkH + .6, p.w - 1.2, werkH - .6)}/>`;
+    });
+    gelegt.slice().sort((a, b) => a.boden - b.boden).forEach(l => {
+      const y = y0 - l.boden - l.dick;
+      const id = eintragen('quer', { b: l.b, x: l.x, w: l.len, y, h: l.dick, quer: true });
+      sQuer += `<rect class="quer" id="${id}" role="option" aria-label="${esc(zeile(l.b).text)}" ${rect(l.x, y, l.len, l.dick)}/>`;
+    });
+    // Unter dem Band eine Haarlinie mit Strichen an den Jahresmarken; Brüche für die ausgelassenen Jahrhunderte
+    const yL = y0 + 5, yT = yL + 17;
+    const fontJ = 'italic 13px "Alegreya"';
+    let sLeiste = '';
+    const linie = (x1, x2, y1, y2) => `<line class="haar" x1="${x1.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y1.toFixed(1)}" y2="${y2.toFixed(1)}"/>`;
+    let start = pos[0].x;
+    A.brueche.forEach(br => {
+      const m = (br.von + br.bis) / 2;
+      sLeiste += linie(start, m - 5, yL, yL);
+      sLeiste += `<path class="bruch" d="M${(m - 4.5).toFixed(1)} ${yL + 4} L${(m - 1.5).toFixed(1)} ${yL - 4} M${(m + 1.5).toFixed(1)} ${yL + 4} L${(m + 4.5).toFixed(1)} ${yL - 4}"/>`;
+      start = m + 5;
+    });
+    sLeiste += linie(start, A.buecherEnde, yL, yL);
+    const marken = [{ text: `${HAUPT[0].t}, ${jahrText(HAUPT[0].j)}`, x: pos[0].x + pos[0].w / 2, anker: 'start', tx: pos[0].x }]
+      .concat([1800, 1900, 1950, 2000].map(j => ({ text: String(j), x: X(j), anker: 'middle' })));
+    let belegtBis = -Infinity, sJahre = '';
+    marken.forEach(m => {
+      const b = textBreite(m.text, fontJ);
+      const tx = m.tx !== undefined ? m.tx : m.x;
+      const x0 = m.anker === 'start' ? tx : tx - b / 2;
+      if (x0 < belegtBis + 10) return;
+      belegtBis = x0 + b;
+      sLeiste += linie(m.x, m.x, yL, yL + 3.5);
+      sJahre += `<text class="jahr" x="${tx.toFixed(1)}" y="${yT}" text-anchor="${m.anker}">${esc(m.text)}</text>`;
+    });
+    // unter den eigenen Strichen dieselbe Haarlinie, darunter „Eigenes“
+    const wA = A.werke[0].x, wE = A.werke[A.werke.length - 1].x + A.werke[A.werke.length - 1].w;
+    sLeiste += linie(wA, wE, yL, yL);
+    const eig = 'Eigenes', eigB = textBreite(eig, fontJ);
+    const eigX = Math.min(W - eigB / 2, (wA + wE) / 2);
+    if (eigX - eigB / 2 > belegtBis + 10) sJahre += `<text class="jahr" x="${eigX.toFixed(1)}" y="${yT}" text-anchor="middle">${eig}</text>`;
+    const Hh = y0 + 27;
+
+    kind.forEach(p => { p.h = hoehe(p.b, .55); });
+    warte.forEach(p => { p.h = hoehe(p.b, .42); });
+    const kH = Math.ceil(maxH * .55) + 2, wH = Math.ceil(maxH * .42) + 2;
+    kind.forEach(p => {
+      const id = eintragen('kind', { b: p.b, x: p.x, w: p.w, y: kH - p.h, h: p.h });
+      sKind += `<rect id="${id}" role="option" aria-label="${esc(zeile(p.b).text)}" ${rect(p.x, kH - p.h, p.w, p.h)}/>`;
+    });
+    warte.forEach(p => {
+      const id = eintragen('warte', { b: p.b, x: p.x, w: p.w, y: wH - p.h, h: p.h });
+      sWarte += `<rect id="${id}" role="option" aria-label="${esc(zeile(p.b).text)}" ${rect(p.x + .3, wH - p.h + .3, Math.max(.4, p.w - .6), p.h - .3)}/>`;
+    });
+    // Die Reihenfolge im Haupt-Band entlang der Zeit
+    folgen.haupt.sort((a, b) => a.x - b.x);
+    folgen.haupt.forEach((o, i) => { o.idx = i; });
+    folgen.quer.sort((a, b) => a.x - b.x);
+    folgen.quer.forEach((o, i) => { o.idx = i; });
+
+    const svg = (id, cls, h, inhalt, label) => `<svg id="${id}" class="band ${cls}" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" tabindex="0" role="listbox" aria-label="${label}">${inhalt}</svg>`;
+    roll.innerHTML =
+      svg('band-haupt', 'band-hauptband', Hh, `<g>${sHaupt}</g><g>${sQuer}</g><g>${sLeiste}${sJahre}</g><line class="marke" id="band-marke" x1="0" x2="0" y1="${y0 + 1}" y2="${y0 + 10}" visibility="hidden"/>`, 'Gelesen, nach dem Jahr des ersten Erscheinens; Pfeiltasten wählen, Eingabe öffnet die Karteikarte') +
+      `<p class="bandzeile" id="bandzeile" aria-live="polite"><span id="zeile-text"></span></p>` +
+      `<p class="bandname">die wichtigsten aus Kindheit und Jugend</p>` +
+      svg('band-kind', 'band-kind', kH, sKind, 'Die wichtigsten Bücher aus Kindheit und Jugend') +
+      `<p class="bandname">was noch wartet</p>` +
+      svg('band-warte', 'band-warte', wH, sWarte, 'Was noch wartet');
+
+    Object.assign(BAND, { items, folgen, aktiv: null, breite: W, schmal, y0 });
+    BAND.byId = Object.fromEntries(items.map(o => [o.id, o]));
+    ['band-haupt', 'band-kind', 'band-warte'].forEach(id => bandBedienung(document.getElementById(id)));
+    if (schmal) roll.scrollLeft = roll.scrollWidth;
+  }
+
+  // Treffer unter dem Zeiger: liegende Bücher zuerst, sonst der nächste Rücken entlang der Zeit
+  function treffer(svg, e) {
+    const r = svg.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const folge = svg.id === 'band-kind' ? 'kind' : svg.id === 'band-warte' ? 'warte' : 'haupt';
+    if (folge === 'haupt') {
+      const q = BAND.folgen.quer.find(o => x >= o.x && x <= o.x + o.w && y >= o.y - 1 && y <= o.y + o.h + 1);
+      if (q) return q;
+      if (y > BAND.y0 + 12) return null;
+    }
+    const f = BAND.folgen[folge];
+    let lo = 0, hi = f.length - 1;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (f[m].x <= x) lo = m; else hi = m - 1; }
+    const kandidaten = [f[lo], f[lo + 1]].filter(Boolean);
+    let best = null, abst = Infinity;
+    kandidaten.forEach(o => { const d = x < o.x ? o.x - x : x > o.x + o.w ? x - o.x - o.w : 0; if (d < abst) { abst = d; best = o; } });
+    if (best && best.b.werk && /^ursprung/.test(best.b.id) && BAENDE.indexOf(best.b.band) >= trilogieSichtbar) return null;
+    return abst <= 4 ? best : null;
+  }
+  function waehle(o) {
+    if (BAND.aktiv === o) return;
+    if (BAND.aktiv) { const alt = document.getElementById(BAND.aktiv.id); if (alt) alt.classList.remove('an'); }
+    BAND.aktiv = o;
+    const textEl = document.getElementById('zeile-text'), marke = document.getElementById('band-marke');
+    if (!textEl) return;
+    if (!o) { textEl.innerHTML = ''; if (marke) marke.setAttribute('visibility', 'hidden'); return; }
+    const el = document.getElementById(o.id);
+    if (el) {
+      el.classList.add('an');
+      const svg = el.ownerSVGElement || el.closest('svg');
+      if (svg) svg.setAttribute('aria-activedescendant', o.id);
+    }
+    const z = zeile(o.b);
+    textEl.innerHTML = BAND.schmal ? `<button class="wort" type="button" id="zeile-karte">${z.html}</button>` : z.html;
+    const mitte = o.x + o.w / 2;
+    const bw = textEl.offsetWidth;
+    let links = mitte - 6;
+    if (BAND.schmal) {
+      const sl = roll.scrollLeft, vw = roll.clientWidth - 32;
+      links = Math.max(sl, Math.min(sl + vw - bw, links));
+    }
+    links = Math.max(0, Math.min(BAND.breite - bw, links));
+    textEl.style.marginLeft = links + 'px';
+    if (marke) {
+      if (o.folge === 'haupt' || o.folge === 'quer') { marke.setAttribute('x1', mitte); marke.setAttribute('x2', mitte); marke.setAttribute('visibility', o.folge === 'haupt' ? 'visible' : 'hidden'); }
+      else marke.setAttribute('visibility', 'hidden');
+    }
+    const knopfEl = document.getElementById('zeile-karte');
+    if (knopfEl) knopfEl.addEventListener('click', () => karteOeffnen(o));
+  }
+  function bandBedienung(svg) {
+    if (!svg) return;
+    let art = 'mouse';
+    svg.addEventListener('pointerdown', e => { art = e.pointerType; });
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { const t = treffer(svg, e); if (t) waehle(t); } });
+    svg.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && document.activeElement !== svg) waehle(null); });
+    svg.addEventListener('click', e => {
+      const t = treffer(svg, e);
+      if (!t) return;
+      if (art !== 'mouse' && BAND.aktiv !== t) { waehle(t); return; }
+      waehle(t); karteOeffnen(t);
+    });
+    svg.addEventListener('focus', () => {
+      if (BAND.aktiv && document.getElementById(BAND.aktiv.id) && document.getElementById(BAND.aktiv.id).closest('svg') === svg) return;
+      const f = svg.id === 'band-kind' ? BAND.folgen.kind : svg.id === 'band-warte' ? BAND.folgen.warte : BAND.folgen.haupt;
+      if (f.length) waehle(svg.id === 'band-haupt' ? f[f.length - 1 - WERKE.length] || f[f.length - 1] : f[f.length - 1]);
+    });
+    svg.addEventListener('keydown', e => {
+      const o = BAND.aktiv; if (!o) return;
+      const reihen = ['quer', 'haupt', 'kind', 'warte'];
+      const f = BAND.folgen[o.folge];
+      let neu = null;
+      if (e.key === 'ArrowRight') neu = f[Math.min(f.length - 1, o.idx + 1)];
+      else if (e.key === 'ArrowLeft') neu = f[Math.max(0, o.idx - 1)];
+      else if (e.key === 'Home') neu = f[0];
+      else if (e.key === 'End') neu = f[f.length - 1];
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const r = reihen.indexOf(o.folge) + (e.key === 'ArrowUp' ? -1 : 1);
+        const ziel = BAND.folgen[reihen[r]];
+        if (ziel && ziel.length) {
+          const m = o.x + o.w / 2;
+          neu = ziel.reduce((a, c) => Math.abs(c.x + c.w / 2 - m) < Math.abs(a.x + a.w / 2 - m) ? c : a);
+        }
+      } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); karteOeffnen(o); return; }
+      else if (e.key === 'Escape') { waehle(null); return; }
+      if (!neu) return;
+      e.preventDefault();
+      const zielSvg = document.getElementById(neu.id).closest('svg');
+      waehle(neu);
+      if (zielSvg !== svg) zielSvg.focus({ preventScroll: true });
+      if (BAND.schmal) {
+        const vw = roll.clientWidth - 32;
+        if (neu.x < roll.scrollLeft || neu.x > roll.scrollLeft + vw) roll.scrollLeft = neu.x - vw / 2;
+      }
+    });
+  }
+  function trilogieZeigen(n) {
+    trilogieSichtbar = n;
+    document.querySelectorAll('#band-haupt .werk.siena').forEach(el => el.classList.toggle('verborgen', BAENDE.indexOf(el.dataset.band) >= n));
+  }
+
+  // ---------- Karteikarte ----------
+  const karte = $('#karte');
+  const BINDUNG = { p: 'Taschenbuch', m: 'Taschenbuch', h: 'gebunden', e: '' };
+  const REGAL = { gelesen: 'gelesen', gerade: 'lese ich gerade', kindheit: 'Kindheit und Jugend', abgebrochen: 'nicht zu Ende gelesen', leseliste: 'wartet noch' };
+  function karteOeffnen(o) {
+    if (!karte || typeof karte.showModal !== 'function') return;
+    const b = o.b;
+    const setze = (id, t, html) => { const el = document.getElementById(id); if (html) el.innerHTML = t; else el.textContent = t; el.hidden = !t; };
+    karte.classList.toggle('karte-siena', !!(b.werk && /^ursprung/.test(b.id)));
+    setze('karte-sig', b.sig);
+    if (b.werk) {
+      setze('karte-regal', b.stand);
+      setze('karte-titel', b.titel);
+      setze('karte-unter', b.art);
+      setze('karte-autor', 'Dominik Jäkel');
+      setze('karte-daten', chr(b.band ? I.baende[b.band] : (b.text || '')));
+      setze('karte-notiz', '');
+    } else {
+      setze('karte-regal', REGAL[b.r] || '');
+      setze('karte-titel', b.t);
+      setze('karte-unter', b.u || '');
+      setze('karte-autor', b.a && !/^Die \d/.test(b.a) ? b.a : '');
+      const daten = [];
+      if (b.j != null) daten.push(b.j < 0 ? `Entstanden ${jahrText(b.j)}` : `Zuerst erschienen ${b.j}`);
+      if (b.p > 0) daten.push(`${tausender(b.p)} Seiten`);
+      const ausgabe = [b.v, BINDUNG[b.b]].filter(Boolean).join(', ');
+      setze('karte-daten', daten.join(', ') + (daten.length ? '.' : '') + (ausgabe ? ` Ausgabe: ${esc(ausgabe)}.` : ''), true);
+      const notiz = [];
+      if (b.s === 5 && b.r === 'gelesen') notiz.push('Eines der liebsten.');
+      if (b.w) notiz.push('Mehr als einmal gelesen.');
+      setze('karte-notiz', notiz.join(' '));
+    }
+    karte.showModal();
+  }
+  if (karte) {
+    $('#karte-zu').addEventListener('click', () => karte.close());
+    karte.addEventListener('click', e => {
+      const r = $('#karte-blatt').getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) karte.close();
+    });
+  }
+
+  // ---------- Aufbau ----------
+  bandBauen();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(bandBauen);
+  let breiteVorher = roll ? roll.clientWidth : 0, resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { if (roll && roll.clientWidth !== breiteVorher) { breiteVorher = roll.clientWidth; bandBauen(); } }, 150);
+  });
+})();
+</script>
+</body>
+</html>

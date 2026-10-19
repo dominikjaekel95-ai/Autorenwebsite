@@ -67,6 +67,9 @@ img { max-width: 100%; }
 }
 .knopf:hover { background: var(--akzent); color: var(--flaeche); }
 
+.neu { padding-bottom: 1.25rem; }
+.neu h2 { margin: 0 0 .4rem; font-family: var(--f-ui); font-weight: 700; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.01em; }
+.neu p { margin: 0; max-width: 44rem; }
 .abschnitt { border-top: 1px solid var(--linie); padding-block: clamp(2.25rem, 5vw, 3.5rem); }
 .abschnitt h2 { margin: 0 0 .4rem; font-family: var(--f-ui); font-weight: 700; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.01em; }
 .abschnitt > .huelle > p { max-width: 44rem; }
@@ -96,16 +99,65 @@ ol.schritte li::marker { font-family: var(--f-ui); font-weight: 700; color: var(
 <header class="huelle kopf">
   <p class="versal">Erste Entwürfe · Oktober 2026</p>
   <h1>Entwürfe für die Autorenwebsite</h1>
-  <p class="lead">Entwürfe für die Startseite von Dominik Jäkel: Journal, Länderguides, Bücher. Der neueste ist D, der Globus. A bis C zeigen je einen anderen Namen. Unten in jedem Entwurf lässt sich jeder Namenskandidat ausprobieren, auch ein eigener.</p>
+  <p class="lead">Entwürfe für die Startseite von Dominik Jäkel: Journal, Länderguides, Bücher. Neu sind E1 bis E3: drei Varianten für den Bereich neben dem Globus und drei für die Bibliothek. D ist der Globus, aus dem sie entstanden sind. A bis C zeigen je einen anderen Namen.</p>
   <p class="hinweis">Alle Texte sind Beispieltexte. Die Formulare verschicken nichts.</p>
 </header>
 
 <main>
-  <section class="huelle richtungen" aria-label="Entwürfe">
+  <section class="huelle neu" aria-labelledby="neu-titel">
+    <h2 id="neu-titel">Neu: drei Varianten für Globus und Bibliothek</h2>
+    <p>Der Globus bleibt, neu ist alles drumherum. Jeder Entwurf hat eine eigene Buchschrift, die Chronik springt durch die Lebensstationen, und die Ursprungstrilogie entfaltet sich langsam. Die Bibliothek ist nach Erscheinungsjahr geordnet, von Gilgamesch bis Labatut. Globusseite und Bibliothek lassen sich frei kombinieren, zum Beispiel die Atlastafel aus E2 mit dem Register aus E3.</p>
+  </section>
+  <section class="huelle richtungen" aria-label="Neue Entwürfe">
+    <article class="richtung">
+      <a class="richtung__bild" href="e1-klappentext.html" tabindex="-1" aria-hidden="true"><img src="vorschau/e1-klappentext.jpg" alt="" width="1280" height="800" loading="lazy"></a>
+      <div class="richtung__text">
+        <p class="versal">Entwurf E1 · Vollkorn</p>
+        <h2><a href="e1-klappentext.html">Klappentext und Regal</a></h2>
+        <p class="richtung__these">Briefkopf, Kurzvita, ein Regal aus echten Daten.</p>
+        <p>Die Lebensstationen stehen als Kolophonzeile unter der Vita, die Chronik hängt daran. Im Regal kommt die Rückenbreite aus der Seitenzahl und die Höhe aus der Bindung, geordnet nach Erscheinungsjahr. Was gerade gelesen wird, liegt quer obenauf.</p>
+        <ul>
+          <li>Die Trilogie steht im Schuber, die Bände gleiten nacheinander heraus</li>
+          <li>Ein Klick auf einen Rücken öffnet eine Karteikarte</li>
+        </ul>
+        <a class="knopf" href="e1-klappentext.html">Entwurf E1 öffnen</a>
+      </div>
+    </article>
+    <article class="richtung">
+      <a class="richtung__bild" href="e2-atlas.html" tabindex="-1" aria-hidden="true"><img src="vorschau/e2-atlas.jpg" alt="" width="1280" height="800" loading="lazy"></a>
+      <div class="richtung__text">
+        <p class="versal">Entwurf E2 · Alegreya</p>
+        <h2><a href="e2-atlas.html">Atlastafel und Zeitband</a></h2>
+        <p class="richtung__these">Eine Doppelseite wie in Schalanskys Atlas der abgelegenen Inseln.</p>
+        <p>Links eine Tafel pro Station mit Jahr, Koordinaten und Entfernung von Dortmund, rechts der Globus. Mit jeder Station wird umgeblättert. Darunter alle gelesenen Bücher als Striche auf einer Zeitachse von Gilgamesch bis Labatut.</p>
+        <ul>
+          <li>Kolumnentitel mit Seitenzahlen, unten die Kustode mit der nächsten Station</li>
+          <li>Siena nur für die Ursprungstrilogie</li>
+        </ul>
+        <a class="knopf" href="e2-atlas.html">Entwurf E2 öffnen</a>
+      </div>
+    </article>
+    <article class="richtung">
+      <a class="richtung__bild" href="e3-marginalie.html" tabindex="-1" aria-hidden="true"><img src="vorschau/e3-marginalie.jpg" alt="" width="1280" height="800" loading="lazy"></a>
+      <div class="richtung__text">
+        <p class="versal">Entwurf E3 · Spectral</p>
+        <h2><a href="e3-marginalie.html">Buchseite und Register</a></h2>
+        <p class="richtung__these">Eine Buchseite mit Randspalte.</p>
+        <p>Die Vita beginnt mit dem Namen in Kapitälchen, der Globus ist Abbildung 1, der aktive Ort steht als Randnotiz. Darunter ein laufendes Register nach Jahrzehnten, die liebsten Bücher in Schwarz, dazu eine kleine Zeichnung der eigenen Bücher mit dem Nachttischstapel.</p>
+        <ul>
+          <li>Ganz ohne Akzentfarbe, nur Schwarz, Grau, Kursiv und Kapitälchen</li>
+          <li>Die Karteikarte erscheint am Rand neben dem Titel</li>
+        </ul>
+        <a class="knopf" href="e3-marginalie.html">Entwurf E3 öffnen</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="huelle richtungen" aria-label="Frühere Entwürfe">
     <article class="richtung">
       <a class="richtung__bild" href="d-globus.html" tabindex="-1" aria-hidden="true"><img src="vorschau/d-globus.jpg" alt="" width="1280" height="800" loading="lazy"></a>
       <div class="richtung__text">
-        <p class="versal">Entwurf D · neu</p>
+        <p class="versal">Entwurf D</p>
         <h2><a href="d-globus.html">Globus</a></h2>
         <p class="richtung__these">Weiß und Graphit, ein Globus zum Reinzoomen.</p>
         <p>Feine Ländergrenzen, 65 bereiste Länder und Gebiete, Ebenen für das eigene Leben, den Roman Satoshi und die Ursprungstrilogie. Darunter eine Bibliothek, aus der man Bücher herausziehen kann.</p>
@@ -193,7 +245,7 @@ ol.schritte li::marker { font-family: var(--f-ui); font-weight: 700; color: var(
         <p>Untertext als Überbrand für Journal, Briefe und Instagram. Dominik Jäkel steht als Absender auf jeder Seite.</p>
         <p>dominikjaekel.de in jedem Fall sichern und auf die Seite zeigen lassen. Ist untertext.de vergeben, läuft die Seite unter dem Namen, und Untertext wird das Journal darin, so wie in Entwurf C.</p>
         <h3>Rubriken</h3>
-        <p>Untertagebuch für die kurzen Notizen, Länder für die Guides, Bücher für eigene Texte und die Trilogie.</p>
+        <p>Untertext für das Journal, Länder für die Guides, Bücher für eigene Texte und die Trilogie.</p>
         <h3>Was draußen bleibt</h3>
         <p>Freelancing und Prototypen: höchstens ein Satz unter „Über mich“. Perry Rhodan unter Pseudonym bleibt getrennt.</p>
       </div>

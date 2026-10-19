@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dominik Jäkel</title>
+<meta name="description" content="Dominik Jäkel, Schriftsteller und Reisender. Entwurf E1: Klappentext und Regal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<style>
+/* Entwurf E1, Klappentext: Briefkopf, Kurzvita, angeschnittener Globus, darunter ein Regal aus dem Goodreads-Export.
+   Eine Schrift (Vollkorn mit Vollkorn SC), Papierweiß und Graphit. Siena bedeutet nur eines: Dominiks eigene Werke als Gegenstände. */
+:root {
+  color-scheme: light;
+  --papier: #FFFEFC;
+  --graphit: #1D1E21;
+  --schwarz: #0A0B0D;
+  --grau-1: #47494E;
+  --grau-2: #6B6D72;
+  --grau-neben: #7C7E83;
+  --grau-3: #96989C;
+  --brett: #E9E6E0;
+  --brettkante: #D2CEC5;
+  --karton: #FBF9F4;
+  --siena: #9B5230;
+  --z: 1.78125rem;                 /* eine Zeile: 19 px × 1,5 */
+  --schrift: "Vollkorn", "Iowan Old Style", Georgia, serif;
+  --sc: "Vollkorn SC", "Vollkorn", Georgia, serif;
+  --rand-l: clamp(16px, 7vw, 136px);
+  --rand-r: clamp(16px, 3vw, 48px);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--papier); color: var(--graphit);
+  font-family: var(--schrift); font-size: 1.1875rem; line-height: 1.5;
+  font-variant-numeric: oldstyle-nums proportional-nums; font-kerning: normal;
+  hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+}
+p, h1, h2, h3, figure { margin: 0; }
+h1, h2, h3 { font-weight: 400; }
+i, em { font-style: italic; }
+
+/* Links sind unterstrichene Wörter, das Gewählte steht schwarz und ohne Strich */
+a, .wort {
+  color: inherit;
+  text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .2em;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+a:hover, .wort:hover { text-decoration-color: currentColor; }
+button.wort { appearance: none; background: none; border: 0; border-radius: 0; padding: 0; margin: 0; font: inherit; color: inherit; letter-spacing: inherit; text-align: inherit; cursor: pointer; }
+.wort.ist-aktiv { color: var(--schwarz); text-decoration-line: none; cursor: default; }
+:focus-visible { outline: 1.5px solid var(--graphit); outline-offset: 3px; }
+.unsichtbar { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- Globusseite ---------- */
+.globusseite {
+  --spalte: clamp(23em, calc(62vw - 330px), 30em);   /* auf mittleren Schirmen gibt die Spalte dem Globus Platz */
+  --globus: min(calc((100vw - var(--rand-l) - var(--spalte) - 2.75rem) / .91), calc(100svh - var(--z)), 1000px);
+  display: grid;
+  grid-template-columns: var(--rand-l) minmax(0, var(--spalte)) minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto 1fr;
+  overflow-x: clip;
+}
+.briefkopf { grid-area: 1 / 2; padding-top: calc(var(--z) * 1.5); }
+.briefkopf h1 { font-family: var(--sc); font-size: 1.15em; letter-spacing: .07em; line-height: var(--z); }
+.briefkopf p { color: var(--grau-2); line-height: var(--z); }
+.vita { grid-area: 2 / 2; margin-top: calc(var(--z) * 4); }
+.ebenen { grid-area: 3 / 2; margin-top: var(--z); color: var(--grau-1); }
+.ebenen .wort { color: var(--grau-1); }
+.ebenen .wort.ist-aktiv { color: var(--schwarz); }
+.ebenentext { grid-area: 4 / 2; margin-top: var(--z); }
+.ebenentext > div > p + p { margin-top: calc(var(--z) * .5); }
+.globus {
+  grid-area: 1 / 3 / 6 / 4; justify-self: end; align-self: start;
+  width: var(--globus); position: relative;
+  margin: calc(var(--z) * .5) calc(var(--globus) * -.09) 0 0;
+}
+.flaeche { position: relative; width: 100%; aspect-ratio: 1; }
+.flaeche canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+.flaeche canvas:active { cursor: grabbing; }
+.flaeche canvas:focus-visible { outline-offset: -2px; }
+.flaeche canvas.namen { position: absolute; left: 0; top: 0; pointer-events: none; cursor: auto; }
+.flaeche canvas[hidden] { display: none; }
+/* Gezoomt bleibt der Globus eine Scheibe am selben Ort, wie unter einer Lupe */
+.flaeche.ist-gezoomt { clip-path: circle(calc(50% - 1.5px)); }
+.flaeche::after { content: ""; position: absolute; inset: 1.5px; border-radius: 50%; border: 1px solid var(--graphit); pointer-events: none; opacity: 0; }
+.flaeche.ist-gezoomt::after { opacity: 1; }
+.tipp { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; white-space: nowrap; font-style: italic; font-size: .875rem; line-height: 1.3; padding: 0 .3em; background: var(--papier); transform: translate(14px, -50%); }
+.tipp.links { transform: translate(calc(-100% - 14px), -50%); }
+.tipp[hidden], .hinweis[hidden] { display: none; }
+.hinweis { position: absolute; left: 14%; bottom: 7%; z-index: 2; pointer-events: none; font-style: italic; font-size: .8125rem; color: var(--grau-2); background: var(--papier); padding: 0 .3em; }
+.ersatz { font-style: italic; color: var(--grau-2); max-width: 22em; padding-top: calc(var(--z) * 6); }
+.ohne-globus .flaeche { display: none; }
+.bildzeile { display: none; }
+
+/* Kolophon nach Joyce, die Nebenorte kleiner und heller */
+.kolophon { font-style: italic; font-size: .9375em; line-height: 1.65; color: var(--grau-2); }
+.kolophon .station { white-space: nowrap; color: var(--grau-2); text-decoration-color: color-mix(in srgb, currentColor 30%, transparent); }
+.kolophon .station.neben { color: var(--grau-neben); font-size: .86em; }
+.kolophon .station.ist-aktiv { color: var(--schwarz); }
+.kolophon .strich { color: var(--grau-3); }
+.glied { white-space: nowrap; }
+.koordinaten { font-style: italic; font-size: .9375em; min-height: 1.5em; margin-top: calc(var(--z) * .25); }
+.nochmal { margin-top: 0; font-size: .9375em; color: var(--grau-2); }
+.nochmal.still { visibility: hidden; }
+.reisen-zahl { margin-bottom: 0; }
+
+/* Ursprung: die Bände erscheinen mit dem Globus. Siena nur für die Bandnummer, den Band als Gegenstand */
+.werk { font-style: italic; }
+.band { margin-top: calc(var(--z) * .5); opacity: 0; visibility: hidden; transition: opacity 1.6s ease, visibility 0s linear 1.6s; }
+.band.da { opacity: 1; visibility: visible; transition: opacity 1.6s ease; }
+.band-nr { font-family: var(--sc); letter-spacing: .05em; color: var(--siena); }
+
+/* ---------- Regal ---------- */
+.regal { padding: calc(var(--z) * 4) var(--rand-r) calc(var(--z) * 2) var(--rand-l); }
+.regal .vorwort { max-width: 30em; margin: 0 0 calc(var(--z) * 1.5); }
+.faecher, .kinderzimmer, .wartet { position: relative; }
+.faecher { margin-top: calc(var(--z) * 1.5); }
+.kinderzimmer, .wartet { margin-top: calc(var(--z) * 1.5); }
+.reihe { margin-bottom: calc(var(--z) * .5); }
+.buecher { display: flex; align-items: flex-end; height: var(--h); min-width: 0; }
+.gruppe { display: flex; align-items: flex-end; flex: none; }
+.brett { height: 7px; background: var(--brett); border-top: 1px solid var(--brettkante); }
+.schilder { display: flex; align-items: flex-start; min-height: calc(1.225rem + .4rem); padding-top: .4rem; }
+.schild { flex: none; font-family: var(--sc); font-size: .875rem; line-height: 1.4; letter-spacing: .04em; text-transform: lowercase; color: var(--grau-2); padding-right: 1em; hyphens: manual; text-wrap: balance; }
+.schild .jahre { font-family: var(--schrift); text-transform: none; letter-spacing: 0; white-space: nowrap; }
+/* Buchstütze zwischen zwei Zeiten: von vorn nur ein schmaler Metallstreifen */
+.stuetze { flex: none; width: 3px; margin: 0 4px 0 5px; background: #8C8E92; border-left: 1px solid #A6A8AB; }
+
+.ruecken {
+  position: relative; flex: none; appearance: none; margin: 0; padding: 0; border: 0; border-radius: 0;
+  border-right: 1px solid rgba(0, 0, 0, .07);
+  background: var(--grund, #EAE7DF); color: var(--tinte, #2A2B2E); font: inherit; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; overflow: visible;
+  transition: transform .2s ease;
+}
+.ruecken:hover, .ruecken:focus-visible, .ruecken.ist-offen { transform: translateY(-6px); }
+.ruecken:focus-visible { outline-offset: 1px; z-index: 1; }
+.ruecken.lehnt { transform-origin: 0 100%; transform: rotate(var(--neigung)); }
+.ruecken.lehnt:hover, .ruecken.lehnt:focus-visible, .ruecken.lehnt.ist-offen { transform: translateY(-6px) rotate(var(--neigung)); }
+/* Rückenschrift wird nie mit Auslassungspunkten gekürzt: Größe und Fassung kommen aus der Messung */
+.aufschrift { display: block; writing-mode: vertical-rl; line-height: 1.12; white-space: nowrap; overflow: hidden; max-height: calc(100% - 20px); pointer-events: none; font-variant-numeric: oldstyle-nums; }
+.aufschrift .z { display: block; }
+.de .aufschrift { transform: rotate(180deg); }
+.aufschrift .nn { font-family: var(--sc); letter-spacing: .04em; }
+.aufschrift .nn + .t { margin-inline-start: .5em; }
+/* Bleistift: ein Strich für ein Lieblingsbuch, zwei für wiedergelesen */
+.strich-1::after, .strich-2::after, .strich-2::before { content: ""; position: absolute; bottom: 5px; width: 1px; height: 6px; background: currentColor; opacity: .32; transform: rotate(20deg); pointer-events: none; }
+.strich-1::after { left: calc(50% - .5px); }
+.strich-2::after { left: calc(50% + 1px); }
+.strich-2::before { left: calc(50% - 2.5px); }
+.lesezeichen { position: absolute; top: -10px; width: 3px; height: 10px; background: #55575C; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%); pointer-events: none; }
+/* Was noch wartet: mit Bleistift vorgezeichnet */
+.geist { background: transparent; border-right: 0; }
+.geist svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.geist path { fill: none; stroke: #8E9094; stroke-width: .75; stroke-linecap: round; opacity: .8; }
+.geist:hover path, .geist:focus-visible path, .geist.ist-offen path { stroke: var(--grau-1); }
+.geist .aufschrift { color: #A2A4A7; font-style: italic; }
+
+/* Was gerade gelesen wird, liegt quer */
+.stapelgruppe { gap: 12px; }
+.stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; }
+.liegt { --versatz: 0px; border-right: 0; border-top: 1px solid rgba(0, 0, 0, .07); transform: translateX(var(--versatz)); }
+.liegt:hover, .liegt:focus-visible, .liegt.ist-offen { transform: translateX(calc(var(--versatz) + 7px)); }
+.liegt .aufschrift { writing-mode: horizontal-tb; max-height: none; max-width: calc(100% - 20px); }
+.liegt.de .aufschrift { transform: none; }
+
+/* Eigene Werke wie Insel-Bücherei: gleiches Schild für alle, eigenes Muster, die Trilogie im Schuber */
+.eigen { --muster: color-mix(in srgb, var(--siena) 36%, transparent); background-color: #F6F2EA; border-right: 1px solid color-mix(in srgb, var(--siena) 26%, transparent); }
+.eigen .titelschild { position: absolute; left: 50%; top: 13%; width: var(--sw); height: var(--sh); transform: translateX(-50%); background: #FDFBF7; border: 1px solid color-mix(in srgb, var(--siena) 70%, transparent); display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none; }
+.eigen .titelschild span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; color: var(--graphit); line-height: 1; font-size: var(--sf); }
+.muster-hoehen { background-image: repeating-radial-gradient(ellipse 150% 62% at 28% 96%, transparent 0 4.6px, var(--muster) 4.6px 5.2px); }
+.muster-schraeg { background-image: repeating-linear-gradient(-62deg, transparent 0 5.4px, var(--muster) 5.4px 6px); }
+.muster-pfeiler { background-image: linear-gradient(0deg, transparent 0 70%, var(--muster) 70% calc(70% + .6px), transparent calc(70% + .6px)), repeating-linear-gradient(90deg, transparent 0 5.4px, var(--muster) 5.4px 6px); }
+.muster-ton { background-image: repeating-linear-gradient(40deg, transparent 0 6px, var(--muster) 6px 6.5px), repeating-linear-gradient(-40deg, transparent 0 6px, var(--muster) 6px 6.5px); }
+.muster-wellen { background-image: radial-gradient(circle at 50% 0, transparent 0 3px, var(--muster) 3px 3.55px, transparent 3.55px); background-size: 8px 6px; }
+.muster-punkte { background-image: radial-gradient(circle, var(--muster) 0 .7px, transparent .9px); background-size: 6px 6px; }
+.muster-zeilen { background-image: repeating-linear-gradient(0deg, transparent 0 5.4px, var(--muster) 5.4px 6px); }
+.muster-netz { background-image: repeating-linear-gradient(90deg, transparent 0 5.4px, var(--muster) 5.4px 6px), repeating-linear-gradient(0deg, transparent 0 8.4px, var(--muster) 8.4px 9px); }
+.eigenes .gruppe { gap: 1px; }
+.schuber-platz { position: relative; flex: none; width: var(--zu); height: var(--hc); transition: width .9s ease; }
+.schuber-platz.offen { width: var(--auf); }
+.schuber-platz .schuber { position: absolute; left: 0; bottom: 0; z-index: 2; }
+.schuber-platz .bandbuch { position: absolute; bottom: 0; left: var(--innen); z-index: 1; transition: transform .8s cubic-bezier(.3, .1, .2, 1); transition-delay: var(--zurueck); }
+.schuber-platz.offen .bandbuch { transform: translateX(var(--weg)); transition-delay: var(--hin); }
+.schuber-platz.offen .bandbuch:hover, .schuber-platz.offen .bandbuch:focus-visible, .schuber-platz.offen .bandbuch.ist-offen { transform: translateX(var(--weg)) translateY(-6px); transition-delay: 0s; }
+
+/* Karteikarte, A6 quer, von oben beschrieben */
+.karte {
+  position: absolute; z-index: 30; width: min(24rem, calc(100vw - 32px)); aspect-ratio: 148 / 105;
+  display: flex; flex-direction: column;
+  background: var(--karton); border: 1px solid #D8D4CB; padding: .9rem 1.2rem 1rem;
+  font-size: 1rem; line-height: 1.4; color: var(--graphit);
+}
+.karte[hidden] { display: none; }
+.karte:focus { outline: none; }
+.karte:focus-visible { outline: 1.5px solid var(--graphit); outline-offset: 2px; }
+.karte-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-bottom: .35rem; margin-bottom: .75rem; border-bottom: 1px solid #B9B5AC; font-size: .875rem; color: var(--grau-2); }
+.signatur { font-family: var(--sc); letter-spacing: .06em; color: var(--graphit); }
+.signatur.eigen-sig { color: var(--siena); }
+.karte-titel { font-size: 1.25rem; line-height: 1.25; text-wrap: balance; hyphens: manual; }
+.karte-titel.eigen-titel { font-style: italic; }
+.karte-unter { font-style: italic; color: var(--grau-2); font-size: .9375rem; margin-top: .15rem; }
+.karte-autor { margin-top: .3rem; }
+.karte-daten { margin-top: .7rem; color: var(--grau-2); font-size: .9375rem; }
+.karte-notiz { font-style: italic; margin-top: .3rem; font-size: .9375rem; }
+.karte-text { margin-top: .4rem; font-size: .9375rem; }
+.karte .weiter { margin-top: .6rem; font-size: .9375rem; }
+.karte.als-blatt { position: fixed; left: 0; right: 0; bottom: 0; top: auto !important; width: auto; aspect-ratio: auto; min-height: 15rem; border-width: 1px 0 0; padding: 1rem 16px calc(1.25rem + env(safe-area-inset-bottom)); }
+
+/* ---------- Fuß ---------- */
+.fuss { padding: calc(var(--z) * 2) var(--rand-r) calc(var(--z) * 2) var(--rand-l); font-size: .875rem; color: var(--grau-2); }
+.fuss p { max-width: 36em; }
+
+/* ---------- Telefon und schmale Fenster ---------- */
+@media (max-width: 62rem) {
+  body { font-size: 1.125rem; }
+  :root { --z: 1.6875rem; }
+  .globusseite { grid-template-columns: var(--rand-l) minmax(0, 1fr) var(--rand-l); grid-template-rows: none; }
+  .briefkopf, .vita, .ebenen, .globus, .ebenentext { grid-column: 2; grid-row: auto; }
+  .briefkopf { padding-top: calc(var(--z) * 1); }
+  .vita { margin-top: calc(var(--z) * 2); }
+  .globus { justify-self: center; width: min(100%, calc(100svh - 6rem)); margin: var(--z) 0 0; scroll-margin-top: 12px; }
+  /* Unter dem Globus der Band, der gerade erscheint, damit Bild und Text zusammen zu sehen sind */
+  .bildzeile:not(:empty) { display: block; font-style: italic; font-size: .9375em; margin-top: calc(var(--z) * .25); }
+  .regal { padding-left: var(--rand-l); padding-right: var(--rand-l); }
+}
+@media (max-width: 40rem) {
+  .kolophon { font-size: .9375em; }
+  .schild { font-size: .8125rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ruecken, .band, .band.da, .schuber-platz, .schuber-platz .bandbuch { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<main>
+<section class="globusseite" aria-label="Orte">
+  <header class="briefkopf">
+    <h1>Dominik Jäkel</h1>
+    <p>Schriftsteller und Reisender</p>
+  </header>
+
+  <p class="vita">Dominik Jäkel lebte bis 2014 in Dortmund, danach in Freiburg, Potsdam und Kaohsiung; seit 2022 lebt er in Berlin. Längere Zeit verbrachte er in Colombo auf Sri Lanka, in Cotonou in Benin und auf Mallorca. Er arbeitet an dem Roman <i>Satoshi</i> und an der Ursprungs&shy;trilogie, schreibt Erzählungen, Länderguides und das Journal <i>Untertext</i>.</p>
+
+  <p class="ebenen">Auf dem Globus: <button type="button" class="wort ist-aktiv" data-ebene="leben" aria-pressed="true">wo ich gelebt habe</button>, <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">wohin ich gereist bin</button>, <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false">wo <i>Satoshi</i> spielt</button>, <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false">wo die Ursprungstrilogie spielt</button>.</p>
+
+  <figure class="globus" id="globus">
+    <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Orten aus dem Text"></canvas><canvas class="namen" id="namen" aria-hidden="true"></canvas></div>
+    <div class="tipp" hidden></div>
+    <p class="hinweis" hidden></p>
+    <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text, mit ihren Koordinaten.</p>
+    <p class="bildzeile" id="bildzeile" aria-hidden="true"></p>
+  </figure>
+
+  <div class="ebenentext">
+    <div data-text="leben" class="leben-text">
+      <p class="kolophon" id="kolophon"></p>
+      <p class="koordinaten" id="koordinaten" aria-live="polite"></p>
+      <p class="nochmal still" id="nochmal-leben"><button type="button" class="wort" data-nochmal="leben">Noch einmal von Dortmund an</button></p>
+    </div>
+    <div data-text="reisen" hidden>
+      <p class="reisen-zahl" id="reisen-zahl"></p>
+      <p>Die meisten liegen in <button type="button" class="wort" data-kontinent="Europa">Europa</button>, viele in <button type="button" class="wort" data-kontinent="Asien">Asien</button>, einige in <button type="button" class="wort" data-kontinent="Afrika">Afrika</button>, nur wenige in <button type="button" class="wort" data-kontinent="Amerika">Amerika</button>.</p>
+    </div>
+    <div data-text="satoshi" hidden class="satoshi-text" id="satoshi-text"></div>
+    <div data-text="ursprung" hidden class="ursprung-text" id="ursprung-text"></div>
+  </div>
+</section>
+
+<section class="regal" aria-labelledby="regal-titel">
+  <h2 id="regal-titel" class="unsichtbar">Regal</h2>
+  <p class="vorwort">Oben, woran ich schreibe und was auf dem Nachttisch liegt. Darunter, was ich gelesen habe, nach dem Erscheinungsjahr geordnet und längst nicht vollständig.</p>
+  <div class="eigenes" id="eigenes"></div>
+  <div class="faecher" id="faecher"></div>
+  <div class="kinderzimmer" id="kinderzimmer"></div>
+  <div class="wartet" id="wartet"></div>
+</section>
+</main>
+
+<div class="karte" id="karte" role="dialog" aria-labelledby="karte-titel" tabindex="-1" hidden></div>
+
+<footer class="fuss">
+  <p>Gesetzt aus der Vollkorn von Friedrich Althausen. Entwurf E1, Klappentext. <a href="index.html">Alle Entwürfe</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="daten/buecher.js"></script>
+<script src="globus/kern.js"></script>
+<script src="globus/inhalt.js"></script>
+<script>
+(function () {
+  'use strict';
+  const I = window.INHALT || {};
+  const $ = (s, el) => (el || document).querySelector(s);
+  const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
+  const sauber = s => String(s == null ? '' : s).replace(/&amp;(amp;)*/g, '&').replace(/[‎‏]/g, '').trim();
+  const esc = s => sauber(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Unregelmäßiges nur aus den Daten: ein fester Hash statt Zufall
+  function hash(s) { let h = 2166136261 >>> 0; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h; }
+  const wert = (s, a, b) => a + (hash(s) % 100003) / 100003 * (b - a);
+  const schmal = () => window.innerWidth < 640;
+  const angeschnitten = () => window.matchMedia('(min-width: 62.0625rem)').matches;
+
+  // ---------- Zahlen und Koordinaten ----------
+  const EINER = ['', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun'];
+  const ZEHNER = ['', 'zehn', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+  const EIGEN = { 0: 'null', 1: 'eins', 11: 'elf', 12: 'zwölf', 16: 'sechzehn', 17: 'siebzehn' };
+  function zahlwort(n) {
+    if (EIGEN[n]) return EIGEN[n];
+    if (n < 10) return EINER[n];
+    if (n < 20) return EINER[n % 10] + 'zehn';
+    if (n < 100) return (n % 10 ? EINER[n % 10] + 'und' : '') + ZEHNER[Math.floor(n / 10)];
+    return String(n);
+  }
+  function gradMinuten(x, plus, minus) {
+    const a = Math.abs(x);
+    let g = Math.floor(a), m = Math.round((a - g) * 60);
+    if (m === 60) { g += 1; m = 0; }
+    return g + '° ' + String(m).padStart(2, '0') + '′ ' + (x >= 0 ? plus : minus);
+  }
+  const koordinaten = o => gradMinuten(o.lat, 'N', 'S') + ', ' + gradMinuten(o.lon, 'O', 'W');
+
+  // ---------- Inhalte ----------
+  const stationen = (I.leben || []).map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, jahr: s.jahr, land: s.land || '' }));
+  const ursprung = (I.ursprung || []).map(o => ({ name: o.name, lat: o.lat, lon: o.lon, band: o.band, jahr: o.jahr, volk: o.volk }));
+  const satoshiOrte = (I.satoshi && I.satoshi.orte) || [];
+  const SIENA = '#9B5230';
+  // In den Ebenen der eigenen Werke sind nur die Punkte und die Spur Siena; der Hof um den gewählten Ort bleibt Graphit
+  const sienaFarben = { akzent: SIENA, akzentHauch: 'rgba(29, 30, 33, .08)' };
+  const BLICK = {
+    leben: { mitte: [62, 30], k: 1 },      // wird aus dem sichtbaren Teil der Leinwand berechnet
+    reisen: { mitte: [52, 30], k: 1 },
+    satoshi: { mitte: [-64, 6], k: 1 },
+    ursprung: { mitte: [40.6, 33.8], k: 3.3 }
+  };
+  // Vor dem ersten Lauf steht der Globus leer; die Orte kommen mit der Chronik
+  const lebenOrte = [];
+  const LEBEN_ORTE = stationen.map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: s.neben, rang: s.neben ? 2 : 1, beschriftung: s.name }));
+  const lebenOrteFuellen = () => { if (!lebenOrte.length) lebenOrte.push(...LEBEN_ORTE); };
+  const EBENEN = {
+    leben: { orte: lebenOrte, laender: false, blick: BLICK.leben },
+    reisen: { orte: [], laender: true, blick: BLICK.reisen },
+    satoshi: { orte: satoshiOrte.filter(o => o.rang !== 3).map(o => Object.assign({}, o)), laender: false, blick: BLICK.satoshi, farben: sienaFarben },
+    ursprung: { orte: ursprung.map(o => ({ name: o.name, lat: o.lat, lon: o.lon, beschriftung: o.name })), laender: false, blick: BLICK.ursprung, farben: sienaFarben }
+  };
+  const KONTINENTE = { Europa: [[13, 50], 3.3], Asien: [[94, 26], 1.75], Afrika: [[16, 4], 1.9], Amerika: [[-80, 12], 1.12] };
+
+  // Kolophon nach Joyce: Station – Station – …, Nebenorte leiser. Nur hier sind die Orte bedienbar.
+  // Station und folgender Strich bleiben zusammen, damit keine Zeile mit einem Strich beginnt
+  $('#kolophon').innerHTML = stationen.map((s, i) =>
+    `<span class="glied"><button type="button" class="wort station${s.neben ? ' neben' : ''}" data-station="${i}">${esc(s.name)} ${esc(s.jahr)}</button>${i < stationen.length - 1 ? '<span class="strich"> –</span>' : ''}</span>`
+  ).join(' ');
+
+  // Reisen: die Zahl als Wort, die eigene Zählung daneben
+  const aufGlobus = (I.bereist || []).length;
+  $('#reisen-zahl').textContent = zahlwort(aufGlobus).replace(/^./, c => c.toUpperCase()) + ' Länder und Gebiete auf dem Globus, nach meiner eigenen Zählung sind es siebenundsechzig.';
+
+  // Satoshi: Kernhandlung, dann die übrigen Schauplätze
+  (function () {
+    const o = name => satoshiOrte.find(x => x.name === name);
+    const knopf = (name, text) => o(name) ? `<button type="button" class="wort" data-satoshi="${esc(name)}">${esc(text || name)}</button>` : esc(text || name);
+    $('#satoshi-text').innerHTML =
+      `<p><span class="werk">Satoshi</span>, ein Roman, ist in Arbeit. Die Kernhandlung spielt 2007 bis 2010 in Patagonien, in ${knopf('Bariloche')} und in den ${knopf('Anden an der Grenze zu Chile', 'Anden')} an der Grenze zu Chile.</p>` +
+      `<p>Weitere Schauplätze sind ${knopf('Buenos Aires')}, ${knopf('Temple City')} im San Gabriel Valley, ${knopf('Fort Meade')} in Maryland, die ${knopf('Black Rock Desert')} in Nevada, ${knopf('New York')}, ${knopf('London')}, ${knopf('Berlin')}, ${knopf('Kobe')} und ${knopf('Penang')}.</p>`;
+  })();
+
+  // Ursprung: drei Bände, die Ortsnamen darin fliegen den Globus an
+  const BILDZEILE = {};
+  (function () {
+    const baende = I.baende || {};
+    const ortKnopf = text => ursprung.reduce((t, s) => t.replace(new RegExp('(^|[^\\wäöü])(' + s.name + ')(?![\\wäöü])'), `$1<button type="button" class="wort" data-ursprung="${s.name}">$2</button>`), esc(text));
+    $('#ursprung-text').innerHTML =
+      `<p>Die <span class="werk">Ursprungstrilogie</span>, drei Romane, alle in Arbeit.</p>` +
+      ['I', 'II', 'III'].map(b => `<p class="band" data-band="${b}"><span class="band-nr">Band ${b}.</span> ${ortKnopf(baende[b] || '')}</p>`).join('') +
+      `<p class="nochmal still" id="nochmal-ursprung"><button type="button" class="wort" data-nochmal="ursprung">Noch einmal von Göbekli Tepe an</button></p>`;
+    // Kurzfassung je Band für die Bildzeile unter dem Globus auf schmalen Schirmen
+    ['I', 'II', 'III'].forEach(b => {
+      const orte = ursprung.filter(o => o.band === b);
+      if (!orte.length) return;
+      const namen = orte.map(o => o.name);
+      BILDZEILE[b] = (namen.length > 1 ? namen.slice(0, -1).join(', ') + ' und ' + namen[namen.length - 1] : namen[0]) + ', ' + (orte[0].volk || orte[0].jahr || '');
+    });
+  })();
+
+  // Knöpfe sind Inline-Blöcke: das folgende Satzzeichen wird an das Wort gebunden, sonst kann es allein in die nächste Zeile rutschen
+  function satzzeichenBinden(wurzel) {
+    $$('button.wort', wurzel).forEach(b => {
+      const n = b.nextSibling;
+      if (!n || n.nodeType !== 3) return;
+      const m = n.textContent.match(/^[.,;:!?)]+/);
+      if (!m) return;
+      const glied = document.createElement('span');
+      glied.className = 'glied';
+      b.parentNode.insertBefore(glied, b);
+      glied.appendChild(b);
+      glied.appendChild(document.createTextNode(m[0]));
+      n.textContent = n.textContent.slice(m[0].length);
+    });
+  }
+  $$('.ebenen, .ebenentext').forEach(satzzeichenBinden);
+
+  // ---------- Globus ----------
+  const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas'), namenCanvas = $('#namen');
+  let g = null, proj = null;
+  let ebeneJetzt = 'leben', laufend = null, begonnen = false, sperre = false;
+  // Stand für die Beschriftung: welche Orte schon zu sehen sind, wie weit die Spur reicht, welcher Ort gewählt ist
+  let sichtbarBis = null, spurBis = -1, aktivName = null;
+
+  if (window.d3 && window.topojson && window.Globus && window.WELT_110M) {
+    // Die Ortsnamen setzt diese Seite selbst, in einer zweiten Ebene über dem Globus. Dazu braucht sie die Projektion des Kerns:
+    // sie wird beim Erstellen nur mitgelesen, der Kern zeichnet unverändert. Gelingt das nicht, beschriftet der Kern wie gewohnt.
+    const urOrtho = d3.geoOrthographic;
+    let mitlesen = false;
+    try { d3.geoOrthographic = function () { const p = urOrtho.apply(this, arguments); if (!proj) proj = p; return p; }; mitlesen = d3.geoOrthographic !== urOrtho; } catch (e) { mitlesen = false; }
+    const ortSchrift = (schmal() ? 'italic 14px' : 'italic 15px') + ' "Vollkorn"';
+    try {
+      g = window.Globus.erstellen({
+        canvas, flaeche, tipp: $('.tipp', figur), hinweis: $('.hinweis', figur),
+        bereist: I.bereist, winzig: I.winzig, ansichten: I.ansichten,
+        farben: { papier: '#FFFEFC', land: '#F2F1EE', reise: '#DBD5CB', grenze: '#CAC9C5', kueste: '#9C9DA1', rand: '#1D1E21', text: '#1D1E21', textLeise: '#7A7C81', akzent: '#1D1E21', akzentHauch: 'rgba(29, 30, 33, .09)', gradnetz: '#EEEDEA' },
+        schrift: { ort: ortSchrift, land: 'italic 13px "Vollkorn"' },
+        versalien: false, pendeln: false, daten50: 'daten/welt-50m.js',
+        tippText: land => land.name,
+        beimEingriff: () => eingriff(),
+        beiChronikEnde: grund => chronikEnde(grund)
+      });
+    } catch (fehler) { g = null; }
+    try { d3.geoOrthographic = urOrtho; } catch (e) { /* bleibt */ }
+    if (!mitlesen) proj = null;
+    // Mit eigener Beschriftung bekommt der Kern für jeden Ort einen leeren Namen, der breiter ist als jeder Globus:
+    // er findet dafür keinen Platz und lässt ihn weg. (Eine Option im Kern, die Beschriftung abzuschalten, wäre sauberer.)
+    if (proj) {
+      const LEER = ' '.repeat(800);
+      LEBEN_ORTE.concat(EBENEN.satoshi.orte, EBENEN.ursprung.orte).forEach(o => { o.beschriftung = LEER; });
+    }
+  }
+  if (!g) {
+    figur.classList.add('ohne-globus');
+    $('#ersatz').hidden = false;
+  }
+
+  // Der Überblick über das Leben: die Mitte so wählen, dass alle acht Orte im sichtbaren Teil der Leinwand stehen und keiner am Rand klebt
+  function lebenBlickBerechnen() {
+    if (!window.d3) return;
+    const S = canvas.clientWidth || 600, R = S / 2 - 2;
+    const cr = canvas.getBoundingClientRect();
+    const rechts = Math.min(S, document.documentElement.clientWidth - cr.left);
+    const pr = d3.geoOrthographic().clipAngle(90).translate([S / 2, S / 2]).scale(R);
+    // Jeder Ort muss im sichtbaren Teil stehen; dann gewinnt die Mitte, bei der alle Orte zugleich möglichst weit vom Rand sind
+    // (Logarithmus: ein Ort am Rand kostet mehr, als ein Ort tief im Innern bringt)
+    let best = null;
+    for (let lon = 20; lon <= 100; lon += 1) for (let lat = 5; lat <= 50; lat += 1) {
+      pr.rotate([-lon, -lat]);
+      let summe = 0;
+      for (const s of stationen) {
+        if (d3.geoDistance([s.lon, s.lat], [lon, lat]) > 1.35) { summe = -Infinity; break; }
+        const [x, y] = pr([s.lon, s.lat]);
+        const rand = R - Math.hypot(x - S / 2, y - S / 2);
+        if (x < 14 || x > rechts - 14 || y < 14 || y > S - 14 || rand < .08 * R) { summe = -Infinity; break; }
+        summe += Math.log(Math.min(rand, .35 * R) + .04 * R);
+      }
+      if (summe > -Infinity && (!best || summe > best.s)) best = { s: summe, lon, lat };
+    }
+    if (best) BLICK.leben.mitte = [best.lon, best.lat];
+    BLICK.reisen.mitte = angeschnitten() ? [52, 30] : [40, 28];
+  }
+
+  if (g) {
+    lebenBlickBerechnen();
+    g.ebene(EBENEN.leben, { fliegen: false });
+    // In den Ebenen der eigenen Bücher gibt es keine Länderhervorhebung
+    flaeche.addEventListener('pointermove', e => { if (sperre) e.stopPropagation(); }, true);
+  }
+
+  // ---------- Ortsnamen ----------
+  // Wohnorte immer, Nebenorte nur, wo Platz ist. Dicht beieinander liegende Orte bekommen einen gemeinsamen Block,
+  // untereinander gesetzt und mit kurzer Führungslinie. Namen meiden die Spur. In Bewegung stehen keine Namen.
+  const nctx = proj ? namenCanvas.getContext('2d') : null;
+  if (!proj) namenCanvas.hidden = true;
+  const gedaechtnis = new Map();
+  function sichtbareOrte() {
+    let liste = [];
+    if (ebeneJetzt === 'leben') liste = lebenOrte.map((o, i) => ({ name: o.name, text: o.name, lat: o.lat, lon: o.lon, neben: !!o.neben, i }));
+    else if (ebeneJetzt === 'satoshi') liste = EBENEN.satoshi.orte.map((o, i) => ({ name: o.name, text: o.kurz || o.name, lat: o.lat, lon: o.lon, neben: o.rang === 2, i }));
+    else if (ebeneJetzt === 'ursprung') liste = EBENEN.ursprung.orte.map((o, i) => ({ name: o.name, text: o.name, lat: o.lat, lon: o.lon, neben: false, i }));
+    return sichtbarBis === null ? liste : liste.filter(o => o.i <= sichtbarBis);
+  }
+  function spurPunkte(mitte, skala) {
+    const st = ebeneJetzt === 'leben' ? stationen : ebeneJetzt === 'ursprung' ? ursprung : [];
+    const punkte = [];
+    for (let i = 0; i < Math.min(spurBis, st.length - 1); i++) {
+      const a = [st[i].lon, st[i].lat], b = [st[i + 1].lon, st[i + 1].lat];
+      const weg = d3.geoInterpolate(a, b), n = Math.max(8, Math.ceil(d3.geoDistance(a, b) * skala / 6));
+      for (let j = 0; j <= n; j++) { const q = weg(j / n); if (d3.geoDistance(q, mitte) < Math.PI / 2 - .02) punkte.push(proj(q)); }
+    }
+    return punkte;
+  }
+  function gruppieren(pkte, T) {
+    const eltern = pkte.map((_, i) => i);
+    const wurzel = i => eltern[i] === i ? i : (eltern[i] = wurzel(eltern[i]));
+    for (let a = 0; a < pkte.length; a++) for (let b = a + 1; b < pkte.length; b++) {
+      if (pkte[a].neben !== pkte[b].neben) continue;
+      if (Math.hypot(pkte[a].p[0] - pkte[b].p[0], pkte[a].p[1] - pkte[b].p[1]) < T) eltern[wurzel(a)] = wurzel(b);
+    }
+    const m = new Map();
+    pkte.forEach((o, i) => { const r = wurzel(i); if (!m.has(r)) m.set(r, []); m.get(r).push(o); });
+    return [...m.values()].map(orte => ({ orte: orte.sort((x, y) => x.i - y.i), neben: orte[0].neben }));
+  }
+  let ndpr = 1;
+  function namenLeeren() {
+    if (!nctx) return;
+    nctx.setTransform(1, 0, 0, 1, 0, 0);
+    nctx.clearRect(0, 0, namenCanvas.width, namenCanvas.height);
+  }
+  function beschriften() {
+    if (!nctx || !g) return;
+    const S = canvas.clientWidth || 0;
+    ndpr = Math.min(2, window.devicePixelRatio || 1);
+    if (namenCanvas.width !== Math.round(S * ndpr)) { namenCanvas.width = Math.round(S * ndpr); namenCanvas.height = Math.round(S * ndpr); }
+    namenLeeren();
+    nctx.setTransform(ndpr, 0, 0, ndpr, 0, 0);
+    const orte = sichtbareOrte();
+    if (!orte.length || !S) return;
+    const rot = proj.rotate(), mitte = [-rot[0], -rot[1]];
+    const R = S / 2 - 2, k = proj.scale() / R, gezoomt = k > 1.15;
+    const cr = canvas.getBoundingClientRect();
+    const rechts = Math.min(S, document.documentElement.clientWidth - cr.left) - 4;
+    const ecken = b => [[b[0], b[1]], [b[2], b[1]], [b[0], b[3]], [b[2], b[3]]];
+    const imBereich = b => b[0] >= 2 && b[2] <= rechts && b[1] >= 2 && b[3] <= S - 2 &&
+      (!gezoomt || ecken(b).every(([x, y]) => Math.hypot(x - S / 2, y - S / 2) < S / 2 - 7));
+    const sicht = orte.filter(o => d3.geoDistance([o.lon, o.lat], mitte) < Math.PI / 2 - .02).map(o => Object.assign({ p: proj([o.lon, o.lat]) }, o));
+    if (!sicht.length) return;
+    const klein = schmal();
+    const einerAktiv = !!aktivName && sicht.some(o => o.name === aktivName);
+    const stil = o => {
+      const px = o.neben ? (klein ? 12.5 : 13) : (klein ? 14 : 15);
+      let farbe;
+      if (einerAktiv && o.name === aktivName) farbe = '#0A0B0D';
+      else if (einerAktiv) farbe = o.neben ? '#9A9CA0' : '#6B6D72';
+      else farbe = o.neben ? '#7C7E83' : '#1D1E21';
+      return { px, farbe, font: `italic ${px}px "Vollkorn"` };
+    };
+    const belegt = sicht.map(o => [o.p[0] - 4.5, o.p[1] - 4.5, o.p[0] + 4.5, o.p[1] + 4.5]);
+    const spur = spurPunkte(mitte, R * k);
+    const trifft = (a, b, luft) => a[0] - luft < b[2] && a[2] + luft > b[0] && a[1] - luft < b[3] && a[3] + luft > b[1];
+    const gruppen = gruppieren(sicht, klein ? 22 : 26);
+    gruppen.forEach(gr => { gr.aktiv = gr.orte.some(o => einerAktiv && o.name === aktivName); });
+    gruppen.sort((a, b) => b.aktiv - a.aktiv || a.neben - b.neben || b.orte.length - a.orte.length || a.orte[0].i - b.orte[0].i);
+    const platziert = [];
+    gruppen.forEach(gr => {
+      const zeilen = gr.orte.map(o => { const st = stil(o); nctx.font = st.font; return Object.assign({ text: o.text, b: nctx.measureText(o.text).width, h: Math.round(st.px * 1.2) }, st); });
+      const w = Math.max(...zeilen.map(z => z.b)) + 2, h = zeilen.reduce((a, z) => a + z.h, 0);
+      const xs = gr.orte.map(o => o.p[0]), ys = gr.orte.map(o => o.p[1]);
+      const box0 = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+      const cy = (box0[1] + box0[3]) / 2;
+      const kand = [];
+      if (gr.orte.length === 1) {
+        const [px, py] = gr.orte[0].p;
+        kand.push(['O', px + 8, py - h / 2, 0], ['W', px - 8 - w, py - h / 2, .4], ['NO', px + 5, py - 5 - h, 1], ['SO', px + 5, py + 5, 1.1],
+          ['NW', px - 5 - w, py - 5 - h, 1.2], ['SW', px - 5 - w, py + 5, 1.3], ['N', px - w / 2, py - 9 - h, 1.6], ['S', px - w / 2, py + 9, 1.7]);
+      } else {
+        [8, 18, 32, 50, 72].forEach(d => {
+          [['m', cy - h / 2, 0], ['o', box0[1] - 6 - h, .5], ['u', box0[3] + 6, .6]].forEach(([v, y, kv]) => {
+            kand.push(['O' + v + d, box0[2] + d, y, d * .025 + kv], ['W' + v + d, box0[0] - d - w, y, .3 + d * .025 + kv]);
+          });
+        });
+      }
+      const schluessel = gr.orte.map(o => o.name).join('|');
+      let best = null;
+      kand.forEach(([seite, x, y, kosten]) => {
+        const b = [x, y, x + w, y + h];
+        if (!imBereich(b)) return;
+        if (belegt.some(q => trifft(b, q, 1.5)) || platziert.some(q => trifft(b, q.box, 3))) return;
+        let c = kosten;
+        spur.forEach(([sx, sy]) => { if (sx > b[0] - 2 && sx < b[2] + 2 && sy > b[1] - 2 && sy < b[3] + 2) c += .5; });
+        if (gedaechtnis.get(schluessel) === seite) c -= .6;
+        if (!best || c < best.c) best = { c, seite, box: b };
+      });
+      if (!best) return;
+      gedaechtnis.set(schluessel, best.seite);
+      platziert.push({ box: best.box, zeilen, gr, seite: best.seite });
+    });
+    // Zeichnen: Führungslinien, dann die Namen mit Papierhof, zuletzt ein Ring um den gewählten Ort
+    nctx.textBaseline = 'middle';
+    nctx.lineJoin = 'round';
+    platziert.forEach(({ box, zeilen, gr, seite }) => {
+      const links = seite[0] === 'W';
+      if (gr.orte.length > 1) {
+        const zx = links ? box[2] + 3 : box[0] - 3;
+        const zy = Math.max(box[1] + 4, Math.min(box[3] - 4, (box[1] + box[3]) / 2));
+        const nah = gr.orte.reduce((a, o) => Math.hypot(o.p[0] - zx, o.p[1] - zy) < Math.hypot(a.p[0] - zx, a.p[1] - zy) ? o : a);
+        const d = Math.hypot(nah.p[0] - zx, nah.p[1] - zy);
+        if (d > 12) {
+          const ux = (zx - nah.p[0]) / d, uy = (zy - nah.p[1]) / d;
+          nctx.beginPath(); nctx.moveTo(nah.p[0] + ux * 5, nah.p[1] + uy * 5); nctx.lineTo(zx, zy);
+          nctx.strokeStyle = '#8A8C90'; nctx.lineWidth = .7; nctx.stroke();
+        }
+      }
+      let y = box[1];
+      zeilen.forEach(z => {
+        nctx.font = z.font;
+        const mittig = seite === 'N' || seite === 'S';
+        nctx.textAlign = mittig ? 'center' : links ? 'right' : 'left';
+        const x = mittig ? (box[0] + box[2]) / 2 : links ? box[2] - 1 : box[0] + 1;
+        nctx.lineWidth = 3.5; nctx.strokeStyle = '#FFFEFC';
+        nctx.strokeText(z.text, x, y + z.h / 2);
+        nctx.fillStyle = z.farbe;
+        nctx.fillText(z.text, x, y + z.h / 2);
+        y += z.h;
+      });
+    });
+    const aktiv = einerAktiv && sicht.find(o => o.name === aktivName);
+    if (aktiv) { nctx.beginPath(); nctx.arc(aktiv.p[0], aktiv.p[1], 6.5, 0, Math.PI * 2); nctx.strokeStyle = '#1D1E21'; nctx.lineWidth = .9; nctx.stroke(); }
+  }
+  // Beobachtet die Projektion des Kerns: in Bewegung keine Namen, in Ruhe neu setzen
+  let stand = '', ruheBilder = 0, gesetzt = false, schmutzig = true, schleifeAn = false;
+  function schleife() {
+    if (!schleifeAn) return;
+    requestAnimationFrame(schleife);
+    if (document.hidden) return;
+    const r = proj.rotate();
+    const jetzt = r[0].toFixed(3) + ',' + r[1].toFixed(3) + ',' + proj.scale().toFixed(2) + ',' + canvas.clientWidth;
+    if (jetzt !== stand) { stand = jetzt; ruheBilder = 0; if (gesetzt) { namenLeeren(); gesetzt = false; } return; }
+    if (++ruheBilder >= 2 && (!gesetzt || schmutzig)) { beschriften(); gesetzt = true; schmutzig = false; }
+  }
+  const neuSetzen = () => { schmutzig = true; };
+  if (nctx) {
+    const an = () => { if (!schleifeAn) { schleifeAn = true; requestAnimationFrame(schleife); } };
+    if ('IntersectionObserver' in window) new IntersectionObserver(e => { if (e.some(x => x.isIntersecting)) an(); else schleifeAn = false; }).observe(flaeche);
+    else an();
+  }
+
+  function eingriff() {
+    // Wer den Globus anfasst, bevor die Chronik lief, bekommt sofort alle Orte und die ganze Spur
+    if (!begonnen) {
+      begonnen = true;
+      if (ebeneJetzt === 'leben' && g) { lebenOrteFuellen(); g.routeZeigen(stationen); spurBis = stationen.length - 1; nochmal('leben', true); }
+    }
+    neuSetzen();
+  }
+  function chronikEnde(grund) {
+    const war = laufend;
+    laufend = null;
+    if (war === 'leben') lebenFertig(grund);
+    else if (war === 'ursprung') ursprungFertig(grund);
+  }
+  function nochmal(welche, zeigen) { const el = $('#nochmal-' + welche); if (el) el.classList.toggle('still', !zeigen || !g); }
+  function aktivSetzen(gruppe, el) { $$(gruppe).forEach(b => b.classList.toggle('ist-aktiv', b === el)); }
+
+  function stationMarkieren(i) {
+    $$('.station').forEach((b, j) => { b.classList.toggle('ist-aktiv', j === i); if (j === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+    $('#koordinaten').textContent = i === null ? '' : koordinaten(stationen[i]);
+  }
+
+  function ebeneWaehlen(name, einst) {
+    einst = einst || {};
+    begonnen = true;
+    if (g) g.chronikStoppen();
+    ebeneJetzt = name;
+    $$('[data-ebene]').forEach(b => { const an = b.dataset.ebene === name; b.classList.toggle('ist-aktiv', an); b.setAttribute('aria-pressed', String(an)); });
+    $$('[data-text]').forEach(t => { t.hidden = t.dataset.text !== name; });
+    $$('[data-kontinent], [data-satoshi], [data-ursprung]').forEach(b => b.classList.remove('ist-aktiv'));
+    sperre = name === 'satoshi' || name === 'ursprung';
+    aktivName = null; sichtbarBis = null; spurBis = -1;
+    stationMarkieren(null);
+    bildzeile('');
+    neuSetzen();
+    if (name === 'ursprung') { ursprungStarten(); return; }
+    if (!g) return;
+    if (name === 'leben') lebenOrteFuellen();
+    g.ebene(EBENEN[name], { fliegen: einst.fliegen !== false });
+    if (name === 'leben') { g.routeZeigen(stationen); spurBis = stationen.length - 1; nochmal('leben', true); }
+  }
+
+  // Leben: springt von Station zu Station, die Spur bleibt stehen
+  function lebenStarten() {
+    begonnen = true;
+    if (ebeneJetzt !== 'leben') ebeneWaehlen('leben', { fliegen: false });
+    if (!g) return;
+    lebenOrteFuellen();
+    g.chronikStoppen();
+    laufend = 'leben';
+    nochmal('leben', false);
+    sichtbarBis = 0; spurBis = 0; neuSetzen();
+    g.chronik(stationen, {
+      dauer: 900, pause: 2200, zoom: 2.4, schluss: BLICK.leben,
+      beiStation: (s, i) => { sichtbarBis = i; spurBis = i; aktivName = s.name; neuSetzen(); stationMarkieren(i); }
+    });
+  }
+  function lebenFertig(grund) {
+    sichtbarBis = null;
+    if (grund === 'fertig') { aktivName = null; spurBis = stationen.length - 1; stationMarkieren(null); }
+    nochmal('leben', true);
+    neuSetzen();
+  }
+  function stationSchritt(i) {
+    begonnen = true;
+    if (ebeneJetzt !== 'leben') ebeneWaehlen('leben', { fliegen: false });
+    if (g) { lebenOrteFuellen(); g.chronikStoppen(); g.chronikSchritt(stationen, i, { zoom: 2.4, dauer: 900 }); }
+    sichtbarBis = null; spurBis = i; aktivName = stationen[i].name; neuSetzen();
+    stationMarkieren(i);
+    nochmal('leben', true);
+  }
+
+  // Ursprung: langsam, Band für Band. Band I erst, wenn der Globus Göbekli Tepe erreicht hat
+  let ursprungNr = 0;
+  function baendeZeigen(alle) { $$('.band').forEach(b => b.classList.toggle('da', !!alle)); }
+  function bildzeile(band) { const el = $('#bildzeile'); el.innerHTML = band && BILDZEILE[band] ? `<span class="band-nr">Band ${band}.</span> ${esc(BILDZEILE[band])}` : ''; }
+  function bandZeigen(band) { const b = $('.band[data-band="' + band + '"]'); if (b) b.classList.add('da'); bildzeile(band); }
+  function ursprungStarten() {
+    const nr = ++ursprungNr;
+    baendeZeigen(false); bildzeile('');
+    if (!g) { baendeZeigen(true); return; }
+    g.chronikStoppen();
+    g.ebene(EBENEN.ursprung);
+    laufend = 'ursprung';
+    nochmal('ursprung', false);
+    sichtbarBis = 0; spurBis = 0; aktivName = ursprung[0] && ursprung[0].name; neuSetzen();
+    const dauer = 2600;
+    setTimeout(() => { if (nr === ursprungNr && laufend === 'ursprung') bandZeigen('I'); }, ruhig ? 0 : dauer * .85);
+    g.chronik(ursprung, {
+      dauer, pause: 3800, zoom: 4.5, schluss: BLICK.ursprung,
+      beiStation: (s, i) => { sichtbarBis = i; spurBis = i; aktivName = s.name; neuSetzen(); if (i > 0) bandZeigen(s.band); }
+    });
+  }
+  function ursprungFertig(grund) {
+    baendeZeigen(true); bildzeile(''); nochmal('ursprung', true);
+    sichtbarBis = null;
+    if (grund === 'fertig') { aktivName = null; spurBis = ursprung.length - 1; }
+    neuSetzen();
+  }
+
+  // Auf dem Telefon steht der Ebenentext unter dem Globus
+  function ebenentextInSicht() {
+    if (angeschnitten()) return;
+    if (ebeneJetzt === 'ursprung' && g) {
+      // Globus ganz oben, darunter die Bildzeile: so sieht man Ort und Band zugleich
+      const r = figur.getBoundingClientRect();
+      if (Math.abs(r.top - 12) > 24) window.scrollBy({ top: r.top - 12, behavior: ruhig ? 'auto' : 'smooth' });
+      return;
+    }
+    const t = $('[data-text="' + ebeneJetzt + '"]');
+    if (!t) return;
+    const r = t.getBoundingClientRect();
+    const ueber = r.top + Math.min(r.height, 110) - window.innerHeight;
+    if (ueber > 0) window.scrollBy({ top: ueber + 16, behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  function globusInSicht() {
+    const r = figur.getBoundingClientRect();
+    if (r.bottom < r.height * .45 || r.top > window.innerHeight - r.height * .45) figur.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'center' });
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button');
+    if (!t) return;
+    if (t.dataset.ebene) { if (!t.classList.contains('ist-aktiv') || t.dataset.ebene === 'ursprung') { ebeneWaehlen(t.dataset.ebene); ebenentextInSicht(); } }
+    else if (t.dataset.station !== undefined) { stationSchritt(+t.dataset.station); globusInSicht(); }
+    else if (t.dataset.nochmal === 'leben') lebenStarten();
+    else if (t.dataset.nochmal === 'ursprung') { ursprungStarten(); ebenentextInSicht(); }
+    else if (t.dataset.kontinent) { aktivSetzen('[data-kontinent]', t); if (g) g.fliegen(KONTINENTE[t.dataset.kontinent][0], KONTINENTE[t.dataset.kontinent][1]); }
+    else if (t.dataset.satoshi) {
+      aktivSetzen('[data-satoshi]', t);
+      const o = satoshiOrte.find(x => x.name === t.dataset.satoshi);
+      if (g && o) {
+        if (o.rang === 3) { aktivName = null; g.fliegen([o.lon, o.lat], 11); }
+        else { aktivName = o.name; g.ortAnfliegen(o, o.name === 'Bariloche' ? 9 : 5); }
+        neuSetzen();
+      }
+    }
+    else if (t.dataset.ursprung) {
+      const o = ursprung.find(x => x.name === t.dataset.ursprung);
+      if (g && o) { g.chronikStoppen(); aktivSetzen('[data-ursprung]', t); aktivName = o.name; sichtbarBis = null; g.ortAnfliegen(o, 7); neuSetzen(); }
+    }
+  });
+
+  // Die Chronik läuft einmal von selbst, sobald der Globus im Bild ist: erst anderthalb Sekunden der ganze Globus, leer
+  const zeit = ms => new Promise(r => setTimeout(r, ms));
+  const schriften = document.fonts ? Promise.race([Promise.all([document.fonts.load('italic 15px "Vollkorn"'), document.fonts.load('15px "Vollkorn"'), document.fonts.load('15px "Vollkorn SC"')]), zeit(2500)]).catch(() => {}) : Promise.resolve();
+  schriften.then(() => {
+    if (!g) return;
+    g.zeichnen(); neuSetzen();
+    const los = () => setTimeout(() => { if (!begonnen) lebenStarten(); }, ruhig ? 600 : 1500);
+    if (!('IntersectionObserver' in window)) { los(); return; }
+    const io = new IntersectionObserver(eintraege => {
+      if (!eintraege.some(x => x.isIntersecting)) return;
+      io.disconnect();
+      los();
+    }, { threshold: .5 });
+    io.observe(flaeche);
+  });
+
+  // ---------- Regal ----------
+  const B = (window.BUECHER || []).filter(b => b && b.r !== 'lieber-nicht' && !(b.r === 'abgebrochen' && /porn/i.test(b.t || '')));
+  const NACHNAMEN = {
+    'Sun Tzu': 'Sun Tzu', 'Luo Guanzhong': 'Luo', 'Han Kang': 'Han', 'Gabriel García Márquez': 'García Márquez',
+    'Carlos Ruiz Zafón': 'Ruiz Zafón', 'Adolfo Bioy Casares': 'Bioy Casares', 'Daphne du Maurier': 'du Maurier',
+    'Ursula K. Le Guin': 'Le Guin', 'John le Carré': 'le Carré', 'Antoine de Saint-Exupéry': 'Saint-Exupéry',
+    'Anonymous': '', 'Die 19 Finaltexte': ''
+  };
+  const AUTOR = { 'Anonymous': 'Anonym' };
+  function nachname(a) {
+    a = sauber(a);
+    if (a in NACHNAMEN) return NACHNAMEN[a];
+    const teile = a.replace(/,?\s+(Jr\.|Sr\.)$/, '').split(/\s+/);
+    return teile[teile.length - 1] || '';
+  }
+  // Rückentitel: ohne Untertitel und Reihe
+  function titelKurz(t) {
+    let s = sauber(t);
+    s = s.replace(/\s*\(.*\)\s*$/, '').split(/:\s|\s[-–]\s/)[0];
+    return s.replace(/(\d)-(\d)/g, '$1–$2').replace(/'/g, '’').trim();
+  }
+  // Noch kürzer, nur wenn der Platz fehlt: ohne „oder …“, ohne „and Other Stories“, ohne Artikel
+  const titelKuerzer = s => s.replace(/,? (or|oder),? .+$/i, '').replace(/,? (and|und|&) (other|andere) .+$/i, '').replace(/^(The|A|An|Der|Die|Das|Ein|Eine) (?=\S)/, '').trim();
+  const DE_VERLAG = /suhrkamp|rowohlt|diogenes|kiepenheuer|kiwi|deutscher taschenbuch|\bdtv\b|hanser|fischer|insel|reclam|piper|ullstein|aufbau|luchterhand|wagenbach|klett|heyne|goldmann|\bbtb\b|kein & aber|\bmare\b|matthes|beck|thienemann|arena|bastei|droemer|knaur|scherz|dumont|hoffmann und campe|arche|kirschbuch|cornelsen|rediroma|carlsen|oetinger|ravensburger|blessing|verlag/i;
+  const DE_TITEL = /[äöüß]|\b(der|die|das|und|ein|eine|im|vom|zum|nicht|ich|wir|über|mit)\b/i;
+  const FAMILIEN = {
+    schwarz: { farben: ['#262628', '#2D2D2F'], tinte: '#ECE8DE' },
+    suhrkamp: { farben: ['#C9BBAF', '#B8C2AF', '#C6C0D2', '#D8CC9F', '#AABAC6', '#CDB5B2', '#B4C7C0'], tinte: '#2A2B2E' },
+    reclam: { farben: ['#E2D38D', '#DCCB80'], tinte: '#2A2B2E' },
+    vintage: { farben: ['#EFEDE7', '#E7E5DF'], tinte: '#1D1E21' },
+    nyrb: { farben: ['#D7D6D0', '#CACCC7', '#DCD9CF'], tinte: '#1D1E21' },
+    dunkel: { farben: ['#3D4045', '#55585D', '#6E7175', '#8D8F92', '#A4A5A6'], tinte: '#F1EFEA' },
+    genre: { farben: ['#5A6A7B', '#76857E', '#8A8F96', '#9EA3A6', '#B5B5B0', '#4F5961'], tinte: '#F1EFEA' },
+    leinen: { farben: ['#DCD5C6', '#D1CAB9', '#E4DED1', '#C8C1B1'], tinte: '#2A2B2E' },
+    creme: { farben: ['#F2EFE7', '#EAE7DF', '#E1DDD4', '#D5D2CA', '#E7E5E0', '#C9C7C2', '#BAB8B3'], tinte: '#2A2B2E' }
+  };
+  function familie(b) {
+    const v = sauber(b.v).toLowerCase();
+    if (/penguin (classics|modern classics|english library|twentieth)/.test(v)) return 'schwarz';
+    if (/suhrkamp|insel/.test(v)) return 'suhrkamp';
+    if (/reclam/.test(v)) return 'reclam';
+    if (/vintage/.test(v)) return 'vintage';
+    if (/new directions|nyrb|new york review/.test(v)) return 'nyrb';
+    if (b.b === 'm' || /bantam|signet|del rey|orbit|ballantine|\btor\b|\bace\b|\bdaw\b|scholastic|puffin|speak|walker|hodder|philomel|amulet|hyperion|miramax|voyager|gollancz|pocket|\bdell\b|avon/.test(v)) return 'genre';
+    if (DE_VERLAG.test(v)) return 'leinen';
+    if (b.b === 'h' && /knopf|farrar|straus|scribner|little, brown|random house|harper|ecco|grove|pantheon|doubleday|houghton|picador|riverhead|viking|penguin press|simon|norton|crown|bloomsbury/.test(v)) return 'dunkel';
+    return 'creme';
+  }
+  const ALLE = [];
+  function buch(b, fach) {
+    const key = sauber(b.t) + '|' + sauber(b.a);
+    const fam = FAMILIEN[familie(b)];
+    const seiten = b.p > 0 ? b.p : 260;
+    const mm = {
+      b: (seiten * 0.06 + (b.b === 'h' ? 5 : 1)) * wert(key + 'b', .94, 1.06),
+      h: (b.b === 'h' ? 225 : b.b === 'm' ? 175 : b.b === 'e' ? 198 : 185) * wert(key + 'h', .965, 1.03)
+    };
+    // Eine Kassette trägt ihren Inhalt auf dem Rücken, nicht das Wort „Boxed Set“
+    const titel = /box(ed)? set/i.test(b.t || '') && b.u ? titelKurz(b.u) : titelKurz(b.t);
+    const x = {
+      b, key, mm, fach, titel, kurz: titelKuerzer(titel), nn: nachname(b.a), autor: AUTOR[sauber(b.a)] || sauber(b.a),
+      de: DE_VERLAG.test(sauber(b.v)) || DE_TITEL.test(sauber(b.t)),
+      grund: fam.farben[hash(key + 'f') % fam.farben.length], tinte: fam.tinte,
+      geist: b.r === 'leseliste'
+    };
+    x.label = (x.autor ? x.autor + ', ' : '') + sauber(b.t);
+    x.id = ALLE.length;
+    ALLE.push(x);
+    return x;
+  }
+  const nachJahr = (a, b) => (a.b.j == null) - (b.b.j == null) || (a.b.j || 0) - (b.b.j || 0) || a.nn.localeCompare(b.nn, 'de') || a.titel.localeCompare(b.titel, 'de');
+  const jahrSig = j => j == null ? 'o. J.' : j < 0 ? '−' + (-j) : String(j);
+  function signaturen(fach) {
+    const proJahr = {}, zaehler = {};
+    fach.buecher.forEach(x => { proJahr[x.b.j] = (proJahr[x.b.j] || 0) + 1; });
+    fach.buecher.forEach(x => {
+      const j = x.b.j;
+      let zusatz = '';
+      if (j != null && proJahr[j] > 1) { const n = zaehler[j] = (zaehler[j] || 0) + 1; zusatz = n <= 26 ? 'abcdefghijklmnopqrstuvwxyz'[n - 1] : String(n); }
+      x.sig = fach.z + ' ' + jahrSig(j) + zusatz;
+    });
+  }
+
+  // Zeiten: die frühe Zeit ist dünn, deshalb ein gemeinsames Fach bis zur Jahrhundertwende; Name und Anfangsjahr aus den Daten
+  const GELESEN = B.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort((a, b) => a.j - b.j);
+  const erstes = GELESEN[0];
+  const EPOCHEN = [
+    { z: 'A', name: 'Von ' + (erstes ? titelKurz(erstes.t) : 'Gilgamesch') + ' bis zur Jahrhundertwende', jahre: (erstes && erstes.j < 0 ? 'um ' + (-erstes.j) + ' v. Chr.' : String(erstes ? erstes.j : '')) + ' bis 1899', bis: 1899 },
+    { z: 'B', name: 'Bis zum Ende des Zweiten Weltkriegs', jahre: '1900–1945', bis: 1945 },
+    { z: 'C', name: 'Bis zum Fall der Mauer', jahre: '1946–1989', bis: 1989 },
+    { z: 'D', name: 'Um die Jahrtausendwende', jahre: '1990–2009', bis: 2009 },
+    { z: 'E', name: 'Die Gegenwart', jahre: 'seit 2010', bis: Infinity }
+  ];
+  EPOCHEN.forEach(f => { f.buecher = []; });
+  GELESEN.forEach(b => { const fach = EPOCHEN.find(f => b.j <= f.bis); fach.buecher.push(buch(b, fach)); });
+  EPOCHEN.forEach(f => { f.buecher.sort(nachJahr); signaturen(f); });
+  const KIND = { z: 'K', name: 'Kinderzimmer', jahre: 'nur die wichtigsten aus Kindheit und Jugend' };
+  KIND.buecher = B.filter(b => b.r === 'kindheit').map(b => buch(b, KIND)).sort(nachJahr);
+  signaturen(KIND);
+  const TISCH = { z: 'N', name: 'Auf dem Nachttisch' };
+  TISCH.buecher = B.filter(b => b.r === 'gerade').map(b => buch(b, TISCH)).sort(nachJahr);
+  signaturen(TISCH);
+  const WARTET = { z: 'W', name: 'Was noch wartet', jahre: '' };
+  WARTET.alle = B.filter(b => b.r === 'leseliste').map(b => buch(b, WARTET));
+
+  // Eigene Werke: gleiches Format, eigenes Muster, die Trilogie im Schuber
+  const werk = id => (I.werke || []).find(w => w.id === id) || {};
+  const EIGENE = [
+    { id: 'satoshi', muster: 'hoehen', dicke: 40, hoehe: 185, sig: 'DJ 1' },
+    { id: 'ursprung', schuber: true, muster: 'schraeg', dicke: 96, hoehe: 191 },
+    { id: 'erzaehlungen', muster: 'punkte', dicke: 30, hoehe: 185, sig: 'DJ 3' },
+    { id: 'untertext', muster: 'zeilen', dicke: 21, hoehe: 185, sig: 'DJ 4' },
+    { id: 'laender', muster: 'netz', dicke: 21, hoehe: 240, sig: 'DJ 5' }
+  ];
+  const BAENDE = [
+    { id: 'ursprung-1', band: 'I', muster: 'pfeiler', sig: 'DJ 2/I' },
+    { id: 'ursprung-2', band: 'II', muster: 'ton', sig: 'DJ 2/II' },
+    { id: 'ursprung-3', band: 'III', muster: 'wellen', sig: 'DJ 2/III' }
+  ];
+  function eigenEintrag(e) { const x = Object.assign({ eigen: true, werk: werk(e.id), werkId: e.id }, e); x.id = ALLE.length; ALLE.push(x); return x; }
+  EIGENE.forEach(e => { if (!e.schuber) e.eintrag = eigenEintrag(e); });
+  BAENDE.forEach(e => { e.eintrag = eigenEintrag(e); });
+  let schuberOffen = false;
+  let offen = null, offenEl = null;
+
+  // Maßstab: auf dem Telefon nicht unter 0,64 px je Millimeter, kein Rücken schmaler als 7 px
+  const massstab = () => window.innerWidth < 640 ? .64 : window.innerWidth < 1000 ? .66 : .72;
+  const minBreite = () => window.innerWidth < 640 ? 7 : 5;
+  const LUECKE_MAX = 18, LEHNE = 26, STUETZE = 12, SCHILD_MIN = 180, KOPF = 14;
+
+  // ---------- Rückenschrift aus der Messung ----------
+  const mctx = document.createElement('canvas').getContext('2d');
+  const MESS = new Map();
+  function breite100(text, sc) {
+    const key = (sc ? 'S|' : 'R|') + text;
+    let v = MESS.get(key);
+    if (v === undefined) { mctx.font = sc ? '100px "Vollkorn SC"' : '100px "Vollkorn"'; v = mctx.measureText(text).width + (sc ? text.length * 4 : 0); MESS.set(key, v); }
+    return v;
+  }
+  const zeile100 = (nn, t) => (nn ? breite100(nn, true) + (t ? 50 : 0) : 0) + (t ? breite100(t, false) : 0);
+  const zeileHtml = (nn, t) => `<span class="z">${nn ? `<span class="nn">${esc(nn)}</span>` : ''}${t ? `<span class="t">${esc(t)}</span>` : ''}</span>`;
+  // Erst die volle Zeile, dann zwei Zeilen, dann kleiner, dann kürzer; nie mit Auslassungspunkten
+  function aufschrift(x, w, L, nurName) {
+    const SICHER = .94, MIN = 6.5;
+    const f1Max = Math.min(10, (w - 3) / 1.12);
+    if (f1Max < MIN || L < 20) return '';
+    const fuer = (nn, t, fmax) => Math.min(fmax, L * SICHER * 100 / Math.max(1, zeile100(nn, t)));
+    const eine = (nn, t, f) => `<span class="aufschrift" style="font-size:${f.toFixed(2)}px">${zeileHtml(nn, t)}</span>`;
+    if (nurName) { const f = fuer('', x.nn, Math.min(9, f1Max)); return x.nn && f >= MIN ? eine('', x.nn, f) : ''; }
+    const voll = fuer(x.nn, x.titel, f1Max);
+    if (voll >= 7.5) return eine(x.nn, x.titel, voll);
+    const f2Max = Math.min(9.5, (w - 4) / 2.3);
+    let best2 = 0, zeilen2 = null;
+    if (f2Max >= MIN) {
+      const pruefen = zs => { const f = Math.min(f2Max, L * SICHER * 100 / Math.max(...zs.map(z => zeile100(z[0], z[1])))); if (f > best2) { best2 = f; zeilen2 = zs; } };
+      if (x.nn) pruefen([[x.nn, ''], ['', x.titel]]);
+      const worte = x.titel.split(' ');
+      for (let i = 1; i < worte.length; i++) pruefen([[x.nn, worte.slice(0, i).join(' ')], ['', worte.slice(i).join(' ')]]);
+    }
+    if (best2 >= Math.max(voll, 7)) return `<span class="aufschrift" style="font-size:${best2.toFixed(2)}px">${zeilen2.map(z => zeileHtml(z[0], z[1])).join('')}</span>`;
+    if (voll >= MIN) return eine(x.nn, x.titel, voll);
+    const versuche = [[x.nn, x.kurz], ['', x.titel], ['', x.kurz], [x.nn, '']];
+    for (const [nn, t] of versuche) {
+      if (!nn && !t) continue;
+      const f = fuer(nn, t, f1Max);
+      if (f >= MIN) return eine(nn, t, f);
+    }
+    return '';
+  }
+
+  function stueck(x, s) { return { x, w: Math.max(minBreite(), Math.round(x.mm.b * s)), h: Math.round(x.mm.h * s), abstand: hash(x.key + 'a') % 3 === 0 ? 1 : 0 }; }
+
+  // ---------- Packen: die Zeiten fließen über die Bretter, eine Buchstütze markiert den Wechsel ----------
+  function elementeAus(abschnitte, s) {
+    const el = [];
+    abschnitte.forEach(ab => ab.buecher.forEach((x, j) => { const it = stueck(x, s); if (j === 0) it.beginnt = ab; el.push(it); }));
+    return el;
+  }
+  const breiteIn = (it, erstes) => it.w + it.abstand + (it.beginnt && !erstes ? STUETZE : 0);
+  function gierig(el, C, schildMin) {
+    const reihen = [];
+    let r = [], x = 0;
+    for (const it of el) {
+      if (r.length) {
+        // Eine neue Zeit braucht Platz für ihr Schild; sonst beginnt sie auf dem nächsten Brett
+        const eng = it.beginnt && C - x < STUETZE + schildMin;
+        if (x + breiteIn(it, false) > C || eng) { reihen.push(r); r = []; x = 0; }
+      }
+      r.push(it); x += breiteIn(it, r.length === 1);
+    }
+    if (r.length) reihen.push(r);
+    return reihen;
+  }
+  const reiheBreite = r => r.reduce((a, it, j) => a + breiteIn(it, j === 0), 0);
+  function packen(abschnitte, W, s) {
+    const el = elementeAus(abschnitte, s);
+    const C = W - LUECKE_MAX - LEHNE;
+    // Platz für ein Schild: auf schmalen Schirmen darf es dreizeilig werden
+    const schildMin = Math.min(SCHILD_MIN, Math.round(W * .36));
+    let reihen = gierig(el, C, schildMin);
+    // Den Rest gleichmäßig verteilen: die kleinste Breite suchen, die mit derselben Zahl Bretter auskommt
+    const n = reihen.length;
+    if (n > 1) {
+      let lo = C * (n - 1) / n, hi = C;
+      for (let k = 0; k < 14; k++) { const mitte = (lo + hi) / 2; if (gierig(el, mitte, schildMin).length <= n) hi = mitte; else lo = mitte; }
+      reihen = gierig(el, hi, schildMin);
+    }
+    return reihen;
+  }
+
+  function rueckenHtml(it, o) {
+    const x = it.x;
+    let cls = 'ruecken';
+    if (x.geist) cls += ' geist';
+    if (x.de) cls += ' de';
+    if (!x.geist && x.b.w) cls += ' strich-2';
+    else if (!x.geist && x.b.s === 5) cls += ' strich-1';
+    let st = `width:${it.w}px;height:${it.h}px;--grund:${x.grund};--tinte:${x.tinte}`;
+    const rechts = it.abstand + (o.luecke || 0);
+    if (rechts) st += `;margin-right:${rechts}px`;
+    if (o.neigung) { cls += ' lehnt'; st += `;margin-left:${o.versatz}px;--neigung:${(-o.neigung).toFixed(2)}deg`; }
+    if (o.ist) cls += ' ist-offen';
+    const schrift = aufschrift(x, it.w, it.h - 24, x.geist);
+    const band = x.b.r === 'abgebrochen' ? `<span class="lesezeichen" style="left:${Math.round(wert(x.key + 'z', 18, 62))}%"></span>` : '';
+    const strich = x.geist ? geistLinien(it, x.key) : '';
+    return `<button type="button" class="${cls}" style="${st}" data-id="${x.id}" tabindex="-1" aria-label="${esc(x.label)}">${strich}${schrift}${band}</button>`;
+  }
+  // Bleistiftumriss: vier einzelne Striche, die an den Ecken leicht überstehen; manchmal fehlt der obere
+  function geistLinien(it, key) {
+    const { w, h } = it;
+    const j = (n, a) => wert(key + 'g' + n, -a, a);
+    const ue = n => wert(key + 'u' + n, 0, 2.6);
+    const f = v => v.toFixed(2);
+    let d = `M${f(.5 + j(1, .6))} ${f(h + ue(2))}L${f(.5 + j(3, .6))} ${f(-ue(4))}`;
+    d += `M${f(w - .5 + j(5, .6))} ${f(h + ue(6))}L${f(w - .5 + j(7, .6))} ${f(-ue(8))}`;
+    if (wert(key + 'oben', 0, 1) > .3) d += `M${f(-ue(9))} ${f(.5 + j(10, .5))}L${f(w + ue(11))} ${f(.5 + j(12, .5))}`;
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
+  }
+  const jahrText = j => j == null ? '' : j < 0 ? (-j) + ' v. Chr.' : String(j);
+
+  function reiheHtml(reihe, schluessel, W, s, lehnt) {
+    const hmax = Math.max(...reihe.map(it => it.h));
+    const n = reihe.length;
+    // die eine Lücke auf dem Brett: nicht am Rand und nicht neben einer Buchstütze
+    const kand = [];
+    for (let j = 1; j < n - 2; j++) if (!reihe[j].beginnt && !reihe[j + 1].beginnt) kand.push(j);
+    const lueckeBei = kand.length ? kand[hash(schluessel + 'l') % kand.length] : -1;
+    const lueckeBreite = Math.round(wert(schluessel + 'lb', 10, 18));
+    const mitJahr = reihe.filter(it => it.x.b.j != null);
+    const name = mitJahr.length ? `Brett, ${jahrText(mitJahr[0].x.b.j)} bis ${jahrText(mitJahr[mitJahr.length - 1].x.b.j)}` : 'Brett';
+    let html = `<div class="reihe"><div class="buecher" data-gruppe role="group" aria-label="${esc(reihe[0].x.fach === KIND ? 'Kinderzimmer' : reihe[0].x.geist ? 'Was noch wartet' : name)}" style="--h:${hmax + KOPF}px">`;
+    const marken = [];
+    let x = 0;
+    reihe.forEach((it, j) => {
+      if (it.beginnt && j > 0) { html += `<span class="stuetze" style="height:${Math.round(150 * s)}px" aria-hidden="true"></span>`; marken.push({ x: x + 5, fach: it.beginnt.fach || it.beginnt }); x += STUETZE; }
+      else if (it.beginnt) marken.push({ x: 0, fach: it.beginnt.fach || it.beginnt });
+      const o = {};
+      if (j === lueckeBei) o.luecke = lueckeBreite;
+      if (lehnt && j === n - 1 && j > 0) {
+        const nachbar = reihe[j - 1];
+        o.neigung = wert(schluessel + 'w', 4, 9);
+        const r = o.neigung * Math.PI / 180;
+        const kontakt = Math.min(it.h * Math.cos(r), nachbar.h);
+        o.versatz = Math.max(0, Math.round(kontakt * Math.tan(r) - nachbar.abstand));
+      }
+      if (offen && offen.id === it.x.id) o.ist = true;
+      html += rueckenHtml(it, o);
+      x += it.w + it.abstand + (o.luecke || 0) + (o.versatz || 0);
+    });
+    html += '</div><div class="brett"></div><div class="schilder">';
+    marken.forEach((m, i) => {
+      const bis = i < marken.length - 1 ? marken[i + 1].x : W;
+      const f = m.fach;
+      html += `<p class="schild" style="${i === 0 && m.x ? `margin-left:${m.x}px;` : ''}width:${Math.max(60, bis - m.x)}px">${esc(f.name)}${f.jahre ? ', <span class="jahre">' + esc(f.jahre) + '</span>' : ''}</p>`;
+    });
+    return html + '</div></div>';
+  }
+
+  // Abschnitte für das Packen: jede Zeit ist ein Abschnitt mit eigenem Schild
+  const abschnitt = fach => ({ fach, buecher: fach.buecher });
+
+  // Lehnende Bücher: nur auf drei oder vier Brettern, nur schmale Taschenbücher am Ende einer Reihe
+  function lehnendeWaehlen(alleReihen) {
+    const geeignet = alleReihen.filter(({ reihe }) => {
+      const it = reihe[reihe.length - 1];
+      return reihe.length >= 6 && it.w < 20 && it.x.b.b !== 'h' && !(it.x.b.p > 900) && !it.beginnt;
+    }).sort((a, b) => hash(a.schluessel + 'lehne') - hash(b.schluessel + 'lehne'));
+    const zahl = alleReihen.length >= 12 ? 4 : 3;
+    const gewaehlt = new Set(), nummern = [];
+    for (const r of geeignet) {
+      if (gewaehlt.size >= zahl) break;
+      if (nummern.some(nr => Math.abs(nr - r.nr) < 2)) continue;
+      gewaehlt.add(r.schluessel); nummern.push(r.nr);
+    }
+    return gewaehlt;
+  }
+
+  function eigeneHtml(W, s) {
+    // Die eigenen Bücher stehen etwas größer als die gelesenen. Alle tragen dasselbe Schild in derselben Größe.
+    const se = s * 1.3;
+    const klein = schmal();
+    const SW = klein ? 13 : 14, SH = klein ? 62 : 74, SF = klein ? 8.75 : 9.5;
+    const px = mm => Math.max(SW + 6, Math.round(mm * se));
+    const H = Math.round(185 * se), VB = px(28);
+    const schild = text => `<span class="titelschild"><span>${esc(text)}</span></span>`;
+    let werke = '';
+    EIGENE.forEach(e => {
+      if (e.schuber) {
+        const cw = px(e.dicke), hc = Math.round(e.hoehe * se);
+        const auf = cw + 3 + BAENDE.length * (VB + 1);
+        werke += `<div class="schuber-platz${schuberOffen ? ' offen' : ''}" style="--zu:${cw}px;--auf:${auf}px;--hc:${hc}px">`;
+        werke += `<button type="button" class="ruecken eigen schuber muster-${e.muster}" style="width:${cw}px;height:${hc}px" tabindex="-1" aria-expanded="${schuberOffen}" aria-label="Ursprungstrilogie, Schuber mit drei Bänden">${schild('Ursprung I–III')}</button>`;
+        BAENDE.forEach((b, k) => {
+          const innen = 3 + k * VB;
+          const weg = cw + 3 + k * (VB + 1) - innen;
+          const n = BAENDE.length;
+          werke += `<button type="button" class="ruecken eigen bandbuch muster-${b.muster}${offen && offen.id === b.eintrag.id ? ' ist-offen' : ''}" data-id="${b.eintrag.id}" style="width:${VB}px;height:${H}px;--innen:${innen}px;--weg:${weg}px;--hin:${(k * .55).toFixed(2)}s;--zurueck:${((n - 1 - k) * .3).toFixed(2)}s" tabindex="-1"${schuberOffen ? '' : ' aria-hidden="true"'} aria-label="Ursprung, Band ${b.band}">${schild('Ursprung ' + b.band)}</button>`;
+        });
+        werke += '</div>';
+      } else {
+        const w = px(e.dicke), h = Math.round(e.hoehe * se);
+        werke += `<button type="button" class="ruecken eigen muster-${e.muster}${offen && offen.id === e.eintrag.id ? ' ist-offen' : ''}" data-id="${e.eintrag.id}" style="width:${w}px;height:${h}px" tabindex="-1" aria-label="${esc(e.eintrag.werk.titel || e.id)}, ${esc(e.eintrag.werk.art || '')}">${schild(e.eintrag.werk.titel || e.id)}</button>`;
+      }
+    });
+    const stilEigen = `--sw:${SW}px;--sh:${SH}px;--sf:${SF}px`;
+    const hoeheEigen = Math.max(...EIGENE.map(e => Math.round(e.hoehe * se)));
+    const breiteEigen = EIGENE.reduce((a, e) => a + px(e.dicke) + 1, 0) + BAENDE.length * (VB + 1) + 3;
+
+    // Der Nachttisch: zwei Stapel quer, unten das längste Buch
+    const liegend = TISCH.buecher.map(x => ({ x, dicke: Math.max(6, Math.round(x.mm.b * s)), laenge: Math.round(x.mm.h * s) }))
+      .sort((a, b) => b.laenge - a.laenge || b.dicke - a.dicke);
+    const stapel = [[], []], hoehe = [0, 0];
+    liegend.forEach(it => { const k = hoehe[0] <= hoehe[1] ? 0 : 1; stapel[k].push(it); hoehe[k] += it.dicke; });
+    const tischHtml = stapel.map(st => '<div class="stapel">' + st.map((it, j) => {
+      const x = it.x;
+      const v = Math.round(wert(x.key + 'v', 2, 6)) * (j % 2 ? -1 : 1) + 6;
+      const schrift = aufschrift(x, it.dicke, it.laenge - 22);
+      return `<button type="button" class="ruecken liegt${x.de ? ' de' : ''}${offen && offen.id === x.id ? ' ist-offen' : ''}" data-id="${x.id}" style="width:${it.laenge}px;height:${it.dicke}px;--grund:${x.grund};--tinte:${x.tinte};--versatz:${v}px" tabindex="-1" aria-label="${esc(x.label)}">${schrift}</button>`;
+    }).join('') + '</div>').join('');
+    const tischBreite = Math.max(...stapel.map(st => Math.max(0, ...st.map(it => it.laenge)))) * 2 + 12 + 14;
+    const tischHoehe = Math.max(...hoehe);
+    const eigenGruppe = `<div class="gruppe" data-gruppe role="group" aria-label="Eigene Bücher" style="${stilEigen}">${werke}</div>`;
+    const tischGruppe = (links) => `<div class="gruppe stapelgruppe" data-gruppe role="group" aria-label="Auf dem Nachttisch"${links ? ` style="margin-left:${links}px"` : ''}>${tischHtml}</div>`;
+    const luft = Math.round(W * .09);
+    if (W >= breiteEigen + tischBreite + luft + 40) {
+      return `<div class="reihe"><div class="buecher" style="--h:${Math.max(hoeheEigen, tischHoehe) + KOPF}px">${eigenGruppe}${tischGruppe(luft)}</div><div class="brett"></div><div class="schilder"></div></div>`;
+    }
+    return `<div class="reihe"><div class="buecher" style="--h:${hoeheEigen + KOPF}px">${eigenGruppe}</div><div class="brett"></div><div class="schilder"></div></div>` +
+      `<div class="reihe"><div class="buecher" style="--h:${tischHoehe + KOPF}px">${tischGruppe(0)}</div><div class="brett"></div><div class="schilder"></div></div>`;
+  }
+
+  let breiteVorher = 0;
+  function regalBauen(erzwingen) {
+    const ziel = $('#faecher');
+    const W = Math.floor(ziel.clientWidth);
+    if (!W || (!erzwingen && W === breiteVorher)) return;
+    breiteVorher = W;
+    const s = massstab();
+    $('#eigenes').innerHTML = eigeneHtml(W, s);
+    const lesen = packen(EPOCHEN.filter(f => f.buecher.length).map(abschnitt), W, s).map((reihe, i) => ({ reihe, schluessel: 'g' + i, nr: i }));
+    const kind = packen([abschnitt(KIND)], W, s).map((reihe, i) => ({ reihe, schluessel: 'k' + i, nr: 100 + i }));
+    const lehnen = lehnendeWaehlen(lesen.concat(kind));
+    ziel.innerHTML = lesen.map(r => reiheHtml(r.reihe, r.schluessel, W, s, lehnen.has(r.schluessel))).join('');
+    $('#kinderzimmer').innerHTML = kind.map(r => reiheHtml(r.reihe, r.schluessel, W, s, lehnen.has(r.schluessel))).join('');
+    // Was noch wartet: eine kurze Reihe mit Abstand, Auswahl fest nach Hash, dann nach Jahr
+    const kap = W * (schmal() ? .92 : .58);
+    let summe = 0;
+    const auswahl = [];
+    WARTET.alle.slice().sort((a, b) => hash(a.key + 'w') - hash(b.key + 'w')).forEach(x => {
+      const w = stueck(x, s).w + 4;
+      if (summe + w <= kap) { auswahl.push(x); summe += w; }
+    });
+    WARTET.buecher = auswahl.sort(nachJahr);
+    signaturen(WARTET);
+    const geister = WARTET.buecher.map((x, j) => { const it = stueck(x, s); it.abstand = 3 + hash(x.key + 'ab') % 3; if (j === 0) it.beginnt = WARTET; return it; });
+    $('#wartet').innerHTML = geister.length ? reiheHtml(geister, 'w', W, s, false) : '';
+    rovingSetzen();
+    if (offen) { offenEl = document.querySelector('[data-id="' + offen.id + '"]'); if (!offenEl) karteZu(); else karteStellen(); }
+  }
+
+  // ---------- Tastatur: ein Tab-Halt je Brett, die Pfeiltasten gehen von Buch zu Buch ----------
+  const knoepfe = gr => $$('button.ruecken', gr).filter(b => b.getAttribute('aria-hidden') !== 'true');
+  function rovingSetzen() { $$('[data-gruppe]').forEach(gr => knoepfe(gr).forEach((b, i) => { b.tabIndex = i === 0 ? 0 : -1; })); }
+  document.addEventListener('focusin', e => {
+    const b = e.target.closest && e.target.closest('button.ruecken');
+    const gr = b && b.closest('[data-gruppe]');
+    if (gr) knoepfe(gr).forEach(k => { k.tabIndex = k === b ? 0 : -1; });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const b = e.target.closest && e.target.closest('button.ruecken');
+    const gr = b && b.closest('[data-gruppe]');
+    if (!gr) return;
+    const kn = knoepfe(gr), i = kn.indexOf(b);
+    let ziel = null;
+    if (e.key === 'ArrowRight') ziel = kn[Math.min(kn.length - 1, i + 1)];
+    else if (e.key === 'ArrowLeft') ziel = kn[Math.max(0, i - 1)];
+    else if (e.key === 'Home') ziel = kn[0];
+    else if (e.key === 'End') ziel = kn[kn.length - 1];
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      const alle = $$('[data-gruppe]');
+      const ng = alle[alle.indexOf(gr) + (e.key === 'ArrowDown' ? 1 : -1)];
+      if (ng) {
+        const mx = b.getBoundingClientRect().left + b.offsetWidth / 2;
+        let bester = null;
+        knoepfe(ng).forEach(k => { const r = k.getBoundingClientRect(); const d = Math.abs(r.left + r.width / 2 - mx); if (!bester || d < bester.d) bester = { k, d }; });
+        ziel = bester && bester.k;
+      }
+    }
+    if (!ziel) return;
+    e.preventDefault();
+    if (ziel !== b) ziel.focus();
+  });
+
+  // ---------- Karteikarte ----------
+  const karte = $('#karte');
+  const satz = s => s && !/[.!?]$/.test(s) ? s + '.' : s;
+  function eigeneKarte(x) {
+    const w = x.werk || {};
+    const ziel = { satoshi: ['satoshi', 'Wo Satoshi spielt'], laender: ['reisen', 'Wohin ich gereist bin'] }[x.werkId] || (x.band ? ['ursprung', 'Wo die Trilogie spielt'] : null);
+    const text = x.band ? ((I.baende || {})[x.band] || '') : (w.text || '');
+    return `<div class="karte-kopf"><span class="signatur eigen-sig">${x.sig}</span><button type="button" class="wort karte-zu">schließen</button></div>` +
+      `<h3 class="karte-titel eigen-titel" id="karte-titel">${esc(w.titel || '')}</h3>` +
+      `<p class="karte-unter">${esc(w.art || '')}, ${esc(w.stand || '')}.</p>` +
+      (text ? `<p class="karte-text">${esc(text)}</p>` : '') +
+      (ziel ? `<p class="weiter"><button type="button" class="wort" data-zeige="${ziel[0]}">${ziel[1]}</button></p>` : '');
+  }
+  function buchKarte(x) {
+    const b = x.b;
+    const jahr = b.j == null ? '' : b.j < 0 ? `Entstanden um ${-b.j} v. Chr.` : b.j < 1450 ? `Entstanden um ${b.j}` : `Zuerst erschienen ${b.j}`;
+    const ausgabe = [sauber(b.v), b.p ? b.p + ' Seiten' : ''].filter(Boolean).join(', ');
+    const notiz = [];
+    if (b.r === 'gerade') notiz.push('Lese ich gerade.');
+    if (b.r === 'abgebrochen') notiz.push('Nicht zu Ende gelesen.');
+    if (b.r === 'leseliste') notiz.push('Steht noch aus.');
+    if (b.r === 'kindheit') notiz.push('Aus dem Kinderzimmer.');
+    if (b.s === 5 && b.r !== 'leseliste') notiz.push('Eines meiner liebsten.');
+    if (b.w) notiz.push('Mehr als einmal gelesen.');
+    return `<div class="karte-kopf"><span class="signatur">${esc(x.sig || '')}</span><button type="button" class="wort karte-zu">schließen</button></div>` +
+      `<h3 class="karte-titel" id="karte-titel">${esc(b.t)}</h3>` +
+      (b.u ? `<p class="karte-unter">${esc(b.u)}</p>` : '') +
+      (x.autor ? `<p class="karte-autor">${esc(x.autor)}</p>` : '') +
+      `<p class="karte-daten">${esc(satz(jahr))}${jahr && ausgabe ? '<br>' : ''}${esc(satz(ausgabe))}</p>` +
+      (notiz.length ? `<p class="karte-notiz">${notiz.join(' ')}</p>` : '');
+  }
+  const alsBlatt = () => window.matchMedia('(max-width: 40rem)').matches;
+  function karteStellen() {
+    if (!offenEl) return;
+    const blatt = alsBlatt();
+    karte.classList.toggle('als-blatt', blatt);
+    if (blatt) { karte.style.left = ''; karte.style.top = ''; return; }
+    const r = offenEl.getBoundingClientRect();
+    const kb = karte.offsetWidth, kh = karte.offsetHeight;
+    const vw = document.documentElement.clientWidth;
+    // am Satzspiegel des Regals ausgerichtet, möglichst über dem Rücken
+    const rs = getComputedStyle($('.regal'));
+    const rl = parseFloat(rs.paddingLeft) || 16, rr = parseFloat(rs.paddingRight) || 16;
+    const links = Math.max(rl, Math.min(vw - kb - rr, r.left + r.width / 2 - kb / 2));
+    let oben = r.top - kh - 16;
+    if (oben < 12) oben = r.bottom + 16;
+    karte.style.left = Math.round(links + window.scrollX) + 'px';
+    karte.style.top = Math.round(oben + window.scrollY) + 'px';
+  }
+  function karteAuf(x, el) {
+    if (offenEl) offenEl.classList.remove('ist-offen');
+    offen = x; offenEl = el;
+    el.classList.add('ist-offen');
+    karte.innerHTML = x.eigen ? eigeneKarte(x) : buchKarte(x);
+    karte.hidden = false;
+    karteStellen();
+    karte.focus({ preventScroll: true });
+  }
+  function karteZu() {
+    if (karte.hidden) return;
+    karte.hidden = true;
+    const el = offenEl;
+    if (el) el.classList.remove('ist-offen');
+    offen = null; offenEl = null;
+    if (el && document.contains(el)) el.focus({ preventScroll: true });
+  }
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button, a');
+    if (t && t.classList.contains('karte-zu')) { karteZu(); return; }
+    if (t && t.dataset.zeige) {
+      const ebene = t.dataset.zeige;
+      karteZu();
+      (angeschnitten() ? $('.globusseite') : figur).scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+      ebeneWaehlen(ebene);
+      return;
+    }
+    if (t && t.classList.contains('schuber')) {
+      schuberOffen = !schuberOffen;
+      const platz = t.parentElement;
+      platz.classList.toggle('offen', schuberOffen);
+      t.setAttribute('aria-expanded', String(schuberOffen));
+      $$('.bandbuch', platz).forEach(b => { b.tabIndex = -1; if (schuberOffen) b.removeAttribute('aria-hidden'); else b.setAttribute('aria-hidden', 'true'); });
+      if (!schuberOffen && offen && offen.band) karteZu();
+      return;
+    }
+    if (t && t.dataset.id !== undefined) {
+      const x = ALLE[+t.dataset.id];
+      if (offen === x) { karteZu(); return; }
+      karteAuf(x, t);
+      return;
+    }
+    if (!karte.hidden && !karte.contains(e.target)) karteZu();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !karte.hidden) { e.preventDefault(); karteZu(); } });
+
+  regalBauen(true);
+  // Die Rückenschrift wird gemessen: nach dem Laden der Schriften neu bauen
+  const regalSchriften = document.fonts ? Promise.race([Promise.all([document.fonts.load('10px "Vollkorn"'), document.fonts.load('10px "Vollkorn SC"'), document.fonts.load('italic 10px "Vollkorn"')]), zeit(3000)]).catch(() => {}) : Promise.resolve();
+  regalSchriften.then(() => { MESS.clear(); regalBauen(true); });
+  let warte = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(warte);
+    warte = setTimeout(() => { regalBauen(false); if (g) { lebenBlickBerechnen(); neuSetzen(); } }, 140);
+  });
+})();
+</script>
+</body>
+</html>

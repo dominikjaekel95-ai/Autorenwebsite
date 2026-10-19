@@ -8,19 +8,25 @@ Erste Entwürfe für eine persönliche Autorenwebsite: Journal, Länderguides, B
 
 | | Richtung | Idee |
 |---|---|---|
+| E1 | [Klappentext und Regal](entwuerfe/e1-klappentext.html) | Briefkopf und Kurzvita in Vollkorn, die Lebensstationen als Kolophonzeile mit springender Chronik. Darunter ein Regal aus den Goodreads-Daten, nach Erscheinungsjahr geordnet, der Nachttisch quer obenauf. |
+| E2 | [Atlastafel und Zeitband](entwuerfe/e2-atlas.html) | Eine Doppelseite nach Schalansky in Alegreya: eine Tafel pro Station, daneben der Globus. Darunter alle Bücher als Striche auf einer Zeitachse von Gilgamesch bis Labatut. |
+| E3 | [Buchseite und Register](entwuerfe/e3-marginalie.html) | Eine Buchseite mit Randspalte in Spectral, der Globus als Abbildung 1, die Orte als Randnotizen. Darunter ein laufendes Register nach Jahrzehnten. |
 | A | [Untertext](entwuerfe/a-untertext.html) | Ein Blatt mit zwei Schichten. Unter jedem Text steht, worum es eigentlich ging; ein Schalter für UV-Licht macht die untere Schrift sichtbar. |
 | B | [Nachtseite](entwuerfe/b-nachtseite.html) | Eine Nacht von der Dämmerung bis zum Morgengrauen, mit echtem Mondstand, Ortszeiten und dem Untertagebuch als Rubrik. |
 | C | [Dominik Jäkel](entwuerfe/c-dominik-jaekel.html) | Der Name als Haus, das Journal heißt Untertext. Eine Atlasseite mit Länderregister, Aufbau eines Guides und Globus. |
 | D | [Globus](entwuerfe/d-globus.html) | Weiß und Graphit. Zoombarer Globus mit 65 bereisten Ländern und Gebieten, Ebenen für Leben, den Roman Satoshi und die Ursprungstrilogie, darunter eine Bibliothek zum Herausziehen. |
 
-In jedem Entwurf lässt sich unten über „Name testen“ jeder Namenskandidat einsetzen, auch ein eigener. Die Übersicht enthält außerdem die Shortlist der Namen und eine Empfehlung.
+In den Entwürfen A bis D lässt sich unten über „Name testen“ jeder Namenskandidat einsetzen, auch ein eigener. Die Übersicht enthält außerdem die Shortlist der Namen und eine Empfehlung.
 
+![Entwurf E1: Klappentext und Regal](entwuerfe/vorschau/e1-klappentext.jpg)
+![Entwurf E2: Atlastafel und Zeitband](entwuerfe/vorschau/e2-atlas.jpg)
+![Entwurf E3: Buchseite und Register](entwuerfe/vorschau/e3-marginalie.jpg)
 ![Entwurf A: Untertext](entwuerfe/vorschau/a-untertext.jpg)
 ![Entwurf B: Nachtseite](entwuerfe/vorschau/b-nachtseite.jpg)
 ![Entwurf C: Dominik Jäkel](entwuerfe/vorschau/c-dominik-jaekel.jpg)
 ![Entwurf D: Globus](entwuerfe/vorschau/d-globus.jpg)
 
-Alle Texte sind Beispieltexte, die Formulare verschicken nichts. Jede Seite ist eine einzelne HTML-Datei ohne Build-Schritt; die Schriften kommen von Google Fonts. Entwurf D lädt zusätzlich d3 und topojson-client von jsDelivr; die Kartendaten liegen in `entwuerfe/daten/` (world-atlas, Natural Earth, gemeinfrei; England, Schottland, Wales und Nordirland daraus vereinfacht geteilt).
+Alle Texte sind Beispieltexte, die Formulare verschicken nichts. Jede Seite ist eine einzelne HTML-Datei ohne Build-Schritt; die Schriften kommen von Google Fonts. Die Entwürfe D und E1–E3 laden zusätzlich d3 und topojson-client von jsDelivr. E1–E3 teilen sich den Globus-Kern (`entwuerfe/globus/kern.js`), die Inhalte (`entwuerfe/globus/inhalt.js`) und die Bücher aus dem Goodreads-Export ohne private Notizen (`entwuerfe/daten/buecher.js`). Die Kartendaten liegen in `entwuerfe/daten/` (world-atlas, Natural Earth, gemeinfrei; England, Schottland, Wales und Nordirland daraus vereinfacht geteilt).
 
 ## Nächste Schritte
 

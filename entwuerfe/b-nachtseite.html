@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nachtseite · Entwurf B</title>
+<meta name="description" content="Entwurf B der Autorenwebsite von Dominik Jäkel: Nachtseite, ein Journal über Reisen, Bücher und Berlin bei Nacht, mit dem Untertagebuch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300..600&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap">
+<style>
+/* Layout: eine Nacht von oben nach unten. Dämmerung im Kopf, Tiefnacht in der Mitte, Morgengrauen am Fuß. Bewusst nur dunkel. */
+:root {
+  color-scheme: dark;
+  --daemmerung: #1A2442;
+  --nacht: #0D1322;
+  --tiefnacht: #080C17;
+  --morgengrau: #34283F;
+  --flaeche: #131B2E;
+  --dunst: #27314A;
+  --mond: #ECE6D6;
+  --mond-2: #A9ACBD;
+  --gaslicht: #E2CC86;
+  --morgen: #E7A88A;
+  --panel: rgba(9, 13, 24, .94);
+
+  --f-marke: "Jost", Futura, "Century Gothic", "Avenir Next", sans-serif;
+  --f-text: "Literata", "Iowan Old Style", Georgia, serif;
+
+  --breite: 74rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; background: var(--nacht); }
+body {
+  margin: 0;
+  background-color: var(--nacht);
+  background-image: linear-gradient(180deg, var(--daemmerung) 0, var(--nacht) 20%, var(--tiefnacht) 58%, var(--nacht) 80%, var(--morgengrau) 100%);
+  color: var(--mond);
+  font-family: var(--f-text);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--gaslicht); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+.huelle {
+  max-width: var(--breite);
+  margin-inline: auto;
+  padding-left: max(clamp(16px, 4vw, 48px), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(16px, 4vw, 48px), env(safe-area-inset-right, 0px));
+}
+.sprung { position: absolute; left: -999px; top: 0; }
+.sprung:focus { left: 16px; top: 16px; z-index: 100; background: var(--mond); color: var(--nacht); padding: .5rem .8rem; }
+.kapitaelchen { font-family: var(--f-marke); text-transform: uppercase; letter-spacing: .16em; font-size: .78rem; }
+
+/* Kopf */
+.kopf__innen { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem 2rem; padding-block: 1.25rem; }
+.marke { text-decoration: none; font-family: var(--f-marke); font-weight: 500; text-transform: uppercase; letter-spacing: .3em; font-size: .95rem; }
+.nav { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem 1.4rem; font-family: var(--f-marke); font-size: .98rem; letter-spacing: .03em; }
+.nav a { text-decoration: none; color: var(--mond-2); }
+.nav a:hover { color: var(--gaslicht); }
+.sprache { color: var(--mond-2); }
+.sprache b { color: var(--mond); font-weight: 500; }
+.sprache__aus { opacity: .55; cursor: help; }
+
+/* Held */
+.held > .huelle { padding-block: clamp(2rem, 6vw, 5rem) clamp(3rem, 7vw, 6rem); }
+.jetzt { display: flex; flex-wrap: wrap; gap: .3rem 1.75rem; margin: 0 0 1.75rem; color: var(--mond-2); font-variant-numeric: tabular-nums; }
+.jetzt b { color: var(--gaslicht); font-weight: 500; }
+.riesenmarke {
+  margin: 0 -.2em 0 0;
+  font-family: var(--f-marke); font-weight: 300; text-transform: uppercase;
+  letter-spacing: .2em; line-height: 1; white-space: nowrap;
+  font-size: clamp(2.2rem, 9.4vw, 8rem);
+}
+.held__raster { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 2.5rem clamp(2rem, 5vw, 5rem); align-items: center; margin-top: clamp(2rem, 5vw, 3.5rem); }
+.held__satz {
+  margin: 0; font-family: var(--f-text); font-style: italic; font-weight: 400;
+  font-size: clamp(1.8rem, 3.8vw, 3.1rem); line-height: 1.12; text-wrap: balance;
+  font-variation-settings: "opsz" 72;
+}
+.claim { margin: 1rem 0 0; color: var(--gaslicht); font-family: var(--f-marke); letter-spacing: .05em; font-size: 1.05rem; }
+.lead { margin: 1.3rem 0 0; max-width: 36rem; color: var(--mond-2); font-size: 1.1rem; }
+.aktionen { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.knopf {
+  display: inline-flex; align-items: center;
+  padding: .85rem 1.3rem;
+  border: 1px solid var(--dunst); border-radius: 999px;
+  background: transparent; color: var(--mond);
+  font-family: var(--f-marke); font-weight: 500; text-transform: uppercase; letter-spacing: .1em; font-size: .82rem;
+  text-decoration: none; cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.knopf:hover { border-color: var(--gaslicht); color: var(--gaslicht); }
+.knopf--voll { background: var(--gaslicht); border-color: var(--gaslicht); color: var(--nacht); }
+.knopf--voll:hover { background: var(--mond); border-color: var(--mond); color: var(--nacht); }
+
+.mond { margin: 0; justify-self: center; width: min(100%, 21rem); color: var(--mond); }
+.mond svg { display: block; width: 100%; height: auto; overflow: visible; }
+.mond__scheibe { fill: var(--flaeche); stroke: var(--dunst); stroke-width: 1; }
+.mond__licht { fill: var(--mond); }
+.mond__maria ellipse { fill: var(--nacht); opacity: .17; }
+.mond figcaption { margin-top: .5rem; text-align: center; color: var(--mond-2); font-size: .95rem; }
+
+/* Abschnitte */
+.abschnitt > .huelle { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
+.abschnitt + .abschnitt > .huelle { border-top: 1px solid var(--dunst); }
+.abschnitt__kopf { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); gap: .8rem 3rem; align-items: end; margin-bottom: clamp(1.75rem, 4vw, 2.75rem); }
+.eyebrow { grid-column: 1 / -1; margin: 0; color: var(--gaslicht); }
+h2 {
+  margin: 0; font-family: var(--f-text); font-weight: 400;
+  font-size: clamp(2.3rem, 5.2vw, 4rem); line-height: 1.05; text-wrap: balance;
+  font-variation-settings: "opsz" 72;
+}
+.abschnitt__text { margin: 0; color: var(--mond-2); }
+
+/* Untertagebuch */
+.eintraege { list-style: none; margin: 0; padding: 0; }
+.eintrag { display: grid; grid-template-columns: 8.5rem 12rem minmax(0, 1fr); gap: .5rem 2rem; align-items: baseline; padding-block: 1.6rem; border-top: 1px solid var(--dunst); }
+.eintrag__zeit { margin: 0; font-family: var(--f-marke); font-weight: 300; font-size: 2.7rem; line-height: 1; letter-spacing: .02em; font-variant-numeric: tabular-nums; color: var(--gaslicht); }
+.eintrag__ort { margin: 0; color: var(--mond-2); line-height: 1.6; }
+.eintrag__text { margin: 0; max-width: 40rem; font-size: 1.22rem; line-height: 1.55; }
+
+/* Texte */
+.texte { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(2rem, 5vw, 4rem); }
+.text { padding-block: 1.6rem; border-top: 1px solid var(--dunst); }
+.text__rubrik { margin: 0 0 .55rem; color: var(--gaslicht); }
+.text h3 { margin: 0 0 .5rem; font-weight: 500; font-size: 1.6rem; line-height: 1.2; text-wrap: balance; font-variation-settings: "opsz" 36; }
+.text h3 a { text-decoration: none; }
+.text h3 a:hover { color: var(--gaslicht); }
+.text p { margin: 0; color: var(--mond-2); }
+.text .text__meta { margin-top: .8rem; font-family: var(--f-marke); font-size: .88rem; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+
+/* Länder */
+.orte { list-style: none; margin: 0; padding: 0; }
+.ort {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) 7.5rem 9rem minmax(0, 1fr);
+  grid-template-areas: "land stadt zeit licht stand";
+  gap: .35rem 1.5rem; align-items: baseline;
+  padding-block: 1.15rem; border-top: 1px solid var(--dunst);
+}
+.ort__land { grid-area: land; font-size: 1.55rem; line-height: 1.2; font-variation-settings: "opsz" 36; }
+.ort__stadt { grid-area: stadt; color: var(--mond-2); }
+.ort__zeit { grid-area: zeit; font-family: var(--f-marke); font-weight: 300; font-size: 2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.ort__licht { grid-area: licht; display: inline-flex; align-items: center; gap: .55rem; color: var(--mond-2); }
+.ort__licht::before { content: ""; flex: none; width: .7rem; height: .7rem; border-radius: 50%; background: var(--mond-2); }
+.ort[data-licht="tag"] .ort__licht::before { background: var(--gaslicht); }
+.ort[data-licht="daemmerung"] .ort__licht::before { background: linear-gradient(180deg, var(--morgen) 50%, var(--dunst) 50%); }
+.ort[data-licht="nacht"] .ort__licht::before { background: transparent; box-shadow: inset .22rem -.08rem 0 0 var(--gaslicht); }
+.ort[data-licht="nacht"] .ort__zeit { color: var(--gaslicht); }
+.ort__stand { grid-area: stand; text-align: right; color: var(--mond-2); font-size: .95rem; }
+
+/* Trilogie */
+.trilogie__raster { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem clamp(2rem, 5vw, 5rem); align-items: center; }
+.trilogie__text p { max-width: 36rem; }
+.trilogie__text h2 { margin: .8rem 0 1.3rem; }
+.sternfeld { margin: 0; }
+.sternfeld svg { display: block; width: 100%; height: auto; }
+.stern { fill: var(--mond-2); opacity: .26; }
+.stern.an { fill: var(--gaslicht); opacity: 1; animation: funkeln 5s ease-in-out infinite; animation-delay: var(--v, 0s); }
+@keyframes funkeln { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+.sternfeld figcaption { margin-top: .9rem; color: var(--mond-2); font-size: .98rem; }
+.sternfeld b { font-family: var(--f-marke); font-weight: 300; font-size: 2.2rem; line-height: 1; color: var(--gaslicht); font-variant-numeric: tabular-nums; }
+.beispiel { margin-left: .4rem; color: var(--morgen); }
+
+/* Formulare */
+.formular { margin-top: 1.8rem; max-width: 34rem; }
+.formular__label { display: block; margin-bottom: .55rem; color: var(--mond-2); }
+.formular__zeile { display: flex; flex-wrap: wrap; gap: .6rem; }
+.formular input {
+  flex: 1 1 14rem; min-width: 0;
+  padding: .8rem 1.15rem;
+  border: 1px solid var(--dunst); border-radius: 999px;
+  background: var(--flaeche); color: var(--mond);
+  font: inherit; font-size: 1rem;
+}
+.formular input::placeholder { color: var(--mond-2); opacity: .7; }
+.formular__status { min-height: 1.5em; margin: .6rem 0 0; color: var(--gaslicht); font-size: .95rem; }
+.formular__klein { margin: .2rem 0 0; color: var(--mond-2); font-size: .9rem; }
+
+/* Briefe: Morgengrauen */
+.briefe { position: relative; }
+.briefe::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--morgen), transparent); opacity: .8;
+}
+.abschnitt.briefe > .huelle { border-top: 0; }
+.briefe__raster { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem 4rem; align-items: end; }
+.briefe__raster p { margin: 0 0 1rem; max-width: 34rem; color: var(--mond-2); }
+.briefe__raster .eyebrow { color: var(--morgen); margin-bottom: .8rem; }
+.briefe__raster .formular { margin-top: 0; }
+
+/* Über mich */
+.ueber__raster { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 1.5rem 4rem; }
+.ueber__raster p { margin: 0 0 1rem; max-width: 40rem; }
+.ueber__klein { color: var(--mond-2); font-size: .98rem; border-top: 1px solid var(--dunst); padding-top: 1rem; }
+
+/* Fuß */
+.fuss__innen { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; padding-block: 2rem; color: var(--mond-2); }
+.fuss__innen p { margin: 0; }
+.fuss__innen nav { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; }
+.fuss__innen a { text-decoration: none; }
+.fuss__innen a:hover { color: var(--gaslicht); }
+.fuss__marke { font-family: var(--f-marke); text-transform: uppercase; letter-spacing: .3em; color: var(--mond); }
+
+/* Namenstest (nur im Entwurf) */
+.namenstest {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-top: 1px solid var(--dunst);
+  padding-top: .55rem;
+  padding-bottom: calc(.55rem + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.namenstest__innen { max-width: var(--breite); margin-inline: auto; display: flex; align-items: center; gap: .75rem; }
+.namenstest__zurueck { flex: none; text-decoration: none; color: var(--mond-2); }
+.namenstest__zurueck:hover { color: var(--gaslicht); }
+.namenstest__label { flex: none; color: var(--mond-2); }
+.namenstest__leiste { display: flex; align-items: center; gap: .4rem; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: none; padding: 3px 2px; }
+.namenstest__leiste::-webkit-scrollbar { display: none; }
+.chips { display: flex; gap: .4rem; flex: none; }
+.chip {
+  flex: none; padding: .35rem .85rem;
+  border: 1px solid var(--dunst); border-radius: 999px;
+  background: transparent; color: var(--mond);
+  font-family: var(--f-marke); font-size: .92rem; letter-spacing: .02em; text-transform: none;
+  line-height: 1.3; cursor: pointer; white-space: nowrap;
+}
+.chip:hover { border-color: var(--mond-2); }
+.chip[aria-checked="true"] { background: var(--gaslicht); border-color: var(--gaslicht); color: var(--nacht); }
+.chip--eingabe { width: 10.5rem; cursor: text; background: var(--flaeche); }
+.chip--eingabe::placeholder { color: var(--mond-2); }
+.chip--eingabe.ist-aktiv { border-color: var(--gaslicht); box-shadow: 0 0 0 1px var(--gaslicht); }
+
+@media (max-width: 900px) {
+  .ort { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "land zeit" "stadt licht" "stand stand"; }
+  .ort__licht { justify-self: end; }
+  .ort__stand { text-align: left; }
+}
+@media (max-width: 820px) {
+  .held__raster, .trilogie__raster, .briefe__raster, .ueber__raster, .abschnitt__kopf { grid-template-columns: minmax(0, 1fr); }
+  .mond { width: min(72%, 17rem); justify-self: start; }
+  .texte { grid-template-columns: minmax(0, 1fr); }
+  .eintrag { grid-template-columns: auto minmax(0, 1fr); gap: .5rem 1.25rem; }
+  .eintrag__text { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .namenstest__label { display: none; }
+  .namenstest__zurueck span { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt springen</a>
+
+<header class="kopf">
+  <div class="huelle kopf__innen">
+    <a class="marke" href="#inhalt" data-brand>Nachtseite</a>
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a href="#tagebuch">Untertagebuch</a>
+      <a href="#texte">Texte</a>
+      <a href="#laender">Länder</a>
+      <a href="#buecher">Bücher</a>
+      <a href="#ueber">Über mich</a>
+      <span class="sprache"><b>DE</b> / <span class="sprache__aus" title="Englische Version folgt">EN</span></span>
+    </nav>
+  </div>
+</header>
+
+<main id="inhalt">
+  <section class="held" aria-labelledby="held-marke">
+    <div class="huelle">
+      <p class="jetzt kapitaelchen" aria-label="Jetzt in Berlin">
+        <span>Berlin <b id="zeitBerlin">--:--</b></span>
+        <span id="lichtBerlin">–</span>
+        <span>Mond <b id="mondKurz">--</b> %</span>
+      </p>
+      <h1 class="riesenmarke" id="held-marke" data-brand>Nachtseite</h1>
+      <div class="held__raster">
+        <div>
+          <p class="held__satz">Geschrieben, wenn die Stadt leiser wird.</p>
+          <p class="claim" data-claim>Was nachts geschrieben wird.</p>
+          <p class="lead">Das Journal von Dominik Jäkel: Texte über Reisen, Bücher und Berlin bei Nacht. Dazu das Untertagebuch, Länderguides aus über sechzig Ländern und irgendwann eine Trilogie.</p>
+          <div class="aktionen">
+            <a class="knopf knopf--voll" href="#briefe">Brief abonnieren</a>
+            <a class="knopf" href="#tagebuch">Zum Untertagebuch</a>
+          </div>
+        </div>
+        <figure class="mond">
+          <svg viewBox="-120 -120 240 240" role="img" aria-labelledby="mondText">
+            <defs>
+              <radialGradient id="hof">
+                <stop offset="50%" stop-color="currentColor" stop-opacity=".14"></stop>
+                <stop offset="100%" stop-color="currentColor" stop-opacity="0"></stop>
+              </radialGradient>
+              <clipPath id="lichtClip"><path id="mondLichtClip" d=""></path></clipPath>
+              <filter id="weich" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"></feGaussianBlur></filter>
+            </defs>
+            <circle r="118" fill="url(#hof)"></circle>
+            <circle class="mond__scheibe" r="78"></circle>
+            <path class="mond__licht" id="mondLicht" d=""></path>
+            <g class="mond__maria" clip-path="url(#lichtClip)">
+              <g filter="url(#weich)">
+                <ellipse cx="-22" cy="-26" rx="21" ry="15"></ellipse>
+                <ellipse cx="9" cy="-30" rx="14" ry="11"></ellipse>
+                <ellipse cx="24" cy="-6" rx="16" ry="12"></ellipse>
+                <ellipse cx="-33" cy="10" rx="24" ry="22"></ellipse>
+                <ellipse cx="4" cy="28" rx="13" ry="9"></ellipse>
+                <ellipse cx="50" cy="-15" rx="9" ry="8"></ellipse>
+              </g>
+            </g>
+          </svg>
+          <figcaption id="mondText">Heute Nacht, von überall gleich: <span id="mondName">–</span>, <span id="mondProzent">–</span> % beleuchtet.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="tagebuch" aria-labelledby="tagebuch-titel">
+    <div class="huelle">
+      <div class="abschnitt__kopf">
+        <p class="eyebrow kapitaelchen">Tagebuch</p>
+        <h2 id="tagebuch-titel">Untertagebuch</h2>
+        <p class="abschnitt__text">Notizen, meistens nach Mitternacht. Kurz, ungefiltert, ab und zu falsch.</p>
+      </div>
+      <ul class="eintraege">
+        <li class="eintrag">
+          <p class="eintrag__zeit"><time datetime="2026-10-14T03:12">03:12</time></p>
+          <p class="eintrag__ort kapitaelchen">Mittwoch, 14. Oktober<br>Neukölln</p>
+          <p class="eintrag__text">Seit zwei Stunden an einem einzigen Satz. Er war vorher besser.</p>
+        </li>
+        <li class="eintrag">
+          <p class="eintrag__zeit"><time datetime="2026-10-10T23:40">23:40</time></p>
+          <p class="eintrag__ort kapitaelchen">Samstag, 10. Oktober<br>Im Nachtzug</p>
+          <p class="eintrag__text">Der Mann gegenüber liest Borges und schläft dabei ein. Ich halte das für die höchste Form der Zustimmung.</p>
+        </li>
+        <li class="eintrag">
+          <p class="eintrag__zeit"><time datetime="2026-10-04T07:14">07:14</time></p>
+          <p class="eintrag__ort kapitaelchen">Sonntag, 4. Oktober<br>Landwehrkanal</p>
+          <p class="eintrag__text">Sonnenaufgang. Ein Mann füttert Schwäne und redet dabei mit ihnen über Politik. Die Schwäne wirken gut informiert.</p>
+        </li>
+        <li class="eintrag">
+          <p class="eintrag__zeit"><time datetime="2026-10-01T01:30">01:30</time></p>
+          <p class="eintrag__ort kapitaelchen">Donnerstag, 1. Oktober<br>Kreuzberg</p>
+          <p class="eintrag__text">Berlin ist nachts nicht laut. Es ist nur nie fertig.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="texte" aria-labelledby="texte-titel">
+    <div class="huelle">
+      <div class="abschnitt__kopf">
+        <p class="eyebrow kapitaelchen">Journal</p>
+        <h2 id="texte-titel">Texte</h2>
+        <p class="abschnitt__text">Alle drei bis vier Wochen ein längerer Text. Selten. Dann sorgfältig.</p>
+      </div>
+      <div class="texte">
+        <article class="text">
+          <p class="text__rubrik kapitaelchen">Literatur</p>
+          <h3><a href="#texte">Der blinde Bibliothekar</a></h3>
+          <p>Borges leitete die Nationalbibliothek in Buenos Aires, als er kaum noch sehen konnte. Warum ausgerechnet er mehr über das Reisen wusste als jeder Reiseführer.</p>
+          <p class="text__meta">12. Okt. 2026 · 9 Min.</p>
+        </article>
+        <article class="text">
+          <p class="text__rubrik kapitaelchen">Politik</p>
+          <h3><a href="#texte">Die leise Erosion</a></h3>
+          <p>Institutionen sterben selten an einem Tag. Über Vertrauen, Verfahren und das Verschwinden des Langweiligen.</p>
+          <p class="text__meta">14. Sep. 2026 · 14 Min.</p>
+        </article>
+        <article class="text">
+          <p class="text__rubrik kapitaelchen">Aufmerksamkeit</p>
+          <h3><a href="#texte">Das langsamste Medium der Welt</a></h3>
+          <p>Die Ökonomie der Aufmerksamkeit belohnt das Schnelle. Ein Plädoyer für Bücher, die man nicht nebenbei lesen kann.</p>
+          <p class="text__meta">17. Aug. 2026 · 11 Min.</p>
+        </article>
+        <article class="text">
+          <p class="text__rubrik kapitaelchen">Berlin bei Nacht</p>
+          <h3><a href="#texte">Kiezburn, Sonntagmorgen</a></h3>
+          <p>Was bleibt, wenn Menschen für ein Wochenende eine Stadt bauen und sie danach spurlos wieder abbauen.</p>
+          <p class="text__meta">20. Juli 2026 · 8 Min.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="laender" aria-labelledby="laender-titel">
+    <div class="huelle">
+      <div class="abschnitt__kopf">
+        <p class="eyebrow kapitaelchen">Länder</p>
+        <h2 id="laender-titel">Wo gerade Nacht ist</h2>
+        <p class="abschnitt__text">Über sechzig Länder, die meisten langsam bereist. Hier entstehen Guides: ehrlich, praktisch und mit einer Leseliste am Ende. Uhrzeit und Licht sind live.</p>
+      </div>
+      <ul class="orte">
+        <li class="ort" data-zeitzone="Asia/Taipei" data-lat="25.03" data-lon="121.57">
+          <span class="ort__land">Taiwan</span>
+          <span class="ort__stadt">Taipeh</span>
+          <span class="ort__zeit">--:--</span>
+          <span class="ort__licht kapitaelchen">–</span>
+          <span class="ort__stand">Guide in Arbeit</span>
+        </li>
+        <li class="ort" data-zeitzone="Africa/Porto-Novo" data-lat="6.37" data-lon="2.43">
+          <span class="ort__land">Benin</span>
+          <span class="ort__stadt">Cotonou</span>
+          <span class="ort__zeit">--:--</span>
+          <span class="ort__licht kapitaelchen">–</span>
+          <span class="ort__stand">Guide in Arbeit</span>
+        </li>
+        <li class="ort" data-zeitzone="Asia/Colombo" data-lat="6.93" data-lon="79.86">
+          <span class="ort__land">Sri Lanka</span>
+          <span class="ort__stadt">Colombo</span>
+          <span class="ort__zeit">--:--</span>
+          <span class="ort__licht kapitaelchen">–</span>
+          <span class="ort__stand">Notizen, Guide folgt</span>
+        </li>
+        <li class="ort" data-zeitzone="Europe/Berlin" data-lat="52.52" data-lon="13.40">
+          <span class="ort__land">Deutschland</span>
+          <span class="ort__stadt">Berlin</span>
+          <span class="ort__zeit">--:--</span>
+          <span class="ort__licht kapitaelchen">–</span>
+          <span class="ort__stand">Zuhause</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="buecher" aria-labelledby="buecher-titel">
+    <div class="huelle trilogie__raster">
+      <figure class="sternfeld">
+        <svg id="sterne" viewBox="0 0 600 380" role="img" aria-label="137 von 1000 Sternen leuchten, Beispielwert"></svg>
+        <figcaption><b>137</b> von 1.000 <span class="beispiel kapitaelchen">Beispielwert</span><br>Jeder Eintrag zündet einen Stern an.</figcaption>
+      </figure>
+      <div class="trilogie__text">
+        <p class="eyebrow kapitaelchen">Bücher</p>
+        <h2 id="buecher-titel">Die Ursprungstrilogie</h2>
+        <p>Drei Romane über die Anfänge der menschlichen Zivilisation. Daran habe ich einen Großteil meiner Zwanziger gearbeitet. Es gab Gespräche mit großen Agenturen. Am Ende hieß es, so etwas lasse sich nicht verkaufen.</p>
+        <p>Vielleicht stimmt das. Wenn sich tausend Leute finden, die die Trilogie lesen wollen, erscheint sie hier.</p>
+        <form class="formular" id="trilogieForm" novalidate>
+          <label class="formular__label kapitaelchen" for="trilogieMail">E-Mail für die Liste</label>
+          <div class="formular__zeile">
+            <input id="trilogieMail" name="email" type="email" autocomplete="email" placeholder="name@beispiel.de" required>
+            <button class="knopf knopf--voll" type="submit">Auf die Liste</button>
+          </div>
+          <p class="formular__status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt" id="ueber" aria-labelledby="ueber-titel">
+    <div class="huelle ueber__raster">
+      <h2 id="ueber-titel">Über mich</h2>
+      <div>
+        <p>Ich heiße Dominik Jäkel. Ich schreibe, und ich reise, meistens langsam und oft auf fremden Sofas. Über sechzig Länder bisher.</p>
+        <p>Ich lese Borges, Ted Chiang und Benjamín Labatut und schreibe über das, was zwischen Orten und Büchern liegt: Literatur und Philosophie, den leisen Verfall von Institutionen, die Ökonomie der Aufmerksamkeit. Und über Berlin bei Nacht.</p>
+        <p class="ueber__klein">Gelegentlich übernehme ich ausgewählte Branding-Projekte. Anfragen gern per E-Mail.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="abschnitt briefe" id="briefe" aria-labelledby="briefe-titel">
+    <div class="huelle briefe__raster">
+      <div>
+        <p class="eyebrow kapitaelchen">Morgengrauen</p>
+        <h2 id="briefe-titel">Briefe</h2>
+      </div>
+      <div>
+        <p>Ein Brief alle drei bis vier Wochen. Selten. Dann sorgfältig.</p>
+        <form class="formular" id="briefForm" novalidate>
+          <label class="formular__label kapitaelchen" for="briefMail">E-Mail-Adresse</label>
+          <div class="formular__zeile">
+            <input id="briefMail" name="email" type="email" autocomplete="email" placeholder="name@beispiel.de" required>
+            <button class="knopf knopf--voll" type="submit">Abonnieren</button>
+          </div>
+          <p class="formular__status" role="status" aria-live="polite"></p>
+          <p class="formular__klein">Abmelden geht jederzeit mit einem Klick.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="fuss">
+  <div class="huelle fuss__innen">
+    <p><span class="fuss__marke" data-brand>Nachtseite</span><span data-byline> · Dominik Jäkel</span></p>
+    <nav aria-label="Kanäle und Rechtliches">
+      <a href="#">Instagram</a>
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<aside class="namenstest kapitaelchen" aria-label="Namen ausprobieren">
+  <div class="namenstest__innen">
+    <a class="namenstest__zurueck" href="index.html">←<span> Übersicht</span></a>
+    <span class="namenstest__label" id="namenLabel">Name testen</span>
+    <div class="namenstest__leiste">
+      <div class="chips" role="radiogroup" aria-labelledby="namenLabel"></div>
+      <input class="chip chip--eingabe" id="eigenerName" type="text" maxlength="28" placeholder="Eigener Name …" aria-label="Eigenen Namen testen, mit Enter bestätigen">
+    </div>
+  </div>
+</aside>
+
+<script>
+(() => {
+  const ENTWURF = 'Entwurf B';
+  const STANDARD = 'Nachtseite';
+  const NAMEN = [
+    ['Nachtseite', 'Was nachts geschrieben wird.'],
+    ['Untertext', 'Notizen von unterwegs. Und was darunter liegt.'],
+    ['Untertagebuch', 'Ein Tagebuch von unter Tage. Und von unterwegs.'],
+    ['Exkurs', 'Reisen und die Abschweifungen dazwischen.'],
+    ['Umweg', 'Umwege erhöhen die Ortskenntnis.'],
+    ['Uqbar', 'Aus über sechzig Ländern. Und einem, das es nicht gibt.'],
+    ['Ortszeit', 'Wie spät es woanders ist.'],
+    ['Dominik Jäkel', 'Autor und Reisender.']
+  ];
+
+  const gruppe = document.querySelector('.chips');
+  const eigen = document.getElementById('eigenerName');
+  const riesenmarke = document.getElementById('held-marke');
+
+  // Große Wortmarke füllt die Zeile: höchstens 8rem, bei langen Namen kleiner
+  const GRENZE = 128;
+  function einpassen() {
+    riesenmarke.style.fontSize = GRENZE + 'px';
+    const faktor = Math.min(1, riesenmarke.clientWidth / riesenmarke.scrollWidth);
+    let groesse = Math.floor(GRENZE * faktor);
+    riesenmarke.style.fontSize = groesse + 'px';
+    while (riesenmarke.scrollWidth > riesenmarke.clientWidth && groesse > 18) {
+      groesse -= 1;
+      riesenmarke.style.fontSize = groesse + 'px';
+    }
+  }
+
+  function anwenden(name) {
+    const eintrag = NAMEN.find(n => n[0] === name);
+    const claim = eintrag ? eintrag[1] : 'Dein Vorschlag. Wie liest er sich?';
+    document.querySelectorAll('[data-brand]').forEach(el => { el.textContent = name; });
+    document.querySelectorAll('[data-claim]').forEach(el => { el.textContent = claim; });
+    document.querySelectorAll('[data-byline]').forEach(el => { el.hidden = name === 'Dominik Jäkel'; });
+    document.title = name + ' · ' + ENTWURF;
+    gruppe.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-checked', String(b.dataset.name === name)));
+    eigen.classList.toggle('ist-aktiv', !eintrag);
+    einpassen();
+  }
+
+  NAMEN.forEach(([name]) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.setAttribute('role', 'radio');
+    b.dataset.name = name;
+    b.textContent = name;
+    b.addEventListener('click', () => { eigen.value = ''; anwenden(name); });
+    gruppe.appendChild(b);
+  });
+  const eigenenNamenAnwenden = () => { const w = eigen.value.trim(); if (w) anwenden(w); };
+  eigen.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); eigenenNamenAnwenden(); } });
+  eigen.addEventListener('change', eigenenNamenAnwenden);
+  anwenden(STANDARD);
+  window.addEventListener('resize', einpassen);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(einpassen);
+
+  // Mondphase (mittlerer synodischer Monat, Referenz-Neumond 6. Januar 2000, 18:14 UTC)
+  const SYNODISCH = 29.530588853;
+  const alter = ((((Date.now() - Date.UTC(2000, 0, 6, 18, 14)) / 86400000) % SYNODISCH) + SYNODISCH) % SYNODISCH;
+  const phase = alter / SYNODISCH;
+  const beleuchtet = (1 - Math.cos(2 * Math.PI * phase)) / 2;
+  const mondname =
+    alter < 1 || alter >= 28.5 ? 'Neumond' :
+    alter < 6.4 ? 'zunehmende Sichel' :
+    alter < 8.4 ? 'erstes Viertel' :
+    alter < 13.8 ? 'zunehmender Mond' :
+    alter < 15.8 ? 'Vollmond' :
+    alter < 21.1 ? 'abnehmender Mond' :
+    alter < 23.1 ? 'letztes Viertel' : 'abnehmende Sichel';
+  const R = 78;
+  const k = Math.cos(2 * Math.PI * phase);
+  const zunehmend = phase < .5;
+  const aussen = zunehmend ? 1 : 0;
+  const innen = (k > 0) === zunehmend ? 0 : 1;
+  const d = 'M 0 ' + (-R) + ' A ' + R + ' ' + R + ' 0 0 ' + aussen + ' 0 ' + R + ' A ' + (Math.abs(k) * R).toFixed(2) + ' ' + R + ' 0 0 ' + innen + ' 0 ' + (-R) + ' Z';
+  document.getElementById('mondLicht').setAttribute('d', d);
+  document.getElementById('mondLichtClip').setAttribute('d', d);
+  const prozent = Math.round(beleuchtet * 100);
+  document.getElementById('mondName').textContent = mondname;
+  document.getElementById('mondProzent').textContent = prozent;
+  document.getElementById('mondKurz').textContent = prozent;
+
+  // Sonnenhöhe (Näherung, etwa ein Grad genau) für Tag, Dämmerung, Nacht
+  const RAD = Math.PI / 180;
+  function sonnenhoehe(lat, lon, datum) {
+    const n = datum.getTime() / 86400000 - 10957.5;
+    const g = (357.529 + 0.98560028 * n) * RAD;
+    const q = 280.459 + 0.98564736 * n;
+    const L = (q + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * RAD;
+    const e = (23.439 - 0.00000036 * n) * RAD;
+    const ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
+    const dek = Math.asin(Math.sin(e) * Math.sin(L));
+    const gmst = ((18.697374558 + 24.06570982441908 * n) % 24 + 24) % 24;
+    const stundenwinkel = (gmst * 15 + lon) * RAD - ra;
+    return Math.asin(Math.sin(lat * RAD) * Math.sin(dek) + Math.cos(lat * RAD) * Math.cos(dek) * Math.cos(stundenwinkel)) / RAD;
+  }
+  const licht = h => h > 0 ? 'tag' : h > -6 ? 'daemmerung' : 'nacht';
+  const LICHTWORT = { tag: 'Tag', daemmerung: 'Dämmerung', nacht: 'Nacht' };
+  const uhr = zone => new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: zone }).format(new Date());
+
+  function aktualisieren() {
+    const jetzt = new Date();
+    document.querySelectorAll('.ort').forEach(ort => {
+      try { ort.querySelector('.ort__zeit').textContent = uhr(ort.dataset.zeitzone); } catch (e) { /* Zeitzone unbekannt */ }
+      const zustand = licht(sonnenhoehe(+ort.dataset.lat, +ort.dataset.lon, jetzt));
+      ort.dataset.licht = zustand;
+      ort.querySelector('.ort__licht').textContent = LICHTWORT[zustand];
+    });
+    try { document.getElementById('zeitBerlin').textContent = uhr('Europe/Berlin'); } catch (e) { /* Zeitzone unbekannt */ }
+    document.getElementById('lichtBerlin').textContent = LICHTWORT[licht(sonnenhoehe(52.52, 13.40, jetzt))];
+  }
+  aktualisieren();
+  setInterval(aktualisieren, 30000);
+
+  // Sternfeld: tausend Punkte, die gesetzten leuchten
+  const GESETZT = 137;
+  let saat = 42;
+  const zufall = () => { saat = (saat * 16807) % 2147483647; return (saat - 1) / 2147483646; };
+  let sterne = '';
+  for (let i = 0; i < 1000; i++) {
+    const x = (6 + zufall() * 588).toFixed(1);
+    const y = (6 + zufall() * 368).toFixed(1);
+    if (i < GESETZT) {
+      sterne += '<circle class="stern an" cx="' + x + '" cy="' + y + '" r="' + (1.3 + zufall() * 1.5).toFixed(2) + '" style="--v:' + (zufall() * 5).toFixed(2) + 's"></circle>';
+    } else {
+      sterne += '<circle class="stern" cx="' + x + '" cy="' + y + '" r="' + (.7 + zufall() * .6).toFixed(2) + '"></circle>';
+    }
+  }
+  document.getElementById('sterne').innerHTML = sterne;
+
+  // Formulare: im Entwurf ohne Versand
+  document.querySelectorAll('form.formular').forEach(f => {
+    f.addEventListener('submit', e => {
+      e.preventDefault();
+      const feld = f.querySelector('input[type="email"]');
+      const status = f.querySelector('.formular__status');
+      if (!feld.value || !feld.checkValidity()) {
+        status.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben, zum Beispiel name@beispiel.de.';
+        feld.focus();
+        return;
+      }
+      status.textContent = 'Entwurf: Hier ginge jetzt eine Bestätigungsmail raus (Double-Opt-in).';
+    });
+  });
+})();
+</script>
+</body>
+</html>

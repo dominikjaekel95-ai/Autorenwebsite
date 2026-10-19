@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Autorenwebsite Dominik Jäkel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..600&display=swap">
+<style>
+/* Layout: ein Arbeitsblatt. Oben die drei Richtungen als Karten, darunter Namen, Empfehlung und nächste Schritte. */
+:root {
+  --grund: #F3F3F6;
+  --flaeche: #FFFFFF;
+  --text: #1B1D2A;
+  --text-2: #5B5E73;
+  --linie: #DCDDE6;
+  --akzent: #3B45B5;
+  --f-ui: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-lese: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --grund: #13141B; --flaeche: #1B1D27; --text: #E8E8EF; --text-2: #A4A6B9; --linie: #2E3140; --akzent: #A9B0FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --grund: #13141B; --flaeche: #1B1D27; --text: #E8E8EF; --text-2: #A4A6B9; --linie: #2E3140; --akzent: #A9B0FF;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--grund); color: var(--text); font-family: var(--f-lese); font-size: 1.0625rem; line-height: 1.6; }
+a { color: var(--akzent); }
+img { max-width: 100%; }
+:focus-visible { outline: 2px solid var(--akzent); outline-offset: 3px; }
+.huelle {
+  max-width: 72rem; margin-inline: auto;
+  padding-left: max(clamp(16px, 4vw, 40px), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(16px, 4vw, 40px), env(safe-area-inset-right, 0px));
+}
+.versal { font-family: var(--f-ui); font-weight: 600; text-transform: uppercase; letter-spacing: .12em; font-size: .78rem; color: var(--text-2); }
+
+.kopf { padding-block: clamp(2.5rem, 6vw, 4.5rem) 2rem; }
+.kopf h1 { margin: .6rem 0 0; font-family: var(--f-ui); font-weight: 700; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.05; letter-spacing: -.02em; text-wrap: balance; }
+.kopf .lead { margin: 1rem 0 0; max-width: 44rem; font-size: 1.2rem; }
+.kopf .hinweis { margin: .75rem 0 0; color: var(--text-2); font-size: .98rem; }
+
+.richtungen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; padding-bottom: 3rem; }
+.richtung { display: flex; flex-direction: column; background: var(--flaeche); border: 1px solid var(--linie); border-radius: 8px; overflow: hidden; }
+.richtung__bild { display: block; aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 1px solid var(--linie); background: var(--grund); }
+.richtung__bild img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top left; transition: transform .4s ease; }
+.richtung__bild:hover img { transform: scale(1.02); }
+.richtung__text { display: flex; flex-direction: column; gap: .55rem; padding: 1.1rem 1.25rem 1.3rem; flex: 1; }
+.richtung h2 { margin: 0; font-family: var(--f-ui); font-weight: 700; font-size: 1.5rem; line-height: 1.15; }
+.richtung h2 a { color: var(--text); text-decoration: none; }
+.richtung__these { margin: 0; font-style: italic; }
+.richtung p { margin: 0; }
+.richtung ul { margin: 0; padding-left: 1.1rem; color: var(--text-2); font-size: .98rem; }
+.knopf {
+  align-self: flex-start; margin-top: auto;
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .6rem 1rem; border-radius: 6px;
+  background: var(--text); color: var(--grund);
+  font-family: var(--f-ui); font-weight: 600; font-size: .92rem; text-decoration: none;
+}
+.knopf:hover { background: var(--akzent); color: var(--flaeche); }
+
+.abschnitt { border-top: 1px solid var(--linie); padding-block: clamp(2.25rem, 5vw, 3.5rem); }
+.abschnitt h2 { margin: 0 0 .4rem; font-family: var(--f-ui); font-weight: 700; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.01em; }
+.abschnitt > .huelle > p { max-width: 44rem; }
+.tabelle { overflow-x: auto; margin-top: 1.25rem; background: var(--flaeche); border: 1px solid var(--linie); border-radius: 8px; }
+table { width: 100%; min-width: 46rem; border-collapse: collapse; }
+th, td { text-align: left; vertical-align: top; padding: .8rem 1rem; border-bottom: 1px solid var(--linie); }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+thead th { font-family: var(--f-ui); font-weight: 600; text-transform: uppercase; letter-spacing: .1em; font-size: .74rem; color: var(--text-2); }
+tbody th { font-family: var(--f-ui); font-weight: 700; white-space: nowrap; }
+td.rolle { font-family: var(--f-ui); font-size: .92rem; color: var(--text-2); white-space: nowrap; }
+.empfohlen th::after { content: "Favorit"; margin-left: .5rem; padding: .1rem .45rem; border-radius: 99px; background: var(--akzent); color: var(--flaeche); font-size: .7rem; font-weight: 600; letter-spacing: .04em; vertical-align: .15em; }
+.klein { color: var(--text-2); font-size: .95rem; }
+
+.zwei { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem 3rem; }
+.zwei h3 { margin: 1.4rem 0 .3rem; font-family: var(--f-ui); font-size: 1.05rem; }
+.zwei p { margin: 0 0 .8rem; }
+ol.schritte { margin: .8rem 0 0; padding-left: 1.3rem; display: grid; gap: .6rem; }
+ol.schritte li::marker { font-family: var(--f-ui); font-weight: 700; color: var(--akzent); }
+.fuss { padding-block: 2rem 3rem; color: var(--text-2); font-size: .95rem; }
+
+@media (max-width: 960px) { .richtungen { grid-template-columns: minmax(0, 1fr); max-width: 40rem; } }
+@media (max-width: 760px) { .zwei { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .richtung__bild img { transition: none; } }
+</style>
+</head>
+<body>
+<header class="huelle kopf">
+  <p class="versal">Erste Entwürfe · Oktober 2026</p>
+  <h1>Drei Richtungen für die Autorenwebsite</h1>
+  <p class="lead">Drei Entwürfe für die Startseite von Dominik Jäkel: Journal, Länderguides, Bücher. Jede Richtung zeigt einen anderen Namen. Unten in jedem Entwurf lässt sich jeder Namenskandidat ausprobieren, auch ein eigener.</p>
+  <p class="hinweis">Alle Texte sind Beispieltexte. Die Formulare verschicken nichts.</p>
+</header>
+
+<main>
+  <section class="huelle richtungen" aria-label="Entwürfe">
+    <article class="richtung">
+      <a class="richtung__bild" href="a-untertext.html" tabindex="-1" aria-hidden="true"><img src="vorschau/a-untertext.jpg" alt="" width="1280" height="800" loading="lazy"></a>
+      <div class="richtung__text">
+        <p class="versal">Entwurf A</p>
+        <h2><a href="a-untertext.html">Untertext</a></h2>
+        <p class="richtung__these">Ein Blatt mit zwei Schichten.</p>
+        <p>Unter jedem Text steht, worum es eigentlich ging. Ein Schalter für UV-Licht macht die untere Schrift sichtbar, wie bei einem Palimpsest. Literarisch und ruhig, mit Randnotizen.</p>
+        <ul>
+          <li>Strichliste mit tausend Strichen für die Trilogie</li>
+          <li>Länder als Steckbriefe mit Leseliste</li>
+        </ul>
+        <a class="knopf" href="a-untertext.html">Entwurf A öffnen</a>
+      </div>
+    </article>
+    <article class="richtung">
+      <a class="richtung__bild" href="b-nachtseite.html" tabindex="-1" aria-hidden="true"><img src="vorschau/b-nachtseite.jpg" alt="" width="1280" height="800" loading="lazy"></a>
+      <div class="richtung__text">
+        <p class="versal">Entwurf B</p>
+        <h2><a href="b-nachtseite.html">Nachtseite</a></h2>
+        <p class="richtung__these">Eine Nacht, von der Dämmerung bis zum Morgengrauen.</p>
+        <p>Mit dem echten Mondstand von heute, Ortszeit und Tageslicht in den Reiseländern und dem Untertagebuch als Rubrik. Am nächsten am Gefühl von „Nachtschicht“.</p>
+        <ul>
+          <li>Sternfeld: Jeder Eintrag für die Trilogie zündet einen Stern an</li>
+          <li>Tagebuch mit Uhrzeit als Überschrift</li>
+        </ul>
+        <a class="knopf" href="b-nachtseite.html">Entwurf B öffnen</a>
+      </div>
+    </article>
+    <article class="richtung">
+      <a class="richtung__bild" href="c-dominik-jaekel.html" tabindex="-1" aria-hidden="true"><img src="vorschau/c-dominik-jaekel.jpg" alt="" width="1280" height="800" loading="lazy"></a>
+      <div class="richtung__text">
+        <p class="versal">Entwurf C</p>
+        <h2><a href="c-dominik-jaekel.html">Dominik Jäkel</a></h2>
+        <p class="richtung__these">Der Name als Haus, das Journal heißt Untertext.</p>
+        <p>Eine Atlasseite: Länderregister mit Ortszeiten, der Aufbau eines Guides in neun Kapiteln, ein Globus mit Wegen ab Berlin. Am stärksten auf das Reisen ausgerichtet.</p>
+        <ul>
+          <li>Maßstabsleiste 1 : 1.000 für die Trilogie</li>
+          <li>Unten wird hier der Name des Journals getestet</li>
+        </ul>
+        <a class="knopf" href="c-dominik-jaekel.html">Entwurf C öffnen</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="abschnitt" aria-labelledby="namen-titel">
+    <div class="huelle">
+      <h2 id="namen-titel">Namen auf der Shortlist</h2>
+      <p>Die Nachtschicht-Familie trifft das Gefühl, die Reise-Familie das Unterwegssein. Gedankenreisen und Weltenwandern stehen nicht drauf: Das eine ist im Deutschen von Entspannungsübungen besetzt, das andere klingt nach Fantasy. Die Idee dahinter, Reisen im Kopf und auf der Karte, steckt in Exkurs, Umweg und Uqbar.</p>
+      <div class="tabelle">
+        <table>
+          <thead>
+            <tr><th scope="col">Name</th><th scope="col">Was drinsteckt</th><th scope="col">Englisch</th><th scope="col">Taugt als</th></tr>
+          </thead>
+          <tbody>
+            <tr class="empfohlen"><th scope="row">Untertext</th><td>Das Ungesagte unter dem Gesagten. „Unterwegs“ klingt mit.</td><td><i>Undertext</i>: die abgeschabte, ältere Schrift unter einem Palimpsest</td><td class="rolle">Überbrand</td></tr>
+            <tr><th scope="row">Nachtseite</th><td>Die dunkle Seite der Dinge, ein Begriff der Romantik. Und die Seite, die nachts geschrieben wird.</td><td><i>Night Pages</i>, Gegenstück zu den „Morning Pages“</td><td class="rolle">Überbrand</td></tr>
+            <tr><th scope="row">Exkurs</th><td>Die Abschweifung im Text, verwandt mit der Exkursion. Gedankenreise ohne Esoterik.</td><td><i>Excursus</i></td><td class="rolle">Überbrand</td></tr>
+            <tr><th scope="row">Umweg</th><td>„Umwege erhöhen die Ortskenntnis.“</td><td><i>Detour</i></td><td class="rolle">Überbrand oder Claim</td></tr>
+            <tr><th scope="row">Uqbar</th><td>Das Land, das Borges erfunden hat, beschrieben nur in einem einzigen Lexikon. Reisen durch Lesen.</td><td>gleich</td><td class="rolle">International</td></tr>
+            <tr><th scope="row">Nachtschrift</th><td>Barbiers Nachtschrift, eine Vorform der Brailleschrift: Schrift, die man im Dunkeln lesen kann.</td><td><i>Night Writing</i></td><td class="rolle">Überbrand</td></tr>
+            <tr><th scope="row">Ortszeit</th><td>Die Uhrzeit, die dort gilt, wo man gerade ist.</td><td><i>Local Time</i></td><td class="rolle">Rubrik</td></tr>
+            <tr><th scope="row">Untertagebuch</th><td>Unter Tage und Tagebuch zugleich. Originell, aber lang und eng.</td><td>schwer übersetzbar</td><td class="rolle">Rubrik fürs Tagebuch</td></tr>
+            <tr><th scope="row">Dominik Jäkel</th><td>Trägt alles: Reisen, Romane, Essays. Auch in zwanzig Jahren und auf Englisch.</td><td>gleich</td><td class="rolle">Fundament</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="klein">Domains, Instagram-Namen und Markenregister sind noch nicht geprüft.</p>
+    </div>
+  </section>
+
+  <section class="abschnitt" aria-labelledby="empfehlung-titel">
+    <div class="huelle zwei">
+      <div>
+        <h2 id="empfehlung-titel">Empfehlung</h2>
+        <p>Untertext als Überbrand für Journal, Briefe und Instagram. Dominik Jäkel steht als Absender auf jeder Seite.</p>
+        <p>dominikjaekel.de in jedem Fall sichern und auf die Seite zeigen lassen. Ist untertext.de vergeben, läuft die Seite unter dem Namen, und Untertext wird das Journal darin, so wie in Entwurf C.</p>
+        <h3>Rubriken</h3>
+        <p>Untertagebuch für die kurzen Notizen, Länder für die Guides, Bücher für eigene Texte und die Trilogie.</p>
+        <h3>Was draußen bleibt</h3>
+        <p>Freelancing und Prototypen: höchstens ein Satz unter „Über mich“. Perry Rhodan unter Pseudonym bleibt getrennt.</p>
+      </div>
+      <div>
+        <h2>Nächste Schritte</h2>
+        <ol class="schritte">
+          <li>Namen festlegen. Danach Domains (.de und .com), Instagram-Namen und die Markenregister von DPMA und EUIPO prüfen.</li>
+          <li>Eine Richtung wählen oder mischen, zum Beispiel A als Grundton mit dem Länderregister aus C.</li>
+          <li>Inhalte sammeln: drei bis fünf echte Texte, ein Länderguide als Vorlage, Fotos, ein Text für „Über mich“.</li>
+          <li>Die echte Seite bauen: Markdown-Texte, Deutsch und Englisch, Newsletter mit Double-Opt-in, Impressum und Datenschutz.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="huelle fuss">
+  <p>Entwürfe im Repository unter <code>entwuerfe/</code>. Stand: 19. Oktober 2026.</p>
+</footer>
+</body>
+</html>

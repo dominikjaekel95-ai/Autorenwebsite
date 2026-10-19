@@ -14,8 +14,9 @@
  *     daten50: 'daten/welt-50m.js', pendeln: true,
  *     beimAnsichtWechsel: teile => {}, beimEingriff: () => {}, beiChronikEnde: grund => {}
  *   });
- *   g.ebene({ orte: [{ name, lat, lon, rang, kurz }], laender: true, blick: { mitte: [lon, lat], k }, farben: { akzent } }, { fliegen: true });
+ *   g.ebene({ orte: [{ name, lat, lon, rang, kurz, neben }], laender: true, blick: { mitte: [lon, lat], k }, farben: { akzent } }, { fliegen: true });
  *                                 // farben in der Ebene überschreiben die Grundfarben, solange die Ebene gilt
+ *                                 // neben: true zeichnet einen Nebenort (offener Punkt, leise Beschriftung, gestrichelte Spur)
  *   g.fliegen([lon, lat], k)      -> Promise 'fertig' | 'abgebrochen'
  *   g.ortAnfliegen(ort, k), g.landAnfliegen(iso), g.aktiv('Name' | 'A · B' | null), g.auswahl(iso | null)
  *   g.zoomen(faktor), g.ganz()
@@ -53,7 +54,7 @@
     let k = 1, seite = 600, R = 280, dpr = 1;
     let hover = null, auswahl = null, aktiverOrt = null;
     let flug = null, flugEnde = null;
-    let route = null;              // { punkte: [[lon, lat]], fortschritt: Segmente als Kommazahl }
+    let route = null;              // { punkte: [[lon, lat]], neben: [bool], fortschritt: Segmente als Kommazahl }
     let sichtbarBis = null;        // während einer Chronik: nur Orte bis zu diesem Index zeigen
     let chronikNummer = 0;
 
@@ -182,8 +183,10 @@
           const bis = i < ganz ? 1 : rest;
           if (bis <= 0) continue;
           ctx.globalAlpha = i < ganz - 2 ? .35 : .85;
+          ctx.setLineDash(route.neben && (route.neben[i] || route.neben[i + 1]) ? [2.5, 3.5] : []);
           linie(bogen(route.punkte[i], route.punkte[i + 1], bis));
         }
+        ctx.setLineDash([]);
         ctx.globalAlpha = 1;
       }
 
@@ -198,16 +201,17 @@
         if (!sichtbar(pos)) return;
         const p = projektion(pos);
         const aktiv = !!aktiverOrt && aktiverOrt.split(' · ').includes(ort.name);
-        ctx.beginPath(); ctx.arc(p[0], p[1], aktiv ? 7 : 5.5, 0, Math.PI * 2); ctx.fillStyle = farben.akzentHauch; ctx.fill();
-        ctx.beginPath(); ctx.arc(p[0], p[1], 2.6, 0, Math.PI * 2); ctx.fillStyle = farben.akzent; ctx.fill();
+        ctx.beginPath(); ctx.arc(p[0], p[1], aktiv ? 7 : ort.neben ? 4.5 : 5.5, 0, Math.PI * 2); ctx.fillStyle = farben.akzentHauch; ctx.fill();
+        if (ort.neben) { ctx.beginPath(); ctx.arc(p[0], p[1], 2.3, 0, Math.PI * 2); ctx.fillStyle = farben.papier; ctx.fill(); ctx.lineWidth = 1.1; ctx.strokeStyle = farben.akzent; ctx.stroke(); }
+        else { ctx.beginPath(); ctx.arc(p[0], p[1], 2.6, 0, Math.PI * 2); ctx.fillStyle = farben.akzent; ctx.fill(); }
         belegt.push([p[0] - 3, p[1] - 3, p[0] + 3, p[1] + 3]);   // Beschriftungen sollen keine Punkte verdecken
         const name = ort.beschriftung || ort.kurz || ort.name;
         const nah = gruppen.find(g => Math.hypot(g.p[0] - p[0], g.p[1] - p[1]) < 16);
-        if (nah) { nah.namen.push(name); nah.aktiv = nah.aktiv || aktiv; } else gruppen.push({ p, namen: [name], aktiv });
+        if (nah) { nah.namen.push(name); nah.aktiv = nah.aktiv || aktiv; nah.neben = nah.neben && !!ort.neben; } else gruppen.push({ p, namen: [name], aktiv, neben: !!ort.neben });
       });
       // Kollision mit 4 px Luft, der aktive Ort wird zuerst beschriftet
       const frei = b => !belegt.some(x => b[0] - 4 < x[2] && b[2] + 4 > x[0] && b[1] < x[3] && b[3] > x[1]);
-      gruppen.sort((a, b) => b.aktiv - a.aktiv).forEach(({ p, namen, aktiv }) => {
+      gruppen.sort((a, b) => b.aktiv - a.aktiv).forEach(({ p, namen, aktiv, neben }) => {
         const text = versalien ? namen.join(' · ').toUpperCase() : namen.join(' · ');
         const breite = ctx.measureText(text).width + 2;
         const boxRechts = [p[0] + 9, p[1] - 8, p[0] + 9 + breite, p[1] + 8];
@@ -219,7 +223,7 @@
         ctx.textAlign = rechts ? 'left' : 'right';
         ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeStyle = farben.papier;
         ctx.strokeText(text, rechts ? p[0] + 9 : p[0] - 9, p[1]);
-        ctx.fillStyle = aktiv ? farben.akzent : farben.text;
+        ctx.fillStyle = aktiv ? farben.akzent : neben ? farben.textLeise : farben.text;
         ctx.fillText(text, rechts ? p[0] + 9 : p[0] - 9, p[1]);
       });
 
@@ -404,7 +408,7 @@
       const nummer = chronikNummer = Date.now() + Math.random();
       const pause = einst.pause !== undefined ? einst.pause : (ruhig ? 2200 : 1500);
       const zoomZiel = einst.zoom || 2.6;
-      route = { punkte: stationen.map(s => [s.lon, s.lat]), fortschritt: 0 };
+      route = { punkte: stationen.map(s => [s.lon, s.lat]), neben: stationen.map(s => !!s.neben), fortschritt: 0 };
       sichtbarBis = 0;
       aktiverOrt = stationen[0].name;
       if (typeof einst.beiStation === 'function') einst.beiStation(stationen[0], 0);
@@ -444,7 +448,7 @@
     function routeSetzen(stationen) {
       const punkte = stationen.map(s => [s.lon, s.lat]);
       const gleich = route && route.punkte.length === punkte.length && route.punkte.every((p, j) => p[0] === punkte[j][0] && p[1] === punkte[j][1]);
-      if (!gleich) route = { punkte, fortschritt: 0 };
+      if (!gleich) route = { punkte, neben: stationen.map(s => !!s.neben), fortschritt: 0 };
     }
     function chronikSchritt(stationen, i, einst = {}) {
       chronikStoppen('abgebrochen');

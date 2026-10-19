@@ -19,16 +19,17 @@ window.INHALT = {
   winzig: { MC: [7.42, 43.73], VA: [12.45, 41.90], HK: [114.17, 22.32], CV: [-23.6, 15.1] },
   ansichten: { FR: [2.5, 46.6, 5.5], NL: [5.3, 52.2, 12], US: [-98, 39, 2.1], RU: [70, 60, 1.5], PT: [-8.1, 39.7, 9], ES: [-3.7, 40.2, 6], CN: [104, 35, 2.4], CA: [-96, 58, 1.8], DK: [10, 56, 10] },
 
-  // Lebensstationen in zeitlicher Reihenfolge (für die Chronik)
+  // Lebensstationen in zeitlicher Reihenfolge (für die Chronik).
+  // neben: true = Nebenort, ein längerer Aufenthalt, während der Wohnort woanders war (Colombo, Cotonou, Mallorca)
   leben: [
     { name: 'Dortmund', jahr: 'bis 2014', von: null, bis: 2014, lat: 51.51, lon: 7.47 },
     { name: 'Freiburg', jahr: '2014', von: 2014, lat: 47.99, lon: 7.85 },
     { name: 'Potsdam', jahr: '2015', von: 2015, lat: 52.39, lon: 13.06 },
-    { name: 'Colombo', land: 'Sri Lanka', jahr: '2016', von: 2016, lat: 6.93, lon: 79.86 },
-    { name: 'Cotonou', land: 'Benin', jahr: '2018', von: 2018, lat: 6.37, lon: 2.43 },
+    { name: 'Colombo', land: 'Sri Lanka', jahr: '2016', von: 2016, neben: true, lat: 6.93, lon: 79.86 },
+    { name: 'Cotonou', land: 'Benin', jahr: '2018', von: 2018, neben: true, lat: 6.37, lon: 2.43 },
     { name: 'Kaohsiung', land: 'Taiwan', jahr: '2018', von: 2018, lat: 22.63, lon: 120.30 },
     { name: 'Berlin', jahr: '2022', von: 2022, lat: 52.52, lon: 13.40 },
-    { name: 'Mallorca', jahr: '2023', von: 2023, lat: 39.57, lon: 2.65 }
+    { name: 'Mallorca', jahr: '2023', von: 2023, neben: true, lat: 39.57, lon: 2.65 }
   ],
 
   satoshi: {

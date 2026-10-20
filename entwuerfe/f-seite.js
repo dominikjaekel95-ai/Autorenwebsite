@@ -19,12 +19,16 @@
      FARBEN, SIENA, SIENA_EBENE   Grundfarben des Globus; Farben für Ebenen eigener Werke
      globus(opts)                  Globus mit den gemeinsamen Farben und Schriften; gibt die Maschine zurück oder null
      blickFuer(canvas, orte, bereich)  Mitte [lon, lat], bei der alle Orte im sichtbaren Teil des Globus stehen
-     tafel(el, inhalt), tafelReservieren(el, inhalte), stationInhalt(station, ausgang)
+     tafel(el, inhalt), tafelReservieren(el, inhalte), tafelPlatz(el, inhalte), stationInhalt(station, ausgang)
      stationen()                   Lebensstationen aus INHALT.leben
+     ursprungOrte(), ursprungInhalt(i)   die vier Orte der Trilogie; Tafel für einen Ort (-1: die ganze Trilogie)
      karteikarte.oeffnen(inhalt, ausloeser), .schliessen(), .offen()
-     buch.alle(), buch.karte(b), buch.zeile(b), buch.nachname(a), buch.titelKurz(t)
-     werkKarte(id)                 Karteikarte für ein eigenes Werk (id aus INHALT.werke)
+     buch.alle(), buch.karte(b, { person }), buch.zeile(b), buch.nachname(a), buch.titelKurz(t)
+     werkKarte(id, { person })     Karteikarte für ein eigenes Werk (id aus INHALT.werke)
      navigation()                  Navigation einrichten (läuft beim Laden von selbst)
+     leselinie(elemente, beiSchritt, o)   beim Scrollen: welches Element zuletzt die Leselinie erreicht hat (vor und zurück)
+     fortschritt(element, beiWert, o)     beim Scrollen: wie weit ein Element durch das Fenster gewandert ist, 0 bis 1
+     imBild(element, { starten, unterbrechen, fortsetzen })   eine Chronik hält an, wenn ihr Globus aus dem Bild ist
 */
 (function () {
   'use strict';
@@ -51,14 +55,43 @@
   const ruhig = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const schmal = () => window.innerWidth < 640;
   const breit = () => window.matchMedia('(min-width: 62.0625rem)').matches;
-  // Wert einer CSS-Länge in Pixeln, auch für Variablen mit clamp() oder vw: masz('--rand-l')
+  // Wert einer CSS-Länge in Pixeln, auch für Variablen mit clamp() oder vw: masz('--rand-l').
+  // Zeile und Ränder (ohne el gemessen) gelten bis zur nächsten Größenänderung des Fensters; was eine Seite selbst setzt
+  // (etwa --tafel-h), wird jedes Mal gemessen
+  const maszSpeicher = new Map(), FEST = ['--z', '--rand-l', '--rand-r'];
   function masz(name, el) {
+    const fest = !el && FEST.includes(name);
+    if (fest && maszSpeicher.has(name)) return maszSpeicher.get(name);
     const probe = document.createElement('div');
     probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;height:0;width:' + (name.startsWith('--') ? 'var(' + name + ')' : name);
     (el || document.body).appendChild(probe);
     const w = probe.getBoundingClientRect().width;
     probe.remove();
+    if (fest && w) maszSpeicher.set(name, w);
     return w;
+  }
+  /* --vb: die Breite des Fensters ohne Bildlaufleiste (100vw zählt eine sichtbare Leiste mit; dann wäre der Globus um ihre Breite
+     stärker angeschnitten, und Navigation und Bilder stünden neben seiner wirklichen Kante). Gesetzt, bevor die Seite ihren Globus
+     baut, und bei jeder Größenänderung zuerst (dieser Listener steht vor dem des Kerns). Ändert sich die Breite ohne Größenänderung
+     des Fensters (die Leiste erscheint), meldet FSeite eine Größenänderung, damit Kern und Seite neu messen. */
+  let vbJetzt = 0;
+  function vbSetzen() {
+    const w = document.documentElement.clientWidth;
+    if (!w || w === vbJetzt) return false;
+    vbJetzt = w;
+    document.documentElement.style.setProperty('--vb', w + 'px');
+    maszSpeicher.clear();
+    return true;
+  }
+  vbSetzen();
+  window.addEventListener('resize', () => { maszSpeicher.clear(); vbSetzen(); });
+  if ('ResizeObserver' in window) {
+    let vbUhr = 0;
+    new ResizeObserver(() => {
+      if (document.documentElement.clientWidth === vbJetzt) return;
+      clearTimeout(vbUhr);
+      vbUhr = setTimeout(() => { if (vbSetzen()) window.dispatchEvent(new Event('resize')); }, 60);
+    }).observe(document.documentElement);
   }
 
   // ---------- Zahlen, Jahre, Koordinaten ----------
@@ -105,8 +138,8 @@
   const jahrText = j => j == null ? '' : j < 0 ? 'um' + NBSP + (-j) + NBSP + 'v.' + NBSP + 'Chr.' : String(j);
   // „um 8000 v. Chr.“ in einem Stück halten
   const chr = t => String(t).replace(/(\d) v\. Chr\./g, '$1' + NBSP + 'v.' + NBSP + 'Chr.').replace(/\bum (\d)/g, 'um' + NBSP + '$1');
-  // Jahr für die große Zahl der Tafel; „bis 2014“ mit kleinem, kursivem „bis“
-  const jahrMarke = jahr => /^bis /.test(jahr || '') ? { html: '<span class="bis">bis</span>' + esc(jahr.slice(4)) } : String(jahr || '');
+  // Jahr für die große Zahl der Tafel; „bis 2014“ mit kleinem, kursivem „bis“ und einem echten Leerzeichen (Vorlesen und Kopieren)
+  const jahrMarke = jahr => /^bis /.test(jahr || '') ? { html: '<span class="bis">bis' + NBSP + '</span>' + esc(jahr.slice(4)) } : String(jahr || '');
 
   // ---------- Schrift und Satz ----------
   // Wartet, bis die drei Schnitte geladen sind, höchstens ms Millisekunden
@@ -140,6 +173,7 @@
 
   /* Globus mit den gemeinsamen Farben und Schriften. Optionen wie Globus.erstellen (canvas, flaeche, tipp, hinweis, tippText,
      beimEingriff, beiChronikEnde, beimAnsichtWechsel, farben, schrift); bereist, winzig und ansichten kommen aus INHALT.
+     radHinweis: false (oder eine Funktion, die false gibt), wo der Globus beim Scrollen mitgeht: kein Hinweis auf Strg oder ⌘.
      Mit namen: { orte(), spur(), aktiv() } setzt FSeite die Ortsnamen selbst, in einer zweiten Leinwand über dem Globus
      (aus E1: dicht beieinander liegende Orte als Block mit Führungslinie, Namen meiden die Spur und den angeschnittenen Rand):
        orte()  -> [{ name, text?, lat, lon, neben? }]   was jetzt beschriftet wird
@@ -176,6 +210,39 @@
     if (!mitlesen) proj = null;
     if (!g) return null;
     g.projektion = proj;
+
+    /* Der Kern misst seine Leinwand nur bei einer Größenänderung des Fensters neu. Ändert sich ihre Größe anders (die Seite setzt
+       --tafel-h, die Bildlaufleiste erscheint, das Globusband wechselt), meldet FSeite eine Größenänderung */
+    if ('ResizeObserver' in window) {
+      let breite = o.canvas.clientWidth, uhr = 0;
+      new ResizeObserver(() => {
+        const w = o.canvas.clientWidth;
+        if (!w || Math.abs(w - breite) < .5) return;
+        breite = w;
+        clearTimeout(uhr);
+        uhr = setTimeout(() => window.dispatchEvent(new Event('resize')), 30);
+      }).observe(o.canvas);
+    }
+
+    /* Der Kern zeigt bei jedem Rad über dem Globus, wie man zoomt, und hält den Hinweis, solange man ohne Pause weiterscrollt.
+       Jeder Hinweis erscheint darum höchstens einmal je Besuch und dann höchstens zwei Sekunden lang, egal wie oft der Kern ihn
+       neu anstößt. Wo der Globus beim Scrollen mitgeht (radHinweis: false, oder eine Funktion, die false gibt), ist das Rad über
+       ihm die gewollte Lesegeste: dort entfällt der Hinweis auf Strg oder ⌘ ganz; der Hinweis für zwei Finger bleibt */
+    if (o.hinweis && 'MutationObserver' in window) {
+      const el = o.hinweis;
+      let zeigt = null, uhr = 0;
+      const verbraucht = new Set();
+      const radAus = () => (typeof o.radHinweis === 'function' ? o.radHinweis() : o.radHinweis) === false;
+      new MutationObserver(() => {
+        if (el.hidden) { clearTimeout(uhr); uhr = 0; if (zeigt) verbraucht.add(zeigt); zeigt = null; return; }
+        const text = el.textContent;
+        if (verbraucht.has(text) || (radAus() && /halten und scrollen/.test(text))) { el.hidden = true; return; }
+        if (text === zeigt) return;
+        zeigt = text;
+        clearTimeout(uhr);
+        uhr = setTimeout(() => { el.hidden = true; }, 2000);
+      }).observe(el, { attributes: true, attributeFilter: ['hidden'], childList: true, characterData: true, subtree: true });
+    }
 
     // Keine Länderhervorhebung, solange gesperrt
     let gesperrt = false;
@@ -350,8 +417,41 @@
   }
 
   /* Mitte für einen Überblick: alle Orte im sichtbaren Teil der Leinwand (rechts kann der Fensterrand den Globus anschneiden),
-     möglichst weit vom Rand. bereich: { lon: [von, bis], lat: [von, bis], k } (k = Zoomfaktor, Vorgabe 1). Gibt [lon, lat] oder null. */
+     möglichst weit vom Rand. bereich: { lon: [von, bis], lat: [von, bis], k } (k = Zoomfaktor, Vorgabe 1). Gibt [lon, lat] oder null.
+     Zuerst streng: jeder Ort mindestens 40 px vom Rand der Scheibe und vom angeschnittenen Fensterrand, bei gleich guten Lagen die,
+     deren Orte um die Mitte des sichtbaren Teils liegen. Passt das nicht (die acht Lebensorte spannen 118 Längengrade), gelten
+     24 und 12 px; zuletzt die alte, weichere Regel. */
   function blickFuer(canvas, orte, bereich) {
+    for (const rand of [40, 24, 12]) { const m = blickStreng(canvas, orte, bereich, rand); if (m) return m; }
+    return blickWeich(canvas, orte, bereich);
+  }
+  function blickStreng(canvas, orte, bereich, RAND) {
+    const d3 = window.d3;
+    if (!d3 || !canvas || !orte || !orte.length) return null;
+    bereich = Object.assign({ lon: [-180, 180], lat: [-60, 70], k: 1, schritt: 1 }, bereich || {});
+    const S = canvas.clientWidth || 600, rS = S / 2 - 2, R = rS * Math.min(1, bereich.k);
+    const rechts = Math.min(S, document.documentElement.clientWidth - canvas.getBoundingClientRect().left);
+    const mx = rechts / 2, my = S / 2;
+    const pr = d3.geoOrthographic().clipAngle(90).translate([S / 2, S / 2]).scale(rS * bereich.k);
+    let best = null;
+    for (let lon = bereich.lon[0]; lon <= bereich.lon[1] + 1e-9; lon += bereich.schritt) for (let lat = bereich.lat[0]; lat <= bereich.lat[1] + 1e-9; lat += bereich.schritt) {
+      pr.rotate([-lon, -lat]);
+      let summe = 0, sx = 0, sy = 0;
+      for (const s of orte) {
+        if (d3.geoDistance([s.lon, s.lat], [lon, lat]) > 1.35) { summe = -Infinity; break; }
+        const [x, y] = pr([s.lon, s.lat]);
+        const rand = Math.min(R - Math.hypot(x - S / 2, y - S / 2), rechts - x - 8, x - 8, y - 8, S - y - 8);
+        if (rand < RAND) { summe = -Infinity; break; }
+        summe += Math.log(Math.min(rand, .45 * rS) + .04 * rS);
+        sx += x; sy += y;
+      }
+      if (summe === -Infinity) continue;
+      summe -= .6 * Math.hypot(sx / orte.length - mx, sy / orte.length - my) / rS;
+      if (!best || summe > best.s) best = { s: summe, lon, lat };
+    }
+    return best ? [best.lon, best.lat] : null;
+  }
+  function blickWeich(canvas, orte, bereich) {
     const d3 = window.d3;
     if (!d3 || !canvas || !orte || !orte.length) return null;
     bereich = Object.assign({ lon: [-180, 180], lat: [-60, 70], k: 1, schritt: 1 }, bereich || {});
@@ -404,6 +504,21 @@
     probe.remove();
     el.style.minHeight = Math.ceil(h) + 'px';
   }
+  /* Wie tafelReservieren; breit dazu --tafel-h: so hoch wie die Tafel mit ihrem längsten Inhalt und einer halben Zeile. Der Globus
+     nimmt die übrige Fensterhöhe, so passen Globus und Tafel zusammen auf einen Schirm, auch wenn die Tafel in einer schmalen Spalte
+     mehr Zeilen braucht. Ein größerer Globus macht die Tafel schmaler, darum bis zu dreimal nachgemessen; die Leinwand misst der Kern
+     danach selbst neu (siehe globus). Schmal gilt der Wert aus dem Stil. */
+  function tafelPlatz(el, inhalte) {
+    const wurzel = document.documentElement.style;
+    if (!breit()) wurzel.removeProperty('--tafel-h');
+    for (let n = 0; n < 3; n++) {
+      tafelReservieren(el, inhalte);
+      if (!breit()) break;
+      const soll = Math.ceil((parseFloat(el.style.minHeight) || 0) + masz('--z') * .5);
+      if (!soll || Math.abs(soll - masz('--tafel-h')) < 1) break;
+      wurzel.setProperty('--tafel-h', soll + 'px');
+    }
+  }
   // Lebensstationen aus INHALT.leben
   const stationen = () => (inhalt().leben || []).map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, jahr: s.jahr, land: s.land || '' }));
   // Tafel für eine Lebensstation, Entfernung vom ersten Ort (Dortmund) aus gemessen
@@ -417,9 +532,39 @@
     };
   }
 
+  // ---------- Ursprungstrilogie ----------
+  // Die vier Orte der Reihe nach: Göbekli Tepe, Uruk, Tyros, Jerusalem
+  const ursprungOrte = () => (inhalt().ursprung || []).map((o, i) => ({ i, name: o.name, lat: o.lat, lon: o.lon, band: o.band, jahr: o.jahr }));
+  /* Tafel für einen Ort der Trilogie (Startseite und Seite der Trilogie gleich): Titel des Bands, darunter Landschaft und Zeit und die
+     Koordinaten, dann ein Satz zum Band (aus INHALT.baende). -1 ist die ganze Trilogie. Stand nur „in Arbeit“, für die ganze Trilogie. */
+  function ursprungInhalt(i) {
+    const I = inhalt(), orte = ursprungOrte(), band = {};
+    ((I.trilogie && I.trilogie.baende) || []).forEach(b => { band[b.band] = b; });
+    const o = orte[i];
+    if (!o) {
+      const a = orte[0], z = orte[orte.length - 1];
+      return { eigen: true, marke: 'I–III', kopf: (I.trilogie && I.trilogie.titel) || 'Ursprung', unter: 'Trilogie, in Arbeit',
+        satz: a && z ? chr(('Von ' + a.name + ' ' + a.jahr + ' bis ' + z.name + ' ' + z.jahr).replace(/([^.])$/, '$1.')) : '' };
+    }
+    const b = band[o.band] || {};
+    const m = String((I.baende || {})[o.band] || '').match(/^(.*?v\. Chr\.)\s+(.+)$/);
+    const landschaft = m ? m[1] : [b.ort, b.zeit].filter(Boolean).join(', ');
+    const satz = m ? m[2] : b.thema ? b.thema.replace(/([^.])$/, '$1.') : '';
+    // Tyros steht nur auf dem Globus, als die Stadt der Phönizier, aus der Thyra kommt
+    const ort = o.name === b.ort ? landschaft : o.name + ', die Stadt der Phönizier, ' + (b.zeit || o.jahr || '');
+    return {
+      eigen: true, marke: o.band,
+      kopf: { html: esc(b.titel || '') + (b.arbeitstitel ? ' <span class="arbeitstitel">Arbeitstitel</span>' : '') },
+      daten: { html: `<span class="ortzeit">${esc(chr(ort))}</span><br>${esc(koord(o.lat, o.lon))}` },
+      satz
+    };
+  }
+
   // ---------- Karteikarte ----------
-  /* Eine Karteikarte, A6 quer; auf dem Telefon unten am Bildschirm. Esc, „zurücklegen“ oder ein Klick daneben legt sie zurück,
-     der Fokus geht an das auslösende Element zurück.
+  /* Eine Karteikarte, A6 quer; auf dem Telefon unten am Bildschirm. Esc, „zurücklegen“, ein Klick daneben oder Tab aus der Karte
+     hinaus legt sie zurück, der Fokus geht an das auslösende Element zurück. Breit liegt sie über dem Auslöser, sonst darunter,
+     sonst daneben; nie unter dem Kopf der Seite oder unter dem, was oben haftet (scroll-padding-top). Gerät der Auslöser beim
+     Scrollen dorthin oder aus dem Fenster, legt sie sich zurück.
      oeffnen(inhalt, ausloeser): inhalt = { signatur, titel, unter, autor, zeilen: [], notiz, verweis: { href, text }, eigen, beimSchliessen }
        eigen: Werk von Dominik (Signatur Siena, Titel kursiv). Textfelder werden maskiert, { html } bleibt unverändert.
        beimSchliessen(still): danach aufgerufen; still ist wahr, wenn ein Klick daneben die Karte zurückgelegt hat.
@@ -444,30 +589,61 @@
         if (ausloeser && ausloeser.contains(e.target)) return;
         schliessen(true);
       }, true);
-      let t = null;
+      // Tab aus der Karte hinaus (vorwärts nach dem letzten Verweis, rückwärts vor dem ersten): die Karte legt sich zurück, und es geht
+      // beim auslösenden Element weiter, nicht am Ende der Seite, wo die Karte im Quelltext steht
+      document.addEventListener('keydown', e => {
+        if (e.key !== 'Tab' || karte.hidden || e.defaultPrevented) return;
+        const a = document.activeElement;
+        if (!karte.contains(a)) return;
+        const fokusbar = $$('button, a[href]', karte);
+        const raus = e.shiftKey ? (a === karte || a === fokusbar[0]) : (!fokusbar.length || a === fokusbar[fokusbar.length - 1]);
+        if (!raus) return;
+        e.preventDefault();
+        schliessen(false);
+      });
+      let t = null, bild = 0;
       window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(stellen, 80); });
+      window.addEventListener('scroll', () => { if (!bild && !karte.hidden) bild = requestAnimationFrame(() => { bild = 0; beimRollen(); }); }, { passive: true });
       return karte;
     }
     const alsBlatt = () => window.matchMedia('(max-width: 40rem)').matches;
+    // Was oben frei bleibt: der Kopf der Seite, solange er im Bild ist, und was oben haftet (scroll-padding-top der Seite)
+    const haftetOben = () => parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    function frei() {
+      const kopf = $('.kopf'), kb = kopf ? kopf.getBoundingClientRect().bottom : 0, sp = haftetOben();
+      return Math.max(12, sp ? sp + 8 : 0, kb > 0 ? kb + masz('--z') * .5 : 0);
+    }
     function stellen() {
       if (!karte || karte.hidden) return;
       const blatt = alsBlatt();
       karte.classList.toggle('als-blatt', blatt);
       if (blatt) { karte.style.left = ''; karte.style.top = ''; return; }
-      const vw = document.documentElement.clientWidth;
+      const vw = document.documentElement.clientWidth, H = window.innerHeight;
       const randL = Math.max(16, masz('--rand-l')), randR = Math.max(16, masz('--rand-r'));
       const kb = karte.offsetWidth, kh = karte.offsetHeight;
       let links, oben;
       if (ausloeser && document.contains(ausloeser)) {
-        const r = ausloeser.getBoundingClientRect();
+        const r = ausloeser.getBoundingClientRect(), f = frei();
+        const ueber = r.top - kh - 16, unter = r.bottom + 16;
         links = r.left + r.width / 2 - kb / 2;
-        oben = r.top - kh - 16;
-        if (oben < 12) oben = r.bottom + 16;
-        if (oben + kh > window.innerHeight - 12 && r.top - kh - 16 >= 12) oben = r.top - kh - 16;
-      } else { links = (vw - kb) / 2; oben = (window.innerHeight - kh) / 2; }
+        if (ueber >= f) oben = ueber;
+        else if (unter + kh <= H - 12) oben = unter;
+        else {
+          const rechts = r.right + 16, daneben = r.left - 16 - kb;
+          const neben = rechts + kb <= vw - randR ? rechts : daneben >= randL ? daneben : null;
+          if (neben !== null) { links = neben; oben = Math.max(f, Math.min(H - 12 - kh, r.top - 6)); }
+          else oben = unter;
+        }
+      } else { links = (vw - kb) / 2; oben = (H - kh) / 2; }
       links = Math.max(randL, Math.min(vw - kb - randR, links));
       karte.style.left = Math.round(links + window.scrollX) + 'px';
       karte.style.top = Math.round(Math.max(12, oben) + window.scrollY) + 'px';
+    }
+    // Der Auslöser ist unter das geraten, was oben haftet, oder aus dem Fenster: die Karte legt sich zurück (das Blatt bleibt)
+    function beimRollen() {
+      if (!karte || karte.hidden || karte.classList.contains('als-blatt') || !ausloeser || !document.contains(ausloeser)) return;
+      const r = ausloeser.getBoundingClientRect(), sp = haftetOben();
+      if (sp > 0 ? r.top < sp : r.bottom < 0) schliessen(!karte.contains(document.activeElement));
     }
     function oeffnen(x, el) {
       const k = element();
@@ -504,9 +680,13 @@
   })();
 
   // ---------- Bücher ----------
-  /* buch.alle(): alle Bücher in einer Liste, ohne „lieber nicht“; was noch wartet, kommt aus daten/leseliste.js (r: 'leseliste').
+  /* buch.alle(): alle Bücher in einer Liste, ohne „lieber nicht“; was noch wartet, kommt aus daten/leseliste.js (r: 'leseliste'),
+     ohne was schon im Regal steht oder auf dem Nachttisch liegt.
      Felder wie in daten/buecher.js (t, u, a, r, s, j, p, w, b, v) und dazu nn (Nachname), autor, key, sig (Signatur wie im Regal von E1:
-     Zeit A bis E und Jahr; K Kindheit und Jugend, N Nachttisch, W was noch wartet). */
+     Zeit A bis E und Jahr; K Kindheit und Jugend, N Nachttisch, W was noch wartet).
+     Berichtigt, solange daten/buecher.js es nicht selbst ist: das Jahr der Erstveröffentlichung, wo der Export das einer Übersetzung
+     trägt; der zweite Verfasser von The Dawn of Everything. Gesetzt mit Halbgeviertstrich in Spannen, typografischen Apostrophen
+     und Anführungszeichen (die Titel sind meist englisch: “…”) und geschützten Leerzeichen nach Initialen („T. S. Eliot“). */
   const buch = (function () {
     let cache = null;
     const NACHNAMEN = {
@@ -516,6 +696,25 @@
       'Anonymous': '', 'Anonym': '', 'Die 19 Finaltexte': ''
     };
     const AUTOR = { 'Anonymous': 'Anonym' };
+    // Bleibt draußen, bis Dominik es freigibt
+    const DRAUSSEN = [{ t: 'Ghostwritten', a: 'David Mitchell' }];
+    // Malina erschien 1971 (1990 ist die englische Ausgabe), In der Strafkolonie 1919 (beide Ausgaben); der Untertitel der
+    // Cornelsen-Ausgabe (ein Arbeitsheft für die Schule) fehlt, bis Dominik sie ansieht
+    const BERICHTIGT = [
+      { a: 'Ingeborg Bachmann', t: 'Malina', j: 1971 },
+      { a: 'Franz Kafka', t: 'In the Penal Colony', j: 1919 },
+      { a: 'Scott O\'Dell', t: 'Island of the Blue Dolphins', v: /cornelsen/i, u: '' },
+      { a: 'David Graeber', t: 'The Dawn of Everything', autor: 'David Graeber und David Wengrow' }
+    ];
+    const satz = s => String(s || '').replace(/(\d)-(\d)/g, '$1–$2').replace(/"([^"]*)"/g, '“$1”').replace(/'/g, '’');
+    const initialen = s => satz(s).replace(/\b([A-Z])\.\s?(?=[A-Z])/g, '$1.' + NBSP);
+    // Verlag ohne den Zusatz „An Imprint of …“; ganz in Versalien exportierte Namen aus mehreren Wörtern in gemischter Schreibung
+    // (Kürzel wie DTV bleiben)
+    const verlag = v => {
+      const t = sauber(v).replace(/:\s*an imprint of .*$/i, '').replace(/,?\s+an imprint of .*$/i, '');
+      return /[A-ZÄÖÜ]{3}\s+[A-ZÄÖÜ]{3}/.test(t) && t === t.toUpperCase() ? t.toLowerCase().replace(/(^|[\s(&\/-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase()) : t;
+    };
+    const titelSchluessel = b => b.nn + '|' + b.t.toLowerCase().replace(/^(der|die|das|the|a|an|ein|eine)\s+/, '').replace(/[^\p{L}\p{N}]+/gu, '');
     // Nachname für Rücken und Zeile
     function nachname(a) {
       a = sauber(a);
@@ -535,13 +734,21 @@
     const ordnung = (x, y) => (x.j == null) - (y.j == null) || (x.j || 0) - (y.j || 0) || x.nn.localeCompare(y.nn, 'de') || x.t.localeCompare(y.t, 'de');
     function alle() {
       if (cache) return cache;
-      const roh = (window.BUECHER || []).filter(b => b && b.r !== 'lieber-nicht' && b.r !== 'leseliste' && !/porn/i.test(b.t || ''));
+      const draussen = b => DRAUSSEN.some(x => x.t === sauber(b.t) && x.a === sauber(b.a));
+      const roh = (window.BUECHER || []).filter(b => b && b.r !== 'lieber-nicht' && b.r !== 'leseliste' && !draussen(b));
       const warte = (window.LESELISTE || []).map(x => ({ t: x.t, u: '', a: x.a, r: 'leseliste', s: 0, j: x.j == null ? null : x.j, p: x.p || 0, w: 0, b: 'p', v: '', k: !!x.k, ungefaehr: true }));
       cache = roh.map(b => Object.assign({}, b)).concat(warte);
       cache.forEach(b => {
-        b.t = sauber(b.t); b.u = sauber(b.u); b.a = sauber(b.a); b.v = sauber(b.v);
-        b.nn = nachname(b.a); b.autor = AUTOR[b.a] || b.a; b.key = b.t + '|' + b.a;
+        b.t = sauber(b.t); b.u = sauber(b.u); b.a = sauber(b.a); b.v = verlag(b.v);
+        const k = BERICHTIGT.find(x => x.a === b.a && x.t === b.t && (!x.v || x.v.test(b.v)));
+        if (k) { if ('j' in k) b.j = k.j; if ('u' in k) b.u = k.u; }
+        b.nn = satz(nachname(b.a)); b.autor = initialen((k && k.autor) || AUTOR[b.a] || b.a);
+        b.t = satz(b.t); b.u = satz(b.u); b.v = initialen(b.v); b.a = initialen(b.a);
+        b.key = b.t + '|' + b.a;
       });
+      // Was schon im Regal steht oder auf dem Nachttisch liegt, wartet nicht noch einmal
+      const imRegal = new Set(cache.filter(b => b.r !== 'leseliste').map(titelSchluessel));
+      cache = cache.filter(b => b.r !== 'leseliste' || !imRegal.has(titelSchluessel(b)));
       // Signaturen: Buchstabe der Zeit oder des Fachs, Jahr, bei gleichem Jahr a, b, c …
       const fach = b => b.r === 'kindheit' ? 'K' : b.r === 'gerade' ? 'N' : b.r === 'leseliste' ? 'W' : b.j == null ? 'E' : EPOCHEN.find(e => b.j <= e[1])[0];
       const gruppen = {};
@@ -552,17 +759,18 @@
       });
       return cache;
     }
-    // Karteikarte eines Buchs
-    function karte(b) {
+    // Karteikarte eines Buchs; person: 3 spricht von ihm („Eines seiner liebsten.“), sonst spricht er selbst
+    function karte(b, o) {
+      const er = !!o && o.person === 3;
       const satz = s => s && !/[.!?]$/.test(s) ? s + '.' : s;
       const jahr = b.j == null ? '' : b.j < 0 ? 'Entstanden ' + jahrText(b.j) : b.j < 1450 ? 'Entstanden um ' + b.j : 'Zuerst erschienen ' + b.j;
       const ausgabe = [b.v, b.p ? (b.ungefaehr ? 'etwa ' : '') + tausender(b.p) + ' Seiten' : ''].filter(Boolean).join(', ');
       const notiz = [];
-      if (b.r === 'gerade') notiz.push('Lese ich gerade.');
+      if (b.r === 'gerade') notiz.push(er ? 'Liest er gerade.' : 'Lese ich gerade.');
       if (b.r === 'abgebrochen') notiz.push('Nicht zu Ende gelesen.');
       if (b.r === 'leseliste') notiz.push('Wartet noch.');
       if (b.r === 'kindheit') notiz.push('Aus Kindheit und Jugend.');
-      if (b.s === 5 && b.r !== 'leseliste') notiz.push('Eines meiner liebsten.');
+      if (b.s === 5 && b.r !== 'leseliste') notiz.push(er ? 'Eines seiner liebsten.' : 'Eines meiner liebsten.');
       if (b.w) notiz.push('Mehr als einmal gelesen.');
       return { signatur: b.sig || '', titel: b.t, unter: b.u, autor: b.autor, zeilen: [satz(jahr), satz(ausgabe)], notiz: notiz.join(' ') };
     }
@@ -580,34 +788,170 @@
 
   // ---------- Eigene Werke ----------
   const WERK_SIG = { satoshi: 'DJ 1', 'ursprung-1': 'DJ 2/I', 'ursprung-2': 'DJ 2/II', 'ursprung-3': 'DJ 2/III', erzaehlungen: 'DJ 3', untertext: 'DJ 4', laender: 'DJ 5' };
-  /* Karteikarte für ein eigenes Werk (id aus INHALT.werke): Signatur Siena, Titel kursiv, Verweis auf die Seite des Werks.
-     Für die Trilogie gilt nur „in Arbeit“, für die ganze Trilogie, ohne Stand je Band. */
-  function werkKarte(id) {
-    const I = inhalt();
+  /* Karteikarte für ein eigenes Werk (id aus INHALT.werke): Signatur Siena, Titel kursiv; bei Satoshi und den Bänden der Trilogie
+     führt der Titel selbst zur Seite des Werks. „Arbeitstitel“ steht klein hinter dem Titel. Für die Trilogie gilt nur „in Arbeit“,
+     für die ganze Trilogie, ohne Stand je Band. person: 3 spricht von ihm (Seiten in der dritten Person), sonst spricht er selbst. */
+  function werkKarte(id, o) {
+    const I = inhalt(), er = !!o && o.person === 3;
     const w = (I.werke || []).find(x => x.id === id);
     if (!w) return null;
-    const x = { signatur: (WERK_SIG[id] || 'DJ').replace(' ', NBSP), titel: w.buchtitel || w.titel, eigen: true, autor: 'Dominik Jäkel' };
+    const ziel = id === 'satoshi' ? SEITEN.satoshi : w.band ? SEITEN.ursprung : '';
+    const name = esc(w.buchtitel || w.titel);
+    const titel = { html: (ziel ? `<a href="${ziel}">${name}</a>` : name) + (w.arbeitstitel ? ' <span class="arbeitstitel">Arbeitstitel</span>' : '') };
+    const x = { signatur: (WERK_SIG[id] || 'DJ').replace(' ', NBSP), titel, eigen: true, autor: 'Dominik Jäkel' };
+    const punkt = t => t && !/[.!?…]$/.test(t) ? t + '.' : t;
     if (id === 'satoshi') {
       const s = I.satoshi || {};
       x.unter = 'Roman';
       x.zeilen = [(s.eckdaten && s.eckdaten.stand) || ''];
       x.notiz = s.hook || w.text || '';
-      x.verweis = { href: SEITEN.satoshi, text: 'Zum Roman' };
     } else if (w.band) {
       const b = ((I.trilogie && I.trilogie.baende) || []).find(y => y.band === w.band) || {};
-      x.unter = 'Band ' + w.band + ' der Ursprungstrilogie' + (w.arbeitstitel ? ', Arbeitstitel' : '');
+      x.unter = 'Band ' + w.band + ' der Ursprungstrilogie';
       x.zeilen = [chr([b.ort, b.zeit].filter(Boolean).join(', ')), 'Die Trilogie ist in Arbeit.'];
-      x.notiz = b.thema || '';
-      x.verweis = { href: SEITEN.ursprung, text: 'Zur Trilogie' };
+      x.notiz = punkt(b.thema || '');
+    } else if (id === 'erzaehlungen') {
+      // „Erzählungen, Kurzgeschichten“ sagte dasselbe zweimal
+      x.unter = '';
+      x.notiz = er ? 'Viele davon hat er auf der Werkstattbühne des Autorenforums Berlin gelesen.' : 'Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.';
     } else {
       x.unter = w.art + (w.stand ? ', ' + w.stand : '');
-      if (id === 'erzaehlungen') x.notiz = 'Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.';
     }
     return x;
   }
 
+  // ---------- Beim Scrollen ----------
+  /* Was dem Scrollen folgt, folgt ihm in beide Richtungen: Zurückscrollen nimmt zurück, nichts wird einmal ausgelöst und bleibt.
+     Eine gemeinsame Schleife für alle Seiten: passive Listener, höchstens ein requestAnimationFrame je Bild, und jeder Beobachter
+     rechnet nur, solange sein Bereich im Bild ist (IntersectionObserver; beim Verlassen rechnet er ein letztes Mal, damit nach
+     schnellem Scrollen der Stand stimmt). Ob eine Seite bei reduzierter Bewegung mitgeht, entscheidet sie selbst (ruhig()). */
+  const beobachter = new Set();
+  let rollBild = 0, rollBereit = false;
+  function rollLauf() { rollBild = 0; beobachter.forEach(b => { if (b.imBild) b.pruefen(false); }); }
+  function rollAnstossen() { if (!rollBild) rollBild = requestAnimationFrame(rollLauf); }
+  function beobachten(b, bereich) {
+    if (!rollBereit) {
+      rollBereit = true;
+      window.addEventListener('scroll', rollAnstossen, { passive: true });
+      window.addEventListener('resize', rollAnstossen, { passive: true });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(rollAnstossen);
+    }
+    b.imBild = true;
+    if (bereich && 'IntersectionObserver' in window) {
+      b.imBild = false;
+      let erst = true;
+      new IntersectionObserver(e => {
+        const da = e[e.length - 1].isIntersecting;
+        if (da === b.imBild && !erst) return;
+        erst = false; b.imBild = da;
+        b.pruefen(false);
+      }, { rootMargin: '20% 0px' }).observe(bereich);
+    }
+    beobachter.add(b);
+    rollAnstossen();
+  }
+
+  /* leselinie(elemente, beiSchritt, o): welches Element zuletzt die Leselinie erreicht hat.
+       elemente   Liste (oder Funktion, die eine gibt) von Elementen in der Reihenfolge der Seite
+       beiSchritt(i, { vorher, richtung, neu })   i = -1, solange noch keines die Linie erreicht hat, sonst sein Index.
+                  Kommt einmal gleich zu Beginn (vorher: null) und danach nur, wenn sich i ändert (mit o.jedesMal in jedem Bild).
+       o.linie    Lage der Linie: Anteil der Fensterhöhe (Vorgabe .45) oder Funktion (H) => Pixel vom oberen Rand
+       o.ende     Vorgabe an: gegen Seitenende, wenn die letzten Elemente die Linie nicht mehr erreichen könnten, wandert sie auf dem
+                  letzten Drittel Fenster des Wegs bis auf neun Zehntel der Fensterhöhe hinab
+       o.stelle(el, i)   y im Fenster, die die Linie erreichen muss (Vorgabe: Oberkante; ein Element ohne Größe zählt nicht)
+       o.bereich  Element, außerhalb dessen nicht gerechnet wird
+     Rückgabe: { jetzt(), linie(), pruefen(erzwingen) } */
+  function leselinie(elemente, beiSchritt, o) {
+    o = o || {};
+    const liste = () => (typeof elemente === 'function' ? elemente() : elemente) || [];
+    const stelle = o.stelle || (el => {
+      if (!el || !el.getBoundingClientRect) return null;
+      const r = el.getBoundingClientRect();
+      return r.width || r.height ? r.top : null;
+    });
+    function linie() {
+      const H = window.innerHeight;
+      let l = typeof o.linie === 'function' ? o.linie(H) : H * (o.linie == null ? .45 : o.linie);
+      if (o.ende !== false) {
+        const rest = Math.max(0, document.documentElement.scrollHeight - H - window.scrollY), strecke = H / 3;
+        if (rest < strecke) l += Math.max(0, H * .9 - l) * (1 - rest / strecke);
+      }
+      return l;
+    }
+    let jetzt = null;
+    const b = {
+      pruefen(erzwingen) {
+        const l = linie();
+        let i = -1;
+        liste().forEach((el, j) => { const y = stelle(el, j); if (y != null && y <= l) i = j; });
+        const neu = i !== jetzt;
+        if (!neu && !erzwingen && !o.jedesMal) return;
+        const vorher = jetzt;
+        jetzt = i;
+        beiSchritt(i, { vorher, richtung: vorher == null ? 0 : Math.sign(i - vorher), neu });
+      }
+    };
+    beobachten(b, o.bereich);
+    return { jetzt: () => jetzt, linie, pruefen: erzwingen => b.pruefen(!!erzwingen) };
+  }
+
+  /* fortschritt(element, beiWert, o): wie weit ein Element durch das Fenster gewandert ist, als Zahl von 0 bis 1.
+     0, solange seine Oberkante bei o.von (Anteil der Fensterhöhe, Vorgabe 1: unterer Rand) oder tiefer steht; 1, sobald sie o.bis
+     erreicht (Vorgabe 0: oberer Rand) oder die Seite nicht weiter kann. beiWert(q, { roh }) kommt, wenn sich q ändert;
+     roh ist ungekappt (unter 0: noch nicht erreicht, über 1: vorbei). Rückgabe: { wert(), pruefen(erzwingen) } */
+  function fortschritt(el, beiWert, o) {
+    o = o || {};
+    let zuletzt = null, wert = 0;
+    const b = {
+      pruefen(erzwingen) {
+        if (!el || !el.isConnected) return;
+        const H = window.innerHeight, y = window.scrollY;
+        const oben = el.getBoundingClientRect().top + y;
+        const s0 = oben - H * (o.von == null ? 1 : o.von);
+        const s1 = Math.min(oben - H * (o.bis == null ? 0 : o.bis), document.documentElement.scrollHeight - H);
+        // Unter 40 px Weg gibt es nichts zu verfolgen
+        if (s1 - s0 < 40) return;
+        const roh = (y - s0) / (s1 - s0);
+        wert = Math.max(0, Math.min(1, roh));
+        const schluessel = roh <= 0 ? -1 : roh >= 1 ? 2 : wert;
+        if (schluessel === zuletzt && !erzwingen) return;
+        zuletzt = schluessel;
+        beiWert(wert, { roh });
+      }
+    };
+    beobachten(b, o.bereich || el);
+    return { wert: () => wert, pruefen: erzwingen => b.pruefen(!!erzwingen) };
+  }
+
+  /* imBild(el, { starten, unterbrechen, fortsetzen }): eine Chronik auf dem Globus läuft nur, solange man ihn sieht.
+     starten, wenn el zum ersten Mal zur Hälfte zu sehen ist; unterbrechen, wenn weniger als ein Siebtel zu sehen ist; fortsetzen,
+     wenn es wieder zur Hälfte da ist. Gibt eine Funktion zurück, die sagt, ob el gerade im Bild ist. */
+  function imBild(el, o) {
+    let da = false, erst = true;
+    if (!el || !('IntersectionObserver' in window)) { da = true; if (o.starten) o.starten(); return () => da; }
+    new IntersectionObserver(eintraege => {
+      const q = eintraege[eintraege.length - 1].intersectionRatio;
+      if (q >= .5 && !da) { da = true; if (erst) { erst = false; if (o.starten) o.starten(); } else if (o.fortsetzen) o.fortsetzen(); }
+      else if (q < .15 && da) { da = false; if (o.unterbrechen) o.unterbrechen(); }
+    }, { threshold: [0, .15, .5, 1] }).observe(el);
+    return () => da;
+  }
+
   // ---------- Navigation ----------
-  // Markiert die jetzige Seite (falls die Seite es nicht selbst tut) und klappt die Liste auf dem Telefon hinter „Inhalt“ zusammen
+  /* Markiert die jetzige Seite (falls die Seite es nicht selbst tut) und klappt die Liste auf dem Telefon hinter „Inhalt“ zusammen;
+     ein Tipp daneben, Esc oder die Wahl eines Verweises klappt sie wieder zu. Breit neben dem Globus läuft sie bis kurz vor ihn;
+     passt sie dort nicht in eine Zeile, bricht sie nach „Untertext“ (.zweizeilig) statt vor einem einzelnen Wort. */
+  function navZeilen() {
+    $$('.nav').forEach(nav => {
+      const liste = $('.nav-liste', nav);
+      if (!liste) return;
+      nav.classList.remove('zweizeilig');
+      if (!breit() || !nav.closest('.mit-globus')) return;
+      const zeile = parseFloat(getComputedStyle(liste).lineHeight) || 28;
+      if (liste.getBoundingClientRect().height > zeile * 1.5) nav.classList.add('zweizeilig');
+    });
+  }
+  let navBereit = false;
   function navigation() {
     document.documentElement.classList.add('js');
     $$('.nav').forEach(nav => {
@@ -625,8 +969,15 @@
       setzen(false);
       knopf.addEventListener('click', () => setzen(knopf.getAttribute('aria-expanded') !== 'true'));
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('ist-offen')) { setzen(false); knopf.focus(); } });
+      document.addEventListener('pointerdown', e => { if (nav.classList.contains('ist-offen') && !nav.contains(e.target)) setzen(false); }, true);
       liste.addEventListener('click', e => { if (e.target.closest('a')) setzen(false); });
     });
+    navZeilen();
+    if (navBereit) return;
+    navBereit = true;
+    let uhr = 0;
+    window.addEventListener('resize', () => { clearTimeout(uhr); uhr = setTimeout(navZeilen, 100); });
+    schriften(3000).then(navZeilen);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', navigation); else navigation();
 
@@ -636,7 +987,8 @@
     zahlwort, gross, tausender, grad, koord, entfernungKm, km, jahrText, chr, jahrMarke,
     schriften, satzzeichenBinden,
     FARBEN, SIENA, SIENA_EBENE, globus, blickFuer,
-    tafel, tafelReservieren, stationen, stationInhalt,
-    karteikarte, buch, werkKarte, navigation
+    tafel, tafelReservieren, tafelPlatz, stationen, stationInhalt, ursprungOrte, ursprungInhalt,
+    karteikarte, buch, werkKarte, navigation,
+    leselinie, fortschritt, imBild
   };
 })();

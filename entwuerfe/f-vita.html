@@ -8,35 +8,47 @@
 <script>document.documentElement.classList.add('js');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&family=IM+Fell+French+Canon&display=swap">
 <link rel="stylesheet" href="f-stil.css">
 <style>
-/* Vita von Entwurf F, gesetzt wie eine Buchklappe: links der Text in der Spalte der Startseite,
-   rechts das Foto in bescheidener Größe und der Werdegang. Die rechte Spalte steht an der linken Kante,
-   an der auf der Startseite der Globus und die Tafel stehen; die Jahre hängen wie dort links in den Steg.
-   Keine Bewegung auf dieser Seite. */
+/* Vita von Entwurf F, gesetzt wie eine Buchklappe: links der Text in der Spalte der Startseite, rechts die Stationen
+   und am Fuß der Klappe das Foto in bescheidener Größe. Die rechte Spalte steht an der linken Kante, an der auf der
+   Startseite Globus und Tafel stehen; die Jahre hängen wie dort links in den Steg.
+   Nichts bewegt sich beim Scrollen: die Seite ist kurz, und Text und Stationen stehen nebeneinander, die Zuordnung leistet
+   die Doppelspalte selbst. */
 
-.vita-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); align-items: start; padding-top: calc(var(--z) * 2); }
-.vita-links { grid-column: 1; min-width: 0; }
-/* an der Kante des Globus der Startseite; auf sehr breiten Schirmen höchstens acht Zeilen Steg */
-.vita-rechts { grid-column: 2; min-width: 0; max-width: 30em; margin-left: clamp(4.5em, calc(var(--globuskante) - var(--rand-l) - var(--spalte)), calc(var(--z) * 8)); }
+.vita-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); padding-top: calc(var(--z) * 2); }
+.vita-links { grid-column: 1; min-width: 0; align-self: start; }
+/* an der Kante des Globus der Startseite; auf sehr breiten Schirmen höchstens acht Zeilen Steg.
+   Die Spalte ist so hoch wie der Text: oben die Stationen, am Fuß das Foto */
+.vita-rechts {
+  grid-column: 2; min-width: 0; max-width: 30em; display: flex; flex-direction: column;
+  margin-left: clamp(4.5em, calc(var(--globuskante) - var(--rand-l) - var(--spalte)), calc(var(--z) * 8));
+}
+.werdegang-bahn { flex: 1 1 auto; }
 .vita-text { max-width: var(--mass); }
 .vita-text > p + p { margin-top: calc(var(--z) * .5); }
-/* Der erste Satz steht allein, eine ganze Zeile Luft darunter */
-.vita-text > .einstieg { color: var(--schwarz); }
+/* Der erste Satz steht allein, in der Schrift des ersten Satzes der Startseite (.leitsatz), kleiner als dort; jedes Glied eine Zeile.
+   Er wird so klein, dass das längste Glied in die Spalte passt, aber nie kleiner als die Grundschrift; reicht der Platz dann
+   noch nicht (oder fehlt die Schrift), bricht das Glied in sich um. Eine ganze Zeile Luft darunter */
+.vita-text > .einstieg { font-size: max(1em, min(1.375em, calc((var(--vb, 100vw) - 2 * var(--rand-l)) / 14.8))); line-height: calc(var(--z) * 1.125); }
+.vita-text > .einstieg .nw { display: block; white-space: normal; }
 .vita-text > .einstieg + p { margin-top: var(--z); }
 
-/* Das Foto wie auf einer Klappe: acht Zeilen hoch, die Angabe klein darunter */
-.bildnis { margin: calc(var(--z) * .3) 0 0; width: calc(var(--z) * 8 * 711 / 690); }
+/* Das Foto wie auf einer Klappe: acht Zeilen hoch, die Angabe klein darunter; breit steht es am Fuß der rechten Spalte */
+.bildnis { width: calc(var(--z) * 8 * 711 / 690); padding-top: calc(var(--z) * 2); }
 .bildnis img { display: block; width: 100%; height: auto; background: #0E0E0F; }
 .bildnis figcaption { margin-top: calc(var(--z) * .25); font-size: .8125rem; line-height: calc(var(--z) * .75); color: var(--grau-2); }
 
-/* Werdegang: die Reihenfolge ist die Information. Ort kursiv, darunter die Koordinaten klein und grau,
-   die Nebenorte kleiner und heller wie im Kolophon der Startseite */
-.werdegang { margin-top: calc(var(--z) * 2); }
+/* Stationen: die Reihenfolge ist die Information. Ort kursiv, darunter die Koordinaten klein und grau,
+   die Nebenorte kleiner und heller wie im Kolophon der Startseite.
+   Breit steht die Überschrift auf der Grundlinie des Seitentitels und der erste Eintrag auf der Zeile des ersten Satzes;
+   ein Eintrag ist eindreiviertel Zeilen hoch, von Jahr zu Jahr sind es genau zwei Zeilen wie im Text daneben */
+.werdegang { padding-top: calc(var(--z) * .32); }
+.werdegang .titel { margin-bottom: calc(var(--z) * 1.18); }
 .daten { list-style: none; }
-.daten li { position: relative; line-height: var(--z); }
-.daten li + li { margin-top: calc(var(--z) * .5); }
+.daten li { position: relative; line-height: var(--z); min-height: calc(var(--z) * 1.75); }
+.daten li + li { margin-top: calc(var(--z) * .25); }
 .daten .jahr { position: absolute; top: 0; right: calc(100% + .95rem); white-space: nowrap; color: var(--graphit); }
 .daten .ort { font-style: italic; color: var(--schwarz); }
 .daten .koord { display: block; font-style: italic; font-size: .8125em; line-height: calc(var(--z) * .75); color: var(--grau-2); }
@@ -45,26 +57,19 @@
 .daten .neben .koord { color: var(--grau-neben); }
 .werdegang .weiter { margin-top: var(--z); }
 
-.anfrage { margin-top: calc(var(--z) * 2); }
-.anfrage .titel { margin-bottom: calc(var(--z) * .5); }
 
-/* Der Kontakt steht auf dieser Seite im Text; im Fuß bleibt nur das Kolophon */
-.vita-seite .fuss .kontakt { display: none; }
-.vita-seite .fuss { margin-top: calc(var(--z) * 2); }
-.vita-seite .fuss .kolophon-fuss { margin-top: 0; }
-
-/* ---------- Schmale Fenster: eine Spalte, das Foto über dem Text ---------- */
+/* ---------- Schmale Fenster: eine Spalte, das Foto unter dem Titel, die Stationen nach dem Text ---------- */
 @media (max-width: 62rem) {
-  .vita-raster { display: flex; flex-direction: column; align-items: stretch; }
-  .vita-links, .vita-rechts { display: contents; }
+  .vita-raster { display: flex; flex-direction: column; align-items: stretch; padding-top: var(--z); }
+  .vita-links, .vita-rechts, .werdegang-bahn { display: contents; }
   .vita-raster .seitentitel { order: 1; }
-  .vita-raster .bildnis { order: 2; margin: 0 0 var(--z); }
+  .vita-raster .bildnis { order: 2; margin: 0 0 var(--z); padding-top: 0; }
   .vita-raster .vita-text { order: 3; }
-  .vita-raster .werdegang { order: 4; }
-  .vita-raster .anfrage { order: 5; }
-  .vita-text, .werdegang, .anfrage { max-width: var(--mass); }
-  /* Die Jahre hängen innerhalb der Spalte */
-  .daten li { padding-left: 3em; }
+  .vita-raster .werdegang { order: 4; margin-top: calc(var(--z) * 2); padding-top: 0; }
+  .werdegang .titel { margin-bottom: var(--z); }
+  .vita-text, .werdegang { max-width: var(--mass); }
+  /* Die Jahre hängen innerhalb der Spalte. Ohne Nachbarspalte gibt es kein Register zu halten: der Preis bekommt keine leere Zeile */
+  .daten li { padding-left: 3em; min-height: 0; }
   .daten .neben { padding-left: calc(3em / .875); }
   .daten .jahr { right: auto; left: 0; }
 }
@@ -98,42 +103,39 @@
     <h1 class="seitentitel">Vita</h1>
 
     <div class="vita-text">
-      <p class="einstieg">Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen.</p>
-      <p>Er wurde 1995 in Dortmund geboren. In Freiburg studierte er Liberal Arts &amp; Sciences, danach in Potsdam IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span>. Längere Zeit verbrachte er in Colombo und in Cotonou, später auch auf Mallorca.</p>
-      <p>Vier Jahre lebte er in Kaohsiung auf Taiwan. Er arbeitete dort als Lektor und freier Autor, unter anderem für Sprachassistenten und unabhängige Spielestudios. In Taiwan begann seine Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Ursprungstrilogie.</p>
-      <p>Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen. Auf der Werkstattbühne des Autorenforums Berlin e.&#8239;V. hat er viele seiner Geschichten gelesen; seit einigen Jahren moderiert er sie.</p>
-      <p>Im Jahr 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gefördert wurde er in der Meisterklasse des Schreibhains und in Seminaren der Bundesakademie für kulturelle Bildung, mit Mentorinnen und Mentoren wie Ursula Poznanski, Wulf Dorn und Klaus N.&nbsp;Frick.</p>
-      <p>Gerade schließt er seinen Debütroman <a href="f-satoshi.html"><i>Satoshi</i></a> ab; das Manuskript liegt vollständig vor. Der Roman erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen.</p>
-      <p>Daneben arbeitet er an der <a href="f-ursprung.html">Ursprungstrilogie</a>, drei Romanen über die Anfänge der Zivilisation. Sie erzählen von der Geburt der organisierten Religion, der Literatur und der Heiligen Schrift, von Göbekli Tepe um&nbsp;8000&nbsp;v.&#8239;Chr. bis Jerusalem um&nbsp;940&nbsp;v.&#8239;Chr.</p>
+      <p class="einstieg leitsatz"><span class="nw">Dominik Jäkel schreibt tagsüber</span> <span class="nw">unter fremden Namen</span> <span class="nw">und abends unter seinem eigenen.</span></p>
+      <p>Er wurde 1995 in Dortmund geboren. In Freiburg studierte er Liberal Arts &amp; Sciences, danach in Potsdam IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span>.</p>
+      <p>Vier Jahre lebte er in Kaohsiung auf Taiwan. Er arbeitete dort als Lektor und freier Autor, unter anderem für Sprach&shy;assistenten und unabhängige Spiele&shy;studios. In Taiwan begann seine Beschäftigung mit der Früh&shy;geschichte des Menschen und die Arbeit an der Ursprungs&shy;trilogie.</p>
+      <p>Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen. Auf der Werkstatt&shy;bühne des Autoren&shy;forums Berlin e.&#8239;V. hat er viele seiner Geschichten gelesen; seit einigen Jahren moderiert er sie.</p>
+      <p>2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gefördert wurde er in der Meister&shy;klasse des Schreibhains und in Seminaren der Bundes&shy;akademie für kulturelle Bildung, mit Mentorinnen und Mentoren wie Ursula Poznanski, Wulf Dorn und Klaus N.&nbsp;Frick.</p>
+      <p>Gerade schließt er seinen Debüt&shy;roman <a href="f-satoshi.html"><i>Satoshi</i></a> ab. Das Manuskript liegt vollständig vor. Der Roman erzählt die Gründungs&shy;legende von Bitcoin als Liebes&shy;geschichte dreier Menschen.</p>
+      <p>Daneben arbeitet er an der <a href="f-ursprung.html">Ursprungs&shy;trilogie</a>, drei Romanen über die Anfänge der Zivili&shy;sation. Sie erzählen von der Geburt der organi&shy;sierten Religion, der Literatur und der Heiligen Schrift, von Göbekli Tepe um 8000&nbsp;v.&#8239;Chr. über Uruk bis Jerusalem um 940&nbsp;v.&#8239;Chr.</p>
     </div>
-
-    <section class="anfrage" aria-labelledby="anfrage-titel">
-      <h2 class="titel" id="anfrage-titel">Kontakt</h2>
-      <p>Anfragen zu Lesungen und zu den Romanen: <span class="platzhalter">Adresse folgt</span></p>
-    </section>
   </div>
 
   <div class="vita-rechts">
+    <div class="werdegang-bahn">
+      <section class="werdegang" aria-labelledby="stationen-titel">
+        <h2 class="titel" id="stationen-titel">Stationen</h2>
+        <ol class="daten">
+          <li><span class="jahr">1995</span> <span class="ort">Dortmund</span>, geboren <span class="koord" data-ort="Dortmund">51°&nbsp;31′&nbsp;N, 7°&nbsp;28′&nbsp;O</span></li>
+          <li><span class="jahr">2014</span> <span class="ort">Freiburg</span>, Studium <span class="nw">Liberal Arts &amp; Sciences</span> <span class="koord" data-ort="Freiburg">47°&nbsp;59′&nbsp;N, 7°&nbsp;51′&nbsp;O</span></li>
+          <li><span class="jahr">2015</span> <span class="ort">Potsdam</span>, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span> <span class="koord" data-ort="Potsdam">52°&nbsp;23′&nbsp;N, 13°&nbsp;04′&nbsp;O</span></li>
+          <li class="neben"><span class="jahr">2016</span> <span class="ort">Colombo, Sri Lanka</span>, längerer Aufenthalt <span class="koord" data-ort="Colombo">6°&nbsp;56′&nbsp;N, 79°&nbsp;52′&nbsp;O</span></li>
+          <li class="neben"><span class="jahr">2018</span> <span class="ort">Cotonou, Benin</span>, längerer Aufenthalt <span class="koord" data-ort="Cotonou">6°&nbsp;22′&nbsp;N, 2°&nbsp;26′&nbsp;O</span></li>
+          <li><span class="jahr">2018</span> <span class="ort">Kaohsiung, Taiwan</span>, vier Jahre als Lektor und freier Autor <span class="koord" data-ort="Kaohsiung">22°&nbsp;38′&nbsp;N, 120°&nbsp;18′&nbsp;O</span></li>
+          <li><span class="jahr">2022</span> <span class="ort">Berlin</span>, seitdem Wohnort <span class="koord" data-ort="Berlin">52°&nbsp;31′&nbsp;N, 13°&nbsp;24′&nbsp;O</span></li>
+          <li><span class="jahr">2022</span> <span class="nw">A.-E.-Johann-Preis</span></li>
+          <li class="neben"><span class="jahr">2023</span> <span class="ort">Mallorca</span>, längerer Aufenthalt <span class="koord" data-ort="Mallorca">39°&nbsp;34′&nbsp;N, 2°&nbsp;39′&nbsp;O</span></li>
+        </ol>
+        <p class="weiter">Dieselben Orte <a class="nw" href="f-start.html#globus">auf dem Globus</a>.</p>
+      </section>
+    </div>
+
     <figure class="bildnis">
       <img src="bilder/dominik-jaekel.jpg" alt="Dominik Jäkel" width="711" height="690" decoding="async">
       <figcaption>Foto: Lars Poeck</figcaption>
     </figure>
-
-    <section class="werdegang" aria-labelledby="werdegang-titel">
-      <h2 class="titel" id="werdegang-titel">Werdegang</h2>
-      <ol class="daten">
-        <li><span class="jahr">1995</span> <span class="ort">Dortmund</span>, geboren <span class="koord" data-ort="Dortmund">51°&nbsp;31′&nbsp;N, 7°&nbsp;28′&nbsp;O</span></li>
-        <li><span class="jahr">2014</span> <span class="ort">Freiburg</span>, Studium <span class="nw">Liberal Arts &amp; Sciences</span> <span class="koord" data-ort="Freiburg">47°&nbsp;59′&nbsp;N, 7°&nbsp;51′&nbsp;O</span></li>
-        <li><span class="jahr">2015</span> <span class="ort">Potsdam</span>, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span> <span class="koord" data-ort="Potsdam">52°&nbsp;23′&nbsp;N, 13°&nbsp;04′&nbsp;O</span></li>
-        <li class="neben"><span class="jahr">2016</span> <span class="ort">Colombo, Sri Lanka</span>, längerer Aufenthalt <span class="koord" data-ort="Colombo">6°&nbsp;56′&nbsp;N, 79°&nbsp;52′&nbsp;O</span></li>
-        <li class="neben"><span class="jahr">2018</span> <span class="ort">Cotonou, Benin</span>, längerer Aufenthalt <span class="koord" data-ort="Cotonou">6°&nbsp;22′&nbsp;N, 2°&nbsp;26′&nbsp;O</span></li>
-        <li><span class="jahr">2018</span> <span class="ort">Kaohsiung, Taiwan</span>, vier Jahre als Lektor und freier Autor <span class="koord" data-ort="Kaohsiung">22°&nbsp;38′&nbsp;N, 120°&nbsp;18′&nbsp;O</span></li>
-        <li><span class="jahr">2022</span> <span class="ort">Berlin</span>, seitdem Wohnort <span class="koord" data-ort="Berlin">52°&nbsp;31′&nbsp;N, 13°&nbsp;24′&nbsp;O</span></li>
-        <li><span class="jahr">2022</span> <span class="nw">A.-E.-Johann-Preis</span></li>
-        <li class="neben"><span class="jahr">2023</span> <span class="ort">Mallorca</span>, längerer Aufenthalt <span class="koord" data-ort="Mallorca">39°&nbsp;34′&nbsp;N, 2°&nbsp;39′&nbsp;O</span></li>
-      </ol>
-      <p class="weiter">Auf der Startseite stehen dieselben Orte <a href="f-start.html#globus">auf dem Globus</a>.</p>
-    </section>
   </div>
 </div>
 </main>
@@ -141,9 +143,9 @@
 <footer class="fuss" id="kontakt">
   <section class="kontakt" aria-labelledby="kontakt-titel">
     <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p><span class="platzhalter">Adresse folgt</span></p>
+    <p>Anfragen zu Lesungen und zu den Romanen: <span class="platzhalter">Adresse folgt</span></p>
   </section>
-  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen. Entwurf F. <a href="index.html">Alle Entwürfe</a></p>
+  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
 </footer>
 
 <script src="globus/inhalt.js"></script>
@@ -151,13 +153,16 @@
 <script>
 (function () {
   'use strict';
-  // Die Koordinaten kommen aus denselben Daten wie die Tafel der Startseite; ohne Skript bleibt der gesetzte Text stehen
   const F = window.FSeite, I = window.INHALT || {};
-  if (!F || !Array.isArray(I.leben)) return;
-  F.$$('[data-ort]').forEach(el => {
-    const s = I.leben.find(x => x.name === el.dataset.ort);
-    if (s && s.lat != null && s.lon != null) el.textContent = F.koord(s.lat, s.lon);
-  });
+  if (!F) return;
+
+  // Die Koordinaten kommen aus denselben Daten wie die Tafel der Startseite; ohne Skript bleibt der gesetzte Text stehen
+  if (Array.isArray(I.leben)) {
+    F.$$('[data-ort]').forEach(el => {
+      const s = I.leben.find(x => x.name === el.dataset.ort);
+      if (s && s.lat != null && s.lon != null) el.textContent = F.koord(s.lat, s.lon);
+    });
+  }
 })();
 </script>
 </body>

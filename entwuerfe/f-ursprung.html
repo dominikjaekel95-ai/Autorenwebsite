@@ -14,7 +14,12 @@
 /* Seite der Ursprungstrilogie in Entwurf F: oben die Globusseite aus E1 (Titel, ein Absatz, die Orte als Kolophon),
    rechts der Globus mit der Tafel aus E2, der langsam von Göbekli Tepe bis Jerusalem aufklappt.
    Auf breiten Schirmen bleibt der Globus mit der Tafel stehen, während links die drei Bände folgen;
-   die Bandnummer hängt in Siena im linken Rand. Siena steht nur für die Trilogie selbst: Titel, Bandnummern, Orte und Weg. */
+   die Bandnummer hängt in Siena im linken Rand. Siena steht nur für die Trilogie selbst: Titel, Bandnummern, Orte und Weg.
+   Beim Scrollen: breit steht zuerst die ganze Trilogie auf dem Globus, und das Lesen klappt sie auf: erreicht Band I die Leselinie,
+   fährt der Globus langsam an den ersten Tempel, mit Band II wächst der Weg nach Uruk, mit Band III über Tyros nach Jerusalem,
+   und Band III bleibt bis zum Seitenende stehen. Zurückscrollen klappt sie wieder zu. Das Aufklappen von selbst gibt es breit nur auf Wunsch.
+   Schmal steht der Globus über den Bänden und klappt einmal von selbst auf, sobald man ihn sieht (er hält an, wenn er aus dem Bild ist);
+   dort steht oben ein lebender Kolumnentitel, und wer aus einem Band zum Globus springt, findet auf der Tafel den Rückweg. */
 
 /* Die Tafel braucht hier eine Zeile mehr (Ort und Zeit über den Koordinaten); der Globus wird dafür etwas kleiner */
 :root { --tafel-h: calc(var(--z) * 7); }
@@ -38,10 +43,6 @@
 .flaeche.ist-rund { clip-path: circle(calc(50% - 1.5px)); }
 .flaeche.ist-rund::after { opacity: 1; }
 
-/* Auf der Tafel steht „Arbeitstitel“ klein, grau und kursiv hinter dem Titel */
-#tafel .zusatz { font-style: italic; white-space: nowrap; }
-#tafel .tafel-daten .ortzeit { color: var(--graphit); }
-
 /* ---------- Die drei Bände ---------- */
 .baende { margin-top: calc(var(--z) * 3); }
 .band { position: relative; scroll-margin-top: var(--z); }
@@ -52,10 +53,8 @@
 .band-titel .titel-text, .band-titel .band-ziffer { cursor: pointer; }
 .band-titel .titel-text:hover { text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); }
 .band.ist-aktiv .band-titel .titel-text, .band.ist-aktiv .band-titel .band-ziffer { cursor: default; text-decoration-line: none; }
+/* Alle Bandnummern bleiben in vollem Siena; was der Globus gerade zeigt, steht nur am Ortswort schwarz */
 .band-ziffer { position: absolute; right: 100%; top: 0; padding-right: .55em; font-family: var(--sc); font-style: normal; font-size: 1.08em; letter-spacing: .04em; color: var(--siena); white-space: nowrap; }
-/* Was der Globus gerade zeigt: die anderen Bandnummern treten leise zurück */
-.baende.hat-aktiv .band:not(.ist-aktiv) .band-ziffer { color: color-mix(in srgb, var(--siena) 42%, var(--papier)); }
-.arbeitstitel { font-size: .7em; color: var(--grau-2); white-space: nowrap; }
 .band-ort { margin-top: calc(var(--z) * .25); color: var(--grau-2); }
 .band-ort .wort { color: var(--graphit); }
 .band-ort .wort.ist-aktiv { color: var(--schwarz); }
@@ -63,12 +62,29 @@
 .band-ort .neben-ort { display: block; }
 .band-ort .neben-ort .wort { color: var(--grau-1); }
 .band-thema { margin-top: var(--z); color: var(--schwarz); }
-.band-pitch { margin-top: calc(var(--z) * .5); font-size: 1.0625em; color: var(--schwarz); }
+/* Die Zeile aus dem Exposé steht kursiv in Textgröße, wie zitiert */
+.band-pitch { margin-top: calc(var(--z) * .5); font-style: italic; color: var(--schwarz); }
 .band-text, .band-frage { margin-top: calc(var(--z) * .5); }
 .figuren { margin-top: var(--z); }
 .figur + .figur { margin-top: calc(var(--z) * .5); }
 .figur-name { font-family: var(--sc); letter-spacing: .04em; color: var(--schwarz); }
 .figur-rolle { color: var(--grau-2); }
+
+/* Schmal steht der Globus nicht neben dem Text. Wer in einem Band liest, dessen Überschrift schon oben hinausgerollt ist,
+   hat oben einen lebenden Kolumnentitel: Bandnummer und Titel, wie im Buch, die Linie darunter so breit wie die Textspalte.
+   Er spricht nichts an (aria-hidden) und erscheint ohne Bewegung; ein Tipp darauf führt an den Anfang des Bands */
+.kolumne {
+  position: fixed; z-index: 20; left: 0; right: 0; top: 0;
+  display: flex; align-items: baseline; column-gap: .55em;
+  padding: max(calc(var(--z) * .3), env(safe-area-inset-top)) var(--rand-l) calc(var(--z) * .25);
+  background: var(--papier);
+  font-size: .9375em; line-height: var(--z); color: var(--graphit);
+  visibility: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.kolumne::after { content: ""; position: absolute; left: var(--rand-l); right: var(--rand-l); bottom: 0; border-bottom: 1px solid var(--grau-4); }
+.kolumne.ist-da { visibility: visible; }
+.kolumne-ziffer { flex: none; font-family: var(--sc); letter-spacing: .04em; color: var(--siena); }
+.kolumne-titel { min-width: 0; font-style: italic; hyphens: manual; text-wrap: balance; }
 
 /* Aus der Bibliothek: eine leise Zeile am Schluss */
 .regal { margin-top: calc(var(--z) * 3); font-size: .9375em; color: var(--grau-2); }
@@ -79,10 +95,23 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
 
 /* Breit: Globus und Tafel bleiben stehen, während links die Bände folgen */
 @media (min-width: 62.0625rem) {
+  .kolumne { display: none; }
   .globusseite > .globus { position: sticky; top: calc(var(--z) * .5); }
   /* Globus und Tafel bleiben stehen, bis der letzte Band gelesen ist: zwei Zeilen Luft gehören noch zum Raster, zwei weniger vor dem Fuß */
   .regal { margin-bottom: calc(var(--z) * 2); }
   .fuss { margin-top: calc(var(--z) * 2); }
+  /* Globus und Tafel stehen bis zum Seitenende: die Spalte des Globus reicht in einer leeren letzten Zeile neben dem Fuß hinunter
+     (--fuss-raum, so hoch wie der Fuß mit seinem Abstand, von der Seite gemessen); der Fuß rückt um so viel hinauf und bleibt links */
+  .globusseite { margin-bottom: calc(-1 * var(--fuss-raum, 0px)); }
+  .globusseite::after { content: ""; grid-column: 2; height: var(--fuss-raum, 0px); }
+  .fuss { width: calc(var(--rand-l) + var(--spalte)); padding-right: 0; }
+  /* Ein Sprung zu einem Band setzt die Überschrift in die Lesehöhe, bei der der Globus folgt; der kurze nächste Band steht dann
+     noch nicht ganz im Bild */
+  .band { scroll-margin-top: max(var(--z), 30svh); }
+}
+@media (max-width: 62rem) {
+  /* Was den Fokus bekommt, verschwindet nicht unter dem Kolumnentitel */
+  html { scroll-padding-top: calc(var(--z) * 2); }
 }
 @media (max-width: 40rem) {
   /* Kein Rand für die Zahl: sie steht über dem Titel */
@@ -163,16 +192,17 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
     </section>
   </div>
 
-  <p class="regal" id="regal">Aus meiner <a href="f-bibliothek.html">Bibliothek</a>, zum Stoff der Trilogie: <button type="button" class="wort" data-buch="Gilgamesch|Anonymous"><i>Gilgamesch</i></button>, Gebhard&nbsp;J.&nbsp;Selz’ <button type="button" class="wort" data-buch="Sumerer und Akkader|Gebhard J. Selz"><i>Sumerer und Akkader</i></button> und David&nbsp;Graebers <button type="button" class="wort" data-buch="The Dawn of Everything|David Graeber"><i>The Dawn of Everything</i></button>.</p>
+  <p class="regal" id="regal">Zum Stoff der Trilogie stehen in seiner <a href="f-bibliothek.html">Bibliothek</a> <button type="button" class="wort" data-buch="Gilgamesch"><i>Gilgamesch</i></button>, <button type="button" class="wort" data-buch="Sumerer und Akkader"><i>Sumerer und Akkader</i></button> von Gebhard&nbsp;J.&nbsp;Selz und <button type="button" class="wort" data-buch="The Dawn of Everything"><i>The Dawn of Everything</i></button> von David&nbsp;Graeber und David&nbsp;Wengrow.</p>
 </section>
+<p class="kolumne" id="kolumne" aria-hidden="true"><span class="kolumne-ziffer"></span><span class="kolumne-titel"></span></p>
 </main>
 
 <footer class="fuss" id="kontakt">
   <section class="kontakt" aria-labelledby="kontakt-titel">
     <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p><span class="platzhalter">Adresse folgt</span></p>
+    <p>Anfragen zu Lesungen und zu den Romanen: <span class="platzhalter">Adresse folgt</span></p>
   </section>
-  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen. Küsten und Grenzen nach Natural Earth. Entwurf F. <a href="index.html">Alle Entwürfe</a></p>
+  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -200,7 +230,6 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
   // Die Orte in zeitlicher Reihenfolge: Göbekli Tepe, Uruk, Tyros, Jerusalem
   const ORTE = (I.ursprung || []).map((o, i) => ({ i, name: o.name, lat: o.lat, lon: o.lon, band: o.band, jahr: o.jahr }));
   if (!ORTE.length) return;
-  const AUSGANG = ORTE[0];
   // Der Ort, an dem ein Band spielt (für einen Klick auf den Titel); Tyros steht nur auf dem Globus
   function hauptOrt(band) {
     const b = BAND[band] || {};
@@ -209,64 +238,93 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
   }
   $$('.weg, .baende, .regal').forEach(F.satzzeichenBinden);
 
+  // Beim Scrollen (unten): welcher Band gerade gelesen wird, und ein Wechsel, der noch wartet
+  const folge = { zone: null, warte: 0, um: -1e9 };
+  // nachLauf: das Aufklappen von selbst ist zu Ende; beim nächsten Scrollen folgt der Globus gleich wieder dem Lesen
+  let nachLauf = false;
+  function folgeWarten() { clearTimeout(folge.warte); }
+
   // ================= Tafel =================
   // -1 ist die ganze Trilogie, danach die Orte der Reihe nach
   const tafelEl = $('#tafel');
   let jetzt = -1;
   const tafelLaut = an => tafelEl.setAttribute('aria-live', an ? 'polite' : 'off');
-  function inhalt(i) {
-    const fuss = knopf('früher', 'data-schritt="-1"', i < 0) + knopf('später', 'data-schritt="1"', i >= ORTE.length - 1);
-    if (i < 0) {
-      return {
-        eigen: true, marke: 'I–III', kopf: 'Ursprung', unter: 'Trilogie, in Arbeit',
-        satz: F.chr('Von Göbekli Tepe um 8000 v. Chr. bis Jerusalem um 940 v. Chr.'), fuss
-      };
-    }
-    const o = ORTE[i], b = BAND[o.band] || {};
-    const ort = o.name === b.ort ? o.name : o.name + ', die Stadt der Phönizier';
-    return {
-      eigen: true, marke: o.band,
-      kopf: { html: esc(b.titel || '') + (b.arbeitstitel ? ' <span class="zusatz">Arbeitstitel</span>' : '') },
-      daten: { html: `<span class="ortzeit">${esc(F.chr(ort + ', ' + (b.zeit || o.jahr || '')))}</span><br>${esc(F.koord(o.lat, o.lon))}` },
-      satz: i === 0 ? 'Von hier aus sind die Entfernungen gemessen.' : F.km(AUSGANG, o) + ' Luftlinie von ' + AUSGANG.name + '.',
-      fuss
-    };
+  // Schmal: wer aus einem Band zum Globus hinaufgesprungen ist, kommt über die Tafel wieder an dieselbe Stelle im Text.
+  // Das Wort ist kurz, damit es neben früher und später passt; welcher Band, sagt die Nummer auf der Tafel (und der Vorleser)
+  let rueck = null;
+  // Titel, Landschaft und Zeit, Koordinaten und ein Satz zum Band wie auf der Startseite (FSeite.ursprungInhalt); der Überblick
+  // steht am Anfang und am Ende: später führt von Jerusalem dorthin
+  function inhalt(i, rueckBand) {
+    const z = rueckBand === undefined ? rueck && rueck.band : rueckBand;
+    const fuss = knopf('früher', 'data-schritt="-1"', i < 0) + knopf('später', 'data-schritt="1"') +
+      (z ? knopf('zurück', `data-zurueck aria-label="zurück zu Band ${z} im Text"`) : '');
+    return Object.assign(F.ursprungInhalt(i), { fuss });
   }
-  function tafelSetzen(i) { jetzt = i; F.tafel(tafelEl, inhalt(i)); }
-  // Die Tafel bekommt die Höhe ihres längsten Inhalts, damit unter ihr nichts springt
-  function tafelHoehe() { F.tafelReservieren(tafelEl, [-1].concat(ORTE.map(o => o.i)).map(inhalt)); }
+  function tafelSetzen(i) { jetzt = i; F.tafel(tafelEl, inhalt(i)); fussSetzen(); }
+  /* Die Tafel bekommt die Höhe ihres längsten Inhalts, damit unter ihr nichts springt; der Rückweg braucht keine eigene Zeile.
+     Breit müssen Globus und Tafel zusammen auf einen Schirm passen, und die Tafel ist je nach Breite zwei oder drei Zeilen höher:
+     der Globus bekommt die Höhe, die nach ihr und einer halben Zeile übrig bleibt (--tafel-h; ein kleinerer Globus macht die Tafel
+     schmaler, darum bis zu dreimal nachgemessen). Ändert sich dadurch die Leinwand, misst der Kern sie neu (FSeite.globus beobachtet sie) */
+  function tafelHoehe() {
+    F.tafelPlatz(tafelEl, [-1].concat(ORTE.map(o => o.i)).map(i => inhalt(i, F.breit() ? '' : 'III')));
+    fussSetzen();
+  }
+  // Schmal folgt unter der Tafel gleich der Text: dort stehen früher, später und der Rückweg immer auf der letzten Zeile der Tafel.
+  // Ein kürzerer Inhalt lässt die Luft über ihnen, nicht unter der Tafel; die Knöpfe bleiben beim Weiterschalten unter dem Finger
+  function fussSetzen() {
+    const fuss = $('.tafel-fuss', tafelEl), teil = $('.tafel-inhalt', tafelEl);
+    if (!fuss || !teil) return;
+    fuss.style.marginTop = '';
+    const soll = parseFloat(tafelEl.style.minHeight) || 0;
+    if (F.breit() || !soll) return;
+    const luft = soll - (teil.getBoundingClientRect().bottom - tafelEl.getBoundingClientRect().top);
+    if (luft > .5) fuss.style.marginTop = (parseFloat(getComputedStyle(fuss).marginTop) + luft) + 'px';
+  }
 
-  // Was der Globus zeigt: im Kolophon und im Band schwarz, die anderen Bandnummern leiser
-  function markieren(i) {
+  // Was der Globus zeigt, steht im Kolophon und am Ortswort im Band schwarz. Schmal steht der Globus weit über dem Text:
+  // dort ändert er die Wörter im Band nur, wenn man selbst gewählt hat, sonst sähe ein Ort im gerade gelesenen Text gewählt aus
+  let markeEigen = false;
+  function markieren(i, eigen) {
+    markeEigen = !!eigen;
     const o = i >= 0 ? ORTE[i] : null;
+    const imText = F.breit() || markeEigen;
     $$('[data-ort]').forEach(b => {
-      const an = !!o && +b.dataset.ort === i;
+      const an = !!o && +b.dataset.ort === i && (imText || !b.closest('.band'));
       b.classList.toggle('ist-aktiv', an);
       if (an) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
     });
-    $$('.band').forEach(s => s.classList.toggle('ist-aktiv', !!o && s.dataset.band === o.band));
-    $('#baende').classList.toggle('hat-aktiv', !!o);
+    $$('.band').forEach(s => s.classList.toggle('ist-aktiv', imText && !!o && s.dataset.band === o.band));
   }
 
   // ================= Globus =================
   const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
-  // Vor dem ersten Lauf steht der Globus leer; der Kern liest dieselbe Liste, sie füllt sich mit der Chronik
+  // Vor dem ersten Lauf steht der Globus leer; der Kern liest dieselbe Liste, sie füllt sich Ort für Ort
   const ortsListe = [];
   const ALLE = ORTE.map(o => ({ name: o.name, lat: o.lat, lon: o.lon }));
-  const fuellen = () => { if (!ortsListe.length) ortsListe.push(...ALLE); };
-  // Beschriftung: welche Orte schon zu sehen sind, wie weit der Weg reicht, welcher Ort gewählt ist
-  let sichtbarBis = null, spurBis = -1, aktivName = null;
-  let laufend = false, begonnen = false, lauf = 0;
-  // Langsam: lange Flüge, lange Halte, nah heran
-  const ZOOM = 6, DAUER = 3400, PAUSE = 5200, SCHRITT = 1800;
+  // Die ersten n Orte auf dem Globus
+  const orteBis = n => { if (ortsListe.length === n) return; ortsListe.length = 0; ortsListe.push(...ALLE.slice(0, n)); };
+  // Beschriftung: wie weit der Weg reicht, welcher Ort gewählt ist
+  let spurBis = -1, aktivName = null;
+  // laufend: das Aufklappen läuft; erreicht: bis zu welchem Ort es kam; pausiert: angehalten, weil der Globus aus dem Bild ist;
+  // fliegt: ein Schritt von Hand ist unterwegs; lauf zählt jede neue Bewegung, damit eine alte nicht weiterschreibt
+  let laufend = false, begonnen = false, lauf = 0, erreicht = -1, pausiert = null, fliegt = 0;
+  // Breit führt das Lesen den Globus (siehe „Beim Scrollen“); schmal klappt er von selbst auf
+  const lesenFuehrt = () => F.breit() && !ruhig;
+  // Langsam: lange Flüge, lange Halte, nah heran. Bei Band III etwas weiter weg, damit Uruk und der ganze Weg im Bild bleiben
+  const ZOOM = 6, ZOOM_III = 4.5, DAUER = 3400, PAUSE = ruhig ? 4000 : 5200, SCHRITT = 1800, WIEDER = 1200;
+  const zoomFuer = i => ORTE[i] && ORTE[i].band === 'III' ? ZOOM_III : ZOOM;
   const BLICK = { anfang: { mitte: [37, 31], k: 1 }, ende: { mitte: [41.5, 34.3], k: 4.5 } };
 
+  // Erst die Höhe der Tafel, dann der Globus in der Größe, die übrig bleibt
+  tafelSetzen(-1);
+  tafelHoehe();
   const g = F.globus({
     canvas, flaeche, hinweis: $('.hinweis', figur),
+    // Breit steht der Globus neben dem Text, und man scrollt über ihn hinweg: dort kein Hinweis auf Strg oder ⌘
+    radHinweis: () => !F.breit(),
     beimEingriff: () => eingriff(),
-    beiChronikEnde: grund => chronikEnde(grund),
     namen: {
-      orte: () => sichtbarBis === null ? ortsListe : ortsListe.slice(0, sichtbarBis + 1),
+      orte: () => ortsListe,
       spur: () => ORTE.slice(0, spurBis + 1),
       aktiv: () => aktivName
     }
@@ -290,10 +348,15 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
   if (g) {
     blickBerechnen();
     g.sperren(true);
-    g.ebene({ orte: ortsListe, laender: false, blick: BLICK.anfang, farben: F.SIENA_EBENE }, { fliegen: false });
+    // Breit steht beim Laden die ganze Trilogie da: alle vier Orte und der ganze Weg. Schmal der leere Globus, bis er aufklappt
+    const ueberblick = F.breit();
+    if (ueberblick) { orteBis(ALLE.length); spurBis = ORTE.length - 1; begonnen = true; }
+    g.ebene({ orte: ortsListe, laender: false, blick: ueberblick ? BLICK.ende : BLICK.anfang, farben: F.SIENA_EBENE }, { fliegen: false });
+    if (ueberblick) g.routeZeigen(ORTE);
   }
 
-  // Rund halten, sobald der Globus vergrößert ist (siehe Stil oben); ein Blick je Bild, nur solange die Seite sichtbar ist
+  // Zwischen k = 1 und dem Lupenrand des Kerns (ab k = 1,15) wäre die Kugel beim langsamen Heranfliegen eckig beschnitten;
+  // die Seite hält sie schon ab k > 1 rund (siehe Stil oben). Ein Blick je Bild, nur solange die Seite sichtbar ist
   if (g) {
     let rund = false;
     const rundHalten = () => {
@@ -305,70 +368,126 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
     requestAnimationFrame(rundHalten);
   }
 
-  function nochmal(zeigen) { $('#nochmal').classList.toggle('still', !zeigen || !g); }
-
-  // Wer den Globus anfasst, bevor er aufklappte, bekommt sofort alle Orte und den ganzen Weg
-  function eingriff() {
-    lauf++;
-    if (!begonnen) {
-      begonnen = true;
-      fuellen();
-      if (g) g.routeZeigen(ORTE);
-      spurBis = ORTE.length - 1;
-    }
-    nochmal(true);
-    neuSetzen();
+  // Das Wort unter dem Kolophon: breit vor dem ersten Aufklappen „Ort für Ort, von Göbekli Tepe an“, danach „Noch einmal …“
+  let geklappt = false;
+  function nochmal(zeigen) {
+    const el = $('#nochmal'), b = el && $('button', el);
+    if (!el) return;
+    el.classList.toggle('still', !zeigen || !g);
+    if (b) b.textContent = geklappt ? 'Noch einmal von Göbekli Tepe an' : 'Ort für Ort, von Göbekli Tepe an';
   }
-  function chronikEnde(grund) {
-    if (!laufend) return;
-    laufend = false;
-    tafelLaut(true);
-    sichtbarBis = null;
-    if (grund === 'fertig') { aktivName = null; spurBis = ORTE.length - 1; markieren(-1); tafelSetzen(-1); }
-    nochmal(true);
-    neuSetzen();
+  const warten = ms => new Promise(r => setTimeout(r, ms));
+  let startUhr = 0, weiterUhr = 0;
+  function uhrenAus() { clearTimeout(startUhr); clearTimeout(weiterUhr); }
+
+  // Ein Ort ist erreicht: er steht auf dem Globus, der Weg reicht bis zu ihm, Tafel und Kolophon zeigen ihn
+  function erreichen(i) {
+    erreicht = i; orteBis(i + 1); spurBis = i; aktivName = ORTE[i].name;
+    markieren(i); tafelSetzen(i); neuSetzen();
   }
 
-  // Das langsame Aufklappen: vom ganzen Globus an den ersten Tempel, dann Ort für Ort; Band I erst, wenn Göbekli Tepe erreicht ist
-  function starten() {
+  /* Das langsame Aufklappen, von Ort ab an. Von vorn (ab = 0): erst der ganze Globus, dann an den ersten Tempel; Band I erst,
+     wenn Göbekli Tepe erreicht ist. Jeder Ort ist ein Schritt des Kerns mit wachsendem Weg; zum Schluss alle vier im Überblick.
+     Nach einer Pause (der Globus war aus dem Bild) geht es am nächsten Ort weiter. */
+  async function aufklappen(ab) {
+    folgeWarten(); uhrenAus();
+    nachLauf = false;
     const meins = ++lauf;
-    begonnen = true;
+    begonnen = true; pausiert = null; fliegt = 0;
     if (!g) return;
-    fuellen();
-    g.chronikStoppen();
-    laufend = true;
+    laufend = true; geklappt = true;
     nochmal(false);
     tafelLaut(false);
-    sichtbarBis = 0; spurBis = 0; aktivName = ORTE[0].name; neuSetzen();
+    if (ab === 0) {
+      // Der alte Weg ist fort; er wächst neu von Göbekli Tepe an
+      g.routeZeigen([ORTE[0]]); g.aktiv(null);
+      erreicht = -1; orteBis(1); spurBis = 0; aktivName = ORTE[0].name;
+      markieren(-1); tafelSetzen(-1); neuSetzen();
+    }
+    for (let i = ab; i < ORTE.length; i++) {
+      if (i > ab) { await warten(PAUSE); if (meins !== lauf) return; }
+      // Ein Ort gilt als erreicht, wenn der Weg gut zur Hälfte bei ihm ist; der erste, wenn der Globus fast angekommen ist
+      const marke = setTimeout(() => { if (meins === lauf) erreichen(i); }, ruhig ? 0 : DAUER * (i === 0 ? .85 : .52));
+      const e = await g.chronikSchritt(ORTE, i, { zoom: zoomFuer(i), dauer: DAUER });
+      if (meins !== lauf || e !== 'fertig') { clearTimeout(marke); return; }
+      if (erreicht < i) { clearTimeout(marke); erreichen(i); }
+    }
+    if (ab < ORTE.length) { await warten(PAUSE); if (meins !== lauf) return; }
+    const e = await g.fliegen(BLICK.ende.mitte, BLICK.ende.k);
+    if (meins !== lauf || e !== 'fertig') return;
+    laufend = false;
+    erreicht = ORTE.length;
+    tafelLaut(true);
+    aktivName = null; g.aktiv(null); spurBis = ORTE.length - 1; orteBis(ALLE.length);
     markieren(-1); tafelSetzen(-1);
-    setTimeout(() => { if (meins === lauf && laufend) { markieren(0); tafelSetzen(0); } }, ruhig ? 0 : DAUER * .85);
-    g.chronik(ORTE, {
-      dauer: DAUER, pause: ruhig ? 4000 : PAUSE, zoom: ZOOM, schluss: BLICK.ende,
-      beiStation: (s, i) => {
-        if (meins !== lauf) return;
-        sichtbarBis = i; spurBis = i; aktivName = s.name; neuSetzen();
-        if (i > 0) { markieren(i); tafelSetzen(i); }
-      }
-    });
+    nochmal(true);
+    neuSetzen();
+    // Wer währenddessen weitergelesen hat, bekommt beim nächsten Scrollen den Band, in dem er liest, ohne auf die nächste Grenze zu warten
+    nachLauf = true;
   }
 
-  // Ein Ort von Hand (Kolophon, Band, früher und später): der Weg wächst oder schrumpft bis dorthin
-  function schritt(i) {
+  // Der Globus ist aus dem Bild: das Aufklappen hält an der letzten erreichten Station; niemand sieht ihn dorthin zurückspringen
+  function anhalten() {
+    if (!laufend || !g) return;
     lauf++;
-    begonnen = true;
-    if (g) g.chronikStoppen();
     laufend = false;
+    if (erreicht >= 0) {
+      pausiert = { ab: erreicht + 1 };
+      orteBis(erreicht + 1); spurBis = erreicht; aktivName = ORTE[erreicht].name;
+      g.chronikSchritt(ORTE, erreicht, { zoom: zoomFuer(erreicht), dauer: 1 });
+    } else {
+      // noch vor dem ersten Tempel: beim nächsten Mal von vorn
+      pausiert = { ab: 0 };
+      g.fliegen(BLICK.anfang.mitte, BLICK.anfang.k);
+    }
+    neuSetzen();
+  }
+
+  // Wer den Globus anfasst, während er sich bewegt oder bevor er aufklappte, bekommt sofort alle Orte und den ganzen Weg
+  function eingriff() {
+    folgeWarten(); uhrenAus();
+    nachLauf = false;
+    const bewegt = laufend || !!pausiert || !!fliegt || !begonnen;
+    lauf++;
+    laufend = false; pausiert = null; fliegt = 0; begonnen = true;
+    if (bewegt && g) { orteBis(ALLE.length); g.routeZeigen(ORTE); spurBis = ORTE.length - 1; }
     tafelLaut(true);
-    fuellen();
-    sichtbarBis = null;
-    markieren(i);
+    nochmal(true);
+    neuSetzen();
+  }
+
+  /* Ein Ort von Hand (Kolophon, Band, früher und später) oder beim Lesen: der Weg wächst oder schrumpft bis dorthin.
+     Für jeden Ort gilt dieselbe Regel: auf dem Globus stehen nur die Orte bis zu ihm, alle vier nur im Überblick (i = -1).
+     Neue Orte erscheinen sofort, überzählige gehen erst nach dem Flug, damit der Weg nicht zu einem Ort zurückläuft, der schon fort ist. */
+  function schritt(i, opt) {
+    opt = opt || {};
+    // Eine eigene Wahl geht vor: ein noch wartender Wechsel durch das Scrollen entfällt
+    if (!opt.zone) { folgeWarten(); folge.um = performance.now(); nachLauf = false; }
+    uhrenAus();
+    const meins = ++lauf;
+    begonnen = true; laufend = false; pausiert = null;
+    tafelLaut(!opt.leise);
+    const n = i >= 0 ? i + 1 : ALLE.length;
+    if (n >= ortsListe.length) orteBis(n);
+    markieren(i, !opt.zone);
     tafelSetzen(i);
     if (i < 0) {
       spurBis = ORTE.length - 1; aktivName = null;
-      if (g) { g.routeZeigen(ORTE); g.aktiv(null); g.fliegen(BLICK.ende.mitte, BLICK.ende.k); }
+      if (g) {
+        g.routeZeigen(ORTE); g.aktiv(null);
+        fliegt = meins;
+        g.fliegen(BLICK.ende.mitte, BLICK.ende.k).then(() => { if (fliegt === meins) fliegt = 0; });
+      }
     } else {
       spurBis = i; aktivName = ORTE[i].name;
-      if (g) g.chronikSchritt(ORTE, i, { zoom: ZOOM, dauer: SCHRITT });
+      if (g) {
+        fliegt = meins;
+        g.chronikSchritt(ORTE, i, { zoom: zoomFuer(i), dauer: opt.dauer || SCHRITT }).then(e => {
+          if (fliegt === meins) fliegt = 0;
+          if (e !== 'fertig' || meins !== lauf || ortsListe.length === n) return;
+          orteBis(n); g.zeichnen(); neuSetzen();
+        });
+      }
     }
     nochmal(true);
     neuSetzen();
@@ -384,56 +503,188 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
 
   // ================= Bibliothek =================
   const BUECHER = F.buch.alle();
+  const buchZu = t => BUECHER.find(x => x.t === t && x.r !== 'leseliste') || BUECHER.find(x => x.t === t);
   // Steht ein Buch nicht (mehr) in den Daten, bleibt nur sein Titel stehen
   $$('[data-buch]').forEach(b => {
-    if (BUECHER.some(x => x.key === b.dataset.buch)) return;
+    if (buchZu(b.dataset.buch)) return;
     const i = document.createElement('i');
     i.textContent = b.textContent;
     b.replaceWith(i);
   });
+  // Die Karte spricht wie diese Seite in der dritten Person von ihm
+  const karteFuer = b => F.buch.karte(b, { person: 3 });
 
   // ================= Bedienung =================
   document.addEventListener('click', e => {
     const t = e.target.closest('button, a');
     if (t) {
       const d = t.dataset;
-      if (d.ort !== undefined) { schritt(+d.ort); globusInSicht(true); }
-      else if (d.schritt) schritt(Math.max(-1, Math.min(ORTE.length - 1, jetzt + +d.schritt)));
-      else if (d.nochmal !== undefined) { starten(); globusInSicht(true); }
+      if (d.ort !== undefined) {
+        if (t.closest('.band')) rueckMerken(t);
+        schritt(+d.ort);
+        globusInSicht(true);
+        // Mit der Tastatur geht der Fokus mit hinauf, auf den Rückweg; mit Maus oder Finger bleibt er, wo er war
+        const z = rueck && e.detail === 0 && $('[data-zurueck]', tafelEl);
+        if (z) z.focus({ preventScroll: true });
+      }
+      else if (d.schritt) schritt(jetzt + +d.schritt > ORTE.length - 1 ? -1 : Math.max(-1, jetzt + +d.schritt));
+      else if (d.zurueck !== undefined) zurueck();
+      else if (d.nochmal !== undefined) { aufklappen(0); globusInSicht(true); }
       else if (d.buch) {
         if (F.karteikarte.offen() && F.karteikarte.ausloeser() === t) { F.karteikarte.schliessen(); return; }
-        const b = BUECHER.find(x => x.key === d.buch);
-        if (b) F.karteikarte.oeffnen(F.buch.karte(b), t);
+        const b = buchZu(d.buch);
+        if (b) F.karteikarte.oeffnen(karteFuer(b), t);
       }
       return;
     }
-    // Ein Klick auf den Titel eines Bands oder seine Zahl führt den Globus an dessen Ort; mit der Tastatur geht es über den Ortsnamen
+    // Ein Klick auf den Titel eines Bands oder seine Zahl führt den Globus an dessen Ort; mit der Tastatur geht es über den Ortsnamen.
+    // Breit geschieht nichts, wenn der Globus daneben diesen Band schon zeigt; schmal holt der Titel den Globus dann wenigstens ins Bild
     const titel = e.target.closest('.band-titel .titel-text, .band-titel .band-ziffer');
     if (titel) {
       const band = titel.closest('.band').dataset.band;
       const i = hauptOrt(band);
-      if (i >= 0 && !(jetzt >= 0 && ORTE[jetzt].band === band)) { schritt(i); globusInSicht(true); }
+      if (i < 0) return;
+      const schonDa = !laufend && jetzt >= 0 && ORTE[jetzt].band === band;
+      if (schonDa && F.breit()) return;
+      rueckMerken(titel);
+      if (schonDa) { markieren(jetzt, true); tafelSetzen(jetzt); } else schritt(i);
+      globusInSicht(true);
     }
   });
 
+  // ================= Beim Scrollen =================
+  const BAENDE = $$('.band');
+  let zeile = F.masz('--z');
+
+  /* Breit: Globus und Tafel stehen neben dem Text still, und das Lesen klappt die Trilogie auf. Erreicht die Überschrift eines Bands
+     die Leselinie (gut zwei Fünftel des Fensters), fährt der Globus langsam an dessen Ort, der Weg wächst bis dorthin, und die Tafel
+     zeigt den Band; zurückscrollen klappt wieder zu. Über Band I steht die ganze Trilogie; Band III bleibt bis zum Seitenende
+     stehen (seine Ansicht zeigt ohnehin alle vier Orte und den ganzen Weg). Am Seitenende wandert die Linie nach unten
+     (FSeite.leselinie), damit auch der kurze letzte Band sie erreicht. Wer schnell scrollt, sieht nur die Fahrt zum Band, bei dem
+     er bleibt. Was man selbst gewählt hat (ein Ort, früher und später, der Globus von Hand), bleibt stehen, bis man in einen anderen
+     Band weiterliest. Läuft das Aufklappen von selbst (auf Wunsch), merkt sich die Seite nur, wo man liest; ist es zu Ende, zeigt
+     der Globus beim nächsten Scrollen gleich diesen Band. Die Tafel sagt diese Wechsel nicht an.
+     Die Fahrt beim Lesen dauert gut zwei Sekunden, kürzer als das Aufklappen auf Wunsch: sie soll dem Lesen antworten.
+     Ohne Globus (kein Netz) und bei reduzierter Bewegung folgt nichts: der Globus bleibt beim Überblick, die Wörter führen ihn. */
+  const FOLGE = 2200, LESELINIE = .42;
+  function zoneVon(i) { return i < 0 ? 'oben' : BAENDE[Math.min(i, BAENDE.length - 1)].dataset.band; }
+  function gelesen(i, info) {
+    const zone = zoneVon(i);
+    if (zone === folge.zone) return;
+    const erste = folge.zone === null;
+    folge.zone = zone;
+    folgeWarten();
+    // Was eine eigene Wahl selbst an Scrollen auslöst (ein Wort wird ins Bild geholt), zählt nicht als Weiterlesen
+    if (!g || !lesenFuehrt() || laufend || pausiert || performance.now() - folge.um < 400) return;
+    // Wer mitten auf der Seite lädt (auch mit #band-iii), sieht den Band, bei dem er ist, sofort
+    if (erste || info.vorher === null) { zoneZeigen(zone, 1); return; }
+    folge.warte = setTimeout(() => zoneZeigen(zone), 240);
+  }
+  function zoneZeigen(zone, dauer) {
+    if (zone !== folge.zone || laufend || !lesenFuehrt()) return;
+    if (zone === 'oben') { if (jetzt >= 0) schritt(-1, { zone: true, leise: true }); return; }
+    if (jetzt >= 0 && ORTE[jetzt].band === zone) return;
+    schritt(hauptOrt(zone), { zone: true, leise: true, dauer: dauer || FOLGE });
+  }
+
+  // Schmal: der lebende Kolumnentitel, solange man in einem Band liest, dessen Überschrift oben hinausgerollt ist
+  const kolumne = $('#kolumne');
+  let kolumneBand = null;
+  function kolumneSetzen() {
+    if (!kolumne) return;
+    let band = null;
+    if (!F.breit()) {
+      const h = kolumne.offsetHeight;
+      BAENDE.forEach(s => { if (s.getBoundingClientRect().top < h) band = s; });
+      if (band && ($('.band-titel', band).getBoundingClientRect().bottom > h || band.getBoundingClientRect().bottom < h + zeile)) band = null;
+    }
+    if (band !== kolumneBand) {
+      kolumneBand = band;
+      if (band) {
+        $('.kolumne-ziffer', kolumne).textContent = band.dataset.band;
+        $('.kolumne-titel', kolumne).textContent = (BAND[band.dataset.band] || {}).titel || '';
+      }
+    }
+    kolumne.classList.toggle('ist-da', !!band);
+  }
+  // Ein Tipp auf den Kolumnentitel führt an den Anfang des Bands
+  if (kolumne) kolumne.addEventListener('click', () => { if (kolumneBand) kolumneBand.scrollIntoView({ block: 'start', behavior: ruhig ? 'auto' : 'smooth' }); });
+
+  // Schmal: ein Ort oder Titel in einem Band holt den Globus ins Bild; ist der Weg weiter als ein Fenster, merkt sich die Seite die Stelle
+  function rueckMerken(el) {
+    rueck = null;
+    const s = el.closest('.band');
+    if (!s || F.breit() || figur.getBoundingClientRect().top > -window.innerHeight * .8) return;
+    rueck = { band: s.dataset.band, y: window.scrollY, el: $('.band-ort .wort', s), gesehen: false };
+  }
+  function rueckVergessen() { if (!rueck) return; rueck = null; tafelLaut(false); tafelSetzen(jetzt); }
+  function zurueck() {
+    if (!rueck) return;
+    const r = rueck;
+    rueckVergessen();
+    window.scrollTo({ top: r.y, behavior: ruhig ? 'auto' : 'smooth' });
+    if (r.el) r.el.focus({ preventScroll: true });
+  }
+  // Wer selbst weiterscrollt, bis Globus und Tafel aus dem Bild sind, braucht den Rückweg nicht mehr
+  function rueckPruefen() {
+    if (!rueck) return;
+    if (F.breit()) { rueckVergessen(); return; }
+    const r = figur.getBoundingClientRect(), drin = r.bottom > 0 && r.top < window.innerHeight;
+    if (drin) rueck.gesehen = true;
+    else if (rueck.gesehen) rueckVergessen();
+  }
+
+  let bild = 0;
+  function beimRollen() {
+    bild = 0; kolumneSetzen(); rueckPruefen();
+    if (nachLauf && !laufend && folge.zone !== null && lesenFuehrt()) { nachLauf = false; zoneZeigen(folge.zone); }
+  }
+  window.addEventListener('scroll', () => { if (!bild) bild = requestAnimationFrame(beimRollen); }, { passive: true });
+
+  // Schmal beginnt das Aufklappen von selbst, sobald der Globus zur Hälfte im Bild ist, nach anderthalb Sekunden ganzem, leerem Globus
+  // (breit führt das Lesen). Verlässt er das Bild (weniger als ein Fünftel zu sehen), hält es an; kommt er zurück, geht es nach
+  // einem Atemzug weiter
+  let imBild = false;
+  function sicht(anteil) {
+    if (anteil >= .5) {
+      if (imBild) return;
+      imBild = true;
+      if (!begonnen) { if (!F.breit()) { clearTimeout(startUhr); startUhr = setTimeout(() => { if (!begonnen && imBild) aufklappen(0); }, ruhig ? 600 : 1500); } }
+      else if (pausiert) { clearTimeout(weiterUhr); weiterUhr = setTimeout(() => { if (pausiert && imBild) aufklappen(pausiert.ab); }, ruhig ? 400 : WIEDER); }
+    } else if (anteil < .2) {
+      imBild = false;
+      uhrenAus();
+      anhalten();
+    }
+  }
+
+  // Breit: die leere Zeile neben dem Fuß (siehe Stil) so hoch wie der Fuß samt seinem Abstand
+  const fussEl = $('.fuss'), seiteEl = $('.globusseite');
+  function fussRaum() {
+    if (!fussEl || !seiteEl) return;
+    if (!F.breit()) { seiteEl.style.removeProperty('--fuss-raum'); return; }
+    seiteEl.style.setProperty('--fuss-raum', Math.ceil(fussEl.getBoundingClientRect().height + (parseFloat(getComputedStyle(fussEl).marginTop) || 0)) + 'px');
+  }
+
   // ================= Start =================
-  tafelSetzen(-1);
   markieren(-1);
+  fussRaum();
   let t = null;
-  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { tafelHoehe(); if (g && !laufend) blickBerechnen(); }, 120); });
-  // Das Aufklappen beginnt von selbst, sobald der Globus im Bild ist: erst anderthalb Sekunden der ganze Globus, leer
+  window.addEventListener('resize', () => {
+    clearTimeout(t);
+    t = setTimeout(() => { zeile = F.masz('--z'); tafelHoehe(); fussRaum(); if (g) blickBerechnen(); markieren(jetzt, markeEigen); beimRollen(); }, 120);
+  });
+  nochmal(F.breit());
+  F.leselinie(BAENDE, gelesen, { bereich: seiteEl, linie: LESELINIE });
   F.schriften(2500).then(() => {
+    zeile = F.masz('--z');
     tafelHoehe();
+    fussRaum();
+    kolumneSetzen();
     if (!g) return;
     g.zeichnen(); neuSetzen();
-    const los = () => setTimeout(() => { if (!begonnen) starten(); }, ruhig ? 600 : 1500);
-    if (!('IntersectionObserver' in window)) { los(); return; }
-    const io = new IntersectionObserver(eintraege => {
-      if (!eintraege.some(x => x.isIntersecting)) return;
-      io.disconnect();
-      los();
-    }, { threshold: .5 });
-    io.observe(flaeche);
+    if (!('IntersectionObserver' in window)) { if (!F.breit()) startUhr = setTimeout(() => { if (!begonnen) aufklappen(0); }, ruhig ? 600 : 1500); return; }
+    new IntersectionObserver(eintraege => sicht(eintraege[eintraege.length - 1].intersectionRatio), { threshold: [0, .2, .5] }).observe(flaeche);
   });
 })();
 </script>

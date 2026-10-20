@@ -15,7 +15,7 @@
    die Zeiten nach dem Jahr der Erstveröffentlichung über die Bretter, Buchstützen und Schilder in Kapitälchen.
    Siena nur für die eigenen Werke. Was noch wartet, ist mit Bleistift vorgezeichnet (daten/leseliste.js). */
 
-.vorspann { padding-top: var(--z); }
+.vorspann { padding-top: calc(var(--z) * 2); }   /* der Titel auf derselben Höhe wie auf Vita, Satoshi und Ursprung */
 .vorspann .spalte > p + p { margin-top: calc(var(--z) * .5); }
 .zeichen { font-size: .9375em; }
 /* Breit steht die Lesehilfe als Randnotiz rechts neben der Einleitung, auf deren erster Zeile; die Einleitung behält ihr Maß.
@@ -46,6 +46,7 @@
   background: var(--grund, #EAE7DF); color: var(--tinte, #2A2B2E); font: inherit; cursor: pointer;
   display: flex; align-items: center; justify-content: center; overflow: visible;
   transition: transform .2s ease; -webkit-tap-highlight-color: transparent;
+  scroll-margin-top: 14px;   /* mit der Tastatur: unter der stehenden Zeile Platz für das Anheben um 6 px und 8 px Luft */
 }
 .ruecken:hover, .ruecken:focus-visible, .ruecken.ist-offen { transform: translateY(-6px); }
 .ruecken:focus-visible { outline-offset: 1px; z-index: 1; }
@@ -93,21 +94,57 @@
 .muster-zeilen { background-image: repeating-linear-gradient(0deg, transparent 0 5.4px, var(--muster) 5.4px 6px); }
 .muster-netz { background-image: repeating-linear-gradient(90deg, transparent 0 5.4px, var(--muster) 5.4px 6px), repeating-linear-gradient(0deg, transparent 0 8.4px, var(--muster) 8.4px 9px); }
 .eigenes .gruppe.eigen-gruppe { gap: 1px; }
-.schuber-platz { position: relative; flex: none; width: var(--zu); height: var(--hc); transition: width .9s ease; }
-.schuber-platz.offen { width: var(--auf); }
+/* Der Schuber: die Bände gleiten nach rechts heraus, der hinterste zuerst, damit keiner über einen anderen fährt.
+   Beim Zurückschieben geht der vorderste zuerst, und der Platz schrumpft erst mit dem letzten Band. */
+.schuber-platz { position: relative; flex: none; width: var(--zu); height: var(--hc); transition: width .8s cubic-bezier(.3, .1, .2, 1) var(--schrumpft, 0s); }
+.schuber-platz.offen { width: var(--auf); transition-delay: 0s; }
 .schuber-platz .schuber { position: absolute; left: 0; bottom: 0; z-index: 2; }
 .schuber-platz .bandbuch { position: absolute; bottom: 0; left: var(--innen); z-index: 1; transition: transform .8s cubic-bezier(.3, .1, .2, 1); transition-delay: var(--zurueck); }
 .schuber-platz.offen .bandbuch { transform: translateX(var(--weg)); transition-delay: var(--hin); }
 .schuber-platz.offen .bandbuch:hover, .schuber-platz.offen .bandbuch:focus-visible, .schuber-platz.offen .bandbuch.ist-offen { transform: translateX(var(--weg)) translateY(-6px); transition-delay: 0s; }
 
+/* ---------- Die Zeitleiste über den Brettern ----------
+   Gesetzt wie die Zeile der Lebensstationen auf der Startseite. Sie steht über dem ersten Brett und bleibt beim Scrollen oben,
+   solange Bretter darunter sind; die Zeit, in der man gerade liest, steht schwarz. */
+.lesen { position: relative; }
+.zeitleiste { position: sticky; top: 0; z-index: 4; margin-top: var(--z); padding: calc(var(--z) * .25) 0; background: var(--papier); }
+.zeitleiste[hidden] { display: none; }
+/* Das Papier der Leiste reicht über die Ränder des Abschnitts, damit kein überstehender Bleistiftstrich daneben hervorschaut */
+.zeitleiste::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(-1 * var(--rand-l)); right: calc(-1 * var(--rand-r)); z-index: -1; background: var(--papier); }
+.zeitleiste-zeile { display: flex; flex-wrap: wrap; column-gap: 1.6em; font-style: italic; font-size: .9375em; line-height: var(--z); color: var(--grau-2); hyphens: manual; }
+.zeitleiste-zeile .gruppe-fach { white-space: nowrap; }
+.zeitleiste a { white-space: nowrap; color: var(--grau-2); text-decoration-color: color-mix(in srgb, currentColor 30%, transparent); }
+.zeitleiste a:hover { text-decoration-color: currentColor; }
+.zeitleiste a[aria-current] { color: var(--schwarz); text-decoration-line: none; }
+.zeitleiste .strich { color: var(--grau-3); }
+.lesen .faecher { margin-top: calc(var(--z) * .25); }
+/* Solange die Zeile oben steht, schließt sie wie ein Kolumnentitel mit einer feinen Linie ab, so breit wie die Bretter;
+   darunter ein Viertel Zeile Papier, dann erst die Rücken. Der Saum liegt außerhalb der Box, die Bretter darunter rücken nicht. */
+.zeitleiste::after { content: none; }
+.zeitleiste.steht::after {
+  content: ""; position: absolute; top: 100%; left: calc(-1 * var(--rand-l)); right: calc(-1 * var(--rand-r)); height: calc(var(--z) * .25 + 1px);
+  background: linear-gradient(var(--grau-4), var(--grau-4)) no-repeat var(--rand-l) 0 / calc(100% - var(--rand-l) - var(--rand-r)) 1px, var(--papier);
+}
+@media (max-width: 62rem) {
+  .zeitleiste::before { right: calc(-1 * var(--rand-l)); }
+  .zeitleiste.steht::after { right: calc(-1 * var(--rand-l)); background-size: calc(100% - 2 * var(--rand-l)) 1px, auto; }
+}
+/* Steht die Zeile oben, liegt die Karteikarte unter ihr: beim Scrollen gleitet sie darunter wie die Bretter.
+   Steht die Zeile noch an ihrem Platz, liegt die Karte obenauf. Auf dem Telefon ist sie ein Blatt am unteren Rand und bleibt obenauf. */
+.leiste-steht .karte:not(.als-blatt) { z-index: 3; }
+
 /* Name des Buchs über dem Rücken, gesetzt wie die Zeile unter dem Band der Startseite: gerade, der Titel kursiv, auf Papier */
-.rueckentipp { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; width: max-content; max-width: min(36em, calc(100% - 32px)); text-wrap: balance; hyphens: manual; font-size: .875rem; line-height: 1.3; padding: 0 .3em; background: var(--papier); color: var(--graphit); }
+.rueckentipp { position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none; width: max-content; max-width: min(36em, calc(100% - 32px)); text-wrap: balance; hyphens: manual; font-size: .875rem; line-height: 1.3; padding: 0 .3em; background: var(--papier); color: var(--graphit); }
 .rueckentipp[hidden] { display: none; }
 
 .zur-startseite { margin-top: calc(var(--z) * 1.5); max-width: var(--mass); }
 
+@media (max-width: 62rem) {
+  .vorspann { padding-top: var(--z); }
+}
 @media (max-width: 40rem) {
   .schild { font-size: .8125rem; }
+  .zeitleiste-zeile { font-size: .875rem; line-height: 1.6; column-gap: 1.2em; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ruecken, .schuber-platz, .schuber-platz .bandbuch { transition: none !important; }
@@ -145,24 +182,27 @@
 <section class="abschnitt regal" id="regal" aria-label="Regal">
   <h2 class="unsichtbar">Was ich schreibe und was auf dem Nachttisch liegt</h2>
   <div class="eigenes" id="eigenes"></div>
-  <h2 class="unsichtbar">Was ich gelesen habe</h2>
-  <div class="faecher" id="faecher"></div>
-  <h2 class="unsichtbar">Kinderzimmer</h2>
-  <div class="kinderzimmer" id="kinderzimmer"></div>
-  <h2 class="unsichtbar">Was noch wartet</h2>
-  <div class="wartet" id="wartet"></div>
+  <div class="lesen" id="lesen">
+    <h2 class="unsichtbar">Was ich gelesen habe</h2>
+    <nav class="zeitleiste" id="zeitleiste" aria-label="Zeiten im Regal" hidden><p class="zeitleiste-zeile" id="zeitleiste-zeile"></p></nav>
+    <div class="faecher" id="faecher"></div>
+    <h2 class="unsichtbar">Kinderzimmer</h2>
+    <div class="kinderzimmer" id="kinderzimmer"></div>
+    <h2 class="unsichtbar">Was noch wartet</h2>
+    <div class="wartet" id="wartet"></div>
+  </div>
   <noscript><p class="leise">Das Regal wird mit JavaScript gezeichnet.</p></noscript>
   <p class="rueckentipp" id="rueckentipp" aria-hidden="true" hidden></p>
-  <p class="zur-startseite"><a href="f-start.html#gelesen">Auf der Startseite</a> stehen dieselben Bücher auf einer Zeitachse.</p>
+  <p class="zur-startseite">Dieselben Bücher stehen auf der Startseite <a href="f-start.html#gelesen">auf einer Zeitachse</a>.</p>
 </section>
 </main>
 
 <footer class="fuss" id="kontakt">
   <section class="kontakt" aria-labelledby="kontakt-titel">
     <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p><span class="platzhalter">Adresse folgt</span></p>
+    <p>Anfragen zu Lesungen und zu den Romanen: <span class="platzhalter">Adresse folgt</span></p>
   </section>
-  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen. Entwurf F. <a href="index.html">Alle Entwürfe</a></p>
+  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
 </footer>
 
 <script src="globus/inhalt.js"></script>
@@ -178,23 +218,8 @@
   const regal = $('#regal');
 
   // ---------- Bücher ----------
-  // Die gemeinsame Liste mit drei Berichtigungen, solange FSeite.buch.alle() sie nicht selbst macht (ist sie dort berichtigt, ändert sich hier nichts):
-  // Was schon im Regal steht oder auf dem Nachttisch liegt, wartet nicht noch einmal. „Ghostwritten“ bleibt draußen, bis Dominik es freigibt.
-  // Titel, Namen und Verlage im deutschen Satz: Halbgeviertstrich in Spannen, typografische Apostrophe und Anführungszeichen, „T. S. Eliot“, „C. H. Beck“.
-  const ROH = F.buch.alle();
-  const titelSchluessel = b => b.nn + '|' + b.t.toLowerCase().replace(/^(der|die|das|the|a|an|ein|eine)\s+/, '').replace(/[^\p{L}\p{N}]+/gu, '');
-  const IM_REGAL = new Set(ROH.filter(b => b.r !== 'leseliste').map(titelSchluessel));
-  const satz = s => String(s || '').replace(/(\d)-(\d)/g, '$1–$2').replace(/"([^"]*)"/g, '“$1”').replace(/'/g, '’');
-  const initialen = v => satz(v).replace(/\b([A-Z])\.\s?(?=[A-Z])/g, '$1.' + F.NBSP);
-  const bleibt = ROH.filter(b => !/^Ghostwritten$/i.test(b.t) && !(b.r === 'leseliste' && IM_REGAL.has(titelSchluessel(b))));
-  const BUECHER = bleibt.map(b => Object.assign({}, b, { t: satz(b.t), u: satz(b.u), v: initialen(b.v), a: initialen(b.a), autor: initialen(b.autor), nn: satz(b.nn) }));
-  // Signaturen der Gruppen, aus denen ein Buch herausgenommen wurde, neu buchstabieren: a, b, c … ohne Lücke
-  const behalten = new Set(bleibt);
-  new Set(ROH.filter(b => !behalten.has(b) && b.sig).map(b => b.sig.replace(/[a-z]$/, ''))).forEach(basis => {
-    const gr = BUECHER.filter(b => b.sig === basis || (b.sig && b.sig.length === basis.length + 1 && b.sig.startsWith(basis) && /[a-z]$/.test(b.sig)))
-      .sort((x, y) => x.sig.localeCompare(y.sig));
-    gr.forEach((b, i) => { b.sig = basis + (gr.length > 1 ? 'abcdefghijklmnopqrstuvwxyz'[i] : ''); });
-  });
+  // Die gemeinsame Liste (FSeite.buch.alle): berichtigt, im Satz gesetzt, mit Signaturen; was schon im Regal steht, wartet nicht noch einmal
+  const BUECHER = F.buch.alle();
   // Noch kürzer, nur wenn der Platz fehlt: ohne „oder …“, ohne „and Other Stories“, ohne Artikel
   const titelKuerzer = s => s.replace(/,? (or|oder),? .+$/i, '').replace(/,? (and|und|&) (other|andere) .+$/i, '').replace(/^(The|A|An|Der|Die|Das|Ein|Eine) (?=\S)/, '').trim();
   // Deutsche Rücken laufen von unten nach oben
@@ -251,22 +276,24 @@
   // Bücher ohne bekanntes Jahr lassen sich nicht einstellen und bleiben draußen.
   const GELESEN = BUECHER.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort(F.buch.ordnung);
   const erstes = GELESEN[0];
+  // anker und marke: Sprungziel und Wort in der Zeitleiste über den Brettern
+  const ERSTES = erstes ? F.buch.titelKurz(erstes.t) : 'Gilgamesch';
   const EPOCHEN = [
-    { z: 'A', name: 'Von ' + (erstes ? F.buch.titelKurz(erstes.t) : 'Gilgamesch') + ' bis zur Jahrhundertwende', jahre: (erstes ? F.jahrText(erstes.j) : '') + ' bis 1899', bis: 1899 },
-    { z: 'B', name: 'Bis zum Ende des Zweiten Weltkriegs', jahre: '1900–1945', bis: 1945 },
-    { z: 'C', name: 'Bis zum Fall der Mauer', jahre: '1946–1989', bis: 1989 },
-    { z: 'D', name: 'Um die Jahrtausendwende', jahre: '1990–2009', bis: 2009 },
-    { z: 'E', name: 'Die Gegenwart', jahre: 'seit 2010', bis: Infinity }
+    { z: 'A', name: 'Von ' + ERSTES + ' bis zur Jahrhundertwende', jahre: (erstes ? F.jahrText(erstes.j) : '') + ' bis 1899', bis: 1899, anker: 'bis-1899', marke: ERSTES },
+    { z: 'B', name: 'Bis zum Ende des Zweiten Weltkriegs', jahre: '1900–1945', bis: 1945, anker: 'ab-1900', marke: '1900' },
+    { z: 'C', name: 'Bis zum Fall der Mauer', jahre: '1946–1989', bis: 1989, anker: 'ab-1946', marke: '1946' },
+    { z: 'D', name: 'Um die Jahrtausendwende', jahre: '1990–2009', bis: 2009, anker: 'ab-1990', marke: '1990' },
+    { z: 'E', name: 'Die Gegenwart', jahre: 'seit 2010', bis: Infinity, anker: 'ab-2010', marke: '2010' }
   ];
   EPOCHEN.forEach(f => { f.buecher = []; });
   GELESEN.forEach(b => { EPOCHEN.find(f => b.j <= f.bis).buecher.push(buch(b, null)); });
   EPOCHEN.forEach(f => { f.buecher.forEach(x => { x.fach = f; }); f.buecher.sort(nachJahr); });
-  const KIND = { z: 'K', name: 'Kinderzimmer', jahre: 'nur die wichtigsten aus Kindheit und Jugend', art: 'kind' };
+  const KIND = { z: 'K', name: 'Kinderzimmer', jahre: 'nur die wichtigsten aus Kindheit und Jugend', art: 'kind', anker: 'kinderzimmer', marke: 'Kinderzimmer' };
   KIND.buecher = BUECHER.filter(b => b.r === 'kindheit').map(b => buch(b, KIND)).sort(nachJahr);
   const TISCH = { z: 'N', name: 'Auf dem Nachttisch' };
   TISCH.buecher = BUECHER.filter(b => b.r === 'gerade').map(b => buch(b, TISCH)).sort(nachJahr);
   // Was noch wartet: Dominiks eigene Liste, nach Jahr; ohne Jahr am Ende
-  const WARTET = { z: 'W', name: 'Was noch wartet', jahre: '', art: 'wartet' };
+  const WARTET = { z: 'W', name: 'Was noch wartet', jahre: '', art: 'wartet', anker: 'wartet', marke: 'Was noch wartet' };
   WARTET.buecher = BUECHER.filter(b => b.r === 'leseliste').map(b => buch(b, WARTET)).sort(nachJahr);
 
   // Eigene Werke: gleiches Format, eigenes Muster, die Trilogie im Schuber
@@ -286,6 +313,7 @@
   function eigenEintrag(e) { const x = Object.assign({ eigen: true, werk: werk(e.id), werkId: e.id }, e); x.id = ALLE.length; ALLE.push(x); return x; }
   EIGENE.forEach(e => { if (!e.schuber) e.eintrag = eigenEintrag(e); });
   BAENDE.forEach(e => { e.eintrag = eigenEintrag(e); });
+  // Der Schuber öffnet sich nur auf einen Klick; beim Scrollen geschieht mit ihm nichts
   let schuberOffen = false;
   let offenId = null;
 
@@ -506,14 +534,16 @@
         const cw = px(e.dicke), hc = Math.round(e.hoehe * se);
         const auf = cw + 3 + BAENDE.length * (VB + 1);
         breiteOffen += auf + 1;
-        werke += `<div class="schuber-platz${schuberOffen ? ' offen' : ''}" style="--zu:${cw}px;--auf:${auf}px;--hc:${hc}px">`;
+        const zustand = schuberOffen ? ' offen' : '';
+        werke += `<div class="schuber-platz${zustand}" style="--zu:${cw}px;--auf:${auf}px;--hc:${hc}px;--schrumpft:${((BAENDE.length - 1) * .3).toFixed(2)}s">`;
         werke += `<button type="button" class="ruecken eigen schuber muster-${e.muster}" style="width:${cw}px;height:${hc}px" tabindex="-1" aria-expanded="${schuberOffen}" aria-label="Ursprungstrilogie, Schuber mit drei Bänden">${schild('Ursprung I–III')}</button>`;
         BAENDE.forEach((b, k) => {
           const innen = 3 + k * VB;
           const weg = cw + 3 + k * (VB + 1) - innen;
           const n = BAENDE.length;
           const w = b.eintrag.werk;
-          werke += `<button type="button" class="ruecken eigen bandbuch muster-${b.muster}${offenCls(b)}" data-id="${b.eintrag.id}" style="width:${VB}px;height:${H}px;--innen:${innen}px;--weg:${weg}px;--hin:${(k * .55).toFixed(2)}s;--zurueck:${((n - 1 - k) * .3).toFixed(2)}s" tabindex="-1"${schuberOffen ? '' : ' aria-hidden="true"'} aria-label="${esc('Ursprung, Band ' + b.band + ': ' + (w.buchtitel || ''))}">${schild(w.titel || 'Ursprung ' + b.band)}</button>`;
+          // heraus der hinterste Band zuerst, hinein der vorderste: so fährt kein Band über einen anderen
+          werke += `<button type="button" class="ruecken eigen bandbuch muster-${b.muster}${offenCls(b)}" data-id="${b.eintrag.id}" style="width:${VB}px;height:${H}px;--innen:${innen}px;--weg:${weg}px;--hin:${((n - 1 - k) * .55).toFixed(2)}s;--zurueck:${(k * .3).toFixed(2)}s" tabindex="-1"${schuberOffen ? '' : ' aria-hidden="true"'} aria-label="${esc('Ursprung, Band ' + b.band + ': ' + (w.buchtitel || ''))}">${schild(w.titel || 'Ursprung ' + b.band)}</button>`;
         });
         werke += '</div>';
       } else {
@@ -650,6 +680,9 @@
     let links = mittig(r.left - rr.left + r.width / 2);
     // über dem Rücken, der beim Zeigen um 6 px steigt
     let oben = r.top - rr.top - th - 10;
+    // Nie über den oberen Rand des Fensters oder unter die stehende Zeitleiste: höchstens bis 4 px unter ihren Saum
+    const lu = Math.max(0, leisteUnten());
+    const obenMin = lu - rr.top + 4;
     if (el.classList.contains('liegt')) {
       // Liegende Bücher: der Name steht rechts neben dem Stapel auf der Höhe des Buchs und deckt so die Bücher darüber nicht zu.
       // Fehlt dort der Platz, steht er über dem ganzen Stapel.
@@ -657,7 +690,14 @@
       const kanten = $$('button.liegt', gruppe).map(b => b.getBoundingClientRect());
       const rechts = Math.max(...kanten.map(k => k.right)) - rr.left + 8;
       if (rechts + tb <= rr.width - pr) { links = rechts; oben = r.top - rr.top + r.height / 2 - th / 2; }
-      else oben = Math.min(...kanten.map(k => k.top)) - rr.top - th - 4;
+      else oben = Math.max(obenMin, Math.min(...kanten.map(k => k.top)) - rr.top - th - 4);
+    } else if (oben < obenMin) {
+      // Der Kopf des Rückens steckt unter der Zeile (oder über dem Fenster): dann steht der Name rechts neben dem Rücken,
+      // auf halber Höhe dessen, was man von ihm sieht; fehlt rechts der Platz, links daneben
+      const sichtOben = Math.max(r.top, lu), mitteY = (sichtOben + r.bottom) / 2 - rr.top;
+      const rechts = r.right - rr.left + 6, linksDaneben = r.left - rr.left - 6 - tb;
+      links = rechts + tb <= rr.width - pr ? rechts : Math.max(pl, linksDaneben);
+      oben = Math.max(obenMin, mitteY - th / 2);
     }
     tipp.style.transform = `translate(${Math.round(links)}px, ${Math.round(oben)}px)`;
   }
@@ -681,12 +721,9 @@
   const AUF_DER_STARTSEITE = { erzaehlungen: 'erzaehlungen', laender: 'laender' };
   function inhaltFuer(x) {
     if (x.eigen) {
+      // Titel als Verweis auf die Seite des Werks, „Arbeitstitel“ dahinter: FSeite.werkKarte; die Bibliothek spricht in der ersten Person
       const k = F.werkKarte(x.werkId) || { signatur: 'DJ', titel: (x.werk && x.werk.titel) || '', eigen: true };
-      // Die Seite sagt überall „Erzählungen“; die Gattung „Kurzgeschichten“ wiederholt nur den Titel
-      if (x.werkId === 'erzaehlungen') k.unter = '';
       if (AUF_DER_STARTSEITE[x.werkId] && !k.verweis) k.verweis = { href: F.SEITEN.start + '#' + AUF_DER_STARTSEITE[x.werkId], text: 'Auf der Startseite' };
-      // Das Thema eines Bandes ist ein Satz und endet mit einem Punkt
-      if (typeof k.notiz === 'string' && k.notiz && !/[.!?…]$/.test(k.notiz)) k.notiz += '.';
       return k;
     }
     return F.buch.karte(x.b);
@@ -697,35 +734,67 @@
     const inhalt = inhaltFuer(x);
     inhalt.beimSchliessen = () => { offenId = null; };
     F.karteikarte.oeffnen(inhalt, el);
-    // Auf dem Telefon liegt die Karte unten: das Buch rückt darüber, damit man sieht, welches es ist
+    karteStellen();
+    // Auf dem Telefon liegt die Karte unten: das Buch rückt darüber, damit man sieht, welches es ist (und nicht unter die Zeitleiste).
+    // Gemessen wird vor dem Anheben um 6 px; darüber bleiben 8 px Papier bis zum Saum der Zeile.
     const k = $('#karteikarte');
     if (k && k.classList.contains('als-blatt')) {
       const r = el.getBoundingClientRect(), frei = window.innerHeight - k.offsetHeight - 16;
-      const dy = r.bottom > frei ? r.bottom - frei : r.top < 24 ? r.top - 24 : 0;
+      const oben = Math.max(24, leisteUnten() + 6 + 8);
+      const dy = r.bottom > frei ? r.bottom - frei : r.top < oben ? r.top - oben : 0;
       if (dy) window.scrollBy({ top: dy, behavior: F.ruhig() ? 'auto' : 'smooth' });
     }
   }
-  function schuberUmschalten(t) {
-    schuberOffen = !schuberOffen;
+  /* Wo die Karte auf dem Bildschirm liegt: wie FSeite.karteikarte (über dem Buch, sonst darunter, sonst daneben; frei bleiben der Kopf
+     und die stehende Zeitleiste). Dazu nur hier: liegt sie neben einem Buch des obersten Bretts, während die Zeitleiste noch an ihrem
+     Platz darunter steht, endet sie über der Leiste. Liegt die Karte schon so, bleibt sie, wo sie ist. */
+  function karteFrei() {
+    const kopf = $('.kopf'), kb = kopf ? kopf.getBoundingClientRect().bottom : 0;
+    const sp = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    return Math.max(12, sp + 8, kb > 0 ? kb + zeile * .5 : 0);
+  }
+  function karteStellen() {
+    const k = $('#karteikarte'), a = F.karteikarte.ausloeser();
+    if (!k || k.hidden || !a || !document.contains(a) || k.classList.contains('als-blatt')) return;
+    const H = window.innerHeight, vw = document.documentElement.clientWidth;
+    const randL = Math.max(16, F.masz('--rand-l')), randR = Math.max(16, F.masz('--rand-r'));
+    const frei = karteFrei();
+    const kr = k.getBoundingClientRect(), r = a.getBoundingClientRect();
+    const kh = kr.height, kb = kr.width;
+    const ueber = r.top - kh - 16, unter = r.bottom + 16;
+    let links = kr.left, oben;
+    if (ueber >= frei) oben = ueber;
+    else if (unter + kh <= H - 12) oben = unter;
+    else {
+      const rechts = r.right + 16, linksDaneben = r.left - 16 - kb;
+      const neben = rechts + kb <= vw - randR ? rechts : linksDaneben >= randL ? linksDaneben : null;
+      if (neben != null) {
+        links = neben;
+        let o = Math.min(H - 12 - kh, r.top - 6);
+        // Steht die Zeitleiste noch an ihrem Platz unter dem Buch (oberstes Brett), endet die Karte über ihr, wenn sie dort Platz hat
+        if (leiste && !leiste.hidden && !steht()) {
+          const lt = leiste.getBoundingClientRect().top;
+          if (lt > r.top && o + kh > lt - 8 && lt - 8 - kh >= frei) o = lt - 8 - kh;
+        }
+        oben = Math.max(frei, o);
+      }
+      else oben = unter;
+    }
+    if (Math.abs(oben - kr.top) < 1 && Math.abs(links - kr.left) < 1) return;
+    k.style.left = Math.round(links + window.scrollX) + 'px';
+    k.style.top = Math.round(oben + window.scrollY) + 'px';
+  }
+  // Schuber auf oder zu, mit der langsamen Bewegung aus dem CSS. hand: jemand hat ihn angefasst, dann bekommt er auch den Tab-Halt.
+  function schuberSetzen(t, auf, hand) {
+    schuberOffen = auf;
     const platz = t.parentElement;
     platz.classList.toggle('offen', schuberOffen);
     t.setAttribute('aria-expanded', String(schuberOffen));
     $$('.bandbuch', platz).forEach(b => { b.tabIndex = -1; if (schuberOffen) b.removeAttribute('aria-hidden'); else b.setAttribute('aria-hidden', 'true'); });
     if (!schuberOffen && offenId != null && ALLE[offenId] && ALLE[offenId].band) F.karteikarte.schliessen();
-    gruppeZeigen(t);
+    if (hand) gruppeZeigen(t);
   }
-  // Die Karte hängt am Ende der Seite: wer mit Tab aus ihr herausgeht, kommt zum Buch zurück und nicht ans Seitenende.
-  // Gehört in FSeite.karteikarte (siehe Bericht); macht die gemeinsame Karte es selbst, tritt dieser Teil zurück.
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'Tab' || e.defaultPrevented || !F.karteikarte.offen()) return;
-    const k = $('#karteikarte'), a = document.activeElement;
-    if (!k || !k.contains(a)) return;
-    const fokusbar = $$('button, a[href]', k);
-    const raus = e.shiftKey ? (a === k || a === fokusbar[0]) : (a === fokusbar[fokusbar.length - 1] || !fokusbar.length);
-    if (!raus) return;
-    e.preventDefault();
-    F.karteikarte.schliessen();
-  });
+  const schuberUmschalten = t => schuberSetzen(t, !schuberOffen, true);
 
   regal.addEventListener('click', e => {
     const t = e.target.closest('button.ruecken');
@@ -737,11 +806,124 @@
     karteAuf(x, t);
   });
 
+  // ================= Beim Scrollen =================
+
+  // ---------- Beim Scrollen: die Zeitleiste über den Brettern, ein lebender Kolumnentitel ----------
+  /* Die Zeiten des Regals in einer Zeile. Schwarz steht die Zeit, in der man gerade liest: das Regal wird gelesen wie eine Seite,
+     Brett für Brett von links nach rechts. Eine Zeit beginnt dort, wo ihr erstes Buch steht; beginnt sie mitten auf einem Brett,
+     gilt sie ab dem entsprechenden Teil seiner Höhe. Gelesen wird ein Viertel des Fensters unter der Leiste, mindestens zwei Zeilen
+     (FSeite.leselinie; am Seitenende wandert die Linie hinab, damit auch die letzten Bretter sie erreichen). Zurückscrollen geht
+     in der Zeit zurück. Bevor die erste Zeit diese Lesezeile erreicht, steht die ganze Zeile grau, als ruhige Reihe von Verweisen.
+     Nur die Farbe wechselt, nichts bewegt sich; das gilt auch bei reduzierter Bewegung.
+     Ein Klick fährt zum Brett, auf dem die Zeit beginnt; mit der Tastatur geht der Fokus auf ihr erstes Buch. */
+  const leiste = $('#zeitleiste'), leisteZeile = $('#zeitleiste-zeile');
+  const ZEITEN = EPOCHEN.filter(f => f.buecher.length).concat([KIND, WARTET].filter(f => f.buecher.length));
+  let zeitJetzt = null, gewaehlt = null, zeile = 28;
+  if (leiste && leisteZeile && ZEITEN.length) {
+    const eintrag = (f, i, liste) => `<span class="glied"><a href="#${f.anker}" data-anker="${f.anker}">${esc(f.marke)}` +
+      (f.art || f === EPOCHEN[0] ? '' : `<span class="unsichtbar">, ${esc(f.name)}</span>`) + `</a>${i < liste.length - 1 ? '<span class="strich"> –</span>' : ''}</span>`;
+    const zeiten = ZEITEN.filter(f => !f.art), faecher = ZEITEN.filter(f => f.art);
+    leisteZeile.innerHTML = `<span class="gruppe-zeit">${zeiten.map(eintrag).join(' ')}</span>` + (faecher.length ? `<span class="gruppe-fach">${faecher.map(eintrag).join(' ')}</span>` : '');
+    leiste.hidden = false;
+  }
+  // Der Saum unter der stehenden Zeile: eine Linie von 1 px und ein Viertel Zeile Papier (siehe .zeitleiste.steht::after)
+  const saum = () => 1 + zeile * .25;
+  const steht = () => !!leiste && !leiste.hidden && leiste.getBoundingClientRect().top <= 1;
+  // Unterkante dessen, was die stehende Zeile oben verdeckt, mit Saum; 0, solange sie nicht steht
+  const leisteUnten = () => steht() ? leiste.getBoundingClientRect().bottom + saum() : 0;
+  // Wo eine Zeit beginnt: oben ist die Oberkante ihres Bretts, stelle die Höhe, ab der sie gilt (beides im Fenster gemessen)
+  function stelle(f) {
+    const x = f.buecher[0];
+    const el = x && regal.querySelector(`button[data-id="${x.id}"]`);
+    const reihe = el && el.closest('.reihe');
+    if (!reihe) return null;
+    const r = reihe.getBoundingClientRect();
+    if (f.art) return { oben: r.top, stelle: r.top };
+    const anteil = Math.max(0, Math.min(.98, (el.getBoundingClientRect().left - r.left) / Math.max(1, r.width)));
+    return { oben: r.top, stelle: r.top + anteil * r.height };
+  }
+  function zeitSetzen(f) {
+    if (f === zeitJetzt) return;
+    zeitJetzt = f;
+    $$('a[data-anker]', leisteZeile).forEach(a => { if (f && a.dataset.anker === f.anker) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  }
+  function leisteSetzen() {
+    if (!leiste || leiste.hidden) return;
+    const st = steht();
+    leiste.classList.toggle('steht', st);
+    document.documentElement.classList.toggle('leiste-steht', st);
+    // Nach einem Sprung bleibt die gewählte Zeit schwarz, bis man von dort ein Stück weitergescrollt hat.
+    // Unterwegs (sanftes Scrollen) wandert das Schwarz durch die Zeiten dazwischen; kommt die Seite nicht an, gilt die Wahl nicht mehr.
+    if (gewaehlt) {
+      const weg = Math.abs(window.scrollY - gewaehlt.y);
+      if (!gewaehlt.da && weg < 2) gewaehlt.da = true;
+      if (gewaehlt.da && weg < Math.max(80, window.innerHeight * .2)) { zeitSetzen(gewaehlt.f); return; }
+      if (gewaehlt.da || performance.now() > gewaehlt.bis) gewaehlt = null;
+    }
+    const i = leser ? leser.jetzt() : -1;
+    zeitSetzen(i != null && i >= 0 ? ZEITEN[i] : null);
+  }
+  // Die Lesezeile liegt fest im Fenster, gemessen unter der Zeile, wie sie oben steht (mit Saum); sie wandert nicht mit der Zeile,
+  // solange diese noch an ihrem Platz über dem ersten Brett steht. Sonst gälte die erste Zeit schon beim Laden als erreicht.
+  const leser = leiste && !leiste.hidden ? F.leselinie(ZEITEN, () => leisteSetzen(), {
+    jedesMal: true,
+    stelle: f => { const x = stelle(f); return x ? x.stelle : null; },
+    linie: H => { const lu = leiste.offsetHeight + saum(); return lu + Math.max(zeile * 2, (H - lu) * .25); }
+  }) : null;
+  function springen(f, sanft, fokus) {
+    const s = stelle(f);
+    if (!s) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    // Das Brett beginnt direkt unter dem Saum der stehenden Zeile
+    const y = Math.max(0, Math.min(max, Math.round(window.scrollY + s.oben - leiste.offsetHeight - saum())));
+    const fern = Math.abs(y - window.scrollY) > window.innerHeight * 3;
+    gewaehlt = { f, y, da: false, bis: performance.now() + 2500 };
+    window.scrollTo({ top: y, behavior: sanft && !F.ruhig() && !fern ? 'smooth' : 'auto' });
+    if (fokus) {
+      const el = regal.querySelector(`button[data-id="${f.buecher[0].id}"]`);
+      if (el) { gruppeZeigen(el); el.focus({ preventScroll: true }); }
+    }
+    leisteSetzen();
+  }
+  function ankerAusAdresse() {
+    let h = '';
+    try { h = decodeURIComponent(location.hash.slice(1)); } catch (e) { h = ''; }
+    return ZEITEN.find(f => f.anker === h) || null;
+  }
+  if (leisteZeile) leisteZeile.addEventListener('click', e => {
+    const a = e.target.closest('a[data-anker]');
+    const f = a && ZEITEN.find(z => z.anker === a.dataset.anker);
+    if (!f) return;
+    e.preventDefault();
+    try { history.replaceState(null, '', '#' + f.anker); } catch (err) { /* file:// in manchen Browsern */ }
+    // Ohne Maus (Enter auf dem Wort) geht der Fokus mit
+    springen(f, true, e.detail === 0);
+  });
+  window.addEventListener('hashchange', () => { const f = ankerAusAdresse(); if (f) springen(f, true, false); });
+  // Tab und Pfeiltasten sollen kein Buch unter die Leiste schieben
+  function leisteMessen() {
+    zeile = F.masz('--z') || 28;
+    // Freiraum oben = Zeile mit Saum: so landet ein Sprung über die Adresse (#kinderzimmer) dort, wo springen() hinfährt.
+    // Ein Rücken hält dazu scroll-margin-top (Anheben und Luft), siehe .ruecken
+    if (leiste && !leiste.hidden) document.documentElement.style.scrollPaddingTop = (leiste.offsetHeight + saum()).toFixed(2) + 'px';
+  }
+
+  // Die Zeitleiste stellt FSeite.leselinie in jedem Bild; die Karteikarte legt sich beim Scrollen selbst zurück (FSeite.karteikarte)
+
+  // ================= Aufbau =================
+  leisteMessen();
   regalBauen(true);
-  // Die Rückenschrift wird gemessen: nach dem Laden der Schriften neu bauen
-  F.schriften(3000).then(() => { MESS.clear(); regalBauen(true); });
+  // Die Rückenschrift wird gemessen: nach dem Laden der Schriften neu bauen; ein Zeitanker in der Adresse wird danach angefahren
+  let angefasst = false;
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(t => window.addEventListener(t, () => { angefasst = true; }, { passive: true, once: true }));
+  F.schriften(3000).then(() => {
+    MESS.clear(); leisteMessen(); regalBauen(true);
+    const f = ankerAusAdresse();
+    if (f && !angefasst) springen(f, false, false);
+  });
   let warte = null;
-  window.addEventListener('resize', () => { clearTimeout(warte); warte = setTimeout(() => regalBauen(false), 140); });
+  // FSeite stellt die Karte nach 80 ms neu; danach rückt karteStellen() sie aus dem Freiraum oben
+  window.addEventListener('resize', () => { clearTimeout(warte); warte = setTimeout(() => { leisteMessen(); regalBauen(false); karteStellen(); }, 140); });
 })();
 </script>
 </body>

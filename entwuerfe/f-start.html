@@ -8,11 +8,31 @@
 <script>document.documentElement.classList.add('js');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&family=IM+Fell+French+Canon&display=swap">
 <link rel="stylesheet" href="f-stil.css">
 <style>
 /* Startseite von Entwurf F: oben die Globusseite aus E1 mit der Tafel aus E2 unter dem Globus,
    darunter, was ich schreibe (das Regalbild aus E3 und das Werkverzeichnis) und was ich gelesen habe (das Zeitband aus E2). */
+
+/* ---------- Einstieg: der erste Satz der Vita ---------- */
+/* Die einzige zweite Schrift der Website, nur für diesen Satz: IM Fell French Canon, Igino Marinis Nachschnitt der Fell-Typen
+   aus Oxford, ein Grad, der im 17. Jahrhundert eigens für große Zeilen geschnitten wurde. Sie ist alt-holländisch wie die Vollkorn
+   und trägt noch den Abdruck von Blei und Tinte; dadurch steht der Satz gedruckt auf dem Papierweiß, nicht als Überschrift darüber. */
+.einstieg { margin-top: var(--z); min-height: calc(var(--z) * 3.75); font-size: 1.625em; line-height: calc(var(--z) * 1.25); }
+/* So breit wie die Vita: 31 em der Grundschrift (var(--mass) gälte hier in der größeren Schrift) */
+.globusseite > .einstieg { max-width: calc(31 * 1.1875rem); }
+.einstieg.gesetzt .glied-satz, .einstieg .fremd, .einstieg .paar { white-space: nowrap; }
+.einstieg-satz { display: inline; }
+.einstieg-satz .w { display: inline-block; }
+/* Die Vorlesekopie zählt beim Markieren und Kopieren nicht mit; kopiert wird der sichtbare Satz */
+.einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
+/* Bis die Schriften da sind, steht der Platz leer; läuft das Skript nicht weiter, erscheint der Satz nach drei Sekunden von selbst */
+.einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 3.2s forwards; }
+@keyframes einstieg-notfall { to { opacity: 1; } }
+.einstieg + script + .vita, .einstieg + .vita { margin-top: calc(var(--z) * .5); }
+/* Entwurfszeile im Fuß: nur für die Abnahme, nicht Teil der Website */
+.entwurf-wahl { margin-top: calc(var(--z) * .5); font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
+.entwurf-wahl a[aria-current] { color: var(--schwarz); text-decoration-line: none; cursor: default; }
 
 /* ---------- Globusseite ---------- */
 .vita { margin-top: var(--z); }
@@ -39,7 +59,7 @@
 .schreiben-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); align-items: start; }
 /* Breit: links das Werkverzeichnis auf der Achse der Vita, rechts das Bild an der linken Kante des Globus */
 .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 1; }
-.schreiben-raster .regalbild { grid-column: 2; grid-row: 1; margin-left: max(calc(var(--z) * 1.5), calc(var(--kante-ist, var(--globuskante)) - var(--rand-l) - var(--spalte))); margin-top: calc(var(--z) * .25); }
+.schreiben-raster .regalbild { grid-column: 2; grid-row: 1; margin-left: max(calc(var(--z) * 1.5), calc(var(--globuskante) - var(--rand-l) - var(--spalte))); margin-top: calc(var(--z) * .25); }
 /* Das Regalbild aus E3, gezeichnet wie E1: eigene Bände mit feiner Siena-Linie, quer liegende Bücher vom Nachttisch, das Brett aus E1 */
 .regalbild { margin: 0; }
 .regalbild-flaeche { position: relative; }
@@ -56,6 +76,8 @@
 .stueck.eigen:hover, .stueck.eigen:focus-visible, .stueck.eigen.ist-offen { --hy: -6px; }
 .stueck.liegt:hover, .stueck.liegt:focus-visible, .stueck.liegt.ist-offen { --hx: 6px; }
 .stueck:focus-visible { outline-offset: 2px; z-index: 1; }
+/* Eintrag und Rücken gehören zusammen: zeigt man auf einen Eintrag im Werkverzeichnis oder kommt über die Navigation dorthin, hebt sich sein Band */
+.stueck.eigen.ist-gemeint, .stueck.eigen.ist-ziel { --hy: -6px; }
 .brett { height: 7px; background: var(--brett); border-top: 1px solid var(--brettkante); }
 .regalbild figcaption { margin-top: calc(var(--z) * .5); font-style: italic; font-size: .9375em; color: var(--grau-2); max-width: 30em; }
 
@@ -66,22 +88,6 @@
 .eintrag + .eintrag { margin-top: calc(var(--z) * .5); }
 .eintrag { scroll-margin-top: var(--z); }
 .eintrag-titel { color: var(--schwarz); }
-
-/* ---------- Globusseite: Ergänzungen ---------- */
-/* Fokus auf dem Globus: ein Ring innerhalb der Scheibe; der runde Zuschnitt beim Zoomen schneidet ihn nicht ab */
-@supports selector(:has(*)) {
-  .flaeche canvas:focus-visible { outline: none; }
-  .flaeche:has(canvas:focus-visible)::after { opacity: 1; box-shadow: inset 0 0 0 2.5px var(--papier), inset 0 0 0 4.5px var(--graphit); }
-}
-/* Tafel: „bis“ mit echtem Leerzeichen statt Rand; auf der Ursprungstafel Ort und Zeit in der Grundschrift */
-.tafel-marke .bis { margin-right: 0; }
-.tafel-unter .ort-zeit { font-family: var(--schrift); text-transform: none; letter-spacing: normal; color: var(--graphit); }
-/* Breit: die Navigation darf über die Textspalte hinaus bis kurz vor den Globus laufen; bricht sie doch, dann nach „Untertext“ */
-@media (min-width: 62.0625rem) {
-  .mit-globus .nav { width: max-content; max-width: calc(var(--kante-ist, var(--globuskante)) - var(--rand-l) - 1.5em); }
-  .nav.zweizeilig .nav-liste li:nth-child(n+5) { order: 2; }
-  .nav.zweizeilig .nav-liste::before { content: ""; flex-basis: 100%; order: 1; height: 0; }
-}
 
 /* ---------- Was ich gelesen habe: das Zeitband aus E2 ---------- */
 .gelesen-vorwort { max-width: var(--mass); }
@@ -102,7 +108,7 @@
 .zb .haar { stroke: var(--grau-3); stroke-width: .75; }
 .zb .bruch { stroke: var(--grau-1); stroke-width: .9; fill: none; }
 .zb .jahr { font-family: var(--schrift); font-style: italic; font-size: 13px; fill: var(--grau-2); font-variant-numeric: oldstyle-nums; }
-.zb .marke { stroke: var(--schwarz); stroke-width: 1; }
+.zb .marke { stroke: var(--schwarz); stroke-width: 1.4; }
 .zb-kind rect { fill: #AFADA7; }
 .zb-warte rect { fill: var(--papier); stroke: #97958F; stroke-width: .65; }
 .zb rect.an, .zb rect.ist-offen { fill: var(--schwarz); }
@@ -110,20 +116,29 @@
 .zb .quer.an, .zb .quer.ist-offen { fill: #E4E1D9; stroke: var(--schwarz); }
 .zb-warte rect.an, .zb-warte rect.ist-offen { fill: var(--schwarz); stroke: var(--schwarz); }
 .bandzeile { min-height: var(--z); margin-top: calc(var(--z) * .25); white-space: nowrap; font-size: .9375em; }
-.bandzeile span { display: inline-block; }
+/* Die Zeile wird mit left unter den Strich gerückt, nicht mit einem Rand: so bricht sie nach der Breite des Fensters um, nicht nach dem Rest */
+.bandzeile span { display: inline-block; position: relative; }
 .bandname { margin-top: var(--z); font-style: italic; color: var(--grau-2); font-size: .9375em; position: sticky; left: 0; width: max-content; max-width: 100%; }
 .zb-kind, .zb-warte { margin-top: calc(var(--z) * .25); }
 .ganze { margin-top: calc(var(--z) * 1.5); max-width: var(--mass); }
 .ganze a { font-size: 1.0625em; }
 
 @media (max-width: 62rem) {
+  .einstieg { font-size: 1.5em; }
+  .globusseite > .einstieg { max-width: calc(31 * 1.125rem); }
   .ebenen { scroll-margin-top: 12px; }
   .schreiben-raster { grid-template-columns: minmax(0, var(--mass)); }
   .schreiben-raster .regalbild { grid-column: 1; grid-row: 1; margin: 0; }
   .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 2; margin-top: calc(var(--z) * 2); }
 }
 @media (max-width: 40rem) {
+  .einstieg { font-size: 1.4em; }
   .zeitband-roll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; padding-bottom: .5rem; margin: 0 calc(var(--rand-l) * -1); padding-left: var(--rand-l); padding-right: var(--rand-l); scroll-padding: 0 var(--rand-l); }
+  /* Die Zeile unter dem Band bleibt im sichtbaren Teil (das Skript rückt sie nach) und bricht lange Titel in zwei Zeilen um;
+     sie hält Platz für beide, damit darunter nichts springt */
+  .bandzeile { white-space: normal; min-height: calc(var(--z) * 2); }
+  .bandzeile + .bandname { margin-top: calc(var(--z) * .5); }
+  .bandzeile span { max-width: calc(100vw - 2 * var(--rand-l)); text-wrap: balance; hyphens: manual; }
   .stueck.liegt span { left: 4px; right: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -152,7 +167,291 @@
 
 <main id="inhalt">
 <section class="globusseite" aria-label="Vita und Globus">
-  <p class="vita">Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen. Er wurde 1995 in Dortmund geboren, studierte Liberal Arts and Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre in Kaohsiung auf Taiwan. Längere Zeit verbrachte er in Colombo, Cotonou und auf Mallorca. Seit 2022 lebt er in Berlin. Auf der Werkstattbühne des Autorenforums Berlin hat er viele seiner Geschichten gelesen; seit einigen Jahren moderiert er sie. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Er war in der Meisterklasse des Schreibhains. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an der Ursprungs&shy;trilogie.</p>
+  <!-- Der erste Satz der Vita als Einstieg, in drei Gliedern; das Skript gleich darunter setzt ihn und spielt ihn einmal ab -->
+  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt tagsüber</span> <span class="glied-satz fremd">unter fremden Namen</span> <span class="glied-satz eigen">und abends unter seinem eigenen.</span></p>
+  <script>
+  /* Einstieg: einfliegend (Standard), verwischt oder ruhig; für diesen Entwurf wählbar über #einfliegen, #verwischt, #ruhig
+     und über die Entwurfszeile im Fuß. Gespielt wird einmal, sobald die Schriften da sind; danach steht der Satz still.
+     Vorgelesen wird der Satz einmal als Ganzes (die Kopie in .unsichtbar); die Wortkästen sind aria-hidden.
+     Bewegt werden nur transform, opacity, text-shadow und Filter: der Satz behält von Anfang an seinen Platz.
+     window.FEinstieg.fertig löst auf, wenn der Satz steht; erst danach beginnt die Chronik auf dem Globus. */
+  (function () {
+    'use strict';
+    var el = document.getElementById('einstieg');
+    if (!el || !el.querySelector('.glied-satz')) return;
+    var ARTEN = ['einfliegen', 'verwischt', 'ruhig'];
+    var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+    var artAusHash = function () { var h = location.hash.slice(1); return ARTEN.indexOf(h) >= 0 ? h : 'einfliegen'; };
+
+    // Satz in Wörter zerlegen; die Leerzeichen bleiben echte Leerzeichen, damit Markieren und Kopieren den Satz ergeben
+    var text = el.textContent.replace(/\s+/g, ' ').trim();
+    var satz = document.createElement('span');
+    satz.className = 'einstieg-satz';
+    satz.setAttribute('aria-hidden', 'true');
+    while (el.firstChild) satz.appendChild(el.firstChild);
+    var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
+    // Was nie getrennt wird, auch wenn der Satz frei bricht: der Name und „seinem eigenen.“ (dazu „unter fremden Namen“ als Ganzes)
+    var PAARE = ['Dominik Jäkel', 'seinem eigenen.'];
+    glieder.forEach(function (g) {
+      var woerter = g.textContent.trim().split(/\s+/);
+      g.textContent = '';
+      var paar = null;
+      woerter.forEach(function (w, i) {
+        var s = document.createElement('span');
+        s.className = 'w';
+        s.textContent = w;
+        if (w === 'fremden') s.classList.add('w-fremden');
+        var beginnt = PAARE.some(function (p) { return p.split(' ')[0] === w && p.split(' ')[1] === woerter[i + 1]; });
+        if (beginnt) {
+          if (i) g.appendChild(document.createTextNode(' '));
+          paar = document.createElement('span');
+          paar.className = 'paar';
+          paar.appendChild(s);
+          g.appendChild(paar);
+          return;
+        }
+        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); paar = null; return; }
+        if (i) g.appendChild(document.createTextNode(' '));
+        g.appendChild(s);
+      });
+    });
+    var vorlesen = document.createElement('span');
+    vorlesen.className = 'unsichtbar einstieg-vorlesen';
+    vorlesen.textContent = text;
+    el.appendChild(vorlesen);
+    el.appendChild(satz);
+    var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
+
+    /* Zeilen nach dem Sinn: jedes Glied eine Zeile. Passt das längste nicht in die Spalte, wird die Schrift kleiner,
+       höchstens bis zum Anderthalbfachen der Grundschrift; reicht auch das nicht, bricht der Satz frei und ausgeglichen. */
+    function setzen() {
+      el.style.fontSize = '';
+      el.classList.add('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var laengste = 0;
+      glieder.forEach(function (g) { laengste = Math.max(laengste, g.getBoundingClientRect().width); });
+      if (laengste <= breite) return;
+      var jetzt = parseFloat(getComputedStyle(el).fontSize);
+      var kleiner = Math.floor(jetzt * breite / laengste * 10) / 10 - .2;
+      var grund = parseFloat(getComputedStyle(el.parentNode).fontSize) || 18;
+      if (kleiner >= grund * 1.25) el.style.fontSize = kleiner + 'px';
+      else el.classList.remove('gesetzt');
+    }
+
+    // Warten auf die Anzeigeschrift und die Vollkorn (die Zeilen darüber dürfen sich nicht mehr verschieben), höchstens 2,5 s
+    function schriften() {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve();
+      var laden = Promise.all(['31px "IM Fell French Canon"', '19px "Vollkorn"', '19px "Vollkorn SC"'].map(function (f) { return document.fonts.load(f); }));
+      return Promise.race([laden, new Promise(function (r) { setTimeout(r, 2500); })]).catch(function () {});
+    }
+
+    var lauf = 0, bild = 0;
+    function zuruecksetzen() {
+      lauf++;
+      cancelAnimationFrame(bild);
+      woerter.forEach(function (w) {
+        if (w.getAnimations) w.getAnimations().forEach(function (a) { a.cancel(); });
+        w.style.filter = '';
+      });
+      if (satz.getAnimations) satz.getAnimations().forEach(function (a) { a.cancel(); });
+      el.classList.remove('mit-rest');
+    }
+
+    /* Einfliegend: Wort für Wort, wie Lettern, die der Setzer im Winkelhaken von rechts an die Zeile schiebt.
+       Kurzer Weg (0,3 em), keine Drehung, kein Nachfedern. Die Unschärfe ist eine waagrechte Bewegungsunschärfe der Buchstaben
+       selbst (kein Schatten), die beim Ankommen vergeht.
+       Zwischen den Gliedern eine Pause, wie beim Lesen: tagsüber … unter fremden Namen … und abends unter seinem eigenen. */
+    var FLUG = [];
+    function einfliegen() {
+      if (!woerter[0].animate) return Promise.resolve();
+      filterAnlegen();
+      var em = parseFloat(getComputedStyle(el).fontSize) || 31;
+      var t = 0, laeufe = [], nr = lauf;
+      glieder.forEach(function (g, gi) {
+        if (gi) t += 230;
+        Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
+          if (wi) t += 80;
+          laeufe.push(w.animate([
+            { opacity: 0, transform: 'translateX(.3em)' },
+            { opacity: 1, offset: .38 },
+            { opacity: 1, transform: 'translateX(0)' }
+          ], { duration: 640, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+        });
+      });
+      // Die Unschärfe folgt dem Fortschritt jedes Worts; vor dem Start (unsichtbar) und nach der Landung ohne Filter
+      (function schritt() {
+        if (nr !== lauf) return;
+        var offen = false;
+        laeufe.forEach(function (a, i) {
+          var w = woerter[i], ct = a.effect.getComputedTiming();
+          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
+          offen = true;
+          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
+          var s = Math.pow(1 - ct.progress, 1.6) * .08 * em;
+          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
+          w.style.filter = s > .06 ? 'url(#einstieg-flug-' + i + ')' : '';
+        });
+        if (offen) bild = requestAnimationFrame(schritt);
+      })();
+      return Promise.all(laeufe.map(function (a) { return a.finished; })).catch(function () {});
+    }
+
+    /* Verwischt: der Satz steht sofort da, nur „unter fremden Namen“ ist ein doppelter, nasser Abdruck: ein zweiter Abdruck
+       versetzt daneben, eine Schleppe nach rechts, das Hauptbild weich und blass. In anderthalb Sekunden rückt der zweite Abdruck
+       ins Register, die Tinte trocknet; „unter“ zuerst, dann „Namen“, zuletzt „fremden“, auf dem ein Hauch des zweiten Abdrucks bleibt.
+       „seinem eigenen“ steht vom ersten Bild an scharf. */
+    var WISCH = [];
+    function filterAnlegen() {
+      if (document.getElementById('einstieg-filter')) return;
+      var ns = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.id = 'einstieg-filter';
+      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+      var html = '';
+      for (var i = 0; i < 3; i++) {
+        html += '<filter id="einstieg-wisch-' + i + '" x="-25%" y="-45%" width="165%" height="190%" color-interpolation-filters="sRGB">' +
+          '<feTurbulence type="fractalNoise" baseFrequency="0.03 0.045" numOctaves="2" seed="' + (4 + i * 3) + '" result="rausch"/>' +
+          '<feDisplacementMap in="SourceGraphic" in2="rausch" scale="0" xChannelSelector="R" yChannelSelector="G" result="verzogen"/>' +
+          '<feGaussianBlur in="verzogen" stdDeviation="0" result="weich"/>' +
+          '<feComponentTransfer in="weich" result="haupt"><feFuncA type="linear" slope="1"/></feComponentTransfer>' +
+          '<feGaussianBlur in="SourceGraphic" stdDeviation="0 .25" result="schliere"/>' +
+          '<feOffset in="schliere" dx="0" dy="0" result="schliere2"/>' +
+          '<feComponentTransfer in="schliere2" result="schleppe"><feFuncA type="linear" slope="0"/></feComponentTransfer>' +
+          '<feOffset in="verzogen" dx="0" dy="0" result="versetzt"/>' +
+          '<feComponentTransfer in="versetzt" result="geist"><feFuncA type="linear" slope="0"/></feComponentTransfer>' +
+          '<feMerge><feMergeNode in="schleppe"/><feMergeNode in="geist"/><feMergeNode in="haupt"/></feMerge>' +
+          '</filter>';
+      }
+      for (var j = 0; j < woerter.length; j++) {
+        html += '<filter id="einstieg-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+      }
+      svg.innerHTML = html;
+      document.body.appendChild(svg);
+      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('einstieg-flug-' + m).querySelector('feGaussianBlur'));
+      for (var k = 0; k < 3; k++) {
+        var f = document.getElementById('einstieg-wisch-' + k);
+        WISCH.push({
+          verzug: f.querySelector('feDisplacementMap'),
+          weich: f.querySelectorAll('feGaussianBlur')[0], haupt: f.querySelectorAll('feFuncA')[0],
+          schliere: f.querySelectorAll('feGaussianBlur')[1], schleppeVersatz: f.querySelectorAll('feOffset')[0], schleppe: f.querySelectorAll('feFuncA')[1],
+          versatz: f.querySelectorAll('feOffset')[1], geist: f.querySelectorAll('feFuncA')[2]
+        });
+      }
+    }
+    /* Stärke s von 1 (nass, doppelt) bis 0 (trocken, im Register); em in Pixel der jetzigen Schriftgröße.
+       Mit Rest (nur „fremden“) läuft der zweite Abdruck nicht ganz ins Register: er bleibt 0,07 em rechts und etwas höher,
+       mit einem Achtel Deckung; nach oben versetzt, damit er nicht wie ein Schlagschatten aussieht. */
+    function wischStellen(f, s, em, rest) {
+      var r = rest ? 1 : 0, mix = function (a, b) { return (a + (b - a) * s) * em; };
+      f.verzug.setAttribute('scale', (s * .055 * em).toFixed(2));
+      f.weich.setAttribute('stdDeviation', (s * .022 * em).toFixed(2));
+      f.haupt.setAttribute('slope', (1 - .22 * s).toFixed(3));
+      f.schliere.setAttribute('stdDeviation', (s * .12 * em).toFixed(2) + ' .2');
+      f.schleppeVersatz.setAttribute('dx', (s * .15 * em).toFixed(2));
+      f.schleppe.setAttribute('slope', (s * .3).toFixed(3));
+      f.versatz.setAttribute('dx', mix(r * .07, .12).toFixed(2));
+      f.versatz.setAttribute('dy', mix(-r * .025, -.045).toFixed(2));
+      f.geist.setAttribute('slope', (r * .12 + (.4 - r * .12) * s).toFixed(3));
+    }
+    var weich = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+    function verwischen() {
+      filterAnlegen();
+      var fremd = Array.prototype.slice.call(satz.querySelectorAll('.fremd .w'));
+      var em = parseFloat(getComputedStyle(el).fontSize) || 31;
+      // je Wort: Beginn und Dauer des Trocknens in ms; „fremden“ zuletzt, mit Rest
+      var plan = fremd.map(function (w, i) {
+        var f = WISCH[i];
+        var istFremden = w.classList.contains('w-fremden');
+        w.style.filter = 'url(#einstieg-wisch-' + i + ')';
+        wischStellen(f, 1, em, istFremden ? 1 : 0);
+        return { w: w, f: f, rest: istFremden, von: [200, 420, 320][i] || 300, dauer: istFremden ? 1300 : 1050 };
+      });
+      var nr = lauf;
+      var gesamt = Math.max.apply(null, plan.map(function (p) { return p.von + p.dauer; }));
+      // Der Satz steht vom ersten Bild an; eine leere Animation auf ihm dient als Takt: ihre Zeit auf der Zeitleiste des Dokuments steuert das Trocknen
+      var takt = satz.animate ? satz.animate([{ opacity: 1 }, { opacity: 1 }], { duration: gesamt, easing: 'linear' }) : null;
+      return new Promise(function (fertig) {
+        var t0 = performance.now();
+        function stellen(t) {
+          var offen = false;
+          plan.forEach(function (p) {
+            var q = Math.max(0, Math.min(1, (t - p.von) / p.dauer));
+            wischStellen(p.f, 1 - weich(q), em, p.rest ? 1 : 0);
+            if (q < 1) offen = true;
+            p.w.style.filter = q < 1 || p.rest ? 'url(#einstieg-wisch-' + fremd.indexOf(p.w) + ')' : '';
+          });
+          return offen;
+        }
+        (function schritt(jetzt) {
+          if (nr !== lauf) { fertig(); return; }
+          var t = takt ? (takt.playState === 'finished' || takt.currentTime === null ? gesamt : takt.currentTime) : jetzt - t0;
+          if (stellen(t)) bild = requestAnimationFrame(schritt);
+          else { el.classList.add('mit-rest'); fertig(); }
+        })(t0);
+      });
+    }
+    // Ruhig und bei reduzierter Bewegung: gleich der Endzustand; beim Verwischen mit dem Rest auf „fremden“
+    function endzustand(art) {
+      if (art !== 'verwischt') return;
+      filterAnlegen();
+      var w = satz.querySelector('.w-fremden'), i = Array.prototype.indexOf.call(satz.querySelectorAll('.fremd .w'), w);
+      if (!w || i < 0) return;
+      w.style.filter = 'url(#einstieg-wisch-' + i + ')';
+      wischStellen(WISCH[i], 0, parseFloat(getComputedStyle(el).fontSize) || 31, 1);
+      el.classList.add('mit-rest');
+    }
+
+    var art = artAusHash();
+    function spielen(neu) {
+      art = neu;
+      zuruecksetzen();
+      el.dataset.art = art;
+      setzen();
+      el.classList.remove('wartet');
+      if (art === 'ruhig' || still()) { endzustand(art); return Promise.resolve(); }
+      return art === 'verwischt' ? verwischen() : einfliegen();
+    }
+    // Ruhig oder bei reduzierter Bewegung steht der Satz sofort da; sonst bleibt sein Platz leer, bis die Schriften geladen sind
+    if (art === 'ruhig' || still()) { el.dataset.art = art; setzen(); endzustand(art); }
+    else el.classList.add('wartet');
+    var fertig = schriften().then(function () { return spielen(art); });
+
+    // Entwurfszeile im Fuß: die gewählte Art steht schwarz; ein Klick fährt nach oben und spielt den Einstieg noch einmal
+    function wahlZeigen() {
+      Array.prototype.forEach.call(document.querySelectorAll('[data-einstieg]'), function (a) {
+        if (a.dataset.einstieg === art) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      });
+    }
+    function wechseln(neu) {
+      window.scrollTo(0, 0);
+      spielen(neu);
+      wahlZeigen();
+    }
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('[data-einstieg]');
+      if (!a) return;
+      e.preventDefault();
+      var neu = a.dataset.einstieg;
+      if (location.hash.slice(1) !== neu) history.replaceState(null, '', '#' + neu);
+      wechseln(neu);
+    });
+    window.addEventListener('hashchange', function () { var h = location.hash.slice(1); if (ARTEN.indexOf(h) >= 0) wechseln(h); });
+    document.addEventListener('DOMContentLoaded', wahlZeigen);
+    var warte = 0, breiteVorher = window.innerWidth;
+    window.addEventListener('resize', function () {
+      clearTimeout(warte);
+      warte = setTimeout(function () {
+        if (window.innerWidth === breiteVorher) return;
+        breiteVorher = window.innerWidth;
+        setzen();
+      }, 140);
+    });
+    window.FEinstieg = { fertig: fertig, spielen: spielen, art: function () { return art; } };
+  })();
+  </script>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre in Kaohsiung auf Taiwan. Längere Zeit verbrachte er in Colombo, Cotonou und auf Mallorca. Seit 2022 lebt er in Berlin. Auf der Werkstattbühne des Autorenforums Berlin hat er viele seiner Geschichten gelesen; seit einigen Jahren moderiert er sie. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Er war in der Meisterklasse des Schreibhains. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an der Ursprungs&shy;trilogie.</p>
 
   <p class="ebenen">Auf dem Globus: <button type="button" class="wort" data-ebene="leben" aria-pressed="true">wo ich gelebt habe</button>, <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">wohin ich gereist bin</button>, <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false">wo <i>Satoshi</i> spielt</button>, <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false">wo die Ursprungstrilogie spielt</button>.</p>
 
@@ -218,9 +517,10 @@
 <footer class="fuss" id="kontakt">
   <section class="kontakt" aria-labelledby="kontakt-titel">
     <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p><span class="platzhalter">Adresse folgt</span></p>
+    <p>Anfragen zu Lesungen und zu den Romanen: <span class="platzhalter">Adresse folgt</span></p>
   </section>
-  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen. Küsten und Grenzen nach Natural Earth. Entwurf F. <a href="index.html">Alle Entwürfe</a></p>
+  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
+  <p class="entwurf-wahl">Entwurf, Einstieg: <a href="#einfliegen" data-einstieg="einfliegen">einfliegend</a>, <a href="#verwischt" data-einstieg="verwischt">verwischt</a> oder <a href="#ruhig" data-einstieg="ruhig">ruhig</a></p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -328,9 +628,8 @@
   let lebenP = 0;
   function lebenInhalt(p) {
     const t = p === 0 ? lebenUeberblick() : F.stationInhalt(stationen[p - 1], AUSGANG);
-    // „bis 2014“: ein echtes Leerzeichen nach dem kleinen „bis“, damit Vorlesen und Kopieren „bis 2014“ ergeben
-    if (t.marke && t.marke.html) t.marke = { html: t.marke.html.replace('<span class="bis">bis</span>', '<span class="bis">bis' + F.NBSP + '</span>') };
-    t.fuss = knopf('früher', 'data-schritt="-1"', p === 0) + knopf('später', 'data-schritt="1"', p === stationen.length);
+    // Der Überblick steht am Anfang und am Ende: später führt von der letzten Station dorthin
+    t.fuss = knopf('früher', 'data-schritt="-1"', p === 0) + knopf('später', 'data-schritt="1"');
     return t;
   }
   function lebenTafel(p) { lebenP = p; F.tafel(tafelEl, lebenInhalt(p)); }
@@ -359,33 +658,27 @@
   // Satoshi: 0 ist der Roman, danach die Szenen in der Reihenfolge des Romans
   let satoshiP = 0;
   function satoshiInhalt(p) {
-    const fuss = knopf('früher', 'data-szene="-1"', p === 0) + knopf('später', 'data-szene="1"', p === szenen.length);
+    const fuss = knopf('früher', 'data-szene="-1"', p === 0) + knopf('später', 'data-szene="1"');
     if (p === 0) return { kopf: 'Satoshi', unter: 'Roman', text: SAT.hook || '', fuss };
     const s = szenen[p - 1], o = satoshiOrt(s.ort) || {};
     return { marke: s.jahr, kopf: (o.kurz || s.ort) + (o.notiz ? ', ' + o.notiz : ''), daten: o.lat != null ? F.koord(o.lat, o.lon) : '', text: s.text, fuss };
   }
   function satoshiTafel(p) { satoshiP = p; F.tafel(tafelEl, satoshiInhalt(p)); }
 
-  // Ursprung: Titel, dann Ort und Zeit, dann die Koordinaten, zuletzt das Thema (gebaut wie die Lebenstafel); -1 ist die ganze Trilogie
-  function ursprungInhalt(i) {
-    if (i < 0) return { kopf: 'Ursprung', unter: 'Trilogie, in Arbeit', satz: F.chr('Drei Romane über die Anfänge der Zivilisation, von Göbekli Tepe um 8000 v. Chr. bis Jerusalem um 940 v. Chr.') };
-    const o = ursprung[i], b = BAND[o.band] || {};
-    const ort = o.name === b.ort ? o.name + ', ' + b.zeit : o.name + ', die Stadt der Phönizier, ' + b.zeit;
-    return {
-      eigen: true, marke: o.band,
-      kopf: { html: esc(b.titel || '') + (b.arbeitstitel ? ' <span class="zusatz">Arbeitstitel</span>' : '') },
-      unter: { html: `<span class="ort-zeit">${esc(F.chr(ort))}</span>` },
-      daten: F.koord(o.lat, o.lon), text: b.thema ? b.thema.replace(/([^.])$/, '$1.') : ''
-    };
-  }
+  // Ursprung: dieselbe Tafel wie auf der Seite der Trilogie (FSeite.ursprungInhalt); -1 ist die ganze Trilogie
+  const ursprungInhalt = F.ursprungInhalt;
   function ursprungTafel(i) { F.tafel(tafelEl, ursprungInhalt(i)); }
 
   // Die Tafel bekommt die Höhe des längsten Inhalts ihrer Ebene, damit darunter nichts springt, solange die Ebene gilt.
+  // Breit lässt der Globus unter sich Platz für die Tafel des Lebens (FSeite.tafelPlatz), der Ebene beim Laden: Globus und Tafel passen
+  // zusammen auf einen Schirm, auch wo die Tafel schmal ist; der Globus behält diese Größe in allen Ebenen.
   // Einspaltig steht unter der Tafel nur noch der nächste Abschnitt: dort hält sie nur für die Chronik ihre Höhe, sonst so hoch wie ihr Inhalt
+  const lebenAlle = () => { const a = []; for (let p = 0; p <= stationen.length; p++) a.push(lebenInhalt(p)); return a; };
   function tafelHoehe() {
+    F.tafelPlatz(tafelEl, lebenAlle());
     if (!F.breit() && ebeneJetzt !== 'leben') { tafelEl.style.minHeight = '0px'; return; }
     const alle = [];
-    if (ebeneJetzt === 'leben') for (let p = 0; p <= stationen.length; p++) alle.push(lebenInhalt(p));
+    if (ebeneJetzt === 'leben') alle.push(...lebenAlle());
     if (ebeneJetzt === 'satoshi') for (let p = 0; p <= szenen.length; p++) alle.push(satoshiInhalt(p));
     if (ebeneJetzt === 'ursprung') for (let i = -1; i < ursprung.length; i++) alle.push(ursprungInhalt(i));
     if (ebeneJetzt === 'reisen') alle.push(reisenInhalt(null, null), reisenInhalt(null, 'Europa'), reisenInhalt({ iso: 'XX', name: 'Demokratische Republik Kongo', punkt: [20, -3] }, null));
@@ -423,45 +716,11 @@
     $('#ersatz').hidden = false;
   }
 
-  /* Mitte für einen Überblick, auf dieser Seite strenger als FSeite.blickFuer: der Abstand zählt zum Scheibenrand und zum
-     angeschnittenen Fensterrand, wenn es geht mindestens 40 px; bei gleich guten Lagen gewinnt die, deren Orte um die Mitte des
-     sichtbaren Teils liegen. Passen die Orte nicht mit 40 px hinein (die acht Lebensorte spannen 118 Längengrade), gilt ein kleinerer
-     Mindestabstand, und der Logarithmus verteilt den knappen Platz gleichmäßig auf beide Ränder. */
-  function blickFuer(orte, bereich) {
-    for (const RAND of [40, 24, 12]) { const m = blickSuchen(orte, bereich, RAND); if (m) return m; }
-    return null;
-  }
-  function blickSuchen(orte, bereich, RAND) {
-    const d3 = window.d3;
-    if (!d3 || !orte.length) return null;
-    bereich = Object.assign({ lon: [-180, 180], lat: [-60, 70], k: 1, schritt: 1 }, bereich);
-    const S = canvas.clientWidth || 600, rS = S / 2 - 2;
-    const rechts = Math.min(S, document.documentElement.clientWidth - canvas.getBoundingClientRect().left);
-    const mx = rechts / 2, my = S / 2;
-    const pr = d3.geoOrthographic().clipAngle(90).translate([S / 2, S / 2]).scale(rS * bereich.k);
-    let best = null;
-    for (let lon = bereich.lon[0]; lon <= bereich.lon[1] + 1e-9; lon += bereich.schritt) for (let lat = bereich.lat[0]; lat <= bereich.lat[1] + 1e-9; lat += bereich.schritt) {
-      pr.rotate([-lon, -lat]);
-      let summe = 0, sx = 0, sy = 0;
-      for (const s of orte) {
-        if (d3.geoDistance([s.lon, s.lat], [lon, lat]) > 1.35) { summe = -Infinity; break; }
-        const [x, y] = pr([s.lon, s.lat]);
-        const rand = Math.min(rS - Math.hypot(x - S / 2, y - S / 2), rechts - x - 8, x - 8, y - 8, S - y - 8);
-        if (rand < RAND) { summe = -Infinity; break; }
-        summe += Math.log(Math.min(rand, .45 * rS) + .04 * rS);
-        sx += x; sy += y;
-      }
-      if (summe === -Infinity) continue;
-      summe -= .6 * Math.hypot(sx / orte.length - mx, sy / orte.length - my) / rS;
-      if (!best || summe > best.s) best = { s: summe, lon, lat };
-    }
-    return best ? [best.lon, best.lat] : null;
-  }
   // Der Überblick über das Leben: alle acht Orte im sichtbaren Teil der Leinwand, keiner am Rand
   function lebenBlickBerechnen() {
-    const m = blickFuer(stationen, { lon: [20, 100], lat: [5, 50] }) || F.blickFuer(canvas, stationen, { lon: [20, 100], lat: [5, 50] });
+    const m = F.blickFuer(canvas, stationen, { lon: [20, 100], lat: [5, 50] });
     if (m) BLICK.leben.mitte = m;
-    const u = blickFuer(ursprung, { lon: [32, 48], lat: [26, 40], k: BLICK.ursprung.k, schritt: .25 }) || F.blickFuer(canvas, ursprung, { lon: [32, 48], lat: [26, 40], k: BLICK.ursprung.k, schritt: .25 });
+    const u = F.blickFuer(canvas, ursprung, { lon: [32, 48], lat: [26, 40], k: BLICK.ursprung.k, schritt: .25 });
     if (u) BLICK.ursprung.mitte = u;
     BLICK.reisen.mitte = F.breit() ? [52, 30] : [40, 28];
   }
@@ -471,26 +730,29 @@
   }
 
   // Wer den Globus anfasst, bevor die Chronik lief, bekommt sofort alle Orte und die ganze Spur.
-  // Wer ihn mitten in der Chronik anfasst, ebenso: der Kern ließe sonst ein halbes Wegstück stehen, während schon alle Namen stehen
-  let lebenAbgebrochen = false;
+  // Wer ihn mitten in einer Chronik anfasst (Leben oder Ursprung), ebenso: der Kern ließe sonst ein halbes Wegstück stehen, während schon alle Namen stehen
+  let abgebrochen = null;
   function eingriff() {
     if (!begonnen) {
       begonnen = true;
       if (ebeneJetzt === 'leben' && g) { lebenOrteFuellen(); g.routeZeigen(stationen); spurBis = stationen.length - 1; nochmal('leben', true); lebenTafel(0); }
-    } else if (lebenAbgebrochen && ebeneJetzt === 'leben' && g) {
+    } else if (g && abgebrochen === 'leben' && ebeneJetzt === 'leben') {
       g.routeZeigen(stationen); spurBis = stationen.length - 1;
+    } else if (g && abgebrochen === 'ursprung' && ebeneJetzt === 'ursprung') {
+      g.routeZeigen(ursprung); spurBis = ursprung.length - 1;
     }
-    lebenAbgebrochen = false;
+    abgebrochen = null;
     neuSetzen();
   }
   function chronikEnde(grund) {
     const war = laufend;
     laufend = null;
-    if (war === 'leben') { lebenAbgebrochen = grund === 'abgebrochen'; lebenFertig(grund); }
+    abgebrochen = grund === 'abgebrochen' ? war : null;
+    if (war === 'leben') lebenFertig(grund);
     else if (war === 'ursprung') ursprungFertig(grund);
   }
   // Die Chronik von der Seite aus anhalten (Ebenenwechsel, Station, Neustart): das ist kein Eingriff am Globus
-  function anhalten() { if (g) g.chronikStoppen(); lebenAbgebrochen = false; }
+  function anhalten() { if (g) g.chronikStoppen(); abgebrochen = null; }
   function nochmal(welche, zeigen) { const el = $('#nochmal-' + welche); if (el) el.classList.toggle('still', !zeigen || !g); }
   function aktivSetzen(gruppe, el) { $$(gruppe).forEach(b => b.classList.toggle('ist-aktiv', b === el)); }
   function stationMarkieren(i) {
@@ -656,14 +918,14 @@
     else if (d.station !== undefined) { stationSchritt(+d.station); globusInSicht(t); }
     else if (d.schritt) {
       const fokus = document.activeElement === t;
-      const p = Math.max(0, Math.min(stationen.length, lebenP + +d.schritt));
+      const p = lebenP + +d.schritt > stationen.length ? 0 : Math.max(0, lebenP + +d.schritt);
       if (p === 0) lebenUeberblickZeigen(); else stationSchritt(p - 1);
       if (fokus) tafelFokus('schritt', d.schritt);
       globusInSicht();
     }
     else if (d.szene) {
       const fokus = document.activeElement === t;
-      szeneZeigen(Math.max(0, Math.min(szenen.length, satoshiP + +d.szene)));
+      szeneZeigen(satoshiP + +d.szene > szenen.length ? 0 : Math.max(0, satoshiP + +d.szene));
       if (fokus) tafelFokus('szene', d.szene);
       globusInSicht();
     }
@@ -707,11 +969,14 @@
   // Die Chronik läuft einmal von selbst, sobald der Globus im Bild ist: erst anderthalb Sekunden der ganze Globus, leer.
   // Bis dahin zeigt die Tafel Dortmund, wo die Chronik beginnt; ohne Globus gleich den Überblick über alle Orte
   lebenTafel(g ? 1 : 0);
+  // Die Chronik wartet, bis der erste Satz steht (window.FEinstieg.fertig), und danach noch einen Augenblick
+  const einstiegFertig = (window.FEinstieg && window.FEinstieg.fertig) || Promise.resolve();
   F.schriften(2500).then(() => {
     tafelHoehe();
     if (!g) return;
     g.zeichnen(); neuSetzen();
-    const los = () => setTimeout(() => { if (!begonnen) lebenStarten(); }, ruhig ? 600 : 1500);
+    const t0 = performance.now();
+    const los = () => einstiegFertig.then(() => setTimeout(() => { if (!begonnen) lebenStarten(); }, ruhig ? 600 : Math.max(700, 1500 - (performance.now() - t0))));
     if (!('IntersectionObserver' in window)) { los(); return; }
     const io = new IntersectionObserver(eintraege => {
       if (!eintraege.some(x => x.isIntersecting)) return;
@@ -722,18 +987,8 @@
   });
 
   // ================= Karteikarten =================
-  /* Karte eines eigenen Werks: der Titel selbst führt zur Seite des Werks (Satoshi, Ursprung), sonst kein Verweis;
-     das Thema eines Bandes endet mit einem Punkt wie auf der Tafel */
-  function werkKarte(id) {
-    const x = F.werkKarte(id);
-    if (!x) return null;
-    const ziel = id === 'satoshi' ? F.SEITEN.satoshi : /^ursprung/.test(id) ? F.SEITEN.ursprung : '';
-    if (ziel && typeof x.titel === 'string') x.titel = { html: `<a href="${ziel}">${esc(x.titel)}</a>` };
-    x.verweis = null;
-    if (id === 'erzaehlungen') x.unter = '';          // „Erzählungen, Kurzgeschichten“ sagt dasselbe zweimal
-    if (typeof x.notiz === 'string' && x.notiz) x.notiz = x.notiz.replace(/([^.!?…])$/, '$1.');
-    return x;
-  }
+  // Karte eines eigenen Werks: der Titel selbst führt zur Seite des Werks (FSeite.werkKarte); die Startseite spricht in der ersten Person
+  const werkKarte = id => F.werkKarte(id);
   /* Wo die Karte liegt: FSeite.karteikarte stellt sie mittig über den Auslöser, begrenzt nur durch die Seitenränder.
      Hier bleibt die Karte des Regalbilds in dessen Spalte (sie deckt das Werkverzeichnis nicht zu),
      und die Karte eines Strichs legt sich unter das Band, über die schmaleren Bänder, statt über Vorwort und Querbücher. */
@@ -818,7 +1073,27 @@
       if (sp.scrollWidth > sp.clientWidth) sp.remove();
     });
     rovingSetzen();
+    zielZeigen();
   }
+  // Werkverzeichnis und Regalbild: der Eintrag unter dem Zeiger (oder mit dem Fokus) hebt seinen Rücken, ebenso der Eintrag,
+  // zu dem die Navigation geführt hat (#erzaehlungen, #untertext, #laender; #satoshi und #ursprung ebenso)
+  const RUECKEN = { satoshi: ['satoshi'], ursprung: ['ursprung-1', 'ursprung-2', 'ursprung-3'], erzaehlungen: ['erzaehlungen'], untertext: ['untertext'], laender: ['laender'] };
+  function rueckenHeben(id, an, klasse) {
+    (RUECKEN[id] || []).forEach(w => { const b = $(`.stueck[data-werk="${w}"]`, regalFlaeche); if (b) b.classList.toggle(klasse, an); });
+  }
+  function zielZeigen() {
+    $$('.stueck.ist-ziel', regalFlaeche).forEach(b => b.classList.remove('ist-ziel'));
+    let id = '';
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = ''; }
+    if (RUECKEN[id]) rueckenHeben(id, true, 'ist-ziel');
+  }
+  window.addEventListener('hashchange', zielZeigen);
+  $$('.verzeichnis .eintrag').forEach(e => {
+    e.addEventListener('pointerenter', ev => { if (ev.pointerType === 'mouse') rueckenHeben(e.id, true, 'ist-gemeint'); });
+    e.addEventListener('pointerleave', () => rueckenHeben(e.id, false, 'ist-gemeint'));
+    e.addEventListener('focusin', () => rueckenHeben(e.id, true, 'ist-gemeint'));
+    e.addEventListener('focusout', () => rueckenHeben(e.id, false, 'ist-gemeint'));
+  });
   // Ein Tab-Halt für das ganze Bild, die Pfeiltasten gehen von Buch zu Buch
   function rovingSetzen() {
     const alle = $$('.stueck', regalFlaeche);
@@ -845,24 +1120,25 @@
     F.karteikarte.oeffnen(inhalt, b);
     karteRuecken(b, 'regal');
   });
-  // ================= Kante und Navigation =================
-  // Die wirkliche linke Kante des Globus: 100vw zählt eine sichtbare Bildlaufleiste mit, die Messung nicht. Regalbild und Navigation richten sich danach
-  function kanteMessen() {
-    const wurzel = document.documentElement.style;
-    if (F.breit() && g && flaeche.offsetWidth) wurzel.setProperty('--kante-ist', Math.round(flaeche.getBoundingClientRect().left) + 'px');
-    else wurzel.removeProperty('--kante-ist');
+  // ================= Anker =================
+  // Breit: wer über die Navigation zu Erzählungen, Untertext oder Länder kommt, landet mit der Überschrift des Abschnitts oben
+  // und sieht daneben das Bild mit dem gehobenen Rücken. Einspaltig steht das Bild über der Liste; dort bleibt der Eintrag selbst oben
+  function ankerSetzen() {
+    const titel = $('#schreiben-titel'), z = F.masz('--z');
+    $$('.verzeichnis .eintrag').forEach(e => {
+      e.style.scrollMarginTop = F.breit() && titel ? Math.max(0, Math.round(e.getBoundingClientRect().top - titel.getBoundingClientRect().top + z)) + 'px' : '';
+    });
   }
-  // Passt die Navigation nicht in eine Zeile, bricht sie nach „Untertext“ statt vor einem einzelnen Wort
-  function navSetzen() {
-    const nav = $('.kopf .nav'), liste = nav && $('.nav-liste', nav);
-    if (!liste) return;
-    nav.classList.remove('zweizeilig');
-    if (!F.breit()) return;
-    const zeile = parseFloat(getComputedStyle(liste).lineHeight) || 28;
-    if (liste.getBoundingClientRect().height > zeile * 1.5) nav.classList.add('zweizeilig');
+  // Nach dem Laden der Schriften verschiebt sich der Satz; hat noch niemand gescrollt, fährt die Seite den Eintrag noch einmal an
+  let angefasst = false;
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(t => window.addEventListener(t, () => { angefasst = true; }, { passive: true }));
+  function zielAnfahren() {
+    let id = '';
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = ''; }
+    const el = RUECKEN[id] && document.getElementById(id);
+    if (el && !angefasst) el.scrollIntoView({ block: 'start' });
   }
-  kanteMessen(); navSetzen();
-  regalZeichnen();
+  regalZeichnen(); ankerSetzen();
 
   // ================= Was ich gelesen habe: das Zeitband =================
   const NBSP = F.NBSP;
@@ -1085,7 +1361,7 @@
 
     const svg = (id, cls, h, inhalt, label) => `<svg id="${id}" class="zb ${cls}" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" tabindex="0" role="listbox" aria-label="${label}">${inhalt}</svg>`;
     roll.innerHTML =
-      svg('zb-haupt', 'zb-hauptband', Hh, `<g>${sHaupt}</g><g>${sQuer}</g><g>${sLeiste}${sJahre}</g><line class="marke" id="zb-marke" x1="0" x2="0" y1="${y0 + 1}" y2="${y0 + 10}" visibility="hidden"/>`, 'Gelesen, nach dem Jahr des ersten Erscheinens; Pfeiltasten wählen, Eingabe öffnet die Karteikarte') +
+      svg('zb-haupt', 'zb-hauptband', Hh, `<g>${sHaupt}</g><g>${sQuer}</g><g>${sLeiste}${sJahre}</g><line class="marke" id="zb-marke" x1="0" x2="0" y1="${y0 + 1}" y2="${y0 + 11}" visibility="hidden"/>`, 'Gelesen, nach dem Jahr des ersten Erscheinens; Pfeiltasten wählen, Eingabe öffnet die Karteikarte') +
       `<p class="bandzeile" id="bandzeile" aria-live="polite"><span id="zeile-text"></span></p>` +
       `<p class="bandname">die wichtigsten aus Kindheit und Jugend</p>` +
       svg('zb-kind', 'zb-kind', kH, sKind, 'Die wichtigsten Bücher aus Kindheit und Jugend') +
@@ -1094,7 +1370,10 @@
 
     Object.assign(ZB, { items, folgen, aktiv: null, breite: W, schmal, y0 });
     ['zb-haupt', 'zb-kind', 'zb-warte'].forEach(id => bandBedienung(document.getElementById(id)));
-    if (schmal) roll.scrollLeft = roll.scrollWidth;
+    // Auf dem Telefon steht das Band am rechten Ende (das Neueste und das Eigene), es sei denn, das Scrollen schiebt es mit
+    MITSCHIEBEN.links = null;
+    if (schmal && !schiebt()) roll.scrollLeft = roll.scrollWidth;
+    else if (MITSCHIEBEN.leser) MITSCHIEBEN.leser.pruefen(true);
   }
 
   // Treffer unter dem Zeiger: liegende Bücher zuerst, sonst der nächste Rücken entlang der Zeit
@@ -1130,22 +1409,29 @@
     }
     const z = zeile(o.b);
     textEl.innerHTML = ZB.schmal ? `<button class="wort" type="button" id="zeile-karte">${z.html}</button>` : z.html;
+    zeileEinpassen();
     const mitte = o.x + o.w / 2;
-    const bw = textEl.offsetWidth;
-    let links = mitte - 6;
-    if (ZB.schmal) {
-      const pl = parseFloat(getComputedStyle(roll).paddingLeft) || 0;
-      const sl = roll.scrollLeft, vw = roll.clientWidth - 2 * pl;
-      links = Math.max(sl, Math.min(sl + vw - bw, links));
-    }
-    links = Math.max(0, Math.min(ZB.breite - bw, links));
-    textEl.style.marginLeft = links + 'px';
     if (marke) {
       if (o.folge === 'haupt') { marke.setAttribute('x1', mitte); marke.setAttribute('x2', mitte); marke.setAttribute('visibility', 'visible'); }
       else marke.setAttribute('visibility', 'hidden');
     }
     const k = document.getElementById('zeile-karte');
     if (k) k.addEventListener('click', () => karteAusBand(o, false));
+  }
+  /* Die Zeile steht unter dem gewählten Strich. Auf dem Telefon liegt sie im seitlich rollenden Band: sie bleibt im sichtbaren Teil,
+     innerhalb des Rands, auch während das Band rollt, und bricht, wenn sie länger ist, in zwei Zeilen um */
+  function zeileEinpassen() {
+    const textEl = document.getElementById('zeile-text'), o = ZB.aktiv;
+    if (!textEl || !o) return;
+    const bw = textEl.offsetWidth;
+    let links = o.x + o.w / 2 - 6;
+    if (ZB.schmal) {
+      const pl = parseFloat(getComputedStyle(roll).paddingLeft) || 0;
+      const sl = roll.scrollLeft, vw = roll.clientWidth - 2 * pl;
+      links = Math.max(sl, Math.min(sl + vw - bw, links));
+    }
+    links = Math.max(0, Math.min(ZB.breite - bw, links));
+    textEl.style.left = Math.round(links) + 'px';
   }
   // Karteikarte zu einem Strich; der Fokus kehrt danach in sein Band zurück
   function karteAusBand(o, perTaste) {
@@ -1162,7 +1448,8 @@
     if (!svg) return;
     let art = 'mouse';
     svg.addEventListener('pointerdown', e => { art = e.pointerType; });
-    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { const t = treffer(svg, e); if (t) waehle(t); } });
+    // Nur eine wirkliche Mausbewegung wählt; nach dem Scrollen schickt der Browser eine Bewegung ohne Weg
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && (e.movementX || e.movementY)) { const t = treffer(svg, e); if (t) waehle(t); } });
     svg.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && document.activeElement !== svg && !F.karteikarte.offen()) waehle(null); });
     svg.addEventListener('click', e => {
       const t = treffer(svg, e);
@@ -1203,20 +1490,56 @@
     });
   }
 
+  // ================= Beim Scrollen: das Band auf dem Telefon =================
+  /* Auf dem Telefon ist das Band gut doppelt so breit wie der Schirm. Solange niemand es selbst bedient, schiebt es sich mit dem
+     Scrollen durch die Zeit, von Gilgamesch bis zum Eigenen am rechten Ende (FSeite.fortschritt): erst wenn es ganz im Bild ist
+     (Oberkante bei drei Fünfteln des Fensters), bis seine Oberkante ein Achtel unter dem oberen Rand steht. Zurückscrollen schiebt
+     es zurück. Die Zeile darunter nennt dabei nichts; sie nennt nur, was man selbst wählt. Wer das Band antippt, seitlich wischt
+     oder mit der Tastatur bedient, hat es von da an in der Hand.
+     Breit steht das Band still: es ist eine Abbildung, die man auf einen Blick erfasst, und die Startseite hat ihre Bewegung schon
+     in der springenden Chronik. Bei reduzierter Bewegung steht es auch auf dem Telefon still, am rechten Ende. */
+  const MITSCHIEBEN = { selbst: !!ruhig, links: null, leser: null };
+  function schiebt() { return !!ZB.schmal && !MITSCHIEBEN.selbst; }
+  function mitschieben() {
+    const M = MITSCHIEBEN;
+    if (!schiebt() || !M.leser || F.karteikarte.offen()) return;
+    const max = roll.scrollWidth - roll.clientWidth;
+    if (max <= 0) return;
+    roll.scrollLeft = Math.round(M.leser.wert() * max);
+    M.links = roll.scrollLeft;
+  }
+  (function () {
+    const zb = $('#zeitband');
+    if (!zb || !roll) return;
+    // Ein Tippen ist ein Klick; ein Finger, der nur die Seite scrollt, zählt nicht
+    const selbst = () => { MITSCHIEBEN.selbst = true; };
+    zb.addEventListener('click', selbst);
+    zb.addEventListener('keydown', selbst);
+    zb.addEventListener('focusin', selbst);
+    // Seitliches Wischen: das Band steht nicht mehr dort, wo das Scrollen es hingeschoben hat. Die Zeile wandert mit in den sichtbaren Teil
+    let bild = 0;
+    roll.addEventListener('scroll', () => {
+      if (MITSCHIEBEN.links !== null && Math.abs(roll.scrollLeft - MITSCHIEBEN.links) > 2) selbst();
+      if (!bild) bild = requestAnimationFrame(() => { bild = 0; zeileEinpassen(); });
+    }, { passive: true });
+    if (ruhig) return;
+    // Gemessen wird am Rahmen des Bands, der beim Neubauen bleibt; seine Oberkante ist die des Hauptbands
+    MITSCHIEBEN.leser = F.fortschritt(zb, mitschieben, { von: .6, bis: .12 });
+  })();
+
   // ================= Aufbau und Größe =================
   bandBauen();
-  F.schriften(3000).then(() => { kanteMessen(); navSetzen(); regalZeichnen(); bandBauen(); });
+  F.schriften(3000).then(() => { regalZeichnen(); bandBauen(); ankerSetzen(); zielAnfahren(); });
   let breiteVorher = window.innerWidth, warte = null;
   window.addEventListener('resize', () => {
     clearTimeout(warte);
     warte = setTimeout(() => {
       if (g) { lebenBlickBerechnen(); neuSetzen(); }
-      kanteMessen(); navSetzen();
       tafelHoehe();
       if (window.innerWidth === breiteVorher) return;
       breiteVorher = window.innerWidth;
       F.karteikarte.schliessen();
-      regalZeichnen(); bandBauen();
+      regalZeichnen(); bandBauen(); ankerSetzen();
     }, 140);
   });
 })();

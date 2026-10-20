@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Länder – Dominik Jäkel</title>
+<meta name="description" content="Die Länder und Gebiete, in denen Dominik Jäkel war, nach Kontinenten.">
+<script>
+document.documentElement.classList.add('js');
+if (/^https?:$/.test(location.protocol)) {
+  var l = document.createElement('link');
+  l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous'; l.href = 'schrift/baskervville-antiqua.woff2';
+  document.head.appendChild(l);
+}
+</script>
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Länder (Abschnitt 12.11, 13): in der Satzspalte das Länderregister nach Kontinenten, im Tafelfeld die Kartentafel mit der
+   Schraffur der bereisten Länder. Am Desktop bleibt die Tafel neben dem Register stehen. */
+.laender > .tafelfeld { margin-top: calc(var(--z) * 2); }
+@media (min-width: 75rem) {
+  .laender > .satzspalte, .laender > .tafelfeld { grid-row: 1; margin-top: 0; }
+  .laender > .tafelfeld { position: sticky; top: calc(var(--z) * 2); align-self: start; }
+}
+/* Die Länder im Fließsatz, durch Komma getrennt; halbfett ohne Sprung (die Sperrung gleicht die Mehrbreite aus) */
+.register-laender p { hyphens: manual; -webkit-hyphens: manual; }
+.register-laender [aria-pressed="true"] { letter-spacing: var(--ausgleich, 0); }
+.guide-verweis { grid-column: 1 / -1; }
+/* Eine Karte, keine Kartenwahl: der Zwickel oben links bleibt leer und rückt den Rahmen nicht von der Höhe des Titels */
+.laender .zw-ol { margin-bottom: 0; }
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="bogen kopf">
+  <a class="name" href="index.html">Dominik Jäkel</a>
+  <nav class="tafelfeld nav" aria-label="Website">
+    <ul class="wahl">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html" aria-current="page">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="bogen laender" id="inhalt">
+  <div class="satzspalte">
+    <h1>Länder</h1>
+    <div class="register-laender" id="register">
+      <h2>Europa</h2>
+      <p class="wahl">Belgien, Bulgarien, Dänemark, Deutschland, England, Estland, Finnland, Frankreich, Irland, Italien, Kroatien, Lettland, Litauen, Monaco, Niederlande, Nordirland, Österreich, Polen, Portugal, Rumänien, Russland, Schottland, Schweden, Schweiz, Serbien, Slowakei, Slowenien, Spanien, Tschechien, Ungarn, Vatikanstadt</p>
+      <h2>Asien</h2>
+      <p class="wahl">Armenien, Bangladesch, China, Georgien, Hongkong, Indien, Indonesien, Israel, Kuwait, Malaysia, Oman, Sri Lanka, Südkorea, Taiwan, Thailand, Türkei, Vereinigte Arabische Emirate, Vietnam, Westjordanland</p>
+      <h2>Afrika</h2>
+      <p class="wahl">Ägypten, Äthiopien, Benin, Ghana, Kap Verde, Kenia, Marokko, Südafrika, Tansania, Togo, Tunesien</p>
+      <h2>Amerika</h2>
+      <p class="wahl">Argentinien, Kanada, Uruguay, USA</p>
+    </div>
+  </div>
+
+  <div class="tafelfeld">
+    <figure class="kartentafel" id="karte">
+      <div class="rahmen">
+        <p class="ohne-karte">Die Karte braucht JavaScript.</p>
+      </div>
+    </figure>
+  </div>
+</main>
+
+<footer class="bogen fuss">
+  <div class="satzspalte">
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
+  </div>
+</footer>
+
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="globus/kern.js"></script>
+<script src="daten/inhalt.js"></script>
+<script src="daten/stationen.js"></script>
+<script src="daten/texte.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+  const { $, $$, esc } = F;
+
+  // ---------- Namen: Landesteile und Gebiete eigens, sonst die deutschen Namen aus daten/laender-de.js ----------
+  const SONDER = Object.assign({ 'GB-ENG': 'England', 'GB-SCT': 'Schottland', 'GB-NIR': 'Nordirland', 'GB-WLS': 'Wales', 'PS-WB': 'Westjordanland', 'PS-GZ': 'Gazastreifen' }, I.sondernamen || {});
+  const DE = {};
+  Object.values((window.LAENDER_DE && window.LAENDER_DE.nach_id) || {}).forEach(e => { if (e[0] && !DE[e[0]]) DE[e[0]] = e[1]; });
+  const name = iso => SONDER[iso] || DE[iso] || iso;
+  // Ein fertiger Länderguide (daten/texte.js, art 'laenderguide'): der neueste je Land
+  const GUIDES = {};
+  F.texte.alle('laenderguide').forEach(t => { if (!GUIDES[t.land]) GUIDES[t.land] = t; });
+
+  // ---------- Register: je Kontinent die Länder als Auswahlliste im Fließsatz, aus den Daten ----------
+  const register = $('#register');
+  const KONTINENTE = I.kontinente || {};
+  if (Object.keys(KONTINENTE).length) {
+    register.innerHTML = Object.keys(KONTINENTE).map(k => {
+      const laender = KONTINENTE[k].slice().sort((a, b) => name(a).localeCompare(name(b), 'de'));
+      return `<h2>${esc(k)}</h2><p class="wahl">${laender.map(iso => `<button type="button" data-land="${esc(iso)}" aria-pressed="false">${esc(name(iso))}</button>`).join(', ')}</p>`;
+    }).join('');
+  }
+  // Halbfett ohne Sprung: die Sperrung gleicht die Mehrbreite des halbfetten Namens aus, die Zeilen brechen nicht neu um
+  const mess = document.createElement('canvas').getContext('2d'), schrift = F.tokens().schrift;
+  const breite = (t, g) => { mess.font = `${g} 100px ${schrift}`; return mess.measureText(t).width; };
+  function gleichBreit() {
+    $$('[data-land]', register).forEach(b => {
+      const t = b.textContent, n = Array.from(t).length;
+      b.style.setProperty('--ausgleich', ((breite(t, 400) - breite(t, 600)) / n / 100).toFixed(4) + 'em');
+    });
+  }
+
+  // ---------- Kartentafel: die Karte „Reisen“ mit der Schraffur ----------
+  const fig = $('#karte');
+  const tafel = F.kartentafel(fig, { karten: ['reisen'], start: 'reisen' });
+  let wahl = null;
+  function registerSetzen() {
+    $$('[data-land]', register).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.land === wahl)));
+  }
+  // Der Verweis auf einen Länderguide steht in der Legende der Tafel seines Lands, mit seinem Titel
+  let guideEl = null;
+  function guideSetzen() {
+    const legende = $('.tafellegende', fig), g = wahl && GUIDES[wahl];
+    if (!legende) return;
+    if (!g) { if (guideEl) { guideEl.remove(); guideEl = null; } return; }
+    if (!guideEl) { guideEl = document.createElement('p'); guideEl.className = 'guide-verweis'; legende.appendChild(guideEl); }
+    guideEl.innerHTML = `<a href="${esc(F.SEITEN.lesen + '#' + g.slug)}">${F.texte.satz(g.titel)}</a>`;
+  }
+  if (tafel) {
+    const g = tafel.kern, kopf = $('.tafelkopf', fig);
+    /* Der Kopf der Tafel nennt das gewählte Land oder das unter dem Zeiger. Ohne Wahl bleibt er leer: „Fünfundsechzig Länder und
+       Gebiete“ steht nur auf der Startseite (Abschnitt 16). Kleinstaaten ohne Fläche im groben Maßstab kennt die Tafel nicht als
+       Land; ihr Name kommt von hier. */
+    const UEBERBLICK = F.gross(F.zahlwort((I.bereist || []).length)) + ' Länder und Gebiete';
+    function kopfPruefen() {
+      if (!kopf || kopf.textContent.trim() !== UEBERBLICK) return;
+      kopf.innerHTML = wahl ? `<p class="tafelkopf-ort">${esc(name(wahl))}</p>` : '';
+      window.dispatchEvent(new Event('resize'));
+    }
+    if (kopf && 'MutationObserver' in window) new MutationObserver(kopfPruefen).observe(kopf, { childList: true, subtree: true, characterData: true });
+    kopfPruefen();
+
+    function waehlen(iso) {
+      wahl = iso || null;
+      registerSetzen();
+      guideSetzen();
+    }
+    // Die Tafel arbeitet in der Bubble-Phase; hier vorher (Capture), damit Kopf und Register denselben Stand haben
+    fig.addEventListener('click', e => {
+      if (e.target.closest('canvas')) {
+        const r = e.target.getBoundingClientRect(), land = g.landBei(e.clientX - r.left, e.clientY - r.top);
+        waehlen(land ? land.iso : null);
+      } else if (e.target.closest('[data-kontinent]')) waehlen(null);
+    }, true);
+    // Wer die Kugel dreht oder zoomt, behält das gewählte Land umrandet
+    const canvas = $('canvas', fig);
+    ['pointerdown', 'touchstart', 'keydown'].forEach(t => canvas.addEventListener(t, () => setTimeout(() => { if (wahl) g.auswahl(wahl); }, 0), { passive: true }));
+    canvas.addEventListener('wheel', () => setTimeout(() => { if (wahl) g.auswahl(wahl); }, 0), { passive: true });
+
+    // Ein Name im Register dreht die Kugel zum Land und wählt es; ist die Karte nicht ganz zu sehen, rückt sie ins Bild
+    const rahmen = $('.rahmen', fig);
+    function insBild() {
+      const H = window.innerHeight, oben = rahmen.getBoundingClientRect().top;
+      const unten = Math.max(rahmen.getBoundingClientRect().bottom, kopf ? kopf.getBoundingClientRect().bottom : 0);
+      if (oben < 0) window.scrollBy(0, oben - 8);
+      else if (unten > H) window.scrollBy(0, Math.min(oben - 8, unten - H + 8));
+    }
+    register.addEventListener('click', e => {
+      const b = e.target.closest('[data-land]');
+      if (!b) return;
+      $$('[data-kontinent]', fig).forEach(w => w.classList.remove('ist-aktiv'));
+      waehlen(b.dataset.land);
+      tafel.land(b.dataset.land);
+      kopfPruefen();
+      insBild();
+    });
+  } else {
+    register.addEventListener('click', e => { const b = e.target.closest('[data-land]'); if (b) { wahl = b.dataset.land; registerSetzen(); } });
+  }
+  F.schriften(2500).then(gleichBreit);
+})();
+</script>
+</body>
+</html>

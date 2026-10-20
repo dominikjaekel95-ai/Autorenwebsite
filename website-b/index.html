@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dominik Jäkel</title>
+<meta name="description" content="Dominik Jäkel schreibt Romane. Sein Debüt Satoshi erzählt die Gründungslegende von Bitcoin.">
+<script>
+document.documentElement.classList.add('js');
+if (/^https?:$/.test(location.protocol)) {
+  var l = document.createElement('link');
+  l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous'; l.href = 'schrift/baskervville-antiqua.woff2';
+  document.head.appendChild(l);
+}
+</script>
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Startseite: ein Blatt. Satzspalte mit erstem Satz, Kurzvita und Inhaltsverzeichnis; im Tafelfeld die Kartentafel. */
+.start { padding-top: calc(var(--z) * 2); }
+.kurzvita { margin-top: var(--z); }
+.inhaltsverzeichnis { margin-top: calc(var(--z) * 1.5); }
+.start > .tafelfeld { margin-top: calc(var(--z) * 2); }
+@media (min-width: 75rem) {
+  .start > .satzspalte, .start > .tafelfeld { grid-row: 1; margin-top: 0; }
+  /* Außenlage: die Kartenwahl steht im Kopfsteg, die Oberkante des Rahmens auf der Höhe des ersten Satzes */
+  .start .zw-ol { margin-top: calc(var(--z) * -1.25); }
+}
+@container tafel (min-width: 40.5rem) {
+  .start .zw-ol { margin-top: calc(var(--z) * .5); }
+}
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<main class="bogen start" id="inhalt">
+  <div class="satzspalte">
+    <h1 class="erster-satz"><span>Dominik Jäkel schreibt tagsüber</span> <span>unter fremden Namen</span> <span>und abends unter seinem eigenen.</span></h1>
+
+    <p class="kurzvita">Er wurde 1995 in <button type="button" class="wort" data-ort="Dortmund">Dortmund</button> geboren, studierte in <button type="button" class="wort" data-ort="Freiburg">Freiburg</button> und am Hasso-Plattner-Institut in <button type="button" class="wort" data-ort="Potsdam">Potsdam</button> und lebte vier Jahre in <button type="button" class="wort" data-ort="Kaohsiung">Kaohsiung</button> auf Taiwan. Seit 2022 lebt er in <button type="button" class="wort" data-ort="Berlin">Berlin</button> und moderiert die Werkstattbühne des Autorenforums Berlin. Im selben Jahr erhielt er den <span class="nw">A.-E.-Johann-Preis</span>.</p>
+
+    <nav class="inhaltsverzeichnis" aria-label="Inhalt">
+      <ul>
+        <li><a href="satoshi.html"><i>Satoshi</i></a> (AT). Roman in vierzig Kapiteln, 364 Normseiten.</li>
+        <li><a href="ursprung.html"><i>Ursprung</i></a>. Drei Romane über die Anfänge der Zivilisation, begonnen in Kaohsiung.</li>
+        <li><span data-verweis-wenn-texte="erzaehlung" data-href="erzaehlungen.html">Erzählungen</span>. Viele davon hat er auf der Werkstattbühne gelesen.</li>
+        <li><span data-verweis-wenn-texte="untertext" data-href="untertext.html"><i>Untertext</i></span>. Sein Journal.</li>
+        <li><a href="laender.html">Länder</a>. Die Länder und Gebiete, in denen er war, nach Kontinenten.</li>
+      </ul>
+      <ul>
+        <li><a href="bibliothek.html">Bibliothek</a>. Die Bücher, die er gelesen hat.</li>
+        <li><a href="vita.html">Vita</a>.</li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="tafelfeld">
+    <figure class="kartentafel" id="karte">
+      <div class="rahmen">
+        <p class="ohne-karte">Die Karte braucht JavaScript. Die Stationen stehen in der <a href="vita.html">Vita</a>.</p>
+      </div>
+    </figure>
+  </div>
+</main>
+
+<footer class="bogen fuss">
+  <div class="satzspalte">
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
+  </div>
+</footer>
+
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="globus/kern.js"></script>
+<script src="daten/inhalt.js"></script>
+<script src="daten/stationen.js"></script>
+<script src="daten/texte.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var F = window.FSeite;
+  if (!F) return;
+  F.kartentafel(document.getElementById('karte'), {
+    karten: ['wohnorte', 'reisen', 'satoshi', 'ursprung'], start: 'wohnorte', chronik: true,
+    ortWoerter: F.$$('.kurzvita [data-ort]')
+  });
+})();
+</script>
+</body>
+</html>

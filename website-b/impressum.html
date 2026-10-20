@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Impressum – Dominik Jäkel</title>
+<meta name="description" content="Anbieter dieser Website ist Dominik Jäkel in Berlin.">
+<script>
+document.documentElement.classList.add('js');
+if (/^https?:$/.test(location.protocol)) {
+  var l = document.createElement('link');
+  l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous'; l.href = 'schrift/baskervville-antiqua.woff2';
+  document.head.appendChild(l);
+}
+</script>
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Impressum (Abschnitt 13): eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2.
+   Nur Anordnung. Die Anschrift steht aufrecht (der Browser setzt <address> sonst kursiv). */
+.recht address { font-style: normal; }
+.recht .schluss { margin-top: calc(var(--z) * 2); }
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="bogen kopf">
+  <a class="name" href="index.html">Dominik Jäkel</a>
+  <nav class="tafelfeld nav" aria-label="Website">
+    <ul class="wahl">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="bogen" id="inhalt">
+  <article class="satzspalte recht">
+    <h1>Impressum</h1>
+    <p class="klein">Entwurf, vor der Veröffentlichung zu prüfen.</p>
+
+    <section aria-labelledby="r-anbieter">
+      <h2 id="r-anbieter">Angaben gemäß <span class="nw">§&nbsp;5 <abbr>DDG</abbr></span></h2>
+      <address>Dominik Jäkel<br>Stresemannstraße&nbsp;76<br>10963&nbsp;Berlin<br><span class="nw">E-Mail</span>: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></address>
+    </section>
+
+    <section aria-labelledby="r-redaktion">
+      <h2 id="r-redaktion">Redaktionell verantwortlich</h2>
+      <p>Verantwortlich für journalistisch-redaktionelle Inhalte gemäß <span class="nw">§&nbsp;18 Abs.&nbsp;2 <abbr>MStV</abbr></span>: Dominik Jäkel, Anschrift wie oben.</p>
+    </section>
+
+    <p class="schluss">Wie diese Website mit Daten umgeht, steht unter <a href="datenschutz.html">Datenschutz</a>.</p>
+  </article>
+</main>
+
+<footer class="bogen fuss">
+  <div class="satzspalte">
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="klein"><a href="impressum.html" aria-current="page">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
+  </div>
+</footer>
+
+<script src="daten/texte.js"></script>
+<script src="seite.js"></script>
+</body>
+</html>

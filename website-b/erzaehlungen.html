@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Erzählungen – Dominik Jäkel</title>
+<meta name="description" content="Dominik Jäkel schreibt Erzählungen und hat viele davon auf der Werkstattbühne gelesen.">
+<script>
+document.documentElement.classList.add('js');
+if (/^https?:$/.test(location.protocol)) {
+  var l = document.createElement('link');
+  l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous'; l.href = 'schrift/baskervville-antiqua.woff2';
+  document.head.appendChild(l);
+}
+</script>
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Erzählungen (Abschnitt 13): unter dem Titel der Satz aus dem Inhaltsverzeichnis der Startseite, darunter die Liste aus
+   daten/texte.js (art: 'erzaehlung'), die neueste zuerst. Je Eintrag Titel kursiv als Verweis zur Leseseite, Untertitel,
+   darunter das Datum im Grad klein. Ein Eintrag hat zwei Zeilen und zählt deshalb als Gruppe (0,75 z). Nur Anordnung. */
+.texte { margin-top: calc(var(--z) * 1.5); }
+.texte > li + li { margin-top: calc(var(--z) * .75); }
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="bogen kopf">
+  <a class="name" href="index.html">Dominik Jäkel</a>
+  <nav class="tafelfeld nav" aria-label="Website">
+    <ul class="wahl">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html" aria-current="page">Erzählungen</a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="bogen" id="inhalt">
+  <div class="satzspalte">
+    <h1>Erzählungen</h1>
+    <p>Viele davon hat er auf der Werkstattbühne gelesen.</p>
+    <ul class="texte" id="texte" hidden></ul>
+  </div>
+</main>
+
+<footer class="bogen fuss">
+  <div class="satzspalte">
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
+  </div>
+</footer>
+
+<script src="daten/texte.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var F = window.FSeite;
+  if (!F || !F.texte) return;
+  var T = F.texte;
+  var liste = document.getElementById('texte');
+  var alle = T.alle('erzaehlung');
+  if (!alle.length) return;
+  // Endet der Titel mit einem Satzzeichen, folgt der Untertitel ohne Punkt dazwischen
+  var endetMitZeichen = function (html) {
+    return /[.!?…:]$/.test(String(html).replace(/<[^>]*>/g, '').replace(/[“‘’»«)\s]+$/, ''));
+  };
+  liste.innerHTML = alle.map(function (t) {
+    var d = T.datum(t.datum), titel = F.versalien(T.satz(t.titel));
+    var zeile = '<a href="' + F.SEITEN.lesen + '#' + t.slug + '"><i>' + titel + '</i></a>'
+      + (t.untertitel ? (endetMitZeichen(titel) ? ' ' : '. ') + T.punkt(F.versalien(T.satz(t.untertitel))) : '');
+    return '<li><p>' + zeile + '</p>'
+      + (d ? '<p class="legende"><time datetime="' + F.esc(String(t.datum).trim()) + '">' + d + '</time></p>' : '')
+      + '</li>';
+  }).join('');
+  liste.hidden = false;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lesen – Dominik Jäkel</title>
+<meta name="description" content="Auf dieser Seite stehen die Erzählungen und Journaleinträge von Dominik Jäkel.">
+<script>
+document.documentElement.classList.add('js');
+if (/^https?:$/.test(location.protocol)) {
+  var l = document.createElement('link');
+  l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous'; l.href = 'schrift/baskervville-antiqua.woff2';
+  document.head.appendChild(l);
+}
+</script>
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Leseseite (Abschnitt 13) für einen Text aus daten/texte.js, welcher, steht in der Adresse: lesen.html#<slug>.
+   Eine Spalte. Titel als h1, Untertitel im Grad Text, Ort und Datum im Grad klein. Absätze mit Einzug, ein Szenenwechsel ist
+   eine Leerzeile, danach kein Einzug. Die Notiz im Grad klein eine Zeile unter dem Text. Darunter früher und später zum
+   Nachbarn derselben Art (das Wort in einer festen Spalte, der Titel als Verweis) und der Verweis zurück zur Liste.
+   Nur Anordnung. */
+.lese-text { margin-top: calc(var(--z) * 2); }
+.lese-text hr { border: 0; margin: 0; height: var(--z); }
+.notiz { margin-top: var(--z); }
+.lese-weiter { margin-top: calc(var(--z) * 3); }
+.nachbarn > li { position: relative; padding-left: 3.25em; }
+.nachbarn .richtung { position: absolute; left: 0; top: 0; }
+.lese-weiter .nachbarn + p { margin-top: calc(var(--z) * .75); }
+/* Nach einem Wechsel des Textes trägt der Titel den Fokus für Vorleseprogramme; er ist kein Bedienelement */
+#lese-titel:focus, #inhalt:focus { outline: none; }
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="bogen kopf">
+  <a class="name" href="index.html">Dominik Jäkel</a>
+  <nav class="tafelfeld nav" aria-label="Website">
+    <ul class="wahl">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="bogen" id="inhalt">
+  <div class="satzspalte" id="lesen">
+    <h1>Lesen</h1>
+    <p>Die Texte stehen unter <a href="erzaehlungen.html">Erzählungen</a> und im <a href="untertext.html"><i>Untertext</i></a>.</p>
+  </div>
+</main>
+
+<footer class="bogen fuss">
+  <div class="satzspalte">
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
+  </div>
+</footer>
+
+<script src="daten/texte.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  var F = window.FSeite;
+  if (!F || !F.texte) return;
+  var T = F.texte, S = F.SEITEN;
+  var ziel = document.getElementById('lesen');
+  var HINWEIS = 'Die Texte stehen unter <a href="' + S.erzaehlungen + '">Erzählungen</a> und im <a href="' + S.untertext + '"><i>Untertext</i></a>.';
+  var NAME = ' – Dominik Jäkel';
+  var nurText = function (html) { var d = document.createElement('div'); d.innerHTML = html; return d.textContent; };
+  var satz = function (s) { return F.versalien(T.satz(s)); };
+
+  // Nur ein schlichtes #slug zählt
+  function slugAusAdresse() {
+    try { return decodeURIComponent(location.hash.slice(1)).trim(); } catch (e) { return ''; }
+  }
+
+  // Der Text: html unverändert; sonst Absätze aus der Liste oder aus einem Text mit Leerzeilen. '***' ist ein Szenenwechsel
+  function satzspiegel(t) {
+    if (typeof t.html === 'string' && t.html.trim()) return t.html;
+    var a = t.absaetze;
+    if (typeof a === 'string') a = a.split(/\n\s*\n/).map(function (x) { return x.replace(/\s*\n\s*/g, ' '); });
+    if (!Array.isArray(a)) return '';
+    return a.map(function (x) { return String(x == null ? '' : x).trim(); }).filter(Boolean)
+      .map(function (x) { return /^(?:\*\s*){3}$|^⁂$/.test(x) ? '<hr>' : '<p>' + satz(x) + '</p>'; }).join('');
+  }
+
+  // Ort und Datum in einer Zeile: „Berlin, 14. März 2026“. Keine Koordinaten
+  function ortZeile(t) {
+    var o = t.ort, d = T.datum(t.datum);
+    var name = typeof o === 'string' ? o : o && o.name ? o.name : '';
+    var teile = [];
+    if (name) teile.push(satz(name));
+    if (d) teile.push('<time datetime="' + F.esc(String(t.datum).trim()) + '">' + d + '</time>');
+    return teile.length ? '<p class="legende">' + teile.join(', ') + '</p>' : '';
+  }
+
+  // Die Liste, zu der der Text gehört, steht in der Navigation halbfett
+  function navMarke(seite) {
+    F.$$('.nav a.ist-aktiv').forEach(function (a) { a.classList.remove('ist-aktiv'); a.removeAttribute('aria-current'); });
+    var a = seite && document.querySelector('.nav a[href="' + seite + '"]');
+    if (a && !a.hasAttribute('aria-current')) { a.classList.add('ist-aktiv'); a.setAttribute('aria-current', 'true'); }
+  }
+
+  function zeigen(neu) {
+    var slug = slugAusAdresse(), alle = T.alle();
+    var t = slug ? alle.filter(function (x) { return x.slug === slug; })[0] : null;
+    if (!t) {
+      navMarke(null);
+      document.title = 'Lesen' + NAME;
+      ziel.innerHTML = '<h1>Lesen</h1><p>' + (slug ? 'Unter dieser Adresse steht kein Text. ' : '') + HINWEIS + '</p>';
+      return;
+    }
+    var L = T.ARTEN[t.art];
+    var reihe = alle.filter(function (x) { return x.art === t.art; }), i = reihe.indexOf(t);
+    var titel = function (x) { return T.ARTEN[x.art].titelKursiv ? '<i>' + satz(x.titel) + '</i>' : satz(x.titel); };
+    var nachbar = function (wort, x) {
+      return x ? '<li><span class="richtung">' + wort + '</span> <a href="#' + x.slug + '">' + titel(x) + '</a></li>' : '';
+    };
+    var nachbarn = nachbar('früher', reihe[i + 1]) + nachbar('später', reihe[i - 1]);
+    ziel.innerHTML = '<article aria-labelledby="lese-titel">'
+      + '<header>'
+      + '<h1 id="lese-titel" tabindex="-1">' + satz(t.titel) + '</h1>'
+      + (t.untertitel ? '<p>' + satz(t.untertitel) + '</p>' : '')
+      + ortZeile(t)
+      + '</header>'
+      + '<div class="prosa lese-text">' + satzspiegel(t) + '</div>'
+      + (t.notiz ? '<p class="klein notiz">' + T.punkt(satz(t.notiz)) + '</p>' : '')
+      + '</article>'
+      + '<nav class="lese-weiter" aria-label="Weitere Texte">'
+      + (nachbarn ? '<ul class="liste nachbarn">' + nachbarn + '</ul>' : '')
+      + '<p><a href="' + L.seite + '">' + L.alle + '</a></p>'
+      + '</nav>';
+    navMarke(L.seite);
+    document.title = nurText(T.satz(t.titel)) + NAME;
+    if (neu) {
+      window.scrollTo(0, 0);
+      var h = document.getElementById('lese-titel');
+      if (h) h.focus({ preventScroll: true });
+    }
+  }
+
+  zeigen(false);
+  window.addEventListener('hashchange', function () {
+    // Ein Sprung zu einer Stelle der Seite lässt den Text stehen
+    var slug = slugAusAdresse();
+    if (slug && document.getElementById(slug) && !(window.TEXTE || []).some(function (x) { return x && x.slug === slug; })) return;
+    zeigen(true);
+  });
+  // „Zum Inhalt“ springt, ohne den Text aus der Adresse zu nehmen
+  var sprung = document.querySelector('.sprung'), haupt = document.getElementById('inhalt');
+  if (sprung && haupt) sprung.addEventListener('click', function (e) {
+    e.preventDefault();
+    haupt.setAttribute('tabindex', '-1');
+    haupt.focus({ preventScroll: true });
+    haupt.scrollIntoView();
+  });
+})();
+</script>
+</body>
+</html>

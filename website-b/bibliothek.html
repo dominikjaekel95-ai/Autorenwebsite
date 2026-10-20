@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bibliothek – Dominik Jäkel</title>
+<meta name="description" content="Die Bücher, die Dominik Jäkel gelesen hat, in einem Regal nach dem Jahr ihrer Erstausgabe.">
+<script>
+document.documentElement.classList.add('js');
+if (/^https?:$/.test(location.protocol)) {
+  var l = document.createElement('link');
+  l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous'; l.href = 'schrift/baskervville-antiqua.woff2';
+  document.head.appendChild(l);
+}
+</script>
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Bibliothek (Abschnitt 12.7 bis 12.10, 13). Vorspann in der Satzspalte, Zeichenerklärung im Tafelfeld auf der Grundlinie der
+   letzten Vorspannzeile. Darunter über die ganze Breite: Zeitband, Standortregister (haftet wie ein Kolumnentitel), oberstes
+   Brett, die Fächer, Kindheit und Jugend, Leseliste. Regal und Zeitband sind Zeichnungen aus den Daten; Farben nur aus den Tokens,
+   die Rückenschrift (9 bis 13 px) ist die Ausnahme aus Abschnitt 5. */
+
+/* ---------- Vorspann und Zeichenerklärung ---------- */
+.regal-zeichen { margin-top: calc(var(--z) * .75); display: flex; flex-wrap: wrap; column-gap: 1.5em; }
+@media (min-width: 48rem) and (max-width: 74.99rem) { .bibliothek > .regal-zeichen { max-width: none; } }
+@media (min-width: 75rem) {
+  .bibliothek > .vorspann, .bibliothek > .regal-zeichen { grid-row: 1; margin-top: 0; }
+  .bibliothek > .regal-zeichen { display: block; align-self: last baseline; }
+}
+
+/* ---------- Zeitband (12.9) ---------- */
+.zeitband-teil { margin-top: calc(var(--z) * 3); }
+.zeitband { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
+.zeitband svg { display: block; overflow: visible; }
+.zeitband svg:focus-visible { outline-offset: 2px; }
+.zeitband .strich { fill: var(--tinte-raster); }
+.zeitband .strich.an { fill: var(--tinte); }
+.zeitband .achse { stroke: var(--tinte); stroke-width: 1; fill: none; }
+.zeitband text { fill: var(--tinte); font-family: var(--schrift); font-size: var(--klein); font-variant-numeric: lining-nums tabular-nums; }
+.zeitband .reihenname { position: sticky; left: 0; width: max-content; margin-top: calc(var(--z) * .5); margin-bottom: calc(var(--z) * .25); }
+.zeitband-teil .buchzeile { margin-top: calc(var(--z) * .25); }
+
+/* ---------- Standortregister (12.10): haftet oben wie ein Kolumnentitel ---------- */
+.standorte {
+  position: sticky; top: 0; z-index: 5; margin-top: calc(var(--z) * 2);
+  padding-top: calc(var(--z) * .5); padding-bottom: calc(var(--z) * .25);
+  background: var(--papier); border-bottom: 1px solid var(--papier);
+  font-size: var(--klein); line-height: var(--zk); hyphens: manual; -webkit-hyphens: manual;
+}
+.standorte.haftet { border-bottom-color: var(--tinte); }
+.standorte ul { display: flex; flex-wrap: wrap; column-gap: 1.5em; }
+.standorte li { white-space: nowrap; }
+/* Halbfett ohne Sprung: die Sperrung gleicht die Breite des halbfetten Worts aus (seite: gleichBreit) */
+.standorte .ist-aktiv, .register-laender [aria-pressed="true"] { letter-spacing: var(--ausgleich, 0); }
+
+/* ---------- Regal (12.7) ---------- */
+.regal { margin-top: var(--z); }
+.fach + .fach { margin-top: calc(var(--z) * 2); }
+.fach > h2 { margin-top: 0; }
+.brett + .brett { margin-top: calc(var(--z) * .75); }
+.flaeche { display: flex; align-items: flex-end; column-gap: 1px; border-bottom: 1px solid var(--tinte); }
+.stapelplatz { display: flex; align-items: flex-end; flex: none; }
+.stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; row-gap: 1px; flex: none; }
+.ruecken {
+  appearance: none; -webkit-appearance: none; position: relative; display: block; flex: none;
+  margin: 0; padding: 0; border: 0; border-radius: 0; background: none;
+  color: var(--tinte); cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.ruecken svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.ruecken .koerper { fill: var(--papier); stroke: var(--tinte); }
+.ruecken .liebste { fill: var(--tinte); }
+.ruecken .wieder { stroke: var(--tinte); fill: none; }
+.ruecken text { fill: var(--tinte); font-family: var(--schrift); }
+.ruecken:focus-visible { z-index: 1; }
+/* Hover, Fokus und Auswahl kehren den Rücken um */
+.ruecken[aria-pressed="true"] .koerper, .ruecken:focus-visible .koerper { fill: var(--tinte); }
+.ruecken[aria-pressed="true"] :is(text, .liebste), .ruecken:focus-visible :is(text, .liebste) { fill: var(--papier); }
+@media (hover: hover) {
+  .ruecken:hover .koerper { fill: var(--tinte); }
+  .ruecken:hover :is(text, .liebste) { fill: var(--papier); }
+}
+/* Unter dem Brett: Jahresachse oder Buchzeile, in einer Zeile fester Höhe */
+.unter { position: relative; margin-top: 0; padding-top: calc(var(--z) * .25); min-height: calc(var(--zk) * var(--zeilen, 1) + var(--z) * .25); }
+.unter .achse { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
+.unter .marke { position: absolute; top: calc(var(--z) * .25); white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; }
+.unter .strich { position: absolute; top: 0; width: 1px; height: 4px; background: var(--tinte); }
+.unter .wort-marke { font-variant-numeric: inherit; }
+.unter.mit-zeile .achse { visibility: hidden; }
+.unter .zeile { display: block; }
+
+/* ---------- Leseliste ---------- */
+.leseliste-teil > h2 { margin-top: calc(var(--z) * 2); }
+.leseliste li { padding-left: 1em; text-indent: -1em; }
+.leseliste li + li { margin-top: calc(var(--z) * .25); }
+@media (min-width: 75rem) {
+  .leseliste { display: grid; grid-template-columns: var(--S) var(--P); column-gap: var(--G); row-gap: calc(var(--z) * .25);
+    grid-auto-flow: column; grid-template-rows: repeat(var(--reihen, 1), auto); }
+  .leseliste li + li { margin-top: 0; }
+}
+
+/* ---------- Ohne Skript ---------- */
+.ohne-regal { margin-top: calc(var(--z) * 3); }
+html.js .ohne-regal:not(.ist-noetig) { display: none; }
+html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
+</style>
+</head>
+<body>
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="bogen kopf">
+  <a class="name" href="index.html">Dominik Jäkel</a>
+  <nav class="tafelfeld nav" aria-label="Website">
+    <ul class="wahl">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html" aria-current="page">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="bogen bibliothek" id="inhalt">
+  <div class="satzspalte vorspann">
+    <h1>Bibliothek</h1>
+    <p>Was ich gelesen habe, nach dem Jahr der Erstausgabe, von Gilgamesch bis Labatut. Kurzgeschichten und Anthologien trage ich noch nach.</p>
+  </div>
+
+  <ul class="tafelfeld klein regal-zeichen nur-mit-skript" id="zeichen" aria-label="Zeichenerklärung">
+    <li data-zeichen="liebste">eines der liebsten</li>
+    <li data-zeichen="wieder">mehr als einmal gelesen</li>
+    <li data-zeichen="abgebrochen">nicht zu Ende gelesen</li>
+    <li data-zeichen="auszuege">in Auszügen gelesen</li>
+  </ul>
+
+  <p class="satzspalte ohne-regal">Das Regal braucht JavaScript.</p>
+
+  <div class="ganz zeitband-teil nur-mit-skript" id="zeitband-teil">
+    <div class="zeitband" id="zeitband"></div>
+    <p class="buchzeile" id="bandzeile" aria-live="polite"></p>
+  </div>
+
+  <nav class="ganz standorte nur-mit-skript" id="standorte" aria-label="Standorte im Regal">
+    <ul class="wahl" id="standorte-liste"></ul>
+  </nav>
+
+  <section class="ganz regal nur-mit-skript" id="regal" aria-label="Regal"></section>
+
+  <section class="ganz leseliste-teil nur-mit-skript" id="leseliste" aria-labelledby="leseliste-titel" hidden>
+    <h2 id="leseliste-titel">Leseliste</h2>
+    <ul class="leseliste" id="leseliste-eintraege"></ul>
+  </section>
+</main>
+
+<footer class="bogen fuss">
+  <div class="satzspalte">
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte. Die Bücher nach seiner Liste bei Goodreads.</p>
+  </div>
+</footer>
+
+<script src="daten/inhalt.js"></script>
+<script src="daten/buecher.js"></script>
+<script src="daten/leseliste.js"></script>
+<script src="daten/texte.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite;
+  const main = document.getElementById('inhalt');
+  if (!F) { document.querySelector('.ohne-regal').classList.add('ist-noetig'); main.classList.add('ohne-buecher'); return; }
+  const { $, $$, esc, NBSP } = F;
+  const T = F.tokens();
+  const BUECHER = F.buch.alle();
+  if (!BUECHER.some(b => b.r !== 'leseliste')) { $('.ohne-regal').classList.add('ist-noetig'); main.classList.add('ohne-buecher'); return; }
+
+  // Zeichenerklärung: die gezeichneten Zeichen des Regals vor den Wörtern
+  $$('#zeichen [data-zeichen]').forEach(li => { li.insertAdjacentHTML('afterbegin', F.zeichen(li.dataset.zeichen)); });
+
+  // ---------- Daten ----------
+  const ordnung = F.buch.ordnung;
+  const FAECHER = F.buch.FAECHER.filter(f => f.id !== 'leseliste').map(f => Object.assign({}, f, {
+    buecher: BUECHER.filter(b => F.buch.fach(b) === f.id).sort(ordnung)
+  })).filter(f => f.buecher.length);
+  const GERADE = BUECHER.filter(b => b.r === 'gerade');
+  const LESELISTE = BUECHER.filter(b => b.r === 'leseliste').sort(ordnung);
+  const MANUSKRIPT = { manuskript: true, key: 'manuskript', t: 'Satoshi', nn: '', blatt: 364 };
+  const HAUPT = FAECHER.filter(f => f.id !== 'kindheit').flatMap(f => f.buecher).filter(b => b.j != null);
+  const KIND = (FAECHER.find(f => f.id === 'kindheit') || { buecher: [] }).buecher.filter(b => b.j != null);
+  const zeile = b => b.manuskript ? F.buch.manuskript() : F.buch.zeile(b);
+
+  // ---------- Maße ----------
+  const mess = document.createElement('canvas').getContext('2d');
+  function laenge(name) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const n = parseFloat(v);
+    return /rem$/.test(v) ? n * parseFloat(getComputedStyle(document.documentElement).fontSize) : n;
+  }
+  // Maßstab 0,9 px je mm am Desktop, 0,8 am Tablet, 0,68 am Telefon; die Fachhöhe trägt das höchste Format und den Strich darüber
+  function masse() {
+    const s = F.telefon() ? .68 : F.desktop() ? .9 : .8;
+    const z = laenge('--z'), klein = laenge('--klein');
+    const viertel = z / 4;
+    return { s, z, klein, zk: z * .75, viertel, fach: Math.ceil((225 * s + 4) / viertel) * viertel, kontur: (window.devicePixelRatio || 1) >= 2 ? .75 : 1 };
+  }
+  const breite = (text, px, gewicht, kursiv) => { mess.font = `${kursiv ? 'italic ' : ''}${gewicht || 400} ${px}px ${T.schrift}`; return mess.measureText(text).width; };
+  const VERSAL = {};
+  const versalhoehe = px => VERSAL[px] || (VERSAL[px] = (mess.font = `400 ${px}px ${T.schrift}`, mess.measureText('H').actualBoundingBoxAscent || px * .66));
+
+  // ---------- Rückenschrift: Baskervville aufrecht, Nachname und Kurztitel mit einem Geviert Abstand ----------
+  // Größe aus der Breite des Rückens, 9 bis 13 px; was nicht passt, wird kürzer, nie mit Auslassungspunkten
+  // Kürzer: ohne „or …“ und „and Other …“, englische Titel ohne Artikel; deutsche behalten ihn („Die wilden Detektive“)
+  const kuerzer = (t, b) => {
+    const k = t.replace(/,? (or|oder),? .+$/i, '').replace(/,? (and|und|&) (other|andere) .+$/i, '').trim();
+    return F.buch.deutsch(b) ? k : k.replace(/^(The|A|An) (?=\S)/, '');
+  };
+  function aufschrift(b, dicke, platz) {
+    const fs0 = Math.min(13, Math.floor((dicke - 5) / .95 * 2) / 2);
+    if (fs0 < 9 || platz < 20) return null;
+    const gewicht = fs => fs >= 11 ? 400 : 500;
+    const nn = b.nn || '', voll = F.buch.titelKurz(b.t), kurz = kuerzer(voll, b);
+    const mass = (n, t, fs) => (n ? breite(n, fs, gewicht(fs)) : 0) + (n && t ? fs : 0) + (t ? breite(t, fs, gewicht(fs)) : 0);
+    const passt = (n, t, fs) => mass(n, t, fs) <= platz;
+    for (const t of [voll, kurz]) if (passt(nn, t, fs0)) return { nn, t, fs: fs0 };
+    for (let fs = fs0 - .5; fs >= Math.max(9, fs0 - 2); fs -= .5) if (passt(nn, kurz, fs)) return { nn, t: kurz, fs };
+    if (nn && passt(nn, '', fs0)) return { nn, t: '', fs: fs0 };
+    if (!nn) for (let fs = fs0 - .5; fs >= 9; fs -= .5) if (passt('', kurz, fs)) return { nn: '', t: kurz, fs };
+    return null;
+  }
+  const tspans = a => (a.nn ? `<tspan>${esc(a.nn)}</tspan>` : '') + (a.t ? `<tspan${a.nn ? ` dx="${a.fs}"` : ''}>${esc(a.t)}</tspan>` : '');
+  const textAttr = a => `font-size="${a.fs}" font-weight="${a.fs >= 11 ? 400 : 500}"`;
+
+  /* Ein Rücken als Zeichnung: Kontur in Tinte (gestrichelt: nicht zu Ende gelesen, gepunktet: in Auszügen), Punkt über dem Fuß
+     (eines der liebsten), Strich über dem Kopf (mehr als einmal gelesen). Liegend: Kopf links, bei deutschen Rücken rechts. */
+  function zeichnung(b, w, h, liegt, m) {
+    const k = m.kontur, o = k / 2;
+    const de = !b.manuskript && F.buch.deutsch(b);
+    const strich = b.x ? ' stroke-dasharray="1 2" stroke-linecap="round"' : b.r === 'abgebrochen' ? ' stroke-dasharray="3 2"' : '';
+    let s = `<rect class="koerper" x="${o}" y="${o}" width="${w - k}" height="${h - k}" stroke-width="${k}"${strich}/>`;
+    const liebste = b.s === 5 && b.r !== 'leseliste';
+    if (liebste) s += liegt ? `<circle class="liebste" cx="${de ? 8 : w - 8}" cy="${h / 2}" r="2"/>` : `<circle class="liebste" cx="${w / 2}" cy="${h - 8}" r="2"/>`;
+    if (b.w) s += liegt ? `<line class="wieder" x1="${de ? w + 2.5 : -2.5}" x2="${de ? w + 2.5 : -2.5}" y1="0" y2="${h}" stroke-width="1"/>` : `<line class="wieder" x1="0" x2="${w}" y1="-2.5" y2="-2.5" stroke-width="1"/>`;
+    const fuss = liebste ? 14 : 8;
+    const lang = liegt ? w : h, dick = liegt ? h : w;
+    const a = b.manuskript ? { nn: '', t: 'Satoshi', fs: Math.min(13, Math.floor((dick - 5) / .95)) } : aufschrift(b, dick, lang - 8 - fuss);
+    if (a && a.fs >= 9) {
+      const halb = versalhoehe(a.fs) / 2;
+      if (liegt) {
+        const mitte = b.manuskript ? w / 2 : de ? (fuss + w - 8) / 2 : (8 + w - fuss) / 2;
+        s += `<text x="${mitte.toFixed(1)}" y="${(h / 2 + halb).toFixed(1)}" text-anchor="middle" ${textAttr(a)}>${tspans(a)}</text>`;
+      } else {
+        const mitte = (8 + h - fuss) / 2;
+        s += `<text transform="translate(${(w / 2).toFixed(1)} ${mitte.toFixed(1)}) rotate(${de ? -90 : 90})" y="${halb.toFixed(1)}" text-anchor="middle" ${textAttr(a)}>${tspans(a)}</text>`;
+      }
+    }
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false">${s}</svg>`;
+  }
+
+  // ---------- Bauen ----------
+  const LISTE = [];          // alle Rücken in der Reihenfolge der Seite: { b, el }
+  const NACH_KEY = new Map();
+  function ruecken(b, w, h, liegt, m) {
+    const n = LISTE.length;
+    LISTE.push({ b });
+    return `<button type="button" class="ruecken${liegt ? ' liegt' : ''}" data-n="${n}" style="width:${w}px;height:${h}px" tabindex="-1" aria-pressed="false" aria-label="${esc(zeile(b).text)}">${zeichnung(b, w, h, liegt, m)}</button>`;
+  }
+  const masz = (b, m) => { const x = F.buch.masse(b); return { w: Math.max(3, Math.round(x.breite * m.s)), h: Math.round(x.hoehe * m.s) }; };
+  const jahrMarke = j => j < 0 ? (-j) + NBSP + 'v.' + NBSP + 'Chr.' : j < 1000 ? j + NBSP + 'n.' + NBSP + 'Chr.' : String(j);
+
+  // Die Zeile unter dem Brett hält Platz für die längste Buchzeile ihrer Rücken: eine Zeile, zwei, wo sie auf dem Telefon umbricht;
+  // gemessen im Satz selbst, in einer unsichtbaren Probe derselben Breite
+  function zeilenFuer(liste, W, m) {
+    const probe = document.createElement('p');
+    probe.className = 'klein';
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = `position:absolute;visibility:hidden;left:0;top:0;width:${W}px`;
+    document.body.appendChild(probe);
+    let h = 0;
+    liste.forEach(b => { probe.innerHTML = zeile(b).html; h = Math.max(h, probe.getBoundingClientRect().height); });
+    probe.remove();
+    return Math.max(1, Math.round(h / m.zk));
+  }
+  function unterHtml(marken, zeilen) {
+    return `<div class="unter klein" style="--zeilen:${zeilen}" aria-live="polite"><span class="achse" aria-hidden="true">${marken}</span><span class="zeile"></span></div>`;
+  }
+
+  // Ein Fach: die Rücken von links nach rechts, so viele Bretter, wie es braucht; unter jedem Brett die Jahresachse
+  function fachHtml(f, W, m) {
+    const reihen = [[]];
+    let x = 0;
+    f.buecher.forEach(b => {
+      const d = masz(b, m);
+      if (reihen[reihen.length - 1].length && x + d.w > W) { reihen.push([]); x = 0; }
+      reihen[reihen.length - 1].push({ b, d, x });
+      x += d.w + 1;
+    });
+    const abstand = 5 * m.klein;
+    return reihen.map(reihe => {
+      let marken = '', zuletzt = -Infinity, jahrVor = null;
+      reihe.forEach(({ b, x }) => {
+        if (b.j == null || b.j === jahrVor) return;
+        jahrVor = b.j;
+        const text = jahrMarke(b.j), tb = breite(text, m.klein);
+        if (x - zuletzt < abstand || x + tb > W) return;
+        marken += `<span class="strich" style="left:${x}px"></span><span class="marke" style="left:${x}px">${text}</span>`;
+        zuletzt = x + Math.max(0, tb + m.klein - abstand);
+      });
+      const knoepfe = reihe.map(({ b, d }) => ruecken(b, d.w, d.h, false, m)).join('');
+      return `<div class="brett"><div class="flaeche" style="height:${m.fach}px">${knoepfe}</div>${unterHtml(marken, zeilenFuer(reihe.map(r => r.b), W, m))}</div>`;
+    }).join('');
+  }
+
+  // Oberstes Brett: das Manuskript von Satoshi liegend (A4 quer, 364 Blatt zu 0,1 mm), 2 z daneben, was ich gerade lese, als Stapel
+  function obenHtml(W, m) {
+    const mw = Math.round(297 * m.s), mh = Math.round(364 * .1 * m.s);
+    const liegend = GERADE.map(b => { const x = F.buch.masse(b); return { b, lang: Math.round(x.hoehe * m.s), dick: Math.max(3, Math.round(x.breite * m.s)) }; })
+      .sort((a, c) => c.lang - a.lang || c.dick - a.dick);
+    // Ein Stapel ist höchstens so hoch wie das Fach. Passt nicht alles auf einen, verteilen sich die Bücher auf so wenige Stapel
+    // wie möglich, gleich hoch; in jedem das größte Buch zuunterst, bündig ohne Versatz
+    const grenze = m.fach - m.viertel;
+    const legen = n => {
+      const st = Array.from({ length: n }, () => ({ buecher: [], hoehe: 0, breite: 0 }));
+      liegend.forEach(it => {
+        const s = st.reduce((a, c) => c.hoehe < a.hoehe ? c : a);
+        s.hoehe += it.dick + (s.buecher.length ? 1 : 0); s.buecher.push(it); s.breite = Math.max(s.breite, it.lang);
+      });
+      return st;
+    };
+    let stapel = [];
+    for (let n = 1; liegend.length && n <= liegend.length; n++) { stapel = legen(n); if (stapel.every(s => s.hoehe <= grenze)) break; }
+    const LUECKE = 2 * m.z, ZWISCHEN = m.z;
+    const stapelBreite = stapel.reduce((a, s, i) => a + s.breite + (i ? ZWISCHEN : 0), 0);
+    const manuskript = `<div class="stapelplatz">${ruecken(MANUSKRIPT, mw, mh, true, m)}</div>`;
+    const lektuere = stapel.map((st, i) => `<div class="stapel"${i ? ` style="margin-left:${ZWISCHEN - 1}px"` : ''}>${st.buecher.map(it => ruecken(it.b, it.lang, it.dick, true, m)).join('')}</div>`).join('');
+    const wortMarke = (text, x) => `<span class="marke wort-marke" style="left:${x}px">${text}</span>`;
+    // Das oberste Brett ist so hoch, wie die Stapel es brauchen, auf Vielfache einer Viertelzeile
+    const hoehe = h => Math.ceil((h + m.viertel) / m.viertel) * m.viertel;
+    const hStapel = hoehe(Math.max(mh, ...stapel.map(st => st.hoehe)));
+    if (!stapel.length) return `<div class="brett"><div class="flaeche" style="height:${hoehe(mh)}px">${manuskript}</div>${unterHtml(wortMarke('Manuskript', 0), zeilenFuer([MANUSKRIPT], W, m))}</div>`;
+    if (mw + LUECKE + stapelBreite <= W) {
+      return `<div class="brett"><div class="flaeche" style="height:${hStapel}px">${manuskript}<div class="stapelplatz" style="margin-left:${LUECKE - 1}px">${lektuere}</div></div>` +
+        unterHtml(wortMarke('Manuskript', 0) + wortMarke('Lese ich gerade', mw + LUECKE), zeilenFuer([MANUSKRIPT].concat(GERADE), W, m)) + '</div>';
+    }
+    // Zu schmal für beides: das Manuskript auf einem eigenen Brett
+    return `<div class="brett"><div class="flaeche" style="height:${hoehe(mh)}px">${manuskript}</div>${unterHtml(wortMarke('Manuskript', 0), zeilenFuer([MANUSKRIPT], W, m))}</div>` +
+      `<div class="brett"><div class="flaeche" style="height:${hStapel}px"><div class="stapelplatz">${lektuere}</div></div>${unterHtml(wortMarke('Lese ich gerade', 0), zeilenFuer(GERADE, W, m))}</div>`;
+  }
+
+  const regal = $('#regal');
+  let breiteVorher = 0, gewaehlt = null, zeiger = null, fokus = null;
+  function regalBauen(erzwingen) {
+    const W = Math.floor(regal.clientWidth);
+    if (!W || (!erzwingen && W === breiteVorher)) return;
+    breiteVorher = W;
+    const m = masse();
+    const fokusKey = document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('ruecken') ? LISTE[+document.activeElement.dataset.n].b.key : null;
+    const tabKey = (() => { const t = $('.ruecken[tabindex="0"]', regal); return t ? LISTE[+t.dataset.n].b.key : null; })();
+    LISTE.length = 0;
+    let html = `<div class="fach oben" role="group" aria-label="Manuskript und was ich gerade lese">${obenHtml(W, m)}</div>`;
+    FAECHER.forEach(f => {
+      const kind = f.id === 'kindheit';
+      html += `<section class="fach" id="${f.id}" aria-labelledby="titel-${f.id}" tabindex="-1"><h2 id="titel-${f.id}"${kind ? '' : ' class="unsichtbar"'}>${esc(f.name)}</h2>${fachHtml(f, W, m)}</section>`;
+    });
+    regal.innerHTML = html;
+    NACH_KEY.clear();
+    $$('.ruecken', regal).forEach(el => { const x = LISTE[+el.dataset.n]; x.el = el; NACH_KEY.set(x.b.key, x); });
+    const tab = (tabKey && NACH_KEY.get(tabKey)) || LISTE[0];
+    if (tab) tab.el.tabIndex = 0;
+    if (gewaehlt) { const x = NACH_KEY.get(gewaehlt.b.key); gewaehlt = x || null; if (x) x.el.setAttribute('aria-pressed', 'true'); }
+    zeiger = null; fokus = null;
+    $$('.unter', regal).forEach(zeileSetzen);
+    if (fokusKey && NACH_KEY.get(fokusKey)) NACH_KEY.get(fokusKey).el.focus({ preventScroll: true });
+    if (leser) leser.pruefen(true);
+  }
+
+  // ---------- Buchzeile unter dem Brett: Zeiger, dann Tastaturfokus, dann Auswahl; sonst die Achse ----------
+  function zeileSetzen(unter) {
+    if (!unter) return;
+    const brett = unter.closest('.brett');
+    const x = [zeiger, fokus, gewaehlt].find(y => y && y.el && brett.contains(y.el));
+    const el = $('.zeile', unter);
+    const html = x ? zeile(x.b).html : '';
+    if (el.innerHTML !== html) el.innerHTML = html;
+    unter.classList.toggle('mit-zeile', !!x);
+  }
+  const unterVon = x => x && x.el ? $('.unter', x.el.closest('.brett')) : null;
+  function setzen(art, x) {
+    const vorher = art === 'zeiger' ? zeiger : art === 'fokus' ? fokus : gewaehlt;
+    if (vorher === x) return;
+    if (art === 'zeiger') zeiger = x; else if (art === 'fokus') fokus = x; else gewaehlt = x;
+    if (art === 'wahl') {
+      if (vorher && vorher.el) vorher.el.setAttribute('aria-pressed', 'false');
+      if (x && x.el) x.el.setAttribute('aria-pressed', 'true');
+    }
+    zeileSetzen(unterVon(vorher));
+    zeileSetzen(unterVon(x));
+  }
+  const ausKnopf = el => { const k = el && el.closest && el.closest('.ruecken'); return k && regal.contains(k) ? LISTE[+k.dataset.n] : null; };
+  regal.addEventListener('pointerover', e => { if (e.pointerType === 'mouse') setzen('zeiger', ausKnopf(e.target)); });
+  regal.addEventListener('pointerleave', () => setzen('zeiger', null));
+  regal.addEventListener('focusin', e => {
+    const x = ausKnopf(e.target);
+    if (!x) return;
+    $$('.ruecken[tabindex="0"]', regal).forEach(k => { if (k !== x.el) k.tabIndex = -1; });
+    x.el.tabIndex = 0;
+    setzen('fokus', x.el.matches(':focus-visible') ? x : null);
+  });
+  regal.addEventListener('focusout', () => setzen('fokus', null));
+  regal.addEventListener('click', e => {
+    const x = ausKnopf(e.target);
+    if (!x) return;
+    setzen('wahl', gewaehlt === x ? null : x);
+  });
+
+  // Tastatur: ein Rücken im Fokus; links und rechts durch das ganze Regal, hinauf und hinab zum nächsten Rücken des Nachbarbretts
+  regal.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const x = ausKnopf(e.target);
+    if (!x) return;
+    if (e.key === 'Escape') { setzen('wahl', null); return; }
+    const alle = LISTE, i = alle.indexOf(x);
+    const brett = x.el.closest('.brett'), imBrett = $$('.ruecken', brett);
+    let ziel = null;
+    if (e.key === 'ArrowRight') ziel = alle[i + 1];
+    else if (e.key === 'ArrowLeft') ziel = alle[i - 1];
+    else if (e.key === 'Home') ziel = LISTE[+imBrett[0].dataset.n];
+    else if (e.key === 'End') ziel = LISTE[+imBrett[imBrett.length - 1].dataset.n];
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      const bretter = $$('.brett', regal), nb = bretter[bretter.indexOf(brett) + (e.key === 'ArrowDown' ? 1 : -1)];
+      if (nb) {
+        const r = x.el.getBoundingClientRect(), mx = r.left + r.width / 2;
+        let best = null;
+        $$('.ruecken', nb).forEach(k => { const q = k.getBoundingClientRect(), d = Math.abs(q.left + q.width / 2 - mx); if (!best || d < best.d) best = { k, d }; });
+        if (best) ziel = LISTE[+best.k.dataset.n];
+      }
+    }
+    if (!ziel) return;
+    e.preventDefault();
+    ziel.el.focus();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && gewaehlt && !regal.contains(document.activeElement)) setzen('wahl', null); });
+
+  // ---------- Zeitband (12.9): Übersicht über dem Regal ----------
+  const huelle = $('#zeitband'), bandzeile = $('#bandzeile');
+  const ZB = { items: [], reihen: { haupt: [], kind: [] }, aktiv: null };
+  let bandBreite = 0;
+  function bandBauen() {
+    const sicht = huelle.clientWidth;
+    if (!sicht || !HAUPT.length) return;
+    const m = masse();
+    // Auf dem Telefon behält das Band seinen Maßstab und lässt sich wischen
+    const W = F.telefon() ? Math.max(sicht, 1000) : sicht;
+    const hoch = m.z * 3, sy = hoch / 225;
+    const BRUCH = m.z;
+    const luecke = d => d <= 0 ? 0 : 1.8 * Math.pow(d, .85);
+    let minL = .5, minB = .8;
+    function anordnen(sx) {
+      const pos = [], brueche = [];
+      let x = 0, vor = null;
+      HAUPT.forEach(b => {
+        if (vor) {
+          const d = b.j - vor.j;
+          if (d > 150) { brueche.push(x + BRUCH / 2); x += BRUCH; } else x += Math.max(minL, sx * luecke(d));
+        }
+        const w = Math.max(minB, sx * F.buch.masse(b).breite);
+        pos.push({ b, x, w }); x += w; vor = b;
+      });
+      return { pos, brueche, ende: x };
+    }
+    for (let n = 0; n < 30 && anordnen(0).ende > W * .8; n++) { minB *= .9; minL *= .9; }
+    let lo = 0, hi = 2;
+    for (let n = 0; n < 40; n++) { const mitte = (lo + hi) / 2; if (anordnen(mitte).ende > W) hi = mitte; else lo = mitte; }
+    const A = anordnen(lo), pos = A.pos, sx = lo;
+    function X(jahr) {
+      let a = 0, c = pos.length;
+      while (a < c) { const mm = (a + c) >> 1; if (pos[mm].b.j < jahr) a = mm + 1; else c = mm; }
+      if (a === 0) return pos[0].x;
+      if (a === pos.length) return pos[a - 1].x + pos[a - 1].w;
+      const p = pos[a - 1], q = pos[a];
+      if (q.b.j === jahr) return q.x;
+      return p.x + p.w + (q.x - p.x - p.w) * (jahr - p.b.j) / (q.b.j - p.b.j);
+    }
+    // Kindheit und Jugend auf derselben Achse; dichte Jahre schieben nach rechts, am Ende zurück nach links
+    const kind = [];
+    let ende = -Infinity;
+    KIND.forEach(b => { const w = Math.max(minB, sx * F.buch.masse(b).breite), x = Math.max(X(b.j), ende + minL); kind.push({ b, x, w }); ende = x + w; });
+    let rechts = A.ende;
+    for (let i = kind.length - 1; i >= 0; i--) { if (kind[i].x + kind[i].w > rechts) kind[i].x = rechts - kind[i].w; rechts = kind[i].x - minL; }
+
+    const f = v => v.toFixed(2);
+    ZB.items = []; ZB.reihen = { haupt: [], kind: [] }; ZB.aktiv = null;
+    const striche = (liste, reihe) => liste.map(p => {
+      const h = F.buch.masse(p.b).hoehe * sy, id = 'zb-' + ZB.items.length;
+      const o = { id, b: p.b, x: p.x, w: p.w, reihe };
+      ZB.items.push(o); ZB.reihen[reihe].push(o);
+      return `<rect class="strich" id="${id}" role="option" aria-label="${esc(zeile(p.b).text)}" x="${f(p.x)}" y="${f(hoch - h)}" width="${f(p.w)}" height="${f(h)}"/>`;
+    }).join('');
+    // Achse: 1 px Tinte, die übersprungenen Jahrhunderte als zwei kurze Schrägstriche
+    const yA = hoch + .5;
+    function achse(y) {
+      let d = '', start = 0;
+      A.brueche.forEach(mx => {
+        d += `M${f(start)} ${y}H${f(mx - 5)}M${f(mx - 4.5)} ${y + 3.5}L${f(mx - 1.5)} ${y - 3.5}M${f(mx + 1.5)} ${y + 3.5}L${f(mx + 4.5)} ${y - 3.5}`;
+        start = mx + 5;
+      });
+      return d + `M${f(start)} ${y}H${f(A.ende)}`;
+    }
+    // Jahreszahlen: zuerst der Anfang jedes Abschnitts nach einem Bruch, dann runde Jahre, ohne dass sich zwei berühren
+    const kandidaten = [];
+    pos.forEach((p, i) => { if (i === 0 || p.x - (pos[i - 1].x + pos[i - 1].w) >= BRUCH - .01) kandidaten.push({ x: p.x, text: jahrMarke(p.b.j), vorrang: 0 }); });
+    const letztes = pos[pos.length - 1].b.j;
+    [1800, 1850, 1900, 1950, 2000].forEach(j => { if (j > HAUPT.find(b => b.j >= 1500).j && j <= letztes) kandidaten.push({ x: X(j), text: String(j), vorrang: 1 }); });
+    const gesetzt = [];
+    const frei = (x0, x1) => gesetzt.every(g => x1 + m.klein * .75 <= g.x0 || x0 >= g.x1 + m.klein * .75);
+    [0, 1].forEach(v => kandidaten.filter(k => k.vorrang === v).forEach(k => {
+      const tb = breite(k.text, m.klein);
+      const x0 = Math.min(k.x, W - tb);
+      if (frei(x0, x0 + tb)) gesetzt.push({ x0, x1: x0 + tb, x: k.x, text: k.text });
+    }));
+    const yJ = hoch + 1 + m.viertel + m.klein * .95;
+    const jahre = gesetzt.map(g => `<path class="achse" d="M${f(g.x)} ${yA}V${f(yA + 4)}"/><text x="${f(g.x0)}" y="${f(yJ)}">${g.text}</text>`).join('');
+    const hHaupt = Math.ceil(hoch + m.z + 1), hKind = Math.ceil(hoch + 1);
+    const svg = (id, h, inhalt, name) => `<svg id="${id}" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" tabindex="0" role="listbox" aria-label="${name}">${inhalt}</svg>`;
+    huelle.innerHTML =
+      svg('zb-haupt', hHaupt, `<g>${striche(pos, 'haupt')}</g><path class="achse" d="${achse(yA)}"/>${jahre}`, 'Zeitband, nach dem Jahr der Erstausgabe. Pfeiltasten wählen ein Buch, Eingabe springt zu seinem Rücken.') +
+      (kind.length ? `<p class="klein reihenname" aria-hidden="true">Kindheit und Jugend</p>` +
+        svg('zb-kind', hKind, `<g>${striche(kind, 'kind')}</g><path class="achse" d="${achse(hoch + .5)}"/>`, 'Kindheit und Jugend, auf derselben Zeitachse') : '');
+    bandzeile.style.minHeight = (zeilenFuer(ZB.items.map(o => o.b), sicht, m) * m.zk) + 'px';
+    $$('svg', huelle).forEach(bandBedienung);
+    bandzeile.innerHTML = '';
+    bandBreite = sicht;
+    // Auf dem Telefon steht das Band beim Laden am rechten Ende, wo beide Reihen besetzt sind; es schiebt sich nie von selbst mit
+    if (huelle.scrollWidth > sicht) huelle.scrollLeft = huelle.scrollWidth;
+  }
+  function bandWaehlen(o, sichtbar) {
+    if (ZB.aktiv === o) return;
+    if (ZB.aktiv) { const alt = document.getElementById(ZB.aktiv.id); if (alt) alt.classList.remove('an'); }
+    ZB.aktiv = o;
+    bandzeile.innerHTML = o ? zeile(o.b).html : '';
+    if (!o) return;
+    const el = document.getElementById(o.id);
+    if (el) { el.classList.add('an'); el.ownerSVGElement.setAttribute('aria-activedescendant', o.id); }
+    // Mit der Tastatur bleibt der gewählte Strich im sichtbaren Teil des Bands
+    if (sichtbar && huelle.scrollWidth > huelle.clientWidth) {
+      const l = huelle.scrollLeft, w = huelle.clientWidth;
+      if (o.x < l + 16) huelle.scrollLeft = Math.max(0, o.x - w * .25);
+      else if (o.x + o.w > l + w - 16) huelle.scrollLeft = o.x - w * .75;
+    }
+  }
+  function treffer(svg, e) {
+    const r = svg.getBoundingClientRect(), x = e.clientX - r.left;
+    const liste = ZB.reihen[svg.id === 'zb-kind' ? 'kind' : 'haupt'];
+    let best = null, abst = Infinity;
+    liste.forEach(o => { const d = x < o.x ? o.x - x : x > o.x + o.w ? x - o.x - o.w : 0; if (d < abst) { abst = d; best = o; } });
+    return abst <= 4 ? best : null;
+  }
+  // Ein Klick springt zum Rücken im Regal und wählt ihn; ohne weiches Scrollen
+  function zumRuecken(b, mitFokus) {
+    const x = NACH_KEY.get(b.key);
+    if (!x) return;
+    setzen('wahl', x);
+    const brett = x.el.closest('.brett'), reg = $('#standorte');
+    const y = window.scrollY + brett.getBoundingClientRect().top - reg.offsetHeight - masse().z * .5;
+    window.scrollTo(0, Math.max(0, Math.round(y)));
+    if (mitFokus) x.el.focus({ preventScroll: true });
+  }
+  function bandBedienung(svg) {
+    let art = 'mouse';
+    svg.addEventListener('pointerdown', e => { art = e.pointerType; });
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && (e.movementX || e.movementY)) { const t = treffer(svg, e); if (t) bandWaehlen(t); } });
+    svg.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && document.activeElement !== svg) bandWaehlen(null); });
+    svg.addEventListener('click', e => {
+      const t = treffer(svg, e);
+      if (!t) return;
+      // Mit dem Finger zeigt das erste Tippen die Buchzeile, das zweite auf denselben Strich springt
+      if (art !== 'mouse' && ZB.aktiv !== t) { bandWaehlen(t); return; }
+      zumRuecken(t.b, false);
+    });
+    svg.addEventListener('focus', () => {
+      if (ZB.aktiv && ZB.aktiv.reihe === (svg.id === 'zb-kind' ? 'kind' : 'haupt')) return;
+      const liste = ZB.reihen[svg.id === 'zb-kind' ? 'kind' : 'haupt'];
+      const l = huelle.scrollLeft;
+      bandWaehlen(liste.find(o => o.x >= l) || liste[0], true);
+    });
+    svg.addEventListener('blur', () => bandWaehlen(null));
+    svg.addEventListener('keydown', e => {
+      if (e.altKey || e.ctrlKey || e.metaKey || !ZB.aktiv) return;
+      const reihe = ZB.reihen[ZB.aktiv.reihe], i = reihe.indexOf(ZB.aktiv);
+      let ziel = null;
+      if (e.key === 'ArrowRight') ziel = reihe[Math.min(reihe.length - 1, i + 1)];
+      else if (e.key === 'ArrowLeft') ziel = reihe[Math.max(0, i - 1)];
+      else if (e.key === 'Home') ziel = reihe[0];
+      else if (e.key === 'End') ziel = reihe[reihe.length - 1];
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zumRuecken(ZB.aktiv.b, true); return; }
+      else if (e.key === 'Escape') { bandWaehlen(null); return; }
+      if (!ziel) return;
+      e.preventDefault();
+      bandWaehlen(ziel, true);
+    });
+  }
+
+  // ---------- Standortregister (12.10) ----------
+  const reg = $('#standorte'), regListe = $('#standorte-liste');
+  const STANDORTE = FAECHER.map(f => ({ id: f.id, name: f.name })).concat(LESELISTE.length ? [{ id: 'leseliste', name: 'Leseliste' }] : []);
+  regListe.innerHTML = STANDORTE.map(s => `<li><a href="#${s.id}" data-fach="${s.id}">${esc(s.name)}</a></li>`).join('');
+  // Halbfett ohne Sprung: die Sperrung gleicht die Mehrbreite des halbfetten Worts aus
+  function gleichBreit(els) {
+    els.forEach(el => {
+      const t = el.textContent, n = Array.from(t).length;
+      if (!n) return;
+      const d = (breite(t, 100, 400) - breite(t, 100, 600)) / n / 100;
+      el.style.setProperty('--ausgleich', d.toFixed(4) + 'em');
+    });
+  }
+  gleichBreit($$('a', regListe));
+  function haftet() { reg.classList.toggle('haftet', reg.getBoundingClientRect().top <= .5 && window.scrollY > 0); }
+  // Was ein Sprung oder der Fokus erreicht, steht unter dem haftenden Register
+  function freiraum() { document.documentElement.style.scrollPaddingTop = Math.ceil(reg.offsetHeight + masse().z * .25) + 'px'; }
+  let leser = null;
+  function standortSetzen(i) {
+    $$('a', regListe).forEach((a, j) => {
+      const an = j === i;
+      a.classList.toggle('ist-aktiv', an);
+      if (an) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+  }
+  regListe.addEventListener('click', e => {
+    const a = e.target.closest('a[data-fach]');
+    if (!a) return;
+    // Mit der Tastatur geht der Tab-Halt des Regals an das erste Buch des Fachs
+    const fach = document.getElementById(a.dataset.fach);
+    const erster = fach && $('.ruecken', fach);
+    if (erster) { $$('.ruecken[tabindex="0"]', regal).forEach(k => { k.tabIndex = -1; }); erster.tabIndex = 0; }
+  });
+
+  // ---------- Leseliste: als Register in Textform, nach dem Jahr der Erstausgabe ----------
+  const lese = $('#leseliste'), leseEintraege = $('#leseliste-eintraege');
+  if (LESELISTE.length) {
+    leseEintraege.innerHTML = LESELISTE.map(b => `<li>${F.versalien((b.autor ? esc(b.autor) + ', ' : '') + `<i>${esc(b.t)}</i>`)}</li>`).join('');
+    leseEintraege.style.setProperty('--reihen', Math.ceil(LESELISTE.length / 2));
+    lese.hidden = false;
+  }
+
+  // ---------- Aufbau ----------
+  function allesBauen(erzwingen) {
+    regalBauen(erzwingen);
+    bandBauen();
+    freiraum();
+    haftet();
+  }
+  F.schriften(2500).then(() => {
+    Object.keys(VERSAL).forEach(k => delete VERSAL[k]);
+    allesBauen(true);
+    const fachEls = () => STANDORTE.map(s => document.getElementById(s.id)).filter(Boolean);
+    leser = F.leselinie(fachEls, i => standortSetzen(i), { linie: H => reg.offsetHeight + Math.max(masse().z * 2, (H - reg.offsetHeight) * .25) });
+    // Ein Anker in der Adresse (#kindheit) wird nach dem Bau angefahren
+    let ziel = null;
+    try { ziel = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) { ziel = null; }
+    if (ziel && regal.contains(ziel)) ziel.scrollIntoView();
+  });
+  let rollBild = 0;
+  window.addEventListener('scroll', () => { if (!rollBild) rollBild = requestAnimationFrame(() => { rollBild = 0; haftet(); }); }, { passive: true });
+  let uhr = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(uhr);
+    uhr = setTimeout(() => {
+      regalBauen(false);
+      if (huelle.clientWidth !== bandBreite) { bandBreite = huelle.clientWidth; bandBauen(); }
+      freiraum(); haftet();
+    }, 140);
+  });
+})();
+</script>
+</body>
+</html>

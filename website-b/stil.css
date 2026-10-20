@@ -1,0 +1,241 @@
+/* Version B (website-b). Das einzige Stylesheet der Website. Regeln: docs/gestaltung-website-b.md.
+
+   Ein Atlasblatt mit Register, gesetzt in einer Buchschrift. Zwei Druckplatten: Schwarz (--tinte) für Schrift und Zeichnung,
+   Blau (--blau, --blau-raster) nur auf Karten. Eine Familie (Baskervville, selbst gehostet), drei Grade, Maßeinheit ist die
+   Zeile --z. Jede sichtbare Farbe, Größe, Zeilenhöhe und Schrift kommt aus einem Token hier; ein <style> in einer Seite legt
+   nur Anordnung fest (Raster, Reihenfolge, Abstände in Vielfachen von --z).
+
+   Gemeinsame Klassen (für alle Seiten):
+     .bogen                Raster einer Seite: Bundsteg, Satzspalte, Zwischenschlag, Tafelfeld, Außensteg (1 : 2)
+       > .satzspalte       Satzspalte (34,375 rem, rund 60 Anschläge)
+       > .tafelfeld        Tafelfeld (--P); auf Tablet und Telefon unter dem Text
+       > .ganz             von der Satzspalte bis zum Tafelfeld
+     .kopf, .name, .nav    Kopf der Unterseiten: Name und Navigation (Auswahlliste) im Grad klein
+     .fuss, .kolophon      Fuß aller Seiten
+     .klein, .gross        die Grade klein und groß (Text ist die Grundschrift); h1 steht im Grad groß, h2 und h3 halbfett
+     .prosa                Absätze ohne Abstand, mit Einzug ab dem zweiten
+     .liste, .gruppe       Einträge mit 0,25 z Abstand; Gruppen mit 0,75 z
+     .chronologie          Register mit hängender Jahreszahl im Bundsteg (Stationen, Szenen, Kapiteltage)
+     .legende              Nebentext: eine Stufe kleiner, aufrecht, in Tinte, 0,25 z unter seinem Gegenstand
+     .wort                 Bedienwort im Text (<button>): unterstrichen; .ist-aktiv oder aria-current: ohne Strich
+     .steuerwort           früher, später: unterstrichen; .ist-aus: unsichtbar an seinem Platz
+     .wahl                 Auswahlliste (Navigation, Kartenwahl, Register): ohne Strich, Hover unterstrichen, gewählt halbfett
+     .zeichen              gezeichnetes Zeichen (SVG aus FSeite.zeichen)
+     .ziffern              Versalziffern mit fester Breite (Achsen, Maßstab)
+     .kartentafel          die Kartentafel (FSeite.kartentafel); Zwickellage ab 40,5 rem Breite, sonst Außenlage
+     .buchzeile            die Buchzeile unter Brett oder Zeitband (FSeite.buch.zeile)
+     .sprung, .unsichtbar  Sprungmarke „Zum Inhalt“; nur für Vorleseprogramme
+*/
+
+@font-face { font-family: "Baskervville"; src: url("schrift/baskervville-antiqua.woff2") format("woff2");
+  font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Baskervville"; src: url("schrift/baskervville-kursiv.woff2") format("woff2");
+  font-weight: 400 700; font-style: italic; font-display: swap; }
+/* Nur für die Leinwand der Karte: die zehn Ziffern als Versalziffern mit fester Breite (werkzeuge/kartenziffern.py).
+   Auf einer Leinwand lässt sich keine OpenType-Ziffernwahl einschalten; im HTML gilt font-variant-numeric. */
+@font-face { font-family: "Baskervville Ziffern"; src: url("schrift/baskervville-ziffern.woff2") format("woff2");
+  font-weight: 400 700; font-style: normal; font-display: swap; unicode-range: U+0030-0039; }
+
+:root {
+  color-scheme: light;
+  /* Farben: Papier, die Schwarzplatte und ihr Raster, die Blauplatte und ihr Raster (nur auf Karten) */
+  --papier: #FFFFFF;
+  --tinte: #141414;
+  --tinte-raster: #C4C4C4;
+  --blau: #2A5F99;
+  --blau-raster: #E5ECF3;
+
+  --schrift: "Baskervville", Baskerville, "Times New Roman", serif;
+  --schrift-ziffern: "Baskervville Ziffern", "Baskervville", Baskerville, "Times New Roman", serif;
+
+  /* Zeile und Grade, Telefon */
+  --z: 1.6875rem;
+  --klein: .9375rem;
+  --text: 1.125rem;
+  --gross: 1.625rem;
+  --zk: calc(var(--z) * .75);
+  --zg: calc(var(--z) * 1.25);
+
+  /* Raster */
+  --S: 34.375rem;
+  --G: calc(var(--z) * 2);
+  --rand: 1rem;
+}
+@media (min-width: 48rem) {
+  :root { --z: 1.875rem; --klein: 1rem; --text: 1.25rem; --gross: 1.875rem; --rand: calc(var(--z) * 2); }
+}
+@media (min-width: 75rem) {
+  :root { --P: clamp(30rem, min(100vw - 34.375rem - 3.75rem - 7.5rem, 100svh - 5 * var(--z)), 42rem); }
+}
+
+/* ---------- Grundlage ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; background: var(--papier); }
+body {
+  margin: 0; background: var(--papier); color: var(--tinte); caret-color: var(--tinte);
+  font-family: var(--schrift); font-size: var(--text); line-height: var(--z); font-weight: 400;
+  font-kerning: normal; font-variant-ligatures: common-ligatures; font-variant-numeric: oldstyle-nums proportional-nums;
+  font-synthesis: none; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty;
+}
+::selection { background: var(--tinte); color: var(--papier); }
+p, h1, h2, h3, h4, ul, ol, dl, dt, dd, figure, figcaption, blockquote { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+h1, h2, h3, h4 { font-size: inherit; line-height: inherit; font-weight: 400; hyphens: manual; -webkit-hyphens: manual; }
+i, em, cite { font-style: italic; }
+b, strong { font-weight: 600; }
+img { display: block; max-width: 100%; height: auto; }
+/* Versalabkürzungen ab drei Buchstaben als Kapitälchen; die Kursive hat keine, dort bleiben es Versalien */
+abbr { font-variant-caps: all-small-caps; letter-spacing: .04em; text-decoration: none; }
+i abbr, em abbr, cite abbr { font-variant-caps: normal; letter-spacing: 0; }
+.nw { white-space: nowrap; }
+.ziffern { font-variant-numeric: lining-nums tabular-nums; }
+.unsichtbar { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[hidden] { display: none !important; }
+
+/* ---------- Grade ---------- */
+.klein { font-size: var(--klein); line-height: var(--zk); }
+.gross, h1 { font-size: var(--gross); line-height: var(--zg); font-weight: 400; }
+h1 { margin-bottom: calc(var(--z) * .5); }
+h2, h3 { font-size: var(--text); line-height: var(--z); font-weight: 600; margin-top: calc(var(--z) * 2); margin-bottom: calc(var(--z) * .5); }
+:is(.satzspalte, .tafelfeld, .ganz) > :is(h2, h3):first-child { margin-top: 0; }
+
+/* ---------- Verweise und Bedienung: vier Arten, je ein Aussehen ---------- */
+a { color: inherit; text-decoration-line: underline; }
+.wort, .steuerwort, .wahl button {
+  appearance: none; -webkit-appearance: none; background: none; border: 0; border-radius: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; letter-spacing: inherit; text-align: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.wort, .steuerwort { text-decoration-line: underline; }
+.wort.ist-aktiv, .wort[aria-current] { text-decoration-line: none; cursor: default; }
+.steuerwort.ist-aus { visibility: hidden; }
+.wahl a, .wahl button { text-decoration-line: none; }
+.wahl a:hover, .wahl button:hover { text-decoration-line: underline; }
+.wahl :is([aria-current="page"], [aria-pressed="true"], .ist-aktiv),
+.wahl :is([aria-current="page"], [aria-pressed="true"], .ist-aktiv):hover { font-weight: 600; text-decoration-line: none; cursor: default; }
+/* Ohne Skript tun Bedienwörter nichts: dann sehen sie auch nicht danach aus */
+html:not(.js) .wort { text-decoration-line: none; cursor: auto; }
+:focus:not(:focus-visible) { outline: none; }
+:focus-visible { outline: 2px solid var(--tinte); outline-offset: 3px; }
+.sprung { position: absolute; left: var(--rand); top: calc(var(--z) * .5); z-index: 10; padding: 0 .25em; background: var(--papier);
+  font-size: var(--klein); line-height: var(--zk); clip-path: inset(50%); }
+.sprung:focus { clip-path: none; }
+
+/* ---------- Raster ----------
+   Telefon: Ränder von 16 px. Tablet: links 2 z, Satzspalte höchstens 34,375 rem, rechts der Rest.
+   Desktop ab 75 rem: Bundsteg | Satzspalte | Zwischenschlag 2 z | Tafelfeld --P | Außensteg, Bundsteg zu Außensteg 1 : 2. */
+.bogen { display: grid; grid-template-columns: var(--rand) minmax(0, 1fr) var(--rand); }
+.bogen > * { grid-column: 2; min-width: 0; }
+.satzspalte { max-width: var(--S); }
+.tafelfeld { max-width: 40rem; }
+@media (max-width: 47.99rem) { .tafelfeld { max-width: none; } }
+@media (min-width: 75rem) {
+  .bogen { grid-template-columns: minmax(0, 1fr) var(--S) var(--G) var(--P) minmax(0, 2fr); }
+  .bogen > * { grid-column: 2; }
+  .bogen > .tafelfeld { grid-column: 4; max-width: none; }
+  .bogen > .ganz { grid-column: 2 / 5; }
+}
+
+/* ---------- Kopf der Unterseiten: eine Zeile im Grad klein auf der Höhe des Kopfstegs ---------- */
+.kopf { padding-top: calc(var(--z) * 2); font-size: var(--klein); line-height: var(--zk); hyphens: manual; -webkit-hyphens: manual; }
+.kopf .name { justify-self: start; text-decoration-line: none; }
+.kopf .name:hover { text-decoration-line: underline; }
+.kopf .name[aria-current="page"]:hover { text-decoration-line: none; }
+.nav ul { display: flex; flex-wrap: wrap; column-gap: 1em; }
+.kopf .nav { margin-top: calc(var(--z) * .25); }
+@media (min-width: 75rem) {
+  .kopf .name, .kopf .nav { grid-row: 1; margin-top: 0; }
+}
+/* Nach dem Kopf 2 z bis zum Seitentitel */
+.kopf + main { padding-top: calc(var(--z) * 2); }
+
+/* ---------- Satz ---------- */
+.prosa p + p { text-indent: 1em; }
+.liste > li + li, .liste > p + p { margin-top: calc(var(--z) * .25); }
+.gruppe + .gruppe { margin-top: calc(var(--z) * .75); }
+.teil + .teil { margin-top: calc(var(--z) * 3); }
+.legende { font-size: var(--klein); line-height: var(--zk); margin-top: calc(var(--z) * .25); }
+.chronologie > li { position: relative; }
+.chronologie > li + li { margin-top: calc(var(--z) * .25); }
+.chronologie .jahr { font-variant-numeric: oldstyle-nums proportional-nums; }
+/* Die Jahreszahl hängt im Bundsteg, rechtsbündig, 0,5 em vor der Satzkante. Ist der Bundsteg schmaler als 3 em, steht sie als
+   eigene Zeile darüber. Der Bundsteg erreicht 3 em (60 px) bei größtem Tafelfeld ab 1462 px Fensterbreite. */
+.chronologie .jahr { display: block; }
+@media (min-width: 91.375rem) {
+  .chronologie .jahr { display: inline; position: absolute; right: calc(100% + .5em); top: 0; white-space: nowrap; }
+}
+
+/* ---------- Gezeichnete Zeichen ---------- */
+.zeichen { display: inline-block; vertical-align: 0; margin-right: .4em; overflow: hidden; }
+
+/* ---------- Kartentafel ----------
+   Ein Quadrat mit 1 px Tinte, darin die Kugel. Randangaben in den vier Zwickeln, wenn die Tafel mindestens 40,5 rem breit ist;
+   sonst die Kartenwahl über dem Rahmen und alle übrigen Angaben darunter (Außenlage). */
+.kartentafel {
+  container: tafel / inline-size;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.5em;
+  font-size: var(--klein); line-height: var(--zk); hyphens: manual; -webkit-hyphens: manual;
+}
+.kartentafel > * { grid-column: 1 / -1; min-width: 0; }
+.rahmen { position: relative; grid-row: 2; aspect-ratio: 1 / 1; border: 1px solid var(--tinte); }
+.rahmen canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+.rahmen canvas:active { cursor: grabbing; }
+.kartentafel:not(.ist-bereit) canvas { visibility: hidden; }
+.ohne-karte { padding: calc(var(--z) * .25) calc(var(--z) * .5); }
+.js .kartentafel.ist-gebaut .ohne-karte { display: none; }
+.js .kartentafel.ohne-kugel .ohne-karte { display: block; }
+.zwickel { pointer-events: none; }
+.zwickel button, .zwickel a { pointer-events: auto; }
+.aussparung { display: none; }
+.kartenwahl { font-size: var(--text); line-height: var(--z); }
+.tafelkopf-ort { font-size: var(--text); line-height: var(--z); }
+.tafelkopf-angabe { font-size: var(--klein); line-height: var(--zk); }
+.zeichenerklaerung li { white-space: nowrap; }
+.massstab { white-space: nowrap; }
+.massstab .leiste { display: inline-block; vertical-align: -.02em; margin: 0 .35em; overflow: visible; }
+.hinweis { max-width: 18em; }
+
+/* Außenlage */
+.zw-ol { grid-row: 1; margin-bottom: calc(var(--z) * .25); }
+.zw-ol .kartenwahl { display: flex; flex-wrap: wrap; column-gap: 1em; }
+.zw-or { grid-row: 3; margin-top: calc(var(--z) * .25); }
+.tafellegende { grid-row: 4; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.5em; align-items: start; margin-top: calc(var(--z) * .25); }
+.tafellegende .steuer { display: flex; column-gap: 1em; white-space: nowrap; }
+.tafellegende.ohne-schritte .steuer { display: none; }
+.zw-ul { grid-row: 5; grid-column: 1; margin-top: calc(var(--z) * .25); }
+.zw-ur { grid-row: 5; grid-column: 2; margin-top: calc(var(--z) * .25); text-align: right; }
+.zw-ul .zeichenerklaerung { display: flex; flex-wrap: wrap; column-gap: 1.5em; }
+
+/* Zwickellage */
+@container tafel (min-width: 40.5rem) {
+  .zwickel { --lage: zwickel; grid-row: 2; grid-column: 1 / -1; position: relative; z-index: 1; margin: calc(var(--z) * .5); }
+  .zw-ol { align-self: start; justify-self: start; }
+  .zw-or { align-self: start; justify-self: end; text-align: right; }
+  .zw-ul { align-self: end; justify-self: start; }
+  .zw-ur { align-self: end; justify-self: end; }
+  .zw-ol .kartenwahl { display: block; }
+  .zw-ul .zeichenerklaerung { display: block; }
+  .zw-ol .aussparung { display: block; float: right; }
+  .zw-or .aussparung { display: block; float: left; }
+  .tafellegende { grid-row: 3; }
+}
+
+/* ---------- Buchzeile (12.8): eine feste Zeile unter dem Brett oder dem Zeitband ---------- */
+.buchzeile { font-size: var(--klein); line-height: var(--zk); min-height: var(--zk); margin-top: calc(var(--z) * .25); }
+@media (max-width: 47.99rem) { .buchzeile { min-height: calc(var(--zk) * 2); } }
+
+/* ---------- Startseite ---------- */
+.erster-satz { hyphens: manual; -webkit-hyphens: manual; }
+.erster-satz span { display: block; }
+@media (max-width: 47.99rem) {
+  .erster-satz { text-wrap: balance; }
+  .erster-satz span { display: inline; }
+}
+.inhaltsverzeichnis li + li { margin-top: calc(var(--z) * .25); }
+.inhaltsverzeichnis ul + ul { margin-top: calc(var(--z) * .75); }
+
+/* ---------- Fuß ---------- */
+.fuss { padding-top: calc(var(--z) * 4); padding-bottom: calc(var(--z) * 2); }
+.fuss p + p { margin-top: calc(var(--z) * .5); }
+
+/* ---------- Ohne Bewegung ---------- */
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

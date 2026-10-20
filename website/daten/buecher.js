@@ -560,5 +560,6 @@ window.BUECHER = [
 {"t":"Ilias","u":"","a":"Homer","r":"gelesen","s":0,"j":-750,"p":560,"w":0,"b":"p","v":"","x":1},
 {"t":"Odyssee","u":"","a":"Homer","r":"gelesen","s":0,"j":-700,"p":480,"w":0,"b":"p","v":"","x":1},
 {"t":"Metamorphosen","u":"","a":"Ovid","r":"gelesen","s":0,"j":8,"p":600,"w":0,"b":"p","v":"","x":1},
-{"t":"Summa theologica","u":"","a":"Thomas von Aquin","r":"gelesen","s":0,"j":1270,"p":400,"w":0,"b":"p","v":"","x":1}
+{"t":"Summa theologica","u":"","a":"Thomas von Aquin","r":"gelesen","s":0,"j":1270,"p":400,"w":0,"b":"p","v":"","x":1},
+{"t":"Don Quijote","u":"","a":"Miguel de Cervantes","r":"gelesen","s":0,"j":1605,"p":1100,"w":0,"b":"p","v":"","x":1}
 ];

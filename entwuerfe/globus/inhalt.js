@@ -4,7 +4,7 @@
 window.INHALT = {
   person: { name: 'Dominik Jäkel', rolle: 'Schriftsteller und Reisender' },
 
-  // Fakten für die Vita. Beruf nur allgemein nennen (Wunsch von Dominik): kein Ghostwriting, keine Firma, keine Medien.
+  // Fakten für die Vita. Beruf: Simon-Kucher darf genannt werden (Dominik, 20. Oktober); kein Ghostwriting, keine Medien.
   vita: {
     einstieg: 'Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen.',
     geboren: { jahr: 1995, ort: 'Dortmund' },
@@ -12,8 +12,8 @@ window.INHALT = {
       { ort: 'Freiburg', fach: 'Liberal Arts & Sciences' },
       { ort: 'Potsdam', fach: 'IT-Systems Engineering am Hasso-Plattner-Institut' }
     ],
-    taiwan: 'Vier Jahre in Taiwan, in Kaohsiung. Dort arbeitete er als Lektor und freier Autor, unter anderem für Sprachassistenten und unabhängige Spielestudios. In Taiwan begann seine Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Ursprungstrilogie.',
-    berlin: 'Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen.',
+    taiwan: 'Vier Jahre lebte er in Kaohsiung auf Taiwan. Er arbeitete dort als Lektor und freier Autor, unter anderem für Sprachassistenten und Indie-Gaming-Studios. In Taiwan, das von einer starken Aboriginer-Kultur geprägt ist, begann seine Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Ursprungstrilogie der Zivilisation.',
+    berlin: 'Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen (vor allem für die Marketing- und Pricingberatung Simon-Kucher).',
     werkstattbuehne: 'Auf der Werkstattbühne des Autorenforums Berlin hat er viele seiner Geschichten vorgelesen; seit einigen Jahren ist er einer der Moderatoren.',
     preis: { name: 'A.-E.-Johann-Preis', jahr: 2022 },
     foerderung: 'Gefördert in der Meisterklasse des Schreibhains und in Seminaren der Bundesakademie für kulturelle Bildung, mit Mentorinnen und Mentoren wie Ursula Poznanski, Wulf Dorn und Klaus N. Frick.',

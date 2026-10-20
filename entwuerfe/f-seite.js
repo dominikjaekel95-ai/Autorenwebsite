@@ -13,7 +13,7 @@
      zahlwort(n), gross(s), tausender(n)
      grad(x, plus, minus), koord(lat, lon)        „51° 31′ N, 7° 28′ O“
      entfernungKm(a, b), km(a, b)  Luftlinie auf 10 km gerundet (Zahl); als Text „8 190 km“. a, b: {lat, lon} oder [lon, lat]
-     jahrText(j), chr(t), jahrMarke(jahr)          „um 1800 v. Chr.“; „v. Chr.“ zusammenhalten; „bis 2014“ für die Tafel
+     jahrText(j), chr(t), jahrMarke(jahr)          „um 1800 v. Chr.“; „v. Chr.“ zusammenhalten; „bis 2014“, „seit 2022“ für die Tafel
      schriften(ms)                 Promise: Vollkorn, Vollkorn kursiv und Vollkorn SC geladen (oder Zeit abgelaufen)
      satzzeichenBinden(wurzel)     Satzzeichen nach einem Knopf-Wort an das Wort binden
      FARBEN, SIENA, SIENA_EBENE   Grundfarben des Globus; Farben für Ebenen eigener Werke
@@ -139,7 +139,10 @@
   // „um 8000 v. Chr.“ in einem Stück halten
   const chr = t => String(t).replace(/(\d) v\. Chr\./g, '$1' + NBSP + 'v.' + NBSP + 'Chr.').replace(/\bum (\d)/g, 'um' + NBSP + '$1');
   // Jahr für die große Zahl der Tafel; „bis 2014“ mit kleinem, kursivem „bis“ und einem echten Leerzeichen (Vorlesen und Kopieren)
-  const jahrMarke = jahr => /^bis /.test(jahr || '') ? { html: '<span class="bis">bis' + NBSP + '</span>' + esc(jahr.slice(4)) } : String(jahr || '');
+  const jahrMarke = jahr => {
+    const m = /^(bis|seit) (.+)$/.exec(jahr || '');
+    return m ? { html: '<span class="bis">' + m[1] + NBSP + '</span>' + esc(m[2]) } : String(jahr || '');
+  };
 
   // ---------- Schrift und Satz ----------
   // Wartet, bis die drei Schnitte geladen sind, höchstens ms Millisekunden

@@ -612,24 +612,17 @@
   // ================= Tafel =================
   const tafelEl = $('#tafel');
   const tafelLaut = an => tafelEl.setAttribute('aria-live', an ? 'polite' : 'off');
-  // Leben: 0 ist der Überblick über alle Orte, danach die Stationen
-  // Die Breiten mit ihren Enden benannt: der südlichste und der nördlichste Ort
+  // Leben: 0 ist das Ende der Chronik (und die Tafel ohne Globus), danach die Stationen.
+  // Am Ende steht kein Zahlenfeld, sondern der Ort, an dem er heute lebt: der letzte Wohnort
   function lebenUeberblick() {
-    const wohn = stationen.filter(s => !s.neben).length, neben = stationen.length - wohn;
-    const sued = stationen.reduce((a, s) => s.lat < a.lat ? s : a), nord = stationen.reduce((a, s) => s.lat > a.lat ? s : a);
-    const fern = stationen.reduce((a, s) => F.entfernungKm(AUSGANG, s) > F.entfernungKm(AUSGANG, a) ? s : a);
-    return {
-      marke: String(stationen.length), kopf: 'Orte',
-      unter: F.zahlwort(wohn) + ' Wohnorte, ' + F.zahlwort(neben) + ' längere Aufenthalte',
-      daten: 'von ' + sued.name + ', ' + F.grad(sued.lat, 'N', 'S') + ', bis ' + nord.name + ', ' + F.grad(nord.lat, 'N', 'S'),
-      satz: 'Am weitesten von ' + AUSGANG.name + ': ' + fern.name + ', ' + F.km(AUSGANG, fern) + ' Luftlinie.'
-    };
+    const heute = stationen.filter(s => !s.neben).pop();
+    return { marke: F.jahrMarke('seit ' + heute.jahr), kopf: heute.name, unter: 'Wohnort', daten: F.koord(heute.lat, heute.lon), satz: 'Hier lebt er heute.' };
   }
   let lebenP = 0;
   function lebenInhalt(p) {
     const t = p === 0 ? lebenUeberblick() : F.stationInhalt(stationen[p - 1], AUSGANG);
-    // Der Überblick steht am Anfang und am Ende: später führt von der letzten Station dorthin
-    t.fuss = knopf('früher', 'data-schritt="-1"', p === 0) + knopf('später', 'data-schritt="1"');
+    // Heute steht am Ende: später führt von der letzten Station dorthin, früher von dort zur letzten Station zurück
+    t.fuss = knopf('früher', 'data-schritt="-1"', p === 1) + knopf('später', 'data-schritt="1"');
     return t;
   }
   function lebenTafel(p) { lebenP = p; F.tafel(tafelEl, lebenInhalt(p)); }
@@ -643,8 +636,9 @@
       const p = land.punkt || (I.winzig && I.winzig[land.iso]);
       return { kopf: land.name, unter: ist ? 'bereist' : 'nicht bereist', daten: p ? F.koord(p[1], p[0]) : '' };
     }
-    if (kontinent) return { marke: String((I.kontinente[kontinent] || []).length), kopf: 'Länder und Gebiete in ' + kontinent, satz: 'Grau auf dem Globus, wo ich gewesen bin.' };
-    return { marke: String(bereist.length), kopf: 'Länder und Gebiete auf dem Globus', satz: 'Grau auf dem Globus, wo ich gewesen bin.' };
+    // Keine große Zahl als Kachel: der Kontinent als Ort, die Zahl ausgeschrieben im Satz
+    if (kontinent) return { kopf: kontinent, satz: F.gross(F.zahlwort((I.kontinente[kontinent] || []).length)) + ' Länder und Gebiete, grau auf dem Globus.' };
+    return { kopf: 'Wohin ich gereist bin', satz: F.gross(F.zahlwort(bereist.length)) + ' Länder und Gebiete, grau auf dem Globus.' };
   }
   let reisenZuletzt = '';
   function reisenTafel() {
@@ -918,7 +912,8 @@
     else if (d.station !== undefined) { stationSchritt(+d.station); globusInSicht(t); }
     else if (d.schritt) {
       const fokus = document.activeElement === t;
-      const p = lebenP + +d.schritt > stationen.length ? 0 : Math.max(0, lebenP + +d.schritt);
+      const ziel = lebenP + +d.schritt;
+      const p = ziel > stationen.length ? 0 : ziel < 0 ? stationen.length : ziel;
       if (p === 0) lebenUeberblickZeigen(); else stationSchritt(p - 1);
       if (fokus) tafelFokus('schritt', d.schritt);
       globusInSicht();

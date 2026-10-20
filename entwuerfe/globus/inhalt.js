@@ -53,8 +53,8 @@ window.INHALT = {
   // Weitere längere Aufenthalte, nur für die Vita (auf dem Globus wäre es zu voll)
   aufenthalte: [
     { name: 'Kapstadt', land: 'Südafrika', jahr: '2024', lat: -33.92, lon: 18.42 },
-    { name: 'Sansibar', land: 'Tansania', jahr: '2024', lat: -6.16, lon: 39.19 },
-    { name: 'Kapstadt', land: 'Südafrika', jahr: '2026', lat: -33.92, lon: 18.42 }
+    { name: 'Sansibar', land: 'Tansania', jahr: '2025', lat: -6.16, lon: 39.19 },
+    { name: 'Buenos Aires', land: 'Argentinien', jahr: '2026', lat: -34.60, lon: -58.38 }
   ],
 
   satoshi: {

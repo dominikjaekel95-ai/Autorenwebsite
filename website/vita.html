@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vita – Dominik Jäkel</title>
+<meta name="description" content="Vita von Dominik Jäkel: geboren 1995 in Dortmund, Studium in Freiburg und am Hasso-Plattner-Institut in Potsdam, vier Jahre in Kaohsiung auf Taiwan, seit 2022 in Berlin. A.-E.-Johann-Preis 2022.">
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&family=IM+Fell+French+Canon&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Vita, gesetzt wie eine Buchklappe: links der Text in der Spalte der Startseite, rechts die Stationen
+   und am Fuß der Klappe das Foto in bescheidener Größe. Die rechte Spalte steht an der linken Kante, an der auf der
+   Startseite Globus und Tafel stehen; die Jahre hängen wie dort links in den Steg.
+   Nichts bewegt sich beim Scrollen: die Seite ist kurz, und Text und Stationen stehen nebeneinander, die Zuordnung leistet
+   die Doppelspalte selbst. */
+
+.vita-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); padding-top: calc(var(--z) * 2); }
+.vita-links { grid-column: 1; min-width: 0; align-self: start; }
+/* an der Kante des Globus der Startseite; auf sehr breiten Schirmen höchstens acht Zeilen Steg.
+   Die Spalte ist so hoch wie der Text: oben die Stationen, am Fuß das Foto */
+.vita-rechts {
+  grid-column: 2; min-width: 0; max-width: 30em; display: flex; flex-direction: column;
+  margin-left: clamp(4.5em, calc(var(--globuskante) - var(--rand-l) - var(--spalte)), calc(var(--z) * 8));
+}
+.werdegang-bahn { flex: 1 1 auto; }
+.vita-text { max-width: var(--mass); }
+.vita-text > p + p { margin-top: calc(var(--z) * .5); }
+/* Der erste Satz steht allein, in der Schrift des ersten Satzes der Startseite (.leitsatz), kleiner als dort; jedes Glied eine Zeile.
+   Er wird so klein, dass das längste Glied in die Spalte passt, aber nie kleiner als die Grundschrift; reicht der Platz dann
+   noch nicht (oder fehlt die Schrift), bricht das Glied in sich um. Eine ganze Zeile Luft darunter */
+.vita-text > .einstieg { font-size: max(1em, min(1.375em, calc((var(--vb, 100vw) - 2 * var(--rand-l)) / 14.8))); line-height: calc(var(--z) * 1.125); }
+.vita-text > .einstieg .nw { display: block; white-space: normal; }
+.vita-text > .einstieg + p { margin-top: var(--z); }
+
+/* Das Foto wie auf einer Klappe: acht Zeilen hoch, die Angabe klein darunter; breit steht es am Fuß der rechten Spalte */
+/* Das Foto im Hochformat 3 : 4, so breit wie zehn Zeilen hoch sind */
+.bildnis { width: calc(var(--z) * 10); padding-top: calc(var(--z) * 2); }
+.bildnis img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; background: var(--brett); }
+.bildnis figcaption { margin-top: calc(var(--z) * .25); font-size: .8125rem; line-height: calc(var(--z) * .75); color: var(--grau-2); }
+
+/* Stationen: die Reihenfolge ist die Information. Ort kursiv, darunter die Koordinaten klein und grau,
+   die Nebenorte kleiner und heller wie im Kolophon der Startseite.
+   Breit steht die Überschrift auf der Grundlinie des Seitentitels und der erste Eintrag auf der Zeile des ersten Satzes;
+   ein Eintrag ist eindreiviertel Zeilen hoch, von Jahr zu Jahr sind es genau zwei Zeilen wie im Text daneben */
+.werdegang { padding-top: calc(var(--z) * .32); }
+.werdegang .titel { margin-bottom: calc(var(--z) * 1.18); }
+.daten { list-style: none; }
+.daten li { position: relative; line-height: var(--z); min-height: calc(var(--z) * 1.75); }
+.daten li + li { margin-top: calc(var(--z) * .25); }
+/* Das Jahr hängt im Steg (absolut gesetzt). Ein unsichtbares geschütztes Leerzeichen im Jahr trennt es beim Kopieren und Vorlesen
+   vom Ort („2026 Kapstadt“ statt „2026Kapstadt“); das Leerzeichen im Quelltext dahinter fiele am Zeilenanfang weg */
+.daten .jahr { position: absolute; top: 0; right: calc(100% + .95rem); white-space: nowrap; color: var(--graphit); }
+.daten .ort { font-style: italic; color: var(--schwarz); }
+.daten .koord { display: block; font-style: italic; font-size: .8125em; line-height: calc(var(--z) * .75); color: var(--grau-2); }
+.daten .neben { font-size: .875em; color: var(--grau-neben); }
+.daten .neben .ort, .daten .neben .jahr { color: var(--grau-2); }
+.daten .neben .koord { color: var(--grau-neben); }
+.werdegang .weiter { margin-top: var(--z); }
+
+
+/* ---------- Schmale Fenster: eine Spalte, das Foto unter dem Titel, die Stationen nach dem Text ---------- */
+@media (max-width: 62rem) {
+  .vita-raster { display: flex; flex-direction: column; align-items: stretch; padding-top: var(--z); }
+  .vita-links, .vita-rechts, .werdegang-bahn { display: contents; }
+  .vita-raster .seitentitel { order: 1; }
+  .vita-raster .bildnis { order: 2; margin: 0 0 var(--z); padding-top: 0; }
+  .vita-raster .vita-text { order: 3; }
+  .vita-raster .werdegang { order: 4; margin-top: calc(var(--z) * 2); padding-top: 0; }
+  .werdegang .titel { margin-bottom: var(--z); }
+  .vita-text, .werdegang { max-width: var(--mass); }
+  /* Die Jahre hängen innerhalb der Spalte. Ohne Nachbarspalte gibt es kein Register zu halten: der Preis bekommt keine leere Zeile */
+  .daten li { padding-left: 3em; min-height: 0; }
+  .daten .neben { padding-left: calc(3em / .875); }
+  .daten .jahr { right: auto; left: 0; }
+}
+@media (max-width: 40rem) {
+  .bildnis { width: min(100%, calc(var(--z) * 9)); }
+}
+</style>
+</head>
+<body class="vita-seite">
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="kopf">
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
+  <nav class="nav" aria-label="Website">
+    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
+    <ul class="nav-liste" id="nav-liste">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html" aria-current="page">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inhalt">
+<div class="abschnitt vita-raster">
+  <div class="vita-links">
+    <h1 class="seitentitel">Vita</h1>
+
+    <div class="vita-text">
+      <p class="einstieg leitsatz"><span class="nw">Dominik Jäkel schreibt tagsüber</span> <span class="nw">unter fremden Namen</span> <span class="nw">und abends unter seinem eigenen.</span></p>
+      <p>Er wurde 1995 in Dortmund geboren. In Freiburg studierte er Liberal Arts &amp; Sciences, danach in Potsdam IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span>.</p>
+      <p>2016 und 2018 ging er für Freiwilligen&shy;projekte mit AIESEC nach Colombo in Sri Lanka und nach Cotonou in Benin.</p>
+      <p>Vier Jahre lebte er in Kaohsiung auf Taiwan. Er arbeitete dort als Lektor und freier Autor, unter anderem für Sprach&shy;assistenten und Indie-Gaming-Studios. In Taiwan, das von einer starken Aboriginer-Kultur geprägt ist, begann seine Beschäftigung mit der Früh&shy;geschichte des Menschen und die Arbeit an der Ursprungs&shy;trilogie der Zivili&shy;sation.</p>
+      <p>Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen (vor allem für die Marketing- und Pricing&shy;beratung Simon-Kucher). Auf der Werkstatt&shy;bühne des Autoren&shy;forums Berlin e.&#8239;V. hat er viele seiner Geschichten gelesen; seit einigen Jahren ist er fester Bestandteil des Moderatoren&shy;teams. Längere Aufenthalte führten ihn seitdem nach Mallorca, Kapstadt und Sansibar.</p>
+      <p>2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debüt&shy;roman <a href="satoshi.html"><i>Satoshi</i></a> ab. Das Manuskript liegt vollständig vor. Der Roman erzählt die Gründungs&shy;legende von Bitcoin als Liebes&shy;geschichte dreier Menschen – und beschäftigt sich vor allem mit der Frage, was passiert, wenn das Vertrauen in Institutionen zerbricht.</p>
+      <p>Daneben arbeitet er an der <a href="ursprung.html">Ursprungs&shy;trilogie</a>, drei Romanen über die Anfänge der Zivili&shy;sation. Sie erzählen von der Geburt der organi&shy;sierten Religion, der Literatur und der Heiligen Schrift, von Göbekli Tepe um 8000&nbsp;v.&#8239;Chr. über Uruk bis Jerusalem um 940&nbsp;v.&#8239;Chr.</p>
+    </div>
+  </div>
+
+  <div class="vita-rechts">
+    <div class="werdegang-bahn">
+      <section class="werdegang" aria-labelledby="stationen-titel">
+        <h2 class="titel" id="stationen-titel">Stationen</h2>
+        <ul class="daten">
+          <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Dortmund</span>, geboren <span class="koord" data-ort="Dortmund">51°&nbsp;31′&nbsp;N, 7°&nbsp;28′&nbsp;O</span></li>
+          <li><span class="jahr">2014<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Freiburg</span>, Studium <span class="nw">Liberal Arts &amp; Sciences</span> <span class="koord" data-ort="Freiburg">47°&nbsp;59′&nbsp;N, 7°&nbsp;51′&nbsp;O</span></li>
+          <li><span class="jahr">2015<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Potsdam</span>, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span> <span class="koord" data-ort="Potsdam">52°&nbsp;23′&nbsp;N, 13°&nbsp;04′&nbsp;O</span></li>
+          <li class="neben"><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Colombo, Sri Lanka</span>, Freiwilligen&shy;projekt mit AIESEC <span class="koord" data-ort="Colombo">6°&nbsp;56′&nbsp;N, 79°&nbsp;52′&nbsp;O</span></li>
+          <li class="neben"><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Cotonou, Benin</span>, Freiwilligen&shy;projekt mit AIESEC <span class="koord" data-ort="Cotonou">6°&nbsp;22′&nbsp;N, 2°&nbsp;26′&nbsp;O</span></li>
+          <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Kaohsiung, Taiwan</span>, vier Jahre als Lektor und freier Autor <span class="koord" data-ort="Kaohsiung">22°&nbsp;38′&nbsp;N, 120°&nbsp;18′&nbsp;O</span></li>
+          <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Berlin</span>, seitdem Wohnort <span class="koord" data-ort="Berlin">52°&nbsp;31′&nbsp;N, 13°&nbsp;24′&nbsp;O</span></li>
+          <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> <span class="nw">A.-E.-Johann-Preis</span></li>
+          <li class="neben"><span class="jahr">2023<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Mallorca</span>, längerer Aufenthalt <span class="koord" data-ort="Mallorca">39°&nbsp;34′&nbsp;N, 2°&nbsp;39′&nbsp;O</span></li>
+          <li class="neben"><span class="jahr">2024<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Kapstadt, Südafrika</span>, längerer Aufenthalt <span class="koord" data-ort="Kapstadt">33°&nbsp;55′&nbsp;S, 18°&nbsp;25′&nbsp;O</span></li>
+          <li class="neben"><span class="jahr">2024<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Sansibar, Tansania</span>, längerer Aufenthalt <span class="koord" data-ort="Sansibar">6°&nbsp;10′&nbsp;S, 39°&nbsp;11′&nbsp;O</span></li>
+          <li class="neben"><span class="jahr">2026<span class="unsichtbar">&nbsp;</span></span> <span class="ort">Kapstadt, Südafrika</span>, längerer Aufenthalt <span class="koord" data-ort="Kapstadt">33°&nbsp;55′&nbsp;S, 18°&nbsp;25′&nbsp;O</span></li>
+        </ul>
+        <p class="weiter">Die Wohnorte und die ersten längeren Aufenthalte <a class="nw" href="index.html#globus">auf dem Globus</a>.</p>
+      </section>
+    </div>
+
+    <figure class="bildnis">
+      <img src="bilder/dominik-jaekel-boot.jpg" alt="Dominik Jäkel liest an Deck eines Segelboots, im Hintergrund Berge im Abendlicht" width="1200" height="1600" decoding="async">
+      <figcaption>Mit <i>Picknick am Wegesrand</i> der Brüder Strugatzki.</figcaption>
+    </figure>
+  </div>
+</div>
+</main>
+
+<footer class="fuss" id="kontakt">
+  <section class="kontakt" aria-labelledby="kontakt-titel">
+    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+  </section>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+</footer>
+
+<script src="daten/inhalt.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+
+  // Die Koordinaten kommen aus denselben Daten wie die Tafel der Startseite; ohne Skript bleibt der gesetzte Text stehen
+  if (Array.isArray(I.leben)) {
+    F.$$('[data-ort]').forEach(el => {
+      const s = I.leben.concat(I.aufenthalte || []).find(x => x.name === el.dataset.ort);
+      if (s && s.lat != null && s.lon != null) el.textContent = F.koord(s.lat, s.lon);
+    });
+  }
+})();
+</script>
+</body>
+</html>

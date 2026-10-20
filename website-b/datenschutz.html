@@ -15,11 +15,10 @@ if (/^https?:$/.test(location.protocol)) {
 </script>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Datenschutz (Abschnitt 13): eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2. Inhalt wie in
-   Version A ohne die Abschnitte zu Google Fonts und jsDelivr: B lädt Schrift und Programmbibliotheken vom eigenen Server.
+/* Datenschutz: eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2. Inhalt wie in Version A
+   ohne die Abschnitte zu Google Fonts und jsDelivr: B lädt Schrift und Programmbibliotheken vom eigenen Server.
    Nur Anordnung. Die Rechte als Liste mit dem Einzug der Absätze (1 em), ohne Zeichen davor, 0,25 z zwischen den Einträgen
    und vor und nach der Liste. */
-.recht address { font-style: normal; }
 .recht .vorab { margin-top: calc(var(--z) * .75); }
 .recht .rechte { margin-block: calc(var(--z) * .25); }
 .recht .rechte > li { padding-left: 1em; }
@@ -33,10 +32,10 @@ if (/^https?:$/.test(location.protocol)) {
   <a class="name" href="index.html">Dominik Jäkel</a>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
-      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="satoshi.html">Satoshi</a></li>
+      <li><a href="ursprung.html">Ursprung</a></li>
       <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -49,7 +48,7 @@ if (/^https?:$/.test(location.protocol)) {
     <h1>Datenschutz</h1>
     <p class="klein">Entwurf, vor der Veröffentlichung zu prüfen.</p>
 
-    <p class="vorab">Kurz gesagt: Diese Website selbst setzt keine Cookies, speichert nichts in Ihrem Browser und verwendet keine Analyse- oder Trackingdienste; ein Kontaktformular gibt es nicht. Personenbezogene Daten, vor allem Ihre <span class="nw">IP-Adresse</span>, fallen nur an, weil Ihr Browser Seiten, Schriften und zwei Programmbibliotheken von Servern lädt, und wenn Sie mir eine <span class="nw">E-Mail</span> schreiben.</p>
+    <p class="vorab">Diese Website setzt keine Cookies, speichert nichts in Ihrem Browser und verwendet keine Analyse- oder Trackingdienste. Ein Kontaktformular gibt es nicht. Personenbezogene Daten, vor allem Ihre <span class="nw">IP-Adresse</span>, fallen nur an, wenn Ihr Browser die Seiten mit Schrift, Kartendaten und Programmen vom Server des Hosters lädt und wenn Sie mir eine <span class="nw">E-Mail</span> schreiben.</p>
 
     <section aria-labelledby="d-verantwortlich">
       <h2 id="d-verantwortlich">Verantwortlich</h2>
@@ -60,16 +59,16 @@ if (/^https?:$/.test(location.protocol)) {
     <section aria-labelledby="d-hosting">
       <h2 id="d-hosting">Hosting und Server-Logfiles</h2>
       <div class="prosa">
-        <p>Diese Fassung der Website ist eine Testseite. Sie liegt auf claude.ai, einem Dienst von Anthropic; was Anthropic dabei verarbeitet, regelt die Datenschutzerklärung von Anthropic. Zum Start zieht die Website auf eine eigene Adresse um, der Hoster wird dann an dieser Stelle genannt.</p>
-        <p>Ruft Ihr Browser eine Seite ab, übermittelt er dem Server des Hosters technisch notwendige Angaben: Ihre <span class="nw">IP-Adresse</span>, Datum und Uhrzeit, die aufgerufene Adresse, gegebenenfalls die Seite, von der Sie kommen, sowie Browser und Betriebssystem. Der Hoster kann diese Angaben in Protokolldateien (Server-Logfiles) speichern, um die Website auszuliefern und vor Missbrauch zu schützen. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f&nbsp;<abbr>DSGVO</abbr>; mein berechtigtes Interesse ist, die Website sicher und zuverlässig bereitzustellen.</p>
+        <p>Diese Fassung der Website ist eine Testseite. Sie liegt auf claude.ai, einem Dienst von Anthropic. Was Anthropic dabei verarbeitet, regelt die Datenschutzerklärung von Anthropic. Zum Start zieht die Website auf eine eigene Adresse um, der Hoster wird dann an dieser Stelle genannt.</p>
+        <p>Ruft Ihr Browser eine Seite ab, übermittelt er dem Server des Hosters technisch notwendige Angaben: Ihre <span class="nw">IP-Adresse</span>, Datum und Uhrzeit, die aufgerufene Adresse, gegebenenfalls die Seite, von der Sie kommen, sowie Browser und Betriebssystem. Der Hoster kann diese Angaben in Protokolldateien (Server-Logfiles) speichern, um die Website auszuliefern und vor Missbrauch zu schützen. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f&nbsp;<abbr>DSGVO</abbr>. Mein berechtigtes Interesse ist, die Website sicher und zuverlässig bereitzustellen.</p>
       </div>
     </section>
 
     <section aria-labelledby="d-email">
       <h2 id="d-email"><span class="nw">E-Mail</span></h2>
       <div class="prosa">
-        <p>Wenn Sie mir eine <span class="nw">E-Mail</span> schreiben, verarbeite ich Ihre Adresse, Ihren Namen, soweit Sie ihn angeben, und den Inhalt Ihrer Nachricht, um Ihnen zu antworten. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b&nbsp;<abbr>DSGVO</abbr>, wenn es um eine Lesung oder eine andere Vereinbarung geht, sonst Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f&nbsp;<abbr>DSGVO</abbr>; mein berechtigtes Interesse ist, Ihre Anfrage zu beantworten.</p>
-        <p>Mein Postfach liegt bei Google (Gmail); Ihre Nachricht wird also auch dort gespeichert. Ich bewahre <span class="nw">E-Mails</span> nur so lange auf, wie es für Ihre Anfrage und mögliche Rückfragen nötig ist oder gesetzliche Aufbewahrungs&shy;fristen es verlangen.</p>
+        <p>Wenn Sie mir eine <span class="nw">E-Mail</span> schreiben, verarbeite ich Ihre Adresse, Ihren Namen, soweit Sie ihn angeben, und den Inhalt Ihrer Nachricht, um Ihnen zu antworten. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b&nbsp;<abbr>DSGVO</abbr>, wenn es um eine Lesung oder eine andere Vereinbarung geht, sonst Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f&nbsp;<abbr>DSGVO</abbr>. Mein berechtigtes Interesse ist, Ihre Anfrage zu beantworten.</p>
+        <p>Mein Postfach liegt bei Google (Gmail), Ihre Nachricht wird also auch dort gespeichert. Ich bewahre <span class="nw">E-Mails</span> nur so lange auf, wie es für Ihre Anfrage und mögliche Rückfragen nötig ist oder gesetzliche Aufbewahrungs&shy;fristen es verlangen.</p>
       </div>
     </section>
 
@@ -105,7 +104,6 @@ if (/^https?:$/.test(location.protocol)) {
   <div class="satzspalte">
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html" aria-current="page">Datenschutz</a></p>
-    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
   </div>
 </footer>
 

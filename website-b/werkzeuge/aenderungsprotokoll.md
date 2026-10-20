@@ -70,3 +70,33 @@ Abweichungen von `docs/gestaltung-website-b.md`, je mit Grund (Abschnitt 1 der R
 16. **Datenschutz: die Rechte mit dem Einzug der Absätze** (5, 12). Ohne Strich davor (A: Halbgeviertstrich in Grau), 1 em eingezogen, 0,25 z zwischen den Einträgen und vor und nach der Liste. „(Art. 15 DSGVO)“ steht in Tinte (A: grau).
 17. **Datenschutz: der Vorspann bleibt wie in A** (13). „… weil Ihr Browser Seiten, Schriften und zwei Programmbibliotheken von Servern lädt …“ stimmt auch für B, alles kommt jetzt vom Server des Hosters. Vorschlag für Dominik im Bericht.
 18. **Impressum und Datenschutz: Entwurfsvermerk und „Stand“ im Grad klein, in Tinte** (13, 10). Der Schlusssatz des Impressums und „Stand: Oktober 2026“ stehen 2 z unter dem letzten Abschnitt. Im Fuß trägt der Verweis auf die eigene Seite `aria-current="page"`, sichtbar bleibt er ein Verweis.
+
+## 20. Oktober 2026, Korrektur nach den Prüfungen „KI-Merkmale“ und „Form und Funktion“
+
+Grundlage: `scratchpad/kb-kritik-ki/` und `scratchpad/kb-kritik-form/`. Die Begründung für alles, was KI-typisch bleibt, steht in `docs/website-b-begruendung.md`. Hier die Abweichungen von den Regeln.
+
+1. **Kein Kopf der Tafel** (12.6). Den Namen des Orts trägt die Karte, halbfett, wenn er gewählt ist. Zeit, Land und Tätigkeit stehen in der Legende unter dem Rahmen („Taiwan, 2018–2022, Lektor und freier Autor.“). Auf *Satoshi* und *Ursprung* gibt es keine Legende. Auf Reisen und Länder schreibt der Kern den Namen des gezeigten oder gewählten Lands auf die Karte.
+2. **Keine Chronik** (14). Die Startseite zeigt in Ruhe den ganzen Weg, Berlin halbfett. Früher und später gehen die Stationen durch, je mit Flug. Die Website hat damit keine selbsttätige Bewegung mehr. Version A behält die Chronik.
+3. **Ring ohne Gradzahlen, kein Maßstab** (12.5). Nur die Seite Länder beschriftet im Überblick den Äquator. Die Schrift „Baskervville Ziffern“ und `werkzeuge/kartenziffern.py` entfallen.
+4. **Zeichenerklärung nur auf der Karte Wohnorte** (12.5), denn nur dort gibt es zwei Zeichen. „● Schauplatz“ und „Schraffur bereist“ entfallen.
+5. **Kurzvita ohne Bedienwörter** (12.3). Sie ist reiner Text. Die Startseite hat im ersten Bildschirm 8 Unterstreichungen (vorher 12).
+6. **Szenen als Auswahlliste** (12.11, 9). Der Ort steht ohne Strich, die ganze Zeile wählt die Szene, der gewählte Ort steht halbfett. Die Jahreszahl steht hinter dem Ort („London, 2007.“) statt als hängende Zahl oder eigene Zeile.
+7. **Szenentexte aus dem Exposé** (16). Die Texte waren Claudes Zusammenfassungen (Herkunftsabgleich 0 bis 32 Prozent). Sie sind jetzt aus Sätzen des Exposés vom August 2026 gebaut und stehen in `daten/stationen.js` (`SZENEN`) und in `satoshi.html`. Bariloche und Penang haben Inhalt. Zur Freigabe durch Dominik.
+8. **Tafel auf Tablet und Telefon nicht haftend** (14). Sie steht über Szenen oder Bänden. Ein Ort rückt sie ins Bild. Am Desktop haftet sie weiter.
+9. **Ursprung: alle Orte immer sichtbar** (12.11). Beim Lesen wird nur der Ort des Bands halbfett. Flüsse aus Natural Earth auf der Blauplatte (`daten/fluesse.js`, gebaut mit `werkzeuge/fluesse.py`). Neue eigene Datei in `daten/`.
+10. **Weg mit Abstechern** (12.5). Ein längerer Aufenthalt ist ein Abstecher vom Wohnort davor, hin und zurück, gestrichelt. Kapstadt, Sansibar und Buenos Aires stehen als längere Aufenthalte auf der Karte Wohnorte. Passen nicht alle Orte auf eine Halbkugel, lässt der Überblick den äußersten weg (Buenos Aires).
+11. **Orte, deren Zeichen fast aufeinander liegen, teilen sich eine Beschriftung** („Potsdam, Berlin“). Die Lagen der Ortsnamen halten 7 px Abstand zum eigenen Zeichen, damit „rechts oben“ wirklich zuerst drankommt.
+12. **Startseite gespiegelt** (6). Am Desktop steht die Kartentafel am Außensteg links, die Satzspalte am Bund rechts, wie die linke Seite eines aufgeschlagenen Atlas (`.bogen.verso`). Die Silhouette unterscheidet sich damit von Version A.
+13. **Inhaltsverzeichnis mit Beisätzen statt „Wort. Satz.“** (12.4, 16). Erzählungen und *Untertext* fehlen dort wie in der Navigation, solange es keine Texte gibt. Kein „(AT)“, keine Normseiten.
+14. **Navigation und Kartenwahl aufrecht** (8). Kursiv nur im Lauftext.
+15. **Satoshi als Doppelseite** (13). Neben Klappentext, Aufbau und „Warum dieser Roman“ stehen im Tafelfeld Eckdaten, Kapiteltage und Figuren. „Vergleichstitel“ ist keine Überschrift mehr, Dominiks Satz steht in den Eckdaten. Der Absatz „spekulative Chronik“ aus A steht wieder im Aufbau. Kapiteltage als Register in drei Spalten mit Versalziffern fester Breite. „Die Tage, mit denen die Kapitel geschnitten sind:“ entfällt.
+16. **Vita ohne Stationenliste** (13). Die Liste wiederholte Dominiks Text. Das Foto steht am Desktop neben dem Text auf der Höhe des Titels, auf dem Telefon zwischen Titel und Text.
+17. **Bibliothek ohne Zeitband** (12.9, Frage 21.4). Vorspann in der dritten Person mit der Quelle Goodreads. Rückenschrift in einer Größe (10 px, 500), liegende Bücher ohne den Strich „mehr als einmal gelesen“. Zeile unter dem Brett höchstens eine Zeile (Telefon zwei). Leseliste in zwei Listen nebeneinander.
+18. **Werktitel deutscher Originale und deutsche Namensformen** (Frage 21.10, Rang 46). In `seite.js` (`ORIGINAL`, `NAMEN_DE`). Verlag, Seiten und Laufrichtung des Rückens bleiben die der gelesenen Ausgabe. Die Daten selbst bleiben Kopien aus A.
+19. **Kolophon nur im Impressum** (12.13), berichtigt, ohne den Minuten- und Sekundenstrich.
+20. **Datenschutz** ohne „Kurz gesagt:“ und ohne Semikolons, der Hinweis auf claude.ai bleibt für die Testphase.
+21. **Kern auf „druck“ beschränkt**. Die Zeichnung von A ist entfernt, der Radius wird nie negativ, Gewässernamen prüfen in 1,5-px-Schritten mit 2 px Rand.
+22. **`werkzeuge/artefakt.py`** entfernt beim Bau alle Kommentare aus HTML, CSS und den eigenen Skripten und bricht ab, wenn `daten/` nicht mehr zu `website/daten/` passt (`--abgleichen` kopiert). `daten/buecher.js` ist abgeglichen (*Don Quijote*).
+23. **Bibliothek, Tastatur**: Geht der Fokus vom Rücken des Manuskripts in den Verweis seiner Buchzeile, bleibt die Zeile stehen.
+24. **Länderregister**: Die Namen sind Verweise mit der Rolle eines Knopfs, damit lange Namen umbrechen. USA in Kapitälchen.
+25. **Gemeinsame Klassen statt Farbe in Seitenstilen**: `.haftleiste`, das Aussehen des Regals, `address`, `hr` stehen jetzt in `stil.css`.

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Satoshi – Dominik Jäkel</title>
-<meta name="description" content="Satoshi ist der Debütroman von Dominik Jäkel. Er erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen.">
+<meta name="description" content="Im ersten Roman von Dominik Jäkel bauen drei Menschen, die einander nicht vertrauen können, Geld, das ohne Vertrauen funktioniert.">
 <script>
 document.documentElement.classList.add('js');
 if (/^https?:$/.test(location.protocol)) {
@@ -15,43 +15,35 @@ if (/^https?:$/.test(location.protocol)) {
 </script>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Satoshi. Oben das Blatt: Titel, Anfang und Szenen in der Satzspalte, daneben die Tafel (höchstens 30 rem), die während der
-   Szenen haftet. Darunter das Buch in der Satzspalte, die Eckdaten neben dem Klappentext. Nur Anordnung, alles Sichtbare kommt
-   aus stil.css. Ausnahme: Grund und Linie der haftenden Tafel auf Tablet und Telefon,
-   aus Tokens, bis es dafür eine gemeinsame Klasse in stil.css gibt (wie beim Standortregister der Bibliothek). */
+/* Satoshi. Oben das Blatt: Titel, Anfang und Szenen in der Satzspalte, daneben die Tafel (höchstens 30 rem), die am Desktop
+   während der Szenen haftet. Darunter das Buch als Doppelseite: links Klappentext, Aufbau und die Frage hinter dem Roman,
+   rechts daneben Eckdaten, Kapiteltage und Figuren. Auf Tablet hochkant und Telefon steht die Tafel über den Szenen und haftet nicht.
+   Nur Anordnung. */
 .szenen { margin-top: calc(var(--z) * 1.5); }
-.szenen > li + li.neues-jahr, .kapiteltage > li + li.neues-jahr { margin-top: calc(var(--z) * .75); }
 .weitere { margin-top: calc(var(--z) * .75); }
-
-.buch > * + * { margin-top: calc(var(--z) * 2); }
-.kapiteltage { margin-top: calc(var(--z) * .5); }
-.kapiteltage > li { display: grid; grid-template-columns: 7em minmax(0, 1fr); }
-.kapiteltage .jahr { grid-column: 1 / -1; }
+.blatt > .tafelplatz { margin-top: calc(var(--z) * 1.5); }
+.tafelplatz .kartentafel { max-width: 30rem; }
+.buch { margin-top: calc(var(--z) * 3); row-gap: calc(var(--z) * 2); }
 .figuren dd + dt { margin-top: calc(var(--z) * .75); }
+.randspalte { max-width: 30rem; }
 
-/* Desktop: die Tafel neben Titel und Szenen, haftend; die Eckdaten neben dem Klappentext */
 @media (min-width: 75rem) {
   .blatt > .titelei { grid-row: 1; }
-  .blatt > .tafelplatz { grid-row: 1 / 3; }
-  .blatt > .szenenteil { grid-row: 2; padding-bottom: calc(var(--z) * 3); }
-  /* Die Tafel haftet bis 3 z vor dem Ende des Blatts; den Auslauf unter den Szenen setzt das Skript, damit auch die letzte
-     Szene die Leselinie erreicht, solange die Tafel noch ganz zu sehen ist */
-  .blatt > .tafelplatz { padding-bottom: calc(var(--z) * 3); }
-  .tafelplatz .kartentafel { position: sticky; top: calc(var(--z) * 2); max-width: 30rem; }
-  .buch > .klappentext, .buch > .eckdaten { grid-row: 1; }
-  .buch > .eckdaten { margin-top: 0; max-width: 30rem; }
+  .blatt > .tafelplatz { grid-row: 1 / 3; margin-top: 0; padding-bottom: calc(var(--z) * 3); }
+  .blatt > .szenenteil { grid-row: 2; }
+  .tafelplatz .kartentafel { position: sticky; top: calc(var(--z) * 2); }
+  .buch > .klappentext { grid-row: 1; } .buch > .eckdaten { grid-row: 1; }
+  .buch > .aufbau { grid-row: 2; } .buch > .tage-teil { grid-row: 2; padding-top: calc(var(--z) * 1.5); }
+  .buch > .warum { grid-row: 3; } .buch > .figuren-teil { grid-row: 3; }
 }
-/* Tablet und Telefon: die Tafel steht über den Szenen und haftet, bis die Liste zu Ende ist */
-@media (max-width: 74.99rem) {
-  .blatt { display: block; padding: 0 var(--rand) calc(var(--z) * 3); }
-  /* Haftet die Tafel, schließt eine Linie sie nach unten ab (die Klasse setzt das Skript) */
-  .blatt > .tafelplatz { position: sticky; top: 0; z-index: 2; max-width: none; margin-top: calc(var(--z) * .5); padding-block: calc(var(--z) * .5);
-    background: var(--papier); border-bottom: 1px solid var(--papier); }
-  .blatt > .tafelplatz.haftet { border-bottom-color: var(--tinte); }
-  .tafelplatz .kartentafel { width: min(100%, 50svh); }
-  .szenenteil .wort { scroll-margin-top: calc(var(--tafel-h, 0px) + var(--z)); }
+/* Tablet quer: zwei Spalten, die Tafel haftet rechts neben dem Text */
+@media (min-width: 60rem) and (max-width: 74.99rem) {
+  .blatt { grid-template-columns: var(--rand) minmax(0, 1fr) var(--G) minmax(0, 24rem) var(--rand); }
+  .blatt > .titelei { grid-column: 2; grid-row: 1; }
+  .blatt > .szenenteil { grid-column: 2; grid-row: 2; }
+  .blatt > .tafelplatz { grid-column: 4; grid-row: 1 / 3; margin-top: 0; padding-bottom: calc(var(--z) * 3); }
+  .tafelplatz .kartentafel { position: sticky; top: calc(var(--z) * 2); }
 }
-html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { position: static; }
 </style>
 </head>
 <body>
@@ -61,10 +53,10 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
   <a class="name" href="index.html">Dominik Jäkel</a>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html" aria-current="page"><i>Satoshi</i></a></li>
-      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="satoshi.html" aria-current="page">Satoshi</a></li>
+      <li><a href="ursprung.html">Ursprung</a></li>
       <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -88,19 +80,19 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
     </div>
 
     <div class="satzspalte szenenteil">
-      <ol class="chronologie szenen">
-        <li><span class="jahr">2001</span> <button type="button" class="wort" data-szene="0">Buenos Aires</button>. Dezember 2001. Die siebzehnjährige Lana erlebt, wie die Ersparnisse ihrer Familie per Dekret verschwinden.</li>
-        <li class="neues-jahr"><span class="jahr">2007</span> <button type="button" class="wort" data-szene="1">London</button>. Lana macht ein Praktikum bei Lehman Brothers und erkennt in den Bilanzen Muster, die sie beunruhigen und an Buenos Aires erinnern.</li>
-        <li><span class="jahr unsichtbar">2007</span> <button type="button" class="wort" data-szene="2">Black Rock Desert</button>, Nevada. Burning Man. In den Nächten des Festivals lösen Lana, Arthur und Samuel ein Problem, an dem Mathematiker seit Jahrzehnten scheitern, und schließen einen Pakt.</li>
-        <li><span class="jahr unsichtbar">2007</span> <button type="button" class="wort" data-szene="3">London</button>. September 2007. Ein Bankrun vor einer Filiale von Northern Rock.</li>
-        <li><span class="jahr unsichtbar">2007</span> <button type="button" class="wort" data-szene="4">Kobe</button>. In Japan bekommt der Pakt seinen Namen: Satoshi Nakamoto.</li>
-        <li class="neues-jahr"><span class="jahr">2008</span> <button type="button" class="wort" data-szene="5">New York</button>. Samuel ist <abbr>CTO</abbr> eines Quant-Fonds an der Wall Street, als die anderen ihn nach Berlin holen.</li>
-        <li><span class="jahr unsichtbar">2008</span> <button type="button" class="wort" data-szene="6">Berlin</button>. Eine Kreuzberger Fabriketage. Hier entsteht das erste digitale Geld, das niemandem gehört.</li>
-        <li class="neues-jahr"><span class="jahr">2009</span> <button type="button" class="wort" data-szene="7">Buenos Aires</button>. 3.&nbsp;Januar 2009. Ein Internetcafé mit wackeligem Strom, zwischen zwei Stromausfällen der erste Block.</li>
-        <li class="neues-jahr"><span class="jahr">2010</span> <button type="button" class="wort" data-szene="8">Bariloche</button>. Patagonien, 2010.</li>
-        <li class="neues-jahr"><span class="jahr">2013</span> <button type="button" class="wort" data-szene="9">Penang</button>. Der Epilog, 2013.</li>
+      <ol class="wahl szenen liste" aria-label="Szenen">
+        <li><button type="button" data-szene="0">Buenos Aires</button>, 2001. Die siebzehnjährige Lana erlebt, wie die Ersparnisse ihrer Familie per Dekret verschwinden.</li>
+        <li><button type="button" data-szene="1">London</button>, 2007. In den Bilanzen, die Lana als Praktikantin bei Lehman Brothers durchrechnet, erkennt sie das Muster von Buenos Aires wieder.</li>
+        <li><button type="button" data-szene="2">Black Rock Desert</button>, 2007. Auf dem Burning-Man-Festival begegnet Lana Arthur und Samuel. In den Nächten des Festivals lösen die drei ein Problem, an dem Mathematiker seit Jahrzehnten verzweifeln, und schließen einen Pakt.</li>
+        <li><button type="button" data-szene="3">London</button>, 2007. Im September stolpert Lana in einen Bankrun vor einer Northern-Rock-Filiale.</li>
+        <li><button type="button" data-szene="4">Kobe</button>, 2007. Lana folgt Arthur nach Japan, wo der Pakt sein Pseudonym bekommt: Satoshi Nakamoto.</li>
+        <li><button type="button" data-szene="5">New York</button>, 2008. Lana und Arthur überreden Samuel, aus seinem Leben als <abbr>CTO</abbr> eines Wall-Street-Fonds auszusteigen.</li>
+        <li><button type="button" data-szene="6">Berlin</button>, 2008. In einer Kreuzberger Fabriketage bauen die drei das erste digitale Geld, das niemandem gehört.</li>
+        <li><button type="button" data-szene="7">Buenos Aires</button>, 2009. Am 3.&nbsp;Januar startet in einem Internetcafé mit wackeligem Strom das Bitcoin-Netzwerk.</li>
+        <li><button type="button" data-szene="8">Bariloche</button>, 2010. Die Behörden finden Satoshis Spur. Sie führt nach Patagonien.</li>
+        <li><button type="button" data-szene="9">Penang</button>, 2013. Jahre später liest Lana von einem mysteriösen Whitepaper.</li>
       </ol>
-      <p class="weitere">Weitere Schauplätze: <button type="button" class="wort" data-weiter="Temple City">Temple City</button> im San Gabriel Valley und die <button type="button" class="wort" data-weiter="Anden an der Grenze zu Chile">Anden</button> an der Grenze zu Chile.</p>
+      <p class="weitere wahl">Weitere Schauplätze: <button type="button" data-weiter="Temple City">Temple City</button> im San Gabriel Valley und die <button type="button" data-weiter="Anden an der Grenze zu Chile">Anden</button> an der Grenze zu Chile.</p>
     </div>
   </section>
 
@@ -116,31 +108,45 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
       </div>
     </section>
 
-    <section class="tafelfeld eckdaten" aria-labelledby="eckdaten">
+    <section class="tafelfeld randspalte eckdaten" aria-labelledby="eckdaten">
       <h2 id="eckdaten">Eckdaten</h2>
       <div class="liste">
         <p>Debütroman. Personal erzählt, aus der Sicht Lanas und kontrapunktisch aus der Samuels. Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.</p>
-        <p>Das Manuskript liegt vollständig vor. Gerade entsteht die Endfassung.</p>
+        <p>Gerade entsteht die Endfassung.</p>
+        <p>In der Stofftradition von Benjamin Quaderers <i>Für immer die Alpen</i>&nbsp;– für Leserinnen und Leser von Hernan Diaz’ <i>Treue</i> und Raphaela Edelbauers <i>Die Inkommensurablen</i>.</p>
       </div>
     </section>
 
-    <section class="satzspalte" aria-labelledby="aufbau">
+    <section class="satzspalte aufbau" aria-labelledby="aufbau">
       <h2 id="aufbau">Aufbau</h2>
       <div class="prosa">
         <p>Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten Bitcoin-Block signiert.</p>
-        <p>Die Tage, mit denen die Kapitel geschnitten sind:</p>
+        <p><i>Satoshi</i> ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand&nbsp;– Satoshi Nakamotos Mails, Forenbeiträgen, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin&nbsp;– und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.</p>
       </div>
-      <ol class="chronologie kapiteltage">
-        <li><span class="jahr">2007</span> <span>14.&nbsp;September</span> <span>Bankrun auf Northern Rock</span></li>
-        <li class="neues-jahr"><span class="jahr">2008</span> <span>15.&nbsp;September</span> <span>Lehman Brothers meldet Insolvenz an</span></li>
-        <li><span class="jahr unsichtbar">2008</span> <span>31.&nbsp;Oktober</span> <span>Das Whitepaper erscheint, neun Seiten</span></li>
-        <li class="neues-jahr"><span class="jahr">2009</span> <span>3.&nbsp;Januar</span> <span>Der erste Block</span></li>
-        <li class="neues-jahr"><span class="jahr">2010</span> <span>15.&nbsp;August</span> <span>Ein Fehler im Code erzeugt Milliarden Bitcoins aus dem Nichts</span></li>
-        <li><span class="jahr unsichtbar">2010</span> <span>Dezember</span> <span>Die Banken sperren WikiLeaks die Konten</span></li>
+    </section>
+
+    <section class="tafelfeld randspalte tage-teil" aria-label="Die Tage, mit denen die Kapitel geschnitten sind">
+      <ol class="tage">
+        <li><span class="jahr">2007</span><span class="tag">14.&nbsp;September</span><span class="ereignis">Bankrun auf Northern Rock</span></li>
+        <li><span class="jahr">2008</span><span class="tag">15.&nbsp;September</span><span class="ereignis">Lehman Brothers meldet Insolvenz an</span></li>
+        <li><span class="jahr unsichtbar">2008</span><span class="tag">31.&nbsp;Oktober</span><span class="ereignis">Das Whitepaper erscheint, neun Seiten</span></li>
+        <li><span class="jahr">2009</span><span class="tag">3.&nbsp;Januar</span><span class="ereignis">Der erste Block</span></li>
+        <li><span class="jahr">2010</span><span class="tag">15.&nbsp;August</span><span class="ereignis">Ein Fehler im Code erzeugt Milliarden Bitcoins aus dem Nichts</span></li>
+        <li><span class="jahr unsichtbar">2010</span><span class="tag">Dezember</span><span class="ereignis">Die Banken sperren WikiLeaks die Konten</span></li>
       </ol>
     </section>
 
-    <section class="satzspalte" aria-labelledby="figuren">
+    <section class="satzspalte warum" aria-labelledby="warum">
+      <h2 id="warum">Warum dieser Roman</h2>
+      <div class="prosa">
+        <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die 2020er Jahre sind das Jahrzehnt, in dem der Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
+        <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine umfangreiche Stabilitäts&shy;kultur, jedoch nur in seltensten Fällen lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
+        <p><i>Satoshi</i> ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat&nbsp;– die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.</p>
+        <p>Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
+      </div>
+    </section>
+
+    <section class="tafelfeld randspalte figuren-teil" aria-labelledby="figuren">
       <h2 id="figuren">Die Figuren</h2>
       <dl class="figuren">
         <dt><b>Satoshi Nakamoto</b>, das Pseudonym</dt>
@@ -153,21 +159,6 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
         <dd>Samuel ist der Realist des Trios&nbsp;– Sohn eines Ex-Army-Offiziers und einer deutschen Mutter, großgezogen in einer Familie, in der man Pflichten erfüllt, statt über sie zu sprechen.</dd>
       </dl>
     </section>
-
-    <section class="satzspalte" aria-labelledby="warum">
-      <h2 id="warum">Warum dieser Roman</h2>
-      <div class="prosa">
-        <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die 2020er Jahre sind das Jahrzehnt, in dem der Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
-        <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine umfangreiche Stabilitäts&shy;kultur, jedoch nur in seltensten Fällen lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
-        <p><i>Satoshi</i> ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat&nbsp;– die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.</p>
-        <p>Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
-      </div>
-    </section>
-
-    <section class="satzspalte" aria-labelledby="vergleichstitel">
-      <h2 id="vergleichstitel">Vergleichstitel</h2>
-      <p>In der Stofftradition von Benjamin Quaderers <i>Für immer die Alpen</i>&nbsp;– für Leserinnen und Leser von Hernan Diaz’ <i>Treue</i> und Raphaela Edelbauers <i>Die Inkommensurablen</i>.</p>
-    </section>
   </div>
 </main>
 
@@ -175,7 +166,6 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
   <div class="satzspalte">
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
   </div>
 </footer>
 
@@ -198,28 +188,30 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
   var SAT = I.satoshi || {};
   var ORTE = (SAT.orte || []).filter(function (o) { return o && o.lat != null && o.lon != null; });
   var ortVon = function (name) { return ORTE.find(function (o) { return o.name === name; }); };
-  // Die Szenen der Reihe nach, wie die Karte Satoshi in seite.js sie führt; Orte kommen mehrfach vor (London, Buenos Aires)
-  var SZ = (SAT.szenen || []).map(function (s) { return Object.assign({}, ortVon(s.ort) || {}, { jahr: s.jahr, text: s.text }); })
-    .filter(function (s) { return s.lat != null; });
+  var SZ = F.szenen();
   var SCHAUPLAETZE = [];
   SZ.forEach(function (s) { if (!SCHAUPLAETZE.some(function (o) { return o.name === s.name; })) SCHAUPLAETZE.push({ name: s.name, kurz: s.kurz, lat: s.lat, lon: s.lon }); });
 
-  var blatt = $('.blatt'), platz = $('.tafelplatz'), fig = $('#karte');
+  var blatt = $('.blatt'), fig = $('#karte');
   var LI = $$('.szenen > li');
   var woerter = $$('[data-szene]'), weitere = $$('[data-weiter]');
 
   var t = SZ.length ? F.kartentafel(fig, { karten: ['satoshi'], legende: false }) : null;
-  // Ohne Karte tun die Wörter nichts: dann stehen sie als Text da
+  // Ohne Karte tun die Orte nichts: dann stehen sie als Text da
   if (!t) {
     woerter.concat(weitere).forEach(function (b) { b.replaceWith(document.createTextNode(b.textContent)); });
+    $$('.wahl.szenen, .weitere').forEach(function (el) { el.classList.remove('wahl'); });
     return;
   }
-  var g = t.kern, kopf = $('.tafelkopf', fig);
+  var g = t.kern, rahmen = $('.rahmen', fig);
+  // Ab 60 rem haftet die Tafel neben dem Text (Tablet quer und Desktop)
+  var haftet = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 60rem)').matches); };
+  F.gleichBreit(woerter.concat(weitere));
   // Zoom wie die Karte Satoshi in seite.js: Europa näher
   var zoomFuer = function (s) { return s.lat > 35 && s.lon > -12 && s.lon < 32 ? 3.6 : 2.5; };
-  var jetzt = -1, extra = null, gewaehltUm = -1e9, uhr = 0;
+  var jetzt = 0, extra = null, gewaehltUm = -1e9, uhr = 0;
 
-  // Der Ort, an dem die Karte steht, verliert seinen Strich
+  // Der Ort, an dem die Karte steht, steht halbfett
   function markieren() {
     woerter.forEach(function (w) {
       var an = !extra && +w.dataset.szene === jetzt;
@@ -235,81 +227,66 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
   function orte(dazu) {
     g.ebene({ orte: dazu ? SCHAUPLAETZE.concat([dazu]) : SCHAUPLAETZE, laender: false, grenzen: true, blick: { mitte: [0, 0], k: 1 } }, { behalten: true });
   }
-  /* Eine Szene: Kopf der Tafel, Flug an ihren Ort, der Weg wächst oder schrumpft bis zu ihr.
-     wie.eigen: selbst gewählt (die Tafel sagt es an); wie.sprung: ohne Flug (beim Laden mitten in den Szenen) */
+  // Auf Tablet hochkant und Telefon haftet die Tafel nicht; ein Ort rückt sie ins Bild (ohne Glätten)
+  function insBild() {
+    if (haftet()) return;
+    var r = rahmen.getBoundingClientRect(), H = window.innerHeight;
+    if (r.top >= 0 && r.bottom <= H) return;
+    window.scrollBy(0, r.top - Math.max(8, (H - r.height) / 2));
+  }
+  /* Eine Szene: Flug an ihren Ort, der Weg wächst oder schrumpft bis zu ihr. wie.sprung: ohne Flug */
   function zeigen(i, wie) {
     wie = wie || {};
     i = Math.max(0, Math.min(SZ.length - 1, i));
     var war = extra;
-    if (i === jetzt && !war && !wie.eigen) return;
-    kopf.setAttribute('aria-live', wie.eigen ? 'polite' : 'off');
-    if (war) { extra = null; orte(null); g.routeZeigen(SZ); }
+    if (i === jetzt && !war && !wie.erzwingen) return;
+    if (war) { extra = null; orte(null); }
     jetzt = i;
-    var s = SZ[i];
-    if (wie.sprung) { t.schritt(i, { fliegen: false }); g.chronikSchritt(SZ, i, { zoom: zoomFuer(s), dauer: 1 }); }
-    else { t.schritt(i); g.chronikSchritt(SZ, i, { zoom: zoomFuer(s) }); }
+    g.chronikSchritt(SZ, i, { zoom: zoomFuer(SZ[i]), dauer: wie.sprung ? 1 : undefined });
     markieren();
   }
   // Ein Schauplatz ohne Szene (Temple City, die Anden): erscheint auf der Karte, solange er gewählt ist, mit dem ganzen Weg
   function weiterZeigen(name) {
     var o = ortVon(name);
     if (!o) return;
-    kopf.setAttribute('aria-live', 'polite');
     extra = { name: o.name, kurz: o.kurz, lat: o.lat, lon: o.lon };
     orte(extra);
     g.routeZeigen(SZ);
     g.ortAnfliegen(extra, o.kurz ? 6 : 3.5);
-    kopf.innerHTML = '<p class="tafelkopf-ort">' + F.zeichen('punkt') + F.esc(o.kurz || o.name) + '</p>' + (o.notiz ? '<p class="tafelkopf-angabe">' + F.esc(o.notiz) + '</p>' : '');
     markieren();
   }
 
+  // Ein Klick auf den Ort oder irgendwo in die Szene wählt sie
   document.addEventListener('click', function (e) {
-    var b = e.target.closest('button[data-szene], button[data-weiter]');
-    if (!b) return;
+    var b = e.target.closest('button[data-weiter]');
+    var li = e.target.closest('.szenen > li');
+    if (!b && !li) return;
+    if (li && !e.target.closest('button') && window.getSelection && String(window.getSelection())) return;
     gewaehltUm = performance.now();
     clearTimeout(uhr);
-    if (b.dataset.szene != null) zeigen(+b.dataset.szene, { eigen: true });
-    else weiterZeigen(b.dataset.weiter);
+    if (b) weiterZeigen(b.dataset.weiter);
+    else zeigen(LI.indexOf(li), { erzwingen: true });
+    insBild();
   });
 
-  // Beim Lesen: die Szene, die zuletzt die Leselinie erreicht hat, führt die Karte. Desktop bei 45 Prozent der Fensterhöhe,
-  // sonst ein knappes Drittel des Leseraums unter der haftenden Tafel. Eine eigene Wahl bleibt, bis man weiterliest
+  // Beim Laden: die erste Szene, der Weg bis zu ihr
+  g.chronikSchritt(SZ, 0, { zoom: zoomFuer(SZ[0]), dauer: 1 });
+  markieren();
+
+  /* Wo die Tafel haftet, führt beim Lesen die Szene, die zuletzt die Leselinie erreicht hat, die Karte. Die Linie beginnt am Anfang der
+     ersten Szene und wandert beim Scrollen doppelt so schnell hinab bis auf 45 Prozent der Fensterhöhe; so ist beim Laden immer
+     die erste Szene gezeigt, auch auf hohen Bildschirmen. Eine eigene Wahl bleibt, bis man weiterliest */
   var linie = function (H) {
-    if (F.desktop()) return H * .45;
-    var unten = Math.max(0, platz.getBoundingClientRect().bottom);
-    return unten + Math.max(0, H - unten) * .3;
+    var oben = LI.length ? LI[0].getBoundingClientRect().top + window.scrollY : 0;
+    return Math.min(H * .45, oben + window.scrollY + 1);
   };
   F.leselinie(LI, function (i, info) {
     clearTimeout(uhr);
-    if (performance.now() - gewaehltUm < 400) return;
+    if (!haftet() || performance.now() - gewaehltUm < 400) return;
     var ziel = Math.max(0, i);
     if (info.vorher === null) { zeigen(ziel, { sprung: true }); return; }
     uhr = setTimeout(function () { zeigen(ziel); }, 160);
   }, { bereich: blatt, linie: linie });
-
-  /* Desktop: unter den Szenen so viel Auslauf, dass die letzte die Leselinie erreicht, solange die Tafel noch ganz neben ihr
-     steht (in Vielfachen von 0,25 z, mindestens 3 z). Tablet und Telefon: wer mit der Tastatur durch die Szenen geht, landet
-     nicht unter der haftenden Tafel, und haftet sie, schließt eine Linie sie ab */
-  var teil = $('.szenenteil');
-  function masse() {
-    blatt.style.setProperty('--tafel-h', platz.offsetHeight + 'px');
-    teil.style.paddingBottom = '';
-    if (!F.desktop() || !LI.length) return;
-    var pad = parseFloat(getComputedStyle(teil).paddingBottom) || 0, viertel = pad / 12;
-    var oben = parseFloat(getComputedStyle(fig).top) || 0;
-    var ende = teil.getBoundingClientRect().bottom - pad, letzte = LI[LI.length - 1].getBoundingClientRect().top;
-    var noetig = oben + fig.offsetHeight + pad - innerHeight * .45 - (ende - letzte);
-    if (noetig > pad && viertel) teil.style.paddingBottom = Math.ceil(noetig / viertel) * viertel + 'px';
-  }
-  function haften() { var o = platz.getBoundingClientRect().top; platz.classList.toggle('haftet', !F.desktop() && o <= .5 && o > -.5 && window.scrollY > 0); }
-  var bild = 0;
-  window.addEventListener('scroll', function () { if (!bild) bild = requestAnimationFrame(function () { bild = 0; haften(); }); }, { passive: true });
-  var mUhr = 0;
-  var spaeter = function () { clearTimeout(mUhr); mUhr = setTimeout(function () { masse(); haften(); }, 60); };
-  window.addEventListener('resize', spaeter);
-  if ('ResizeObserver' in window) new ResizeObserver(spaeter).observe(fig);
-  F.schriften(2500).then(spaeter);
-  masse(); haften();
 })();
 </script>
 </body>

@@ -15,17 +15,14 @@ if (/^https?:$/.test(location.protocol)) {
 </script>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Länder (Abschnitt 12.11, 13): in der Satzspalte das Länderregister nach Kontinenten, im Tafelfeld die Kartentafel mit der
-   Schraffur der bereisten Länder. Am Desktop bleibt die Tafel neben dem Register stehen. */
+/* Länder: in der Satzspalte das Länderregister nach Kontinenten, im Tafelfeld die Kartentafel mit der Schraffur der bereisten
+   Länder. Am Desktop bleibt die Tafel neben dem Register stehen. Nur Anordnung. */
 .laender > .tafelfeld { margin-top: calc(var(--z) * 2); }
 @media (min-width: 75rem) {
   .laender > .satzspalte, .laender > .tafelfeld { grid-row: 1; margin-top: 0; }
   .laender > .tafelfeld { position: sticky; top: calc(var(--z) * 2); align-self: start; }
 }
-/* Die Länder im Fließsatz, durch Komma getrennt; halbfett ohne Sprung (die Sperrung gleicht die Mehrbreite aus) */
 .register-laender p { hyphens: manual; -webkit-hyphens: manual; }
-.register-laender [aria-pressed="true"] { letter-spacing: var(--ausgleich, 0); }
-.guide-verweis { grid-column: 1 / -1; }
 /* Eine Karte, keine Kartenwahl: der Zwickel oben links bleibt leer und rückt den Rahmen nicht von der Höhe des Titels */
 .laender .zw-ol { margin-bottom: 0; }
 </style>
@@ -37,10 +34,10 @@ if (/^https?:$/.test(location.protocol)) {
   <a class="name" href="index.html">Dominik Jäkel</a>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
-      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="satoshi.html">Satoshi</a></li>
+      <li><a href="ursprung.html">Ursprung</a></li>
       <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html" aria-current="page">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -59,7 +56,7 @@ if (/^https?:$/.test(location.protocol)) {
       <h2>Afrika</h2>
       <p class="wahl">Ägypten, Äthiopien, Benin, Ghana, Kap Verde, Kenia, Marokko, Südafrika, Tansania, Togo, Tunesien</p>
       <h2>Amerika</h2>
-      <p class="wahl">Argentinien, Kanada, Uruguay, USA</p>
+      <p class="wahl">Argentinien, Kanada, Uruguay, <abbr>USA</abbr></p>
     </div>
   </div>
 
@@ -76,7 +73,6 @@ if (/^https?:$/.test(location.protocol)) {
   <div class="satzspalte">
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
   </div>
 </footer>
 
@@ -96,103 +92,60 @@ if (/^https?:$/.test(location.protocol)) {
   const F = window.FSeite, I = window.INHALT || {};
   if (!F) return;
   const { $, $$, esc } = F;
-
-  // ---------- Namen: Landesteile und Gebiete eigens, sonst die deutschen Namen aus daten/laender-de.js ----------
-  const SONDER = Object.assign({ 'GB-ENG': 'England', 'GB-SCT': 'Schottland', 'GB-NIR': 'Nordirland', 'GB-WLS': 'Wales', 'PS-WB': 'Westjordanland', 'PS-GZ': 'Gazastreifen' }, I.sondernamen || {});
-  const DE = {};
-  Object.values((window.LAENDER_DE && window.LAENDER_DE.nach_id) || {}).forEach(e => { if (e[0] && !DE[e[0]]) DE[e[0]] = e[1]; });
-  const name = iso => SONDER[iso] || DE[iso] || iso;
+  const name = iso => F.landName(iso);
   // Ein fertiger Länderguide (daten/texte.js, art 'laenderguide'): der neueste je Land
   const GUIDES = {};
   F.texte.alle('laenderguide').forEach(t => { if (!GUIDES[t.land]) GUIDES[t.land] = t; });
 
-  // ---------- Register: je Kontinent die Länder als Auswahlliste im Fließsatz, aus den Daten ----------
+  /* Register: je Kontinent die Länder als Auswahlliste im Fließsatz, aus den Daten. Die Namen sind Verweise mit der Rolle
+     eines Knopfs, damit lange Namen („Vereinigte Arabische Emirate“) wie Text umbrechen */
   const register = $('#register');
   const KONTINENTE = I.kontinente || {};
   if (Object.keys(KONTINENTE).length) {
     register.innerHTML = Object.keys(KONTINENTE).map(k => {
       const laender = KONTINENTE[k].slice().sort((a, b) => name(a).localeCompare(name(b), 'de'));
-      return `<h2>${esc(k)}</h2><p class="wahl">${laender.map(iso => `<button type="button" data-land="${esc(iso)}" aria-pressed="false">${esc(name(iso))}</button>`).join(', ')}</p>`;
+      return `<h2>${esc(k)}</h2><p class="wahl">${laender.map(iso => `<a href="#karte" role="button" data-land="${esc(iso)}" aria-pressed="false">${F.versalien(esc(name(iso)))}</a>`).join(', ')}</p>`;
     }).join('');
   }
-  // Halbfett ohne Sprung: die Sperrung gleicht die Mehrbreite des halbfetten Namens aus, die Zeilen brechen nicht neu um
-  const mess = document.createElement('canvas').getContext('2d'), schrift = F.tokens().schrift;
-  const breite = (t, g) => { mess.font = `${g} 100px ${schrift}`; return mess.measureText(t).width; };
-  function gleichBreit() {
-    $$('[data-land]', register).forEach(b => {
-      const t = b.textContent, n = Array.from(t).length;
-      b.style.setProperty('--ausgleich', ((breite(t, 400) - breite(t, 600)) / n / 100).toFixed(4) + 'em');
-    });
-  }
+  const knoepfe = $$('[data-land]', register);
+  F.gleichBreit(knoepfe);
 
-  // ---------- Kartentafel: die Karte „Reisen“ mit der Schraffur ----------
+  // ---------- Kartentafel: die Karte „Reisen“ mit der Schraffur; im Ring nur der Äquator ----------
   const fig = $('#karte');
-  const tafel = F.kartentafel(fig, { karten: ['reisen'], start: 'reisen' });
+  const tafel = F.kartentafel(fig, { karten: ['reisen'], start: 'reisen', satz: false, ring: 'aequator' });
   let wahl = null;
-  function registerSetzen() {
-    $$('[data-land]', register).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.land === wahl)));
-  }
+  function registerSetzen() { knoepfe.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.land === wahl))); }
   // Der Verweis auf einen Länderguide steht in der Legende der Tafel seines Lands, mit seinem Titel
-  let guideEl = null;
   function guideSetzen() {
-    const legende = $('.tafellegende', fig), g = wahl && GUIDES[wahl];
-    if (!legende) return;
-    if (!g) { if (guideEl) { guideEl.remove(); guideEl = null; } return; }
-    if (!guideEl) { guideEl = document.createElement('p'); guideEl.className = 'guide-verweis'; legende.appendChild(guideEl); }
-    guideEl.innerHTML = `<a href="${esc(F.SEITEN.lesen + '#' + g.slug)}">${F.texte.satz(g.titel)}</a>`;
+    const satz = $('.legendensatz', fig), g = wahl && GUIDES[wahl];
+    if (satz) satz.innerHTML = g ? `<a href="${esc(F.SEITEN.lesen + '#' + g.slug)}">${F.texte.satz(g.titel)}</a>` : '';
   }
-  if (tafel) {
-    const g = tafel.kern, kopf = $('.tafelkopf', fig);
-    /* Der Kopf der Tafel nennt das gewählte Land oder das unter dem Zeiger. Ohne Wahl bleibt er leer: „Fünfundsechzig Länder und
-       Gebiete“ steht nur auf der Startseite (Abschnitt 16). Kleinstaaten ohne Fläche im groben Maßstab kennt die Tafel nicht als
-       Land; ihr Name kommt von hier. */
-    const UEBERBLICK = F.gross(F.zahlwort((I.bereist || []).length)) + ' Länder und Gebiete';
-    function kopfPruefen() {
-      if (!kopf || kopf.textContent.trim() !== UEBERBLICK) return;
-      kopf.innerHTML = wahl ? `<p class="tafelkopf-ort">${esc(name(wahl))}</p>` : '';
-      window.dispatchEvent(new Event('resize'));
-    }
-    if (kopf && 'MutationObserver' in window) new MutationObserver(kopfPruefen).observe(kopf, { childList: true, subtree: true, characterData: true });
-    kopfPruefen();
-
-    function waehlen(iso) {
-      wahl = iso || null;
-      registerSetzen();
-      guideSetzen();
-    }
-    // Die Tafel arbeitet in der Bubble-Phase; hier vorher (Capture), damit Kopf und Register denselben Stand haben
-    fig.addEventListener('click', e => {
-      if (e.target.closest('canvas')) {
-        const r = e.target.getBoundingClientRect(), land = g.landBei(e.clientX - r.left, e.clientY - r.top);
-        waehlen(land ? land.iso : null);
-      } else if (e.target.closest('[data-kontinent]')) waehlen(null);
-    }, true);
-    // Wer die Kugel dreht oder zoomt, behält das gewählte Land umrandet
-    const canvas = $('canvas', fig);
-    ['pointerdown', 'touchstart', 'keydown'].forEach(t => canvas.addEventListener(t, () => setTimeout(() => { if (wahl) g.auswahl(wahl); }, 0), { passive: true }));
-    canvas.addEventListener('wheel', () => setTimeout(() => { if (wahl) g.auswahl(wahl); }, 0), { passive: true });
-
-    // Ein Name im Register dreht die Kugel zum Land und wählt es; ist die Karte nicht ganz zu sehen, rückt sie ins Bild
-    const rahmen = $('.rahmen', fig);
-    function insBild() {
-      const H = window.innerHeight, oben = rahmen.getBoundingClientRect().top;
-      const unten = Math.max(rahmen.getBoundingClientRect().bottom, kopf ? kopf.getBoundingClientRect().bottom : 0);
-      if (oben < 0) window.scrollBy(0, oben - 8);
-      else if (unten > H) window.scrollBy(0, Math.min(oben - 8, unten - H + 8));
-    }
-    register.addEventListener('click', e => {
-      const b = e.target.closest('[data-land]');
-      if (!b) return;
-      $$('[data-kontinent]', fig).forEach(w => w.classList.remove('ist-aktiv'));
-      waehlen(b.dataset.land);
-      tafel.land(b.dataset.land);
-      kopfPruefen();
-      insBild();
-    });
-  } else {
-    register.addEventListener('click', e => { const b = e.target.closest('[data-land]'); if (b) { wahl = b.dataset.land; registerSetzen(); } });
+  function waehlen(iso) { wahl = iso || null; registerSetzen(); guideSetzen(); }
+  if (!tafel) {
+    register.addEventListener('click', e => { const b = e.target.closest('[data-land]'); if (b) { e.preventDefault(); waehlen(b.dataset.land); } });
+    return;
   }
-  F.schriften(2500).then(gleichBreit);
+  const g = tafel.kern, canvas = $('canvas', fig), rahmen = $('.rahmen', fig);
+  // Ein Klick auf die Karte wählt ein bereistes Land oder hebt die Wahl auf; Kontinente heben sie auf
+  fig.addEventListener('click', e => {
+    if (e.target.closest('canvas')) { const r = canvas.getBoundingClientRect(), land = g.landBei(e.clientX - r.left, e.clientY - r.top); waehlen(land ? land.iso : null); }
+  }, true);
+  // Wer die Kugel dreht oder zoomt, behält das gewählte Land umrandet und beschriftet
+  ['pointerdown', 'touchstart', 'keydown', 'wheel'].forEach(t => canvas.addEventListener(t, () => setTimeout(() => { if (wahl) g.auswahl(wahl); }, 0), { passive: true }));
+
+  // Ein Name im Register dreht die Kugel zum Land und wählt es; ist die Karte nicht ganz zu sehen, rückt sie ins Bild
+  function insBild() {
+    const H = window.innerHeight, r = rahmen.getBoundingClientRect();
+    if (r.top < 0) window.scrollBy(0, r.top - 8);
+    else if (r.bottom > H) window.scrollBy(0, Math.min(r.top - 8, r.bottom - H + 8));
+  }
+  function registerKlick(b) {
+    waehlen(b.dataset.land);
+    tafel.land(b.dataset.land);
+    insBild();
+  }
+  register.addEventListener('click', e => { const b = e.target.closest('[data-land]'); if (!b) return; e.preventDefault(); registerKlick(b); });
+  register.addEventListener('keydown', e => { const b = e.target.closest('[data-land]'); if (b && e.key === ' ') { e.preventDefault(); registerKlick(b); } });
 })();
 </script>
 </body>

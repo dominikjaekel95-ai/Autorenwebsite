@@ -10,20 +10,23 @@
        > .satzspalte       Satzspalte (34,375 rem, rund 60 Anschläge)
        > .tafelfeld        Tafelfeld (--P); auf Tablet und Telefon unter dem Text
        > .ganz             von der Satzspalte bis zum Tafelfeld
+     .bogen.verso          gespiegelt wie eine linke Buchseite: Außensteg, Tafelfeld, Zwischenschlag, Satzspalte, Bundsteg (Startseite)
      .kopf, .name, .nav    Kopf der Unterseiten: Name und Navigation (Auswahlliste) im Grad klein
      .fuss, .kolophon      Fuß aller Seiten
      .klein, .gross        die Grade klein und groß (Text ist die Grundschrift); h1 steht im Grad groß, h2 und h3 halbfett
      .prosa                Absätze ohne Abstand, mit Einzug ab dem zweiten
      .liste, .gruppe       Einträge mit 0,25 z Abstand; Gruppen mit 0,75 z
-     .chronologie          Register mit hängender Jahreszahl im Bundsteg (Stationen, Szenen, Kapiteltage)
+     .tage                 Register in drei Spalten: Jahr (nur, wo es wechselt), Tag, Ereignis (Kapiteltage auf Satoshi)
      .legende              Nebentext: eine Stufe kleiner, aufrecht, in Tinte, 0,25 z unter seinem Gegenstand
      .wort                 Bedienwort im Text (<button>): unterstrichen; .ist-aktiv oder aria-current: ohne Strich
      .steuerwort           früher, später: unterstrichen; .ist-aus: unsichtbar an seinem Platz
-     .wahl                 Auswahlliste (Navigation, Kartenwahl, Register): ohne Strich, Hover unterstrichen, gewählt halbfett
+     .wahl                 Auswahlliste (Navigation, Kartenwahl, Register, Szenen): ohne Strich, Hover unterstrichen, gewählt halbfett
+     .haftleiste           Leiste, die beim Scrollen oben haftet: Grund Papier, unten eine Linie, solange sie haftet (.haftet)
      .zeichen              gezeichnetes Zeichen (SVG aus FSeite.zeichen)
-     .ziffern              Versalziffern mit fester Breite (Achsen, Maßstab)
+     .ziffern              Versalziffern mit fester Breite (Achsen)
      .kartentafel          die Kartentafel (FSeite.kartentafel); Zwickellage ab 40,5 rem Breite, sonst Außenlage
-     .buchzeile            die Buchzeile unter Brett oder Zeitband (FSeite.buch.zeile)
+     .buchzeile            die Buchzeile unter dem Brett (FSeite.buch.zeile)
+     .regal, .ruecken      das Regal der Bibliothek als Strichzeichnung
      .sprung, .unsichtbar  Sprungmarke „Zum Inhalt“; nur für Vorleseprogramme
 */
 
@@ -31,10 +34,6 @@
   font-weight: 400 700; font-style: normal; font-display: swap; }
 @font-face { font-family: "Baskervville"; src: url("schrift/baskervville-kursiv.woff2") format("woff2");
   font-weight: 400 700; font-style: italic; font-display: swap; }
-/* Nur für die Leinwand der Karte: die zehn Ziffern als Versalziffern mit fester Breite (werkzeuge/kartenziffern.py).
-   Auf einer Leinwand lässt sich keine OpenType-Ziffernwahl einschalten; im HTML gilt font-variant-numeric. */
-@font-face { font-family: "Baskervville Ziffern"; src: url("schrift/baskervville-ziffern.woff2") format("woff2");
-  font-weight: 400 700; font-style: normal; font-display: swap; unicode-range: U+0030-0039; }
 
 :root {
   color-scheme: light;
@@ -46,7 +45,6 @@
   --blau-raster: #E5ECF3;
 
   --schrift: "Baskervville", Baskerville, "Times New Roman", serif;
-  --schrift-ziffern: "Baskervville Ziffern", "Baskervville", Baskerville, "Times New Roman", serif;
 
   /* Zeile und Grade, Telefon */
   --z: 1.6875rem;
@@ -75,13 +73,14 @@ body {
   margin: 0; background: var(--papier); color: var(--tinte); caret-color: var(--tinte);
   font-family: var(--schrift); font-size: var(--text); line-height: var(--z); font-weight: 400;
   font-kerning: normal; font-variant-ligatures: common-ligatures; font-variant-numeric: oldstyle-nums proportional-nums;
-  font-synthesis: none; hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty;
+  font-synthesis: none; hyphens: auto; -webkit-hyphens: auto;
 }
 ::selection { background: var(--tinte); color: var(--papier); }
 p, h1, h2, h3, h4, ul, ol, dl, dt, dd, figure, figcaption, blockquote { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 h1, h2, h3, h4 { font-size: inherit; line-height: inherit; font-weight: 400; hyphens: manual; -webkit-hyphens: manual; }
 i, em, cite { font-style: italic; }
+address { font-style: normal; }
 b, strong { font-weight: 600; }
 img { display: block; max-width: 100%; height: auto; }
 /* Versalabkürzungen ab drei Buchstaben als Kapitälchen; die Kursive hat keine, dort bleiben es Versalien */
@@ -112,6 +111,11 @@ a { color: inherit; text-decoration-line: underline; }
 .wahl a:hover, .wahl button:hover { text-decoration-line: underline; }
 .wahl :is([aria-current="page"], [aria-pressed="true"], .ist-aktiv),
 .wahl :is([aria-current="page"], [aria-pressed="true"], .ist-aktiv):hover { font-weight: 600; text-decoration-line: none; cursor: default; }
+/* Halbfett ohne Sprung: die Sperrung gleicht die Mehrbreite aus (FSeite.gleichBreit) */
+.wahl .ist-aktiv, .wahl [aria-pressed="true"] { letter-spacing: var(--ausgleich, 0); }
+/* Szenen: die ganze Zeile wählt die Szene, der Ort zeigt es an */
+.js .szenen > li { cursor: pointer; }
+.szenen > li:hover button:not(.ist-aktiv) { text-decoration-line: underline; }
 /* Ohne Skript tun Bedienwörter nichts: dann sehen sie auch nicht danach aus */
 html:not(.js) .wort { text-decoration-line: none; cursor: auto; }
 :focus:not(:focus-visible) { outline: none; }
@@ -133,6 +137,10 @@ html:not(.js) .wort { text-decoration-line: none; cursor: auto; }
   .bogen > * { grid-column: 2; }
   .bogen > .tafelfeld { grid-column: 4; max-width: none; }
   .bogen > .ganz { grid-column: 2 / 5; }
+  /* Verso: die linke Seite eines aufgeschlagenen Atlas, das Tafelfeld am Außensteg, die Satzspalte am Bund */
+  .bogen.verso { grid-template-columns: minmax(0, 2fr) var(--P) var(--G) var(--S) minmax(0, 1fr); }
+  .bogen.verso > * { grid-column: 4; }
+  .bogen.verso > .tafelfeld { grid-column: 2; }
 }
 
 /* ---------- Kopf der Unterseiten: eine Zeile im Grad klein auf der Höhe des Kopfstegs ---------- */
@@ -149,20 +157,25 @@ html:not(.js) .wort { text-decoration-line: none; cursor: auto; }
 .kopf + main { padding-top: calc(var(--z) * 2); }
 
 /* ---------- Satz ---------- */
+.prosa p { text-wrap: pretty; }
 .prosa p + p { text-indent: 1em; }
 .liste > li + li, .liste > p + p { margin-top: calc(var(--z) * .25); }
 .gruppe + .gruppe { margin-top: calc(var(--z) * .75); }
 .teil + .teil { margin-top: calc(var(--z) * 3); }
 .legende { font-size: var(--klein); line-height: var(--zk); margin-top: calc(var(--z) * .25); }
-.chronologie > li { position: relative; }
-.chronologie > li + li { margin-top: calc(var(--z) * .25); }
-.chronologie .jahr { font-variant-numeric: oldstyle-nums proportional-nums; }
-/* Die Jahreszahl hängt im Bundsteg, rechtsbündig, 0,5 em vor der Satzkante. Ist der Bundsteg schmaler als 3 em, steht sie als
-   eigene Zeile darüber. Der Bundsteg erreicht 3 em (60 px) bei größtem Tafelfeld ab 1462 px Fensterbreite. */
-.chronologie .jahr { display: block; }
-@media (min-width: 91.375rem) {
-  .chronologie .jahr { display: inline; position: absolute; right: calc(100% + .5em); top: 0; white-space: nowrap; }
-}
+.prosa hr { border: 0; margin: 0; height: var(--z); }
+/* Register mit Jahr, Tag und Ereignis: das Jahr steht nur, wo es wechselt (sonst nur für Vorleseprogramme); die Spalten
+   für Jahr und Tag tragen Versalziffern fester Breite, damit sie senkrecht fluchten */
+.tage > li { position: relative; display: grid; grid-template-columns: 2.2em 6.6em minmax(0, 1fr); column-gap: .5em; }
+.tage > li + li { margin-top: calc(var(--z) * .25); }
+.tage .jahr { grid-column: 1; }
+.tage .tag { grid-column: 2; }
+.tage .ereignis { grid-column: 3; }
+.tage .jahr, .tage .tag { font-variant-numeric: lining-nums tabular-nums; }
+
+/* Haftende Leiste (Standortregister der Bibliothek) */
+.haftleiste { position: sticky; top: 0; z-index: 5; background: var(--papier); border-bottom: 1px solid var(--papier); }
+.haftleiste.haftet { border-bottom-color: var(--tinte); }
 
 /* ---------- Gezeichnete Zeichen ---------- */
 .zeichen { display: inline-block; vertical-align: 0; margin-right: .4em; overflow: hidden; }
@@ -180,48 +193,69 @@ html:not(.js) .wort { text-decoration-line: none; cursor: auto; }
 .rahmen canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
 .rahmen canvas:active { cursor: grabbing; }
 .kartentafel:not(.ist-bereit) canvas { visibility: hidden; }
-.ohne-karte { padding: calc(var(--z) * .25) calc(var(--z) * .5); }
 .js .kartentafel.ist-gebaut .ohne-karte { display: none; }
 .js .kartentafel.ohne-kugel .ohne-karte { display: block; }
+/* Ohne Skript und ohne Kern: kein leerer Rahmen, nur der Satz */
+html:not(.js) .rahmen, .kartentafel.ohne-kugel .rahmen { aspect-ratio: auto; border: 0; }
 .zwickel { pointer-events: none; }
 .zwickel button, .zwickel a { pointer-events: auto; }
 .aussparung { display: none; }
 .kartenwahl { font-size: var(--text); line-height: var(--z); }
-.tafelkopf-ort { font-size: var(--text); line-height: var(--z); }
-.tafelkopf-angabe { font-size: var(--klein); line-height: var(--zk); }
 .zeichenerklaerung li { white-space: nowrap; }
-.massstab { white-space: nowrap; }
-.massstab .leiste { display: inline-block; vertical-align: -.02em; margin: 0 .35em; overflow: visible; }
 .hinweis { max-width: 18em; }
 
-/* Außenlage */
+/* Außenlage: die Kartenwahl über dem Rahmen, darunter die Legende mit früher und später, dann Zeichenerklärung und Hinweis */
 .zw-ol { grid-row: 1; margin-bottom: calc(var(--z) * .25); }
 .zw-ol .kartenwahl { display: flex; flex-wrap: wrap; column-gap: 1em; }
-.zw-or { grid-row: 3; margin-top: calc(var(--z) * .25); }
-.tafellegende { grid-row: 4; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.5em; align-items: start; margin-top: calc(var(--z) * .25); }
+.tafellegende { grid-row: 3; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.5em; align-items: start; margin-top: calc(var(--z) * .25); }
 .tafellegende .steuer { display: flex; column-gap: 1em; white-space: nowrap; }
 .tafellegende.ohne-schritte .steuer { display: none; }
-.zw-ul { grid-row: 5; grid-column: 1; margin-top: calc(var(--z) * .25); }
-.zw-ur { grid-row: 5; grid-column: 2; margin-top: calc(var(--z) * .25); text-align: right; }
+.zw-ul { grid-row: 4; grid-column: 1; margin-top: calc(var(--z) * .25); }
+.zw-ur { grid-row: 4; grid-column: 2; margin-top: calc(var(--z) * .25); text-align: right; }
 .zw-ul .zeichenerklaerung { display: flex; flex-wrap: wrap; column-gap: 1.5em; }
 
 /* Zwickellage */
 @container tafel (min-width: 40.5rem) {
   .zwickel { --lage: zwickel; grid-row: 2; grid-column: 1 / -1; position: relative; z-index: 1; margin: calc(var(--z) * .5); }
   .zw-ol { align-self: start; justify-self: start; }
-  .zw-or { align-self: start; justify-self: end; text-align: right; }
   .zw-ul { align-self: end; justify-self: start; }
   .zw-ur { align-self: end; justify-self: end; }
   .zw-ol .kartenwahl { display: block; }
   .zw-ul .zeichenerklaerung { display: block; }
   .zw-ol .aussparung { display: block; float: right; }
-  .zw-or .aussparung { display: block; float: left; }
-  .tafellegende { grid-row: 3; }
 }
 
-/* ---------- Buchzeile (12.8): eine feste Zeile unter dem Brett oder dem Zeitband ---------- */
+/* ---------- Buchzeile (12.8): eine feste Zeile unter dem Brett ---------- */
 .buchzeile { font-size: var(--klein); line-height: var(--zk); min-height: var(--zk); margin-top: calc(var(--z) * .25); }
-@media (max-width: 47.99rem) { .buchzeile { min-height: calc(var(--zk) * 2); } }
+
+/* ---------- Regal: Strichzeichnung aus den Daten (Bibliothek) ---------- */
+.flaeche { display: flex; align-items: flex-end; column-gap: 1px; border-bottom: 1px solid var(--tinte); }
+.ruecken {
+  appearance: none; -webkit-appearance: none; position: relative; display: block; flex: none;
+  margin: 0; padding: 0; border: 0; border-radius: 0; background: none;
+  color: var(--tinte); cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.ruecken svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.ruecken .koerper { fill: var(--papier); stroke: var(--tinte); }
+.ruecken .liebste { fill: var(--tinte); }
+.ruecken .wieder { stroke: var(--tinte); fill: none; }
+.ruecken text { fill: var(--tinte); font-family: var(--schrift); }
+.ruecken:focus-visible { z-index: 1; }
+/* Hover, Fokus und Auswahl kehren den Rücken um */
+.ruecken[aria-pressed="true"] .koerper, .ruecken:focus-visible .koerper { fill: var(--tinte); }
+.ruecken[aria-pressed="true"] :is(text, .liebste), .ruecken:focus-visible :is(text, .liebste) { fill: var(--papier); }
+@media (hover: hover) {
+  .ruecken:hover .koerper { fill: var(--tinte); }
+  .ruecken:hover :is(text, .liebste) { fill: var(--papier); }
+}
+/* Unter dem Brett: Jahresachse oder Buchzeile, in einer Zeile fester Höhe */
+.unter { position: relative; font-size: var(--klein); line-height: var(--zk); padding-top: calc(var(--z) * .25); min-height: calc(var(--zk) * var(--zeilen, 1) + var(--z) * .25); }
+.unter .achse { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
+.unter .marke { position: absolute; top: calc(var(--z) * .25); white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; }
+.unter .strich { position: absolute; top: 0; width: 1px; height: 4px; background: var(--tinte); }
+.unter .wort-marke { font-variant-numeric: inherit; }
+.unter.mit-zeile .achse { visibility: hidden; }
+.unter .zeile { display: block; }
 
 /* ---------- Startseite ---------- */
 .erster-satz { hyphens: manual; -webkit-hyphens: manual; }

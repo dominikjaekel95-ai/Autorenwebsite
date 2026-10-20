@@ -13,20 +13,23 @@
      $(sel, wurzel), $$(…)          querySelector, querySelectorAll als Liste
      esc(s), sauber(s)              HTML maskieren; Reste aus dem Export entfernen
      ruhig(), desktop(), telefon()  reduzierte Bewegung; Raster ab 75 rem; unter 48 rem
-     tokens()                       Farben und Schriften aus stil.css { papier, tinte, tinteRaster, blau, blauRaster, schrift, ziffern }
+     tokens()                       Farben und Schriften aus stil.css { papier, tinte, tinteRaster, blau, blauRaster, schrift }
      zahlwort(n), gross(s), tausender(n), jahrText(j), chr(t), versalien(html)
                                     Zahlwort bis 99; erster Buchstabe groß; 12 000 erst ab fünf Stellen; „um 750 v. Chr.“;
                                     „v. Chr.“ zusammenhalten; Versalabkürzungen ab drei Buchstaben als <abbr> (Kapitälchen)
-     schriften(ms)                  Promise: Baskervville (Antiqua, Kursive, 500) und die Kartenziffern geladen, höchstens ms
-     zeichen(art)                   gezeichnetes Zeichen als SVG für Zeichenerklärung und Tafel:
-                                    'punkt', 'kreis', 'schraffur' (Karte); 'ruecken', 'liebste', 'wieder', 'abgebrochen', 'auszuege' (Regal)
+     schriften(ms)                  Promise: Baskervville (Antiqua, Kursive, 500) geladen, höchstens ms
+     gleichBreit(elemente)          Sperrung, die die Mehrbreite des halbfetten Worts ausgleicht (Auswahllisten)
+     zeichen(art)                   gezeichnetes Zeichen als SVG für Zeichenerklärungen:
+                                    'punkt', 'kreis' (Karte); 'ruecken', 'liebste', 'wieder', 'abgebrochen', 'auszuege' (Regal)
      texte.alle(art), texte.satz(s), texte.datum(d), texte.punkt(s), texte.ARTEN
      buch.alle(), buch.ordnung, buch.nachname(a), buch.titelKurz(t), buch.deutsch(b), buch.masse(b), buch.fach(b),
      buch.FAECHER, buch.zeile(b), buch.manuskript()     Bücher und die Buchzeile nach Abschnitt 12.8
      leselinie(elemente, beiSchritt, o)   welches Element zuletzt die Leselinie erreicht hat (vor und zurück)
-     stationen()                    Wohnorte aus INHALT.leben mit Zeitraum und Satz aus daten/stationen.js
+     stationen()                    Wohnorte und längere Aufenthalte mit Land, Zeitraum und Satz aus daten/stationen.js
+     szenen()                       die Szenen von Satoshi mit den Texten aus daten/stationen.js
+     landName(iso)                  deutscher Name eines Lands oder Gebiets
      blickFuer(orte, bereich)       Mitte [lon, lat], bei der alle Orte mit Abstand zum Rand auf der Kugel stehen
-     kartentafel(figur, o)          die Kartentafel (Abschnitt 12.5 und 12.6), siehe dort
+     kartentafel(figur, o)          die Kartentafel, siehe dort
      navigation()                   läuft beim Laden von selbst
 */
 (function () {
@@ -52,7 +55,7 @@
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
     const t = n => cs.getPropertyValue(n).trim();
-    return { papier: t('--papier'), tinte: t('--tinte'), tinteRaster: t('--tinte-raster'), blau: t('--blau'), blauRaster: t('--blau-raster'), schrift: t('--schrift'), ziffern: t('--schrift-ziffern') };
+    return { papier: t('--papier'), tinte: t('--tinte'), tinteRaster: t('--tinte-raster'), blau: t('--blau'), blauRaster: t('--blau-raster'), schrift: t('--schrift') };
   }
 
   // ---------- Zahlen, Jahre, Satz ----------
@@ -81,9 +84,23 @@
     if (!document.fonts || !document.fonts.load) return Promise.resolve();
     const laden = Promise.all([
       document.fonts.load('400 20px "Baskervville"'), document.fonts.load('italic 400 20px "Baskervville"'),
-      document.fonts.load('500 15px "Baskervville"'), document.fonts.load('500 13px "Baskervville Ziffern"', '0123456789')
+      document.fonts.load('500 15px "Baskervville"'), document.fonts.load('italic 500 13px "Baskervville"')
     ]);
     return Promise.race([laden, warten(ms || 2500)]).catch(() => {});
+  }
+
+  // ---------- Halbfett ohne Sprung ----------
+  // Eine Sperrung (--ausgleich, je Element gemessen) gleicht die Mehrbreite des halbfetten Worts aus; die Zeilen brechen nicht neu um
+  function gleichBreit(els) {
+    const c = document.createElement('canvas').getContext('2d');
+    return schriften(2500).then(() => {
+      const f = tokens().schrift;
+      const w = (t, g) => { c.font = `${g} 100px ${f}`; return c.measureText(t).width; };
+      (els || []).forEach(el => {
+        const t = el.textContent, n = Array.from(t).length;
+        if (n) el.style.setProperty('--ausgleich', ((w(t, 400) - w(t, 600)) / n / 100).toFixed(4) + 'em');
+      });
+    });
   }
 
   // ---------- Gezeichnete Zeichen ----------
@@ -93,11 +110,6 @@
     switch (art) {
       case 'punkt': return svg(8, 9, '<circle cx="4" cy="4.5" r="3.5" fill="currentColor"/>');
       case 'kreis': return svg(8, 9, '<circle cx="4" cy="4.5" r="2.875" fill="none" stroke="currentColor" stroke-width="1.25"/>');
-      case 'schraffur': {
-        let l = '';
-        for (let x = -11; x < 17; x += 3.4) l += `M${x.toFixed(2)} 11L${(x + 11).toFixed(2)} 0`;
-        return svg(16, 11, `<path d="${l}" stroke="currentColor" stroke-width=".55" fill="none"/><rect x=".375" y=".375" width="15.25" height="10.25" fill="none" stroke="currentColor" stroke-width=".75"/>`);
-      }
       case 'ruecken': return svg(8, 18, '<rect x=".5" y="2.5" width="7" height="15" fill="none" stroke="currentColor"/>');
       case 'liebste': return svg(8, 18, '<rect x=".5" y="2.5" width="7" height="15" fill="none" stroke="currentColor"/><circle cx="4" cy="11.5" r="2" fill="currentColor"/>');
       case 'wieder': return svg(8, 18, '<rect x=".5" y="3.5" width="7" height="14" fill="none" stroke="currentColor"/><path d="M0 .5H8" stroke="currentColor"/>');
@@ -194,7 +206,7 @@
       'Sun Tzu': 'Sun Tzu', 'Luo Guanzhong': 'Luo', 'Han Kang': 'Han', 'Gabriel García Márquez': 'García Márquez', 'Jin Yong': 'Jin Yong',
       'Carlos Ruiz Zafón': 'Ruiz Zafón', 'Adolfo Bioy Casares': 'Bioy Casares', 'Daphne du Maurier': 'du Maurier',
       'Ursula K. Le Guin': 'Le Guin', 'John le Carré': 'le Carré', 'Antoine de Saint-Exupéry': 'Saint-Exupéry', 'Lieutenant X': 'Lieutenant X',
-      'Thomas von Aquin': 'Thomas von Aquin', 'Anonymous': '', 'Anonym': '', 'Die 19 Finaltexte': ''
+      'Thomas von Aquin': 'Thomas von Aquin', 'Mark Aurel': 'Mark Aurel', 'Anonymous': '', 'Anonym': '', 'Die 19 Finaltexte': ''
     };
     const AUTOR = { 'Anonymous': 'Anonym' };
     const BERICHTIGT = [
@@ -203,6 +215,54 @@
       { a: 'Scott O\'Dell', t: 'Island of the Blue Dolphins', v: /cornelsen/i, u: '' },
       { a: 'David Graeber', t: 'The Dawn of Everything', autor: 'David Graeber und David Wengrow' }
     ];
+    /* Werke, die zuerst auf Deutsch erschienen sind, stehen mit ihrem Originaltitel da, auch wenn die gelesene Ausgabe eine
+       Übersetzung ist; Verlag und Seitenzahl der Buchzeile bleiben die der gelesenen Ausgabe. Schlüssel: Autor|Titel der Daten.
+       Welche davon Dominik auf Deutsch gelesen hat, ist offen (Regeln 21.10). */
+    const ORIGINAL = {
+      'Christoph Ransmayr|Atlas of an Anxious Man': 'Atlas eines ängstlichen Mannes', 'Christoph Ransmayr|The Last World': 'Die letzte Welt',
+      'Jenny Erpenbeck|Go, Went, Gone': 'Gehen, ging, gegangen', 'Jenny Erpenbeck|Visitation': 'Heimsuchung',
+      'Ernst Haffner|Blood Brothers': 'Blutsbrüder', 'Ernst Jünger|Storm of Steel': 'In Stahlgewittern',
+      'W.G. Sebald|The Rings of Saturn': 'Die Ringe des Saturn', 'W.G. Sebald|The Emigrants': 'Die Ausgewanderten',
+      'Stefan Zweig|The World of Yesterday': 'Die Welt von Gestern', 'Stefan Zweig|Chess Story': 'Schachnovelle', 'Stefan Zweig|Fouché': 'Joseph Fouché',
+      'Wulf Dorn|La psichiatra': 'Trigger', 'Franz Werfel|Una scrittura femminile azzurro pallido': 'Eine blassblaue Frauenschrift',
+      'Irmgard Keun|The Artificial Silk Girl': 'Das kunstseidene Mädchen', 'John Rabe|The Good Man of Nanking': 'Der gute Deutsche von Nanking',
+      'Heinrich Harrer|Seven Years in Tibet': 'Sieben Jahre in Tibet',
+      'Thomas Mann|Mario and the Magician': 'Mario und der Zauberer', 'Thomas Mann|The Magic Mountain': 'Der Zauberberg', 'Thomas Mann|Death in Venice': 'Der Tod in Venedig',
+      'Ferdinand von Schirach|The Collini Case': 'Der Fall Collini', 'Elfriede Jelinek|The Piano Teacher': 'Die Klavierspielerin',
+      'Max Frisch|Bluebeard': 'Blaubart', 'Max Frisch|Gantenbein': 'Mein Name sei Gantenbein', "Max Frisch|I'm Not Stiller": 'Stiller', 'Max Frisch|Homo Faber': 'Homo faber',
+      'Peter Stamm|Seven Years': 'Sieben Jahre', 'Christa Wolf|Cassandra': 'Kassandra',
+      'Daniel Kehlmann|Measuring the World': 'Die Vermessung der Welt', 'Siegfried Lenz|The German Lesson': 'Deutschstunde',
+      'Arthur Schnitzler|Dream Story': 'Traumnovelle', 'Arthur Schnitzler|La Ronde': 'Reigen',
+      'Patrick Süskind|The Pigeon': 'Die Taube', 'Patrick Süskind|Perfume': 'Das Parfum',
+      'Peter Handke|Short Letter, Long Farewell': 'Der kurze Brief zum langen Abschied',
+      'Herta Müller|The Land of Green Plums': 'Herztier', 'Herta Müller|The Hunger Angel': 'Atemschaukel',
+      'Saša Stanišić|How the Soldier Repairs the Gramophone': 'Wie der Soldat das Grammofon repariert',
+      'Günter Grass|Crabwalk': 'Im Krebsgang', 'Günter Grass|Cat and Mouse': 'Katz und Maus',
+      'Bernhard Schlink|The Reader': 'Der Vorleser', 'Friedrich Dürrenmatt|The Visit': 'Der Besuch der alten Dame',
+      'Gustav Janouch|Conversations with Kafka': 'Gespräche mit Kafka', 'Karl Marx|The Communist Manifesto': 'Manifest der Kommunistischen Partei',
+      'Joseph Roth|Job': 'Hiob', 'Otfried Preußler|The Little Ghost': 'Das kleine Gespenst', 'Erich Kästner|Emil and the Detectives': 'Emil und die Detektive',
+      'Cornelia Funke|Inkheart': 'Tintenherz', 'Cornelia Funke|Inkspell': 'Tintenblut', 'Cornelia Funke|Inkdeath': 'Tintentod',
+      'Friedrich Nietzsche|Thus Spoke Zarathustra': 'Also sprach Zarathustra',
+      'Heinrich Böll|The Clown': 'Ansichten eines Clowns', 'Heinrich Böll|The Lost Honor of Katharina Blum': 'Die verlorene Ehre der Katharina Blum',
+      'Markus Heitz|The Dwarves': 'Die Zwerge', 'Hugo von Hofmannsthal|The Lord Chandos Letter and Other Writings': 'Ein Brief',
+      'Rainer Maria Rilke|Duino Elegies': 'Duineser Elegien', 'Rainer Maria Rilke|Letters to a Young Poet': 'Briefe an einen jungen Dichter',
+      'Rainer Maria Rilke|The Notebooks of Malte Laurids Brigge': 'Die Aufzeichnungen des Malte Laurids Brigge',
+      'Robert Musil|The Confusions of Young Törless': 'Die Verwirrungen des Zöglings Törleß',
+      'Franz Kafka|A Country Doctor': 'Ein Landarzt', 'Franz Kafka|Letter to His Father': 'Brief an den Vater', 'Franz Kafka|In the Penal Colony': 'In der Strafkolonie',
+      'Franz Kafka|A Hunger Artist': 'Ein Hungerkünstler', 'Franz Kafka|The Complete Short Stories': 'Sämtliche Erzählungen',
+      'Franz Kafka|The Metamorphosis': 'Die Verwandlung', 'Franz Kafka|The Castle': 'Das Schloss', 'Franz Kafka|The Trial': 'Der Prozess',
+      'Franz Kafka|Diaries, 1910-1923': 'Tagebücher 1910–1923', 'Franz Kafka|The Judgment and other stories': 'Das Urteil und andere Erzählungen',
+      'Michael Ende|The Neverending Story': 'Die unendliche Geschichte', 'Johann Wolfgang von Goethe|Faust, First Part': 'Faust. Der Tragödie erster Teil',
+      'Erich Maria Remarque|All Quiet on the Western Front': 'Im Westen nichts Neues',
+      'Hermann Hesse|Beneath the Wheel': 'Unterm Rad', 'Hermann Hesse|Narcissus and Goldmund': 'Narziß und Goldmund', 'Hermann Hesse|Steppenwolf': 'Der Steppenwolf',
+      'Hermann Hesse|The Glass Bead Game': 'Das Glasperlenspiel', 'Hermann Hesse|The Journey to the East': 'Die Morgenlandfahrt'
+    };
+    // Deutsche Namensformen (wie in deutschen Ausgaben)
+    const NAMEN_DE = {
+      'Aristotle': 'Aristoteles', 'Fyodor Dostoevsky': 'Fjodor Dostojewski', 'Leo Tolstoy': 'Leo Tolstoi', 'Mikhail Bulgakov': 'Michail Bulgakow',
+      'Aleksandr Solzhenitsyn': 'Alexander Solschenizyn', 'Arkady Strugatsky': 'Arkadi Strugatzki', 'Sergei Lukyanenko': 'Sergej Lukianenko',
+      'Dmitry Glukhovsky': 'Dmitry Glukhovsky', 'Marcus Aurelius': 'Mark Aurel', 'Sun Tzu': 'Sunzi'
+    };
     const DE_VERLAG = /suhrkamp|rowohlt|diogenes|kiepenheuer|kiwi|deutscher taschenbuch|\bdtv\b|hanser|fischer|insel|reclam|piper|ullstein|aufbau|luchterhand|wagenbach|klett|heyne|goldmann|\bbtb\b|kein & aber|\bmare\b|matthes|beck|thienemann|arena|bastei|droemer|knaur|scherz|dumont|hoffmann und campe|arche|kirschbuch|cornelsen|rediroma|carlsen|oetinger|ravensburger|blessing|verlag/i;
     const DE_TITEL = /[äöüß]|\b(der|die|das|und|ein|eine|im|vom|zum|nicht|ich|wir|über|mit)\b/i;
     const satz = s => String(s || '').replace(/(\d)-(\d)/g, '$1–$2').replace(/"([^"]*)"/g, '“$1”').replace(/'/g, '’');
@@ -219,8 +279,9 @@
       const t = a.replace(/,?\s+(Jr\.|Sr\.)$/, '').split(/\s+/);
       return t[t.length - 1] || '';
     }
+    // Kurztitel für den Rücken: ohne Klammer, ohne Untertitel nach Doppelpunkt, Strich oder Punkt („Holzfällen. Eine Erregung“)
     function titelKurz(t) {
-      const s = sauber(t).replace(/\s*\(.*\)\s*$/, '').split(/:\s|\s[-–]\s/)[0];
+      const s = sauber(t).replace(/\s*\(.*\)\s*$/, '').split(/:\s|\s[-–]\s|(?<=\p{Ll}{3})\.\s(?=\p{Lu})/u)[0];
       return s.replace(/(\d)-(\d)/g, '$1–$2').replace(/'/g, '’').trim();
     }
     const REGALE = ['gelesen', 'kindheit', 'gerade', 'abgebrochen'];
@@ -235,6 +296,11 @@
         b.t = sauber(b.t); b.u = sauber(b.u); b.a = sauber(b.a); b.v = verlag(b.v);
         const k = BERICHTIGT.find(x => x.a === b.a && x.t === b.t && (!x.v || x.v.test(b.v)));
         if (k) { if ('j' in k) b.j = k.j; if ('u' in k) b.u = k.u; }
+        // Die Laufrichtung des Rückens folgt der gelesenen Ausgabe, angezeigt wird der Originaltitel
+        b.ausgabeDeutsch = DE_VERLAG.test(b.v || '') || DE_TITEL.test(b.t || '');
+        const original = ORIGINAL[b.a + '|' + b.t];
+        if (original) { b.t = original; b.u = ''; }
+        if (NAMEN_DE[b.a]) b.a = NAMEN_DE[b.a];
         b.nn = satz(nachname(b.a)); b.autor = initialen((k && k.autor) || AUTOR[b.a] || b.a);
         b.t = satz(b.t); b.u = satz(b.u); b.v = initialen(b.v); b.a = initialen(b.a);
         b.key = b.t + '|' + b.a;
@@ -244,7 +310,7 @@
       return cache;
     }
     // Deutsche Rücken laufen von unten nach oben
-    const deutsch = b => DE_VERLAG.test(b.v || '') || DE_TITEL.test(b.t || '');
+    const deutsch = b => b.ausgabeDeutsch != null ? b.ausgabeDeutsch : DE_VERLAG.test(b.v || '') || DE_TITEL.test(b.t || '');
     // Regelmaße in mm nach Abschnitt 12.7: ohne Seitenzahl 260 Seiten; ohne Streuung
     const HOEHE = { p: 185, m: 175, e: 198, h: 225 };
     const masse = b => ({ breite: (b.p > 0 ? b.p : 260) * .06 + (b.b === 'h' ? 5 : 1), hoehe: HOEHE[b.b] || HOEHE.e });
@@ -345,18 +411,49 @@
   }
 
   // ---------- Orte ----------
-  // Wohnorte aus INHALT.leben; Zeitraum und Satz der Tafel aus daten/stationen.js
+  // Wohnorte aus INHALT.leben und die längeren Aufenthalte aus INHALT.aufenthalte (als Nebenorte); Land, Zeitraum und Satz
+  // aus daten/stationen.js, wo es dort steht
   function stationen() {
-    const ST = window.STATIONEN || {};
-    return (inhalt().leben || []).map(s => {
+    const ST = window.STATIONEN || {}, I = inhalt();
+    const roh = (I.leben || []).concat((I.aufenthalte || []).map(s => Object.assign({ neben: true }, s)));
+    return roh.map(s => {
       const x = ST[s.name] || {};
-      return { name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, land: s.land || '', jahr: s.jahr, zeit: x.zeit || String(s.jahr || '').replace(/^bis /, ''), satz: x.satz || '' };
+      return {
+        name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, land: x.land != null ? x.land : (s.land || ''), jahr: s.jahr,
+        zeit: x.zeit || String(s.jahr || '').replace(/^bis /, ''), satz: x.satz || ''
+      };
     });
   }
+  // Die Szenen von Satoshi mit Ort und Koordinaten; die Texte aus daten/stationen.js (SZENEN), sonst aus daten/inhalt.js
+  function szenen() {
+    const SAT = inhalt().satoshi || {}, eigen = window.SZENEN || [];
+    return (SAT.szenen || []).map((s, i) => {
+      const o = (SAT.orte || []).find(x => x.name === s.ort) || {};
+      return Object.assign({}, o, { jahr: s.jahr, text: (eigen[i] && eigen[i].text) || s.text });
+    }).filter(s => s.lat != null);
+  }
+  // Deutscher Name eines Lands oder Gebiets: Landesteile und Gebiete eigens, sonst aus daten/laender-de.js
+  let namen = null;
+  function landName(iso) {
+    if (!namen) {
+      namen = Object.assign({ 'GB-ENG': 'England', 'GB-SCT': 'Schottland', 'GB-NIR': 'Nordirland', 'GB-WLS': 'Wales', 'PS-WB': 'Westjordanland', 'PS-GZ': 'Gazastreifen' }, inhalt().sondernamen || {});
+      Object.values((window.LAENDER_DE && window.LAENDER_DE.nach_id) || {}).forEach(e => { if (e[0] && !namen[e[0]]) namen[e[0]] = e[1]; });
+    }
+    return namen[iso] || iso;
+  }
   /* Mitte für einen Überblick (Rechenweg aus Version A, für die ganze Kugel im Ring): alle Orte im Kreis, möglichst weit vom Rand,
-     bei gleich guten Lagen die, deren Orte um die Mitte liegen. bereich: { lon: [von, bis], lat: [von, bis], k, schritt } */
+     bei gleich guten Lagen die, deren Orte um die Mitte liegen. bereich: { lon: [von, bis], lat: [von, bis], k, schritt }.
+     Passen nicht alle Orte auf eine Halbkugel (Kaohsiung und Buenos Aires), fällt der Ort weg, der am weitesten außen liegt. */
   function blickFuer(orte, bereich) {
-    for (const rand of [40, 24, 12]) { const m = blickStreng(orte, bereich, rand); if (m) return m; }
+    let rest = (orte || []).slice();
+    while (rest.length) {
+      for (const rand of [40, 24, 12]) { const m = blickStreng(rest, bereich, rand); if (m) return m; }
+      if (rest.length < 3 || !window.d3) return null;
+      const mitte = window.d3.geoCentroid({ type: 'MultiPoint', coordinates: rest.map(s => [s.lon, s.lat]) });
+      let weit = 0;
+      rest.forEach((s, j) => { if (window.d3.geoDistance([s.lon, s.lat], mitte) > window.d3.geoDistance([rest[weit].lon, rest[weit].lat], mitte)) weit = j; });
+      rest.splice(weit, 1);
+    }
     return null;
   }
   function blickStreng(orte, bereich, RAND) {
@@ -384,28 +481,29 @@
     return best ? [best.lon, best.lat] : null;
   }
 
-  // ---------- Kartentafel (Abschnitt 12.5 und 12.6) ----------
+  // ---------- Kartentafel ----------
   /* kartentafel(figur, o): baut in <figure class="kartentafel"> mit <div class="rahmen"> (darin <p class="ohne-karte">) die Tafel:
-     Leinwand, Zwickel (Kartenwahl, Kopf der Tafel, Zeichenerklärung, Maßstab und Hinweis), Legende mit früher und später.
+     Leinwand, Kartenwahl (Zwickel oben links), Zeichenerklärung (unten links, nur wo es zwei Zeichen gibt), Bedienhinweis
+     (unten rechts) und die Legende unter dem Rahmen mit früher und später. Kein Kopf: den Namen des Orts trägt die Karte.
        o.karten     Liste aus 'wohnorte', 'reisen', 'satoshi', 'ursprung' (Vorgabe ['wohnorte']); mehr als eine: Kartenwahl
        o.start      die Karte beim Laden (Vorgabe die erste)
-       o.chronik    true: auf „wohnorte“ läuft einmal die Chronik (Startseite)
-       o.legende    false: keine Legende und kein früher und später (Seite Satoshi)
-       o.ortWoerter Bedienwörter mit data-ort="Name" (Kurzvita): fliegen die Karte zum Wohnort; der Ort, an dem sie steht, verliert den Strich
+       o.legende    false: keine Legende und kein früher und später
+       o.satz       false: auf der Karte „Reisen“ kein Satz in der Legende (Seite Länder)
+       o.ring       'aequator': im Überblick steht „Äquator“ im Ring (Seite Länder), sonst keine Ringbeschriftung
        o.beiSchritt (karte, i, schritt) => {}   nach jedem Schritt
-     Rückgabe: { waehlen(karte), schritt(i, { fliegen }), ort(name), land(iso), kern, karte(), jetzt() } oder null ohne Kern */
+     Rückgabe: { waehlen(karte), schritt(i, { fliegen }), land(iso), kern, karte(), jetzt() } oder null ohne Kern */
   const KONTINENTE = { Europa: [[13, 50], 3.3], Asien: [[94, 26], 1.75], Afrika: [[16, 4], 1.9], Amerika: [[-80, 12], 1.25] };
   const europa = s => s.lat > 35 && s.lon > -12 && s.lon < 32;
   const zoomFuer = s => europa(s) ? 3.6 : 2.5;
+  // Legende einer Station: Land, Zeitraum und Tätigkeit, wo es sie gibt („Taiwan, 2018–2022, Lektor und freier Autor.“)
+  const stationSatz = s => punkt(gross([s.land, s.zeit, s.satz].filter(Boolean).join(', ')));
 
   function karten() {
     const I = inhalt();
     const wohnorte = stationen();
     const berlin = wohnorte.map(s => s.neben).lastIndexOf(false);
-    const SAT = I.satoshi || {};
-    const satOrte = [];
-    (SAT.szenen || []).forEach(s => { const o = (SAT.orte || []).find(x => x.name === s.ort); if (o && !satOrte.includes(o)) satOrte.push(o); });
-    const szenen = (SAT.szenen || []).map(s => Object.assign({}, (SAT.orte || []).find(x => x.name === s.ort) || {}, { jahr: s.jahr, text: s.text })).filter(s => s.lat != null);
+    const sz = szenen(), satOrte = [];
+    sz.forEach(s => { if (!satOrte.some(o => o.name === s.name)) satOrte.push({ name: s.name, kurz: s.kurz, lat: s.lat, lon: s.lon }); });
     const baende = {};
     ((I.trilogie && I.trilogie.baende) || []).forEach(b => { baende[b.band] = b; });
     const bandSatz = band => {
@@ -416,32 +514,27 @@
     const kont = I.kontinente || {};
     return {
       wohnorte: {
-        name: 'Wohnorte', schritte: wohnorte, orte: wohnorte, weg: true, ende: berlin,
+        name: 'Wohnorte', schritte: wohnorte, orte: wohnorte, ende: berlin,
         zeichen: [['punkt', 'Wohnort'], ['kreis', 'längerer Aufenthalt']],
-        kopf: s => ({ zeichen: s.neben ? 'kreis' : 'punkt', name: s.name, angabe: [s.land, s.zeit].filter(Boolean).join(', ') }),
-        legende: s => versalien(esc(s.satz)), blick: s => ({ mitte: [s.lon, s.lat], k: zoomFuer(s) }),
-        ueberblick: () => ({ mitte: blickFuer(wohnorte, { lon: [20, 100], lat: [5, 50] }) || [60, 30], k: 1 })
+        legende: s => versalien(esc(stationSatz(s))), blick: s => ({ mitte: [s.lon, s.lat], k: zoomFuer(s) }),
+        ueberblick: () => ({ mitte: blickFuer(wohnorte, { lon: [10, 100], lat: [-10, 50] }) || [50, 20], k: 1 })
       },
       reisen: {
-        name: 'Reisen', schritte: null, orte: [], laender: true, zeichen: [['schraffur', 'bereist']],
-        kopfText: gross(zahlwort((I.bereist || []).length)) + ' Länder und Gebiete',
+        name: 'Reisen', schritte: null, orte: [], laender: true, zeichen: [],
         legendeText: () => {
           const w = n => `<button type="button" class="wort" data-kontinent="${n}">${n}</button>`;
           const z = n => zahlwort((kont[n] || []).length);
-          return `${gross(z('Europa'))} in ${w('Europa')}, ${z('Asien')} in ${w('Asien')}, ${z('Afrika')} in ${w('Afrika')} und ${z('Amerika')} in ${w('Amerika')}.`;
+          return `${gross(zahlwort((I.bereist || []).length))} Länder und Gebiete, ${z('Europa')} in ${w('Europa')}, ${z('Asien')} in ${w('Asien')}, ${z('Afrika')} in ${w('Afrika')} und ${z('Amerika')} in ${w('Amerika')}.`;
         },
         ueberblick: () => ({ mitte: [34, 28], k: 1 })
       },
       satoshi: {
-        name: '<i>Satoshi</i>', schritte: szenen, orte: satOrte.map(o => ({ name: o.name, kurz: o.kurz, lat: o.lat, lon: o.lon })),
-        zeichen: [['punkt', 'Schauplatz']],
-        kopf: s => ({ zeichen: 'punkt', name: s.kurz || s.name, angabe: [s.notiz, s.jahr].filter(Boolean).join(', ') }),
-        legende: s => versalien(esc(s.text)), blick: s => ({ mitte: [s.lon, s.lat], k: zoomFuer(s) })
+        name: 'Satoshi', schritte: sz, orte: satOrte, zeichen: [],
+        legende: s => versalien(esc(punkt(s.jahr + '. ' + s.text))), blick: s => ({ mitte: [s.lon, s.lat], k: zoomFuer(s) })
       },
       ursprung: {
-        name: '<i>Ursprung</i>', schritte: ursprung, orte: ursprung.map(o => ({ name: o.name, lat: o.lat, lon: o.lon })), grenzen: false, fest: true,
-        zeichen: [['punkt', 'Schauplatz']],
-        kopf: s => ({ zeichen: 'punkt', name: s.name, angabe: chr(s.jahr || '') }),
+        name: 'Ursprung', schritte: ursprung, orte: ursprung.map(o => ({ name: o.name, lat: o.lat, lon: o.lon })), grenzen: false, fluesse: true, fest: true,
+        zeichen: [],
         legende: s => { const b = baende[s.band] || {}; return `Band ${esc(s.band)}, <i>${esc(b.titel || '')}</i>. ${esc(bandSatz(s.band))}`; },
         blick: () => ({ mitte: [40, 33.6], k: 7 })
       }
@@ -450,7 +543,7 @@
 
   function kartentafel(fig, o) {
     if (!fig) return null;
-    o = Object.assign({ karten: ['wohnorte'], start: null, chronik: false, legende: true, ortWoerter: [], beiSchritt: null }, o || {});
+    o = Object.assign({ karten: ['wohnorte'], start: null, legende: true, satz: true, ring: null, beiSchritt: null }, o || {});
     const T = tokens();
     const K = karten();
     const liste = o.karten.filter(k => K[k]);
@@ -464,71 +557,63 @@
     canvas.setAttribute('aria-label', 'Karte. Ziehen oder Pfeiltasten drehen sie, Plus und Minus zoomen.');
     rahmen.insertBefore(canvas, rahmen.firstChild);
     const neu = (tag, cls, html) => { const el = document.createElement(tag); if (cls) el.className = cls; if (html) el.innerHTML = html; return el; };
-    const zwOL = neu('div', 'zwickel zw-ol'), zwOR = neu('div', 'zwickel zw-or'), zwUL = neu('div', 'zwickel zw-ul'), zwUR = neu('div', 'zwickel zw-ur');
-    [zwOL, zwOR].forEach(z => { const a = neu('div', 'aussparung'); a.setAttribute('aria-hidden', 'true'); z.appendChild(a); });
+    const zwOL = neu('div', 'zwickel zw-ol'), zwUL = neu('div', 'zwickel zw-ul'), zwUR = neu('div', 'zwickel zw-ur');
+    const ausparung = neu('div', 'aussparung');
+    ausparung.setAttribute('aria-hidden', 'true');
+    zwOL.appendChild(ausparung);
     let wahl = null;
     if (liste.length > 1) {
       wahl = neu('ul', 'wahl kartenwahl', liste.map(k => `<li><button type="button" data-karte="${k}" aria-pressed="false">${K[k].name}</button></li>`).join(''));
       wahl.setAttribute('aria-label', 'Karte');
       zwOL.appendChild(wahl);
     }
-    const kopf = neu('div', 'tafelkopf');
-    kopf.setAttribute('aria-live', 'polite');
-    zwOR.appendChild(kopf);
     const erkl = neu('ul', 'zeichenerklaerung');
     erkl.setAttribute('aria-label', 'Zeichenerklärung');
     zwUL.appendChild(erkl);
     const hinweis = neu('p', 'hinweis');
     hinweis.hidden = true;
-    const mass = neu('p', 'massstab ziffern');
-    mass.hidden = true;
-    mass.setAttribute('aria-hidden', 'true');
     zwUR.appendChild(hinweis);
-    zwUR.appendChild(mass);
     let legende = null, satzEl = null, frueher = null, spaeter = null;
     if (o.legende) {
       legende = neu('figcaption', 'tafellegende');
       satzEl = neu('p', 'legendensatz');
+      satzEl.setAttribute('aria-live', 'polite');
       const steuer = neu('p', 'steuer', '<button type="button" class="steuerwort" data-schritt="-1">früher</button> <button type="button" class="steuerwort" data-schritt="1">später</button>');
       legende.appendChild(satzEl);
       legende.appendChild(steuer);
       [frueher, spaeter] = $$('button', steuer);
     }
-    // Reihenfolge für die Tastatur: Kartenwahl, Karte, Kopf, Legende mit früher und später; das Raster ordnet sie an
+    // Reihenfolge für die Tastatur: Kartenwahl, Karte, Legende mit früher und später; das Raster ordnet sie an
     fig.insertBefore(zwOL, rahmen);
-    [zwOR, zwUL, zwUR].forEach(z => fig.appendChild(z));
+    [zwUL, zwUR].forEach(z => fig.appendChild(z));
     if (legende) fig.appendChild(legende);
     fig.classList.add('ist-gebaut');
 
     // ---------- Zustand ----------
-    let karte = null, i = 0, chronikLaeuft = false, begonnen = false, gewaehlt = null, hoverLand = null, massZuletzt = '';
+    let karte = null, i = 0, gewaehlt = null;
     const D = () => K[karte];
-    const laut = an => kopf.setAttribute('aria-live', an ? 'polite' : 'off');
 
     // ---------- Kern ----------
     let g = null;
-    const schrift = T.schrift || 'serif', ziffern = T.ziffern || schrift;
+    const schrift = T.schrift || 'serif';
     const blauGrad = () => telefon() ? 12 : 13;
     let aussparCache = [];
     if (window.d3 && window.topojson && window.Globus && window.WELT_110M) {
       try {
         g = window.Globus.erstellen({
-          canvas, flaeche: rahmen, hinweis, zeichenart: 'druck', pendeln: false, versalien: false, dauer: 1000,
+          canvas, hinweis, dauer: 1000, ring: o.ring, landName,
           bereist: inhalt().bereist || [], winzig: inhalt().winzig || {}, ansichten: inhalt().ansichten || {},
           farben: { papier: T.papier, tinte: T.tinte, blau: T.blau, blauRaster: T.blauRaster },
-          schrift: { ort: `500 15px ${schrift}`, ortAktiv: `600 15px ${schrift}`, wasser: `italic 500 ${blauGrad()}px ${schrift}`, ring: `500 ${blauGrad()}px ${ziffern}` },
+          schrift: { ort: `500 15px ${schrift}`, ortAktiv: `600 15px ${schrift}`, wasser: `italic 500 ${blauGrad()}px ${schrift}`, ring: `500 ${blauGrad()}px ${schrift}` },
           aussparungen: () => aussparCache,
-          beiLand: land => { if (karte) landHover(land); },
-          beiAnsicht: a => { if (karte) massstabSetzen(a.massstab); },
-          beimEingriff: () => eingriff(),
-          beiChronikEnde: grund => chronikEnde(grund)
+          beimEingriff: () => { $$('[data-kontinent]', fig).forEach(b => b.classList.remove('ist-aktiv')); }
         });
       } catch (fehler) { g = null; console.warn('Karte:', fehler); }
     }
     if (!g) { fig.classList.add('ohne-kugel'); canvas.remove(); return null; }
 
-    // ---------- Zwickel: Text weicht der Kugel aus ----------
-    const zwickellage = () => getComputedStyle(zwOR).getPropertyValue('--lage').trim() === 'zwickel';
+    // ---------- Zwickel: der Text oben links weicht der Kugel aus ----------
+    const zwickellage = () => getComputedStyle(zwOL).getPropertyValue('--lage').trim() === 'zwickel';
     function textRechtecke(el, bezug) {
       const out = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
       let n;
@@ -544,47 +629,32 @@
     function zwickelFormen() {
       const S = canvas.clientWidth;
       const zw = zwickellage();
-      [zwOL, zwOR].forEach(z => {
-        const a = $('.aussparung', z);
-        z.style.width = zw ? Math.round(S * .46) + 'px' : '';
-        if (!a) return;
-        if (!zw) { a.style.shapeOutside = ''; a.style.height = ''; return; }
-        a.style.height = Math.round(S * .46) + 'px';
-      });
-      [zwUL, zwUR].forEach(z => { z.style.maxWidth = ''; });
-      if (!zw) { aussparCache = []; return; }
-      const c = canvas.getBoundingClientRect(), R = S / 2 - (S < 480 ? 19 : 24), M = 4;
-      [zwOL, zwOR].forEach(z => {
-        const a = $('.aussparung', z), b = a.getBoundingClientRect();
-        a.style.shapeOutside = `circle(${(R + M).toFixed(1)}px at ${(c.left + S / 2 - b.left).toFixed(1)}px ${(c.top + S / 2 - b.top).toFixed(1)}px)`;
-      });
+      zwOL.style.width = zw ? Math.round(S * .46) + 'px' : '';
+      if (!zw) { ausparung.style.shapeOutside = ''; ausparung.style.height = ''; aussparCache = []; [zwUL, zwUR].forEach(z => { z.style.maxWidth = ''; }); return; }
+      ausparung.style.height = Math.round(S * .46) + 'px';
+      const c = canvas.getBoundingClientRect(), R = Math.max(0, S / 2 - (S < 480 ? 19 : 24)), M = 4;
+      const b = ausparung.getBoundingClientRect();
+      ausparung.style.shapeOutside = `circle(${(R + M).toFixed(1)}px at ${(c.left + S / 2 - b.left).toFixed(1)}px ${(c.top + S / 2 - b.top).toFixed(1)}px)`;
       // Unten: so schmal, dass die oberste Zeile neben dem Kreis bleibt (der Block wächst beim Umbrechen nach oben)
       [zwUL, zwUR].forEach(z => {
+        z.style.maxWidth = '';
         for (let n = 0; n < 4; n++) {
-          const b = z.getBoundingClientRect();
-          const dy = Math.abs(b.top - (c.top + S / 2)), frei = dy < R + M ? Math.sqrt((R + M) ** 2 - dy ** 2) : 0;
-          const rand = z === zwUL ? b.left - c.left : c.right - b.right;
+          const q = z.getBoundingClientRect();
+          const dy = Math.abs(q.top - (c.top + S / 2)), frei = dy < R + M ? Math.sqrt((R + M) ** 2 - dy ** 2) : 0;
+          const rand = z === zwUL ? q.left - c.left : c.right - q.right;
           const platz = Math.floor(S / 2 - frei - rand);
-          if (!frei || b.width <= platz) break;
+          if (!frei || q.width <= platz) break;
           z.style.maxWidth = Math.max(80, platz) + 'px';
         }
       });
-      aussparCache = [zwOL, zwOR, zwUL, zwUR].flatMap(z => textRechtecke(z, c));
+      aussparCache = [zwOL, zwUL, zwUR].flatMap(z => textRechtecke(z, c));
     }
 
-    function kopfHtml(t) {
-      if (!t) return '';
-      return `<p class="tafelkopf-ort">${t.zeichen ? zeichen(t.zeichen) : ''}${esc(t.name)}</p>` + (t.angabe ? `<p class="tafelkopf-angabe">${esc(t.angabe)}</p>` : '');
-    }
     function tafelSetzen() {
       const d = D();
-      if (d.schritte) {
-        const s = d.schritte[i];
-        kopf.innerHTML = kopfHtml(d.kopf(s));
-        if (satzEl) satzEl.innerHTML = d.legende(s) || '';
-      } else {
-        kopf.innerHTML = gewaehlt ? kopfHtml({ name: gewaehlt.name }) : `<p class="tafelkopf-ort">${esc(d.kopfText)}</p>`;
-        if (satzEl) satzEl.innerHTML = d.legendeText();
+      if (satzEl) {
+        if (d.schritte) satzEl.innerHTML = d.legende(d.schritte[i]) || '';
+        else satzEl.innerHTML = o.satz && d.legendeText ? d.legendeText() : '';
       }
       if (legende) legende.classList.toggle('ohne-schritte', !d.schritte);
       if (frueher) {
@@ -593,76 +663,65 @@
         [frueher, spaeter].forEach(b => { const aus = b.classList.contains('ist-aus'); b.tabIndex = aus ? -1 : 0; b.setAttribute('aria-hidden', String(aus)); });
       }
       $$('[data-kontinent]', fig).forEach(b => b.classList.remove('ist-aktiv'));
-      woerterSetzen();
       zwickelFormen();
       neuZeichnen();
       if (typeof o.beiSchritt === 'function') o.beiSchritt(karte, i, d.schritte ? d.schritte[i] : null);
     }
-    // Nach einer Änderung an Kopf oder Zwickeln einmal neu zeichnen (die Gradzahlen weichen dem Text aus), höchstens einmal je Bild
+    // Nach einer Änderung an den Zwickeln einmal neu zeichnen (die Ringbeschriftung weicht dem Text aus), höchstens einmal je Bild
     let bildAngefordert = 0;
     function neuZeichnen() { if (!bildAngefordert) bildAngefordert = requestAnimationFrame(() => { bildAngefordert = 0; g.zeichnen(); }); }
-    function woerterSetzen() {
-      const name = karte === 'wohnorte' && D().schritte ? D().schritte[i].name : null;
-      o.ortWoerter.forEach(w => { const an = w.dataset.ort === name; w.classList.toggle('ist-aktiv', an); if (an) w.setAttribute('aria-current', 'true'); else w.removeAttribute('aria-current'); });
-    }
-    // Die Legende und, in der Außenlage, der Kopf halten die Höhe ihres längsten Inhalts: darunter springt nichts
-    function hoehenHalten() {
+    // Die Legende hält die Höhe des längsten Satzes ihrer Karte, höchstens zwei Zeilen: darunter springt fast nichts
+    function hoeheHalten() {
+      if (!satzEl) return;
       const d = D();
-      const probe = (el, inhalte) => {
-        if (!el) return;
-        el.style.minHeight = '';
-        const p = el.cloneNode(false);
-        p.removeAttribute('aria-live');
-        p.setAttribute('aria-hidden', 'true');
-        p.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;width:${el.getBoundingClientRect().width}px;min-height:0;max-width:none;margin:0`;
-        el.parentNode.appendChild(p);
-        let h = 0;
-        inhalte.forEach(x => { p.innerHTML = x; h = Math.max(h, p.getBoundingClientRect().height); });
-        p.remove();
-        el.style.minHeight = Math.ceil(h) + 'px';
-      };
-      if (satzEl) probe(satzEl, d.schritte ? d.schritte.map(s => d.legende(s) || '') : [d.legendeText()]);
-      if (!zwickellage()) probe(kopf, d.schritte ? d.schritte.map(s => kopfHtml(d.kopf(s))) : [`<p class="tafelkopf-ort">${esc(d.kopfText)}</p>`]);
-      else kopf.style.minHeight = '';
+      satzEl.style.minHeight = '';
+      const p = satzEl.cloneNode(false);
+      p.removeAttribute('aria-live');
+      p.setAttribute('aria-hidden', 'true');
+      p.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;width:${satzEl.getBoundingClientRect().width}px;min-height:0;max-width:none;margin:0`;
+      satzEl.parentNode.appendChild(p);
+      let h = 0;
+      (d.schritte ? d.schritte.map(s => d.legende(s) || '') : [o.satz && d.legendeText ? d.legendeText() : '']).forEach(x => { p.innerHTML = x; h = Math.max(h, p.getBoundingClientRect().height); });
+      p.remove();
+      const zeile = parseFloat(getComputedStyle(satzEl).lineHeight) || 0;
+      satzEl.style.minHeight = Math.ceil(zeile ? Math.min(h, zeile * 2) : h) + 'px';
     }
 
     // ---------- Karten und Schritte ----------
-    function ebeneSetzen(key, blick, fliegen, orte) {
+    function ebeneSetzen(key, blick, fliegen) {
       const d = K[key];
-      return g.ebene({ orte: orte || d.orte, laender: !!d.laender, grenzen: d.grenzen !== false, blick }, { fliegen });
+      return g.ebene({ orte: d.orte, laender: !!d.laender, grenzen: d.grenzen !== false, fluesse: !!d.fluesse, blick }, { fliegen });
     }
+    // Wohnorte in Ruhe: der ganze Weg im Überblick, Berlin hervorgehoben; Satoshi und Ursprung: der erste Schauplatz
     function waehlen(key, e) {
       e = e || {};
       if (!K[key]) return;
-      chronikBeenden();
-      begonnen = true;
       karte = key; gewaehlt = null;
       const d = D();
       if (wahl) $$('[data-karte]', wahl).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.karte === key)));
       erkl.innerHTML = d.zeichen.map(([z, w]) => `<li>${zeichen(z)}${esc(w)}</li>`).join('');
+      zwUL.hidden = !d.zeichen.length;
       const fliegen = e.fliegen !== false;
       if (key === 'wohnorte') {
-        i = e.schritt != null ? e.schritt : d.ende;
-        const ziel = e.schritt != null ? d.blick(d.schritte[i]) : d.ueberblick();
-        ebeneSetzen(key, ziel, fliegen);
+        i = d.ende;
+        ebeneSetzen(key, d.ueberblick(), fliegen);
         g.routeZeigen(d.schritte);
         g.aktiv(d.schritte[i].name);
       } else if (d.schritte) {
-        i = e.schritt || 0;
+        i = 0;
         ebeneSetzen(key, d.blick(d.schritte[i]), fliegen);
+        if (d.fest) g.routeZeigen(d.schritte);
         g.aktiv(d.schritte[i].name);
       } else {
         ebeneSetzen(key, d.ueberblick(), fliegen);
       }
-      hoehenHalten();
+      hoeheHalten();
       tafelSetzen();
     }
     function schritt(n, e) {
       e = e || {};
       const d = D();
       if (!d.schritte) return;
-      chronikBeenden();
-      begonnen = true;
       i = Math.max(0, Math.min(d.schritte.length - 1, n));
       const s = d.schritte[i];
       if (d.fest) g.aktiv(s.name);
@@ -670,105 +729,25 @@
       else g.ortAnfliegen({ name: s.name, lat: s.lat, lon: s.lon }, d.blick(s).k);
       tafelSetzen();
     }
-    function ort(name) {
-      const st = K.wohnorte.schritte, n = st.findIndex(s => s.name === name);
-      if (n < 0) return;
-      if (karte !== 'wohnorte') { waehlen('wohnorte', { schritt: n }); return; }
-      schritt(n);
-    }
 
-    // ---------- Chronik der Startseite ----------
-    function endstand(springen) {
-      const d = K.wohnorte;
-      chronikLaeuft = false;
-      laut(true);
-      if (karte !== 'wohnorte') return;
-      i = d.ende;
-      g.routeZeigen(d.schritte);
-      const b = d.ueberblick();
-      if (springen) g.springen(b.mitte, b.k);
-      g.aktiv(d.schritte[i].name);
-      tafelSetzen();
-    }
-    function chronikStarten() {
-      if (karte !== 'wohnorte' || begonnen) return;
-      begonnen = true;
-      if (ruhig()) { endstand(true); return; }
-      const d = K.wohnorte;
-      chronikLaeuft = true;
-      laut(false);
-      ebeneSetzen('wohnorte', d.blick(d.schritte[0]), false);
-      g.chronik(d.schritte, {
-        sofort: true, dauer: 1000, pause: 2600, zoom: s => zoomFuer(s), schluss: d.ueberblick(),
-        beiStation: (s, n) => { if (!chronikLaeuft) return; i = n; tafelSetzen(); }
-      });
-    }
-    function chronikEnde(grund) {
-      if (!chronikLaeuft) return;
-      if (grund === 'fertig') { endstand(false); return; }
-      chronikLaeuft = false;
-      laut(true);
-      g.routeZeigen(K.wohnorte.schritte);
-      tafelSetzen();
-    }
-    // Die Seite selbst beendet die Chronik (Kartenwahl, früher und später, Bedienwort): der ganze Weg bleibt stehen
-    function chronikBeenden() {
-      if (!chronikLaeuft) return;
-      chronikLaeuft = false;
-      g.chronikStoppen();
-      g.routeZeigen(K.wohnorte.schritte);
-      laut(true);
-    }
-    // Wer die Karte anfasst, bevor die Chronik lief, sieht alle Wohnorte und den ganzen Weg
-    function eingriff() {
-      if (!begonnen && karte === 'wohnorte' && o.chronik) {
-        begonnen = true;
-        g.ebene({ orte: K.wohnorte.orte, laender: false, grenzen: true, blick: { mitte: [0, 0], k: 1 } }, { fliegen: false, behalten: true });
-        g.routeZeigen(K.wohnorte.schritte);
-        g.aktiv(K.wohnorte.schritte[i].name);
-      }
-      begonnen = true;
-    }
-
-    // ---------- Reisen: Land unter dem Zeiger, gewähltes Land, Kontinente ----------
-    function landHover(land) {
-      if (karte !== 'reisen') return;
-      hoverLand = land;
-      const zeigen = land || gewaehlt;
-      kopf.innerHTML = zeigen ? kopfHtml({ name: zeigen.name }) : `<p class="tafelkopf-ort">${esc(D().kopfText)}</p>`;
-      zwickelFormen();
-    }
+    // ---------- Reisen: ein Klick wählt ein bereistes Land, der Kern schreibt seinen Namen auf die Karte ----------
     canvas.addEventListener('click', e => {
       if (karte !== 'reisen') return;
       const r = canvas.getBoundingClientRect();
-      const land = g.landBei(e.clientX - r.left, e.clientY - r.top);
-      gewaehlt = land;
-      g.auswahl(land ? land.iso : null);
-      landHover(hoverLand);
-      if (!land) kopf.innerHTML = `<p class="tafelkopf-ort">${esc(D().kopfText)}</p>`;
+      gewaehlt = g.landBei(e.clientX - r.left, e.clientY - r.top);
+      g.auswahl(gewaehlt ? gewaehlt.iso : null);
     });
 
-    // ---------- Maßstab und Hinweis ----------
-    function massstabSetzen(m) {
-      const schluessel = m ? m.km + '|' + Math.round(m.px) : '';
-      if (schluessel === massZuletzt) return;
-      massZuletzt = schluessel;
-      if (!m) { mass.hidden = true; mass.innerHTML = ''; return; }
-      const w = Math.round(m.px);
-      mass.innerHTML = `0<svg class="leiste" width="${w + 2}" height="7" viewBox="0 0 ${w + 2} 7" aria-hidden="true" focusable="false"><rect x="1" y="1" width="${(w / 2).toFixed(2)}" height="5" fill="currentColor"/><rect x="1" y="1" width="${w}" height="5" fill="none" stroke="currentColor" stroke-width=".75"/></svg>${m.km}${NBSP}km`;
-      mass.hidden = false;
-    }
     // Der Kern zeigt den Hinweis bei jedem Rad ohne Taste; hier erscheint jeder Hinweis höchstens einmal je Besuch, zwei Sekunden
     if ('MutationObserver' in window) {
       let zeigt = null, uhr = 0;
       const verbraucht = new Set();
       new MutationObserver(() => {
-        if (hinweis.hidden) { clearTimeout(uhr); uhr = 0; if (zeigt) verbraucht.add(zeigt); zeigt = null; mass.style.display = ''; return; }
+        if (hinweis.hidden) { clearTimeout(uhr); uhr = 0; if (zeigt) verbraucht.add(zeigt); zeigt = null; return; }
         const text = hinweis.textContent;
         if (verbraucht.has(text)) { hinweis.hidden = true; return; }
         if (text === zeigt) return;
         zeigt = text;
-        mass.style.display = 'none';
         zwickelFormen();
         clearTimeout(uhr);
         uhr = setTimeout(() => { hinweis.hidden = true; }, 2000);
@@ -792,51 +771,18 @@
         const [mitte, k] = KONTINENTE[b.dataset.kontinent] || [];
         if (!mitte) return;
         gewaehlt = null; g.auswahl(null);
-        landHover(null);
         g.fliegen(mitte, k);
         $$('[data-kontinent]', fig).forEach(x => x.classList.toggle('ist-aktiv', x === b));
       }
     });
-    // Ein Bedienwort außerhalb der Tafel: auf dem Telefon rückt die Karte ins Bild (ohne Glätten)
-    function insBild() {
-      const r = rahmen.getBoundingClientRect(), H = window.innerHeight;
-      if (r.top >= 0 && r.bottom <= H) return;
-      window.scrollBy(0, r.top - Math.max(8, (H - r.height) / 2));
-    }
-    o.ortWoerter.forEach(w => w.addEventListener('click', () => { ort(w.dataset.ort); insBild(); }));
 
-    // ---------- Laden, Sichtbarkeit, Größe ----------
+    // ---------- Laden, Größe ----------
     const start = o.start && liste.includes(o.start) ? o.start : liste[0];
-    karte = start;
-    const d0 = K[start];
-    erkl.innerHTML = d0.zeichen.map(([z, w]) => `<li>${zeichen(z)}${esc(w)}</li>`).join('');
-    if (wahl) $$('[data-karte]', wahl).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.karte === start)));
-    if (start === 'wohnorte' && o.chronik) {
-      // Bis die Chronik beginnt, steht die Karte an ihrer ersten Station, nur mit diesem Ort
-      i = 0;
-      ebeneSetzen('wohnorte', d0.blick(d0.schritte[0]), false, d0.orte.slice(0, 1));
-      g.aktiv(d0.schritte[0].name);
-    } else if (d0.schritte) {
-      i = start === 'wohnorte' ? d0.ende : 0;
-      ebeneSetzen(start, start === 'wohnorte' ? d0.ueberblick() : d0.blick(d0.schritte[i]), false);
-      if (start === 'wohnorte') g.routeZeigen(d0.schritte);
-      g.aktiv(d0.schritte[i].name);
-    } else ebeneSetzen(start, d0.ueberblick(), false);
-
+    waehlen(start, { fliegen: false });
     schriften(2500).then(() => {
-      hoehenHalten();
+      hoeheHalten();
       tafelSetzen();
       fig.classList.add('ist-bereit');
-      if (!(start === 'wohnorte' && o.chronik)) return;
-      // Bei reduzierter Bewegung keine Chronik: gleich der ganze Weg und Berlin
-      if (ruhig()) { begonnen = true; endstand(true); return; }
-      if (!('IntersectionObserver' in window)) { chronikStarten(); return; }
-      // Sie beginnt, wenn die Karte zur Hälfte zu sehen ist, und endet, wenn sie das Fenster verlässt
-      new IntersectionObserver(e => {
-        const q = e[e.length - 1].intersectionRatio;
-        if (q >= .5 && !begonnen) chronikStarten();
-        else if (q < .15 && chronikLaeuft) { chronikBeenden(); endstand(true); }
-      }, { threshold: [0, .15, .5, 1] }).observe(rahmen);
     });
     let uhr = 0, breiteVorher = 0;
     window.addEventListener('resize', () => {
@@ -844,7 +790,7 @@
       uhr = setTimeout(() => {
         zwickelFormen();
         const w = fig.getBoundingClientRect().width;
-        if (Math.abs(w - breiteVorher) > .5) { breiteVorher = w; hoehenHalten(); }
+        if (Math.abs(w - breiteVorher) > .5) { breiteVorher = w; hoeheHalten(); }
         g.zeichnen();
       }, 120);
     });
@@ -858,7 +804,11 @@
       }).observe(canvas);
     }
 
-    return { waehlen, schritt, ort, kern: g, karte: () => karte, jetzt: () => i, land: iso => { if (karte === 'reisen') { const f = g.land(iso); gewaehlt = f; g.auswahl(iso); landHover(null); return g.landAnfliegen(iso); } } };
+    return {
+      waehlen, schritt, kern: g, karte: () => karte, jetzt: () => i,
+      land: iso => { if (karte !== 'reisen') return null; gewaehlt = g.land(iso); g.auswahl(iso); return g.landAnfliegen(iso); },
+      gewaehlt: () => gewaehlt
+    };
   }
 
   // ---------- Navigation ----------
@@ -883,7 +833,7 @@
 
   window.FSeite = {
     SEITEN, NBSP, NNBSP, $, $$, esc, sauber, ruhig, desktop, telefon, tokens,
-    zahlwort, gross, tausender, jahrText, chr, versalien, punkt, schriften, zeichen,
-    texte, buch, leselinie, stationen, blickFuer, kartentafel, navigation
+    zahlwort, gross, tausender, jahrText, chr, versalien, punkt, schriften, gleichBreit, zeichen,
+    texte, buch, leselinie, stationen, szenen, landName, blickFuer, kartentafel, navigation
   };
 })();

@@ -15,9 +15,8 @@ if (/^https?:$/.test(location.protocol)) {
 </script>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Impressum (Abschnitt 13): eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2.
-   Nur Anordnung. Die Anschrift steht aufrecht (der Browser setzt <address> sonst kursiv). */
-.recht address { font-style: normal; }
+/* Impressum: eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2. Am Ende Schrift und Quellen
+   der Karten, das Kolophon der Website. Nur Anordnung. */
 .recht .schluss { margin-top: calc(var(--z) * 2); }
 </style>
 </head>
@@ -28,10 +27,10 @@ if (/^https?:$/.test(location.protocol)) {
   <a class="name" href="index.html">Dominik Jäkel</a>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
-      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="satoshi.html">Satoshi</a></li>
+      <li><a href="ursprung.html">Ursprung</a></li>
       <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -54,6 +53,11 @@ if (/^https?:$/.test(location.protocol)) {
       <p>Verantwortlich für journalistisch-redaktionelle Inhalte gemäß <span class="nw">§&nbsp;18 Abs.&nbsp;2 <abbr>MStV</abbr></span>: Dominik Jäkel, Anschrift wie oben.</p>
     </section>
 
+    <section aria-labelledby="r-schrift">
+      <h2 id="r-schrift">Schrift und Karten</h2>
+      <p>Gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>. Küsten, Grenzen und Flüsse der Karten nach Natural Earth, die bereisten Länder nach Dominik Jäkels Rubbelkarte.</p>
+    </section>
+
     <p class="schluss">Wie diese Website mit Daten umgeht, steht unter <a href="datenschutz.html">Datenschutz</a>.</p>
   </article>
 </main>
@@ -62,7 +66,6 @@ if (/^https?:$/.test(location.protocol)) {
   <div class="satzspalte">
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <p class="klein"><a href="impressum.html" aria-current="page">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
   </div>
 </footer>
 

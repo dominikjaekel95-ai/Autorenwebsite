@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ursprung – Dominik Jäkel</title>
-<meta name="description" content="Ursprung ist eine Trilogie von Dominik Jäkel. Drei Romane über die Geburt der organisierten Religion am Göbekli Tepe, der Literatur in Uruk und der Heiligen Schrift in Jerusalem.">
+<meta name="description" content="Drei Romane von Dominik Jäkel, die am Göbekli Tepe, in Uruk und in Jerusalem spielen, um 8000, 2700 und 940 vor Christus.">
 <script>
 document.documentElement.classList.add('js');
 if (/^https?:$/.test(location.protocol)) {
@@ -16,27 +16,26 @@ if (/^https?:$/.test(location.protocol)) {
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Ursprung. Oben das Blatt: Titel und Vorspann, darunter die drei Bände in der Satzspalte, daneben die Tafel (höchstens 30 rem),
-   die während der Bände haftet und dem Band folgt, den man liest. Danach die Bücher zum Stoff. Nur Anordnung, alles Sichtbare
-   kommt aus stil.css. Ausnahme: Grund und Linie der haftenden Tafel auf Tablet und Telefon,
-   aus Tokens, bis es dafür eine gemeinsame Klasse in stil.css gibt (wie beim Standortregister der Bibliothek). */
+   die am Desktop während der Bände haftet; der Ort des Bands, den man liest, steht halbfett. Danach die Bücher zum Stoff.
+   Auf Tablet hochkant und Telefon steht die Tafel über den Bänden und haftet nicht. Nur Anordnung. */
 .ortzeile { margin-bottom: calc(var(--z) * .25); }
-.stoff + .buchzeile { margin-top: calc(var(--z) * .5); }
-
+.blatt > .tafelplatz { margin-top: calc(var(--z) * 1.5); }
+.tafelplatz .kartentafel { max-width: 30rem; }
+.stoff-teil { margin-top: calc(var(--z) * 3); }
 @media (min-width: 75rem) {
   .blatt > .titelei { grid-row: 1; }
-  .blatt > .tafelplatz { grid-row: 1 / 3; padding-bottom: calc(var(--z) * 3); }
-  .blatt > .baende { grid-row: 2; padding-bottom: calc(var(--z) * 3); }
-  .tafelplatz .kartentafel { position: sticky; top: calc(var(--z) * 2); max-width: 30rem; }
+  .blatt > .tafelplatz { grid-row: 1 / 3; margin-top: 0; padding-bottom: calc(var(--z) * 3); }
+  .blatt > .baende { grid-row: 2; }
+  .tafelplatz .kartentafel { position: sticky; top: calc(var(--z) * 2); }
 }
-@media (max-width: 74.99rem) {
-  .blatt { display: block; padding: 0 var(--rand) calc(var(--z) * 3); }
-  .blatt > .tafelplatz { position: sticky; top: 0; z-index: 2; max-width: none; margin-top: calc(var(--z) * .5); padding-block: calc(var(--z) * .5);
-    background: var(--papier); border-bottom: 1px solid var(--papier); }
-  .blatt > .tafelplatz.haftet { border-bottom-color: var(--tinte); }
-  .tafelplatz .kartentafel { width: min(100%, 50svh); }
-  .baende .wort { scroll-margin-top: calc(var(--tafel-h, 0px) + var(--z)); }
+/* Tablet quer: zwei Spalten, die Tafel haftet rechts neben dem Text */
+@media (min-width: 60rem) and (max-width: 74.99rem) {
+  .blatt { grid-template-columns: var(--rand) minmax(0, 1fr) var(--G) minmax(0, 24rem) var(--rand); }
+  .blatt > .titelei { grid-column: 2; grid-row: 1; }
+  .blatt > .baende { grid-column: 2; grid-row: 2; }
+  .blatt > .tafelplatz { grid-column: 4; grid-row: 1 / 3; margin-top: 0; padding-bottom: calc(var(--z) * 3); }
+  .tafelplatz .kartentafel { position: sticky; top: calc(var(--z) * 2); }
 }
-html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { position: static; }
 </style>
 </head>
 <body>
@@ -46,10 +45,10 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
   <a class="name" href="index.html">Dominik Jäkel</a>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
-      <li><a href="ursprung.html" aria-current="page"><i>Ursprung</i></a></li>
+      <li><a href="satoshi.html">Satoshi</a></li>
+      <li><a href="ursprung.html" aria-current="page">Ursprung</a></li>
       <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html"><i>Untertext</i></a></li>
+      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -61,7 +60,7 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
   <section class="bogen blatt" aria-labelledby="titel">
     <div class="satzspalte titelei">
       <h1 id="titel">Ursprung</h1>
-      <p>Drei Romane über die Geburt der organisierten Religion am Göbekli Tepe, der Literatur in Uruk und der Heiligen Schrift in Jerusalem. In Taiwan begann Dominik Jäkels Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Trilogie.</p>
+      <p>Eine Trilogie, an der Dominik Jäkel gerade arbeitet.</p>
     </div>
 
     <div class="tafelfeld tafelplatz">
@@ -75,18 +74,18 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
     <div class="satzspalte baende">
       <section class="band" id="band-i" data-band="I" aria-labelledby="band-i-titel">
         <h2 id="band-i-titel">Band I. Kreise ohne Wiederkehr</h2>
-        <p class="ortzeile"><button type="button" class="wort" data-ort="0">Göbekli Tepe</button>, um&nbsp;8000&nbsp;v.&nbsp;Chr.</p>
+        <p class="ortzeile">Göbekli Tepe, um&nbsp;8000&nbsp;v.&nbsp;Chr.</p>
         <div class="prosa">
           <p>Die Geburt der organisierten Religion und die Sesshaftwerdung.</p>
           <p>Als die Menschheit ihre Götter erfand – und beschloss, sie zu begraben.</p>
           <p>Am ersten Tempel der Menschheit kämpft der Priester Jaromir – der mit nur 37&nbsp;Sommern den Titel des „Ältesten“ trägt – um das Überleben seines Volkes. Die Winter werden kälter, die Ahnen wenden sich von den Menschen ab und die Jagdgründe versiegen. Zwischen den ersten sesshaften Bauern und den nomadischen Jägern des Umlands droht ein Krieg auszubrechen. Verzweifelt sucht Jaromir nach einem Schüler und Nachfolger, um die Verbindung zu den Ahnen wiederherzustellen. Doch als er gezwungen wird, die gefangene Jägerin Kannika in sein Dorf aufzunehmen, gerät nicht nur sein Glaube, sondern alles, wofür er jemals einstand, ins Wanken.</p>
-          <p>Alles steht unter der Frage: Warum wurde der älteste Tempel der Menschheit nach zweitausend Jahren Blütezeit absichtlich unter Unmengen von Schutt und Erde begraben? Dieser Roman erzählt die Geschichte.</p>
+          <p><i>Kreise ohne Wiederkehr</i> erzählt die Geschichte hinter dem größten Rätsel der Frühgeschichte: Warum wurde der älteste Tempel der Menschheit, der Geburtsort unserer Zivilisation, nach zweitausend Jahren Blütezeit absichtlich unter Unmengen von Schutt und Erde begraben?</p>
         </div>
       </section>
 
       <section class="band" id="band-ii" data-band="II" aria-labelledby="band-ii-titel">
         <h2 id="band-ii-titel">Band II. Von dem König, der niemals sterben wollte (AT)</h2>
-        <p class="ortzeile"><button type="button" class="wort" data-ort="1">Uruk</button>, um&nbsp;2700&nbsp;v.&nbsp;Chr.</p>
+        <p class="ortzeile">Uruk, um&nbsp;2700&nbsp;v.&nbsp;Chr.</p>
         <div class="prosa">
           <p>Die Geburt der Literatur: Die Schrift wird von einer Sprache der Verwaltung zu einer Sprache der Mythen und Legenden.</p>
           <p>Der junge Schreiberlehrling Harran bricht auf, um seine Schwester Samhat zu retten, die König Gilgamesch entführt hat. Er trifft auf einen Herrscher, der von der Angst vor dem Tod besessen ist und nach Unsterblichkeit strebt. Harran erkennt, dass er den König nicht mit Gewalt besiegen kann, sondern nur, wenn er ihm eine Geschichte schreibt.</p>
@@ -95,7 +94,7 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
 
       <section class="band" id="band-iii" data-band="III" aria-labelledby="band-iii-titel">
         <h2 id="band-iii-titel">Band III. Das steinerne Wort (AT)</h2>
-        <p class="ortzeile"><button type="button" class="wort" data-ort="3">Jerusalem</button>, um&nbsp;940&nbsp;v.&nbsp;Chr.</p>
+        <p class="ortzeile">Jerusalem, um&nbsp;940&nbsp;v.&nbsp;Chr.</p>
         <div class="prosa">
           <p>Die Geburt der Heiligen Schrift als politisches Werkzeug.</p>
           <p>Die phönizische Gelehrte Thyra, eine Meisterin aller Mythen der Mittelmeervölker, strandet in Jerusalem. Dort zwingt sie der alternde König Salomo, ihm bei seinem Monumentalwerk zu helfen: aus den vielen Göttern seines zerfallenden Reiches einen einzigen, allmächtigen Gott zu schaffen, um sein zerstrittenes Volk zu einen.</p>
@@ -104,10 +103,9 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
     </div>
   </section>
 
-  <div class="bogen">
+  <div class="bogen stoff-teil">
     <div class="satzspalte">
-      <p class="stoff">Zum Stoff der Trilogie stehen in seiner <a href="bibliothek.html">Bibliothek</a> unter anderem <button type="button" class="wort" data-buch="Gilgamesch"><i>Gilgamesch</i></button>, <button type="button" class="wort" data-buch="Sumerer und Akkader"><i>Sumerer und Akkader</i></button> von Gebhard&nbsp;J.&nbsp;Selz, <button type="button" class="wort" data-buch="The Dawn of Everything"><i>The Dawn of Everything</i></button> von David&nbsp;Graeber und David&nbsp;Wengrow und <button type="button" class="wort" data-buch="Sapiens"><i>Sapiens</i></button> von Yuval Noah&nbsp;Harari.</p>
-      <p class="buchzeile" aria-live="polite"></p>
+      <p>Zum Stoff der Trilogie stehen in seiner <a href="bibliothek.html">Bibliothek</a> unter anderem <i>Gilgamesch</i>, <i>Sumerer und Akkader</i> von Gebhard&nbsp;J.&nbsp;Selz, <i>The Dawn of Everything</i> von David&nbsp;Graeber und David&nbsp;Wengrow und <i>Sapiens</i> von Yuval Noah&nbsp;Harari.</p>
     </div>
   </div>
 </main>
@@ -116,7 +114,6 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
   <div class="satzspalte">
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>, ergänzt um Minuten- und Sekundenstrich. Küsten und Grenzen nach Natural Earth, die bereisten Länder nach seiner Rubbelkarte.</p>
   </div>
 </footer>
 
@@ -129,8 +126,7 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
 <script src="daten/inhalt.js"></script>
 <script src="daten/stationen.js"></script>
 <script src="daten/texte.js"></script>
-<script src="daten/buecher.js"></script>
-<script src="daten/leseliste.js"></script>
+<script src="daten/fluesse.js"></script>
 <script src="seite.js"></script>
 <script>
 (function () {
@@ -138,132 +134,41 @@ html:not(.js) .blatt > .tafelplatz, .blatt > .tafelplatz:has(.ohne-kugel) { posi
   var F = window.FSeite, I = window.INHALT || {};
   if (!F) return;
   var $ = F.$, $$ = F.$$;
-
-  // ---------- Bücher zum Stoff: ein Titel zeigt seine Buchzeile, ein zweiter Klick nimmt sie weg ----------
-  var BUECHER = F.buch.alle();
-  var buchZu = function (t) { return BUECHER.find(function (x) { return x.t === t && x.r !== 'leseliste'; }) || BUECHER.find(function (x) { return x.t === t; }); };
-  var zeile = $('.buchzeile'), buchWahl = null;
-  $$('[data-buch]').forEach(function (b) {
-    // Steht ein Buch nicht in den Daten, bleibt nur sein Titel stehen
-    if (!buchZu(b.dataset.buch)) { var i = document.createElement('i'); i.textContent = b.textContent; b.replaceWith(i); }
-  });
-  var buchWoerter = $$('[data-buch]');
-  function buchZeigen(b) {
-    buchWahl = buchWahl === b ? null : b;
-    buchWoerter.forEach(function (w) {
-      var an = w === buchWahl;
-      w.classList.toggle('ist-aktiv', an);
-      if (an) w.setAttribute('aria-current', 'true'); else w.removeAttribute('aria-current');
-    });
-    zeile.innerHTML = buchWahl ? F.buch.zeile(buchZu(buchWahl.dataset.buch)).html : '';
-  }
-  document.addEventListener('click', function (e) { var b = e.target.closest('button[data-buch]'); if (b) buchZeigen(b); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && buchWahl) { var b = buchWahl; buchZeigen(b); b.focus(); } });
-
-  // ---------- Karte: sie folgt dem Band, den man liest ----------
-  var ORTE = (I.ursprung || []).filter(function (o) { return o && o.lat != null && o.lon != null; })
-    .map(function (o) { return { name: o.name, lat: o.lat, lon: o.lon, band: o.band }; });
+  // Der Ort, an dem ein Band spielt; Tyros steht nur auf der Karte, auf dem Weg nach Jerusalem
+  var ORTE = (I.ursprung || []).filter(function (o) { return o && o.lat != null && o.lon != null; });
   var BAND = {};
   ((I.trilogie && I.trilogie.baende) || []).forEach(function (b) { BAND[b.band] = b; });
-  // Der Ort, an dem ein Band spielt; Tyros steht nur auf der Karte, auf dem Weg nach Jerusalem
   var hauptOrt = function (band) {
-    var b = BAND[band] || {};
-    var i = ORTE.findIndex(function (o) { return o.band === band && o.name === b.ort; });
-    return i >= 0 ? i : ORTE.findIndex(function (o) { return o.band === band; });
+    var b = BAND[band] || {}, o = ORTE.find(function (x) { return x.band === band && x.name === b.ort; }) || ORTE.find(function (x) { return x.band === band; });
+    return o ? o.name : null;
   };
-  var blatt = $('.blatt'), platz = $('.tafelplatz'), fig = $('#karte'), baende = $('.baende');
-  var BAENDE = $$('.band'), ortWoerter = $$('[data-ort]');
+  var blatt = $('.blatt'), fig = $('#karte'), BAENDE = $$('.band');
   var t = ORTE.length ? F.kartentafel(fig, { karten: ['ursprung'], legende: false }) : null;
-  if (!t) {
-    ortWoerter.forEach(function (b) { b.replaceWith(document.createTextNode(b.textContent)); });
-    return;
-  }
-  var g = t.kern, kopf = $('.tafelkopf', fig), canvas = $('canvas', fig);
+  if (!t) return;
+  var g = t.kern, canvas = $('canvas', fig);
+  // Ab 60 rem haftet die Tafel neben dem Text (Tablet quer und Desktop)
+  var haftet = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 60rem)').matches); };
   // Derselbe feste Blick wie die Karte Ursprung in seite.js: alle vier Orte im Bild
   var BLICK = { mitte: [40, 33.6], k: 7 };
-  var jetzt = -1, verschoben = false, gewaehltUm = -1e9, uhr = 0;
+  var jetzt = null, verschoben = false, uhr = 0;
   // Wer die Karte selbst gedreht oder gezoomt hat, bekommt beim nächsten Band wieder den festen Blick
-  var druck = null;
-  canvas.addEventListener('pointerdown', function (e) { druck = [e.clientX, e.clientY]; }, { passive: true });
-  canvas.addEventListener('pointermove', function (e) {
-    if (!druck) return;
-    // Mit dem Finger dreht nur die waagerechte Bewegung; senkrecht scrollt die Seite
-    var dx = Math.abs(e.clientX - druck[0]), dy = Math.abs(e.clientY - druck[1]);
-    if (e.pointerType === 'touch' ? dx > 4 && dx > dy : Math.hypot(dx, dy) > 3) verschoben = true;
-  }, { passive: true });
-  ['pointerup', 'pointercancel'].forEach(function (n) { canvas.addEventListener(n, function () { druck = null; }, { passive: true }); });
-  canvas.addEventListener('keydown', function (e) { if (/^(Arrow|\+|=|-)/.test(e.key)) verschoben = true; });
-  canvas.addEventListener('wheel', function (e) { if (e.ctrlKey || e.metaKey) verschoben = true; }, { passive: true });
-  canvas.addEventListener('touchmove', function (e) { if (e.touches.length === 2) verschoben = true; }, { passive: true });
-
-  function markieren() {
-    ortWoerter.forEach(function (w) {
-      var an = +w.dataset.ort === jetzt;
-      w.classList.toggle('ist-aktiv', an);
-      if (an) w.setAttribute('aria-current', 'true'); else w.removeAttribute('aria-current');
-    });
-  }
-  /* Ein Ort der Trilogie: auf der Karte stehen die Orte bis zu ihm und der Weg dorthin, der Kopf der Tafel nennt Ort und Zeit.
-     eigen: selbst gewählt (die Tafel sagt es an) */
-  function zeigen(i, eigen) {
-    i = Math.max(0, Math.min(ORTE.length - 1, i));
-    if (i === jetzt && !eigen && !verschoben) return;
-    kopf.setAttribute('aria-live', eigen ? 'polite' : 'off');
-    var bis = ORTE.slice(0, i + 1);
-    if (i !== jetzt) {
-      g.ebene({ orte: bis, laender: false, grenzen: false, blick: BLICK }, { behalten: true });
-      g.routeZeigen(bis);
-    }
+  ['pointerdown', 'keydown', 'wheel', 'touchmove'].forEach(function (n) { canvas.addEventListener(n, function () { verschoben = true; }, { passive: true }); });
+  // Wo die Tafel nicht haftet, zeigt die Karte alle Orte ohne Hervorhebung; sonst steht der Ort des Bands halbfett
+  function zeigen(name) {
+    if (name === jetzt && !verschoben) return;
+    jetzt = name;
+    g.aktiv(name);
     if (verschoben) { verschoben = false; g.fliegen(BLICK.mitte, BLICK.k); }
-    jetzt = i;
-    t.schritt(i);
-    markieren();
   }
-
-  document.addEventListener('click', function (e) {
-    var b = e.target.closest('button[data-ort]');
-    if (!b) return;
-    gewaehltUm = performance.now();
-    clearTimeout(uhr);
-    zeigen(+b.dataset.ort, true);
-  });
-
-  // Beim Lesen: der Band, dessen Überschrift zuletzt die Leselinie erreicht hat. Über Band I steht Band I.
-  // Desktop bei gut zwei Fünfteln der Fensterhöhe, sonst ein knappes Drittel des Leseraums unter der haftenden Tafel
-  var linie = function (H) {
-    if (F.desktop()) return H * .42;
-    var unten = Math.max(0, platz.getBoundingClientRect().bottom);
-    return unten + Math.max(0, H - unten) * .3;
-  };
+  if (!haftet()) g.aktiv(null);
+  // Beim Lesen: der Band, dessen Überschrift zuletzt die Leselinie erreicht hat. Über Band I steht Band I
   F.leselinie(BAENDE, function (i, info) {
     clearTimeout(uhr);
-    if (performance.now() - gewaehltUm < 400) return;
+    if (!haftet()) { if (jetzt !== null) { jetzt = null; g.aktiv(null); } return; }
     var ziel = hauptOrt(BAENDE[Math.max(0, i)].dataset.band);
     if (info.vorher === null) { zeigen(ziel); return; }
     uhr = setTimeout(function () { zeigen(ziel); }, 160);
-  }, { bereich: blatt, linie: linie });
-
-  // Desktop: unter den Bänden so viel Auslauf, dass Band III die Leselinie erreicht, solange die Tafel noch ganz neben ihm steht.
-  // Tablet und Telefon: Tastaturfokus nicht unter der haftenden Tafel; haftet sie, schließt eine Linie sie ab
-  function masse() {
-    blatt.style.setProperty('--tafel-h', platz.offsetHeight + 'px');
-    baende.style.paddingBottom = '';
-    if (!F.desktop() || !BAENDE.length) return;
-    var pad = parseFloat(getComputedStyle(baende).paddingBottom) || 0, viertel = pad / 12;
-    var oben = parseFloat(getComputedStyle(fig).top) || 0;
-    var ende = baende.getBoundingClientRect().bottom - pad, letzte = BAENDE[BAENDE.length - 1].getBoundingClientRect().top;
-    var noetig = oben + fig.offsetHeight + pad - innerHeight * .42 - (ende - letzte);
-    if (noetig > pad && viertel) baende.style.paddingBottom = Math.ceil(noetig / viertel) * viertel + 'px';
-  }
-  function haften() { var o = platz.getBoundingClientRect().top; platz.classList.toggle('haftet', !F.desktop() && o <= .5 && o > -.5 && window.scrollY > 0); }
-  var bild = 0;
-  window.addEventListener('scroll', function () { if (!bild) bild = requestAnimationFrame(function () { bild = 0; haften(); }); }, { passive: true });
-  var mUhr = 0;
-  var spaeter = function () { clearTimeout(mUhr); mUhr = setTimeout(function () { masse(); haften(); }, 60); };
-  window.addEventListener('resize', spaeter);
-  if ('ResizeObserver' in window) new ResizeObserver(spaeter).observe(fig);
-  F.schriften(2500).then(spaeter);
-  masse(); haften();
+  }, { bereich: blatt, linie: function (H) { return H * .42; } });
 })();
 </script>
 </body>

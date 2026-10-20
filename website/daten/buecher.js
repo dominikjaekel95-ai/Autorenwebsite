@@ -553,8 +553,12 @@ window.BUECHER = [
 {"t":"Die wilden Detektive","u":"","a":"Roberto Bolaño","r":"gerade","s":0,"j":1998,"p":680,"w":0,"b":"p","v":""},
 {"t":"Meditationen","u":"","a":"Marcus Aurelius","r":"gelesen","s":0,"j":180,"p":250,"w":0,"b":"p","v":""},
 {"t":"Das Neue Testament","u":"","a":"Anonym","r":"gelesen","s":0,"j":100,"p":400,"w":0,"b":"p","v":""},
-{"t":"Genesis","u":"Die ersten Kapitel der Bibel","a":"Anonym","r":"gelesen","s":0,"j":-500,"p":90,"w":0,"b":"p","v":""},
+{"t":"Genesis","u":"Die ersten Kapitel der Bibel","a":"Anonym","r":"gelesen","s":0,"j":-500,"p":90,"w":0,"b":"p","v":"","x":1},
 {"t":"Das Buch Hiob","u":"","a":"Anonym","r":"gelesen","s":0,"j":-500,"p":70,"w":0,"b":"p","v":""},
-{"t":"Aeneis","u":"","a":"Vergil","r":"gelesen","s":0,"j":-19,"p":400,"w":0,"b":"p","v":""},
-{"t":"De bello Gallico","u":"","a":"Gaius Iulius Caesar","r":"gelesen","s":0,"j":-50,"p":300,"w":0,"b":"p","v":""}
+{"t":"Aeneis","u":"","a":"Vergil","r":"gelesen","s":0,"j":-19,"p":400,"w":0,"b":"p","v":"","x":1},
+{"t":"De bello Gallico","u":"","a":"Gaius Iulius Caesar","r":"gelesen","s":0,"j":-50,"p":300,"w":0,"b":"p","v":"","x":1},
+{"t":"Ilias","u":"","a":"Homer","r":"gelesen","s":0,"j":-750,"p":560,"w":0,"b":"p","v":"","x":1},
+{"t":"Odyssee","u":"","a":"Homer","r":"gelesen","s":0,"j":-700,"p":480,"w":0,"b":"p","v":"","x":1},
+{"t":"Metamorphosen","u":"","a":"Ovid","r":"gelesen","s":0,"j":8,"p":600,"w":0,"b":"p","v":"","x":1},
+{"t":"Summa theologica","u":"","a":"Thomas von Aquin","r":"gelesen","s":0,"j":1270,"p":400,"w":0,"b":"p","v":"","x":1}
 ];

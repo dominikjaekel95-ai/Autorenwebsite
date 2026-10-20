@@ -140,7 +140,8 @@
   // Luftlinie als Text: „8 190 km“
   const km = (a, b) => tausender(entfernungKm(a, b)) + NBSP + 'km';
   // Jahr als Text: negative Jahre vor Christus, „um“ davor
-  const jahrText = j => j == null ? '' : j < 0 ? 'um' + NBSP + (-j) + NBSP + 'v.' + NBSP + 'Chr.' : String(j);
+  // Frühe Jahre nach Christus mit „n. Chr.“, damit „um 8“ nicht wie eine Zahl ohne Bezug dasteht
+  const jahrText = j => j == null ? '' : j < 0 ? 'um' + NBSP + (-j) + NBSP + 'v.' + NBSP + 'Chr.' : j < 1000 ? 'um' + NBSP + j + NBSP + 'n.' + NBSP + 'Chr.' : String(j);
   // „um 8000 v. Chr.“ in einem Stück halten
   const chr = t => String(t).replace(/(\d) v\. Chr\./g, '$1' + NBSP + 'v.' + NBSP + 'Chr.').replace(/\bum (\d)/g, 'um' + NBSP + '$1');
   // Jahr für die große Zahl der Tafel; „bis 2014“ mit kleinem, kursivem „bis“ und einem echten Leerzeichen (Vorlesen und Kopieren)
@@ -720,7 +721,7 @@
       'Sun Tzu': 'Sun Tzu', 'Luo Guanzhong': 'Luo', 'Han Kang': 'Han', 'Gabriel García Márquez': 'García Márquez', 'Jin Yong': 'Jin Yong',
       'Carlos Ruiz Zafón': 'Ruiz Zafón', 'Adolfo Bioy Casares': 'Bioy Casares', 'Daphne du Maurier': 'du Maurier',
       'Ursula K. Le Guin': 'Le Guin', 'John le Carré': 'le Carré', 'Antoine de Saint-Exupéry': 'Saint-Exupéry', 'Lieutenant X': 'Lieutenant X',
-      'Anonymous': '', 'Anonym': '', 'Die 19 Finaltexte': ''
+      'Thomas von Aquin': 'Thomas von Aquin', 'Anonymous': '', 'Anonym': '', 'Die 19 Finaltexte': ''
     };
     const AUTOR = { 'Anonymous': 'Anonym' };
     // Bleibt draußen, falls ein Buch nicht im Regal stehen soll (derzeit nichts)
@@ -791,7 +792,7 @@
     function karte(b, o) {
       const er = !!o && o.person === 3;
       const satz = s => s && !/[.!?]$/.test(s) ? s + '.' : s;
-      const jahr = b.j == null ? '' : b.j < 0 ? 'Entstanden ' + jahrText(b.j) : b.j < 1450 ? 'Entstanden um ' + b.j : 'Zuerst erschienen ' + b.j;
+      const jahr = b.j == null ? '' : b.j < 1000 ? 'Entstanden ' + jahrText(b.j) : b.j < 1450 ? 'Entstanden um ' + b.j : 'Zuerst erschienen ' + b.j;
       const ausgabe = [b.v, b.p ? (b.ungefaehr ? 'etwa ' : '') + tausender(b.p) + ' Seiten' : ''].filter(Boolean).join(', ');
       const notiz = [];
       if (b.r === 'gerade') notiz.push(er ? 'Liest er gerade.' : 'Lese ich gerade.');
@@ -799,12 +800,13 @@
       if (b.r === 'leseliste') notiz.push('Wartet noch.');
       if (b.r === 'kindheit') notiz.push('Aus Kindheit und Jugend.');
       if (b.s === 5 && b.r !== 'leseliste') notiz.push(er ? 'Eines seiner liebsten.' : 'Eines meiner liebsten.');
+      if (b.x) notiz.push('In Auszügen gelesen.');
       if (b.w) notiz.push('Mehr als einmal gelesen.');
       return { signatur: b.sig || '', titel: b.t, unter: b.u, autor: b.autor, zeilen: [satz(jahr), satz(ausgabe)], notiz: notiz.join(' ') };
     }
     // Eine Zeile über ein Buch: „Bukowski, Pulp, 1994“ als Text und als HTML (Titel kursiv)
     function zeile(b) {
-      const zusatz = b.r === 'abgebrochen' ? 'nicht zu Ende gelesen' : b.r === 'gerade' ? 'lese ich gerade' : b.r === 'leseliste' ? 'wartet noch' : '';
+      const zusatz = b.r === 'abgebrochen' ? 'nicht zu Ende gelesen' : b.r === 'gerade' ? 'lese ich gerade' : b.r === 'leseliste' ? 'wartet noch' : b.x ? 'in Auszügen' : '';
       const j = b.j != null ? jahrText(b.j) : '';
       return {
         text: [b.nn, b.t, j, zusatz].filter(Boolean).join(', '),

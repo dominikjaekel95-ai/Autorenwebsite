@@ -74,7 +74,7 @@ function schreiben(name, inhalt) {
 // ---------- buecher.js ----------
 function buecher() {
   const REGALE = ['gelesen', 'kindheit', 'gerade', 'abgebrochen'];
-  const FELDER = ['t', 'u', 'a', 'r', 's', 'j', 'p', 'w', 'b', 'v'];
+  const FELDER = ['t', 'u', 'a', 'r', 's', 'j', 'p', 'w', 'b', 'v', 'x'];   // x: in Auszügen gelesen
   const roh = laden(path.join(QUELLE, 'daten', 'buecher.js'), 'BUECHER');
   // Verlag ohne „An Imprint of …“; Exportreste ohne Verlagsnamen (eine Webadresse, „Fisical_Book“) bleiben leer
   const imprint = v => /^https?:\/\/|_/.test(String(v || '')) ? '' : String(v || '').replace(/:\s*an imprint of .*$/i, '').replace(/,?\s+an imprint of .*$/i, '');

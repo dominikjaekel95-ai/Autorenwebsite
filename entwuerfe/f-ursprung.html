@@ -38,11 +38,6 @@
 .nochmal { margin-top: calc(var(--z) * .25); font-size: .9375em; color: var(--grau-2); }
 .nochmal.still { visibility: hidden; }
 
-/* Zwischen k = 1 und dem Lupenrand des Kerns (ab k = 1,15) wäre die Kugel beim langsamen Heranfliegen fast eine Sekunde lang
-   eckig vom Rand der Leinwand beschnitten; die Seite hält sie schon ab k > 1 rund, mit demselben Rand */
-.flaeche.ist-rund { clip-path: circle(calc(50% - 1.5px)); }
-.flaeche.ist-rund::after { opacity: 1; }
-
 /* ---------- Die drei Bände ---------- */
 .baende { margin-top: calc(var(--z) * 3); }
 .band { position: relative; scroll-margin-top: var(--z); }
@@ -353,19 +348,6 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
     if (ueberblick) { orteBis(ALLE.length); spurBis = ORTE.length - 1; begonnen = true; }
     g.ebene({ orte: ortsListe, laender: false, blick: ueberblick ? BLICK.ende : BLICK.anfang, farben: F.SIENA_EBENE }, { fliegen: false });
     if (ueberblick) g.routeZeigen(ORTE);
-  }
-
-  // Zwischen k = 1 und dem Lupenrand des Kerns (ab k = 1,15) wäre die Kugel beim langsamen Heranfliegen eckig beschnitten;
-  // die Seite hält sie schon ab k > 1 rund (siehe Stil oben). Ein Blick je Bild, nur solange die Seite sichtbar ist
-  if (g) {
-    let rund = false;
-    const rundHalten = () => {
-      requestAnimationFrame(rundHalten);
-      if (document.hidden) return;
-      const jetzt = g.k() > 1.0005;
-      if (jetzt !== rund) { rund = jetzt; flaeche.classList.toggle('ist-rund', rund); }
-    };
-    requestAnimationFrame(rundHalten);
   }
 
   // Das Wort unter dem Kolophon: breit vor dem ersten Aufklappen „Ort für Ort, von Göbekli Tepe an“, danach „Noch einmal …“

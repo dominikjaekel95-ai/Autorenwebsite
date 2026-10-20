@@ -8,6 +8,7 @@ Erste Entwürfe für eine persönliche Autorenwebsite: Journal, Länderguides, B
 
 | | Richtung | Idee |
 |---|---|---|
+| F | [Dominik Jäkel, fünf Seiten](entwuerfe/f-start.html) | Der erste mehrseitige Entwurf vor der Live-Demo: Startseite mit Globus, Stationstafel und bewegter erster Zeile, dazu [Satoshi](entwuerfe/f-satoshi.html), [Ursprung](entwuerfe/f-ursprung.html), [Bibliothek](entwuerfe/f-bibliothek.html) und [Vita](entwuerfe/f-vita.html). Gemeinsamer Stil in `f-stil.css`, gemeinsame Helfer in `f-seite.js`. |
 | E1 | [Klappentext und Regal](entwuerfe/e1-klappentext.html) | Briefkopf und Kurzvita in Vollkorn, die Lebensstationen als Kolophonzeile mit springender Chronik. Darunter ein Regal aus den Goodreads-Daten, nach Erscheinungsjahr geordnet, der Nachttisch quer obenauf. |
 | E2 | [Atlastafel und Zeitband](entwuerfe/e2-atlas.html) | Eine Doppelseite nach Schalansky in Alegreya: eine Tafel pro Station, daneben der Globus. Darunter alle Bücher als Striche auf einer Zeitachse von Gilgamesch bis Labatut. |
 | E3 | [Buchseite und Register](entwuerfe/e3-marginalie.html) | Eine Buchseite mit Randspalte in Spectral, der Globus als Abbildung 1, die Orte als Randnotizen. Darunter ein laufendes Register nach Jahrzehnten. |
@@ -18,6 +19,7 @@ Erste Entwürfe für eine persönliche Autorenwebsite: Journal, Länderguides, B
 
 In den Entwürfen A bis D lässt sich unten über „Name testen“ jeder Namenskandidat einsetzen, auch ein eigener. Die Übersicht enthält außerdem die Shortlist der Namen und eine Empfehlung.
 
+![Entwurf F: Startseite](entwuerfe/vorschau/f-start.jpg)
 ![Entwurf E1: Klappentext und Regal](entwuerfe/vorschau/e1-klappentext.jpg)
 ![Entwurf E2: Atlastafel und Zeitband](entwuerfe/vorschau/e2-atlas.jpg)
 ![Entwurf E3: Buchseite und Register](entwuerfe/vorschau/e3-marginalie.jpg)

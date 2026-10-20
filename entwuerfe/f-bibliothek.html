@@ -749,7 +749,8 @@
      und die stehende Zeitleiste). Dazu nur hier: liegt sie neben einem Buch des obersten Bretts, während die Zeitleiste noch an ihrem
      Platz darunter steht, endet sie über der Leiste. Liegt die Karte schon so, bleibt sie, wo sie ist. */
   function karteFrei() {
-    const kopf = $('.kopf'), kb = kopf ? kopf.getBoundingClientRect().bottom : 0;
+    const unten = el => el ? el.getBoundingClientRect().bottom : 0;
+    const kb = Math.max(unten($('.kopf')), unten($('main h1.seitentitel')));
     const sp = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
     return Math.max(12, sp + 8, kb > 0 ? kb + zeile * .5 : 0);
   }

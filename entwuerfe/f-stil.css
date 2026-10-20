@@ -130,6 +130,10 @@ a.name:hover { text-decoration-line: underline; }
 .flaeche.ist-gezoomt { clip-path: circle(calc(50% - 1.5px)); }
 .flaeche::after { content: ""; position: absolute; inset: 1.5px; border-radius: 50%; border: 1px solid var(--graphit); pointer-events: none; opacity: 0; }
 .flaeche.ist-gezoomt::after { opacity: 1; }
+/* Zwischen k = 1 und dem Lupenrand des Kerns (ab k = 1,15) wäre die Kugel beim Heranfliegen kurz eckig vom Rand der Leinwand
+   beschnitten; FSeite hält sie schon ab k > 1 rund, mit demselben Rand */
+.flaeche.ist-rund { clip-path: circle(calc(50% - 1.5px)); }
+.flaeche.ist-rund::after { opacity: 1; }
 .globus { position: relative; }
 .tipp { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; white-space: nowrap; font-style: italic; font-size: .875rem; line-height: 1.3; padding: 0 .3em; background: var(--papier); transform: translate(14px, -50%); }
 .tipp.links { transform: translate(calc(-100% - 14px), -50%); }

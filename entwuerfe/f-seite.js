@@ -244,6 +244,21 @@
       }).observe(el, { attributes: true, attributeFilter: ['hidden'], childList: true, characterData: true, subtree: true });
     }
 
+    // Rund schon ab k > 1 (siehe .ist-rund im Stil): ein Blick je Bild, nur solange der Globus im Bild und die Seite sichtbar ist
+    if (o.flaeche && typeof g.k === 'function') {
+      let rund = false, an = false;
+      const rundHalten = () => {
+        if (!an) return;
+        requestAnimationFrame(rundHalten);
+        if (document.hidden) return;
+        const jetzt = g.k() > 1.0005;
+        if (jetzt !== rund) { rund = jetzt; o.flaeche.classList.toggle('ist-rund', rund); }
+      };
+      const los = () => { if (!an) { an = true; requestAnimationFrame(rundHalten); } };
+      if ('IntersectionObserver' in window) new IntersectionObserver(e => { if (e[e.length - 1].isIntersecting) los(); else an = false; }).observe(o.flaeche);
+      else los();
+    }
+
     // Keine Länderhervorhebung, solange gesperrt
     let gesperrt = false;
     if (o.flaeche) o.flaeche.addEventListener('pointermove', e => { if (gesperrt) e.stopPropagation(); }, true);
@@ -607,10 +622,12 @@
       return karte;
     }
     const alsBlatt = () => window.matchMedia('(max-width: 40rem)').matches;
-    // Was oben frei bleibt: der Kopf der Seite, solange er im Bild ist, und was oben haftet (scroll-padding-top der Seite)
+    // Was oben frei bleibt: der Kopf der Seite und der Titel einer Unterseite, solange sie im Bild sind, und was oben haftet
+    // (scroll-padding-top der Seite)
     const haftetOben = () => parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
     function frei() {
-      const kopf = $('.kopf'), kb = kopf ? kopf.getBoundingClientRect().bottom : 0, sp = haftetOben();
+      const unten = el => el ? el.getBoundingClientRect().bottom : 0;
+      const kb = Math.max(unten($('.kopf')), unten($('main h1.seitentitel'))), sp = haftetOben();
       return Math.max(12, sp ? sp + 8 : 0, kb > 0 ? kb + masz('--z') * .5 : 0);
     }
     function stellen() {
@@ -696,8 +713,8 @@
       'Anonymous': '', 'Anonym': '', 'Die 19 Finaltexte': ''
     };
     const AUTOR = { 'Anonymous': 'Anonym' };
-    // Bleibt draußen, bis Dominik es freigibt
-    const DRAUSSEN = [{ t: 'Ghostwritten', a: 'David Mitchell' }];
+    // Bleibt draußen, bis Dominik es freigibt (derzeit nichts; Ghostwritten von David Mitchell ist ein Roman und bleibt im Regal)
+    const DRAUSSEN = [];
     // Malina erschien 1971 (1990 ist die englische Ausgabe), In der Strafkolonie 1919 (beide Ausgaben); der Untertitel der
     // Cornelsen-Ausgabe (ein Arbeitsheft für die Schule) fehlt, bis Dominik sie ansieht
     const BERICHTIGT = [

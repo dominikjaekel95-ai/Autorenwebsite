@@ -656,7 +656,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .nochmal { display: none; }
     return { signatur: 'Die Faktenlage', titel: 'Satoshi Nakamoto', unter: fig.rolle || 'Das Pseudonym', zeilen: ['Ein Whitepaper, neun Seiten, 31.' + F.NBSP + 'Oktober 2008.', 'Gut fünfhundert Forenposts.'], notiz: 'Der erklärte Wunsch, sich selbst überflüssig zu machen.' };
   }
   /* Breit liegt die Karte neben der Textspalte, auf Höhe des Worts, an der Kante des Globus, wenn sie dort Platz hat;
-     so verdeckt sie keinen Text (gehört in FSeite.karteikarte.stellen, solange es dort fehlt, legt die Seite sie selbst) */
+     so verdeckt sie keinen Text. Nur auf dieser Seite: hier steht das Wort mitten im Fließtext */
   function karteDaneben() {
     const karte = $('#karteikarte'), t = F.karteikarte.ausloeser();
     if (!karte || karte.hidden || !t || !F.breit()) return;

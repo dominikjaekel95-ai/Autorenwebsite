@@ -60,10 +60,6 @@
 /* Die Zeile aus dem Exposé steht kursiv in Textgröße, wie zitiert */
 .band-pitch { margin-top: calc(var(--z) * .5); font-style: italic; color: var(--schwarz); }
 .band-text, .band-frage { margin-top: calc(var(--z) * .5); }
-.figuren { margin-top: var(--z); }
-.figur + .figur { margin-top: calc(var(--z) * .5); }
-.figur-name { font-family: var(--sc); letter-spacing: .04em; color: var(--schwarz); }
-.figur-rolle { color: var(--grau-2); }
 
 /* Schmal steht der Globus nicht neben dem Text. Wer in einem Band liest, dessen Überschrift schon oben hinausgerollt ist,
    hat oben einen lebenden Kolumnentitel: Bandnummer und Titel, wie im Buch, die Linie darunter so breit wie die Textspalte.
@@ -165,18 +161,14 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
       <p class="band-thema">Die Geburt der organisierten Religion und die Sesshaftwerdung.</p>
       <p class="band-pitch">Als die Menschheit ihre Götter erfand – und beschloss, sie zu begraben.</p>
       <p class="band-text">Am ersten Tempel der Menschheit kämpft der Priester Jaromir – der mit nur 37&nbsp;Sommern den Titel des „Ältesten“ trägt – um das Überleben seines Volkes. Die Winter werden kälter, die Ahnen wenden sich von den Menschen ab und die Jagdgründe versiegen. Zwischen den ersten sesshaften Bauern und den nomadischen Jägern des Umlands droht ein Krieg auszubrechen. Verzweifelt sucht Jaromir nach einem Schüler und Nachfolger, um die Verbindung zu den Ahnen wiederherzustellen. Doch als er gezwungen wird, die gefangene Jägerin Kannika in sein Dorf aufzunehmen, gerät nicht nur sein Glaube, sondern alles, wofür er jemals einstand, ins Wanken.</p>
-      <p class="band-frage">Warum wurde der älteste Tempel der Menschheit nach zweitausend Jahren Blütezeit absichtlich unter Unmengen von Schutt und Erde begraben?</p>
-      <div class="figuren">
-        <p class="figur"><span class="figur-name">Jaromir</span>, <span class="figur-rolle">der Älteste.</span> Seit er in jungen Jahren unerwartet zum „Ältesten“ wurde, fühlt sich Jaromir wie ein Hochstapler.</p>
-        <p class="figur"><span class="figur-name">Kannika</span>, <span class="figur-rolle">die Wanderin.</span> In ihrer frühen Kindheit ermordeten die Priester ihre Eltern. Sie wächst am Berg Karazak in der Obhut einiger Wanderer auf.</p>
-      </div>
+      <p class="band-frage">Alles steht unter der Frage: Warum wurde der älteste Tempel der Menschheit nach zweitausend Jahren Blütezeit absichtlich unter Unmengen von Schutt und Erde begraben? Dieser Roman erzählt die Geschichte.</p>
     </section>
 
     <section class="band" id="band-ii" data-band="II" aria-labelledby="band-ii-titel">
       <h2 class="band-titel" id="band-ii-titel"><span class="band-ziffer" aria-hidden="true">II</span><span class="unsichtbar">Band II: </span><span class="titel-text">Von dem König, der niemals sterben wollte</span> <span class="arbeitstitel">Arbeitstitel</span></h2>
       <p class="band-ort"><button type="button" class="wort" data-ort="1">Uruk</button>, um&nbsp;2700&nbsp;v.&nbsp;Chr.<br><span class="koord">31°&nbsp;19′&nbsp;N, 45°&nbsp;38′&nbsp;O</span></p>
       <p class="band-thema">Die Geburt der Literatur: Die Schrift wird von einer Sprache der Verwaltung zu einer Sprache der Mythen und Legenden.</p>
-      <p class="band-text">Der junge Schreiberlehrling Harran bricht auf, um seine Schwester Samhat zu retten, die König Gilgamesch entführt hat. Er trifft auf einen Herrscher, der von der Angst vor dem Tod besessen ist und nach Unsterblichkeit strebt. Harran erkennt, dass er den König nicht mit Gewalt besiegen kann.</p>
+      <p class="band-text">Der junge Schreiberlehrling Harran bricht auf, um seine Schwester Samhat zu retten, die König Gilgamesch entführt hat. Er trifft auf einen Herrscher, der von der Angst vor dem Tod besessen ist und nach Unsterblichkeit strebt. Harran erkennt, dass er den König nicht mit Gewalt besiegen kann, sondern nur, wenn er ihm eine Geschichte schreibt.</p>
     </section>
 
     <section class="band" id="band-iii" data-band="III" aria-labelledby="band-iii-titel">
@@ -187,7 +179,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
     </section>
   </div>
 
-  <p class="regal" id="regal">Zum Stoff der Trilogie stehen in seiner <a href="f-bibliothek.html">Bibliothek</a> <button type="button" class="wort" data-buch="Gilgamesch"><i>Gilgamesch</i></button>, <button type="button" class="wort" data-buch="Sumerer und Akkader"><i>Sumerer und Akkader</i></button> von Gebhard&nbsp;J.&nbsp;Selz und <button type="button" class="wort" data-buch="The Dawn of Everything"><i>The Dawn of Everything</i></button> von David&nbsp;Graeber und David&nbsp;Wengrow.</p>
+  <p class="regal" id="regal">Zum Stoff der Trilogie stehen in seiner <a href="f-bibliothek.html">Bibliothek</a> unter anderem <button type="button" class="wort" data-buch="Gilgamesch"><i>Gilgamesch</i></button>, <button type="button" class="wort" data-buch="Sumerer und Akkader"><i>Sumerer und Akkader</i></button> von Gebhard&nbsp;J.&nbsp;Selz, <button type="button" class="wort" data-buch="The Dawn of Everything"><i>The Dawn of Everything</i></button> von David&nbsp;Graeber und David&nbsp;Wengrow und <button type="button" class="wort" data-buch="Sapiens"><i>Sapiens</i></button> von Yuval Noah&nbsp;Harari.</p>
 </section>
 <p class="kolumne" id="kolumne" aria-hidden="true"><span class="kolumne-ziffer"></span><span class="kolumne-titel"></span></p>
 </main>
@@ -198,7 +190,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .weg { display: none; }
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <p class="impressum">Impressum: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin</p>
   </section>
-  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>

@@ -36,8 +36,9 @@
 .vita-text > .einstieg + p { margin-top: var(--z); }
 
 /* Das Foto wie auf einer Klappe: acht Zeilen hoch, die Angabe klein darunter; breit steht es am Fuß der rechten Spalte */
-.bildnis { width: calc(var(--z) * 8 * 711 / 690); padding-top: calc(var(--z) * 2); }
-.bildnis img { display: block; width: 100%; height: auto; background: #0E0E0F; }
+/* Das Foto im Hochformat 3 : 4, so breit wie zehn Zeilen hoch sind */
+.bildnis { width: calc(var(--z) * 10); padding-top: calc(var(--z) * 2); }
+.bildnis img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; background: var(--brett); }
 .bildnis figcaption { margin-top: calc(var(--z) * .25); font-size: .8125rem; line-height: calc(var(--z) * .75); color: var(--grau-2); }
 
 /* Stationen: die Reihenfolge ist die Information. Ort kursiv, darunter die Koordinaten klein und grau,
@@ -74,7 +75,7 @@
   .daten .jahr { right: auto; left: 0; }
 }
 @media (max-width: 40rem) {
-  .bildnis { width: calc(var(--z) * 6.5 * 711 / 690); }
+  .bildnis { width: min(100%, calc(var(--z) * 9)); }
 }
 </style>
 </head>
@@ -136,8 +137,8 @@
     </div>
 
     <figure class="bildnis">
-      <img src="bilder/dominik-jaekel.jpg" alt="Dominik Jäkel" width="711" height="690" decoding="async">
-      <figcaption>Foto: Lars Poeck</figcaption>
+      <img src="bilder/dominik-jaekel-boot.jpg" alt="Dominik Jäkel liest an Deck eines Segelboots, im Hintergrund Berge im Abendlicht" width="1200" height="1600" decoding="async">
+      <figcaption>Mit <i>Picknick am Wegesrand</i> der Brüder Strugatzki.</figcaption>
     </figure>
   </div>
 </div>
@@ -149,7 +150,7 @@
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <p class="impressum">Impressum: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin</p>
   </section>
-  <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
 </footer>
 
 <script src="globus/inhalt.js"></script>

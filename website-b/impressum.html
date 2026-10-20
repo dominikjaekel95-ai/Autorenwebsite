@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Impressum – Dominik Jäkel</title>
-<meta name="description" content="Anbieter dieser Website ist Dominik Jäkel in Berlin.">
+<meta name="description" content="Impressum der Website von Dominik Jäkel.">
 <script>
 document.documentElement.classList.add('js');
 if (/^https?:$/.test(location.protocol)) {
@@ -15,8 +15,12 @@ if (/^https?:$/.test(location.protocol)) {
 </script>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Impressum: eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2. Am Ende Schrift und Quellen
-   der Karten, das Kolophon der Website. Nur Anordnung. */
+/* Impressum: eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2, Wortlaut wie in A.
+   Das Kolophon steht wie in A im Fuß. Nur Anordnung.
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (gehört wie auf den anderen Seiten nach stil.css). */
+.kopf .briefkopf { justify-self: start; }
+.kopf .rolle { margin-left: 1em; }
+@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
 .recht .schluss { margin-top: calc(var(--z) * 2); }
 </style>
 </head>
@@ -24,13 +28,13 @@ if (/^https?:$/.test(location.protocol)) {
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
 
 <header class="bogen kopf">
-  <a class="name" href="index.html">Dominik Jäkel</a>
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
       <li><a href="satoshi.html">Satoshi</a></li>
       <li><a href="ursprung.html">Ursprung</a></li>
-      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -53,20 +57,17 @@ if (/^https?:$/.test(location.protocol)) {
       <p>Verantwortlich für journalistisch-redaktionelle Inhalte gemäß <span class="nw">§&nbsp;18 Abs.&nbsp;2 <abbr>MStV</abbr></span>: Dominik Jäkel, Anschrift wie oben.</p>
     </section>
 
-    <section aria-labelledby="r-schrift">
-      <h2 id="r-schrift">Schrift und Karten</h2>
-      <p>Gesetzt aus der Baskervville des Atelier National de Recherche Typographique in Nancy, unter der <span class="nw">SIL Open Font License 1.1</span>. Küsten, Grenzen und Flüsse der Karten nach Natural Earth, die bereisten Länder nach Dominik Jäkels Rubbelkarte.</p>
-    </section>
-
     <p class="schluss">Wie diese Website mit Daten umgeht, steht unter <a href="datenschutz.html">Datenschutz</a>.</p>
   </article>
 </main>
 
-<footer class="bogen fuss">
-  <div class="satzspalte">
+<footer class="bogen fuss" id="kontakt">
+  <section class="satzspalte kontakt" aria-labelledby="kontakt-titel">
+    <h2 id="kontakt-titel">Kontakt</h2>
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
-    <p class="klein"><a href="impressum.html" aria-current="page">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-  </div>
+    <p class="klein"><a href="impressum.html" aria-current="page">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique. Küsten und Grenzen nach Natural Earth.</p>
+  </section>
 </footer>
 
 <script src="daten/texte.js"></script>

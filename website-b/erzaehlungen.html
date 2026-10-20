@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Erzählungen – Dominik Jäkel</title>
-<meta name="description" content="Erzählungen von Dominik Jäkel, viele davon zuerst auf der Werkstattbühne in Berlin gelesen.">
+<meta name="description" content="Erzählungen von Dominik Jäkel.">
 <script>
 document.documentElement.classList.add('js');
 if (/^https?:$/.test(location.protocol)) {
@@ -15,10 +15,14 @@ if (/^https?:$/.test(location.protocol)) {
 </script>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Erzählungen: unter dem Titel ein Satz, darunter die Liste aus
-   daten/texte.js (art: 'erzaehlung'), die neueste zuerst. Je Eintrag Titel kursiv als Verweis zur Leseseite, Untertitel,
-   darunter das Datum im Grad klein. Ein Eintrag hat zwei Zeilen und zählt deshalb als Gruppe (0,75 z). Nur Anordnung. */
-.texte { margin-top: calc(var(--z) * 1.5); }
+/* Erzählungen: unter dem Titel die Zeile von A, darunter die Liste aus daten/texte.js (art: 'erzaehlung'), die neueste zuerst.
+   Je Eintrag Titel kursiv als Verweis zur Leseseite, Untertitel, darunter das Datum im Grad klein. Ein Eintrag hat zwei Zeilen
+   und zählt deshalb als Gruppe (0,75 z). Ohne Text steht an der Stelle der Liste der Satz von A im Grad Text. Nur Anordnung.
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (gehört wie auf den anderen Seiten nach stil.css). */
+.kopf .briefkopf { justify-self: start; }
+.kopf .rolle { margin-left: 1em; }
+@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
+.texte, .texte-leer { margin-top: calc(var(--z) * 1.5); }
 .texte > li + li { margin-top: calc(var(--z) * .75); }
 </style>
 </head>
@@ -26,13 +30,13 @@ if (/^https?:$/.test(location.protocol)) {
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
 
 <header class="bogen kopf">
-  <a class="name" href="index.html">Dominik Jäkel</a>
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
       <li><a href="satoshi.html">Satoshi</a></li>
       <li><a href="ursprung.html">Ursprung</a></li>
-      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html" aria-current="page">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
+      <li><a href="erzaehlungen.html" aria-current="page">Erzählungen</a></li>
+      <li><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -43,16 +47,19 @@ if (/^https?:$/.test(location.protocol)) {
 <main class="bogen" id="inhalt">
   <div class="satzspalte">
     <h1>Erzählungen</h1>
-    <p>Viele seiner Erzählungen hat Dominik Jäkel auf der Werkstattbühne in Berlin gelesen.</p>
+    <p>Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.</p>
     <ul class="texte" id="texte" hidden></ul>
+    <p class="texte-leer" id="texte-leer" hidden>Noch steht hier keine.</p>
   </div>
 </main>
 
-<footer class="bogen fuss">
-  <div class="satzspalte">
+<footer class="bogen fuss" id="kontakt">
+  <section class="satzspalte kontakt" aria-labelledby="kontakt-titel">
+    <h2 id="kontakt-titel">Kontakt</h2>
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
-    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-  </div>
+    <p class="klein"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique. Küsten und Grenzen nach Natural Earth.</p>
+  </section>
 </footer>
 
 <script src="daten/texte.js"></script>
@@ -63,9 +70,9 @@ if (/^https?:$/.test(location.protocol)) {
   var F = window.FSeite;
   if (!F || !F.texte) return;
   var T = F.texte;
-  var liste = document.getElementById('texte');
+  var liste = document.getElementById('texte'), leer = document.getElementById('texte-leer');
   var alle = T.alle('erzaehlung');
-  if (!alle.length) return;
+  if (!alle.length) { leer.hidden = false; return; }
   // Endet der Titel mit einem Satzzeichen, folgt der Untertitel ohne Punkt dazwischen
   var endetMitZeichen = function (html) {
     return /[.!?…:]$/.test(String(html).replace(/<[^>]*>/g, '').replace(/[“‘’»«)\s]+$/, ''));

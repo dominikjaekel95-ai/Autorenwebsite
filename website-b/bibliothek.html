@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bibliothek – Dominik Jäkel</title>
-<meta name="description" content="Ein Regal mit den Büchern, die Dominik Jäkel gelesen hat, von Gilgamesch bis Labatut.">
+<meta name="description" content="Die Bibliothek von Dominik Jäkel: was er gelesen hat, im Regal nach dem Jahr der Erstveröffentlichung gestellt, dazu seine eigenen Werke, der Nachttisch und was noch wartet.">
 <script>
 document.documentElement.classList.add('js');
 if (/^https?:$/.test(location.protocol)) {
@@ -16,31 +16,79 @@ if (/^https?:$/.test(location.protocol)) {
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Bibliothek. Vorspann in der Satzspalte, Zeichenerklärung im Tafelfeld auf der Grundlinie der letzten Vorspannzeile. Darunter
-   über die ganze Breite: Standortregister (haftet wie ein Kolumnentitel), oberstes Brett, die Fächer, Kindheit und Jugend,
-   Leseliste. Das Regal ist eine Zeichnung aus den Daten, sein Aussehen steht in stil.css. Nur Anordnung. */
-.regal-zeichen { margin-top: calc(var(--z) * .75); display: flex; flex-wrap: wrap; column-gap: 1.5em; }
-@media (min-width: 48rem) and (max-width: 74.99rem) { .bibliothek > .regal-zeichen { max-width: none; } }
+   über die ganze Breite, wie der Vorspann es sagt: oben, woran ich schreibe, und der Nachttisch; darunter, was ich gelesen habe,
+   zuerst als Zeitband (Übersicht, Wortlaut des Zeitbands der Startseite von A), dann das Standortregister mit den Zeiten des
+   Regals (haftet wie ein Kolumnentitel), die Fächer, das Kinderzimmer und was noch wartet (als Register in Textform).
+   Der Wortlaut aller Texte ist der von A (Bibliothek und Zeitband der Startseite). Regal und Zeitband sind Zeichnungen aus den Daten.
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“.
+   Nur Anordnung; was Farbe setzt (Zeitband, Regal der eigenen Werke, haftende Zeile unter dem Register), gehört nach stil.css. */
+.kopf .briefkopf { justify-self: start; }
+.kopf .rolle { margin-left: 1em; }
+@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
+
+/* ---------- Vorspann und Zeichenerklärung ---------- */
+.regal-zeichen { margin-top: calc(var(--z) * .75); }
+.regal-zeichen li { padding-left: calc(8px + .5em); text-indent: calc(-8px - .5em); }
+.regal-zeichen li + li { margin-top: calc(var(--z) * .25); }
+.regal-zeichen li .zeichen { margin-right: .5em; text-indent: 0; }
+.regal-zeichen li:not([data-zeichen]) { padding-left: 0; text-indent: 0; }
+@media (min-width: 48rem) and (max-width: 74.99rem) { .bibliothek > .regal-zeichen { max-width: var(--S); } }
 @media (min-width: 75rem) {
   .bibliothek > .vorspann, .bibliothek > .regal-zeichen { grid-row: 1; margin-top: 0; }
-  .bibliothek > .regal-zeichen { display: block; align-self: last baseline; }
+  .bibliothek > .regal-zeichen { align-self: last baseline; max-width: 30rem; }
 }
-.standorte { margin-top: calc(var(--z) * 2); padding-top: calc(var(--z) * .5); padding-bottom: calc(var(--z) * .25); hyphens: manual; -webkit-hyphens: manual; }
-.standorte ul { display: flex; flex-wrap: wrap; column-gap: 1.5em; }
-.standorte li { white-space: nowrap; }
-.regal { margin-top: var(--z); }
+
+/* ---------- Regal ---------- */
+.regal { margin-top: calc(var(--z) * 2); }
 .fach + .fach { margin-top: calc(var(--z) * 2); }
 .fach > h2 { margin-top: 0; }
 .brett + .brett { margin-top: calc(var(--z) * .75); }
-.stapelplatz { display: flex; align-items: flex-end; flex: none; }
+.gruppe-platz, .stapelplatz, .schuber-platz { display: flex; align-items: flex-end; flex: none; column-gap: 1px; }
 .stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; row-gap: 1px; flex: none; }
-.bibliothek > .leseliste-teil { margin-top: calc(var(--z) * 3); }
+/* Der Schuber der Trilogie: die drei Bände stehen neben ihm, wenn er offen ist; ihr Platz bleibt frei, damit nichts rückt */
+.schuber-platz.zu .band { visibility: hidden; }
+/* Die Karteikarte als Zeile unter dem Brett: die Felder von A in ihrer Folge, ohne Zeichen dazwischen, dazu „zurücklegen“ */
+.unter .zeile.als-karte { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1em; }
+.unter .schild { font-variant-numeric: inherit; white-space: normal; }
+
+/* ---------- Was ich gelesen habe: Vorwort und Zeitband ---------- */
+.lesen { margin-top: calc(var(--z) * 3); }
+.lesen > h2 { margin-top: 0; }
+.vorwort { max-width: var(--S); }
+.zeitband-teil { margin-top: calc(var(--z) * 1.5); }
+.zeitband { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
+.zeitband svg { display: block; overflow: visible; }
+.zeitband svg:focus-visible { outline-offset: 2px; }
+.zeitband .strich { fill: var(--tinte-raster); }
+.zeitband .lieb { fill: var(--tinte); }
+.zeitband .wieder, .zeitband .marke { stroke: var(--tinte); stroke-width: 1; }
+.zeitband .werk, .zeitband .quer { fill: var(--papier); stroke: var(--tinte); stroke-width: .75; }
+.zeitband .warte { fill: var(--papier); stroke: var(--tinte-raster); stroke-width: 1; }
+.zeitband .an { fill: var(--tinte); }
+.zeitband .achse { stroke: var(--tinte); stroke-width: 1; fill: none; }
+.zeitband text { fill: var(--tinte); font-family: var(--schrift); font-size: var(--klein); font-variant-numeric: lining-nums tabular-nums; }
+.zeitband .reihenname { position: sticky; left: 0; width: max-content; margin-top: calc(var(--z) * .5); margin-bottom: calc(var(--z) * .25); }
+.zeitband-teil .buchzeile { margin-top: calc(var(--z) * .5); }
+
+/* ---------- Standortregister: die Zeiten im Regal, haftet oben wie ein Kolumnentitel ---------- */
+.standorte { margin-top: calc(var(--z) * 2); padding-top: calc(var(--z) * .5); padding-bottom: calc(var(--z) * .25); hyphens: manual; -webkit-hyphens: manual; }
+.standorte ul { display: flex; flex-wrap: wrap; column-gap: 1.5em; }
+.standorte .glied { white-space: nowrap; }
+.standorte + .faecher { margin-top: var(--z); }
+
+/* ---------- Was noch wartet: Register in Textform; die Zeile darunter bleibt am unteren Rand stehen, solange sie etwas zeigt ---------- */
 .leseliste li { padding-left: 1em; text-indent: -1em; }
 .leseliste li + li, .leseliste ul + ul { margin-top: calc(var(--z) * .25); }
-/* Am Desktop zwei Listen nebeneinander, in Satzspalte und Tafelfeld; jede läuft für sich */
+.leseliste button { text-indent: 0; }
 @media (min-width: 75rem) {
   .leseliste { display: grid; grid-template-columns: var(--S) var(--P); column-gap: var(--G); align-items: start; }
   .leseliste ul + ul { margin-top: 0; }
 }
+.wartet .unter { margin-top: calc(var(--z) * .25); }
+.wartet .unter.mit-zeile { position: sticky; bottom: 0; z-index: 4; background: var(--papier); padding-bottom: calc(var(--z) * .25); border-top: 1px solid var(--papier); }
+.wartet .unter.mit-zeile.haftet { border-top-color: var(--tinte); }
+
+.zur-startseite { margin-top: calc(var(--z) * 1.5); }
 .ohne-regal { margin-top: calc(var(--z) * 3); }
 html.js .ohne-regal:not(.ist-noetig) { display: none; }
 html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
@@ -50,13 +98,13 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
 
 <header class="bogen kopf">
-  <a class="name" href="index.html">Dominik Jäkel</a>
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
       <li><a href="satoshi.html">Satoshi</a></li>
       <li><a href="ursprung.html">Ursprung</a></li>
-      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html" aria-current="page">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -67,35 +115,47 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
 <main class="bogen bibliothek" id="inhalt">
   <div class="satzspalte vorspann">
     <h1>Bibliothek</h1>
-    <p>In diesem Regal stehen die Bücher, die Dominik Jäkel bei Goodreads verzeichnet hat, nach dem Jahr ihrer Erstausgabe.</p>
+    <p>Oben steht, woran ich schreibe und was auf dem Nachttisch liegt. Darunter steht, was ich gelesen habe, nach dem Jahr geordnet, in dem ein Buch zuerst erschien. Es ist eine Auswahl und wird nie vollständig sein.</p>
   </div>
 
-  <ul class="tafelfeld klein regal-zeichen nur-mit-skript" id="zeichen" aria-label="Zeichenerklärung">
-    <li data-zeichen="liebste">eines der liebsten</li>
-    <li data-zeichen="wieder">mehr als einmal gelesen</li>
-    <li data-zeichen="abgebrochen">nicht zu Ende gelesen</li>
-    <li data-zeichen="auszuege">in Auszügen gelesen</li>
+  <ul class="tafelfeld klein regal-zeichen nur-mit-skript" id="zeichen">
+    <li data-zeichen="liebste">Ein Punkt unten auf dem Rücken: eines meiner liebsten.</li>
+    <li data-zeichen="wieder">Ein Strich über dem Rücken: mehr als einmal gelesen.</li>
+    <li data-zeichen="abgebrochen">Gestrichelt sind die Bücher, die ich nicht zu Ende gelesen habe.</li>
+    <li>Zu jedem Rücken gibt es eine Karteikarte.</li>
   </ul>
 
-  <p class="satzspalte ohne-regal">Das Regal braucht JavaScript.</p>
+  <p class="satzspalte ohne-regal">Das Regal wird mit JavaScript gezeichnet.</p>
 
-  <nav class="ganz klein haftleiste standorte nur-mit-skript" id="standorte" aria-label="Standorte im Regal">
-    <ul class="wahl" id="standorte-liste"></ul>
-  </nav>
+  <section class="ganz regal nur-mit-skript" id="regal" aria-label="Regal">
+    <h2 class="unsichtbar">Was ich schreibe und was auf dem Nachttisch liegt</h2>
+    <div class="fach oben" id="eigenes"></div>
 
-  <section class="ganz regal nur-mit-skript" id="regal" aria-label="Regal"></section>
+    <div class="lesen" id="lesen">
+      <h2 id="gelesen">Was ich gelesen habe</h2>
+      <p class="vorwort">Von Gilgamesch bis Labatut, geordnet nach dem Jahr, in dem ein Buch zuerst erschien; jeder Strich so breit wie sein Rücken. Dunkel stehen die liebsten; halb so hoch, was ich nicht zu Ende gelesen habe; ein kleiner Strich darüber, wenn ich es wieder gelesen habe. Quer darauf liegt, was ich gerade lese; ganz rechts steht, woran ich selbst schreibe. Eine Auswahl, längst nicht alles.</p>
+      <div class="zeitband-teil" id="zeitband-teil">
+        <div class="zeitband" id="zeitband"></div>
+        <p class="buchzeile" id="bandzeile" aria-live="polite"></p>
+      </div>
 
-  <section class="ganz leseliste-teil nur-mit-skript" id="leseliste" aria-labelledby="leseliste-titel" hidden>
-    <h2 id="leseliste-titel">Leseliste</h2>
-    <div class="leseliste" id="leseliste-eintraege"></div>
+      <nav class="klein haftleiste standorte" id="standorte" aria-label="Zeiten im Regal">
+        <ul class="wahl" id="standorte-liste"></ul>
+      </nav>
+      <div class="faecher" id="faecher"></div>
+    </div>
   </section>
+
+  <p class="satzspalte zur-startseite nur-mit-skript">Dieselben Bücher stehen oben <a href="#zeitband-teil">auf einer Zeitachse</a>.</p>
 </main>
 
-<footer class="bogen fuss">
-  <div class="satzspalte">
+<footer class="bogen fuss" id="kontakt">
+  <section class="satzspalte kontakt" aria-labelledby="kontakt-titel">
+    <h2 id="kontakt-titel">Kontakt</h2>
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
-    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-  </div>
+    <p class="klein"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique. Küsten und Grenzen nach Natural Earth.</p>
+  </section>
 </footer>
 
 <script src="daten/inhalt.js"></script>
@@ -106,218 +166,377 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
 <script>
 (function () {
   'use strict';
-  const F = window.FSeite;
+  const F = window.FSeite, I = window.INHALT || {};
   const main = document.getElementById('inhalt');
-  if (!F) { document.querySelector('.ohne-regal').classList.add('ist-noetig'); main.classList.add('ohne-buecher'); return; }
-  const { $, $$, esc, NBSP } = F;
+  const ohneRegal = () => { document.querySelector('.ohne-regal').classList.add('ist-noetig'); main.classList.add('ohne-buecher'); };
+  if (!F) { ohneRegal(); return; }
+  const { $, $$, esc } = F;
   const T = F.tokens();
   const BUECHER = F.buch.alle();
-  if (!BUECHER.some(b => b.r !== 'leseliste')) { $('.ohne-regal').classList.add('ist-noetig'); main.classList.add('ohne-buecher'); return; }
+  if (!BUECHER.some(b => b.r !== 'leseliste')) { ohneRegal(); return; }
 
-  // Zeichenerklärung: die gezeichneten Zeichen des Regals vor den Wörtern
+  // Zeichenerklärung: die gezeichneten Zeichen des Regals vor den Sätzen
   $$('#zeichen [data-zeichen]').forEach(li => { li.insertAdjacentHTML('afterbegin', F.zeichen(li.dataset.zeichen)); });
 
-  // ---------- Daten ----------
+  // ---------- Daten wie in A ----------
   const ordnung = F.buch.ordnung;
-  const FAECHER = F.buch.FAECHER.filter(f => f.id !== 'leseliste').map(f => Object.assign({}, f, {
-    buecher: BUECHER.filter(b => F.buch.fach(b) === f.id).sort(ordnung)
-  })).filter(f => f.buecher.length);
-  const GERADE = BUECHER.filter(b => b.r === 'gerade');
-  const LESELISTE = BUECHER.filter(b => b.r === 'leseliste').sort(ordnung);
-  const MANUSKRIPT = { manuskript: true, key: 'manuskript', t: 'Satoshi', nn: '', blatt: 364 };
-  const zeile = b => b.manuskript ? F.buch.manuskript() : F.buch.zeile(b);
+  // Gelesen und nicht zu Ende gelesen, nach dem Jahr der Erstveröffentlichung; Bücher ohne bekanntes Jahr bleiben draußen (wie in A)
+  const GELESEN = BUECHER.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort(ordnung);
+  const erstes = GELESEN[0];
+  const ERSTES = erstes ? F.buch.titelKurz(erstes.t) : 'Gilgamesch';
+  // Die Zeiten des Regals mit Namen, Jahren und dem Wort im Standortregister wie in A
+  const EPOCHEN = [
+    { id: 'bis-1899', name: 'Von ' + ERSTES + ' bis zur Jahrhundertwende', jahre: (erstes ? F.jahrText(erstes.j) : '') + ' bis 1899', bis: 1899, marke: ERSTES },
+    { id: 'ab-1900', name: 'Bis zum Ende des Zweiten Weltkriegs', jahre: '1900–1945', bis: 1945, marke: '1900' },
+    { id: 'ab-1946', name: 'Bis zum Fall der Mauer', jahre: '1946–1989', bis: 1989, marke: '1946' },
+    { id: 'ab-1990', name: 'Um die Jahrtausendwende', jahre: '1990–2009', bis: 2009, marke: '1990' },
+    { id: 'ab-2010', name: 'Die Gegenwart', jahre: 'seit 2010', bis: Infinity, marke: '2010' }
+  ];
+  EPOCHEN.forEach(f => { f.buecher = []; });
+  GELESEN.forEach(b => { EPOCHEN.find(f => b.j <= f.bis).buecher.push(b); });
+  const KIND = { id: 'kinderzimmer', name: 'Kinderzimmer', jahre: 'nur die wichtigsten aus Kindheit und Jugend', art: 'kind', marke: 'Kinderzimmer' };
+  KIND.buecher = BUECHER.filter(b => b.r === 'kindheit').sort(ordnung);
+  const TISCH = { id: 'nachttisch', name: 'Auf dem Nachttisch' };
+  TISCH.buecher = BUECHER.filter(b => b.r === 'gerade').sort(ordnung);
+  const WARTET = { id: 'wartet', name: 'Was noch wartet', jahre: '', art: 'wartet', marke: 'Was noch wartet' };
+  WARTET.buecher = BUECHER.filter(b => b.r === 'leseliste').sort(ordnung);
+  const FAECHER = EPOCHEN.filter(f => f.buecher.length).concat([KIND].filter(f => f.buecher.length));
+  const schildText = f => f.name + (f.jahre ? ', ' + f.jahre : '');
+  // Eigene Werke wie in A: Satoshi (hier das Manuskript), die Trilogie im Schuber, Erzählungen, Untertext, Länder; Maße in mm wie in A,
+  // gezeichnet wie dort etwas größer als die gelesenen (1,3)
+  const werk = id => (I.werke || []).find(w => w.id === id) || {};
+  const EIGENE = [
+    { id: 'ursprung', schuber: true, breite: 96, hoehe: 191 },
+    { id: 'erzaehlungen', breite: 30, hoehe: 185 },
+    { id: 'untertext', breite: 21, hoehe: 185 },
+    { id: 'laender', breite: 21, hoehe: 220 }
+  ];
+  const BAENDE = ['ursprung-1', 'ursprung-2', 'ursprung-3'];
+  const BAND_MM = { breite: 28, hoehe: 185 };
+
+  // ---------- Was eine Zeile über einen Rücken sagt (Wortlaut von A) ----------
+  // Beim Zeigen: der Name über dem Rücken in A; bei der Wahl: die Karteikarte von A als Zeile
+  function werkTipp(id) {
+    const w = werk(id);
+    if (w.band) return `<i>${esc(w.buchtitel || '')}</i>, Band ${esc(w.band)} der Trilogie`;
+    const t = w.buchtitel || w.titel || '';
+    if (id === 'erzaehlungen') return esc(t);
+    return id === 'satoshi' || id === 'untertext' ? `<i>${esc(t)}</i>, ${esc(w.art || '')}` : esc(w.art || t);
+  }
+  function zeigHtml(x) {
+    if (x.art === 'schuber') return '<i>Ursprung</i>, drei Bände im Schuber';
+    if (x.art === 'werk') return werkTipp(x.id);
+    // Auf dem Nachttisch sagt schon das Wort darunter, dass ich es gerade lese
+    return F.buch.zeile(x.fach === TISCH ? Object.assign({}, x.b, { r: '' }) : x.b).html;
+  }
+  const teil = v => v == null || v === '' ? '' : typeof v === 'object' ? String(v.html || '') : esc(v);
+  function karteVon(x) {
+    if (x.art === 'werk') return F.werkKarte(x.id) || { signatur: 'DJ', titel: werk(x.id).titel || '', eigen: true };
+    return F.buch.karte(x.b);
+  }
+  function karteHtml(x) {
+    const k = karteVon(x);
+    const felder = [['signatur', k.signatur], ['titel', k.titel], ['unter', k.unter], ['autor', k.autor], ['zeilen', (k.zeilen || []).filter(Boolean)], ['notiz', k.notiz]]
+      .filter(([, v]) => Array.isArray(v) ? v.length : v != null && v !== '');
+    return felder.map(([c, v]) => {
+      let h = c === 'zeilen' ? v.map(teil).join(' ') : teil(v);
+      if (c === 'titel' && typeof v !== 'object') h = `<i>${h}</i>`;
+      return `<div class="feld feld-${c}">${F.versalien(h)}</div>`;
+    }).join('') + '<button type="button" class="steuerwort zuruecklegen">zurücklegen</button>';
+  }
+  // aria-label eines Rückens wie in A
+  function name(x) {
+    if (x.art === 'schuber') return 'Ursprungstrilogie, Schuber mit drei Bänden';
+    if (x.art === 'werk') {
+      const w = werk(x.id);
+      if (w.band) return 'Ursprung, Band ' + w.band + ': ' + (w.buchtitel || '');
+      return (w.buchtitel || w.titel || x.id) + ', ' + (w.art || '');
+    }
+    return (x.b.autor ? x.b.autor + ', ' : '') + x.b.t;
+  }
 
   // ---------- Maße ----------
   const mess = document.createElement('canvas').getContext('2d');
-  function laenge(name) {
-    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    const n = parseFloat(v);
-    return /rem$/.test(v) ? n * parseFloat(getComputedStyle(document.documentElement).fontSize) : n;
+  function laenge(n) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const z = parseFloat(v);
+    return /rem$/.test(v) ? z * parseFloat(getComputedStyle(document.documentElement).fontSize) : z;
   }
   // Maßstab 0,9 px je mm am Desktop, 0,8 am Tablet, 0,68 am Telefon; die Fachhöhe trägt das höchste Format und den Strich darüber
   function masse() {
     const s = F.telefon() ? .68 : F.desktop() ? .9 : .8;
     const z = laenge('--z'), klein = laenge('--klein');
     const viertel = z / 4;
-    return { s, z, klein, zk: z * .75, viertel, fach: Math.ceil((225 * s + 4) / viertel) * viertel, kontur: (window.devicePixelRatio || 1) >= 2 ? .75 : 1, zeilenMax: F.telefon() ? 2 : 1 };
+    return { s, z, klein, zk: z * .75, viertel, fach: Math.ceil((225 * s + 4) / viertel) * viertel, kontur: (window.devicePixelRatio || 1) >= 2 ? .75 : 1 };
   }
   const breite = (text, px, gewicht, kursiv) => { mess.font = `${kursiv ? 'italic ' : ''}${gewicht || 400} ${px}px ${T.schrift}`; return mess.measureText(text).width; };
   const VERSAL = {};
   const versalhoehe = px => VERSAL[px] || (VERSAL[px] = (mess.font = `400 ${px}px ${T.schrift}`, mess.measureText('H').actualBoundingBoxAscent || px * .66));
+  const mm = x => x.art === 'werk' && x.mm ? x.mm : F.buch.masse(x.b);
 
   // ---------- Rückenschrift: Baskervville aufrecht, Nachname und Kurztitel mit einem Geviert Abstand ----------
-  // Eine Größe für alle Rücken (10 px, Gewicht 500); ein Rücken, der dafür zu schmal ist, bleibt leer. Was nicht passt, wird
-  // kürzer, nie mit Auslassungspunkten
-  // Kürzer: ohne „or …“ und „and Other …“, englische Titel ohne Artikel; deutsche behalten ihn („Die wilden Detektive“)
-  const kuerzer = (t, b) => {
-    const k = t.replace(/,? (or|oder),? .+$/i, '').replace(/,? (and|und|&) (other|andere) .+$/i, '').trim();
-    return F.buch.deutsch(b) ? k : k.replace(/^(The|A|An) (?=\S)/, '');
-  };
-  const RS = 10;
-  function aufschrift(b, dicke, platz) {
-    if (dicke < RS / .95 + 5 || platz < 20) return null;
-    const nn = b.nn || '', voll = F.buch.titelKurz(b.t), kurz = kuerzer(voll, b);
-    const mass = (n, t) => (n ? breite(n, RS, 500) : 0) + (n && t ? RS : 0) + (t ? breite(t, RS, 500) : 0);
-    for (const t of [voll, kurz]) if (mass(nn, t) <= platz) return { nn, t, fs: RS };
-    if (nn && mass(nn, '') <= platz) return { nn, t: '', fs: RS };
+  // Wie in A: erst der volle Kurztitel in einer Zeile, dann in zwei Zeilen, dann kleiner (bis 9 px), dann kürzer (ohne „or …“,
+  // „and Other …“ und den Artikel), dann der Titel allein, zuletzt der Nachname; nie mit Auslassungspunkten
+  const kuerzer = t => t.replace(/,? (or|oder),? .+$/i, '').replace(/,? (and|und|&) (other|andere) .+$/i, '').replace(/^(The|A|An|Der|Die|Das|Ein|Eine) (?=\S)/, '').trim();
+  const zeileBreite = (n, t, fs) => (n ? breite(n, fs, 500) : 0) + (n && t ? fs : 0) + (t ? breite(t, fs, 500) : 0);
+  const GRADE = [10, 9.5, 9];
+  function aufschrift(nn, voll, dicke, platz) {
+    if (platz < 20) return null;
+    const kurz = kuerzer(voll);
+    // Platz quer zum Rücken wie in A: eine Zeile braucht 1,12 Grad und 3 px, zwei Zeilen 2,1 Grad und 2 px
+    const passt1 = (n, t, fs) => dicke >= fs * 1.12 + 3 && zeileBreite(n, t, fs) <= platz;
+    const passt2 = (zs, fs) => dicke >= 2.1 * fs + 2 && zs.every(([n, t]) => zeileBreite(n, t, fs) <= platz);
+    const zwei = [];
+    if (nn && voll) zwei.push([[nn, ''], ['', voll]]);
+    const w = voll.split(' ');
+    for (let i = 1; i < w.length; i++) zwei.push([[nn, w.slice(0, i).join(' ')], ['', w.slice(i).join(' ')]]);
+    for (const fs of GRADE) {
+      if (passt1(nn, voll, fs)) return { zeilen: [[nn, voll]], fs };
+      for (const zs of zwei) if (passt2(zs, fs)) return { zeilen: zs, fs };
+    }
+    for (const [n, t] of [[nn, kurz], ['', voll], ['', kurz], [nn, '']]) {
+      if (!n && !t) continue;
+      for (const fs of GRADE) if (passt1(n, t, fs)) return { zeilen: [[n, t]], fs };
+    }
     return null;
   }
-  const tspans = a => (a.nn ? `<tspan>${esc(a.nn)}</tspan>` : '') + (a.t ? `<tspan${a.nn ? ` dx="${a.fs}"` : ''}>${esc(a.t)}</tspan>` : '');
-  const textAttr = a => `font-size="${a.fs}" font-weight="500"`;
+  const tspans = (a, lh, halb) => a.zeilen.map(([n, t], i) => {
+    const y = (halb + (i - (a.zeilen.length - 1) / 2) * lh).toFixed(1);
+    return (n ? `<tspan x="0" y="${y}">${esc(n)}</tspan>` : '') + (t ? `<tspan${n ? ` dx="${a.fs}"` : ` x="0" y="${y}"`}>${esc(t)}</tspan>` : '');
+  }).join('');
 
   /* Ein Rücken als Zeichnung: Kontur in Tinte (gestrichelt: nicht zu Ende gelesen, gepunktet: in Auszügen), Punkt über dem Fuß
-     (eines der liebsten), Strich über dem Kopf (mehr als einmal gelesen). Liegend: Kopf links, bei deutschen Rücken rechts. */
-  function zeichnung(b, w, h, liegt, m) {
-    const k = m.kontur, o = k / 2;
-    const de = !b.manuskript && F.buch.deutsch(b);
-    const strich = b.x ? ' stroke-dasharray="1 2" stroke-linecap="round"' : b.r === 'abgebrochen' ? ' stroke-dasharray="3 2"' : '';
+     (eines der liebsten), Strich über dem Kopf (mehr als einmal gelesen). Liegend: Kopf links, bei deutschen Rücken rechts.
+     Eigene Werke tragen ihren Namen wie in A (Ursprung I–III, Erzählungen …), deutsch von unten nach oben. */
+  function zeichnung(x, w, h, liegt, m) {
+    const b = x.b || {}, k = m.kontur, o = k / 2;
+    const eigen = x.art !== 'buch';
+    const de = eigen ? !x.manuskript : F.buch.deutsch(b);
+    const strich = !eigen && b.x ? ' stroke-dasharray="1 2" stroke-linecap="round"' : !eigen && b.r === 'abgebrochen' ? ' stroke-dasharray="3 2"' : '';
     let s = `<rect class="koerper" x="${o}" y="${o}" width="${w - k}" height="${h - k}" stroke-width="${k}"${strich}/>`;
-    const liebste = b.s === 5 && b.r !== 'leseliste';
+    const liebste = !eigen && b.s === 5 && b.r !== 'leseliste';
     if (liebste) s += liegt ? `<circle class="liebste" cx="${de ? 8 : w - 8}" cy="${h / 2}" r="2"/>` : `<circle class="liebste" cx="${w / 2}" cy="${h - 8}" r="2"/>`;
-    // Liegend trägt ein Buch den Strich nicht: er stünde frei neben dem Stapel; die Buchzeile sagt es
-    if (b.w && !liegt) s += `<line class="wieder" x1="0" x2="${w}" y1="-2.5" y2="-2.5" stroke-width="1"/>`;
+    // Liegend trägt ein Buch den Strich nicht: er stünde frei neben dem Stapel; die Zeile sagt es
+    if (!eigen && b.w && !liegt) s += `<line class="wieder" x1="0" x2="${w}" y1="-2.5" y2="-2.5" stroke-width="1"/>`;
     const fuss = liebste ? 14 : 8;
     const lang = liegt ? w : h, dick = liegt ? h : w;
-    const a = b.manuskript ? { nn: '', t: 'Satoshi', fs: RS } : aufschrift(b, dick, lang - 8 - fuss);
+    const a = eigen ? (x.manuskript ? { zeilen: [['', x.aufschrift]], fs: 10 } : aufschrift('', x.aufschrift, dick, lang - 16)) : aufschrift(b.nn || '', F.buch.titelKurz(b.t), dick, lang - 8 - fuss);
     if (a) {
-      const halb = versalhoehe(a.fs) / 2;
+      const halb = versalhoehe(a.fs) / 2, lh = a.fs * 1.05;
+      const attr = `font-size="${a.fs}" font-weight="500" text-anchor="middle"`;
       if (liegt) {
-        const mitte = b.manuskript ? w / 2 : de ? (fuss + w - 8) / 2 : (8 + w - fuss) / 2;
-        s += `<text x="${mitte.toFixed(1)}" y="${(h / 2 + halb).toFixed(1)}" text-anchor="middle" ${textAttr(a)}>${tspans(a)}</text>`;
+        const mitte = x.manuskript ? w / 2 : de ? (fuss + w - 8) / 2 : (8 + w - fuss) / 2;
+        s += `<text transform="translate(${mitte.toFixed(1)} ${(h / 2).toFixed(1)})" ${attr}>${tspans(a, lh, halb)}</text>`;
       } else {
-        const mitte = (8 + h - fuss) / 2;
-        s += `<text transform="translate(${(w / 2).toFixed(1)} ${mitte.toFixed(1)}) rotate(${de ? -90 : 90})" y="${halb.toFixed(1)}" text-anchor="middle" ${textAttr(a)}>${tspans(a)}</text>`;
+        const mitte = eigen ? h / 2 : (8 + h - fuss) / 2;
+        s += `<text transform="translate(${(w / 2).toFixed(1)} ${mitte.toFixed(1)}) rotate(${de ? -90 : 90})" ${attr}>${tspans(a, lh, halb)}</text>`;
       }
     }
     return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false">${s}</svg>`;
   }
 
   // ---------- Bauen ----------
-  const LISTE = [];          // alle Rücken in der Reihenfolge der Seite: { b, el }
+  const LISTE = [];          // alle Rücken und Einträge in der Reihenfolge der Seite: { art, b | id, fach, el }
   const NACH_KEY = new Map();
-  function ruecken(b, w, h, liegt, m) {
-    const n = LISTE.length;
-    LISTE.push({ b });
-    return `<button type="button" class="ruecken${liegt ? ' liegt' : ''}" data-n="${n}" style="width:${w}px;height:${h}px" tabindex="-1" aria-pressed="false" aria-label="${esc(zeile(b).text)}">${zeichnung(b, w, h, liegt, m)}</button>`;
+  const schluessel = x => x.art === 'buch' ? 'b|' + x.b.key : x.art + '|' + x.id;
+  function knopf(x, w, h, liegt, m, extra) {
+    x.n = LISTE.length;
+    LISTE.push(x);
+    const cls = 'ruecken' + (liegt ? ' liegt' : '') + (x.art === 'schuber' ? ' schuber' : '') + (x.band ? ' band' : '');
+    const zustand = x.art === 'schuber' ? `aria-expanded="${schuberOffen}"` : 'aria-pressed="false"';
+    return `<button type="button" class="${cls}" data-n="${x.n}" style="width:${w}px;height:${h}px" tabindex="-1" ${zustand} aria-label="${esc(name(x))}"${extra || ''}>${zeichnung(x, w, h, liegt, m)}</button>`;
   }
-  const masz = (b, m) => { const x = F.buch.masse(b); return { w: Math.max(3, Math.round(x.breite * m.s)), h: Math.round(x.hoehe * m.s) }; };
-  const jahrMarke = j => j < 0 ? (-j) + NBSP + 'v.' + NBSP + 'Chr.' : j < 1000 ? j + NBSP + 'n.' + NBSP + 'Chr.' : String(j);
+  const masz = (x, m) => { const d = mm(x); return { w: Math.max(3, Math.round(d.breite * m.s)), h: Math.round(d.hoehe * m.s) }; };
 
-  // Die Zeile unter dem Brett hält Platz für die längste Buchzeile ihrer Rücken: eine Zeile, zwei, wo sie auf dem Telefon umbricht;
-  // gemessen im Satz selbst, in einer unsichtbaren Probe derselben Breite
-  function zeilenFuer(liste, W, m) {
-    const probe = document.createElement('p');
-    probe.className = 'klein';
+  // Die Zeile unter dem Brett hält Platz für die längste Zeile ihrer Rücken (gemessen im Satz selbst); am Desktop und Tablet auch für
+  // die Karteikarte, auf dem Telefon wächst sie bei der Wahl
+  function zeilenFuer(liste, W, m, mitKarte, schild) {
+    const probe = document.createElement('div');
+    probe.className = 'unter';
     probe.setAttribute('aria-hidden', 'true');
-    probe.style.cssText = `position:absolute;visibility:hidden;left:0;top:0;width:${W}px`;
+    probe.style.cssText = `position:absolute;visibility:hidden;left:0;top:0;width:${W}px;min-height:0;padding:0`;
+    probe.innerHTML = '<span class="zeile"></span>';
     document.body.appendChild(probe);
+    const z = probe.firstChild;
     let h = 0;
-    liste.forEach(b => { probe.innerHTML = zeile(b).html; h = Math.max(h, probe.getBoundingClientRect().height); });
+    if (schild) { z.className = 'zeile'; z.textContent = schild; h = z.getBoundingClientRect().height; }
+    liste.forEach(x => {
+      z.className = 'zeile'; z.innerHTML = zeigHtml(x); h = Math.max(h, z.getBoundingClientRect().height);
+      if (mitKarte && x.art !== 'schuber') { z.className = 'zeile als-karte'; z.innerHTML = karteHtml(x); h = Math.max(h, z.getBoundingClientRect().height); }
+    });
     probe.remove();
-    return Math.max(1, Math.min(m.zeilenMax, Math.round(h / m.zk)));
+    return Math.max(1, Math.round(h / m.zk));
   }
+  const schildMarke = (text, x, bis, id) => `<div class="marke wort-marke schild"${id ? ` id="${id}"` : ''} style="left:${x}px;max-width:${Math.max(40, bis - x)}px">${esc(text)}</div>`;
   function unterHtml(marken, zeilen) {
-    return `<div class="unter klein" style="--zeilen:${zeilen}" aria-live="polite"><span class="achse" aria-hidden="true">${marken}</span><span class="zeile"></span></div>`;
+    return `<div class="unter klein" style="--zeilen:${zeilen}" aria-live="polite"><div class="achse">${marken}</div><span class="zeile"></span></div>`;
+  }
+  // Name eines Bretts wie in A: „Brett, um 1800 v. Chr. bis 1925“, „Kinderzimmer, 1929 bis 2011“
+  function brettName(fach, reihe) {
+    const mitJahr = reihe.filter(x => x.b.j != null);
+    const von = mitJahr.length ? F.jahrText(mitJahr[0].b.j) : '', bis = mitJahr.length ? F.jahrText(mitJahr[mitJahr.length - 1].b.j) : '';
+    const spanne = !von ? '' : von === bis ? ', ' + von : `, ${von} bis ${bis}`;
+    return (fach === KIND ? 'Kinderzimmer' : fach === WARTET ? 'Was noch wartet' : 'Brett') + spanne;
   }
 
-  // Ein Fach: die Rücken von links nach rechts, so viele Bretter, wie es braucht; unter jedem Brett die Jahresachse
+  // Ein Fach: die Rücken von links nach rechts, so viele Bretter, wie es braucht; unter dem ersten Brett der Name des Fachs wie in A
   function fachHtml(f, W, m) {
     const reihen = [[]];
     let x = 0;
     f.buecher.forEach(b => {
-      const d = masz(b, m);
+      const it = { art: 'buch', b, fach: f };
+      const d = masz(it, m);
       if (reihen[reihen.length - 1].length && x + d.w > W) { reihen.push([]); x = 0; }
-      reihen[reihen.length - 1].push({ b, d, x });
+      reihen[reihen.length - 1].push(Object.assign(it, { d }));
       x += d.w + 1;
     });
-    const abstand = 5 * m.klein;
-    return reihen.map(reihe => {
-      let marken = '', zuletzt = -Infinity, jahrVor = null;
-      reihe.forEach(({ b, x }) => {
-        if (b.j == null || b.j === jahrVor) return;
-        jahrVor = b.j;
-        const text = jahrMarke(b.j), tb = breite(text, m.klein);
-        if (x - zuletzt < abstand || x + tb > W) return;
-        marken += `<span class="strich" style="left:${x}px"></span><span class="marke" style="left:${x}px">${text}</span>`;
-        zuletzt = x + Math.max(0, tb + m.klein - abstand);
-      });
-      const knoepfe = reihe.map(({ b, d }) => ruecken(b, d.w, d.h, false, m)).join('');
-      return `<div class="brett"><div class="flaeche" style="height:${m.fach}px">${knoepfe}</div>${unterHtml(marken, zeilenFuer(reihe.map(r => r.b), W, m))}</div>`;
+    return reihen.map((reihe, i) => {
+      const knoepfe = reihe.map(it => knopf(it, it.d.w, it.d.h, false, m)).join('');
+      const marke = i === 0 ? schildMarke(schildText(f), 0, W, 'schild-' + f.id) : '';
+      return `<div class="brett"><div class="flaeche" style="height:${m.fach}px" role="group" aria-label="${esc(brettName(f, reihe))}">${knoepfe}</div>${unterHtml(marke, zeilenFuer(reihe, W, m, !F.telefon(), i === 0 ? schildText(f) : ''))}</div>`;
     }).join('');
   }
 
-  // Oberstes Brett: das Manuskript von Satoshi liegend (A4 quer, 364 Blatt zu 0,1 mm), 2 z daneben, was ich gerade lese, als Stapel
+  /* Das oberste Brett: was ich schreibe (das Manuskript von Satoshi liegend, A4 quer, 364 Blatt zu 0,1 mm; die Trilogie im Schuber,
+     Erzählungen, Untertext, Länder) und, 2 z daneben, der Nachttisch als Stapel. Was nicht auf ein Brett passt, steht auf dem nächsten;
+     unter jedem Brett „Was ich schreibe“ und „Auf dem Nachttisch“ dort, wo die Gruppe beginnt */
+  let schuberOffen = false;
   function obenHtml(W, m) {
-    const mw = Math.round(297 * m.s), mh = Math.round(364 * .1 * m.s);
-    const liegend = GERADE.map(b => { const x = F.buch.masse(b); return { b, lang: Math.round(x.hoehe * m.s), dick: Math.max(3, Math.round(x.breite * m.s)) }; })
+    const teile = [];
+    // Satoshi als Manuskript
+    teile.push({ gruppe: 'schreibe', art: 'werk', id: 'satoshi', manuskript: true, aufschrift: werk('satoshi').titel || 'Satoshi', liegt: true, w: Math.round(297 * m.s), h: Math.round(364 * .1 * m.s) });
+    const se = m.s * 1.3;
+    EIGENE.forEach(e => {
+      if (e.schuber) {
+        const sw = Math.round(e.breite * se), sh = Math.round(e.hoehe * se), bw = Math.round(BAND_MM.breite * se), bh = Math.round(BAND_MM.hoehe * se);
+        teile.push({ gruppe: 'schreibe', schuber: true, w: sw + 1 + BAENDE.length * (bw + 1), h: Math.max(sh, bh), sw, sh, bw, bh });
+      } else teile.push({ gruppe: 'schreibe', art: 'werk', id: e.id, aufschrift: werk(e.id).titel || e.id, mm: { breite: e.breite, hoehe: e.hoehe }, w: Math.round(e.breite * se), h: Math.round(e.hoehe * se) });
+    });
+    // Der Nachttisch: liegend, das größte Buch zuunterst; ein Stapel ist höchstens so hoch wie das Fach, sonst so wenige Stapel wie
+    // möglich, gleich hoch, bündig ohne Versatz
+    const liegend = TISCH.buecher.map(b => { const d = F.buch.masse(b); return { b, lang: Math.round(d.hoehe * m.s), dick: Math.max(3, Math.round(d.breite * m.s)) }; })
       .sort((a, c) => c.lang - a.lang || c.dick - a.dick);
-    // Ein Stapel ist höchstens so hoch wie das Fach. Passt nicht alles auf einen, verteilen sich die Bücher auf so wenige Stapel
-    // wie möglich, gleich hoch; in jedem das größte Buch zuunterst, bündig ohne Versatz
     const grenze = m.fach - m.viertel;
     const legen = n => {
       const st = Array.from({ length: n }, () => ({ buecher: [], hoehe: 0, breite: 0 }));
-      liegend.forEach(it => {
-        const s = st.reduce((a, c) => c.hoehe < a.hoehe ? c : a);
-        s.hoehe += it.dick + (s.buecher.length ? 1 : 0); s.buecher.push(it); s.breite = Math.max(s.breite, it.lang);
-      });
+      liegend.forEach(it => { const s = st.reduce((a, c) => c.hoehe < a.hoehe ? c : a); s.hoehe += it.dick + (s.buecher.length ? 1 : 0); s.buecher.push(it); s.breite = Math.max(s.breite, it.lang); });
       return st;
     };
     let stapel = [];
     for (let n = 1; liegend.length && n <= liegend.length; n++) { stapel = legen(n); if (stapel.every(s => s.hoehe <= grenze)) break; }
+    stapel.forEach(st => teile.push({ gruppe: 'tisch', stapel: st, w: st.breite, h: st.hoehe }));
+    // Bretter füllen: 1 px zwischen den Stücken einer Gruppe, 2 z vor dem Nachttisch, 1 z zwischen zwei Stapeln
     const LUECKE = 2 * m.z, ZWISCHEN = m.z;
-    const stapelBreite = stapel.reduce((a, s, i) => a + s.breite + (i ? ZWISCHEN : 0), 0);
-    const manuskript = `<div class="stapelplatz">${ruecken(MANUSKRIPT, mw, mh, true, m)}</div>`;
-    const lektuere = stapel.map((st, i) => `<div class="stapel"${i ? ` style="margin-left:${ZWISCHEN - 1}px"` : ''}>${st.buecher.map(it => ruecken(it.b, it.lang, it.dick, true, m)).join('')}</div>`).join('');
-    const wortMarke = (text, x) => `<span class="marke wort-marke" style="left:${x}px">${text}</span>`;
-    // Das oberste Brett ist so hoch, wie die Stapel es brauchen, auf Vielfache einer Viertelzeile
+    const bretter = [];
+    let br = null;
+    teile.forEach(t => {
+      const vor = br && br.teile.length ? (t.gruppe !== br.teile[br.teile.length - 1].gruppe ? LUECKE : t.stapel ? ZWISCHEN : 1) : 0;
+      if (!br || (br.teile.length && br.x + vor + t.w > W)) { br = { teile: [], x: 0 }; bretter.push(br); }
+      const abstand = br.teile.length ? vor : 0;
+      t.x = br.x + abstand; t.abstand = abstand;
+      br.teile.push(t); br.x = t.x + t.w;
+    });
     const hoehe = h => Math.ceil((h + m.viertel) / m.viertel) * m.viertel;
-    const hStapel = hoehe(Math.max(mh, ...stapel.map(st => st.hoehe)));
-    if (!stapel.length) return `<div class="brett"><div class="flaeche" style="height:${hoehe(mh)}px">${manuskript}</div>${unterHtml(wortMarke('Manuskript', 0), zeilenFuer([MANUSKRIPT], W, m))}</div>`;
-    if (mw + LUECKE + stapelBreite <= W) {
-      return `<div class="brett"><div class="flaeche" style="height:${hStapel}px">${manuskript}<div class="stapelplatz" style="margin-left:${LUECKE - 1}px">${lektuere}</div></div>` +
-        unterHtml(wortMarke('Manuskript', 0) + wortMarke('Lese ich gerade', mw + LUECKE), zeilenFuer([MANUSKRIPT].concat(GERADE), W, m)) + '</div>';
-    }
-    // Zu schmal für beides: das Manuskript auf einem eigenen Brett
-    return `<div class="brett"><div class="flaeche" style="height:${hoehe(mh)}px">${manuskript}</div>${unterHtml(wortMarke('Manuskript', 0), zeilenFuer([MANUSKRIPT], W, m))}</div>` +
-      `<div class="brett"><div class="flaeche" style="height:${hStapel}px"><div class="stapelplatz">${lektuere}</div></div>${unterHtml(wortMarke('Lese ich gerade', 0), zeilenFuer(GERADE, W, m))}</div>`;
+    const stueck = t => {
+      if (t.stapel) return `<div class="stapel">${t.stapel.buecher.map(it => knopf({ art: 'buch', b: it.b, fach: TISCH }, it.lang, it.dick, true, m)).join('')}</div>`;
+      if (t.schuber) {
+        const s = knopf({ art: 'schuber', id: 'ursprung', aufschrift: 'Ursprung I–III', mm: { breite: 96, hoehe: 191 } }, t.sw, t.sh, false, m);
+        const baende = BAENDE.map(id => knopf({ art: 'werk', id, band: true, aufschrift: werk(id).titel || id, mm: BAND_MM }, t.bw, t.bh, false, m, schuberOffen ? '' : ' aria-hidden="true"')).join('');
+        return `<div class="schuber-platz${schuberOffen ? '' : ' zu'}">${s}${baende}</div>`;
+      }
+      return knopf(t, t.w, t.h, !!t.liegt, m);
+    };
+    const GRUPPE = { schreibe: 'Was ich schreibe', tisch: 'Auf dem Nachttisch' };
+    return bretter.map(b => {
+      // Die Stücke einer Gruppe stehen zusammen in einer Gruppe mit dem Namen von A
+      const n0 = LISTE.length;
+      let html = '', marken = '', g = null, offen = false;
+      b.teile.forEach(t => {
+        if (t.gruppe !== g) {
+          if (offen) html += '</div>';
+          html += `<div class="gruppe-platz" role="group" aria-label="${GRUPPE[t.gruppe]}"${t.abstand ? ` style="margin-left:${t.abstand}px"` : ''}>`;
+          offen = true; g = t.gruppe;
+          // Der Name steht unter dem Brett, auf dem die Gruppe beginnt
+          if (!bretter.some(v => v !== b && bretter.indexOf(v) < bretter.indexOf(b) && v.teile.some(u => u.gruppe === t.gruppe))) {
+            const naechste = b.teile.find(u => u.gruppe !== t.gruppe && u.x > t.x);
+            marken += schildMarke(GRUPPE[t.gruppe], t.x, naechste ? naechste.x - 8 : W);
+          }
+        } else if (t.abstand > 1) html += `<span style="width:${t.abstand - 1}px;flex:none" aria-hidden="true"></span>`;
+        html += stueck(t);
+      });
+      if (offen) html += '</div>';
+      const h = hoehe(Math.max(...b.teile.map(t => t.h)));
+      return { html, marken, h, zeilen: zeilenFuer(LISTE.slice(n0), W, m, !F.telefon()) };
+    }).map(b => `<div class="brett"><div class="flaeche" style="height:${b.h}px">${b.html}</div>${unterHtml(b.marken, b.zeilen)}</div>`).join('');
   }
 
-  const regal = $('#regal');
+  // Was noch wartet: Register in Textform, nach dem Jahr der Erstausgabe; jeder Eintrag zeigt und wählt wie ein Rücken
+  function wartetHtml(m) {
+    if (!WARTET.buecher.length) return '';
+    const eintrag = b => {
+      const x = { art: 'buch', b, fach: WARTET };
+      x.n = LISTE.length; LISTE.push(x);
+      return `<li><button type="button" data-n="${x.n}" tabindex="-1" aria-pressed="false">${F.versalien((b.autor ? esc(b.autor) + ', ' : '') + `<i>${esc(b.t)}</i>`)}</button></li>`;
+    };
+    const haelfte = Math.ceil(WARTET.buecher.length / 2);
+    const listen = `<ul class="wahl">${WARTET.buecher.slice(0, haelfte).map(eintrag).join('')}</ul><ul class="wahl">${WARTET.buecher.slice(haelfte).map(eintrag).join('')}</ul>`;
+    return `<section class="fach wartet" id="wartet" aria-labelledby="titel-wartet" tabindex="-1"><h2 id="titel-wartet">Was noch wartet</h2>` +
+      `<div class="brett"><div class="leseliste" role="group" aria-label="${esc(brettName(WARTET, WARTET.buecher.map(b => ({ b }))))}">${listen}</div>${unterHtml('', 1)}</div></section>`;
+  }
+
+  const regal = $('#regal'), eigenes = $('#eigenes'), faecher = $('#faecher');
   let breiteVorher = 0, gewaehlt = null, zeiger = null, fokus = null;
   function regalBauen(erzwingen) {
-    const W = Math.floor(regal.clientWidth);
+    const W = Math.floor(faecher.clientWidth);
     if (!W || (!erzwingen && W === breiteVorher)) return;
     breiteVorher = W;
     const m = masse();
-    const fokusKey = document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('ruecken') ? LISTE[+document.activeElement.dataset.n].b.key : null;
-    const tabKey = (() => { const t = $('.ruecken[tabindex="0"]', regal); return t ? LISTE[+t.dataset.n].b.key : null; })();
+    const aktiv = document.activeElement;
+    const fokusKey = aktiv && aktiv.dataset && aktiv.dataset.n != null && LISTE[+aktiv.dataset.n] ? schluessel(LISTE[+aktiv.dataset.n]) : null;
+    const tabKeys = $$('[data-n][tabindex="0"]', regal).map(t => schluessel(LISTE[+t.dataset.n]));
+    const wahlKey = gewaehlt ? schluessel(gewaehlt) : null;
     LISTE.length = 0;
-    let html = `<div class="fach oben" role="group" aria-label="Manuskript und was ich gerade lese">${obenHtml(W, m)}</div>`;
+    eigenes.innerHTML = obenHtml(W, m);
+    let html = '';
     FAECHER.forEach(f => {
-      const kind = f.id === 'kindheit';
-      html += `<section class="fach" id="${f.id}" aria-labelledby="titel-${f.id}" tabindex="-1"><h2 id="titel-${f.id}"${kind ? '' : ' class="unsichtbar"'}>${esc(f.name)}</h2>${fachHtml(f, W, m)}</section>`;
+      const kind = f === KIND;
+      html += `<section class="fach" id="${f.id}" aria-labelledby="${kind ? 'titel-' + f.id : 'schild-' + f.id}" tabindex="-1">${kind ? `<h2 class="unsichtbar" id="titel-${f.id}">${esc(f.name)}</h2>` : ''}${fachHtml(f, W, m)}</section>`;
     });
-    regal.innerHTML = html;
+    html += wartetHtml(m);
+    faecher.innerHTML = html;
     NACH_KEY.clear();
-    $$('.ruecken', regal).forEach(el => { const x = LISTE[+el.dataset.n]; x.el = el; NACH_KEY.set(x.b.key, x); });
-    const tab = (tabKey && NACH_KEY.get(tabKey)) || LISTE[0];
-    if (tab) tab.el.tabIndex = 0;
-    if (gewaehlt) { const x = NACH_KEY.get(gewaehlt.b.key); gewaehlt = x || null; if (x) x.el.setAttribute('aria-pressed', 'true'); }
+    $$('[data-n]', regal).forEach(el => { const x = LISTE[+el.dataset.n]; x.el = el; NACH_KEY.set(schluessel(x), x); });
+    // Halbfett ohne Sprung auch im Register „Was noch wartet“
+    F.gleichBreit($$('.wartet button', faecher));
+    // Ein Tab-Halt je Fach (wie in A je Brett): der zuletzt benutzte Rücken oder der erste
+    $$('.fach', regal).forEach(fach => {
+      const alle = $$('[data-n]', fach).filter(sichtbar);
+      const t = alle.find(el => tabKeys.includes(schluessel(LISTE[+el.dataset.n]))) || alle[0];
+      if (t) t.tabIndex = 0;
+    });
+    gewaehlt = wahlKey ? NACH_KEY.get(wahlKey) || null : null;
+    if (gewaehlt) gewaehlt.el.setAttribute('aria-pressed', 'true');
     zeiger = null; fokus = null;
     $$('.unter', regal).forEach(zeileSetzen);
     if (fokusKey && NACH_KEY.get(fokusKey)) NACH_KEY.get(fokusKey).el.focus({ preventScroll: true });
     if (leser) leser.pruefen(true);
   }
+  const sichtbar = el => !el.closest('.schuber-platz.zu') || el.classList.contains('schuber');
 
-  // ---------- Buchzeile unter dem Brett: Zeiger, dann Tastaturfokus, dann Auswahl; sonst die Achse ----------
+  // ---------- Zeile unter dem Brett: Zeiger, dann Tastaturfokus, dann die Wahl als Karteikarte; sonst der Name des Fachs ----------
   function zeileSetzen(unter) {
     if (!unter) return;
     const brett = unter.closest('.brett');
-    const x = [zeiger, fokus, gewaehlt].find(y => y && y.el && brett.contains(y.el));
+    const hier = y => y && y.el && brett.contains(y.el);
+    let html = '', karte = false;
+    if (hier(zeiger) && zeiger !== gewaehlt) html = zeigHtml(zeiger);
+    else if (hier(fokus) && fokus !== gewaehlt) html = zeigHtml(fokus);
+    else if (hier(gewaehlt)) { html = karteHtml(gewaehlt); karte = true; }
     const el = $('.zeile', unter);
-    const html = x ? zeile(x.b).html : '';
     if (el.innerHTML !== html) el.innerHTML = html;
-    unter.classList.toggle('mit-zeile', !!x);
+    el.classList.toggle('als-karte', karte);
+    unter.classList.toggle('mit-zeile', !!html);
+    if (unter.closest('.wartet')) wartetHaftet();
   }
   const unterVon = x => x && x.el ? $('.unter', x.el.closest('.brett')) : null;
   function setzen(art, x) {
@@ -327,65 +546,373 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
     if (art === 'wahl') {
       if (vorher && vorher.el) vorher.el.setAttribute('aria-pressed', 'false');
       if (x && x.el) x.el.setAttribute('aria-pressed', 'true');
+      // Die Zeile mit dem Zeiger oder Fokus auf demselben Rücken zeigt jetzt die Karte
+      zeileSetzen(unterVon(zeiger)); zeileSetzen(unterVon(fokus));
     }
     zeileSetzen(unterVon(vorher));
     zeileSetzen(unterVon(x));
   }
-  const ausKnopf = el => { const k = el && el.closest && el.closest('.ruecken'); return k && regal.contains(k) ? LISTE[+k.dataset.n] : null; };
+  const ausKnopf = el => { const k = el && el.closest && el.closest('[data-n]'); return k && regal.contains(k) ? LISTE[+k.dataset.n] : null; };
   regal.addEventListener('pointerover', e => { if (e.pointerType === 'mouse') setzen('zeiger', ausKnopf(e.target)); });
   regal.addEventListener('pointerleave', () => setzen('zeiger', null));
   regal.addEventListener('focusin', e => {
     const x = ausKnopf(e.target);
     if (!x) return;
-    $$('.ruecken[tabindex="0"]', regal).forEach(k => { if (k !== x.el) k.tabIndex = -1; });
+    const fach = x.el.closest('.fach');
+    $$('[data-n][tabindex="0"]', fach).forEach(k => { if (k !== x.el) k.tabIndex = -1; });
     x.el.tabIndex = 0;
     setzen('fokus', x.el.matches(':focus-visible') ? x : null);
   });
-  // Geht der Fokus vom Rücken in seine Buchzeile (der Verweis beim Manuskript), bleibt die Zeile stehen
+  // Geht der Fokus vom Rücken in seine Zeile (Verweis der Karte, „zurücklegen“), bleibt die Zeile stehen
   regal.addEventListener('focusout', e => {
     const nach = e.relatedTarget;
     if (nach && regal.contains(nach) && nach.closest('.unter') && fokus && unterVon(fokus) === nach.closest('.unter')) return;
     setzen('fokus', null);
   });
+  function schuberSetzen(auf) {
+    schuberOffen = auf;
+    const platz = $('.schuber-platz', regal);
+    if (!platz) return;
+    platz.classList.toggle('zu', !auf);
+    $('.schuber', platz).setAttribute('aria-expanded', String(auf));
+    $$('.band', platz).forEach(b => { if (auf) b.removeAttribute('aria-hidden'); else { b.setAttribute('aria-hidden', 'true'); b.tabIndex = -1; } });
+    if (!auf && gewaehlt && gewaehlt.band) setzen('wahl', null);
+  }
   regal.addEventListener('click', e => {
+    const zu = e.target.closest('.zuruecklegen');
+    if (zu) { const x = gewaehlt; setzen('wahl', null); if (x && x.el) x.el.focus({ preventScroll: true }); return; }
     const x = ausKnopf(e.target);
     if (!x) return;
+    if (x.art === 'schuber') { schuberSetzen(!schuberOffen); return; }
     setzen('wahl', gewaehlt === x ? null : x);
   });
 
-  // Tastatur: ein Rücken im Fokus; links und rechts durch das ganze Regal, hinauf und hinab zum nächsten Rücken des Nachbarbretts
+  // Tastatur: ein Tab-Halt je Fach; links und rechts durch das ganze Regal, hinauf und hinab zum nächsten Rücken des Nachbarbretts
   regal.addEventListener('keydown', e => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     const x = ausKnopf(e.target);
     if (!x) return;
     if (e.key === 'Escape') { setzen('wahl', null); return; }
-    const alle = LISTE, i = alle.indexOf(x);
-    const brett = x.el.closest('.brett'), imBrett = $$('.ruecken', brett);
+    const alle = LISTE.filter(y => y.el && sichtbar(y.el)), i = alle.indexOf(x);
+    const brett = x.el.closest('.brett'), imBrett = $$('[data-n]', brett).filter(sichtbar);
     let ziel = null;
     if (e.key === 'ArrowRight') ziel = alle[i + 1];
     else if (e.key === 'ArrowLeft') ziel = alle[i - 1];
     else if (e.key === 'Home') ziel = LISTE[+imBrett[0].dataset.n];
     else if (e.key === 'End') ziel = LISTE[+imBrett[imBrett.length - 1].dataset.n];
     else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      const bretter = $$('.brett', regal), nb = bretter[bretter.indexOf(brett) + (e.key === 'ArrowDown' ? 1 : -1)];
-      if (nb) {
-        const r = x.el.getBoundingClientRect(), mx = r.left + r.width / 2;
-        let best = null;
-        $$('.ruecken', nb).forEach(k => { const q = k.getBoundingClientRect(), d = Math.abs(q.left + q.width / 2 - mx); if (!best || d < best.d) best = { k, d }; });
-        if (best) ziel = LISTE[+best.k.dataset.n];
+      const ab = e.key === 'ArrowDown';
+      // Im Register von Eintrag zu Eintrag, vom ersten hinauf zum Brett darüber
+      if (x.fach === WARTET && (ab ? i < alle.length - 1 : alle[i - 1] && alle[i - 1].fach === WARTET)) ziel = alle[i + (ab ? 1 : -1)];
+      else {
+        const bretter = $$('.brett', regal), nb = bretter[bretter.indexOf(brett) + (ab ? 1 : -1)];
+        if (nb) {
+          const r = x.el.getBoundingClientRect(), mx = r.left + r.width / 2;
+          let best = null;
+          $$('[data-n]', nb).filter(sichtbar).forEach(k => { const q = k.getBoundingClientRect(), d = Math.abs(q.left + q.width / 2 - mx); if (!best || d < best.d) best = { k, d }; });
+          if (best) ziel = LISTE[+best.k.dataset.n];
+        }
       }
     }
-    if (!ziel) return;
+    if (!ziel || !ziel.el) return;
     e.preventDefault();
     ziel.el.focus();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && gewaehlt && !regal.contains(document.activeElement)) setzen('wahl', null); });
 
-  // ---------- Standortregister (12.10) ----------
+  // Die Zeile unter dem Register „Was noch wartet“ bleibt am unteren Rand des Fensters stehen, solange sie etwas zeigt und das Register
+  // weiter reicht; dann schließt sie oben mit einer Linie ab
+  function wartetHaftet() {
+    const u = $('.wartet .unter', regal);
+    if (!u) return;
+    const an = u.classList.contains('mit-zeile') && u.getBoundingClientRect().bottom >= window.innerHeight - .5 && u.parentElement.getBoundingClientRect().bottom > window.innerHeight + 1;
+    u.classList.toggle('haftet', an);
+  }
+
+  // ---------- Zeitband: die gelesenen Bücher auf einer Zeitachse (Rechenweg und Wortlaut des Zeitbands der Startseite von A) ----------
+  const huelle = $('#zeitband'), bandzeile = $('#bandzeile');
+  const HAUPT = GELESEN;
+  const GERADE_J = TISCH.buecher.filter(b => b.j != null);
+  const KIND_J = KIND.buecher.filter(b => b.j != null);
+  const WARTE_J = WARTET.buecher.filter(b => b.j != null);
+  const WERKE = (I.werke || []).map(w => ({ werk: true, id: w.id, w }));
+  // Die Zeile über einen Strich wie in A: das Buch wie im Regal, die eigenen Werke mit Nachnamen und Art
+  function bandText(x) {
+    if (x.werk) {
+      const w = x.w, t = w.buchtitel || w.titel;
+      const art = w.band ? 'Band ' + w.band + ' der Ursprungstrilogie' : w.art;
+      return { text: `Jäkel, ${t}, ${art}`, html: `Jäkel, <i>${esc(t)}</i>, ${esc(art)}` };
+    }
+    return F.buch.zeile(x);
+  }
+  const ZB = { items: [], folgen: {}, aktiv: null, y0: 0 };
+  let bandBreite = 0;
+  function bandBauen() {
+    const sicht = huelle.clientWidth;
+    if (!sicht || !HAUPT.length) return;
+    const m = masse();
+    // Auf dem Telefon behält das Band die Breite eines Tablets und lässt sich wischen
+    const W = F.telefon() ? Math.max(sicht, 1000) : sicht;
+    const sy = m.z * 3 / 225;                 // px je mm in der Höhe: das höchste Format ist drei Zeilen hoch
+    let minL = .5, minB = .8;
+    const BRUCH = m.z, WERKLUECKE = 22, BODEN = 7;
+    const mmB = b => F.buch.masse(b).breite, mmH = b => F.buch.masse(b).hoehe;
+    const luecke = d => d <= 0 ? 0 : 1.8 * Math.pow(d, .85);
+    const liegeLaenge = b => mmH(b) * sy, liegeDicke = b => Math.max(5, mmB(b) * sy);
+    function anordnen(sx) {
+      const pos = [], brueche = [], amBoden = [];
+      let x = 0, vor = null;
+      HAUPT.forEach(b => {
+        if (vor) {
+          const d = b.j - vor.j;
+          if (d > 150) {
+            // Was gerade gelesen wird und in diese Lücke fällt, liegt hier flach auf dem Boden
+            GERADE_J.forEach(l => { if (l.j > vor.j && l.j < b.j) { x += BODEN; amBoden.push({ b: l, x, len: liegeLaenge(l), dick: liegeDicke(l) }); x += liegeLaenge(l); } });
+            brueche.push({ von: x, bis: x + BRUCH });
+            x += BRUCH;
+          } else x += Math.max(minL, sx * luecke(d));
+        }
+        const w = Math.max(minB, sx * mmB(b));
+        pos.push({ b, x, w }); x += w; vor = b;
+      });
+      const buecherEnde = x;
+      x += WERKLUECKE;
+      const ww = Math.max(6, 40 * sx), wl = 2;
+      const werke = WERKE.map(b => { const o = { b, x, w: ww }; x += ww + wl; return o; });
+      return { pos, werke, brueche, amBoden, buecherEnde, ende: x - wl };
+    }
+    for (let n = 0; n < 30 && anordnen(0).ende > W * .8; n++) { minB *= .9; minL *= .9; }
+    let lo = 0, hi = 1.5;
+    for (let n = 0; n < 40; n++) { const mitte = (lo + hi) / 2; if (anordnen(mitte).ende > W) hi = mitte; else lo = mitte; }
+    const sx = lo, A = anordnen(sx), pos = A.pos;
+    function X(jahr) {
+      let a = 0, c = pos.length;
+      while (a < c) { const k = (a + c) >> 1; if (pos[k].b.j < jahr) a = k + 1; else c = k; }
+      if (a === 0) return pos[0].x;
+      if (a === pos.length) return pos[a - 1].x + pos[a - 1].w;
+      const p = pos[a - 1], q = pos[a];
+      if (q.b.j === jahr) return q.x;
+      return p.x + p.w + (q.x - p.x - p.w) * (jahr - p.b.j) / (q.b.j - p.b.j);
+    }
+    // Nebenbänder auf derselben Achse; dichte Jahre schieben nach rechts, am Ende zurück nach links
+    function nebenband(liste, grenze) {
+      const out = [];
+      let ende = -Infinity;
+      liste.forEach(b => { const w = Math.max(minB, sx * mmB(b)), x = Math.max(X(b.j), ende + minL); out.push({ b, x, w }); ende = x + w; });
+      let rechts = grenze;
+      for (let i = out.length - 1; i >= 0; i--) { if (out[i].x + out[i].w > rechts) out[i].x = rechts - out[i].w; rechts = out[i].x - minL; }
+      return out;
+    }
+    const kind = nebenband(KIND_J, A.buecherEnde), warte = nebenband(WARTE_J, A.buecherEnde);
+    const maxH = 225 * sy;
+    const hoehe = (b, f) => mmH(b) * sy * (f || 1);
+    const stehendHoehe = (x0, x1) => { let h = 0; for (const p of pos) { if (p.x > x1) break; if (p.x + p.w >= x0) h = Math.max(h, hoehe(p.b, p.b.r === 'abgebrochen' ? .5 : 1)); } return h; };
+    // Was ich gerade lese: an seinem Jahr quer auf den Rücken, höchstens drei aufeinander, die dicksten zuunterst, ohne Versatz
+    const amBoden = new Set(A.amBoden.map(l => l.b));
+    const liegend = GERADE_J.filter(b => !amBoden.has(b)).map(b => ({ b, len: liegeLaenge(b), dick: liegeDicke(b), mitte: X(b.j) })).sort((a, b) => a.mitte - b.mitte);
+    const MAXDICK = maxH * .5, stapel = [];
+    liegend.forEach(l => {
+      const st = stapel[stapel.length - 1];
+      if (st) {
+        const mitte = st.buecher.reduce((a, x) => a + x.mitte, 0) / st.buecher.length, dicke = st.buecher.reduce((a, x) => a + x.dick, 0);
+        if (st.buecher.length < 3 && dicke + l.dick <= MAXDICK && Math.abs(l.mitte - mitte) < l.len * .6) { st.buecher.push(l); return; }
+      }
+      stapel.push({ buecher: [l] });
+    });
+    stapel.forEach(st => { st.lang = Math.max(...st.buecher.map(l => l.len)); st.x0 = st.buecher.reduce((a, l) => a + l.mitte, 0) / st.buecher.length - st.lang / 2; });
+    for (let n = 0; n < stapel.length; n++) { const vor = stapel[n - 1]; stapel[n].x0 = Math.max(stapel[n].x0, vor ? vor.x0 + vor.lang + 10 : 4); }
+    for (let n = stapel.length - 1; n >= 0; n--) { const nach = stapel[n + 1]; stapel[n].x0 = Math.min(stapel[n].x0, nach ? nach.x0 - stapel[n].lang - 10 : A.buecherEnde - stapel[n].lang); }
+    const gelegt = [];
+    stapel.forEach(st => {
+      let boden = stehendHoehe(st.x0, st.x0 + st.lang) + .5;
+      st.buecher.sort((a, b) => b.dick - a.dick || ordnung(a.b, b.b)).forEach(l => {
+        l.x = Math.max(0, Math.min(W - l.len, st.x0 + (st.lang - l.len) / 2));
+        l.boden = boden; boden += l.dick + 1;
+        gelegt.push(l);
+      });
+    });
+    A.amBoden.forEach(l => { l.boden = 0; gelegt.push(l); });
+    const y0 = Math.ceil(Math.max(maxH, ...gelegt.map(l => l.boden + l.dick)) + 4);
+
+    const f = v => v.toFixed(2);
+    const items = [], folgen = { quer: [], haupt: [], kind: [], warte: [] };
+    const rect = (x, y, w, h) => `x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}"`;
+    const eintragen = (folge, o) => { o.id = 'zb' + items.length; o.folge = folge; items.push(o); folgen[folge].push(o); return o.id; };
+    const option = (id, cls, b, r) => `<rect id="${id}" class="${cls}" role="option" aria-label="${esc(bandText(b).text)}" ${r}/>`;
+    let sHaupt = '', sQuer = '', sKind = '', sWarte = '';
+    pos.forEach(p => {
+      const b = p.b, halb = b.r === 'abgebrochen', h = hoehe(b, halb ? .5 : 1);
+      const cls = 'strich' + (halb ? ' ab' : b.s === 5 ? ' lieb' : '');
+      sHaupt += option(eintragen('haupt', { b, x: p.x, w: p.w, y: y0 - h, h }), cls, b, rect(p.x, y0 - h, p.w, h));
+      if (b.w) sHaupt += `<line class="wieder" x1="${f(p.x - 1.5)}" x2="${f(p.x + p.w + 1.5)}" y1="${f(y0 - h - 3)}" y2="${f(y0 - h - 3)}"/>`;
+    });
+    // Eigenes am rechten Ende: offene Striche in voller Höhe
+    A.werke.forEach(p => { sHaupt += option(eintragen('haupt', { b: p.b, x: p.x, w: p.w, y: y0 - maxH, h: maxH }), 'werk', p.b, rect(p.x + .4, y0 - maxH + .4, p.w - .8, maxH - .4)); });
+    gelegt.slice().sort((a, b) => a.boden - b.boden).forEach(l => {
+      const y = y0 - l.boden - l.dick;
+      sQuer += option(eintragen('quer', { b: l.b, x: l.x, w: l.len, y, h: l.dick }), 'quer', l.b, rect(l.x + .4, y + .4, l.len - .8, l.dick - .8));
+    });
+    // Achse: 1 px Tinte direkt unter den Strichen, die übersprungenen Jahrhunderte als zwei kurze Schrägstriche, unter dem Eigenen
+    // ein eigenes Stück
+    const yA = y0 + .5;
+    function achse(y) {
+      let d = '', start = pos[0].x;
+      A.brueche.forEach(br => {
+        const mx = (br.von + br.bis) / 2;
+        d += `M${f(start)} ${y}H${f(mx - 5)}M${f(mx - 4.5)} ${y + 3.5}L${f(mx - 1.5)} ${y - 3.5}M${f(mx + 1.5)} ${y + 3.5}L${f(mx + 4.5)} ${y - 3.5}`;
+        start = mx + 5;
+      });
+      return d + `M${f(start)} ${y}H${f(A.buecherEnde)}`;
+    }
+    const wA = A.werke[0].x, wE = A.werke[A.werke.length - 1].x + A.werke[A.werke.length - 1].w;
+    // Jahresmarken wie in A: der Anfang (erstes Buch und sein Jahr), dann 1800, 1900, 1950, 2000, unter dem Eigenen „Eigenes“
+    const yJ = yA + 4 + m.viertel + m.klein * .75;
+    const marken = [{ text: `${HAUPT[0].t}, ${F.jahrText(HAUPT[0].j)}`, x: pos[0].x + pos[0].w / 2, anker: 'start', tx: pos[0].x }]
+      .concat([1800, 1900, 1950, 2000].map(j => ({ text: String(j), x: X(j), anker: 'middle' })));
+    let belegtBis = -Infinity, sJahre = '';
+    marken.forEach(mk => {
+      const b = breite(mk.text, m.klein);
+      const tx = mk.tx !== undefined ? mk.tx : mk.x;
+      const x0 = mk.anker === 'start' ? tx : tx - b / 2;
+      if (x0 < belegtBis + 10) return;
+      belegtBis = x0 + b;
+      sJahre += `<path class="achse" d="M${f(mk.x)} ${yA}V${f(yA + 4)}"/><text x="${f(tx)}" y="${f(yJ)}" text-anchor="${mk.anker}">${esc(mk.text)}</text>`;
+    });
+    const eig = 'Eigenes', eigB = breite(eig, m.klein), eigX = Math.min(W - eigB / 2, (wA + wE) / 2);
+    if (eigX - eigB / 2 > belegtBis + 10) sJahre += `<text x="${f(eigX)}" y="${f(yJ)}" text-anchor="middle">${eig}</text>`;
+    const marke = `<path class="marke" id="zb-marke" d="M0 ${yA}V${f(yA + 7)}" visibility="hidden"/>`;
+    const hHaupt = Math.ceil(yJ + m.klein * .3);
+
+    const kH = Math.ceil(maxH * .55) + 2, wH = Math.ceil(maxH * .42) + 2;
+    kind.forEach(p => { const h = hoehe(p.b, .55); sKind += option(eintragen('kind', { b: p.b, x: p.x, w: p.w, y: kH - h, h }), 'strich', p.b, rect(p.x, kH - h, p.w, h)); });
+    warte.forEach(p => { const h = hoehe(p.b, .42); sWarte += option(eintragen('warte', { b: p.b, x: p.x, w: p.w, y: wH - h, h }), 'warte', p.b, rect(p.x + .5, wH - h + .5, Math.max(.4, p.w - 1), h - .5)); });
+    folgen.haupt.sort((a, b) => a.x - b.x); folgen.quer.sort((a, b) => a.x - b.x);
+    Object.values(folgen).forEach(l => l.forEach((o, i) => { o.idx = i; }));
+
+    const svg = (id, h, inhalt, label) => `<svg id="${id}" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" tabindex="0" role="listbox" aria-label="${label}">${inhalt}</svg>`;
+    huelle.innerHTML =
+      svg('zb-haupt', hHaupt, `<g>${sHaupt}</g><g>${sQuer}</g><path class="achse" d="${achse(yA)}M${f(wA)} ${yA}H${f(wE)}"/>${sJahre}${marke}`, 'Gelesen, nach dem Jahr des ersten Erscheinens; Pfeiltasten wählen, Eingabe öffnet die Karteikarte') +
+      (kind.length ? `<p class="klein reihenname">die wichtigsten aus Kindheit und Jugend</p>` + svg('zb-kind', kH + 1, `<g>${sKind}</g><path class="achse" d="${achse(kH + .5)}"/>`, 'Die wichtigsten Bücher aus Kindheit und Jugend') : '') +
+      (warte.length ? `<p class="klein reihenname">was noch wartet</p>` + svg('zb-warte', wH + 1, `<g>${sWarte}</g><path class="achse" d="${achse(wH + .5)}"/>`, 'Was noch wartet') : '');
+    Object.assign(ZB, { items, folgen, aktiv: null, y0 });
+    bandzeile.style.minHeight = (zeilenBand(items, sicht, m) * m.zk) + 'px';
+    $$('svg', huelle).forEach(bandBedienung);
+    bandzeile.innerHTML = '';
+    bandBreite = sicht;
+    // Auf dem Telefon steht das Band beim Laden am rechten Ende, wo alle Reihen besetzt sind; es schiebt sich nie von selbst mit
+    if (huelle.scrollWidth > sicht) huelle.scrollLeft = huelle.scrollWidth;
+  }
+  function zeilenBand(items, W, m) {
+    const probe = document.createElement('p');
+    probe.className = 'buchzeile';
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = `position:absolute;visibility:hidden;left:0;top:0;width:${W}px;min-height:0;margin:0`;
+    document.body.appendChild(probe);
+    let h = 0;
+    items.forEach(o => { probe.innerHTML = bandText(o.b).html; h = Math.max(h, probe.getBoundingClientRect().height); });
+    probe.remove();
+    return Math.max(1, Math.round(h / m.zk));
+  }
+  function bandWaehlen(o, sichtbarHalten) {
+    if (ZB.aktiv === o) return;
+    if (ZB.aktiv) { const alt = document.getElementById(ZB.aktiv.id); if (alt) alt.classList.remove('an'); }
+    ZB.aktiv = o;
+    const mk = document.getElementById('zb-marke');
+    bandzeile.innerHTML = o ? bandText(o.b).html : '';
+    if (!o) { if (mk) mk.setAttribute('visibility', 'hidden'); return; }
+    const el = document.getElementById(o.id);
+    if (el) { el.classList.add('an'); el.ownerSVGElement.setAttribute('aria-activedescendant', o.id); }
+    if (mk) {
+      if (o.folge === 'haupt') { mk.setAttribute('transform', `translate(${(o.x + o.w / 2).toFixed(2)} 0)`); mk.setAttribute('visibility', 'visible'); }
+      else mk.setAttribute('visibility', 'hidden');
+    }
+    // Mit der Tastatur bleibt der gewählte Strich im sichtbaren Teil des Bands
+    if (sichtbarHalten && huelle.scrollWidth > huelle.clientWidth) {
+      const l = huelle.scrollLeft, w = huelle.clientWidth;
+      if (o.x < l + 16) huelle.scrollLeft = Math.max(0, o.x - w * .25);
+      else if (o.x + o.w > l + w - 16) huelle.scrollLeft = o.x - w * .75;
+    }
+  }
+  // Treffer unter dem Zeiger wie in A: liegende Bücher zuerst, sonst der nächste Strich entlang der Zeit
+  function treffer(svg, e) {
+    const r = svg.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    const folge = svg.id === 'zb-kind' ? 'kind' : svg.id === 'zb-warte' ? 'warte' : 'haupt';
+    if (folge === 'haupt') {
+      const q = ZB.folgen.quer.find(o => x >= o.x && x <= o.x + o.w && y >= o.y - 1 && y <= o.y + o.h + 1);
+      if (q) return q;
+      if (y > ZB.y0 + 12) return null;
+    }
+    const liste = ZB.folgen[folge];
+    let best = null, abst = Infinity;
+    liste.forEach(o => { const d = x < o.x ? o.x - x : x > o.x + o.w ? x - o.x - o.w : 0; if (d < abst) { abst = d; best = o; } });
+    return abst <= 4 ? best : null;
+  }
+  // Ein Klick springt zum Rücken im Regal (oder zum Eintrag im Register) und wählt ihn: dort steht seine Karteikarte; ohne weiches Scrollen
+  function zumRuecken(o, mitFokus) {
+    const key = o.b.werk ? 'werk|' + o.b.id : 'b|' + o.b.key;
+    if (o.b.werk && BAENDE.includes(o.b.id) && !schuberOffen) schuberSetzen(true);
+    const x = NACH_KEY.get(key);
+    if (!x) return;
+    setzen('wahl', x);
+    const brett = x.el.closest('.brett'), reg = $('#standorte');
+    const ziel = x.fach === WARTET ? x.el : brett;
+    const y = window.scrollY + ziel.getBoundingClientRect().top - reg.offsetHeight - masse().z * .5;
+    window.scrollTo(0, Math.max(0, Math.round(y)));
+    if (mitFokus) x.el.focus({ preventScroll: true });
+  }
+  function bandBedienung(svg) {
+    let art = 'mouse';
+    svg.addEventListener('pointerdown', e => { art = e.pointerType; });
+    // Nur eine wirkliche Mausbewegung zeigt; nach dem Scrollen schickt der Browser eine Bewegung ohne Weg
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && (e.movementX || e.movementY)) { const t = treffer(svg, e); if (t) bandWaehlen(t); } });
+    svg.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && document.activeElement !== svg) bandWaehlen(null); });
+    svg.addEventListener('click', e => {
+      const t = treffer(svg, e);
+      if (!t) return;
+      // Mit dem Finger zeigt das erste Tippen die Zeile, das zweite auf denselben Strich springt
+      if (art !== 'mouse' && ZB.aktiv !== t) { bandWaehlen(t); return; }
+      zumRuecken(t, false);
+    });
+    svg.addEventListener('focus', () => {
+      const folge = svg.id === 'zb-kind' ? 'kind' : svg.id === 'zb-warte' ? 'warte' : 'haupt';
+      if (ZB.aktiv && ZB.aktiv.folge === folge) return;
+      const l = ZB.folgen[folge];
+      if (l.length) bandWaehlen(folge === 'haupt' ? l[l.length - 1 - WERKE.length] || l[l.length - 1] : l[l.length - 1], true);
+    });
+    svg.addEventListener('blur', e => { if (!(e.relatedTarget && huelle.contains(e.relatedTarget))) bandWaehlen(null); });
+    svg.addEventListener('keydown', e => {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      const o = ZB.aktiv;
+      if (!o) return;
+      const reihen = ['quer', 'haupt', 'kind', 'warte'], l = ZB.folgen[o.folge];
+      let neu = null;
+      if (e.key === 'ArrowRight') neu = l[Math.min(l.length - 1, o.idx + 1)];
+      else if (e.key === 'ArrowLeft') neu = l[Math.max(0, o.idx - 1)];
+      else if (e.key === 'Home') neu = l[0];
+      else if (e.key === 'End') neu = l[l.length - 1];
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const ziel = ZB.folgen[reihen[reihen.indexOf(o.folge) + (e.key === 'ArrowUp' ? -1 : 1)]];
+        if (ziel && ziel.length) { const mx = o.x + o.w / 2; neu = ziel.reduce((a, c) => Math.abs(c.x + c.w / 2 - mx) < Math.abs(a.x + a.w / 2 - mx) ? c : a); }
+      } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zumRuecken(o, true); return; }
+      else if (e.key === 'Escape') { bandWaehlen(null); return; }
+      if (!neu) return;
+      e.preventDefault();
+      const zielSvg = document.getElementById(neu.id).ownerSVGElement;
+      bandWaehlen(neu, true);
+      if (zielSvg !== svg) zielSvg.focus({ preventScroll: true });
+    });
+  }
+
+  // ---------- Standortregister: die Zeiten im Regal wie die Zeitleiste von A ----------
   const reg = $('#standorte'), regListe = $('#standorte-liste');
-  const STANDORTE = FAECHER.map(f => ({ id: f.id, name: f.name })).concat(LESELISTE.length ? [{ id: 'leseliste', name: 'Leseliste' }] : []);
-  regListe.innerHTML = STANDORTE.map(s => `<li><a href="#${s.id}" data-fach="${s.id}">${esc(s.name)}</a></li>`).join('');
-  F.gleichBreit($$('a', regListe));
+  const ZEITEN = EPOCHEN.filter(f => f.buecher.length).concat([KIND, WARTET].filter(f => f.buecher.length));
+  const glied = (f, i, liste) => `<span class="glied"><a href="#${f.id}" data-fach="${f.id}"><span class="wort-sichtbar">${esc(f.marke)}</span>` +
+    (f.art || f === EPOCHEN[0] ? '' : `<span class="unsichtbar">, ${esc(f.name)}</span>`) + `</a>${i < liste.length - 1 ? ' –' : ''}</span>`;
+  const zeitGruppe = ZEITEN.filter(f => !f.art), fachGruppe = ZEITEN.filter(f => f.art);
+  regListe.innerHTML = `<li>${zeitGruppe.map(glied).join(' ')}</li>` + (fachGruppe.length ? `<li>${fachGruppe.map(glied).join(' ')}</li>` : '');
+  // Halbfett ohne Sprung: gemessen am sichtbaren Wort, gesetzt am Verweis
+  const sichtbareWorte = $$('.wort-sichtbar', regListe);
+  F.gleichBreit(sichtbareWorte).then(() => sichtbareWorte.forEach(w => w.parentElement.style.setProperty('--ausgleich', w.style.getPropertyValue('--ausgleich'))));
   function haftet() { reg.classList.toggle('haftet', reg.getBoundingClientRect().top <= .5 && window.scrollY > 0); }
   // Was ein Sprung oder der Fokus erreicht, steht unter dem haftenden Register
   function freiraum() { document.documentElement.style.scrollPaddingTop = Math.ceil(reg.offsetHeight + masse().z * .25) + 'px'; }
@@ -400,45 +927,39 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
   regListe.addEventListener('click', e => {
     const a = e.target.closest('a[data-fach]');
     if (!a) return;
-    // Mit der Tastatur geht der Tab-Halt des Regals an das erste Buch des Fachs
+    // Mit der Tastatur geht der Tab-Halt des Fachs an sein erstes Buch
     const fach = document.getElementById(a.dataset.fach);
-    const erster = fach && $('.ruecken', fach);
-    if (erster) { $$('.ruecken[tabindex="0"]', regal).forEach(k => { k.tabIndex = -1; }); erster.tabIndex = 0; }
+    const erster = fach && $('[data-n]', fach);
+    if (erster) { $$('[data-n][tabindex="0"]', fach).forEach(k => { k.tabIndex = -1; }); erster.tabIndex = 0; }
   });
-
-  // ---------- Leseliste: als Register in Textform, nach dem Jahr der Erstausgabe ----------
-  const lese = $('#leseliste'), leseEintraege = $('#leseliste-eintraege');
-  if (LESELISTE.length) {
-    const eintrag = b => `<li>${F.versalien((b.autor ? esc(b.autor) + ', ' : '') + `<i>${esc(b.t)}</i>`)}</li>`;
-    const haelfte = Math.ceil(LESELISTE.length / 2);
-    leseEintraege.innerHTML = `<ul>${LESELISTE.slice(0, haelfte).map(eintrag).join('')}</ul><ul>${LESELISTE.slice(haelfte).map(eintrag).join('')}</ul>`;
-    lese.hidden = false;
-  }
 
   // ---------- Aufbau ----------
   function allesBauen(erzwingen) {
     regalBauen(erzwingen);
+    bandBauen();
     freiraum();
     haftet();
   }
+  allesBauen(true);
   F.schriften(2500).then(() => {
     Object.keys(VERSAL).forEach(k => delete VERSAL[k]);
     allesBauen(true);
-    const fachEls = () => STANDORTE.map(s => document.getElementById(s.id)).filter(Boolean);
+    const fachEls = () => ZEITEN.map(s => document.getElementById(s.id)).filter(Boolean);
     leser = F.leselinie(fachEls, i => standortSetzen(i), { linie: H => reg.offsetHeight + Math.max(masse().z * 2, (H - reg.offsetHeight) * .25) });
-    // Ein Anker in der Adresse (#kindheit) wird nach dem Bau angefahren
+    // Ein Anker in der Adresse (#kinderzimmer) wird nach dem Bau angefahren
     let ziel = null;
     try { ziel = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) { ziel = null; }
     if (ziel && regal.contains(ziel)) ziel.scrollIntoView();
   });
   let rollBild = 0;
-  window.addEventListener('scroll', () => { if (!rollBild) rollBild = requestAnimationFrame(() => { rollBild = 0; haftet(); }); }, { passive: true });
+  window.addEventListener('scroll', () => { if (!rollBild) rollBild = requestAnimationFrame(() => { rollBild = 0; haftet(); wartetHaftet(); }); }, { passive: true });
   let uhr = 0;
   window.addEventListener('resize', () => {
     clearTimeout(uhr);
     uhr = setTimeout(() => {
       regalBauen(false);
-      freiraum(); haftet();
+      if (huelle.clientWidth !== bandBreite) bandBauen();
+      freiraum(); haftet(); wartetHaftet();
     }, 140);
   });
 })();

@@ -13,10 +13,12 @@
  *     farben: { papier, tinte, blau, blauRaster },
  *     schrift: { ort, ortAktiv, wasser, ring },    // Schriften auf der Leinwand
  *     ring: 'aequator' | null,       // Gradzahlen im Ring: nur „Äquator“ im Überblick, sonst keine
+ *     gewaesserNamen: false,         // Gewässer- und Flussnamen (A hat keine; in B aus, siehe Textregel)
  *     dauer: 1000,                   // feste Dauer jedes Flugs in ms (bei reduzierter Bewegung 0)
  *     aussparungen: () => [[x0, y0, x1, y1], …],   // Rechtecke, die keine Ringbeschriftung berühren darf
  *     landName: iso => 'Name',       // Name eines Kleinstaats, der im groben Maßstab keine Fläche hat
  *     beiLand: land | null => {},    // bereistes Land unter dem Zeiger (nur auf Ebenen mit laender: true)
+ *     alleLaender: true,             // beiLand meldet jedes Land unter dem Zeiger, nicht nur bereiste (land.bereist sagt es)
  *     beimEingriff: () => {}, beiChronikEnde: grund => {}
  *   });
  *   g.ebene({ orte: [{ name, lat, lon, rang, kurz, neben }], laender, grenzen, fluesse, blick: { mitte: [lon, lat], k } }, { fliegen, behalten })
@@ -37,7 +39,10 @@
   function erstellen(o) {
     const { canvas, hinweis } = o;
     const F = Object.assign({ papier: '#FFFFFF', tinte: '#141414', blau: '#2A5F99', blauRaster: '#E5ECF3' }, o.farben || {});
-    const schrift = Object.assign({ ort: '500 15px serif', ortAktiv: '600 15px serif', wasser: 'italic 500 13px serif', ring: '500 13px serif' }, o.schrift || {});
+    const schrift = Object.assign({ ort: '500 15px serif', ortAktiv: '600 15px serif', land: '500 13px serif', wasser: 'italic 500 13px serif', ring: '500 13px serif' }, o.schrift || {});
+    // Gewässer- und Flussnamen nur mit o.gewaesserNamen: true. A beschriftet keine Gewässer; nach der Textregel steht in B kein
+    // Wort, das A nicht hat (die Zeichnung der Blauplatte bleibt)
+    const gewaesserNamen = o.gewaesserNamen === true;
     const KMIN = 1;
     const bereist = new Set(o.bereist || []);
     const winzig = o.winzig || {};
@@ -191,7 +196,7 @@
       ctx.beginPath(); pfad(d.landFlaeche); ctx.fillStyle = F.papier; ctx.fill();
       // In Ruhe: das Bild aus Wasser und Land einmal auslesen; daran prüfen die Gewässernamen, ob sie auf Wasser stehen
       let wasserBild = null;
-      if (!bewegt) { try { wasserBild = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch (e) { wasserBild = null; } }
+      if (!bewegt && gewaesserNamen) { try { wasserBild = ctx.getImageData(0, 0, canvas.width, canvas.height); } catch (e) { wasserBild = null; } }
       if (ebene.laender && muster) { ctx.beginPath(); pfad(d.bereist); ctx.fillStyle = muster; ctx.fill(); }
 
       ctx.beginPath(); pfad(netz(netzSchritt())); ctx.strokeStyle = F.blau; ctx.lineWidth = .45; ctx.globalAlpha = .75; ctx.stroke(); ctx.globalAlpha = 1;
@@ -240,7 +245,8 @@
         else { ctx.arc(p[0], p[1], 3.5, 0, Math.PI * 2); ctx.fillStyle = F.tinte; ctx.fill(); }
         belegt.push([p[0] - 4, p[1] - 4, p[0] + 4, p[1] + 4]);
       });
-      // Ortsnamen aufrecht; Orte, deren Zeichen fast aufeinander liegen, teilen sich eine Beschriftung („Potsdam, Berlin“).
+      // Ortsnamen aufrecht; Orte, deren Zeichen fast aufeinander liegen, teilen sich eine Beschriftung: die Namen untereinander,
+      // ohne Zeichen dazwischen (Potsdam über Berlin), wie die Namensblöcke von A.
       // Lage nach der Reihenfolge rechts oben, rechts unten, links oben, links unten, rechts, links. Der aktive Ort zuerst
       // und halbfett; kein Name überdeckt einen anderen oder ein Ortszeichen
       const aktivListe = aktiverOrt ? [aktiverOrt] : [];
@@ -256,26 +262,25 @@
       ctx.textBaseline = 'alphabetic'; ctx.lineJoin = 'round'; ctx.textAlign = 'left';
       const teilBreite = t => { ctx.font = t.aktiv ? schrift.ortAktiv : schrift.ort; return ctx.measureText(t.text).width; };
       gruppen.sort((a, b) => b.aktiv - a.aktiv || a.rang - b.rang || a.i - b.i).forEach(g => {
-        ctx.font = schrift.ort;
-        const komma = ctx.measureText(', ').width;
         const breiten = g.teile.map(teilBreite);
-        const w = breiten.reduce((s, x) => s + x, 0) + komma * (g.teile.length - 1), h = 11;
-        // Die Lagen beziehen sich auf alle Zeichen der Gruppe; 7 px Abstand, damit das eigene Zeichen frei bleibt
+        const n = g.teile.length, h = 11, zeile = 16, hoch = h + (n - 1) * zeile;
+        const w = Math.max(...breiten);
+        // Die Lagen beziehen sich auf alle Zeichen der Gruppe; 7 px Abstand, damit das eigene Zeichen frei bleibt.
+        // y ist die Grundlinie der ersten Zeile
         const xs = g.punkte.map(q => q[0]), ys = g.punkte.map(q => q[1]);
         const x0g = Math.min(...xs), x1g = Math.max(...xs), y0g = Math.min(...ys), y1g = Math.max(...ys), ym = (y0g + y1g) / 2;
-        const lagen = [[x1g + 7, y0g - 5, 'l'], [x1g + 7, y1g + 5 + h, 'l'], [x0g - 7, y0g - 5, 'r'], [x0g - 7, y1g + 5 + h, 'r'], [x1g + 7, ym + h / 2, 'l'], [x0g - 7, ym + h / 2, 'r']];
+        const oben = y0g - 5 - (n - 1) * zeile, unten = y1g + 5 + h, mittig = ym - hoch / 2 + h;
+        const lagen = [[x1g + 7, oben, 'l'], [x1g + 7, unten, 'l'], [x0g - 7, oben, 'r'], [x0g - 7, unten, 'r'], [x1g + 7, mittig, 'l'], [x0g - 7, mittig, 'r']];
         for (const [lx, ly, a] of lagen) {
           const x0 = a === 'l' ? lx : lx - w;
-          const box = [x0 - 1.5, ly - h - 1.5, x0 + w + 1.5, ly + 4];
+          const box = [x0 - 1.5, ly - h - 1.5, x0 + w + 1.5, ly + (n - 1) * zeile + 4];
           if (!imRund(box, 3) || !frei(box)) continue;
           belegt.push(box);
-          let x = x0;
           g.teile.forEach((t, j) => {
-            const text = t.text + (j < g.teile.length - 1 ? ',' : '');
+            const x = a === 'l' ? x0 : x0 + w - breiten[j], y = ly + j * zeile;
             ctx.font = t.aktiv ? schrift.ortAktiv : schrift.ort;
-            ctx.lineWidth = 3; ctx.strokeStyle = F.papier; ctx.strokeText(text, x, ly);
-            ctx.fillStyle = F.tinte; ctx.fillText(text, x, ly);
-            x += breiten[j] + komma;
+            ctx.lineWidth = 3; ctx.strokeStyle = F.papier; ctx.strokeText(t.text, x, y);
+            ctx.fillStyle = F.tinte; ctx.fillText(t.text, x, y);
           });
           break;
         }
@@ -296,7 +301,22 @@
           }
         }
       }
-      // Gewässernamen: Blauplatte, kursiv, nur auf Wasser; Ozeane in Versalien, gesperrt
+      // Ländernamen bereister Länder ab mittlerem Zoom, wie in A: aufrecht in Tinte, freigestellt, wo Platz ist
+      if (k >= 2.6 && ebene.laender) {
+        const d = daten(), f0 = hover || gewaehlt;
+        ctx.font = schrift.land; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        d.bereist.features.forEach(f => {
+          if ((f0 && f0.iso === f.iso) || !f.punkt || d3.geoDistance(f.punkt, mitte) > 1.3) return;
+          const p = projektion(f.punkt);
+          if (!p) return;
+          const b = ctx.measureText(f.name).width / 2 + 2, box = [p[0] - b, p[1] - 8, p[0] + b, p[1] + 8];
+          if (!imRund(box, 3) || !frei(box)) return;
+          belegt.push(box);
+          ctx.lineWidth = 3; ctx.strokeStyle = F.papier; ctx.strokeText(f.name, p[0], p[1]);
+          ctx.fillStyle = F.tinte; ctx.fillText(f.name, p[0], p[1]);
+        });
+      }
+      // Gewässernamen (nur mit o.gewaesserNamen): Blauplatte, kursiv, nur auf Wasser; Ozeane in Versalien, gesperrt
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.font = schrift.wasser;
       const em = groesse(schrift.wasser);
@@ -314,7 +334,7 @@
         return true;
       };
       // In Bewegung keine Gewässernamen: die Prüfung auf Wasser ist teuer; nach dem Flug stehen sie wieder da
-      if (!bewegt) GEWAESSER.forEach(([name, lon, lat, abK, ozean, bisK]) => {
+      if (!bewegt && gewaesserNamen) GEWAESSER.forEach(([name, lon, lat, abK, ozean, bisK]) => {
         if (k < abK || (ozean && k > (bisK || 3.2)) || !sichtbar([lon, lat])) return;
         const p = projektion([lon, lat]);
         if (kannSperren) ctx.letterSpacing = ozean ? (em * .12).toFixed(2) + 'px' : '0px';
@@ -333,7 +353,7 @@
       });
       if (kannSperren) ctx.letterSpacing = '0px';
       // Flussnamen: Blauplatte, kursiv, dem Lauf folgend, 4 px neben dem Fluss
-      if (ebene.fluesse && !bewegt) FLUESSE.forEach(f => {
+      if (ebene.fluesse && !bewegt && gewaesserNamen) FLUESSE.forEach(f => {
         if (!f.anker || !sichtbar(f.anker)) return;
         let best = null;
         f.geo.coordinates.forEach(l => l.forEach((q, j) => { const dd = d3.geoDistance(q, f.anker); if (!best || dd < best.d) best = { d: dd, l, j }; }));
@@ -478,15 +498,16 @@
       zoomStandSetzen(); bewegung(); zeichnen();
     });
 
-    // Land unter dem Zeiger (nur bereiste Länder, nur auf Ebenen mit laender: true)
+    // Land unter dem Zeiger (nur auf Ebenen mit laender: true): bereiste Länder; mit o.alleLaender jedes Land, wie die Tafel von A
+    // („nicht bereist“). Gewählt wird mit landBei(x, y) nur ein bereistes
     function hoverLoesen() { if (hover) { hover = null; zeichnen(); landMelden(); } }
     let gemeldetesLand = null;
     function landMelden() { if (hover !== gemeldetesLand) { gemeldetesLand = hover; melden('beiLand', hover); } }
-    function landBei(x, y) {
+    function landBei(x, y, alle) {
       if (!ebene.laender || Math.hypot(x - seite / 2, y - seite / 2) >= R) return null;
       const ll = projektion.invert([x, y]);
       if (!ll) return null;
-      const f = daten().laender.find(l => l.bereist && d3.geoContains(l, ll));
+      const f = daten().laender.find(l => (l.bereist || alle) && d3.geoContains(l, ll));
       if (f) return f;
       // Kleinstaaten: ihr Quadrat
       for (const [iso, pos] of Object.entries(winzig)) {
@@ -504,7 +525,7 @@
       requestAnimationFrame(() => {
         wartet = false;
         const r = canvas.getBoundingClientRect();
-        const t = landBei(e.clientX - r.left, e.clientY - r.top);
+        const t = landBei(e.clientX - r.left, e.clientY - r.top, !!o.alleLaender);
         if ((t && t.iso) !== (hover && hover.iso)) { hover = t; zeichnen(); landMelden(); }
       });
     });

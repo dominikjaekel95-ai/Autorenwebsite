@@ -8,8 +8,8 @@ Aufruf (aus einem beliebigen Ordner):
 Der Zielordner wird neu angelegt; liegt dort schon ein früherer Bau (ein Ordner mit index.html), wird er ersetzt.
 
 Was der Bau tut:
-  - Zuerst prüft er, dass die Daten in website-b/daten/ dieselben sind wie in website/daten/ (bis auf die eigenen Dateien
-    von B, stationen.js und fluesse.js). Weicht eine ab, bricht er ab; mit --abgleichen kopiert er vorher die Dateien von A
+  - Zuerst prüft er, dass die Daten in website-b/daten/ dieselben sind wie in website/daten/ (bis auf die eigene Datei
+    von B, fluesse.js). Weicht eine ab, bricht er ab; mit --abgleichen kopiert er vorher die Dateien von A
     nach website-b/daten/.
   - Er kopiert website-b/ in den Zielordner, ohne werkzeuge/, README.md, versteckte Dateien und ohne Bilder aus bilder/,
     auf die keine Seite, kein Skript und kein Stil verweist.
@@ -39,7 +39,7 @@ VERSION_A = QUELLE.parent / 'website'
 HAUPTSEITE = 'index.html'
 AUSLASSEN = {'werkzeuge', 'README.md'}
 TEXTDATEIEN = ('.html', '.css', '.js')
-EIGENE_DATEN = {'stationen.js', 'fluesse.js'}
+EIGENE_DATEN = {'fluesse.js'}
 
 
 def fehler(text):

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Untertext – Dominik Jäkel</title>
-<meta name="description" content="Untertext ist das Journal von Dominik Jäkel.">
+<meta name="description" content="Untertext, das Journal von Dominik Jäkel.">
 <script>
 document.documentElement.classList.add('js');
 if (/^https?:$/.test(location.protocol)) {
@@ -14,18 +14,28 @@ if (/^https?:$/.test(location.protocol)) {
 }
 </script>
 <link rel="stylesheet" href="stil.css">
+<style>
+/* Untertext, das Journal: unter dem Titel die Zeile von A, darunter Eintrag unter Eintrag aus daten/texte.js (art: 'untertext'),
+   der neueste zuerst, das Datum als Überschrift, darunter der Titel als Verweis zur Leseseite. Ohne Eintrag steht an der Stelle
+   der Satz von A im Grad Text. Nur Anordnung.
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (gehört wie auf den anderen Seiten nach stil.css). */
+.kopf .briefkopf { justify-self: start; }
+.kopf .rolle { margin-left: 1em; }
+@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
+.texte-leer { margin-top: calc(var(--z) * 1.5); }
+</style>
 </head>
 <body>
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
 
 <header class="bogen kopf">
-  <a class="name" href="index.html">Dominik Jäkel</a>
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
       <li><a href="satoshi.html">Satoshi</a></li>
       <li><a href="ursprung.html">Ursprung</a></li>
-      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html" aria-current="page">Untertext</a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html" aria-current="page">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -36,16 +46,19 @@ if (/^https?:$/.test(location.protocol)) {
 <main class="bogen" id="inhalt">
   <div class="satzspalte">
     <h1>Untertext</h1>
-    <p><i>Untertext</i> ist das Journal von Dominik Jäkel.</p>
+    <p>Mein Journal.</p>
     <div id="texte" hidden></div>
+    <p class="texte-leer" id="texte-leer" hidden>Noch steht hier kein Eintrag.</p>
   </div>
 </main>
 
-<footer class="bogen fuss">
-  <div class="satzspalte">
+<footer class="bogen fuss" id="kontakt">
+  <section class="satzspalte kontakt" aria-labelledby="kontakt-titel">
+    <h2 id="kontakt-titel">Kontakt</h2>
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
-    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-  </div>
+    <p class="klein"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique. Küsten und Grenzen nach Natural Earth.</p>
+  </section>
 </footer>
 
 <script src="daten/texte.js"></script>
@@ -56,9 +69,9 @@ if (/^https?:$/.test(location.protocol)) {
   var F = window.FSeite;
   if (!F || !F.texte) return;
   var T = F.texte;
-  var journal = document.getElementById('texte');
+  var journal = document.getElementById('texte'), leer = document.getElementById('texte-leer');
   var alle = T.alle('untertext');
-  if (!alle.length) return;
+  if (!alle.length) { leer.hidden = false; return; }
   var endetMitZeichen = function (html) {
     return /[.!?…:]$/.test(String(html).replace(/<[^>]*>/g, '').replace(/[“‘’»«)\s]+$/, ''));
   };

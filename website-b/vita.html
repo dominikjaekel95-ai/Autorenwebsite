@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vita – Dominik Jäkel</title>
-<meta name="description" content="Dominik Jäkel wurde 1995 in Dortmund geboren und lebt seit 2022 in Berlin. 2022 erhielt er den A.-E.-Johann-Preis.">
+<meta name="description" content="Vita von Dominik Jäkel: geboren 1995 in Dortmund, Studium in Freiburg und am Hasso-Plattner-Institut in Potsdam, vier Jahre in Kaohsiung auf Taiwan, seit 2022 in Berlin. A.-E.-Johann-Preis 2022.">
 <script>
 document.documentElement.classList.add('js');
 if (/^https?:$/.test(location.protocol)) {
@@ -15,29 +15,45 @@ if (/^https?:$/.test(location.protocol)) {
 </script>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Vita: Dominiks Vita in der Satzspalte, im Tafelfeld das Bootsfoto auf der Höhe des Seitentitels. Auf Tablet und Telefon
-   steht das Foto zwischen Titel und Text. Nur Anordnung. */
-.vita > .bildnis { margin-top: calc(var(--z) * .5); max-width: var(--S); }
-.bildnis img { width: 100%; }
-.vita > .vita-text { margin-top: var(--z); }
+/* Vita (Abschnitt 13): Dominiks Vita in der Satzspalte, davor sein erster Satz allein, jedes Glied eine Zeile. Im Tafelfeld die
+   Stationen als Chronologie (12.11) und darunter das Bootsfoto. Nur Anordnung.
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“.
+   Die Jahreszahl hängt im Tafelfeld selbst (es hat keinen eigenen Bundsteg): eine Spalte so breit wie die breiteste Jahreszahl,
+   rechtsbündig, 0,5 em vor der Kante des Eintrags. Unter dem Ort die Koordinaten im Grad klein. */
+.kopf .briefkopf { justify-self: start; }
+.kopf .rolle { margin-left: 1em; }
+@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
+.vita .einstieg { margin-bottom: var(--z); hyphens: manual; -webkit-hyphens: manual; }
+.vita .einstieg span { display: block; }
+.vita > .tafelfeld { margin-top: calc(var(--z) * 2); }
+.vita > .tafelfeld > section > h2:first-child { margin-top: 0; }
 @media (min-width: 75rem) {
-  .vita > .titel { grid-row: 1; }
-  .vita > .vita-text { grid-row: 2; margin-top: 0; }
-  .vita > .bildnis { grid-row: 1 / 3; margin-top: 0; }
+  .vita > .satzspalte, .vita > .tafelfeld { grid-row: 1; margin-top: 0; }
+  /* Die Überschrift steht auf der Grundlinie des Seitentitels, die erste Station auf der Zeile des ersten Satzes */
+  .vita > .tafelfeld { padding-top: calc(var(--z) * .25); }
 }
+.chronologie > li { position: relative; }
+.chronologie > li + li { margin-top: calc(var(--z) * .25); }
+.stationen { --jahr: 2em; }
+.stationen > li { padding-left: calc(var(--jahr) + .5em); }
+.stationen > li > .jahr { display: block; position: absolute; left: 0; top: 0; width: var(--jahr); text-align: right; }
+.stationen .koord { display: block; }
+.stationen + .weiter { margin-top: calc(var(--z) * .75); }
+.bildnis { margin-top: calc(var(--z) * 2); max-width: var(--S); }
+.bildnis img { width: 100%; }
 </style>
 </head>
 <body>
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
 
 <header class="bogen kopf">
-  <a class="name" href="index.html">Dominik Jäkel</a>
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
       <li><a href="satoshi.html">Satoshi</a></li>
       <li><a href="ursprung.html">Ursprung</a></li>
-      <li data-wenn-texte="erzaehlung" hidden><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li data-wenn-texte="untertext" hidden><a href="untertext.html">Untertext</a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html">Untertext</a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html" aria-current="page">Vita</a></li>
@@ -46,30 +62,53 @@ if (/^https?:$/.test(location.protocol)) {
 </header>
 
 <main class="bogen vita" id="inhalt">
-  <div class="satzspalte titel">
+  <div class="satzspalte">
     <h1>Vita</h1>
+    <p class="einstieg"><span>Dominik Jäkel schreibt tagsüber</span> <span>unter fremden Namen</span> <span>und abends unter seinem eigenen.</span></p>
+    <div class="prosa">
+      <p>Er wurde 1995 in Dortmund geboren. In Freiburg studierte er Liberal Arts &amp; Sciences, danach in Potsdam IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span>.</p>
+      <p>2016 und 2018 ging er für Freiwilligen&shy;projekte mit <abbr>AIESEC</abbr> nach Colombo in Sri Lanka und nach Cotonou in Benin.</p>
+      <p>Vier Jahre lebte er in Kaohsiung auf Taiwan. Er arbeitete dort als Lektor und freier Autor, unter anderem für Sprach&shy;assistenten und Indie-Gaming-Studios. In Taiwan, das von einer starken Aboriginer-Kultur geprägt ist, begann seine Beschäftigung mit der Früh&shy;geschichte des Menschen und die Arbeit an der Ursprungs&shy;trilogie der Zivili&shy;sation.</p>
+      <p>Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen (vor allem für die Marketing- und Pricing&shy;beratung Simon-Kucher). Auf der Werkstatt&shy;bühne des Autoren&shy;forums Berlin e.&#8239;V. hat er viele seiner Geschichten gelesen; seit einigen Jahren ist er fester Bestandteil des Moderatoren&shy;teams. Längere Aufenthalte führten ihn seitdem nach Mallorca, Kapstadt, Sansibar und Buenos Aires.</p>
+      <p>2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debüt&shy;roman <a href="satoshi.html"><i>Satoshi</i></a> ab. Das Manuskript liegt vollständig vor. Der Roman erzählt die Gründungs&shy;legende von Bitcoin als Liebes&shy;geschichte dreier Menschen&nbsp;– und beschäftigt sich vor allem mit der Frage, was passiert, wenn das Vertrauen in Institutionen zerbricht.</p>
+      <p>Daneben arbeitet er an der <a href="ursprung.html">Ursprungs&shy;trilogie</a>, drei Romanen über die Anfänge der Zivili&shy;sation. Sie erzählen von der Geburt der organi&shy;sierten Religion, der Literatur und der Heiligen Schrift, von Göbekli Tepe um 8000&nbsp;v.&#8239;Chr. über Uruk bis Jerusalem um 940&nbsp;v.&#8239;Chr.</p>
+    </div>
   </div>
 
-  <figure class="tafelfeld bildnis">
-    <img src="bilder/dominik-jaekel-boot.jpg" alt="Dominik Jäkel liest an Deck eines Segelboots, im Hintergrund Berge im Abendlicht" width="1200" height="1600" decoding="async">
-    <figcaption class="legende">Mit <i>Picknick am Wegesrand</i> der Brüder Strugatzki.</figcaption>
-  </figure>
+  <div class="tafelfeld">
+    <section aria-labelledby="stationen-titel">
+      <h2 id="stationen-titel">Stationen</h2>
+      <ol class="chronologie stationen">
+        <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren <span class="koord klein">51°&nbsp;31′&nbsp;N, 7°&nbsp;28′&nbsp;O</span></li>
+        <li><span class="jahr">2014<span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span> <span class="koord klein">47°&nbsp;59′&nbsp;N, 7°&nbsp;51′&nbsp;O</span></li>
+        <li><span class="jahr">2015<span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span> <span class="koord klein">52°&nbsp;23′&nbsp;N, 13°&nbsp;04′&nbsp;O</span></li>
+        <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit <abbr>AIESEC</abbr> <span class="koord klein">6°&nbsp;56′&nbsp;N, 79°&nbsp;52′&nbsp;O</span></li>
+        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit <abbr>AIESEC</abbr> <span class="koord klein">6°&nbsp;22′&nbsp;N, 2°&nbsp;26′&nbsp;O</span></li>
+        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor <span class="koord klein">22°&nbsp;38′&nbsp;N, 120°&nbsp;18′&nbsp;O</span></li>
+        <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> Berlin, seitdem Wohnort <span class="koord klein">52°&nbsp;31′&nbsp;N, 13°&nbsp;24′&nbsp;O</span></li>
+        <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> <span class="nw">A.-E.-Johann-Preis</span></li>
+        <li><span class="jahr">2023<span class="unsichtbar">&nbsp;</span></span> Mallorca, längerer Aufenthalt <span class="koord klein">39°&nbsp;34′&nbsp;N, 2°&nbsp;39′&nbsp;O</span></li>
+        <li><span class="jahr">2024<span class="unsichtbar">&nbsp;</span></span> Kapstadt, Südafrika, längerer Aufenthalt <span class="koord klein">33°&nbsp;55′&nbsp;S, 18°&nbsp;25′&nbsp;O</span></li>
+        <li><span class="jahr">2025<span class="unsichtbar">&nbsp;</span></span> Sansibar, Tansania, längerer Aufenthalt <span class="koord klein">6°&nbsp;10′&nbsp;S, 39°&nbsp;11′&nbsp;O</span></li>
+        <li><span class="jahr">2026<span class="unsichtbar">&nbsp;</span></span> Buenos Aires, Argentinien, längerer Aufenthalt <span class="koord klein">34°&nbsp;36′&nbsp;S, 58°&nbsp;23′&nbsp;W</span></li>
+      </ol>
+      <p class="weiter">Die Wohnorte und die ersten längeren Aufenthalte <a class="nw" href="index.html#karte">auf dem Globus</a>.</p>
+    </section>
 
-  <div class="satzspalte prosa vita-text">
-    <p>Er wurde 1995 in Dortmund geboren. In Freiburg studierte er Liberal Arts &amp; Sciences, danach in Potsdam IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span>.</p>
-    <p>2016 und 2018 ging er für Freiwilligen&shy;projekte mit <abbr>AIESEC</abbr> nach Colombo in Sri Lanka und nach Cotonou in Benin.</p>
-    <p>Vier Jahre lebte er in Kaohsiung auf Taiwan. Er arbeitete dort als Lektor und freier Autor, unter anderem für Sprach&shy;assistenten und Indie-Gaming-Studios. In Taiwan, das von einer starken Aboriginer-Kultur geprägt ist, begann seine Beschäftigung mit der Früh&shy;geschichte des Menschen und die Arbeit an der Ursprungs&shy;trilogie der Zivili&shy;sation.</p>
-    <p>Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen (vor allem für die Marketing- und Pricing&shy;beratung Simon-Kucher). Auf der Werkstatt&shy;bühne des Autoren&shy;forums Berlin e.&#8239;V. hat er viele seiner Geschichten gelesen; seit einigen Jahren ist er fester Bestandteil des Moderatoren&shy;teams. Längere Aufenthalte führten ihn seitdem nach Mallorca, Kapstadt, Sansibar und Buenos Aires.</p>
-    <p>2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debüt&shy;roman <a href="satoshi.html"><i>Satoshi</i></a> ab. Das Manuskript liegt vollständig vor. Der Roman erzählt die Gründungs&shy;legende von Bitcoin als Liebes&shy;geschichte dreier Menschen&nbsp;– und beschäftigt sich vor allem mit der Frage, was passiert, wenn das Vertrauen in Institutionen zerbricht.</p>
-    <p>Daneben arbeitet er an der <a href="ursprung.html">Ursprungs&shy;trilogie</a>, drei Romanen über die Anfänge der Zivili&shy;sation. Sie erzählen von der Geburt der organi&shy;sierten Religion, der Literatur und der Heiligen Schrift, von Göbekli Tepe um 8000&nbsp;v.&#8239;Chr. über Uruk bis Jerusalem um 940&nbsp;v.&#8239;Chr.</p>
+    <figure class="bildnis">
+      <img src="bilder/dominik-jaekel-boot.jpg" alt="Dominik Jäkel liest an Deck eines Segelboots, im Hintergrund Berge im Abendlicht" width="1200" height="1600" decoding="async">
+      <figcaption class="legende">Mit <i>Picknick am Wegesrand</i> der Brüder Strugatzki.</figcaption>
+    </figure>
   </div>
 </main>
 
-<footer class="bogen fuss">
-  <div class="satzspalte">
+<footer class="bogen fuss" id="kontakt">
+  <section class="satzspalte kontakt" aria-labelledby="kontakt-titel">
+    <h2 id="kontakt-titel">Kontakt</h2>
     <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
-    <p class="klein"><a href="impressum.html">Impressum</a> und <a href="datenschutz.html">Datenschutz</a></p>
-  </div>
+    <p class="klein"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="klein kolophon">Website gesetzt aus der Baskervville des Atelier National de Recherche Typographique. Küsten und Grenzen nach Natural Earth.</p>
+  </section>
 </footer>
 
 <script src="daten/texte.js"></script>

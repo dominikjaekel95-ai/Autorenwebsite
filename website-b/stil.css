@@ -200,29 +200,40 @@ html:not(.js) .rahmen, .kartentafel.ohne-kugel .rahmen { aspect-ratio: auto; bor
 .zwickel { pointer-events: none; }
 .zwickel button, .zwickel a { pointer-events: auto; }
 .aussparung { display: none; }
+/* Kartenwahl: der Satz von A („Auf dem Globus: wo ich gelebt habe, …“) als Auswahlliste im Satz, immer über dem Rahmen */
 .kartenwahl { font-size: var(--text); line-height: var(--z); }
+/* Kopf der Tafel (12.6): Ort oder Titel im Grad Text, Jahr, Band und Art darunter im Grad klein, jedes auf seiner Zeile */
+.tafelkopf-ort { font-size: var(--text); line-height: var(--z); }
+.tafelkopf-angabe, .tafelkopf .arbeitstitel { font-size: var(--klein); line-height: var(--zk); }
+.tafelkopf .arbeitstitel { display: block; }
 .zeichenerklaerung li { white-space: nowrap; }
 .hinweis { max-width: 18em; }
 
-/* Außenlage: die Kartenwahl über dem Rahmen, darunter die Legende mit früher und später, dann Zeichenerklärung und Hinweis */
+/* Außenlage: die Kartenwahl über dem Rahmen, darunter Kopf, Legende mit früher und später, Zeichenerklärung und Hinweis,
+   zuletzt der Text der Karte (Startseite) */
 .zw-ol { grid-row: 1; margin-bottom: calc(var(--z) * .25); }
-.zw-ol .kartenwahl { display: flex; flex-wrap: wrap; column-gap: 1em; }
-.tafellegende { grid-row: 3; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.5em; align-items: start; margin-top: calc(var(--z) * .25); }
+.zw-or { grid-row: 3; margin-top: calc(var(--z) * .25); }
+.tafellegende { grid-row: 4; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.5em; align-items: start; margin-top: calc(var(--z) * .25); }
 .tafellegende .steuer { display: flex; column-gap: 1em; white-space: nowrap; }
 .tafellegende.ohne-schritte .steuer { display: none; }
-.zw-ul { grid-row: 4; grid-column: 1; margin-top: calc(var(--z) * .25); }
-.zw-ur { grid-row: 4; grid-column: 2; margin-top: calc(var(--z) * .25); text-align: right; }
+.legendenzusatz { margin-top: calc(var(--z) * .25); }
+.zw-ul { grid-row: 5; grid-column: 1; margin-top: calc(var(--z) * .25); }
+.zw-ur { grid-row: 5; grid-column: 2; margin-top: calc(var(--z) * .25); text-align: right; }
 .zw-ul .zeichenerklaerung { display: flex; flex-wrap: wrap; column-gap: 1.5em; }
+.kartentext { grid-row: 6; margin-top: calc(var(--z) * .75); }
+.kartentext > p + p, .legendenzusatz > p + p { margin-top: calc(var(--z) * .25); }
+.kartentext .band { padding-left: 2em; text-indent: -2em; }
+.kartentext .band-nr { display: inline-block; width: 2em; text-indent: 0; }
 
 /* Zwickellage */
 @container tafel (min-width: 40.5rem) {
   .zwickel { --lage: zwickel; grid-row: 2; grid-column: 1 / -1; position: relative; z-index: 1; margin: calc(var(--z) * .5); }
-  .zw-ol { align-self: start; justify-self: start; }
+  .zw-or { align-self: start; justify-self: end; text-align: right; }
   .zw-ul { align-self: end; justify-self: start; }
   .zw-ur { align-self: end; justify-self: end; }
-  .zw-ol .kartenwahl { display: block; }
   .zw-ul .zeichenerklaerung { display: block; }
-  .zw-ol .aussparung { display: block; float: right; }
+  .zw-or .aussparung { display: block; float: left; }
+  .tafellegende { grid-row: 3; }
 }
 
 /* ---------- Buchzeile (12.8): eine feste Zeile unter dem Brett ---------- */

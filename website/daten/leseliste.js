@@ -1,4 +1,4 @@
-/* Was noch wartet: Dominiks eigene Leseliste (Stand Oktober 2026), nur Titel und Autor, ohne seine Notizen.
+/* Was noch wartet: die eigene Leseliste (Stand Oktober 2026), nur Titel und Autor.
    t Titel, a Autor, j Jahr der Erstveröffentlichung (negativ = v. Chr., null = unklar), p Seiten (ungefähr), k Kurzprosa oder Gedichte */
 window.LESELISTE = [
   { t: 'Serotonin', a: 'Michel Houellebecq', j: 2019, p: 336 },

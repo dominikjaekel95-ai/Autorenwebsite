@@ -1,5 +1,5 @@
-/* Gemeinsame Inhalte der Website: Orte, Stationen, Länder, eigene Werke. Bereinigt erzeugt von werkzeuge/daten.cjs aus den
-   Entwürfen (entwuerfe/globus/inhalt.js); nur, was die Seiten lesen. Keine privaten Kontaktdaten. */
+/* Gemeinsame Inhalte der Website: Orte, Stationen, Länder, eigene Werke.
+   Erzeugt von werkzeuge/daten.cjs (nicht von Hand ändern); nur, was die Seiten lesen. Keine privaten Kontaktdaten. */
 window.INHALT = {
   // Bereiste Länder und Gebiete (ISO-Codes; die Landesteile des Vereinigten Königreichs einzeln, Westjordanland als PS-WB)
   bereist: ['AT', 'BE', 'BG', 'DK', 'DE', 'GB-ENG', 'EE', 'FI', 'FR', 'IE', 'IT', 'HR', 'LV', 'LT', 'MC', 'NL', 'GB-NIR', 'PL', 'PT', 'RO', 'RU', 'GB-SCT', 'SE', 'CH', 'RS', 'SK', 'SI', 'ES', 'CZ', 'HU', 'VA', 'AM', 'BD', 'CN', 'GE', 'HK', 'IN', 'ID', 'IL', 'KW', 'MY', 'OM', 'KR', 'LK', 'TW', 'TH', 'TR', 'AE', 'VN', 'PS-WB', 'EG', 'ET', 'BJ', 'GH', 'CV', 'KE', 'MA', 'ZA', 'TZ', 'TG', 'TN', 'AR', 'CA', 'UY', 'US'],
@@ -34,8 +34,8 @@ window.INHALT = {
   // Weitere längere Aufenthalte, nur für die Koordinaten der Vita (auf dem Globus wäre es zu voll)
   aufenthalte: [
     { name: 'Kapstadt', land: 'Südafrika', jahr: '2024', lat: -33.92, lon: 18.42 },
-    { name: 'Sansibar', land: 'Tansania', jahr: '2024', lat: -6.16, lon: 39.19 },
-    { name: 'Kapstadt', land: 'Südafrika', jahr: '2026', lat: -33.92, lon: 18.42 }
+    { name: 'Sansibar', land: 'Tansania', jahr: '2025', lat: -6.16, lon: 39.19 },
+    { name: 'Buenos Aires', land: 'Argentinien', jahr: '2026', lat: -34.6, lon: -58.38 }
   ],
 
   // Satoshi: Schauplätze, die Szenen der Reihe nach (ohne das Ende zu verraten), der erste Satz, Eckdaten und das Pseudonym
@@ -87,7 +87,7 @@ window.INHALT = {
     III: 'Jerusalem zur Zeit des ersten Tempels, um 940 v. Chr. Eine phönizische Gelehrte und die Geburt der Heiligen Schrift.'
   },
 
-  // Die Bände im Einzelnen; Stand nach Dominiks Wunsch nur „in Arbeit“ (für die ganze Trilogie). Die Texte stehen in ursprung.html
+  // Die Bände im Einzelnen; als Stand gilt für die ganze Trilogie nur „in Arbeit“. Die Texte stehen in ursprung.html
   trilogie: {
     titel: 'Ursprung',
     baende: [

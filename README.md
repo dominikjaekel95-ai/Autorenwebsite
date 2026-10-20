@@ -2,6 +2,10 @@
 
 Erste Entwürfe für eine persönliche Autorenwebsite: Journal, Länderguides, Bücher.
 
+## Testsystem
+
+Die zusammengehörige Website liegt in `website/` (Start, Satoshi, Ursprung, Erzählungen, Untertext, Länder, Bibliothek, Vita, Impressum, Datenschutz). Aufbau, Texte hinzufügen und Veröffentlichen beschreibt `website/README.md`. Zum Testen ist sie als privater Link auf claude.ai veröffentlicht; gebaut wird die Fassung dafür mit `python3 website/werkzeuge/artefakt.py <ziel>`.
+
 ## Entwürfe ansehen
 
 `entwuerfe/index.html` lokal im Browser öffnen. Von dort sind alle Entwürfe verlinkt:
@@ -38,6 +42,8 @@ Alle Texte sind Beispieltexte, die Formulare verschicken nichts. Jede Seite ist 
 4. Die echte Seite bauen: statischer Seitengenerator mit Markdown-Inhalten (zum Beispiel Astro), Deutsch und Englisch, Newsletter mit Double-Opt-in, Impressum und Datenschutz.
 
 ## Für später
+
+- Vor dem Livegang: Schriften und d3 selbst hosten (statt Google Fonts und jsDelivr), Impressum und Datenschutz prüfen lassen (u. a. zweiter schneller Kontaktweg nach § 5 DDG), Hoster in die Datenschutzerklärung eintragen, den privaten claude.ai-Link löschen.
 
 - Goodreads ergänzen: einige hundert gelesene Kurzgeschichten und ein paar Anthologien nachtragen (Wunsch von Dominik, Oktober 2026). Danach `entwuerfe/daten/buecher.js` neu erzeugen.
 - LinkedIn-Profil als Richtung für ein kommerzielles Publikum mitdenken; Text dafür liefert Dominik.

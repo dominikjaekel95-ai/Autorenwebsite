@@ -10,6 +10,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
 <link rel="stylesheet" href="stil.css">
+<style>
+/* Untertext, das Journal: unter dem Titel die Zeile aus dem Werkverzeichnis der Startseite, darunter Eintrag unter Eintrag,
+   das Datum als Überschrift, darunter der Titel als Verweis zur Leseseite.
+   Die Einträge kommen aus daten/texte.js (art: 'untertext') über FSeite.texte, der neueste zuerst. */
+.journal { max-width: var(--mass); }
+.journal-eintrag + .journal-eintrag { margin-top: var(--z); }
+.journal-datum { color: var(--grau-2); }
+.journal .text-titel { color: var(--schwarz); }
+</style>
 </head>
 <body>
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
@@ -32,8 +41,10 @@
 
 <main id="inhalt">
 <div class="abschnitt unterseite">
-  <h1 class="seitentitel"><i>Untertext</i></h1>
-  <p class="spalte">Diese Seite entsteht gerade.</p>
+  <h1 class="seitentitel">Untertext</h1>
+  <p class="unterzeile spalte">Mein Journal.</p>
+  <div class="journal" id="texte" hidden></div>
+  <p class="spalte leise" id="texte-leer" hidden>Noch steht hier kein Eintrag.</p>
 </div>
 </main>
 
@@ -46,6 +57,30 @@
   <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
 </footer>
 
+<script src="daten/texte.js"></script>
 <script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite;
+  if (!F || !F.texte) return;
+  const T = F.texte;
+
+  // Das Journal: das Datum als Überschrift, darunter der Titel als Verweis zur Leseseite
+  const journal = document.getElementById('texte'), leer = document.getElementById('texte-leer');
+  const alle = T.alle('untertext');
+  if (!alle.length) { leer.hidden = false; return; }
+  journal.innerHTML = alle.map(t => {
+    const d = T.datum(t.datum), titel = T.satz(t.titel);
+    const verweis = '<a class="text-titel" href="' + F.SEITEN.lesen + '#' + t.slug + '">' + titel + '</a>'
+      + (t.untertitel ? (T.zeichenAmEnde(titel) ? ' ' : '. ') + T.punkt(T.satz(t.untertitel)) : '');
+    return '<article class="journal-eintrag">'
+      + (d ? '<h2 class="journal-datum"><time datetime="' + String(t.datum).trim() + '">' + d + '</time></h2><p>' + verweis + '</p>'
+           : '<h2>' + verweis + '</h2>')
+      + '</article>';
+  }).join('');
+  journal.hidden = false;
+})();
+</script>
 </body>
 </html>

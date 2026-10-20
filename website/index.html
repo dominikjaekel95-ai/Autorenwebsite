@@ -216,7 +216,8 @@
     var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
 
     /* Zeilen nach dem Sinn: jedes Glied eine Zeile. Passt das längste nicht in die Spalte, wird die Schrift kleiner,
-       höchstens bis zum Anderthalbfachen der Grundschrift; reicht auch das nicht, bricht der Satz frei und ausgeglichen. */
+       bis hinab zum 1,15-Fachen der Grundschrift (so passen die drei Glieder noch bei 360 px Breite); reicht auch das nicht
+       (unter etwa 350 px), bricht der Satz in voller Größe frei und ausgeglichen. */
     function setzen() {
       el.style.fontSize = '';
       el.classList.add('gesetzt');
@@ -228,7 +229,7 @@
       var jetzt = parseFloat(getComputedStyle(el).fontSize);
       var kleiner = Math.floor(jetzt * breite / laengste * 10) / 10 - .2;
       var grund = parseFloat(getComputedStyle(el.parentNode).fontSize) || 18;
-      if (kleiner >= grund * 1.25) el.style.fontSize = kleiner + 'px';
+      if (kleiner >= grund * 1.15) el.style.fontSize = kleiner + 'px';
       else el.classList.remove('gesetzt');
     }
 

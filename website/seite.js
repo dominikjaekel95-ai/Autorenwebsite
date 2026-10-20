@@ -25,6 +25,8 @@
      karteikarte.oeffnen(inhalt, ausloeser), .schliessen(), .offen()
      buch.alle(), buch.karte(b, { person }), buch.zeile(b), buch.nachname(a), buch.titelKurz(t)
      werkKarte(id, { person })     Karteikarte für ein eigenes Werk (id aus INHALT.werke)
+     texte.alle(art), texte.satz(s), texte.datum(d), texte.punkt(s), texte.ARTEN   Texte aus daten/texte.js (Erzählungen, Untertext,
+                                   Länderguides): gültige Einträge, deutscher Satz, Datum, Liste je Art
      navigation()                  Navigation einrichten (läuft beim Laden von selbst)
      leselinie(elemente, beiSchritt, o)   beim Scrollen: welches Element zuletzt die Leselinie erreicht hat (vor und zurück)
      fortschritt(element, beiWert, o)     beim Scrollen: wie weit ein Element durch das Fenster gewandert ist, 0 bis 1
@@ -587,7 +589,8 @@
      sonst daneben; nie unter dem Kopf der Seite oder unter dem, was oben haftet (scroll-padding-top). Gerät der Auslöser beim
      Scrollen dorthin oder aus dem Fenster, legt sie sich zurück.
      oeffnen(inhalt, ausloeser): inhalt = { signatur, titel, unter, autor, zeilen: [], notiz, verweis: { href, text }, eigen, beimSchliessen }
-       eigen: Werk von Dominik (Signatur Siena, Titel kursiv). Textfelder werden maskiert, { html } bleibt unverändert.
+       eigen: eigenes Werk (Signatur Siena, Titel kursiv); titelGerade: der Titel ist ein Sammelbegriff (Erzählungen, Länder)
+       und steht gerade wie in Navigation und Werkverzeichnis. Textfelder werden maskiert, { html } bleibt unverändert.
        beimSchliessen(still): danach aufgerufen; still ist wahr, wenn ein Klick daneben die Karte zurückgelegt hat.
        Das auslösende Element bekommt solange die Klasse ist-offen. */
   const karteikarte = (function () {
@@ -675,6 +678,7 @@
       if (ausloeser) ausloeser.classList.add('ist-offen');
       danach = typeof x.beimSchliessen === 'function' ? x.beimSchliessen : null;
       k.classList.toggle('ist-eigen', !!x.eigen);
+      k.classList.toggle('titel-gerade', !!x.titelGerade);
       const zeilen = (x.zeilen || []).filter(Boolean).map(teil);
       k.innerHTML =
         `<div class="karte-kopf"><span class="signatur">${teil(x.signatur)}</span><button type="button" class="wort karte-zu">zurücklegen</button></div>` +
@@ -703,7 +707,7 @@
   })();
 
   // ---------- Bücher ----------
-  /* buch.alle(): alle Bücher in einer Liste, ohne „lieber nicht“; was noch wartet, kommt aus daten/leseliste.js (r: 'leseliste'),
+  /* buch.alle(): alle Bücher der vier Regale aus daten/buecher.js in einer Liste; was noch wartet, kommt aus daten/leseliste.js (r: 'leseliste'),
      ohne was schon im Regal steht oder auf dem Nachttisch liegt.
      Felder wie in daten/buecher.js (t, u, a, r, s, j, p, w, b, v) und dazu nn (Nachname), autor, key, sig (Signatur wie im Regal der Bibliothek:
      Zeit A bis E und Jahr; K Kindheit und Jugend, N Nachttisch, W was noch wartet).
@@ -719,10 +723,10 @@
       'Anonymous': '', 'Anonym': '', 'Die 19 Finaltexte': ''
     };
     const AUTOR = { 'Anonymous': 'Anonym' };
-    // Bleibt draußen, bis Dominik es freigibt (derzeit nichts)
+    // Bleibt draußen, falls ein Buch nicht im Regal stehen soll (derzeit nichts)
     const DRAUSSEN = [];
     // Malina erschien 1971 (1990 ist die englische Ausgabe), In der Strafkolonie 1919 (beide Ausgaben); der Untertitel der
-    // Cornelsen-Ausgabe (ein Arbeitsheft für die Schule) fehlt, bis Dominik sie ansieht
+    // Cornelsen-Ausgabe (ein Arbeitsheft für die Schule) fällt weg
     const BERICHTIGT = [
       { a: 'Ingeborg Bachmann', t: 'Malina', j: 1971 },
       { a: 'Franz Kafka', t: 'In the Penal Colony', j: 1919 },
@@ -752,13 +756,14 @@
       s = s.replace(/\s*\(.*\)\s*$/, '').split(/:\s|\s[-–]\s/)[0];
       return s.replace(/(\d)-(\d)/g, '$1–$2').replace(/'/g, '’').trim();
     }
+    const REGALE = ['gelesen', 'kindheit', 'gerade', 'abgebrochen'];   // gelesen, Kindheit und Jugend, Nachttisch, nicht zu Ende gelesen
     const EPOCHEN = [['A', 1899], ['B', 1945], ['C', 1989], ['D', 2009], ['E', Infinity]];
     const jahrSig = j => j == null ? 'o.' + NBSP + 'J.' : j < 0 ? '−' + (-j) : String(j);
     const ordnung = (x, y) => (x.j == null) - (y.j == null) || (x.j || 0) - (y.j || 0) || x.nn.localeCompare(y.nn, 'de') || x.t.localeCompare(y.t, 'de');
     function alle() {
       if (cache) return cache;
       const draussen = b => DRAUSSEN.some(x => x.t === sauber(b.t) && x.a === sauber(b.a));
-      const roh = (window.BUECHER || []).filter(b => b && b.r !== 'lieber-nicht' && b.r !== 'leseliste' && !draussen(b));
+      const roh = (window.BUECHER || []).filter(b => b && REGALE.includes(b.r) && !draussen(b));
       const warte = (window.LESELISTE || []).map(x => ({ t: x.t, u: '', a: x.a, r: 'leseliste', s: 0, j: x.j == null ? null : x.j, p: x.p || 0, w: 0, b: 'p', v: '', k: !!x.k, ungefaehr: true }));
       cache = roh.map(b => Object.assign({}, b)).concat(warte);
       cache.forEach(b => {
@@ -811,6 +816,9 @@
 
   // ---------- Eigene Werke ----------
   const WERK_SIG = { satoshi: 'DJ 1', 'ursprung-1': 'DJ 2/I', 'ursprung-2': 'DJ 2/II', 'ursprung-3': 'DJ 2/III', erzaehlungen: 'DJ 3', untertext: 'DJ 4', laender: 'DJ 5' };
+  // Sammelbegriffe statt Werktitel: auf der Karte gerade wie in Navigation, Werkverzeichnis und Seitentitel (kursiv nur Satoshi,
+  // Ursprung mit seinen Bänden und Untertext)
+  const WERK_GERADE = ['erzaehlungen', 'laender'];
   /* Karteikarte für ein eigenes Werk (id aus INHALT.werke): Signatur Siena, Titel kursiv; der Titel selbst führt zur Seite des Werks
      (die Bände der Trilogie zur Seite der Trilogie). „Arbeitstitel“ steht klein hinter dem Titel. Für die Trilogie gilt nur „in Arbeit“,
      für die ganze Trilogie, ohne Stand je Band. person: 3 spricht von ihm (Seiten in der dritten Person), sonst spricht er selbst. */
@@ -821,7 +829,7 @@
     const ziel = w.band ? SEITEN.ursprung : SEITEN[id] || '';
     const name = esc(w.buchtitel || w.titel);
     const titel = { html: (ziel ? `<a href="${ziel}">${name}</a>` : name) + (w.arbeitstitel ? ' <span class="arbeitstitel">Arbeitstitel</span>' : '') };
-    const x = { signatur: (WERK_SIG[id] || 'DJ').replace(' ', NBSP), titel, eigen: true, autor: 'Dominik Jäkel' };
+    const x = { signatur: (WERK_SIG[id] || 'DJ').replace(' ', NBSP), titel, eigen: true, titelGerade: WERK_GERADE.includes(id), autor: 'Dominik Jäkel' };
     const punkt = t => t && !/[.!?…]$/.test(t) ? t + '.' : t;
     if (id === 'satoshi') {
       const s = I.satoshi || {};
@@ -960,6 +968,105 @@
     return () => da;
   }
 
+  // ---------- Texte zum Lesen (daten/texte.js) ----------
+  /* Erzählungen, Einträge im Untertext und Länderguides stehen in window.TEXTE; erzaehlungen.html, untertext.html, laender.html und
+     lesen.html lesen sie nur hierüber, damit alle dieselben Einträge gelten lassen.
+       alle(art)    gültige Einträge (ohne art: alle), das neueste zuerst. Ungültige (slug, art, titel fehlt, ist ungültig oder
+                    doppelt; ein Länderguide ohne land) stehen einmal als Warnung in der Konsole und bleiben draußen
+       satz(s)      gerade Zeichen werden deutsche: "…" zu „…“, '…' zu ‚…‘, sonst ' zu ’ (Apostroph), ... zu …, ' - ' zu ' – '
+                    (geschütztes Leerzeichen davor). Maskiert; nur <i>, <em> und <br> bleiben Auszeichnung
+       datum(d)     '2026-03-14' → „14. März 2026“, '2026-03' → „März 2026“, '2026' → „2026“; ungültig: ''
+       punkt(s), zeichenAmEnde(s)   ein Punkt ans Satzende, wenn dort noch kein Satzzeichen steht
+       ARTEN        je Art die Liste, zu der ein Text gehört: { seite, alle (Verweis zurück), titelKursiv }
+       BELEGT       Slugs, die schon Stellen der Seiten benennen */
+  const texte = (function () {
+    const MONATE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+    const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/, LAND = /^[A-Z]{2}(?:-[A-Z]{2,3})?$/;
+    const BELEGT = ['inhalt', 'kontakt', 'kontakt-titel', 'nav-liste', 'lesen'];
+    const ARTEN = {
+      erzaehlung: { seite: SEITEN.erzaehlungen, alle: 'Alle Erzählungen', titelKursiv: true },
+      untertext: { seite: SEITEN.untertext, alle: 'Alle Einträge im <i>Untertext</i>', titelKursiv: false },
+      laenderguide: { seite: SEITEN.laender, alle: 'Alle Länder', titelKursiv: false }
+    };
+    const BUCHSTABE = /[\p{L}\p{N}]/u;
+    // Verkürzte Wörter mit Apostroph vorn: 's, 'n, 'ne, 'raus …
+    const VERKUERZT = /^(?:s|n|ne|nem|nen|ner|nes|m|raus|rein|rum|rüber|runter|rauf|ran|naus|nein|nüber|nunter|nauf)(?![\p{L}\p{N}])/u;
+    /* Einfache gerade Anführungszeichen: am Wortanfang (Absatzanfang, nach Leerzeichen, „, (, [, Strich oder <i>) öffnet ' ein ‚,
+       wenn später im Absatz ein schließendes folgt; das nächste ' danach, das nicht zwischen zwei Buchstaben steht, schließt mit ‘.
+       Jedes übrige ' ist ein Apostroph ’ (geht's, Grass' Roman, 's war, '68). */
+    function einfache(t) {
+      let aus = '', offen = false;
+      const schliesstSpaeter = ab => {
+        for (let j = ab; j < t.length; j++) {
+          if (t[j] !== "'") continue;
+          if (/\s/.test(t[j - 1] || ' ')) continue;
+          if (!BUCHSTABE.test(t[j + 1] || '')) return true;
+        }
+        return false;
+      };
+      // Was das nächste ' nach einer Stelle tut: 'oeffnet' (am Wortanfang), 'schliesst' oder nichts davon (null)
+      const folgt = ab => {
+        for (let j = ab; j < t.length; j++) {
+          if (t[j] !== "'") continue;
+          const v = t.slice(0, j);
+          if (!v || /[\s(\[„‚–—]$/.test(v) || /<(?:i|em)>$/.test(v)) return 'oeffnet';
+          if (!BUCHSTABE.test(t[j + 1] || '')) return 'schliesst';
+        }
+        return null;
+      };
+      for (let i = 0; i < t.length; i++) {
+        const c = t[i];
+        if (c !== "'") { aus += c; continue; }
+        const vor = t.slice(0, i), nach = t.slice(i + 1);
+        const anfang = !vor || /[\s(\[„‚–—]$/.test(vor) || /<(?:i|em)>$/.test(vor);
+        const zwischen = BUCHSTABE.test(vor.slice(-1)) && BUCHSTABE.test(nach.charAt(0));
+        // Genitiv nach s, ß, x, z innerhalb von ‚…‘ („‚Hans' Hut‘“): ein Apostroph, wenn vor dem nächsten Öffnen noch ein ' schließt
+        if (offen && !anfang && !zwischen && /[sßxz]$/.test(vor) && /^\s/.test(nach) && folgt(i + 1) === 'schliesst') { aus += '’'; continue; }
+        if (offen && !anfang && !zwischen) { aus += '‘'; offen = false; continue; }
+        if (!offen && anfang && nach && !/^\s/.test(nach) && !VERKUERZT.test(nach) && !/^\d{2}(?!\d)/.test(nach) && schliesstSpaeter(i + 1)) {
+          aus += '‚'; offen = true; continue;
+        }
+        aus += '’';
+      }
+      return aus;
+    }
+    function satz(s) {
+      const t = einfache(String(s == null ? '' : s).trim()
+        .replace(/\.\.\./g, '…')
+        .replace(/ --? /g, ' – ')
+        .replace(/(^|[\s(\[–—‚]|<i>|<em>)"(?=\S)/g, '$1„')
+        .replace(/"/g, '“'));
+      return t.replace(/&(?!(?:[a-zA-Z][a-zA-Z0-9]*|#\d+|#x[0-9a-fA-F]+);)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/&lt;(\/?)(i|em)&gt;/g, '<$1$2>').replace(/&lt;br\s*\/?&gt;/g, '<br>');
+    }
+    function datum(d) {
+      const m = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/.exec(String(d || '').trim());
+      if (!m || (m[2] && !MONATE[+m[2] - 1]) || (m[3] && (+m[3] < 1 || +m[3] > 31))) return '';
+      return (m[3] ? +m[3] + '. ' : '') + (m[2] ? MONATE[+m[2] - 1] + ' ' : '') + m[1];
+    }
+    // Satzende: ein Punkt, wenn noch kein Satzzeichen da ist (auch vor schließendem Anführungszeichen, Klammer oder Tag)
+    const zeichenAmEnde = s => /[.!?…:]$/.test(String(s).replace(/<[^>]*>/g, '').replace(/[“‘’»«)\s]+$/, ''));
+    const punkt = s => zeichenAmEnde(s) ? s : s + '.';
+    const gemeldet = new Set();
+    function gueltig(t, gesehen) {
+      return !!t && typeof t.slug === 'string' && SLUG.test(t.slug) && !BELEGT.includes(t.slug) && !gesehen.has(t.slug)
+        && Object.prototype.hasOwnProperty.call(ARTEN, t.art) && !!t.titel
+        && (t.art !== 'laenderguide' || (typeof t.land === 'string' && LAND.test(t.land)));
+    }
+    function alle(art) {
+      const gesehen = new Set();
+      return (Array.isArray(window.TEXTE) ? window.TEXTE : []).filter(t => {
+        if (!gueltig(t, gesehen)) {
+          if (!gemeldet.has(t)) { gemeldet.add(t); console.warn('daten/texte.js: Eintrag übersprungen (slug, art, titel oder beim Länderguide land fehlt, ist ungültig oder doppelt)', t); }
+          return false;
+        }
+        gesehen.add(t.slug);
+        return !art || t.art === art;
+      }).sort((a, b) => String(b.datum || '') > String(a.datum || '') ? 1 : String(b.datum || '') < String(a.datum || '') ? -1 : 0);
+    }
+    return { alle, satz, datum, punkt, zeichenAmEnde, ARTEN, BELEGT };
+  })();
+
   // ---------- Navigation ----------
   /* Markiert die jetzige Seite (falls die Seite es nicht selbst tut) und klappt die Liste auf dem Telefon hinter „Inhalt“ zusammen;
      ein Tipp daneben, Esc oder die Wahl eines Verweises klappt sie wieder zu. Breit neben dem Globus läuft sie bis kurz vor ihn;
@@ -1011,7 +1118,7 @@
     schriften, satzzeichenBinden,
     FARBEN, SIENA, SIENA_EBENE, globus, blickFuer,
     tafel, tafelReservieren, tafelPlatz, stationen, stationInhalt, ursprungOrte, ursprungInhalt,
-    karteikarte, buch, werkKarte, navigation,
+    karteikarte, buch, werkKarte, texte, navigation,
     leselinie, fortschritt, imBild
   };
 })();

@@ -10,6 +10,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
 <link rel="stylesheet" href="stil.css">
+<style>
+/* Erzählungen: unter dem Titel die Zeile aus dem Werkverzeichnis der Startseite, darunter die Texte wie dort im Werkverzeichnis:
+   der Titel kursiv als Verweis zur Leseseite, dahinter der Untertitel, darunter leise das Datum.
+   Die Einträge kommen aus daten/texte.js (art: 'erzaehlung') über FSeite.texte, das neueste zuerst. */
+.texte { list-style: none; max-width: var(--mass); }
+.texte li + li { margin-top: var(--z); }
+.texte .text-titel { color: var(--schwarz); }
+.texte .text-datum { display: block; color: var(--grau-2); }
+</style>
 </head>
 <body>
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
@@ -33,7 +42,9 @@
 <main id="inhalt">
 <div class="abschnitt unterseite">
   <h1 class="seitentitel">Erzählungen</h1>
-  <p class="spalte">Diese Seite entsteht gerade.</p>
+  <p class="unterzeile spalte">Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.</p>
+  <ul class="texte" id="texte" hidden></ul>
+  <p class="spalte leise" id="texte-leer" hidden>Noch steht hier keine.</p>
 </div>
 </main>
 
@@ -46,6 +57,27 @@
   <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
 </footer>
 
+<script src="daten/texte.js"></script>
 <script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite;
+  if (!F || !F.texte) return;
+  const T = F.texte;
+
+  // Die Liste: der Titel kursiv als Verweis zur Leseseite, dahinter der Untertitel, darunter das Datum
+  const liste = document.getElementById('texte'), leer = document.getElementById('texte-leer');
+  const alle = T.alle('erzaehlung');
+  if (!alle.length) { leer.hidden = false; return; }
+  liste.innerHTML = alle.map(t => {
+    const d = T.datum(t.datum), titel = T.satz(t.titel);
+    return '<li><a class="text-titel" href="' + F.SEITEN.lesen + '#' + t.slug + '"><i>' + titel + '</i></a>'
+      + (t.untertitel ? (T.zeichenAmEnde(titel) ? ' ' : '. ') + T.punkt(T.satz(t.untertitel)) : '')
+      + (d ? ' <span class="text-datum"><time datetime="' + String(t.datum).trim() + '">' + d + '</time></span>' : '') + '</li>';
+  }).join('');
+  liste.hidden = false;
+})();
+</script>
 </body>
 </html>

@@ -293,7 +293,7 @@
   KIND.buecher = BUECHER.filter(b => b.r === 'kindheit').map(b => buch(b, KIND)).sort(nachJahr);
   const TISCH = { z: 'N', name: 'Auf dem Nachttisch' };
   TISCH.buecher = BUECHER.filter(b => b.r === 'gerade').map(b => buch(b, TISCH)).sort(nachJahr);
-  // Was noch wartet: Dominiks eigene Liste, nach Jahr; ohne Jahr am Ende
+  // Was noch wartet: die eigene Leseliste, nach Jahr; ohne Jahr am Ende
   const WARTET = { z: 'W', name: 'Was noch wartet', jahre: '', art: 'wartet', anker: 'wartet', marke: 'Was noch wartet' };
   WARTET.buecher = BUECHER.filter(b => b.r === 'leseliste').map(b => buch(b, WARTET)).sort(nachJahr);
 

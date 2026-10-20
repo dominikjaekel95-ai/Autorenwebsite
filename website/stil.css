@@ -1,13 +1,14 @@
 /* Gemeinsames Stylesheet aller Seiten der Website.
    Eine Schrift (Vollkorn mit Vollkorn SC), Papierweiß und Graphit, Grautöne.
-   Siena bedeutet nur eines: Dominiks eigene Werke. Maßeinheit ist die Zeile (--z), Abstände sind Vielfache davon.
+   Siena bedeutet nur eines: die eigenen Werke. Maßeinheit ist die Zeile (--z), Abstände sind Vielfache davon.
 
    Klassen für alle Seiten, kurz:
      .kopf (Briefkopf und Navigation), .fuss (Kontakt und Kolophon),
      .spalte (Textspalte mit asymmetrischem linken Rand), .abschnitt (Abschnitt mit Rand), .titel (ruhige Abschnittsüberschrift),
      .seitentitel (Titel einer Unterseite), .wort (Wort, das etwas tut), .leise (grauer Text), .werk (Titel eines eigenen Werks),
      .globusseite (Text links, Globus rechts), .globus/.flaeche (Globus), .tafel (Stationstafel), .karte (Karteikarte),
-     .arbeitstitel (der Zusatz „Arbeitstitel“ hinter einem Titel), .leitsatz (der erste Satz der Vita in der Anzeigeschrift).
+     .arbeitstitel (der Zusatz „Arbeitstitel“ hinter einem Titel), .leitsatz (der erste Satz der Vita in der Anzeigeschrift),
+     .recht (Impressum und Datenschutz).
    --vb ist die Breite des Fensters ohne Bildlaufleiste; FSeite setzt sie (ohne Skript gilt 100vw). */
 
 :root {
@@ -88,6 +89,9 @@ a.name[aria-current="page"]:hover { text-decoration-line: none; }
 .nav-liste a { color: var(--grau-1); text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); }
 .nav-liste a:hover { text-decoration-color: currentColor; }
 .nav-liste a[aria-current="page"] { color: var(--schwarz); }
+/* Auf der Leseseite steht die Liste, zu der ein Text gehört, schwarz wie eine gewählte Seite, bleibt aber ein Verweis */
+.nav-liste a[aria-current="true"] { color: var(--schwarz); text-decoration-line: none; }
+.nav-liste a[aria-current="true"]:hover { text-decoration-line: underline; }
 .nav-schalter { display: none; }
 /* Breit, neben dem Globus: die Navigation darf über die Textspalte hinaus bis kurz vor den Globus laufen;
    bricht sie doch, dann nach „Untertext“ (FSeite setzt .zweizeilig) statt vor einem einzelnen Wort */
@@ -115,9 +119,24 @@ a.name[aria-current="page"]:hover { text-decoration-line: none; }
 /* ---------- Fuß ---------- */
 .fuss { margin-top: calc(var(--z) * 4); padding: calc(var(--z) * 2) var(--rand-r) calc(var(--z) * 2) var(--rand-l); }
 .kontakt .titel { margin-bottom: calc(var(--z) * .5); }
-.platzhalter { display: inline-block; font-style: italic; color: var(--grau-2); line-height: 1.35; padding: 0 .45em; border: 1px dashed var(--grau-3); }
 .impressum { margin-top: calc(var(--z) * .5); font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
 .kolophon-fuss { margin-top: calc(var(--z) * 2); max-width: 36em; font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
+
+/* ---------- Rechtstexte (Impressum, Datenschutz) ----------
+   Eine Textspalte, ruhige Kapitälchen-Überschriften, zwischen den Abschnitten eineinhalb Zeilen. Unter dem Titel ein grauer
+   kursiver Vermerk, solange die Texte Entwurf sind; die Rechte als Liste mit hängendem Halbgeviertstrich. */
+.recht { max-width: var(--mass); }
+.recht .seitentitel { margin-bottom: calc(var(--z) * .5); }
+.recht .vermerk { margin-bottom: calc(var(--z) * 1.5); font-size: .9375em; font-style: italic; }
+.recht section + section, .recht .vorab + section { margin-top: calc(var(--z) * 1.5); }
+.recht .titel { margin-bottom: calc(var(--z) * .5); }
+.recht section > * + * { margin-top: calc(var(--z) * .5); }
+.recht address { font-style: normal; }
+.recht .stand { margin-top: calc(var(--z) * 2); font-size: .875rem; line-height: 1.6; }
+.recht .rechte { list-style: none; }
+.recht .rechte li { position: relative; padding-left: 1.1em; }
+.recht .rechte li::before { content: "–"; position: absolute; left: 0; color: var(--grau-2); }
+.recht .rechte .leise { white-space: nowrap; }
 
 /* ---------- Globus ---------- */
 .flaeche { position: relative; width: 100%; aspect-ratio: 1; }
@@ -217,6 +236,7 @@ a.name[aria-current="page"]:hover { text-decoration-line: none; }
 .karte.ist-eigen .signatur { color: var(--siena); }
 .karte-titel { font-size: 1.25rem; line-height: 1.25; text-wrap: balance; hyphens: manual; }
 .karte.ist-eigen .karte-titel { font-style: italic; }
+.karte.ist-eigen.titel-gerade .karte-titel { font-style: normal; }   /* Sammelbegriffe: Erzählungen, Länder */
 .karte-titel a { color: inherit; }
 .karte-unter { font-style: italic; color: var(--grau-2); font-size: .9375rem; margin-top: .15rem; }
 .karte-autor { margin-top: .3rem; }

@@ -9,15 +9,18 @@
      --erzwingen         auch Dateien überschreiben, die seit dem letzten Lauf von Hand geändert wurden
 
    Was bereinigt wird:
-     buecher.js  nur die Regale gelesen, kindheit, gerade und abgebrochen (ohne die Goodreads-Leseliste und „lieber nicht“;
+     buecher.js  nur die Regale gelesen, kindheit, gerade und abgebrochen (ohne die Goodreads-Leseliste und das private Regal;
                  was noch wartet, kommt aus leseliste.js) und nur die Felder, die die Seiten lesen: t u a r s j p w b v
-                 (ohne den Lesemonat d). Beim Verlag fällt der Zusatz „An Imprint of …“ weg, wie ihn auch die Seite weglässt.
-     inhalt.js   ohne Fort Meade, ohne die Beispieleinträge des Journals, ohne die Vita-Fakten (die Vita steht als Text in
-                 vita.html; die Mentoren hat Dominik gestrichen), ohne die Texte, die als HTML in satoshi.html und ursprung.html
+                 (ohne den Lesemonat d). Von der Wertung bleibt nur, was die Seiten zeigen: s 5 (eines der liebsten) oder 0;
+                 die übrigen Sterne bleiben privat. Beim Verlag fällt der Zusatz „An Imprint of …“ weg, wie ihn auch die Seite
+                 weglässt; Exportreste statt eines Verlags (eine Webadresse, „Fisical_Book“) werden leer.
+     inhalt.js   unter den Schauplätzen von Satoshi nur die, an denen eine Szene spielt, und die zwei, die satoshi.html als weitere
+                 nennt; ohne die Beispieleinträge des Journals, ohne die Vita-Fakten (die Vita steht als Text in
+                 vita.html), ohne die Texte, die als HTML in satoshi.html und ursprung.html
                  stehen, und ohne alles andere, was keine Seite liest (person, sondernamen, regale, satoshi.notiz,
                  trilogie.untertitel/stand/herkunft, Pitch, Frage und Text der Bände, die übrigen Figuren, von/bis der Stationen,
                  werke[].ebene).
-     Kopien      leseliste.js, welt-110m.js, welt-50m.js, laender-de.js, uk-landesteile.js unverändert.
+     Kopien      welt-110m.js, welt-50m.js, laender-de.js, uk-landesteile.js unverändert; leseliste.js mit neutralem Kopfkommentar.
 
    Schutz vor Überschreiben: werkzeuge/daten-stand.json hält die Prüfsumme jeder erzeugten Datei. Ist eine Datei seither von Hand
    geändert worden, bleibt sie stehen (Meldung), außer mit --erzwingen. */
@@ -73,16 +76,17 @@ function buecher() {
   const REGALE = ['gelesen', 'kindheit', 'gerade', 'abgebrochen'];
   const FELDER = ['t', 'u', 'a', 'r', 's', 'j', 'p', 'w', 'b', 'v'];
   const roh = laden(path.join(QUELLE, 'daten', 'buecher.js'), 'BUECHER');
-  const imprint = v => String(v || '').replace(/:\s*an imprint of .*$/i, '').replace(/,?\s+an imprint of .*$/i, '');
+  // Verlag ohne „An Imprint of …“; Exportreste ohne Verlagsnamen (eine Webadresse, „Fisical_Book“) bleiben leer
+  const imprint = v => /^https?:\/\/|_/.test(String(v || '')) ? '' : String(v || '').replace(/:\s*an imprint of .*$/i, '').replace(/,?\s+an imprint of .*$/i, '');
   const liste = roh.filter(b => b && REGALE.includes(b.r)).map(b => {
     const x = {};
-    FELDER.forEach(f => { x[f] = f === 'v' ? imprint(b[f]) : b[f]; });
+    FELDER.forEach(f => { x[f] = f === 'v' ? imprint(b[f]) : f === 's' ? (b.s === 5 ? 5 : 0) : b[f]; });
     return x;
   });
   const zaehlen = REGALE.map(r => r + ' ' + liste.filter(b => b.r === r).length).join(', ');
   const kopf = '/* Bücher von Dominik Jäkel aus seinem Goodreads-Export, bereinigt von werkzeuge/daten.cjs (nicht von Hand ändern).\n' +
     '   Nur die Regale gelesen, kindheit (Kindheit und Jugend), gerade (Nachttisch) und abgebrochen; was noch wartet, steht in leseliste.js.\n' +
-    '   t Titel, u Untertitel, a Autor, r Regal, s Sterne (5 = eines der liebsten), j Jahr der Erstveröffentlichung, p Seiten,\n' +
+    '   t Titel, u Untertitel, a Autor, r Regal, s 5 = eines der liebsten (sonst 0), j Jahr der Erstveröffentlichung, p Seiten,\n' +
     '   w wiedergelesen, b Bindung (p Paperback, h Hardcover, m Mass Market, e sonst), v Verlag. Ohne Notizen und Rezensionen. */\n';
   schreiben('buecher.js', kopf + 'window.BUECHER = [\n' + liste.map(b => JSON.stringify(b)).join(',\n') + '\n];\n');
   console.log('             ' + liste.length + ' Bücher (' + zaehlen + ')');
@@ -90,6 +94,8 @@ function buecher() {
 
 // ---------- inhalt.js ----------
 const nur = (o, felder) => { const x = {}; felder.forEach(f => { if (o[f] !== undefined) x[f] = o[f]; }); return x; };
+// Schauplätze ohne Szene, die satoshi.html unter „Weitere Schauplätze“ nennt; alle anderen ohne Szene bleiben draußen
+const WEITERE_ORTE = ['Temple City', 'Anden an der Grenze zu Chile'];
 function inhaltBereinigen(I) {
   const s = I.satoshi || {};
   const nakamoto = (s.figuren || []).find(f => f.name === 'Satoshi Nakamoto');
@@ -101,7 +107,7 @@ function inhaltBereinigen(I) {
     leben: I.leben.map(o => nur(o, ['name', 'land', 'jahr', 'neben', 'projekt', 'lat', 'lon'])),
     aufenthalte: I.aufenthalte,
     satoshi: {
-      orte: s.orte.filter(o => o.name !== 'Fort Meade'),
+      orte: s.orte.filter(o => (s.szenen || []).some(x => x.ort === o.name) || WEITERE_ORTE.includes(o.name)),
       szenen: s.szenen,
       hook: s.hook,
       eckdaten: nur(s.eckdaten || {}, ['zeit', 'stand']),
@@ -126,7 +132,7 @@ const KOMMENTARE = {
   satoshi: 'Satoshi: Schauplätze, die Szenen der Reihe nach (ohne das Ende zu verraten), der erste Satz, Eckdaten und das Pseudonym\n  // für die Karteikarte. Klappentext, Bau, Figuren und Frage stehen als Text in satoshi.html',
   ursprung: 'Ursprungstrilogie: die Orte in zeitlicher Reihenfolge (für die Chronik)',
   baende: 'Ein Satz je Band für die Tafel: Landschaft und Zeit, dann worum es geht',
-  trilogie: 'Die Bände im Einzelnen; Stand nach Dominiks Wunsch nur „in Arbeit“ (für die ganze Trilogie). Die Texte stehen in ursprung.html',
+  trilogie: 'Die Bände im Einzelnen; als Stand gilt für die ganze Trilogie nur „in Arbeit“. Die Texte stehen in ursprung.html',
   werke: 'Eigene Werke für Regal, Zeitband und Karteikarten; titel ist der kurze Rückentitel, buchtitel der Titel des Buchs'
 };
 // Lesbar setzen: kurze Objekte und Listen aus einfachen Werten in eine Zeile, sonst eingerückt; Zeichenketten in einfachen Anführungszeichen
@@ -149,8 +155,8 @@ function wert(v, tiefe) {
 function inhalt() {
   const I = laden(path.join(QUELLE, 'globus', 'inhalt.js'), 'INHALT');
   const sauber = inhaltBereinigen(I);
-  const kopf = '/* Gemeinsame Inhalte der Website: Orte, Stationen, Länder, eigene Werke. Bereinigt erzeugt von werkzeuge/daten.cjs aus den\n' +
-    '   Entwürfen (entwuerfe/globus/inhalt.js); nur, was die Seiten lesen. Keine privaten Kontaktdaten. */\n';
+  const kopf = '/* Gemeinsame Inhalte der Website: Orte, Stationen, Länder, eigene Werke.\n' +
+    '   Erzeugt von werkzeuge/daten.cjs (nicht von Hand ändern); nur, was die Seiten lesen. Keine privaten Kontaktdaten. */\n';
   const text = kopf + 'window.INHALT = ' + wert(sauber, 0).replace(/^\{\n\n/, '{\n') + ';\n';
   // Probe: die erzeugte Datei muss dasselbe Objekt ergeben
   const probe = {};
@@ -162,7 +168,10 @@ function inhalt() {
 // ---------- unveränderte Kopien ----------
 function kopien() {
   ['leseliste.js', 'welt-110m.js', 'welt-50m.js', 'laender-de.js', 'uk-landesteile.js'].forEach(n => {
-    schreiben(n, fs.readFileSync(path.join(QUELLE, 'daten', n), 'utf8'));
+    let text = fs.readFileSync(path.join(QUELLE, 'daten', n), 'utf8');
+    // Der Kopf der Leseliste beschreibt die Datei, nicht ihre Herkunft
+    if (n === 'leseliste.js') text = text.replace(/^\/\* Was noch wartet:[^\n]*\n/, '/* Was noch wartet: die eigene Leseliste (Stand Oktober 2026), nur Titel und Autor.\n');
+    schreiben(n, text);
   });
 }
 

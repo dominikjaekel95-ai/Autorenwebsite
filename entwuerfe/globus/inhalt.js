@@ -75,12 +75,12 @@ window.INHALT = {
     // Der Roman der Reihe nach, ohne das Ende zu verraten (für eine Chronik auf dem Globus)
     szenen: [
       { ort: 'Buenos Aires', jahr: '2001', text: 'Dezember 2001. Die siebzehnjährige Lana erlebt, wie die Ersparnisse ihrer Familie per Dekret verschwinden.' },
-      { ort: 'London', jahr: '2007', text: 'Lana rechnet bei Lehman Brothers Bilanzen durch und erkennt darin das Muster von Buenos Aires.' },
+      { ort: 'London', jahr: '2007', text: 'Lana macht ein Praktikum bei Lehman Brothers und erkennt in den Bilanzen Muster, die sie beunruhigen und an Buenos Aires erinnern.' },
       { ort: 'Black Rock Desert', jahr: '2007', text: 'Burning Man. In den Nächten des Festivals lösen Lana, Arthur und Samuel ein Problem, an dem Mathematiker seit Jahrzehnten scheitern, und schließen einen Pakt.' },
       { ort: 'London', jahr: '2007', text: 'September 2007. Ein Bankrun vor einer Filiale von Northern Rock.' },
       { ort: 'Kobe', jahr: '2007', text: 'In Japan bekommt der Pakt seinen Namen: Satoshi Nakamoto.' },
       { ort: 'New York', jahr: '2008', text: 'Samuel ist CTO eines Quant-Fonds an der Wall Street, als die anderen ihn nach Berlin holen.' },
-      { ort: 'Berlin', jahr: '2008', text: 'Eine Kreuzberger Fabriketage. Hier entsteht das erste digitale Geld, das niemandem gehört. An Halloween 2008 stehen neun Seiten im Netz.' },
+      { ort: 'Berlin', jahr: '2008', text: 'Eine Kreuzberger Fabriketage. Hier entsteht das erste digitale Geld, das niemandem gehört.' },
       { ort: 'Buenos Aires', jahr: '2009', text: '3. Januar 2009. Ein Internetcafé mit wackeligem Strom, zwischen zwei Stromausfällen der erste Block.' },
       { ort: 'Bariloche', jahr: '2010', text: 'Patagonien, 2010.' },
       { ort: 'Penang', jahr: '2013', text: 'Der Epilog, 2013.' }
@@ -95,7 +95,9 @@ window.INHALT = {
     ],
     schluss: 'Die Erfindung von Bitcoin gelingt, gerade weil sie ohne Vertrauen auskommt. Die drei scheitern aus demselben Grund. Davon erzählt dieser Roman.',
     frage: 'Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug – gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die 2020er Jahre sind das Jahrzehnt, in dem der Ausstieg zum ersten Mal massentauglich wurde – bis hin zum Ausstieg aus dem Geldsystem.',
-    warumJetzt: 'Wer war Satoshi Nakamoto? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto nie eine Person. Satoshi ist ein Versprechen – und dieser Roman erzählt, was es gekostet hat.',
+    sonderfall: 'Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt – 1923, 1948, für den Osten 1990 – und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine umfangreiche Stabilitätskultur, jedoch nur in seltensten Fällen lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld – Falladas Wolf unter Wölfen, Remarques Schwarzer Obelisk – sind über siebzig Jahre alt. Jetzt, da die Vertrauenskurve auch hier zu knicken beginnt, fehlt der institutionentreuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat – aber keine eigenen Geschichten und Narrative mehr.',
+    versuch: 'Satoshi ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat – die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.',
+    warumJetzt: 'Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen – und dieser Roman erzählt, was es gekostet hat.',
     bau: 'Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten Bitcoin-Block signiert.',
     poetik: 'Satoshi ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand – Satoshi Nakamotos Mails, Forenbeiträgen, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin – und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.',
     tradition: 'Eine Erzähltradition, die ihre Wurzeln in Borges’ Ficciones hat und zu deren heutigen Vertretern Hernan Diaz und Benjamín Labatut gehören: Literatur in den Leerstellen des Verbürgten.',

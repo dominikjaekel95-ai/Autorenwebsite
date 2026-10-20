@@ -451,7 +451,7 @@
     window.FEinstieg = { fertig: fertig, spielen: spielen, art: function () { return art; } };
   })();
   </script>
-  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre in Kaohsiung auf Taiwan. Längere Zeit verbrachte er in Colombo, Cotonou und auf Mallorca. Seit 2022 lebt er in Berlin. Auf der Werkstattbühne des Autorenforums Berlin hat er viele seiner Geschichten gelesen; seit einigen Jahren moderiert er sie. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Er war in der Meisterklasse des Schreibhains. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an der Ursprungs&shy;trilogie.</p>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre in Kaohsiung auf Taiwan. Längere Aufenthalte in Colombo, Cotonou und auf Mallorca. Seit 2022 lebt er in Berlin. Auf der Werkstattbühne des Autorenforums Berlin hat er viele seiner Geschichten vorgelesen; seit einigen Jahren ist er einer der Moderatoren. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben arbeitet er seit einigen Jahren an einer Roman&shy;trilogie, die in die Ursprünge der Zivilisation eintaucht.</p>
 
   <p class="ebenen">Auf dem Globus: <button type="button" class="wort" data-ebene="leben" aria-pressed="true">wo ich gelebt habe</button>, <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">wohin ich gereist bin</button>, <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false">wo <i>Satoshi</i> spielt</button>, <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false">wo die Ursprungstrilogie spielt</button>.</p>
 
@@ -517,10 +517,10 @@
 <footer class="fuss" id="kontakt">
   <section class="kontakt" aria-labelledby="kontakt-titel">
     <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p>Anfragen zu Lesungen und zu den Romanen: <span class="platzhalter">Adresse folgt</span></p>
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="impressum">Impressum: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin</p>
   </section>
   <p class="kolophon-fuss">Gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth. Entwurf&nbsp;F. <a href="index.html">Alle Entwürfe</a></p>
-  <p class="entwurf-wahl">Entwurf, Einstieg: <a href="#einfliegen" data-einstieg="einfliegen">einfliegend</a>, <a href="#verwischt" data-einstieg="verwischt">verwischt</a> oder <a href="#ruhig" data-einstieg="ruhig">ruhig</a></p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -644,7 +644,7 @@
       return { kopf: land.name, unter: ist ? 'bereist' : 'nicht bereist', daten: p ? F.koord(p[1], p[0]) : '' };
     }
     if (kontinent) return { marke: String((I.kontinente[kontinent] || []).length), kopf: 'Länder und Gebiete in ' + kontinent, satz: 'Grau auf dem Globus, wo ich gewesen bin.' };
-    return { marke: String(bereist.length), kopf: 'Länder und Gebiete auf dem Globus', satz: 'Nach meiner eigenen Zählung sind es 67.' };
+    return { marke: String(bereist.length), kopf: 'Länder und Gebiete auf dem Globus', satz: 'Grau auf dem Globus, wo ich gewesen bin.' };
   }
   let reisenZuletzt = '';
   function reisenTafel() {

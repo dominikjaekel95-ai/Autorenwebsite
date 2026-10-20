@@ -112,6 +112,7 @@ a.name:hover { text-decoration-line: underline; }
 .fuss { margin-top: calc(var(--z) * 4); padding: calc(var(--z) * 2) var(--rand-r) calc(var(--z) * 2) var(--rand-l); }
 .kontakt .titel { margin-bottom: calc(var(--z) * .5); }
 .platzhalter { display: inline-block; font-style: italic; color: var(--grau-2); line-height: 1.35; padding: 0 .45em; border: 1px dashed var(--grau-3); }
+.impressum { margin-top: calc(var(--z) * .5); font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
 .kolophon-fuss { margin-top: calc(var(--z) * 2); max-width: 36em; font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
 
 /* ---------- Globus ---------- */

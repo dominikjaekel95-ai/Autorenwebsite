@@ -14,10 +14,11 @@ window.INHALT = {
     ],
     taiwan: 'Vier Jahre in Taiwan, in Kaohsiung. Dort arbeitete er als Lektor und freier Autor, unter anderem für Sprachassistenten und unabhängige Spielestudios. In Taiwan begann seine Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Ursprungstrilogie.',
     berlin: 'Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen.',
-    werkstattbuehne: 'Viele seiner Geschichten hat er auf der Werkstattbühne des Autorenforums Berlin e. V. gelesen; seit einigen Jahren moderiert er sie.',
+    werkstattbuehne: 'Auf der Werkstattbühne des Autorenforums Berlin hat er viele seiner Geschichten vorgelesen; seit einigen Jahren ist er einer der Moderatoren.',
     preis: { name: 'A.-E.-Johann-Preis', jahr: 2022 },
     foerderung: 'Gefördert in der Meisterklasse des Schreibhains und in Seminaren der Bundesakademie für kulturelle Bildung, mit Mentorinnen und Mentoren wie Ursula Poznanski, Wulf Dorn und Klaus N. Frick.',
-    debuet: 'Gerade schließt er seinen Debütroman Satoshi ab.'
+    debuet: 'Gerade schließt er seinen Debütroman Satoshi ab; daneben arbeitet er seit einigen Jahren an einer Romantrilogie, die in die Ursprünge der Zivilisation eintaucht.',
+    kontakt: { email: 'dominik.jd.jaekel@gmail.com', anschrift: 'Stresemannstraße 76, 10963 Berlin' }
   },
 
   // Bereiste Länder und Gebiete (Rubbelkarte plus Argentinien, Uruguay, Westjordanland), Landesteile des UK einzeln
@@ -43,11 +44,17 @@ window.INHALT = {
     { name: 'Dortmund', jahr: 'bis 2014', von: null, bis: 2014, lat: 51.51, lon: 7.47 },
     { name: 'Freiburg', jahr: '2014', von: 2014, lat: 47.99, lon: 7.85 },
     { name: 'Potsdam', jahr: '2015', von: 2015, lat: 52.39, lon: 13.06 },
-    { name: 'Colombo', land: 'Sri Lanka', jahr: '2016', von: 2016, neben: true, lat: 6.93, lon: 79.86 },
-    { name: 'Cotonou', land: 'Benin', jahr: '2018', von: 2018, neben: true, lat: 6.37, lon: 2.43 },
+    { name: 'Colombo', land: 'Sri Lanka', jahr: '2016', von: 2016, neben: true, projekt: 'Freiwilligenprojekt mit AIESEC', lat: 6.93, lon: 79.86 },
+    { name: 'Cotonou', land: 'Benin', jahr: '2018', von: 2018, neben: true, projekt: 'Freiwilligenprojekt mit AIESEC', lat: 6.37, lon: 2.43 },
     { name: 'Kaohsiung', land: 'Taiwan', jahr: '2018', von: 2018, lat: 22.63, lon: 120.30 },
     { name: 'Berlin', jahr: '2022', von: 2022, lat: 52.52, lon: 13.40 },
     { name: 'Mallorca', jahr: '2023', von: 2023, neben: true, lat: 39.57, lon: 2.65 }
+  ],
+  // Weitere längere Aufenthalte, nur für die Vita (auf dem Globus wäre es zu voll)
+  aufenthalte: [
+    { name: 'Kapstadt', land: 'Südafrika', jahr: '2024', lat: -33.92, lon: 18.42 },
+    { name: 'Sansibar', land: 'Tansania', jahr: '2024', lat: -6.16, lon: 39.19 },
+    { name: 'Kapstadt', land: 'Südafrika', jahr: '2026', lat: -33.92, lon: 18.42 }
   ],
 
   satoshi: {
@@ -119,7 +126,7 @@ window.INHALT = {
     { name: 'Jerusalem', band: 'III', jahr: 'um 940 v. Chr.', volk: 'die Phönizier', lat: 31.78, lon: 35.22 }
   ],
   baende: {
-    I: 'Göbekli Tepe in Südostanatolien, um 8000 v. Chr. Der älteste Tempel der Menschheit, und warum er begraben wurde.',
+    I: 'Göbekli Tepe in Südostanatolien, um 8000 v. Chr. Der älteste Tempel der Menschheit, und warum er von Menschenhand begraben wurde.',
     II: 'Uruk im Süden Mesopotamiens, um 2700 v. Chr. König Gilgamesch und die Geburt der Literatur.',
     III: 'Jerusalem zur Zeit des ersten Tempels, um 940 v. Chr. Eine phönizische Gelehrte und die Geburt der Heiligen Schrift.'
   },

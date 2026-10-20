@@ -535,7 +535,7 @@
     }
   }
   // Lebensstationen aus INHALT.leben
-  const stationen = () => (inhalt().leben || []).map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, jahr: s.jahr, land: s.land || '' }));
+  const stationen = () => (inhalt().leben || []).map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, jahr: s.jahr, land: s.land || '', projekt: s.projekt || '' }));
   // Tafel für eine Lebensstation, Entfernung vom ersten Ort (Dortmund) aus gemessen
   function stationInhalt(s, ausgang) {
     ausgang = ausgang || stationen()[0];
@@ -543,7 +543,7 @@
       marke: jahrMarke(s.jahr), kopf: s.land ? s.name + ', ' + s.land : s.name, neben: !!s.neben,
       unter: s.neben ? 'längerer Aufenthalt' : 'Wohnort',
       daten: koord(s.lat, s.lon),
-      satz: ausgang && s.name === ausgang.name ? 'Von hier aus sind die Entfernungen gemessen.' : km(ausgang, s) + ' Luftlinie von ' + ausgang.name + '.'
+      satz: (s.projekt ? s.projekt + '. ' : '') + (ausgang && s.name === ausgang.name ? 'Von hier aus sind die Entfernungen gemessen.' : km(ausgang, s) + ' Luftlinie von ' + ausgang.name + '.')
     };
   }
 

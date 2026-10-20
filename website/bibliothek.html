@@ -30,7 +30,7 @@
 .faecher, .kinderzimmer, .wartet { position: relative; }
 .faecher { margin-top: calc(var(--z) * .5); }
 .kinderzimmer, .wartet { margin-top: calc(var(--z) * 1.5); }
-.reihe { margin-bottom: calc(var(--z) * .5); }
+.reihe { margin-bottom: calc(var(--z) * .25); }
 .buecher { display: flex; align-items: flex-end; height: var(--h); min-width: 0; }
 .gruppe { display: flex; align-items: flex-end; flex: none; }
 .brett { height: 7px; background: var(--brett); border-top: 1px solid var(--brettkante); }
@@ -318,11 +318,11 @@
   let schuberOffen = false;
   let offenId = null;
 
-  // Maßstab: auf dem Telefon nicht unter 0,64 px je Millimeter, kein Rücken schmaler als 7 px
-  const massstab = () => window.innerWidth < 640 ? .64 : window.innerWidth < 1000 ? .66 : .72;
+  // Maßstab: auf dem Telefon 0,68 px je Millimeter, kein Rücken schmaler als 7 px; breit dichter (0,9), damit dieselben Bücher mehr Wand füllen
+  const massstab = () => window.innerWidth < 640 ? .68 : window.innerWidth < 1000 ? .8 : .9;
   const minBreite = () => window.innerWidth < 640 ? 7 : 5;
   // KOPF: Luft über dem höchsten Rücken für Lesezeichen und das Anheben; die eigenen Werke tragen kein Lesezeichen, ihnen reicht das Anheben
-  const LUECKE_MAX = 18, LEHNE = 26, STUETZE = 12, KOPF = 14, KOPF_EIGEN = 8;
+  const LUECKE_MAX = 12, LEHNE = 26, STUETZE = 12, KOPF = 14, KOPF_EIGEN = 8;
 
   // ---------- Rückenschrift aus der Messung ----------
   const mctx = document.createElement('canvas').getContext('2d');
@@ -397,7 +397,7 @@
     for (const it of el) {
       if (r.length) {
         // Eine neue Zeit braucht Platz für ihr Schild, sonst beginnt sie auf dem nächsten Brett. Das Schild reicht bis ans Ende des Bretts
-        // (W = C + 44) und beginnt höchstens 18 px Lücke und 5 px Stütze hinter x: es hat also mindestens C − x + 21 px.
+        // (W = C + 38) und beginnt höchstens 12 px Lücke und 5 px Stütze hinter x: es hat also mindestens C − x + 21 px.
         const eng = it.beginnt && C - x < STUETZE + Math.max(0, it.beginnt.schild - 33);
         if (x + breiteIn(it, false) > C || eng) { reihen.push(r); r = []; x = 0; }
       }
@@ -471,7 +471,7 @@
     const kand = [];
     for (let j = 1; j < n - 2; j++) if (!reihe[j].beginnt && !reihe[j + 1].beginnt) kand.push(j);
     const lueckeBei = kand.length ? kand[hash(schluessel + 'l') % kand.length] : -1;
-    const lueckeBreite = Math.round(wert(schluessel + 'lb', 10, 18));
+    const lueckeBreite = Math.round(wert(schluessel + 'lb', 6, 12));
     const mitJahr = reihe.filter(it => it.x.b.j != null);
     const von = mitJahr.length ? F.jahrText(mitJahr[0].x.b.j) : '', bis = mitJahr.length ? F.jahrText(mitJahr[mitJahr.length - 1].x.b.j) : '';
     const spanne = !von ? '' : von === bis ? ', ' + von : `, ${von} bis ${bis}`;

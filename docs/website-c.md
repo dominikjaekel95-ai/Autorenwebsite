@@ -424,3 +424,56 @@ Geprüft habe ich außerdem:
 ![Startseite, 1440 × 900, Ebene Satoshi im Ablauf, neu: auch der längste Szenentext (Black Rock Desert) steht ganz im Bild.](c-bilder/takt-07-satoshi-startseite-desktop-neu.jpg)
 
 **Zu entscheiden:** Wenn dir *Satoshi* zu schnell ist, nimm 0,35 s statt 0,3 s je Wort. Dann dauert der Ablauf rund 66 s. Das ist eine Zahl in `satoshiHalt` (`seite.js`). Bleibt die Option von dir: ein Globus über die ganze Breite am Kopf von *Satoshi*.
+
+## Runde 4: langsamer
+
+Stand: 21. Oktober 2026, nachts. Grundlage ist deine Rückmeldung: „Du bewegst dich sehr schnell über den Globus. Dann wird der Globus kurz unscharf. Dann für eine Sekunde kommen die detaillierten Ränder (das meinte ich mit dem aufblitzen!). Und dann wandert er super schnell wieder weiter. … Ich glaube, es ist am besten die Animation zu verlangsamen. Beschreibungen der Orte und Bedeutungen für mein Leben sollen aber bleiben.“ Wo die Teile oben etwas anderes sagen, gilt dieser Abschnitt, auch gegenüber „Runde 3: Takt“. Am Wortlaut der Seiten hat sich nichts geändert.
+
+Während der Runde kam dein Nachtrag: „Mit der Animation von Satoshi bin ich Recht zufrieden. Die könnte als Orientierung dienen. Aber sie ist vielleicht sogar noch einen Ticken zu langsam. Die anderen sind zu schnell. Ursprung könnte dagegen langsamer sein. Versuch die mal alle aufeinander abzustimmen.“ Die Zahlen unten folgen dem Nachtrag: ein Rhythmus für alle Abläufe, geeicht an *Satoshi*. Ein erster Stand (Zwischenstand `d6595e1`) flog 1,8 bis 2,4 s und hielt nach Zeichen; Leben dauerte so 64 s, *Satoshi* 76 s und *Ursprung* 44 s, also alles langsamer als *Satoshi* in Runde 3.
+
+**Was das Aufblitzen war.** In Runde 3 habe ich „Details“ als die Angaben auf der Tafel verstanden und sie im Ablauf weggelassen. Gemeint war die Karte. Im Flug zeichnete der Globus eine grobe Karte. 0,22 s nach dem Stillstand schaltete er hart auf die feine. Weil der Halt nur 0,8 bis 1,4 s dauerte, standen die feinen Ränder etwa eine Sekunde, dann ging es grob und schnell weiter.
+
+**Was sich geändert hat**
+
+- **Die Beschreibungen sind zurück.** Die Tafel zeigt im Einspieler und beim Abspielen wieder alles, was sie in Ruhe zeigt:
+  - bei Leben Jahr, Ort, Art und den Vermerk aus der Vita, etwa „Wohnort, Studium Liberal Arts & Sciences“,
+  - bei *Ursprung* Band, Ort, Landschaft und Zeit und die Zeile zum Band, auf `ursprung.html` dazu die Koordinaten,
+  - bei *Satoshi* wie bisher den Szenentext.
+
+  Aus Runde 3 bleibt: Der Text wechselt erst, wenn die Linie ankommt (gemessen 9 bis 33 ms danach, im selben Bild wie Punkt und Name). Die Tafel hat eine feste Höhe. Die erste Station steht sofort da. Beim Anhalten steht die ganze Tafel.
+- **Ein Flugtakt für alle.** Jeder Flug läuft sanft an und aus und dauert nach der Entfernung 0,9 s plus 0,7 s mal Entfernung durch 180°, höchstens 1,6 s: Dortmund–Freiburg 0,92 s, Potsdam–Colombo 1,19 s, Berlin–Kaohsiung 1,23 s, Bariloche–Penang 1,48 s. Das ist der Flug von *Satoshi* aus Runde 3 (0,9 s) für kurze Sprünge, weite dauern etwas länger. In der Mitte des Flugs ist die Kugel höchstens 1,9-mal so schnell wie im Schnitt. Vorher war sie 3-mal so schnell. Der Rückweg eines Abstechers folgt derselben Regel.
+- **Ein Halt zum Lesen für alle.** Jeder Halt dauert 0,9 s für die Kopfzeile (Jahr oder Band und Ort) und 0,27 s je Wort darunter: Art und Vermerk, Landschaft und Zeit, die Zeile zum Band, der Szenentext. Die Koordinaten zählen nicht. Der Halt dauert mindestens 2,5 s und höchstens 8 s. *Ursprung* hält 0,5 s länger, weil Band, Ort, Zeit und Thema mehr Text sind. So hält Leben 2,5 bis 3,1 s, *Satoshi* 2,5 bis 7,4 s und *Ursprung* 4,9 bis 6,3 s, auf der Startseite wie auf `ursprung.html`. *Satoshi* ist damit einen Ticken schneller als in Runde 3 (1 s plus 0,3 s je Wort). Die Tafel bleibt auch im folgenden Flug stehen (bei einem Abstecher auch auf dem Rückweg): So steht jede Tafel bei Leben 3,4 bis 4,8 s, bei *Satoshi* 4,0 bis 8,6 s und bei *Ursprung* 5,9 bis 7,2 s.
+- **Kein hartes Umschalten mehr.**
+  - Die feinen Grenzen und Küsten stehen jetzt auch im Flug, sobald die Kugel gezoomt ist. Nur wenn sie auf einem weiten Flug herauszoomt, gehen sie unterwegs weich in die groben über und kommen vor der Ankunft wieder. So wirkt der Globus im Flug nicht mehr unscharf. Strichstärke und Farbe waren schon gleich, der Unterschied lag in der Genauigkeit der Karte.
+  - Grob bleibt im Flug nur die hellgraue Fläche der Länder. Ihre genaue Form blendet nach der Ankunft über 0,35 s ein und beim Abflug über 0,3 s aus, während die Kugel langsam anläuft.
+  - Im Ablauf steht die feine Karte an jedem Halt mindestens 1,5 s. Wo kein Halt ist, am Wohnort nach einem Abstecher, kommt sie gar nicht. Im Einspieler von *Satoshi* (1,2-fach) bleibt die Karte grob, wie in Ruhe bei dieser Vergrößerung.
+  - Die Ortsnamen stehen im Flug an denselben Stellen wie in Ruhe. Vorher sprangen sie bei jedem Halt und jedem Abflug an einen anderen Platz.
+- **Gleich geblieben:** Flüge von Hand (früher, später, ein Ort) mit 1,0 s, Ziehen und Zoomen, „anhalten“, die Pause, wenn der Globus aus dem Bild geht, und bei reduzierter Bewegung kein Einspieler. Neu wartet der Einspieler, bis Schriften und feine Karte geladen sind. So stockt der erste Flug nicht mehr.
+
+**Gemessen** mit Playwright in Chromium ohne Grafikkarte, 1440 × 900 und 390 × 844 (Telefon mit doppelter Pixeldichte). Die Dauer zählt vom ersten Flug bis zum Ende des Ablaufs, davor liegen 0,6 s Pause.
+
+| Ablauf | Gesamt Desktop / Telefon | Runde 3 | Erster Stand (`d6595e1`) | Halt je Station | feine Fläche ganz je Halt |
+|---|---|---|---|---|---|
+| Startseite, Leben, Einspieler | 33,7 / 33,6 s | 18,2 s | 63,7 s | 2,5 bis 3,1 s | 2,1 bis 2,7 s |
+| Startseite, Leben, Abspielen | 33,7 / 33,6 s | – | 63,7 s | 2,5 bis 3,1 s | 2,1 bis 2,7 s |
+| Startseite, *Satoshi*, Einspieler | 58,8 / 58,7 s | 60,3 s | 75,8 s | 2,5 bis 7,4 s | keine (1,2-fach) |
+| Startseite, *Satoshi*, Abspielen | 57,1 / 57,0 s | 60,5 s | 73,1 s | 2,5 bis 7,4 s | 2,1 bis 7,0 s |
+| Startseite, *Ursprung*, Einspieler und Abspielen | 27,2 / 27,1 s | 13,7 s | 43,5 s | 4,9 bis 6,3 s | 4,5 bis 5,9 s |
+| `satoshi.html`, Einspieler | 58,5 / 58,5 s | 60,3 s | 75,5 s | 2,5 bis 7,4 s | keine (1,2-fach) |
+| `satoshi.html`, Abspielen | 57,0 / 57,0 s | 60,4 s | 73,2 s | 2,5 bis 7,4 s | 2,1 bis 7,0 s |
+| `ursprung.html`, Einspieler und Abspielen | 27,1 / 27,1 s | 13,8 s | 48,7 s | 4,9 bis 6,3 s | 4,5 bis 5,9 s |
+
+Nebeneinander: Leben 34 s für acht Orte (gut 4 s je Ort), *Ursprung* 27 s für vier (knapp 7 s je Ort), *Satoshi* 59 s für zehn Szenen (knapp 6 s je Szene). *Satoshi* und *Ursprung* sind damit je Ort langsamer als Leben, weil sie mehr Text haben.
+
+- **Flüge:** 0,92 bis 1,48 s, Rückwege von Abstechern 0,97 bis 1,20 s.
+- **Feine Karte:** Die feine Fläche beginnt 0,05 bis 0,13 s nach der Ankunft einzublenden und steht dann ganz 2,1 s (Leben) bis 7,0 s (Black Rock Desert), bevor sie beim Abflug ausblendet. Die feinen Linien stehen in Abschnitten von mindestens 3,2 s, auf *Ursprung* vom ersten bis zum letzten Ort. Nirgends steht etwas Feines kürzer als 1,5 s. Die Tafel wechselt 9 bis 33 ms nach der Ankunft.
+- **Bildrate im Flug:** Desktop 53 bis 61 Bilder je Sekunde (Mittel 59). Telefon in zwei Messungen 98 von 102 und 70 von 70 Flügen mit 50 bis 61 (Mittel 58), vier Flüge mit 47 bis 49: weite Flüge beim Abspielen von *Satoshi* und Leben, gegen Ende, wenn die feinen Linien beim Hineinzoomen über die groben blenden. Mit den kürzeren Flügen lagen die feinen Linien beim Herauszoomen zuerst noch über der ganzen kleinen Kugel (fünf Flüge auf dem Telefon unter 50); jetzt gehen sie im Flug doppelt so schnell, wie sie kommen (0,15 s). Ein Bild in Ruhe kostet 1 bis 14 ms statt 87 bis 123 ms wie in Runde 3; das Zeigen eines Lands unter der Maus (Reisen, Länder) folgt dadurch schneller.
+- **Bildfolgen** mit 30 Bildern je Sekunde für alle fünf Abläufe, je am Desktop und auf dem Telefon: Startseite mit Leben, *Satoshi* und *Ursprung*, `satoshi.html` mit Einspieler und Abspielen, `ursprung.html`. An allen 50 Halten mit feiner Karte verteilt sich der Wechsel auf 13 bis 17 Bilder über 0,26 bis 0,37 s. Der größte Schritt zwischen zwei Bildern macht 8 bis 12 % der ganzen Änderung aus; ein harter Wechsel wäre ein Schritt mit 100 %. Danach steht die feine Karte 2,1 bis 7,0 s bis zum Abflug. Im Einspieler von *Satoshi* ändert sich in den Halten kein Bild. Die Aufnahme zeigt Punkt und Name der Ankunft ein bis zwei Bilder später als die Kugel sie zeichnet; ausgelesen an der Leinwand stehen Ring, Name und Tafel im ersten Bild nach der Ankunft.
+- **Von Hand:** Ziehen und Zoomen folgen der Hand wie in Runde 3. Ein Schritt mit „früher“ dauert 1,0 s mit 56 bis 59 Bildern je Sekunde. Nach dem Loslassen blendet die feine Fläche nach 0,3 s ein und steht nach 0,6 s ganz. Auf der Seite Länder fliegt die Kugel zu einem gewählten Land mit 53 bis 61 Bildern je Sekunde.
+- **Weiter geprüft:** Kein Inhalt der Tafel steht im Ablauf kürzer als 1,5 s, die Tafel ist nie leer, ihre Höhe und die Lage der Teile darunter ändern sich nicht. Anhalten zeigt die ganze Tafel („2016 Colombo, Sri Lanka, längerer Aufenthalt, Freiwilligenprojekt mit AIESEC“). Geht der Globus aus dem Bild, hält der Einspieler an und läuft an derselben Stelle weiter. Reduzierte Bewegung: kein Einspieler, sofort der Endzustand. Alle elf Seiten bei 1440 × 900, 1280 × 800, 390 × 844 und 360 × 740: keine Fehlermeldung, keine Anfrage an fremde Server, kein waagerechtes Scrollen. Die Prüfung des Baus für den claude.ai-Link besteht alle 37 Punkte.
+
+![Startseite, Leben, 1440 × 900: Ankunft in Kaohsiung, Bildfolge mit 15 Bildern je Sekunde, Ausschnitt um Taiwan. Die Linien sind schon im Flug fein, die Fläche blendet nach der Ankunft in 0,35 s ein (f = Anteil der feinen Fläche, l = Anteil der feinen Linien). Punkt und Name stehen schon im ersten Bild nach der Ankunft; die Aufnahme liefert sie ein bis zwei Bilder später.](c-bilder/takt-08-leben-ankunft-desktop.jpg)
+
+![Startseite, Leben, 1440 × 900: Flug Potsdam–Colombo (1,19 s), alle 0,06 s (rechts schneidet der Fensterrand die Kugel an). Beim Abflug blendet die feine Fläche aus, beim Herauszoomen gehen die Linien weich in die groben über, vor der Ankunft kommen sie wieder. Die Namen bleiben an ihrem Platz, bis sie sich beim Herauszoomen zu einem Block mit Führungslinie zusammenschieben.](c-bilder/takt-09-leben-flug-desktop.jpg)
+
+**Zu entscheiden:** *Satoshi* dauert 59 s statt der angepeilten 50 bis 55 s. Die Halte allein sind 45 s, aber die meisten Sprünge gehen über Kontinente (57° bis 144°) und dauern nach der gemeinsamen Regel 1,1 bis 1,5 s statt 0,9 s. Soll *Satoshi* kürzer werden, nimm 0,24 statt 0,27 s je Wort: Dann dauert *Satoshi* rund 55 s, Leben 33 s und *Ursprung* 25 s. Das ist eine Zahl in `LESEN` (`seite.js`). Dir zu schnell? 0,3 s je Wort ergibt rund 62, 34 und 29 s.

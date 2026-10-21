@@ -115,8 +115,25 @@
     }
     /* Die feinen Linien (Grenzen, Küsten) in Stücken zu höchstens 32 Punkten, je Stück seine Mitte als Einheitsvektor und sein
        Radius als Bogen. Gezeichnet werden nur die Stücke, die die Leinwand erreichen: gezoomt kosten die feinen Linien so 3 bis 7 ms
-       statt 30 und dürfen auch in Bewegung stehen (Runde 4) */
+       statt 30 und dürfen auch in Bewegung stehen (Runde 4). Dazu in drei Stufen: ganz, ohne Punkte näher als 0,06° und ohne Punkte
+       näher als 0,1° am vorigen (die Enden bleiben). Der Kern nimmt die gröbste Stufe, deren Abstand auf der Leinwand unter 1 px
+       bleibt (stufeFuer); das spart auf dem Telefon bei 1,8- bis 2,4-fach 3 bis 5 ms je Bild, ohne dass man es sieht */
     const einheit = ([lon, lat]) => { const l = lon * RAD, p = lat * RAD, c = Math.cos(p); return [c * Math.cos(l), c * Math.sin(l), Math.sin(p)]; };
+    function winkelDuenn(ml, grad) {
+      if (!grad) return ml;
+      const grenze = Math.cos(grad * RAD);
+      return { type: 'MultiLineString', coordinates: ml.coordinates.map(l => {
+        if (l.length < 3) return l;
+        const aus = [l[0]];
+        let a = einheit(l[0]);
+        for (let i = 1; i < l.length - 1; i++) {
+          const b = einheit(l[i]);
+          if (a[0] * b[0] + a[1] * b[1] + a[2] * b[2] < grenze) { aus.push(l[i]); a = b; }
+        }
+        aus.push(l[l.length - 1]);
+        return aus;
+      }) };
+    }
     function stueckeBauen(ml) {
       const stuecke = [];
       ml.coordinates.forEach(l => {
@@ -142,7 +159,7 @@
       const fertig = () => {
         if (!window.WELT_50M) return;
         const d = datensatz(window.WELT_50M);
-        d.stuecke = { grenzen: stueckeBauen(d.grenzen), kueste: stueckeBauen(d.kueste) };
+        d.stufen = [0, .06, .1].map(g => ({ g, grenzen: stueckeBauen(winkelDuenn(d.grenzen, g)), kueste: stueckeBauen(winkelDuenn(d.kueste, g)) }));
         fein = d;
         feinDa();
         zeichnen();
@@ -161,7 +178,8 @@
        Seit Runde 4 (Dominik, 21. Oktober abends: erst „unscharf“, dann „für eine Sekunde die detaillierten Ränder“, dann weiter)
        wechselt nichts mehr hart:
        - Die feinen Linien (Grenzen, Küsten) stehen auch in Bewegung, sobald die Kugel gezoomt ist: zwischen 1,6- und 2,1-fach
-         blenden sie über die groben, dem Ziel folgen sie höchstens in 300 ms (linien.a). Grob bleibt in Bewegung nur die Fläche.
+         blenden sie über die groben, dem Ziel folgen sie höchstens in 300 ms, im Flug gehen sie in 150 ms (linien.a). Grob bleibt
+         in Bewegung nur die Fläche.
        - Die feine Fläche malt der Kern in Ruhe einmal in ein zweites Bild (bild) und blendet sie über 350 ms über die grobe
          (blende.a). Geht es weiter, blendet sie über 300 ms aus; das Bild folgt dabei der Kugel (bildLegen), es springt nichts.
        - In einem Ablauf nur, wenn der Halt danach noch 1,5 s mit der feinen Karte trägt (flaecheSoll, haltBis); ein Halt bei
@@ -180,12 +198,11 @@
       bewegt = false;
       torDanach = 1;
       zeichnen();
-      ansichtMelden();
     }
     const daten = () => fein && k > 1.8 && !bewegt ? fein : grob;
 
     // ---------- Überblendung grob zu fein ----------
-    const BLENDE_EIN = 350, BLENDE_AUS = 300, LINIEN_MS = 300, FEIN_MIN = 1500;
+    const BLENDE_EIN = 350, BLENDE_AUS = 300, LINIEN_MS = 300, LINIEN_AUS_MS = 150, FEIN_MIN = 1500;
     const glatt = t => t * t * (3 - 2 * t);
     const blende = { a: 0, von: 0, nach: 0, start: 0, dauer: 0 };     // Anteil der feinen Fläche
     const linien = { a: 0, t: 0 };                                     // Anteil der feinen Linien
@@ -222,7 +239,9 @@
     function linienStand(jetzt, soll) {
       const dt = Math.min(34, Math.max(0, jetzt - linien.t));
       linien.t = jetzt;
-      const schritt = dt / LINIEN_MS;
+      /* Im Flug gehen die feinen Linien doppelt so schnell, wie sie kommen: Mit den kürzeren Flügen nach dem Nachtrag lagen sie beim
+         Herauszoomen sonst noch über der ganzen, schon kleinen Kugel und kosteten auf dem Telefon bis 40 ms je Bild */
+      const schritt = dt / (bewegt && soll < linien.a ? LINIEN_AUS_MS : LINIEN_MS);
       linien.a = soll > linien.a ? Math.min(soll, linien.a + schritt) : Math.max(soll, linien.a - schritt);
       return linien.a;
     }
@@ -276,20 +295,24 @@
       if (nachBild || flug) return;
       nachBild = requestAnimationFrame(() => { nachBild = 0; if (!flug) zeichnen(); });
     }
-    // Die sichtbaren Stücke der feinen Linien (je Ansicht einmal): was die Ecken der Leinwand erreichen, mit etwas Rand
+    /* Die sichtbaren Stücke der feinen Linien (je Ansicht einmal): was die runde Fläche erreicht (gezoomt schneidet stil.css die
+       Leinwand rund zu, clip-path), mit etwas Rand */
     // (Die Listen werden wiederverwendet: im Flug wählt jedes Bild neu, ohne jedes Mal neue Felder anzulegen)
     const stueckWahl = { schluessel: '', grenzen: { type: 'MultiLineString', coordinates: [] }, kueste: { type: 'MultiLineString', coordinates: [] } };
+    // Die gröbste Stufe, deren Punkte auf der Leinwand weniger als 1 px auseinanderliegen dürfen
+    const stufeFuer = () => { for (let i = fein.stufen.length - 1; i > 0; i--) if (R * k * fein.stufen[i].g * RAD < 1) return fein.stufen[i]; return fein.stufen[0]; };
     function sichtbareStuecke() {
       const schluessel = mitte[0] + ',' + mitte[1] + ',' + k + ',' + seite;
       if (stueckWahl.schluessel === schluessel) return stueckWahl;
-      const sicht = Math.asin(Math.min(1, Math.SQRT2 * (seite / 2) / (R * k))) + .03;
+      const stufe = stufeFuer();
+      const sicht = Math.asin(Math.min(1, (seite / 2) / (R * k))) + .03;
       const m = einheit(mitte);
       const wahl = (st, aus) => {
         aus.length = 0;
         for (const q of st) { const w = sicht + q.r; if (w >= Math.PI || q.x * m[0] + q.y * m[1] + q.z * m[2] > Math.cos(w)) aus.push(q.s); }
       };
-      wahl(fein.stuecke.grenzen, stueckWahl.grenzen.coordinates);
-      wahl(fein.stuecke.kueste, stueckWahl.kueste.coordinates);
+      wahl(stufe.grenzen, stueckWahl.grenzen.coordinates);
+      wahl(stufe.kueste, stueckWahl.kueste.coordinates);
       stueckWahl.schluessel = schluessel;
       return stueckWahl;
     }
@@ -474,7 +497,7 @@
       if (bewegt ? namenInBewegung : namenInRuhe) namenSetzen(orte);
 
       if (!erstesBild) erstesBild = performance.now();
-      if (!bewegt) ansichtMelden();
+      if (!bewegt) ansichtPlanen();
       if (blende.dauer || l !== lSoll) weiterZeichnen();
       melden('beimZeichnen', { bewegt, k, fein: a, linien: l });
     }
@@ -521,6 +544,20 @@
       });
     }
 
+    /* Wo die Kugel steht („Welt › Deutschland › Berlin“), in Ruhe nach dem nächsten Bild: mit der feinen Karte kostet die Suche
+       des Lands bis zu 70 ms und hielt sonst das Bild der Ankunft auf (Runde 4). Je Ansicht einmal */
+    let ansichtPlan = 0, ansichtZuletzt = '';
+    function ansichtPlanen() {
+      if (ansichtPlan) return;
+      ansichtPlan = requestAnimationFrame(() => setTimeout(() => {
+        ansichtPlan = 0;
+        if (bewegt) return;
+        const schluessel = [mitte[0], mitte[1], k, aktiverOrt, daten() === fein].join();
+        if (schluessel === ansichtZuletzt) return;
+        ansichtZuletzt = schluessel;
+        ansichtMelden();
+      }, 0));
+    }
     let letzteAnsicht = '';
     function ansichtMelden() {
       const teile = ['Welt'];

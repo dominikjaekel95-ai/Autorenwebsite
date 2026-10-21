@@ -1,5 +1,7 @@
 # Takt der Globen: Messung, Best Practices, Empfehlung
 
+> **Nachtrag Runde 4:** Mit „nicht jedes Mal kurz die Details zeigen“ meinte Dominik nicht die Tafel, sondern den Wechsel von der groben zur feinen Karte, die bei jedem kurzen Halt für etwa eine Sekunde kam. Was daraus wurde, steht in `website-c.md`, Abschnitt „Runde 4: langsamer“. Die Empfehlung 3.1 (im Ablauf nur die Kopfzeile der Tafel) ist zurückgenommen.
+
 Stand: 21. Oktober 2026, abends. Gilt für Version C (`website-c/`). Grundlage ist deine Rückmeldung:
 
 > „Takt kürzer, etwa eine Minute insgesamt. Eines was mir noch aufgefallen ist. Auf der Startseite. Entweder den Takt länger oder kurz halten. Aber dann nicht jedes Mal kurz die Details zeigen. Das sieht auch komisch aus. Da bitte auch nochmal nach best practices schauen. Und dann die Empfehlungen umsetzen“

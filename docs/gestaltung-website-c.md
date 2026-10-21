@@ -28,7 +28,7 @@ Pfade ohne Ordner beziehen sich auf `website-c/`. „scratchpad/“ steht für `
 ### Was C ist
 
 - **Die Anmutung von A:** Vollkorn, Papierweiß und Graphit, die große angeschnittene Kugel, die Chronik, das farbige Regal, das Zeitband auf der Startseite (V02).
-- **Das Zoomen von B:** grob in Bewegung, fein in Ruhe, Namen auch beim Bewegen (V26, M1).
+- **Das Zoomen von B:** grob in Bewegung, fein in Ruhe, Namen auch beim Bewegen (V26, M1). Seit Runde 4 gezoomt mit den feinen Linien auch in Bewegung und ohne harten Wechsel (10).
 - **Ohne die Mikromarker:** eine Tinte für allen Text, Nebentext nur eine Stufe kleiner, Kursive nur für Titel, ein Abstandsraster (V03).
 - **Der erste Eindruck:** souverän, literarisch, mit Freude gemacht. Nicht süß, nicht steif (M9). Faustregel: Ein verspieltes Element bleibt, wenn es präzise gemacht ist und etwas Echtes zeigt, also echte Orte, echte Bücher, echte Wege. Es geht, wenn es nur dekoriert.
 
@@ -212,8 +212,13 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 2. Namen auch in Bewegung: beim Bewegen schlichte Namen an sechs Lagen um den Punkt (wie B), in Ruhe die Namensblöcke von A.
 3. Gradnetz wird mit dem Zoom dichter, Schritte wie B: unter 1,6-fach alle 30°, unter 4-fach alle 10°, unter 9-fach alle 5°, darüber alle 2°. Farbe #ECEDEE, 0,5 px.
 4. Telefon: Ein Finger waagrecht dreht die Kugel, senkrecht scrollt die Seite, zwei Finger zoomen (B, `kern.js` Zeile 461 bis 495).
-5. Feste Flugdauer 1,0 s, Europa 3,6-fach.
-6. Ruhebild 220 ms nach der letzten Bewegung, fein erst ab 1,8-fach.
+5. Feste Flugdauer 1,0 s, Europa 3,6-fach. Seit Runde 4 gilt das nur noch für Flüge von Hand; die Abläufe fliegen nach der Entfernung 0,9 bis 1,6 s und sanfter (7.2).
+6. Ruhebild 220 ms nach der letzten Bewegung, fein erst ab 1,8-fach. Am Ende eines Flugs gleich.
+8. **Runde 4** (Dominik, 21. Oktober abends: „Dann wird der Globus kurz unscharf. Dann für eine Sekunde kommen die detaillierten Ränder … Und dann wandert er super schnell wieder weiter“). Kein harter Wechsel mehr zwischen grob und fein:
+   - Die feinen Grenzen und Küsten stehen gezoomt auch in Bewegung: zwischen 1,6- und 2,1-fach blenden sie über die groben, höchstens in 300 ms; beim Herauszoomen im Flug gehen sie in 150 ms. Gezeichnet werden nur die Stücke, die die Kugel erreichen, ohne Punkte, die näher als 1 px beieinander liegen. Strichstärke und Farbe sind grob und fein gleich (wie bisher).
+   - Grob bleibt in Bewegung nur die Fläche. Die feine Fläche blendet in Ruhe über 350 ms ein und beim nächsten Griff oder Flug über 300 ms aus; dabei folgt ihr Bild der Kugel.
+   - In einem Ablauf steht die feine Karte an jedem Halt mindestens 1,5 s, nie kürzer. Die feinen Linien kommen dort nur auf dem Weg zu einem Halt und gehen auf dem Weg davon.
+   - Die Ortsnamen setzt FSeite in Ruhe und in Bewegung an dieselben Stellen (vorher in Bewegung schlichte Namen des Kerns, die beim Halt an ihren Platz sprangen). Punkt 2 gilt so nicht mehr.
 7. Kein `willReadFrequently`.
 
 **Text:** Der Hinweis „Zwei Finger zum Drehen und Zoomen“ muss zur neuen Geste passen, denn ein Finger dreht jetzt waagrecht. Die Texter prüfen den Wortlaut.
@@ -763,7 +768,7 @@ Jahreszahl und Ortsname stehen auf einer Grundlinie. Die Tafel meldet sich Vorle
 - „Sichtbar“ heißt: mindestens 50 % der Kugel im Fenster. Sinkt der Anteil unter 20 % oder wird der Tab verborgen, hält der Einspieler an und läuft weiter, wenn die Kugel wieder zur Hälfte zu sehen ist.
 - Die Linie wächst während des Flugs von der einen Stadt zur nächsten. Erst wenn sie am Ziel ist, erscheinen Punkt und Name, und im selben Bild wechselt die Tafel (bis Runde 2 schon bei 55 % des Flugs). Auf dem Rückweg eines Abstechers bleibt die Tafel beim Abstecher.
 - Die Ortsleiste hebt die jetzige Station halbfett hervor. Die Tafel geht mit.
-- **Was die Tafel wann zeigt** (Runde 3, Dominik: „nicht jedes Mal kurz die Details zeigen“; `takt-empfehlung.md`, 3.1). Was von selbst läuft, zeigt nur Jahr und Ort. Was der Besucher selbst wählt, zeigt alles. *Satoshi* ist die Ausnahme, dort laufen die Szenentexte mit (K9), mit Halten, die zum Lesen reichen.
+- **Was die Tafel wann zeigt.** Seit Runde 4 (Dominik: „Die Beschreibungen der Orte sollen bleiben“) zeigt die Tafel auch im Einspieler und beim Abspielen alles, was sie in Ruhe zeigt, und jeder Halt reicht zum Lesen (7.2). Runde 3 hatte „nicht jedes Mal kurz die Details zeigen“ auf die Tafel bezogen; gemeint war die feine Karte (10, Punkt 8). Die Tabelle gibt den Stand von Runde 3; die Zeilen „bevor der Einspieler läuft“ und „im Einspieler und beim Abspielen“ gelten jetzt wie „nach einem Schritt von Hand“: die ganze Tafel.
 
   | Zustand | Leben | *Ursprung* | *Satoshi* | Reisen |
   |---|---|---|---|---|
@@ -775,7 +780,7 @@ Jahreszahl und Ortsname stehen auf einer Grundlinie. Die Tafel meldet sich Vorle
   | reduzierte Bewegung | Endzustand | Endzustand | Ruhetafel | Überblick |
 
 - Die Tafel zeigt schon vor dem Einspieler seine erste Station, und jeder Ablauf von vorn setzt sie sofort. Zwischen der Wahl einer Ebene und der ersten Station steht keine Ruhetafel.
-- Kein Inhalt der Tafel steht im Ablauf kürzer als 1,5 s. Die Tafel ist nie leer. Ihre Höhe ist die ihres längsten Inhalts und ändert sich im Ablauf und an seinem Ende nicht; im Ablauf bleibt unter der Kopfzeile Platz frei.
+- Kein Inhalt der Tafel steht im Ablauf kürzer als 1,5 s. Die Tafel ist nie leer. Ihre Höhe ist die ihres längsten Inhalts und ändert sich im Ablauf und an seinem Ende nicht.
 - Am Ende zeigt die Kugel den ganzen Weg im Überblick.
 - Jeder Griff an die Kugel, jede Wahl und auf *Ursprung* jeder Wechsel der Leselinie beendet den Einspieler. Dann steht der ganze Weg, und die Steuerzeile zeigt „Noch einmal von vorn“, auf *Satoshi* „Abspielen“ (6.4).
 - Bei reduzierter Bewegung gibt es keinen Einspieler. Der ganze Weg steht sofort, die Tafel zeigt den Endzustand.
@@ -913,10 +918,10 @@ Knöpfe sind `<button>` ohne Rahmen, Grund und Radius. Verweise sind `<a>`. Kein
 | Was | Wo | Wie lange | Warum |
 |---|---|---|---|
 | Einflug des ersten Satzes | Startseite | 1,0 s, bei jedem Laden | V13 |
-| Einspieler Leben | Startseite | rund 18 s, nur Jahr und Ort | V22, M7, Runde 3 |
-| Einspieler *Satoshi* | Startseite (Ebene), *Satoshi* | rund 60 s, mit Szenentext | M7, K9, Runde 3 |
-| Einspieler *Ursprung* | Startseite (Ebene), *Ursprung* | rund 14 s, langsamer je Ort, nur Band, Ort und Zeit | V23, Runde 3 |
-| Abspielen | alle drei Abläufe | wie der Einspieler; *Satoshi* rund 60 s, endet in Penang | Nachtrag 1, Punkt 5, K9 |
+| Einspieler Leben | Startseite | rund 34 s, mit der ganzen Tafel | V22, M7, Runde 4 |
+| Einspieler *Satoshi* | Startseite (Ebene), *Satoshi* | rund 59 s, mit Szenentext | M7, K9, Runde 4 |
+| Einspieler *Ursprung* | Startseite (Ebene), *Ursprung* | rund 27 s, mit der ganzen Tafel | V23, Runde 4 |
+| Abspielen | alle drei Abläufe | wie der Einspieler; *Satoshi* rund 57 s, endet in Penang | Nachtrag 1, Punkt 5, K9 |
 | Flug nach Klick, früher, später | alle Globen | 1,0 s | V26 |
 | Leselinie führt den Globus | *Ursprung*, ab 62,0625 rem | Flug 1,0 s | E19, V10 |
 | Drehen und Zoomen | alle Globen | folgt der Hand | V26 |
@@ -925,7 +930,20 @@ Knöpfe sind `<button>` ohne Rahmen, Grund und Radius. Verweise sind `<a>`. Kein
 
 ### 7.2 Takt der Einspieler
 
-Stand Runde 3 (21. Oktober abends, `takt-empfehlung.md`; Werte in `FSeite.TAKT`):
+Stand Runde 4 (21. Oktober abends, Dominik: „Ich glaube, es ist am besten die Animation zu verlangsamen“, im Nachtrag: „Versuch die mal alle aufeinander abzustimmen“, *Satoshi* als Orientierung; Werte in `FSeite.TAKT` und `LESEN`, gemessen in `website-c.md`, Runde 4). Ein Rhythmus für alle Abläufe:
+
+| Ablauf | Flug | Halt | Vergrößerung | Gesamt |
+|---|---|---|---|---|
+| Leben | nach der Entfernung 0,9 s plus 0,7 s mal Entfernung durch 180°, höchstens 1,6 s (0,92 bis 1,23 s), sanft an- und auslaufend; der Rückweg eines Abstechers ohne Halt ebenso | 0,9 s plus 0,27 s je Wort unter der Kopfzeile der Tafel (ohne Koordinaten), mindestens 2,5 s, höchstens 8 s (2,5 bis 3,1 s) | wie Runde 3 | rund 34 s |
+| *Satoshi* | wie Leben (0,96 bis 1,48 s) | wie Leben, nach dem Szenentext (2,5 bis 7,4 s) | wie Runde 3 | rund 59 s, Abspielen 57 s |
+| *Ursprung* | wie Leben (0,93 bis 1,0 s) | wie Leben und 0,5 s Grundhalt (4,9 bis 6,3 s, Startseite und Seite gleich) | wie Runde 3 | rund 27 s |
+
+- Ist die Kugel am Halt über 1,8-fach gezoomt, dauert der Halt mindestens so lange, dass die feine Karte danach 1,5 s steht (rund 2,1 s).
+- Ein erster Stand von Runde 4 (Zwischenstand `d6595e1`) flog 1,8 bis 2,4 s und hielt 1,5 s plus 1 s je 15 Zeichen der ganzen Tafel (Leben 64 s, *Satoshi* 76 s, *Ursprung* 44 s); der Nachtrag hat ihn abgelöst.
+- Vor dem ersten Flug: 0,6 s nach dem ersten Bild der Kugel und erst, wenn die Schriften und die feine Karte geladen sind (höchstens 2,5 und 2 s).
+- Easing der Abläufe seit Runde 4: Smootherstep (`sanft` im Kern), in der Mitte 1,9-mal so schnell wie im Schnitt (kubisch 3-mal). Flüge von Hand bleiben 1,0 s mit `d3.easeCubicInOut`.
+
+Stand Runde 3 (überholt):
 
 | Einspieler | Flug | Halt | Vergrößerung | Tafel steht je Station | Gesamt |
 |---|---|---|---|---|---|
@@ -938,7 +956,7 @@ Stand Runde 3 (21. Oktober abends, `takt-empfehlung.md`; Werte in `FSeite.TAKT`)
 - Vor dem ersten Flug 0,6 s nach dem ersten Bild der Kugel. Der erste Flug ist nur die Fahrt zur ersten Station, ohne Linie; ihre Tafel steht schon da.
 - Bis Runde 2: Leben Halt 0,6 s und Rückweg 0,5 s mit der Vergrößerung des Wohnorts (rund 16 s); *Satoshi* 3 s plus 0,6 s je Wort, 6 bis 18 s (rund 118 s); *Ursprung* Halt 2,0 s (rund 16 s).
 
-Easing der Flüge: `d3.easeCubicInOut`. Kein Nachfedern, keine Trägheit.
+Easing der Flüge bis Runde 3: `d3.easeCubicInOut`. Kein Nachfedern, keine Trägheit.
 
 ### 7.3 Was sich nicht bewegt
 

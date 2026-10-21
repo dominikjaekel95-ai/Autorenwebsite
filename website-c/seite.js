@@ -29,7 +29,7 @@
      blickFuer(canvas, orte, bereich)  Mitte [lon, lat], bei der alle Orte im sichtbaren Teil des Globus stehen
      ueberblick(canvas, orte, k)    { mitte, k } für den Schluss eines Einspielers
      tafel(el, inhalt), tafelReservieren(el, inhalte), tafelPlatz(el, inhalte, platz)
-     lesezeit(tafelEl)              wie lange ein Halt im Ablauf dauert, damit man die Tafel lesen kann (TAKT, halt: 'lesen')
+     lesezeit(tafelEl, plus)        wie lange ein Halt im Ablauf dauert, damit man die Tafel lesen kann (TAKT, halt: 'lesen', grundhalt)
      steuerzeile(tafelEl)           die Steuerzeile eines Globus, direkt unter der Kugel über der Tafel (früher, später, Steuerwort)
      ortsleiste(el, eintraege)      Orte als Knöpfe in einer fließenden Zeile, durch Komma getrennt
      ablauf(opts)                   Einspieler und Bedienung eines Globus (siehe dort); TAKT: die Takte aus Abschnitt 7.2
@@ -472,17 +472,17 @@
         });
       });
     }
-    /* Der Kern meldet jedes Bild: in Bewegung setzt diese Leinwand die Namen sofort mit (im selben Bild wie die Kugel), in Ruhe
-       ein Bild später. Bis Runde 3 setzte der Kern in Bewegung eigene, schlichte Namen an andere Stellen; beim Halt und beim
-       Abflug sprangen sie dann an ihren Platz in den Namensblöcken (Runde 4) */
+    /* Der Kern meldet jedes Bild: diese Leinwand setzt die Namen sofort mit, im selben Bild wie die Kugel, in Ruhe wie in
+       Bewegung; was die Seite anstößt (neu()), kommt im nächsten Bild. Bis Runde 3 setzte der Kern in Bewegung eigene, schlichte
+       Namen an andere Stellen; beim Halt und beim Abflug sprangen sie dann an ihren Platz in den Namensblöcken (Runde 4) */
     let bild = 0;
     const anstossen = () => {
       if (bild) return;
-      bild = requestAnimationFrame(() => { bild = 0; if (g.bewegt && g.bewegt()) return; beschriften(); });
+      bild = requestAnimationFrame(() => { bild = 0; beschriften(); });
     };
-    const beiBild = info => {
-      if (info.bewegt) { if (bild) { cancelAnimationFrame(bild); bild = 0; } beschriften(); return; }
-      anstossen();
+    const beiBild = () => {
+      if (bild) { cancelAnimationFrame(bild); bild = 0; }
+      beschriften();
     };
     beiBild.neu = anstossen;
     window.addEventListener('resize', anstossen);
@@ -583,12 +583,18 @@
   }
   /* Im Ablauf (Einspieler, Abspielen) zeigt jede Tafel wieder alles, was sie in Ruhe zeigt (Runde 4; Dominik, 21. Oktober abends:
      „Die Beschreibungen der Orte sollen bleiben“). Runde 3 hatte dort nur die Kopfzeile gesetzt (imLauf, nurKopf); gemeint war
-     aber das Aufblitzen der feinen Karte, nicht die Tafel. Der Halt dauert dafür so lange, dass man sie lesen kann: 1,5 s und
-     1 s je 15 Zeichen der Tafel, mindestens 2,5 s */
-  const LESEN = { sockel: 1500, zeichenJeSekunde: 15, mindestens: 2500 };
-  function lesezeit(el) {
-    const n = el ? el.textContent.replace(/\s+/g, ' ').trim().length : 0;
-    return Math.round(Math.max(LESEN.mindestens, LESEN.sockel + 1000 * n / LESEN.zeichenJeSekunde));
+     aber das Aufblitzen der feinen Karte, nicht die Tafel. Der Halt dauert dafür so lange, dass man sie lesen kann, in allen
+     Abläufen nach derselben Formel (Runde 4, Nachtrag: „Versuch die mal alle aufeinander abzustimmen“; geeicht am Satoshi-Ablauf
+     aus Runde 3, einen Ticken schneller): 0,9 s für die Kopfzeile (Jahr oder Band und Ort) und 0,27 s je Wort darunter (Art und
+     Vermerk, Landschaft und Zeit, die Zeile zum Band, der Szenentext; die Koordinaten zählen nicht), mindestens 2,5 s, höchstens
+     8 s. plus: ein Grundhalt dazu (Ursprung 0,5 s). Bis Nachtrag: 1,5 s und 1 s je 15 Zeichen der ganzen Tafel */
+  const LESEN = { sockel: 900, jeWort: 270, mindestens: 2500, hoechstens: 8000 };
+  const wortzahl = text => String(text || '').trim().split(/\s+/).filter(Boolean).length;
+  const lesehalt = (n, plus) => Math.round(Math.max(LESEN.mindestens, Math.min(LESEN.hoechstens, LESEN.sockel + (plus || 0) + LESEN.jeWort * n)));
+  function lesezeit(el, plus) {
+    let n = 0;
+    if (el) el.querySelectorAll('.tafel-unter, .tafel-satz, .tafel-text').forEach(p => { n += wortzahl(p.textContent); });
+    return lesehalt(n, plus);
   }
   // Hält die Höhe der Tafel fest: so hoch wie ihr längster Inhalt bei der jetzigen Breite, damit darunter nichts springt
   function tafelHoeheVon(el, inhalte) {
@@ -694,26 +700,27 @@
   // ---------- Ablauf am Globus (6.4, 6.5, 7.2) ----------
   // Die Takte der Einspieler; zoom und halt als Zahl oder als Funktion (station, i)
   const europa = s => s.lon > -25 && s.lon < 45 && s.lat > 34;
-  const woerter = s => String(s.text || '').trim().split(/\s+/).filter(Boolean).length;
-  /* Satoshi: Einspieler und Abspielen zeigen an jeder Station den Szenentext (Dominik, 21. Oktober). Der Halt ist die Lesezeit:
-     1 s plus 0,3 s je Wort, mindestens 3 s, höchstens 9 s; die zehn Halte dauern zusammen 50 s (Runde 3, Dominik: „etwa eine
-     Minute insgesamt“; vorher 3 s plus 0,6 s je Wort, rund 118 s). Seit Runde 4 sind die Flüge langsamer, der Einspieler dauert
-     rund 75 s (docs/website-c.md, Runde 4: langsamer) */
-  const satoshiHalt = s => Math.max(3000, Math.min(9000, 1000 + 300 * woerter(s)));
+  /* Satoshi: Einspieler und Abspielen zeigen an jeder Station den Szenentext (Dominik, 21. Oktober). Der Halt ist die Lesezeit
+     des Szenentexts nach derselben Formel wie Leben und Ursprung (lesehalt): 0,9 s plus 0,27 s je Wort, 2,5 bis 8 s (Runde 4,
+     Nachtrag: „Mit der Animation von Satoshi bin ich Recht zufrieden … vielleicht sogar noch einen Ticken zu langsam“). Runde 3:
+     1 s plus 0,3 s je Wort, 3 bis 9 s, rund 60 s; davor 3 s plus 0,6 s je Wort, rund 118 s */
+  const satoshiHalt = s => lesehalt(wortzahl(s.text));
   const lebenZoom = s => europa(s) ? 3.6 : 2.4;
-  /* Runde 4 (Dominik, 21. Oktober abends: „es ist am besten die Animation zu verlangsamen“): jeder Flug läuft sanft an und aus
-     (im Kern sanft) und dauert nach der Entfernung 1,8 s (ein kurzer Sprung wie Dortmund–Freiburg) bis 2,4 s (ab 90°, etwa
-     Berlin–Kaohsiung mit 82° 2,35 s); der Rückweg eines Abstechers ohne Halt 1,2 bis 1,5 s. Leben und Ursprung halten, bis man die
-     ganze Tafel gelesen hat (halt: 'lesen', lesezeit()); Satoshi behält die Lesezeit nach Wörtern. Vorher flog Leben 1,0 s und hielt
-     0,8 s, Satoshi 0,9 s (Abspielen 1,0 s), Ursprung 1,6 s mit 1,4 s Halt. Leben: der Rückweg mit der Vergrößerung des
-     Abstechers, damit die Kugel nicht zwischen 3,6- und 2,4-fach hin und her zoomt */
-  const nachWeite = (kurz, lang) => grad => Math.round(kurz + (lang - kurz) * Math.min(1, grad / 90));
-  const FLUG = nachWeite(1800, 2400), RUECKWEG = nachWeite(1200, 1500);
+  /* Runde 4 (Dominik, 21. Oktober abends: „es ist am besten die Animation zu verlangsamen“, im Nachtrag: alle aufeinander
+     abstimmen, Satoshi als Maßstab): ein Rhythmus für alle Abläufe. Jeder Flug läuft sanft an und aus (im Kern sanft) und dauert
+     nach der Entfernung 0,9 s plus 0,7 s mal Entfernung durch 180°: Dortmund–Freiburg (4°) 0,92 s, Potsdam–Colombo (70°)
+     1,17 s, Berlin–Kaohsiung (82°) 1,22 s, Bariloche–Penang (144°) 1,46 s, höchstens 1,6 s. Der Rückweg eines Abstechers ohne
+     Halt ebenso. Halte zum Lesen (halt: 'lesen', lesezeit(); Satoshi nach Wörtern, satoshiHalt), Ursprung mit 0,5 s Grundhalt
+     dazu, weil Band, Ort, Zeit und Thema mehr Text sind. Runde 3: Leben flog 1,0 s und hielt 0,8 s, Satoshi 0,9 s (Abspielen
+     1,0 s), Ursprung 1,6 s mit 1,4 s Halt. Leben: der Rückweg mit der Vergrößerung des Abstechers, damit die Kugel nicht
+     zwischen 3,6- und 2,4-fach hin und her zoomt */
+  const nachWeite = (kurz, lang, bis) => grad => Math.round(kurz + (lang - kurz) * Math.min(1, grad / bis));
+  const FLUG = nachWeite(900, 1600, 180);
   const TAKT = {
-    leben: { flug: FLUG, halt: 'lesen', rueckweg: RUECKWEG, zoom: lebenZoom, rueckZoom: s => lebenZoom(s) },
-    satoshi: { flug: FLUG, halt: satoshiHalt, rueckweg: RUECKWEG, zoom: 1.2 },
-    satoshiAbspielen: { flug: FLUG, halt: satoshiHalt, rueckweg: RUECKWEG, zoom: lebenZoom },
-    ursprung: { flug: FLUG, halt: 'lesen', zoom: 3.3, schlussK: 3.3, schlussBereich: { lon: [32, 48], lat: [26, 40], schritt: .25 } },
+    leben: { flug: FLUG, halt: 'lesen', rueckweg: FLUG, zoom: lebenZoom, rueckZoom: s => lebenZoom(s) },
+    satoshi: { flug: FLUG, halt: satoshiHalt, rueckweg: FLUG, zoom: 1.2 },
+    satoshiAbspielen: { flug: FLUG, halt: satoshiHalt, rueckweg: FLUG, zoom: lebenZoom },
+    ursprung: { flug: FLUG, halt: 'lesen', grundhalt: 500, zoom: 3.3, schlussK: 3.3, schlussBereich: { lon: [32, 48], lat: [26, 40], schritt: .25 } },
     europa
   };
   const STEUERWORT = { laeuft: 'anhalten', weiter: 'abspielen', ende: 'noch einmal von vorn' };
@@ -731,7 +738,8 @@
        globus: g,                    // FSeite.globus(…); ohne Globus gehen Ortsleiste, Tafel und früher/später trotzdem
        stationen: [...] | () => [...],   // { name, lat, lon, neben?, text? } in der Reihenfolge des Wegs
        takt: FSeite.TAKT.leben,      // Takt des Einspielers (Felder wie g.chronik); schluss: { mitte, k } | null (der Globus bleibt);
-                                     // ohne schluss der Überblick über alle Orte bei schlussK (Vorgabe 1) im schlussBereich
+                                     // ohne schluss der Überblick über alle Orte bei schlussK (Vorgabe 1) im schlussBereich;
+                                     // halt: 'lesen' ist die Lesezeit der gesetzten Tafel (lesezeit), grundhalt ms dazu
        taktAbspielen: …,             // Takt, wenn der Besucher „abspielen“ wählt (Vorgabe: takt)
        schrittZoom: k | (s, i) => k, // Vergrößerung bei einem Schritt von Hand (Vorgabe: zoom des Takts)
        tafel: el,                    // die Tafel; bekommt die Steuerzeile in ihren Fuß (steuerzeile: false, wenn keine)
@@ -746,7 +754,8 @@
        wegBisStation: true,          // ein Schritt von Hand zeigt den Weg bis zu dieser Station; false: der ganze Weg bleibt
        aktiv: true                   // false: erst mit a.zeigen() (Ebenen der Startseite)
      });
-     a.einspielen()   Einspieler starten (wartet, bis der Globus zur Hälfte zu sehen ist, und mindestens 600 ms nach seinem ersten Bild)
+     a.einspielen()   Einspieler starten (wartet, bis der Globus zur Hälfte zu sehen ist, bis die Schriften geladen sind, höchstens
+                      2,5 s, und mindestens 600 ms nach seinem ersten Bild)
      a.abspielen(), a.anhalten(), a.vonVorn(), a.waehlen(i), a.waehlenName(name), a.frueher(), a.spaeter()
      a.zeigen()       die Ebene wird gezeigt: Weg und Tafel wie zuletzt, beim ersten Mal der Einspieler
      a.ruhen()        zurück in die Ruhe: ganzer Weg im Überblick, keine Station gewählt
@@ -826,8 +835,8 @@
       art = neuArt; zustand = neuArt; orteModus = modus; systemPause = false; gespielt = true;
       steuerZeigen();
       const t = Object.assign({}, neuArt === 'abspielen' && o.taktAbspielen ? o.taktAbspielen : takt);
-      // halt: 'lesen' hält, bis man die Tafel der Station gelesen hat (der Kern fragt, wenn sie schon gesetzt ist)
-      if (t.halt === 'lesen') t.halt = () => lesezeit(tafelEl);
+      // halt: 'lesen' hält, bis man die Tafel der Station gelesen hat (der Kern fragt, wenn sie schon gesetzt ist), grundhalt dazu
+      if (t.halt === 'lesen') { const plus = t.grundhalt || 0; t.halt = () => lesezeit(tafelEl, plus); }
       if (t.schluss === undefined) t.schluss = g.canvas ? ueberblick(g.canvas, st, t.schlussK || 1, t.schlussBereich) : undefined;
       const ende = st[endeBei()];
       t.ab = ab; t.orte = modus;
@@ -934,10 +943,16 @@
       wartetAufSicht = false;
       zustand = 'einspieler'; art = 'einspieler'; gespielt = true;
       steuerZeigen();
-      const warte = Math.max(0, 600 - (performance.now() - (g.erstesBild || 0)));
       clearTimeout(startUhr);
-      const nr = lauf;
-      startUhr = setTimeout(() => { if (aktiv && nr === lauf && zustand === 'einspieler') spielen('einspieler', 0, 'bis'); }, warte);
+      const nr = lauf, gilt = () => aktiv && nr === lauf && zustand === 'einspieler';
+      /* Erst wenn die Schriften da sind (höchstens 2,5 s): was die Seite dann neu setzt (Tafel, Überblick, Namen), kostet bis zu
+         0,1 s und fiele sonst in den ersten Flug (Runde 4) */
+      const los = () => {
+        if (!gilt()) return;
+        const warte = Math.max(0, 600 - (performance.now() - (g.erstesBild || 0)));
+        startUhr = setTimeout(() => { if (gilt()) spielen('einspieler', 0, 'bis'); }, warte);
+      };
+      (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, warten(2500)]) : Promise.resolve()).then(los, los);
     }
     function einspielen() {
       if (gespielt || !aktiv) return;

@@ -19,30 +19,23 @@ if (/^https?:$/.test(location.protocol)) {
    daneben die Tafel (höchstens 30 rem), die am Desktop während der Bände haftet; der Ort des Bands, den man liest, steht
    halbfett. Danach die Bücher zum Stoff, ein Titel zeigt seine Karteikarte als Zeile darunter. Auf Tablet hochkant und Telefon
    steht die Tafel über den Bänden und haftet nicht. Der Wortlaut aller Texte ist der von A.
-   Nur Anordnung; was hier über die Anordnung hinausgeht (Briefkopf, Bandtitel, Karteikarte als Zeile, Rückweg unter früher
-   und später), gehört nach stil.css. */
+   Nur Anordnung; Briefkopf, Bandtitel und Karteikarte als Zeile stehen in stil.css. Den Rückweg unter früher und später gibt es
+   nur hier, seine Anordnung steht deshalb in dieser Seite. */
 
-/* Kopf: Name und Rolle in einer Zeile im Grad klein (wie der Briefkopf von A) */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
 
 .titelei .unterzeile { margin-top: calc(var(--z) * -.25); }
 .titelei .einleitung { margin-top: calc(var(--z) * .75); }
 /* Die Zeile der Orte (wie in A unter der Einleitung): jedes Glied ein Wort, das die Karte führt */
 .titelei .ortszeile { margin-top: calc(var(--z) * .75); }
+/* Das Wort von A unter der Zeile der Orte („Ort für Ort, von Göbekli Tepe an“, danach „Noch einmal …“): es führt zum ersten Ort */
+.titelei .nochmal { margin-top: calc(var(--z) * .25); }
 .blatt > .tafelplatz { margin-top: calc(var(--z) * 1.5); }
 .tafelplatz .kartentafel { max-width: 30rem; }
-/* Bandtitel: die Bandziffer in der Titelzeile, „Arbeitstitel“ darunter im Grad klein */
-.band h2 .band-ziffer { display: inline-block; min-width: 1.75em; }
-.band h2 .arbeitstitel { display: block; font-size: var(--klein); line-height: var(--zk); font-weight: 400; }
 .band .ortzeile + .legende { margin-top: 0; }
 .band .prosa { margin-top: calc(var(--z) * .5); }
 .stoff-teil { margin-top: calc(var(--z) * 3); }
-/* Die Karteikarte eines Buchs als Zeile unter dem Absatz: die Felder von A in ihrer Folge, ohne Zeichen dazwischen */
-.kartenzeile { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1em; font-size: var(--klein); line-height: var(--zk); margin-top: calc(var(--z) * .5); }
-/* FSeite.buch.kartenzeile nennt ein Feld „unter“ wie die Zeile unter dem Brett in stil.css: hier ohne deren Maße */
-.kartenzeile .unter { position: static; padding-top: 0; min-height: 0; }
+/* Die Karteikarte eines Buchs als Zeile unter dem Absatz (stil.css) */
+.kartenzeile { margin-top: calc(var(--z) * .5); }
 /* Der Rückweg „zurück“ (wie in A, nur wo die Tafel nicht haftet) steht unter früher und später, rechtsbündig: die Legende
    behält ihre Breite */
 .tafellegende .steuer { display: grid; grid-template-columns: auto auto; column-gap: 1em; }
@@ -71,10 +64,10 @@ if (/^https?:$/.test(location.protocol)) {
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html">Satoshi</a></li>
-      <li><a href="ursprung.html" aria-current="page">Ursprung</a></li>
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html" aria-current="page"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -89,6 +82,7 @@ if (/^https?:$/.test(location.protocol)) {
       <p class="klein unterzeile">Eine Trilogie über die Anfänge der Zivilisation, in&nbsp;Arbeit.</p>
       <p class="einleitung">Drei Romane über drei Geburten: der organisierten Religion am Göbekli Tepe, der Literatur in Uruk und der Heiligen Schrift in Jerusalem. In Taiwan begann Dominik Jäkels Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Trilogie.</p>
       <p class="klein ortszeile"><span class="nw"><button type="button" class="wort" data-ort="0">Göbekli Tepe um&nbsp;8000&nbsp;v.&nbsp;Chr.</button> –</span> <span class="nw"><button type="button" class="wort" data-ort="1">Uruk um&nbsp;2700&nbsp;v.&nbsp;Chr.</button> –</span> <span class="nw"><button type="button" class="wort" data-ort="2">Tyros</button> und</span> <span class="nw"><button type="button" class="wort" data-ort="3">Jerusalem um&nbsp;940&nbsp;v.&nbsp;Chr.</button></span></p>
+      <p class="klein nochmal" id="nochmal" hidden><button type="button" class="wort" data-nochmal>Noch einmal von Göbekli Tepe an</button></p>
     </div>
 
     <div class="tafelfeld tafelplatz">
@@ -339,11 +333,26 @@ if (/^https?:$/.test(location.protocol)) {
     buchWoerter.forEach(w => { const an = w === b && !!x; w.classList.toggle('ist-aktiv', an); w.setAttribute('aria-expanded', String(an)); });
   }
 
+  /* Das Wort von A unter der Zeile der Orte. A klappt damit die Orte nacheinander auf; B kennt keinen selbsttätigen Lauf, das Wort
+     führt zum ersten Ort, von dort geht es mit später weiter (wie „Noch einmal von Göbekli Tepe an“ auf der Startseite). Vorher
+     „Ort für Ort, von …“, danach „Noch einmal von …“ wie in A. Ohne Karte steht es nicht da */
+  const nochmalEl = $('#nochmal'), nochmalWort = nochmalEl && $('button', nochmalEl);
+  let nochmalGewaehlt = false;
+  function nochmalSetzen() {
+    if (!nochmalEl || !nochmalWort) return;
+    nochmalEl.hidden = !g;
+    if (nochmalEl.hidden) return;
+    const erster = ORTE[0].name;
+    nochmalWort.textContent = nochmalGewaehlt ? 'Noch einmal von ' + erster + ' an' : 'Ort für Ort, von ' + erster + ' an';
+  }
+  nochmalSetzen();
+
   // ---------- Bedienung ----------
   document.addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
-    if (b.hasAttribute('data-zurueck')) zurueck();
+    if (b.hasAttribute('data-nochmal')) { gewaehltUm = performance.now(); clearTimeout(uhr); zeigen(0); nochmalGewaehlt = true; nochmalSetzen(); insBild(b); }
+    else if (b.hasAttribute('data-zurueck')) zurueck();
     else if (legende.contains(b)) {
       if (b.classList.contains('ist-aus')) return;
       gewaehltUm = performance.now(); clearTimeout(uhr);

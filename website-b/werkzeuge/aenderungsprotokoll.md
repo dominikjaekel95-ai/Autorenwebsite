@@ -114,3 +114,24 @@ Dominiks Auftrag „Neue Gestalt, gleicher Inhalt“ geht den Regeln vor: Jedes 
 7. **Bücher wie in A**: `ORIGINAL` und `NAMEN_DE` entfallen, Titel und Namen stehen wie in den Daten. `buch.karte`, `buch.zeile`, `werkKarte` und die Signaturen sind die von A; `buch.kartenzeile` setzt die Karte von A als Buchzeile ohne neue Satzzeichen. `titelKurz` schneidet wie in A nicht mehr bei „. “. `buch.manuskript()` gibt „*Satoshi*, Roman“ und die Karte des Werks.
 8. **`daten/stationen.js` entfällt** (Sätze und Zeiträume der Legende und die Szenentexte waren Wortlaut, den A nicht hat). Die Szenen kommen aus `daten/inhalt.js`. `werkzeuge/artefakt.py` kennt nur noch `fluesse.js` als eigene Datei.
 9. **Navigation**: Erzählungen und *Untertext* stehen immer da, wie in A (`navigation()` hebt `hidden` auf).
+
+## 21. Oktober 2026, Textabgleich mit A: Seiten (Einträge aus den Berichten der Seitenschritte)
+
+Was die Seitenschritte beim Zurücksetzen auf den Wortlaut von A gegen diese Regeln gebaut haben.
+
+1. **Kopf auf allen Seiten wie in A** (gegen 9 und 12.1): Name und „Schriftsteller und Reisender“, die Navigation mit allen sieben Einträgen, auch auf der Startseite. Dort steht die Kartenwahl unter der Navigation, die Oberkante des Rahmens auf der Höhe des ersten Satzes.
+2. **Fuß wie in A** (gegen 12.13): Überschrift „Kontakt“, Anschrift im Impressum-Satz, das Kolophon von A mit der Schrift von B.
+3. **Regalbild der Startseite** in der Form von B (gegen 19): eigene Werke stehend, der Nachttisch liegend in zwei Stapeln, die Karteikarte von A als Buchzeile mit „zurücklegen“.
+4. **Bibliothek**: Zeitband wieder in der Bibliothek, mit Leseart, damit das Vorwort von A stimmt (gegen 12.9); eigene Werke und Schuber (gegen 12.7); Karteikarte als Zeile mit Signatur und „zurücklegen“ (gegen 12.8); Schilder von A unter dem Brett statt der Jahresachse (gegen 12.7). Die Bände des Schubers stehen geschlossen nicht im Regal, ihr Platz bleibt am Ende der Gruppe frei, offen rücken die übrigen Werke nach rechts, der Nachttisch rückt nie.
+5. **Koordinaten** auf der Tafel, in der Vita und auf der Leseseite (gegen 10). **Länderregister** per Skript mit dem noscript-Satz von A (gegen 15).
+
+## 21. Oktober 2026, Textabgleich mit A: Reste und Brüche
+
+1. **Szenenwechsel** (gegen 13, „eine Leerzeile“): Die Zeile trägt die drei Sternchen von A („*\2003*\2003*“ als `content` von `.prosa hr::after`), linksbündig in Tinte.
+2. **Keine Zeichenerklärung auf der Karte Wohnorte** (gegen 12.5): A hat keine. „Wohnort“ und „längerer Aufenthalt“ stehen wie in A im Kopf der Tafel.
+3. **Ohne Kern** (d3, topojson oder `globus/kern.js` fehlen) baut `kartentafel` Kartenwahl, Legende mit früher und später und den Text der Karte wieder ab. Im Rahmen steht nur der Satz von A. Vorher standen auf der Startseite tote Wörter „früher später“.
+4. **Hinweis „Zwei Finger zum Drehen und Zoomen“** wie in A (`globus/kern.js`): beim senkrechten Wischen mit einem Finger auf der Kugel, einmal je Wischen, wie jeder Hinweis höchstens einmal je Besuch. Der Hinweis steht auch in der Außenlage unten rechts im Rahmen, auf Papier, damit unter der Tafel nichts springt.
+5. **Satoshi und Ursprung: das Wort von A über den Szenen und unter der Zeile der Orte**: „Szene für Szene, von Buenos Aires an“ und „Ort für Ort, von Göbekli Tepe an“, danach „Noch einmal von … an“. B hat keinen selbsttätigen Lauf. Das Wort führt zur ersten Szene oder zum ersten Ort, von dort geht es mit später weiter, wie „Noch einmal von Dortmund an“ auf der Startseite. „anhalten“ und „weiter mit …“ gehören zum Lauf von A und entfallen.
+6. **Rückenschrift mit dem Rechenweg und den Grenzen von A** (gegen 5, 9 bis 13 px): Bibliothek wie `aufschrift` in `website/bibliothek.html` (volle Zeile ab 7,5 px, zwei Zeilen ab 7 px, dann bis 6,5 px, dann kürzer; Länge des Rückens ohne 24 px), Startseite wie das Regalbild von A (ein Grad je Bild aus dem Maßstab, eigene Werke 8 bis 11 px, liegende Bücher 7,5 bis 10 px). Gemessen wird in der Baskervville, die Rücken haben die Maße von B ohne Streuung. Dadurch bleiben einzelne Rücken anders als in A (Bibliothek 1440 px: 7 von 556, 390 px: 23 von 556; Startseite 390 px: einer).
+7. **Navigation**: *Satoshi*, *Ursprung* und *Untertext* kursiv wie in A und nach 8 und 9 (Punkt 14 des Eintrags „Korrektur“ gilt nicht mehr).
+8. **Seitenstile**: Briefkopf (alle Seiten), Szenenregister, Bandtitel, Karteikarte als Zeile, Stapel, Regalbild, Farben des Zeitbands und die haftende Zeile unter „Was noch wartet“ stehen jetzt in `stil.css`. Die berechneten Stile aller Elemente sind vorher und nachher gleich (34 Seitenzustände, beide Breiten). Den Rückweg „zurück“ gibt es nur auf *Ursprung*, seine Anordnung bleibt in der Seite.

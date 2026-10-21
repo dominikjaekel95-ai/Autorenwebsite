@@ -18,11 +18,7 @@ if (/^https?:$/.test(location.protocol)) {
 /* Untertext, das Journal: unter dem Titel die Zeile von A, darunter Eintrag unter Eintrag aus daten/texte.js (art: 'untertext'),
    der neueste zuerst, das Datum als Überschrift, darunter der Titel als Verweis zur Leseseite. Ohne Eintrag steht an der Stelle
    der Satz von A im Grad Text. Nur Anordnung.
-   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (gehört wie auf den anderen Seiten nach stil.css). */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
-.texte-leer { margin-top: calc(var(--z) * 1.5); }
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (Regeln in stil.css). */
 </style>
 </head>
 <body>
@@ -32,10 +28,10 @@ if (/^https?:$/.test(location.protocol)) {
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html">Satoshi</a></li>
-      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li><a href="untertext.html" aria-current="page">Untertext</a></li>
+      <li><a href="untertext.html" aria-current="page"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>

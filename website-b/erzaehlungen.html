@@ -18,11 +18,8 @@ if (/^https?:$/.test(location.protocol)) {
 /* Erzählungen: unter dem Titel die Zeile von A, darunter die Liste aus daten/texte.js (art: 'erzaehlung'), die neueste zuerst.
    Je Eintrag Titel kursiv als Verweis zur Leseseite, Untertitel, darunter das Datum im Grad klein. Ein Eintrag hat zwei Zeilen
    und zählt deshalb als Gruppe (0,75 z). Ohne Text steht an der Stelle der Liste der Satz von A im Grad Text. Nur Anordnung.
-   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (gehört wie auf den anderen Seiten nach stil.css). */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
-.texte, .texte-leer { margin-top: calc(var(--z) * 1.5); }
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (Regeln in stil.css). */
+.texte { margin-top: calc(var(--z) * 1.5); }
 .texte > li + li { margin-top: calc(var(--z) * .75); }
 </style>
 </head>
@@ -33,10 +30,10 @@ if (/^https?:$/.test(location.protocol)) {
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html">Satoshi</a></li>
-      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html" aria-current="page">Erzählungen</a></li>
-      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>

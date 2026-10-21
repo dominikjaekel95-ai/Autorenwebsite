@@ -18,11 +18,8 @@ if (/^https?:$/.test(location.protocol)) {
 /* Datenschutz: eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2. Wortlaut wie in Version A.
    B lädt Schrift und Programmbibliotheken vom Server des Hosters, nicht von Google Fonts und jsDelivr: in den beiden Abschnitten
    dazu ist nur geändert, was für B falsch wäre (Anbieter, Schriftnamen, Übermittlung ins Ausland). Nur Anordnung.
-   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (gehört wie auf den anderen Seiten nach stil.css). Die Rechte als Liste mit dem Einzug der Absätze (1 em), ohne Zeichen davor, 0,25 z zwischen den Einträgen
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (Regeln in stil.css). Die Rechte als Liste mit dem Einzug der Absätze (1 em), ohne Zeichen davor, 0,25 z zwischen den Einträgen
    und vor und nach der Liste. */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
 .recht .vorab { margin-top: calc(var(--z) * .75); }
 .recht .rechte { margin-block: calc(var(--z) * .25); }
 .recht .rechte > li { padding-left: 1em; }
@@ -36,10 +33,10 @@ if (/^https?:$/.test(location.protocol)) {
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html">Satoshi</a></li>
-      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>

@@ -21,10 +21,8 @@ if (/^https?:$/.test(location.protocol)) {
    Regals (haftet wie ein Kolumnentitel), die Fächer, das Kinderzimmer und was noch wartet (als Register in Textform).
    Der Wortlaut aller Texte ist der von A (Bibliothek und Zeitband der Startseite). Regal und Zeitband sind Zeichnungen aus den Daten.
    Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“.
-   Nur Anordnung; was Farbe setzt (Zeitband, Regal der eigenen Werke, haftende Zeile unter dem Register), gehört nach stil.css. */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
+   Nur Anordnung; was Farbe, Schrift oder Grad setzt (Zeitband, Stapel, Karteikarte als Zeile, haftende Zeile unter dem Register),
+   steht in stil.css. */
 
 /* ---------- Vorspann und Zeichenerklärung ---------- */
 .regal-zeichen { margin-top: calc(var(--z) * .75); }
@@ -44,13 +42,9 @@ if (/^https?:$/.test(location.protocol)) {
 .fach > h2 { margin-top: 0; }
 .brett + .brett { margin-top: calc(var(--z) * .75); }
 .gruppe-platz, .stapelplatz, .schuber-platz { display: flex; align-items: flex-end; flex: none; column-gap: 1px; }
-.stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; row-gap: 1px; flex: none; }
 /* Der Schuber der Trilogie: die drei Bände stehen neben ihm, wenn er offen ist; ihr Platz bleibt am Ende der Gruppe frei (wie in A),
    damit der Nachttisch nicht rückt */
 .schuber-platz.zu .band { display: none; }
-/* Die Karteikarte als Zeile unter dem Brett: die Felder von A in ihrer Folge, ohne Zeichen dazwischen, dazu „zurücklegen“ */
-.unter .zeile.als-karte { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1em; }
-.unter .schild { font-variant-numeric: inherit; white-space: normal; }
 
 /* ---------- Was ich gelesen habe: Vorwort und Zeitband ---------- */
 .lesen { margin-top: calc(var(--z) * 3); }
@@ -60,14 +54,6 @@ if (/^https?:$/.test(location.protocol)) {
 .zeitband { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
 .zeitband svg { display: block; overflow: visible; }
 .zeitband svg:focus-visible { outline-offset: 2px; }
-.zeitband .strich { fill: var(--tinte-raster); }
-.zeitband .lieb { fill: var(--tinte); }
-.zeitband .wieder, .zeitband .marke { stroke: var(--tinte); stroke-width: 1; }
-.zeitband .werk, .zeitband .quer { fill: var(--papier); stroke: var(--tinte); stroke-width: .75; }
-.zeitband .warte { fill: var(--papier); stroke: var(--tinte-raster); stroke-width: 1; }
-.zeitband .an { fill: var(--tinte); }
-.zeitband .achse { stroke: var(--tinte); stroke-width: 1; fill: none; }
-.zeitband text { fill: var(--tinte); font-family: var(--schrift); font-size: var(--klein); font-variant-numeric: lining-nums tabular-nums; }
 .zeitband .reihenname { position: sticky; left: 0; width: max-content; margin-top: calc(var(--z) * .5); margin-bottom: calc(var(--z) * .25); }
 .zeitband-teil .buchzeile { margin-top: calc(var(--z) * .5); }
 
@@ -86,8 +72,6 @@ if (/^https?:$/.test(location.protocol)) {
   .leseliste ul + ul { margin-top: 0; }
 }
 .wartet .unter { margin-top: calc(var(--z) * .25); }
-.wartet .unter.mit-zeile { position: sticky; bottom: 0; z-index: 4; background: var(--papier); padding-bottom: calc(var(--z) * .25); border-top: 1px solid var(--papier); }
-.wartet .unter.mit-zeile.haftet { border-top-color: var(--tinte); }
 
 .zur-startseite { margin-top: calc(var(--z) * 1.5); }
 .ohne-regal { margin-top: calc(var(--z) * 3); }
@@ -102,10 +86,10 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html">Satoshi</a></li>
-      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html" aria-current="page">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -276,28 +260,36 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
   const mm = x => x.art === 'werk' && x.mm ? x.mm : F.buch.masse(x.b);
 
   // ---------- Rückenschrift: Baskervville aufrecht, Nachname und Kurztitel mit einem Geviert Abstand ----------
-  // Wie in A: erst der volle Kurztitel in einer Zeile, dann in zwei Zeilen, dann kleiner (bis 9 px), dann kürzer (ohne „or …“,
-  // „and Other …“ und den Artikel), dann der Titel allein, zuletzt der Nachname; nie mit Auslassungspunkten
+  // Rechenweg und Grenzen von A (Textregel: der Rücken zeigt, was er in A zeigt): erst der volle Kurztitel in einer Zeile (ab 7,5 px),
+  // dann in zwei Zeilen (ab 7 px), dann die volle Zeile bis 6,5 px, dann kürzer (ohne „or …“, „and Other …“ und den Artikel), dann der
+  // Titel allein, zuletzt der Nachname; nie mit Auslassungspunkten. Der Grad folgt aus Länge und Dicke des Rückens, höchstens 10 px
+  // (zwei Zeilen 9,5 px). Abweichung von Abschnitt 5 (9 bis 13 px), damit kein Rücken leer bleibt, auf dem A schreibt
   const kuerzer = t => t.replace(/,? (or|oder),? .+$/i, '').replace(/,? (and|und|&) (other|andere) .+$/i, '').replace(/^(The|A|An|Der|Die|Das|Ein|Eine) (?=\S)/, '').trim();
   const zeileBreite = (n, t, fs) => (n ? breite(n, fs, 500) : 0) + (n && t ? fs : 0) + (t ? breite(t, fs, 500) : 0);
-  const GRADE = [10, 9.5, 9];
+  const SICHER = .94, MIN = 6.5;
   function aufschrift(nn, voll, dicke, platz) {
-    if (platz < 20) return null;
+    // Quer zum Rücken wie in A: eine Zeile braucht 1,12 Grad und 3 px, zwei Zeilen 2,3 Grad und 4 px
+    const f1Max = Math.min(10, (dicke - 3) / 1.12);
+    if (f1Max < MIN || platz < 20) return null;
     const kurz = kuerzer(voll);
-    // Platz quer zum Rücken wie in A: eine Zeile braucht 1,12 Grad und 3 px, zwei Zeilen 2,1 Grad und 2 px
-    const passt1 = (n, t, fs) => dicke >= fs * 1.12 + 3 && zeileBreite(n, t, fs) <= platz;
-    const passt2 = (zs, fs) => dicke >= 2.1 * fs + 2 && zs.every(([n, t]) => zeileBreite(n, t, fs) <= platz);
-    const zwei = [];
-    if (nn && voll) zwei.push([[nn, ''], ['', voll]]);
-    const w = voll.split(' ');
-    for (let i = 1; i < w.length; i++) zwei.push([[nn, w.slice(0, i).join(' ')], ['', w.slice(i).join(' ')]]);
-    for (const fs of GRADE) {
-      if (passt1(nn, voll, fs)) return { zeilen: [[nn, voll]], fs };
-      for (const zs of zwei) if (passt2(zs, fs)) return { zeilen: zs, fs };
+    const fuer = (zs, fmax) => Math.min(fmax, platz * SICHER * 100 / Math.max(1, ...zs.map(([n, t]) => zeileBreite(n, t, 100))));
+    const grad = f => Math.floor(f * 100) / 100;
+    const voll1 = fuer([[nn, voll]], f1Max);
+    if (voll1 >= 7.5) return { zeilen: [[nn, voll]], fs: grad(voll1) };
+    const f2Max = Math.min(9.5, (dicke - 4) / 2.3);
+    let best2 = 0, zeilen2 = null;
+    if (f2Max >= MIN) {
+      const pruefen = zs => { const f = fuer(zs, f2Max); if (f > best2) { best2 = f; zeilen2 = zs; } };
+      if (nn) pruefen([[nn, ''], ['', voll]]);
+      const w = voll.split(' ');
+      for (let i = 1; i < w.length; i++) pruefen([[nn, w.slice(0, i).join(' ')], ['', w.slice(i).join(' ')]]);
     }
+    if (best2 >= Math.max(voll1, 7)) return { zeilen: zeilen2, fs: grad(best2) };
+    if (voll1 >= MIN) return { zeilen: [[nn, voll]], fs: grad(voll1) };
     for (const [n, t] of [[nn, kurz], ['', voll], ['', kurz], [nn, '']]) {
       if (!n && !t) continue;
-      for (const fs of GRADE) if (passt1(n, t, fs)) return { zeilen: [[n, t]], fs };
+      const f = fuer([[n, t]], f1Max);
+      if (f >= MIN) return { zeilen: [[n, t]], fs: grad(f) };
     }
     return null;
   }
@@ -321,7 +313,8 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
     if (!eigen && b.w && !liegt) s += `<line class="wieder" x1="0" x2="${w}" y1="-2.5" y2="-2.5" stroke-width="1"/>`;
     const fuss = liebste ? 14 : 8;
     const lang = liegt ? w : h, dick = liegt ? h : w;
-    const a = eigen ? (x.manuskript ? { zeilen: [['', x.aufschrift]], fs: 10 } : aufschrift('', x.aufschrift, dick, lang - 16)) : aufschrift(b.nn || '', F.buch.titelKurz(b.t), dick, lang - 8 - fuss);
+    // Die Länge für die Schrift wie in A: der Rücken ohne 24 px (Kopf und Fuß)
+    const a = eigen ? (x.manuskript ? { zeilen: [['', x.aufschrift]], fs: 10 } : aufschrift('', x.aufschrift, dick, lang - 16)) : aufschrift(b.nn || '', F.buch.titelKurz(b.t), dick, lang - 24);
     if (a) {
       const halb = versalhoehe(a.fs) / 2, lh = a.fs * 1.05;
       const attr = `font-size="${a.fs}" font-weight="500" text-anchor="middle"`;

@@ -18,10 +18,7 @@ if (/^https?:$/.test(location.protocol)) {
 /* Startseite: ein Blatt, gespiegelt wie die linke Seite eines Atlas. Am Desktop die Kartentafel am Außensteg, die Satzspalte
    mit erstem Satz, Kurzvita, „Was ich schreibe“ (mit dem Regalbild) und „Was ich gelesen habe“ am Bund. Auf Tablet und Telefon
    der Text zuerst. Der Kopf wie auf den Unterseiten (wie in A: Name, „Schriftsteller und Reisender“ und die Navigation), gespiegelt:
-   der Briefkopf über der Satzspalte, die Navigation über der Kartentafel. Nur Anordnung. */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
+   der Briefkopf über der Satzspalte, die Navigation über der Kartentafel. Nur Anordnung; das Regalbild steht in stil.css. */
 .start .kurzvita { margin-top: var(--z); }
 .inhaltsverzeichnis { margin-top: calc(var(--z) * 1.5); }
 .inhaltsverzeichnis > section:first-child > h2 { margin-top: 0; }
@@ -32,16 +29,6 @@ if (/^https?:$/.test(location.protocol)) {
   .kopf + .start { padding-top: calc(var(--z) * 2.75); }
   .start .zw-ol { margin-top: calc(var(--z) * -2.25); }
 }
-/* Das Regalbild (Abschnitt 12.7, Strichzeichnung): die eigenen Werke stehen, daneben liegen die Bücher vom Nachttisch in zwei
-   Stapeln, bündig, das größte zuunterst. In der Zeile unter dem Brett die Bildlegende oder an ihrer Stelle die Karteikarte als
-   Buchzeile (12.8); die Zeile hält Platz für die längste Karte, damit nichts springt. Die beiden Regeln für .stapel und .als-karte
-   stehen gleich in bibliothek.html und gehören nach stil.css. */
-.regalbild { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: var(--z); }
-.regalbild > .flaeche { grid-row: 1; }
-.regalbild > figcaption, .regalbild > .buchzeile { grid-row: 2; grid-column: 1; }
-.regalbild.mit-karte > figcaption { visibility: hidden; }
-.regalbild .stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; row-gap: 1px; flex: none; }
-.regalbild .als-karte { display: flex; flex-wrap: wrap; align-items: baseline; align-content: flex-start; column-gap: 1em; }
 </style>
 </head>
 <body>
@@ -51,10 +38,10 @@ if (/^https?:$/.test(location.protocol)) {
   <p class="briefkopf"><a class="name" href="index.html" aria-current="page">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html">Satoshi</a></li>
-      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -189,23 +176,26 @@ if (/^https?:$/.test(location.protocol)) {
   var breite = function (t, fs) { mess.font = '500 ' + fs + 'px ' + schrift; return mess.measureText(t).width; };
   var VERSAL = {};
   var versalhoehe = function (fs) { if (!VERSAL[fs]) { mess.font = '500 ' + fs + 'px ' + schrift; VERSAL[fs] = mess.measureText('H').actualBoundingBoxAscent || fs * .66; } return VERSAL[fs]; };
-  var GRADE = [10, 9.5, 9];
-  // Rückenschrift: erst alle Teile in einer Zeile, sonst nur der erste (der Name), sonst nichts; nie unter 9 px
+  /* Rückenschrift mit dem Rechenweg von A (Textregel: der Rücken zeigt, was er in A zeigt): ein Grad je Bild aus dem Maßstab m,
+     eigene Werke m × 12,5 (8 bis 11 px) und immer mit ihrem Namen, liegende Bücher m × 11,5 (7,5 bis 10 px) und nur, wo der Rücken
+     4 px dicker ist als der Grad; dort erst Name und Titel, sonst der Name, sonst nichts, was in die Länge ohne 7 px je Seite passt.
+     Abweichung von Abschnitt 5 (9 bis 13 px) */
+  var grad = { eigen: 10, liegt: 10 };
   function aufschrift(teile, dick, platz) {
+    var fs = grad.liegt;
+    if (dick < fs + 4) return null;
     var versuche = [teile, teile.slice(0, 1)];
     for (var v = 0; v < versuche.length; v++) {
-      for (var g = 0; g < GRADE.length; g++) {
-        var fs = GRADE[g], t = versuche[v];
-        var w = t.reduce(function (a, x) { return a + breite(x, fs); }, 0) + (t.length - 1) * fs;
-        if (dick >= fs * 1.12 + 3 && w <= platz) return { teile: t, fs: fs };
-      }
+      var t = versuche[v];
+      var w = t.reduce(function (a, x) { return a + breite(x, fs); }, 0) + (t.length - 1) * fs;
+      if (w <= platz) return { teile: t, fs: fs };
     }
     return null;
   }
   function zeichnung(x, w, h, liegt, kontur) {
     var o = kontur / 2;
     var s = '<rect class="koerper" x="' + o + '" y="' + o + '" width="' + (w - kontur) + '" height="' + (h - kontur) + '" stroke-width="' + kontur + '"/>';
-    var a = liegt ? aufschrift([x.b.nn || x.b.autor, F.buch.titelKurz(x.b.t)].filter(Boolean), h, w - 16) : aufschrift([x.aufschrift], w, h - 16);
+    var a = liegt ? aufschrift([x.b.nn || x.b.autor, F.buch.titelKurz(x.b.t)].filter(Boolean), h, w - 14) : { teile: [x.aufschrift], fs: grad.eigen };
     if (a) {
       var y = (versalhoehe(a.fs) / 2).toFixed(1);
       var spans = a.teile.map(function (t, i) { return '<tspan' + (i ? ' dx="' + a.fs + '"' : ' x="0" y="' + y + '"') + '>' + esc(t) + '</tspan>'; }).join('');
@@ -247,6 +237,8 @@ if (/^https?:$/.test(location.protocol)) {
     // Platz für die Lücken von 1 px zwischen den Stücken und für das Runden
     var m = Math.min(S, (W - EIGEN.length - 2 * stapel.length - 8) / mm);
     var px = function (v) { return Math.max(3, Math.round(v * m)); };
+    var rund = function (v) { return Math.round(v * 10) / 10; };
+    grad = { eigen: rund(Math.max(8, Math.min(11, m * 12.5))), liegt: rund(Math.max(7.5, Math.min(10, m * 11.5))) };
     var html = '', n = 0, hoehe = 0;
     EIGEN.forEach(function (e) { html += knopf(STUECKE[n], n, px(e.d), px(e.h), false, kontur); hoehe = Math.max(hoehe, px(e.h)); n++; });
     stapel.forEach(function (st, k) {

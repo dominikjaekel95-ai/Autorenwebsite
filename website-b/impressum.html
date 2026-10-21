@@ -17,10 +17,7 @@ if (/^https?:$/.test(location.protocol)) {
 <style>
 /* Impressum: eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2, Wortlaut wie in A.
    Das Kolophon steht wie in A im Fuß. Nur Anordnung.
-   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (gehört wie auf den anderen Seiten nach stil.css). */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
+   Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (Regeln in stil.css). */
 .recht .schluss { margin-top: calc(var(--z) * 2); }
 </style>
 </head>
@@ -31,10 +28,10 @@ if (/^https?:$/.test(location.protocol)) {
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html">Satoshi</a></li>
-      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>

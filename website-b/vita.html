@@ -20,9 +20,6 @@ if (/^https?:$/.test(location.protocol)) {
    Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“.
    Die Jahreszahl hängt im Tafelfeld selbst (es hat keinen eigenen Bundsteg): eine Spalte so breit wie die breiteste Jahreszahl,
    rechtsbündig, 0,5 em vor der Kante des Eintrags. Unter dem Ort die Koordinaten im Grad klein. */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
 .vita .einstieg { margin-bottom: var(--z); hyphens: manual; -webkit-hyphens: manual; }
 .vita .einstieg span { display: block; }
 .vita > .tafelfeld { margin-top: calc(var(--z) * 2); }
@@ -50,10 +47,10 @@ if (/^https?:$/.test(location.protocol)) {
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html">Satoshi</a></li>
-      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html" aria-current="page">Vita</a></li>

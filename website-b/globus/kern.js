@@ -456,8 +456,19 @@
       const r = canvas.getBoundingClientRect();
       return { x: (t[0].clientX + t[1].clientX) / 2 - r.left, y: (t[0].clientY + t[1].clientY) / 2 - r.top, abstand: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) };
     };
-    canvas.addEventListener('touchstart', e => { if (e.touches.length === 2) { finger = fingerLage(e.touches); eingriff(); } }, { passive: true });
+    // Ein Finger senkrecht scrollt die Seite: dann der Hinweis von A (einmal je Wischen)
+    let wisch = null;
+    canvas.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) { finger = fingerLage(e.touches); wisch = null; eingriff(); }
+      else if (e.touches.length === 1) wisch = { x: e.touches[0].clientX, y: e.touches[0].clientY, gezeigt: false };
+    }, { passive: true });
     canvas.addEventListener('touchmove', e => {
+      if (e.touches.length === 1 && !finger) {
+        if (!wisch || wisch.gezeigt || (zeiger && zeiger.an)) return;
+        const dx = Math.abs(e.touches[0].clientX - wisch.x), dy = Math.abs(e.touches[0].clientY - wisch.y);
+        if (dy > 8 && dy > dx) { wisch.gezeigt = true; hinweisZeigen('Zwei Finger zum Drehen und Zoomen'); }
+        return;
+      }
       if (e.touches.length !== 2 || !finger) return;
       e.preventDefault();
       const jetzt = fingerLage(e.touches);

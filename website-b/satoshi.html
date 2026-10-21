@@ -19,34 +19,24 @@ if (/^https?:$/.test(location.protocol)) {
    (höchstens 30 rem), die am Desktop während der Szenen haftet. Darunter das Buch als Doppelseite: links Klappentext, „Gebaut wie
    ein Protokoll“, „Die Frage hinter dem Roman“ und „Wie er gemacht ist“, rechts daneben Eckdaten, die Kapiteltage und die Figuren.
    Auf Tablet hochkant und Telefon steht die Tafel über den Szenen und haftet nicht. Der Wortlaut aller Texte ist der von A.
-   Nur Anordnung; was hier über die Anordnung hinausgeht (Briefkopf, Fuß, Szenenregister, Karteikarte als Zeile), gehört nach stil.css. */
+   Nur Anordnung; Briefkopf, Szenenregister und Karteikarte als Zeile stehen in stil.css. */
 
-/* Kopf: Name und Rolle in einer Zeile im Grad klein (wie der Briefkopf von A) */
-.kopf .briefkopf { justify-self: start; }
-.kopf .rolle { margin-left: 1em; }
-@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
 
 .titelei .unterzeile { margin-top: calc(var(--z) * -.25); }
 .titelei .anfang { margin-top: calc(var(--z) * .75); }
 .szenenteil { margin-top: calc(var(--z) * 2); }
 .blatt > .tafelplatz { margin-top: calc(var(--z) * 1.5); }
 .tafelplatz .kartentafel { max-width: 30rem; }
-/* Die Szenen als Register: das Jahr in der eigenen Spalte (nur, wo es wechselt, sonst nur für Vorleseprogramme), daneben der Ort
-   und darunter die Szene */
-.szenen > li { position: relative; display: grid; grid-template-columns: 2.6em minmax(0, 1fr); }
-.szenen > li + li { margin-top: calc(var(--z) * .5); }
-.szenen .jahr { grid-column: 1; grid-row: 1; font-variant-numeric: lining-nums tabular-nums; }
-.szenen .ort, .szenen .szene { grid-column: 2; }
 .weitere { margin-top: calc(var(--z) * .75); }
+/* Das Wort von A über den Szenen („Szene für Szene, von Buenos Aires an“, danach „Noch einmal …“): es führt zur ersten Szene */
+.szenenteil .nochmal { margin-bottom: calc(var(--z) * .5); }
 .buch { margin-top: calc(var(--z) * 3); row-gap: calc(var(--z) * 2); }
 .figuren dd + dt { margin-top: calc(var(--z) * .75); }
 .randspalte { max-width: 30rem; }
 .tage-vor { margin-bottom: calc(var(--z) * .5); }
 .an-verlage { margin-top: calc(var(--z) * 2); }
-/* Die Karteikarte der Faktenlage als Zeile unter dem Absatz: die Felder von A in ihrer Folge, ohne Zeichen dazwischen */
-.kartenzeile { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1em; font-size: var(--klein); line-height: var(--zk); margin-top: calc(var(--z) * .25); }
-/* FSeite.buch.kartenzeile nennt ein Feld „unter“ wie die Zeile unter dem Brett in stil.css: hier ohne deren Maße */
-.kartenzeile .unter { position: static; padding-top: 0; min-height: 0; }
+/* Die Karteikarte der Faktenlage als Zeile unter dem Absatz (stil.css) */
+.kartenzeile { margin-top: calc(var(--z) * .25); }
 
 @media (min-width: 75rem) {
   .blatt > .titelei { grid-row: 1; }
@@ -75,10 +65,10 @@ if (/^https?:$/.test(location.protocol)) {
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="tafelfeld nav" aria-label="Website">
     <ul class="wahl">
-      <li><a href="satoshi.html" aria-current="page">Satoshi</a></li>
-      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="satoshi.html" aria-current="page"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
-      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
       <li><a href="bibliothek.html">Bibliothek</a></li>
       <li><a href="vita.html">Vita</a></li>
@@ -104,6 +94,7 @@ if (/^https?:$/.test(location.protocol)) {
 
     <div class="satzspalte szenenteil" id="reihe">
       <h2 id="reihe-titel">Der Roman der Reihe nach</h2>
+      <p class="klein nochmal" id="nochmal" hidden><button type="button" class="wort" data-nochmal>Szene für Szene, von Buenos Aires an</button></p>
       <ol class="wahl szenen">
         <li><span class="jahr">2001</span> <span class="ort"><button type="button" data-szene="0">Buenos Aires</button></span> <span class="szene">Dezember 2001. Die siebzehnjährige Lana erlebt, wie die Ersparnisse ihrer Familie per Dekret verschwinden.</span></li>
         <li><span class="jahr">2007</span> <span class="ort"><button type="button" data-szene="1">London</button></span> <span class="szene">Lana macht ein Praktikum bei Lehman Brothers und erkennt in den Bilanzen Muster, die sie beunruhigen und an Buenos Aires erinnern.</span></li>
@@ -424,6 +415,20 @@ if (/^https?:$/.test(location.protocol)) {
     faktWort.classList.toggle('ist-aktiv', auf);
   }
 
+  /* Das Wort von A über den Szenen. A spielt damit die Szenen nacheinander ab („anhalten“, „weiter mit …“); B kennt keinen
+     selbsttätigen Lauf, das Wort führt zur ersten Szene, von dort geht es mit später weiter (wie „Noch einmal von Dortmund an“ auf
+     der Startseite). Vorher „Szene für Szene, von …“, danach „Noch einmal von …“ wie in A. Ohne Karte steht es nicht da */
+  const nochmalEl = $('#nochmal'), nochmalWort = nochmalEl && $('button', nochmalEl);
+  let nochmalGewaehlt = false;
+  function nochmalSetzen() {
+    if (!nochmalEl || !nochmalWort) return;
+    nochmalEl.hidden = !g || !N;
+    if (nochmalEl.hidden) return;
+    const erster = SZ[0].name;
+    nochmalWort.textContent = nochmalGewaehlt ? 'Noch einmal von ' + erster + ' an' : 'Szene für Szene, von ' + erster + ' an';
+  }
+  nochmalSetzen();
+
   // ---------- Bedienung ----------
   document.addEventListener('click', e => {
     const b = e.target.closest('button');
@@ -435,6 +440,7 @@ if (/^https?:$/.test(location.protocol)) {
     }
     if (b && b.dataset.weiter) { gewaehltUm = performance.now(); clearTimeout(uhr); weiterZeigen(b.dataset.weiter); insBild(); return; }
     if (b && b.hasAttribute('data-faktenlage')) { karteSetzen(faktZeile.hidden); return; }
+    if (b && b.hasAttribute('data-nochmal')) { gewaehltUm = performance.now(); clearTimeout(uhr); zeigen(1, { erzwingen: true }); nochmalGewaehlt = true; nochmalSetzen(); insBild(); return; }
     if (b && b.hasAttribute('data-zuruecklegen')) { karteSetzen(false); faktWort.focus({ preventScroll: true }); return; }
     // Ein Klick auf den Ort oder irgendwo in die Szene wählt sie
     const li = e.target.closest('.szenen > li');

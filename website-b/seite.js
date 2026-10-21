@@ -696,7 +696,7 @@
     };
     return {
       wohnorte: {
-        schritte: wohnSchritte, start: wohnSchritte.length - 1, orte: st, zeichen: [['punkt', 'Wohnort'], ['kreis', 'längerer Aufenthalt']],
+        schritte: wohnSchritte, start: wohnSchritte.length - 1, orte: st, zeichen: [],
         aktivBeiUeberblick: heute ? heute.name : null, weg: true,
         blick: s => ({ mitte: [s.lon, s.lat], k: zoomFuer(s) }),
         ueberblick: () => ({ mitte: blickFuer(st, { lon: [10, 100], lat: [-10, 50] }) || [50, 20], k: 1 }),
@@ -754,7 +754,8 @@
       kopf.setAttribute('aria-live', 'polite');
       zwOR.appendChild(kopf);
     }
-    // Zeichenerklärung ohne eigenes aria-label: das Wort „Zeichenerklärung“ steht in A nicht (Textregel)
+    // Zeichenerklärung ohne eigenes aria-label: das Wort „Zeichenerklärung“ steht in A nicht (Textregel). Keine Karte hat eine:
+    // A erklärt die Zeichen nicht, „Wohnort“ und „längerer Aufenthalt“ stehen wie in A im Kopf der Tafel (Textregel)
     const erkl = neu('ul', 'zeichenerklaerung');
     zwUL.appendChild(erkl);
     const hinweis = neu('p', 'hinweis');
@@ -809,7 +810,13 @@
         });
       } catch (fehler) { g = null; console.warn('Karte:', fehler); }
     }
-    if (!g) { fig.classList.add('ohne-kugel'); canvas.remove(); return null; }
+    // Ohne Kern bleibt im Rahmen nur der Satz von A: Kartenwahl, Legende mit früher und später und der Text der Karte täten nichts.
+    // Den Zwickel oben rechts behält eine Seite, die ihre Tafel selbst setzt (o.legende false: Satoshi, Ursprung)
+    if (!g) {
+      fig.classList.add('ohne-kugel'); canvas.remove();
+      [zwOL, zwUL, zwUR, legende, o.textEl ? null : textEl, o.legende ? zwOR : null].forEach(el => { if (el) el.remove(); });
+      return null;
+    }
 
     // ---------- Zwickel: der Kopf oben rechts weicht der Kugel aus ----------
     const zwickellage = () => getComputedStyle(zwOR).getPropertyValue('--lage').trim() === 'zwickel';

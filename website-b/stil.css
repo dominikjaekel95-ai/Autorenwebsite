@@ -153,6 +153,10 @@ html:not(.js) .wort { text-decoration-line: none; cursor: auto; }
 @media (min-width: 75rem) {
   .kopf .name, .kopf .nav { grid-row: 1; margin-top: 0; }
 }
+/* Der Briefkopf wie in A: Name und „Schriftsteller und Reisender“ in einer Zeile (Textregel; gegen 12.1) */
+.kopf .briefkopf { justify-self: start; }
+.kopf .rolle { margin-left: 1em; }
+@media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
 /* Nach dem Kopf 2 z bis zum Seitentitel */
 .kopf + main { padding-top: calc(var(--z) * 2); }
 
@@ -163,7 +167,9 @@ html:not(.js) .wort { text-decoration-line: none; cursor: auto; }
 .gruppe + .gruppe { margin-top: calc(var(--z) * .75); }
 .teil + .teil { margin-top: calc(var(--z) * 3); }
 .legende { font-size: var(--klein); line-height: var(--zk); margin-top: calc(var(--z) * .25); }
-.prosa hr { border: 0; margin: 0; height: var(--z); }
+/* Szenenwechsel: eine Zeile, darin die drei Sternchen von A, linksbündig in Tinte */
+.prosa hr { border: 0; margin: 0; height: var(--z); overflow: visible; color: inherit; }
+.prosa hr::after { content: "*\2003*\2003*"; display: block; line-height: var(--z); }
 /* Register mit Jahr, Tag und Ereignis: das Jahr steht nur, wo es wechselt (sonst nur für Vorleseprogramme); die Spalten
    für Jahr und Tag tragen Versalziffern fester Breite, damit sie senkrecht fluchten */
 .tage > li { position: relative; display: grid; grid-template-columns: 2.2em 6.6em minmax(0, 1fr); column-gap: .5em; }
@@ -218,7 +224,9 @@ html:not(.js) .rahmen, .kartentafel.ohne-kugel .rahmen { aspect-ratio: auto; bor
 .tafellegende.ohne-schritte .steuer { display: none; }
 .legendenzusatz { margin-top: calc(var(--z) * .25); }
 .zw-ul { grid-row: 5; grid-column: 1; margin-top: calc(var(--z) * .25); }
-.zw-ur { grid-row: 5; grid-column: 2; margin-top: calc(var(--z) * .25); text-align: right; }
+/* Der Hinweis (Strg oder ⌘, zwei Finger) liegt auch in der Außenlage unten rechts im Rahmen, auf Papier: darunter springt nichts */
+.zw-ur { grid-row: 2; grid-column: 1 / -1; align-self: end; justify-self: end; position: relative; z-index: 1; margin: calc(var(--z) * .25); text-align: right; }
+.zw-ur .hinweis { background: var(--papier); padding-left: .25em; }
 .zw-ul .zeichenerklaerung { display: flex; flex-wrap: wrap; column-gap: 1.5em; }
 .kartentext { grid-row: 6; margin-top: calc(var(--z) * .75); }
 .kartentext > p + p, .legendenzusatz > p + p { margin-top: calc(var(--z) * .25); }
@@ -277,6 +285,49 @@ html:not(.js) .rahmen, .kartentafel.ohne-kugel .rahmen { aspect-ratio: auto; bor
 }
 .inhaltsverzeichnis li + li { margin-top: calc(var(--z) * .25); }
 .inhaltsverzeichnis ul + ul { margin-top: calc(var(--z) * .75); }
+
+/* Leere Liste auf Erzählungen und Untertext: der Satz von A an der Stelle der Liste */
+.texte-leer { margin-top: calc(var(--z) * 1.5); }
+
+/* ---------- Register der Szenen (Satoshi, 12.11): das Jahr in der eigenen Spalte (nur, wo es wechselt, sonst nur für
+   Vorleseprogramme), daneben der Ort und darunter die Szene ---------- */
+.szenen > li { position: relative; display: grid; grid-template-columns: 2.6em minmax(0, 1fr); }
+.szenen > li + li { margin-top: calc(var(--z) * .5); }
+.szenen .jahr { grid-column: 1; grid-row: 1; font-variant-numeric: lining-nums tabular-nums; }
+.szenen .ort, .szenen .szene { grid-column: 2; }
+
+/* ---------- Bandtitel (Ursprung): die Bandziffer in der Titelzeile, „Arbeitstitel“ darunter im Grad klein ---------- */
+.band h2 .band-ziffer { display: inline-block; min-width: 1.75em; }
+.band h2 .arbeitstitel { display: block; font-size: var(--klein); line-height: var(--zk); font-weight: 400; }
+
+/* ---------- Karteikarte als Zeile (Satoshi, Ursprung): die Felder von A in ihrer Folge, ohne Zeichen dazwischen.
+   FSeite.buch.kartenzeile nennt ein Feld „unter“ wie die Zeile unter dem Brett: hier ohne deren Maße ---------- */
+.kartenzeile { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1em; font-size: var(--klein); line-height: var(--zk); }
+.kartenzeile .unter { position: static; padding-top: 0; min-height: 0; }
+
+/* ---------- Stapel und Karteikarte als Zeile im Regal (Bibliothek) und im Regalbild (Startseite) ---------- */
+.stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; row-gap: 1px; flex: none; }
+.unter .zeile.als-karte { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1em; }
+.unter .schild { font-variant-numeric: inherit; white-space: normal; }
+/* Das Regalbild der Startseite (Strichzeichnung wie 12.7): die eigenen Werke stehen, daneben liegen die Bücher vom Nachttisch in
+   zwei Stapeln. In der Zeile unter dem Brett die Bildlegende oder an ihrer Stelle die Karteikarte als Buchzeile (12.8) */
+.regalbild { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: var(--z); }
+.regalbild > .flaeche { grid-row: 1; }
+.regalbild > figcaption, .regalbild > .buchzeile { grid-row: 2; grid-column: 1; }
+.regalbild.mit-karte > figcaption { visibility: hidden; }
+.regalbild .als-karte { display: flex; flex-wrap: wrap; align-items: baseline; align-content: flex-start; column-gap: 1em; }
+
+/* ---------- Zeitband (Bibliothek, 12.9) und die haftende Zeile unter „Was noch wartet“ ---------- */
+.zeitband .strich { fill: var(--tinte-raster); }
+.zeitband .lieb { fill: var(--tinte); }
+.zeitband .wieder, .zeitband .marke { stroke: var(--tinte); stroke-width: 1; }
+.zeitband .werk, .zeitband .quer { fill: var(--papier); stroke: var(--tinte); stroke-width: .75; }
+.zeitband .warte { fill: var(--papier); stroke: var(--tinte-raster); stroke-width: 1; }
+.zeitband .an { fill: var(--tinte); }
+.zeitband .achse { stroke: var(--tinte); stroke-width: 1; fill: none; }
+.zeitband text { fill: var(--tinte); font-family: var(--schrift); font-size: var(--klein); font-variant-numeric: lining-nums tabular-nums; }
+.wartet .unter.mit-zeile { position: sticky; bottom: 0; z-index: 4; background: var(--papier); padding-bottom: calc(var(--z) * .25); border-top: 1px solid var(--papier); }
+.wartet .unter.mit-zeile.haftet { border-top-color: var(--tinte); }
 
 /* ---------- Fuß ---------- */
 .fuss { padding-top: calc(var(--z) * 4); padding-bottom: calc(var(--z) * 2); }

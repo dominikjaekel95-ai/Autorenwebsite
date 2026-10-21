@@ -12,3 +12,8 @@ Gebaut wird erst nach seinem Go.
    (Orte und Jahre als Bedienelemente, früher/später). Die Tafel zeigt den Text einer Szene nur nach einer Wahl. In Ruhe zeigt
    der Globus den ganzen Weg, ohne Szenentext. Für Vorleseprogramme bleiben die Szenen erreichbar (Bedienelemente mit Namen),
    aber nicht als ausgeschriebene Liste.
+4. **Tagline bleibt vorerst.** „Schriftsteller und Reisender“ bleibt, aber nicht mehr grau. Claude sammelt 25 Alternativen und zeigt die besten fünf.
+5. **Abstecher bestätigt.** Kapstadt, Sansibar und Buenos Aires gehen von Berlin aus, Colombo und Cotonou von Potsdam aus, jeweils hin und zurück.
+6. **Wege immer von Stadt zu Stadt**, als Linie, die über den Globus wandert. Das gilt auf der Startseite, auf Satoshi und auf Ursprung.
+7. **Bewegung:** Beim ersten Sichtbarwerden läuft ein kurzer Einspieler, die Linien wandern von Stadt zu Stadt. Danach klickt man selbst. Es gibt einen Knopf zum Abspielen und Anhalten, „weiter“ und „Noch einmal von vorn“. Auf Satoshi zeigt der Einspieler keine Szenentexte.
+8. **Bootsfoto:** Es stammt von einem Freund, ein Bildnachweis ist nicht nötig.

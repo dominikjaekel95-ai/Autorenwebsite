@@ -638,14 +638,13 @@
   // ---------- Lebensstationen, Szenen, Trilogie ----------
   // Lebensstationen aus INHALT.leben
   const stationen = () => (inhalt().leben || []).map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, jahr: s.jahr, land: s.land || '', projekt: s.projekt || '' }));
-  /* Tafel für eine Lebensstation: Kartenzeichen und Ort, darunter die Art mit dem Vermerk aus der Vita, dann die Koordinaten.
-     Die Luftlinie entfällt (V20, Textänderung 12) */
+  /* Tafel für eine Lebensstation: Kartenzeichen und Ort, darunter die Art mit dem Vermerk aus der Vita. Die Luftlinie entfällt
+     (V20, Textänderung 12), die Koordinaten auch (Dominik, 21. Oktober: nicht auf der Startseite) */
   function stationInhalt(s) {
     return {
       zeichen: s.neben ? 'aufenthalt' : 'wohnort',
       marke: jahrMarke(s.jahr), kopf: s.land ? s.name + ', ' + s.land : s.name, neben: !!s.neben,
-      unter: (s.neben ? 'längerer Aufenthalt' : 'Wohnort') + (s.projekt ? ', ' + s.projekt : ''),
-      daten: koord(s.lat, s.lon)
+      unter: (s.neben ? 'längerer Aufenthalt' : 'Wohnort') + (s.projekt ? ', ' + s.projekt : '')
     };
   }
   // Die Szenen von Satoshi der Reihe nach, mit Ort und Koordinaten: { name, kurz, notiz, jahr, text, lat, lon }
@@ -1293,7 +1292,7 @@
       x.notiz = punkt(b.thema || '');
     } else if (id === 'erzaehlungen') {
       x.unter = '';
-      x.notiz = er ? 'Viele davon hat er auf der Werkstattbühne des Autorenforums Berlin gelesen.' : 'Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.';
+      x.notiz = er ? 'Viele davon hat er auf der Werkstattbühne des Autorenforums Berlin e.' + NBSP + 'V. vorgestellt.' : 'Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin e.' + NBSP + 'V. vorgestellt.';
     } else {
       x.unter = w.art + (w.stand ? ', ' + w.stand : '');
     }
@@ -1581,7 +1580,7 @@
      sie stehen sollen, etwa { name: 'Instagram', url: 'https://…' }, { name: 'LinkedIn', url: 'https://…' }. Solange die Liste leer
      ist, bleibt die Zeile .profile verborgen; es gibt keine toten Verweise. */
   const PROFILE = [];
-  /* Die Zeile „Eine E-Mail, wenn ein Buch erscheint oder eine Lesung ansteht“ (form.post im Fuß jeder Seite). Einen Newsletter-Dienst
+  /* Die Zeile „Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht“ (form.post im Fuß jeder Seite). Einen Newsletter-Dienst
      gibt es noch nicht: Eintragen schickt nichts ab und lädt nichts, es leert nur das Feld und zeigt den Dank in der Statuszeile.
      Ohne Skript ist das Formular verborgen (stil.css). */
   const POST_DANKE = 'Danke. Im Testsystem wird noch nichts verschickt.';

@@ -329,3 +329,32 @@ Impressum, Lesen und die Zeile für Neuigkeiten im Fuß bleiben, wie sie sind.
 | 59 | 55, 56, 57, 58, 59, 60 |
 
 Ohne Flagge neu entschieden: 1 („Inhalt“), 2 („Kontakt“), 3 (Hinweis für das Telefon), 20 (Vorlesetext des Zeitbands).
+
+## Runde 2 (Dominiks Rückmeldung vom 21. Oktober)
+
+Deine Rückmeldung vom 21. Oktober, vormittags, mit dem Nachtrag danach. Dein Wortlaut gilt, offensichtliche Tippfehler sind korrigiert („Gründungslegende“, „e. V.“ mit geschütztem Leerzeichen). Wo diese Runde einer Zeile weiter oben widerspricht, gilt diese Runde (7, 14, 15, 18, 34, 36 und Flagge 9 und 54 unter „Bewusst gelassen“).
+
+Nach deinem Nachtrag bleiben die Koordinaten auf *Ursprung* (Bandzeilen und Tafel) und auf *Satoshi* (Tafel jeder Szene). Sie fallen auf der Startseite, in der Vita und auf der Seite Länder weg. Die Datenschutzerklärung zitiert die Newsletter-Zeile nicht, dort ändert sich nur der Fuß.
+
+| Nr. | Stelle | Vorher | Nachher | Herkunft |
+|---:|---|---|---|---|
+| 61 | Startseite, Ebene Leben, Stationenzeile unter der Kartenwahl | Dortmund bis 2014, Freiburg 2014, Potsdam 2015, Colombo 2016, Cotonou 2018, Kaohsiung 2018, Berlin 2022, Mallorca 2023 | entfällt. Die Tafel nennt jeden Ort, früher, später und das Steuerwort bleiben, auch für Tastatur und Vorleseprogramme. Ersetzt 7. | Dominik |
+| 62 | Startseite, Tafel aller vier Ebenen (Leben, Reisen, *Satoshi*, *Ursprung*), Zeile unter dem Ort | die Koordinaten, etwa „52° 31′ N, 13° 24′ O“ (Berlin) oder „51° 02′ N, 10° 21′ O“ (Deutschland) | entfällt | Dominik |
+| 63 | Startseite, Satz, wenn der Globus nicht lädt (sonst unsichtbar) | Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text und auf der Tafel, mit ihren Koordinaten. | Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text und auf der Tafel. | Dominik (folgt aus 62) |
+| 64 | Vita, Stationen, Zeile unter jedem Ort | die Koordinaten der elf Orte, etwa „51° 31′ N, 7° 28′ O“ (Dortmund) | entfallen | Dominik |
+| 65 | Länder, Tafel eines bereisten Lands | die Koordinaten seiner Mitte, etwa „23° 45′ N, 120° 58′ O“ (Taiwan) | entfallen | Dominik |
+| 66 | Startseite, Was ich schreibe, *Satoshi* | *Satoshi*. Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor. | *Satoshi*. Roman in vierzig Kapiteln. Die Gründungslegende von Bitcoin. Das Manuskript liegt vollständig vor. Ersetzt 14. | Dominik |
+| 67 | Startseite, Was ich schreibe, *Ursprung* | *Ursprung*. Drei Romane über die Anfänge der Zivilisation, begonnen in Kaohsiung und in Arbeit. | *Ursprung*. Drei Romane über die Anfänge der Zivilisation, begonnen in Kaohsiung, Taiwan. In Arbeit. Ersetzt 15. | Dominik |
+| 68 | Erzählungen: Werkverzeichnis der Startseite, Unterzeile auf `erzaehlungen.html`, Buchzeile des Rückens im Regalbild und in der Bibliothek (`seite.js`, `werkKarte`, auch die er-Fassung), `daten/inhalt.js` (`werke`) | Viele davon habe ich (hat er) auf der Werkstattbühne des Autorenforums Berlin gelesen. | Viele davon habe ich (hat er) auf der Werkstattbühne des Autorenforums Berlin e. V. vorgestellt. Ersetzt Flagge 9 unter „Bewusst gelassen“. | Dominik |
+| 69 | Startseite, Überschrift über dem Zeitband | Was ich gelesen habe | Meine digitale Bibliothek. Der Verweis „Die ganze Bibliothek“ darunter bleibt. | Dominik |
+| 70 | Startseite, Satz über dem Zeitband, Schluss | … Quer darauf liegt, was ich gerade lese, ganz rechts steht, woran ich selbst schreibe. | … Quer darauf liegt, was ich gerade lese. Ändert 18. | Dominik |
+| 71 | Startseite, Zeitband, der Abschnitt ganz rechts: die Umrisse der sieben eigenen Werke, „Eigenes“ an der Achse, ihre Namen für Vorleseprogramme („Jäkel, Satoshi, Roman“ und so weiter) | Eigenes | entfällt mit dem ganzen Abschnitt. Die eigenen Werke stehen weiter im Regalbild unter „Was ich schreibe“. | Dominik |
+| 72 | Fuß aller elf Seiten, Newsletter-Zeile | Eine E-Mail, wenn ein Buch erscheint oder eine Lesung ansteht: | Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht: | Dominik |
+| 73 | Fuß aller elf Seiten, Feld der Newsletter-Zeile | leer. „E-Mail-Adresse“ war nur der unsichtbare Name für Vorleseprogramme. | E-Mail-Adresse (sichtbar im leeren Feld, verschwindet beim Tippen). Der unsichtbare Name bleibt. | Dominik |
+| 74 | *Ursprung*, Ortsleiste unter der Einleitung | Göbekli Tepe um 8000 v. Chr., Uruk um 2700 v. Chr., Tyros und Jerusalem um 940 v. Chr. | entfällt. Die Orte stehen weiter in den Bandzeilen, mit Koordinaten. Ersetzt 34. | Dominik |
+| 75 | *Ursprung*, Band I, Thema, dazu `daten/inhalt.js` (`trilogie.baende`) | Die Geburt der organisierten Religion und die Sesshaftwerdung. | Die Geburt der organisierten Religion und die Sesshaftwerdung der Menschheit. | Dominik |
+| 76 | *Ursprung*, Band I, Zeile aus dem Exposé | Als die Menschheit ihre Götter erfand – und beschloss, sie zu begraben. (aufrecht) | Derselbe Satz kursiv. Dominik: „kann kursiv!“ | Dominik |
+| 77 | *Ursprung*, Band II, Thema, dazu `daten/inhalt.js` (`trilogie.baende`) | Die Geburt der Literatur und der Wandel der Schrift von einer bürokratischen zu einer Sprache der Mythen und Legenden. | Die Geburt der Literatur und der Wandel der Schrift von einer Sprache zur Verwaltung zu einer Sprache der Mythen und Legenden. Ersetzt 36. | Dominik |
+| 78 | *Ursprung*, Satz zur Bibliothek unter Band III | Zum Stoff der Trilogie stehen in seiner Bibliothek unter anderem … | Zum Stoff der Trilogie stehen in der Bibliothek unter anderem … („Bibliothek“ bleibt der Verweis auf die Bibliothek) | Dominik |
+
+Die Ebene *Ursprung* der Startseite zeigt die Themen der Bände nicht, nur Titel und Orte. Dort ändert sich durch 75 und 77 nichts.

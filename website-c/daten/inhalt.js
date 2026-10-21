@@ -1,5 +1,6 @@
 /* Gemeinsame Inhalte der Website: Orte, Stationen, Länder, eigene Werke.
-   Erzeugt von werkzeuge/daten.cjs; in Version C von Hand geändert (Textänderungen 12, 22, 36 bis 38 in docs/text-aenderungen-c.md),
+   Erzeugt von werkzeuge/daten.cjs; in Version C von Hand geändert (Textänderungen 12, 22, 36 bis 38 und Runde 2 in
+   docs/text-aenderungen-c.md),
    darum nicht mit --erzwingen neu erzeugen. Nur, was die Seiten lesen. Keine privaten Kontaktdaten. */
 window.INHALT = {
   // Bereiste Länder und Gebiete (ISO-Codes; die Landesteile des Vereinigten Königreichs einzeln, Westjordanland als PS-WB)
@@ -19,7 +20,7 @@ window.INHALT = {
   // Eigene Blickpunkte für große Länder: [Länge, Breite, Zoom]
   ansichten: { FR: [2.5, 46.6, 5.5], NL: [5.3, 52.2, 12], US: [-98, 39, 2.1], RU: [70, 60, 1.5], PT: [-8.1, 39.7, 9], ES: [-3.7, 40.2, 6], CN: [104, 35, 2.4], CA: [-96, 58, 1.8], DK: [10, 56, 10] },
 
-  // Lebensstationen in zeitlicher Reihenfolge (Chronik der Startseite, Koordinaten der Vita).
+  // Lebensstationen in zeitlicher Reihenfolge (Chronik der Startseite; Koordinaten für den Globus, sie stehen nicht mehr als Text da).
   // neben: ein längerer Aufenthalt, während der Wohnort woanders war
   leben: [
     { name: 'Dortmund', jahr: 'bis 2014', projekt: 'geboren 1995', lat: 51.51, lon: 7.47 },
@@ -32,7 +33,7 @@ window.INHALT = {
     { name: 'Mallorca', jahr: '2023', neben: true, lat: 39.57, lon: 2.65 }
   ],
 
-  // Weitere längere Aufenthalte, nur für die Koordinaten der Vita (auf dem Globus wäre es zu voll)
+  // Weitere längere Aufenthalte (in der Vita; auf dem Globus wäre es zu voll). Die Vita nennt seit dem 21. Oktober keine Koordinaten
   aufenthalte: [
     { name: 'Kapstadt', land: 'Südafrika', jahr: '2024', lat: -33.92, lon: 18.42 },
     { name: 'Sansibar', land: 'Tansania', jahr: '2025', lat: -6.16, lon: 39.19 },
@@ -92,14 +93,14 @@ window.INHALT = {
   trilogie: {
     titel: 'Ursprung',
     baende: [
-      { band: 'I', titel: 'Kreise ohne Wiederkehr', ort: 'Göbekli Tepe', zeit: 'um 8000 v. Chr.', thema: 'Die Geburt der organisierten Religion und die Sesshaftwerdung' },
+      { band: 'I', titel: 'Kreise ohne Wiederkehr', ort: 'Göbekli Tepe', zeit: 'um 8000 v. Chr.', thema: 'Die Geburt der organisierten Religion und die Sesshaftwerdung der Menschheit' },
       {
         band: 'II',
         titel: 'Von dem König, der niemals sterben wollte',
         arbeitstitel: true,
         ort: 'Uruk',
         zeit: 'um 2700 v. Chr.',
-        thema: 'Die Geburt der Literatur und der Wandel der Schrift von einer bürokratischen zu einer Sprache der Mythen und Legenden'
+        thema: 'Die Geburt der Literatur und der Wandel der Schrift von einer Sprache zur Verwaltung zu einer Sprache der Mythen und Legenden'
       },
       { band: 'III', titel: 'Das steinerne Wort', arbeitstitel: true, ort: 'Jerusalem', zeit: 'um 940 v. Chr.', thema: 'Die Geburt der Heiligen Schrift als politisches Werkzeug' }
     ]
@@ -118,7 +119,7 @@ window.INHALT = {
     { id: 'ursprung-1', titel: 'Ursprung I', buchtitel: 'Kreise ohne Wiederkehr', art: 'Roman, Band I der Ursprungstrilogie', stand: 'in Arbeit', band: 'I' },
     { id: 'ursprung-2', titel: 'Ursprung II', buchtitel: 'Von dem König, der niemals sterben wollte', arbeitstitel: true, art: 'Roman, Band II der Ursprungstrilogie', stand: 'in Arbeit', band: 'II' },
     { id: 'ursprung-3', titel: 'Ursprung III', buchtitel: 'Das steinerne Wort', arbeitstitel: true, art: 'Roman, Band III der Ursprungstrilogie', stand: 'in Arbeit', band: 'III' },
-    { id: 'erzaehlungen', titel: 'Erzählungen', buchtitel: 'Erzählungen', art: 'Kurzgeschichten', stand: '', text: 'Viele davon hat er auf der Werkstattbühne des Autorenforums Berlin gelesen.' },
+    { id: 'erzaehlungen', titel: 'Erzählungen', buchtitel: 'Erzählungen', art: 'Kurzgeschichten', stand: '', text: 'Viele davon hat er auf der Werkstattbühne des Autorenforums Berlin e.\u00a0V. vorgestellt.' },
     { id: 'untertext', titel: 'Untertext', buchtitel: 'Untertext', art: 'Journal', stand: '' },
     { id: 'laender', titel: 'Länder', buchtitel: 'Länder', art: 'Länderguides', stand: 'in Arbeit' }
   ]

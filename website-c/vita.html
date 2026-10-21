@@ -31,14 +31,13 @@
 .bildnis img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; background: var(--brett); }
 .bildnis figcaption { margin-top: var(--z-viertel); font-size: var(--g-klein); line-height: var(--zh-klein); }
 
-/* Stationen: das Jahr hängt im Steg, rechtsbündig in Ziffern fester Breite; Ort und Tätigkeit im Grad Text, darunter die Koordinaten
-   klein. Wohnorte und längere Aufenthalte gleich groß und gleich dunkel */
+/* Stationen: das Jahr hängt im Steg, rechtsbündig in Ziffern fester Breite; Ort und Tätigkeit im Grad Text, ohne Koordinaten
+   (Dominik, 21. Oktober). Wohnorte und längere Aufenthalte gleich groß und gleich dunkel */
 .daten { list-style: none; hyphens: manual; -webkit-hyphens: manual; }
 .daten li { position: relative; }
 .daten li + li { margin-top: var(--z-viertel); }
 /* Ein unsichtbares geschütztes Leerzeichen im Jahr trennt es beim Kopieren und Vorlesen vom Ort („2025 Sansibar“) */
 .daten .jahr { position: absolute; top: 0; right: calc(100% + .6em); white-space: nowrap; font-variant-numeric: oldstyle-nums tabular-nums; }
-.daten .koord { display: block; font-size: var(--g-klein); line-height: var(--zh-klein); }
 .werdegang { margin-top: var(--z-zwei); }
 .werdegang .weiter { margin-top: var(--z-dreiviertel); }
 
@@ -100,18 +99,18 @@
     <section class="werdegang" aria-labelledby="stationen-titel">
       <h2 class="titel" id="stationen-titel">Stationen</h2>
       <ul class="daten">
-        <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren <span class="koord" data-ort="Dortmund">51°&nbsp;31′&nbsp;N, 7°&nbsp;28′&nbsp;O</span></li>
-        <li><span class="jahr">2014<span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span> <span class="koord" data-ort="Freiburg">47°&nbsp;59′&nbsp;N, 7°&nbsp;51′&nbsp;O</span></li>
-        <li><span class="jahr">2015<span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span> <span class="koord" data-ort="Potsdam">52°&nbsp;23′&nbsp;N, 13°&nbsp;04′&nbsp;O</span></li>
-        <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit AIESEC <span class="koord" data-ort="Colombo">6°&nbsp;56′&nbsp;N, 79°&nbsp;52′&nbsp;O</span></li>
-        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit AIESEC <span class="koord" data-ort="Cotonou">6°&nbsp;22′&nbsp;N, 2°&nbsp;26′&nbsp;O</span></li>
-        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor <span class="koord" data-ort="Kaohsiung">22°&nbsp;38′&nbsp;N, 120°&nbsp;18′&nbsp;O</span></li>
-        <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> Berlin, seitdem Wohnort <span class="koord" data-ort="Berlin">52°&nbsp;31′&nbsp;N, 13°&nbsp;24′&nbsp;O</span></li>
+        <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren</li>
+        <li><span class="jahr">2014<span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span></li>
+        <li><span class="jahr">2015<span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span></li>
+        <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit AIESEC</li>
+        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit AIESEC</li>
+        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor</li>
+        <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> Berlin, seitdem Wohnort</li>
         <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> <span class="nw">A.-E.-Johann-Preis</span></li>
-        <li><span class="jahr">2023<span class="unsichtbar">&nbsp;</span></span> Mallorca, längerer Aufenthalt <span class="koord" data-ort="Mallorca">39°&nbsp;34′&nbsp;N, 2°&nbsp;39′&nbsp;O</span></li>
-        <li><span class="jahr">2024<span class="unsichtbar">&nbsp;</span></span> Kapstadt, Südafrika, längerer Aufenthalt <span class="koord" data-ort="Kapstadt">33°&nbsp;55′&nbsp;S, 18°&nbsp;25′&nbsp;O</span></li>
-        <li><span class="jahr">2025<span class="unsichtbar">&nbsp;</span></span> Sansibar, Tansania, längerer Aufenthalt <span class="koord" data-ort="Sansibar">6°&nbsp;10′&nbsp;S, 39°&nbsp;11′&nbsp;O</span></li>
-        <li><span class="jahr">2026<span class="unsichtbar">&nbsp;</span></span> Buenos Aires, Argentinien, längerer Aufenthalt <span class="koord" data-ort="Buenos Aires">34°&nbsp;36′&nbsp;S, 58°&nbsp;23′&nbsp;W</span></li>
+        <li><span class="jahr">2023<span class="unsichtbar">&nbsp;</span></span> Mallorca, längerer Aufenthalt</li>
+        <li><span class="jahr">2024<span class="unsichtbar">&nbsp;</span></span> Kapstadt, Südafrika, längerer Aufenthalt</li>
+        <li><span class="jahr">2025<span class="unsichtbar">&nbsp;</span></span> Sansibar, Tansania, längerer Aufenthalt</li>
+        <li><span class="jahr">2026<span class="unsichtbar">&nbsp;</span></span> Buenos Aires, Argentinien, längerer Aufenthalt</li>
       </ul>
       <p class="weiter">Die Wohnorte und die ersten längeren Aufenthalte <a class="nw" href="index.html#globus">auf dem Globus</a>.</p>
     </section>
@@ -123,7 +122,7 @@
   <div class="kontakt">
     <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
-      <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
+      <p><span id="post-satz">Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" placeholder="E-Mail-Adresse" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
@@ -134,19 +133,5 @@
 
 <script src="daten/inhalt.js"></script>
 <script src="seite.js"></script>
-<script>
-(function () {
-  'use strict';
-  const F = window.FSeite, I = window.INHALT || {};
-  if (!F) return;
-  // Die Koordinaten kommen aus denselben Daten wie die Tafel der Startseite; ohne Skript bleibt der gesetzte Text stehen
-  if (Array.isArray(I.leben)) {
-    F.$$('[data-ort]').forEach(el => {
-      const s = I.leben.concat(I.aufenthalte || []).find(x => x.name === el.dataset.ort);
-      if (s && s.lat != null && s.lon != null) el.textContent = F.koord(s.lat, s.lon);
-    });
-  }
-})();
-</script>
 </body>
 </html>

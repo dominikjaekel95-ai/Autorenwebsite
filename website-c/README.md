@@ -24,7 +24,7 @@ Der Bau kopiert `website-c/` ohne `werkzeuge/`, ohne diese Datei und ohne Bilder
 
 | Datei | Inhalt |
 |---|---|
-| `index.html` | Startseite: erster Satz, Kurzvita, Globus mit Tafel, „Was ich schreibe“, „Was ich gelesen habe“ |
+| `index.html` | Startseite: erster Satz, Kurzvita, Globus mit Tafel, „Was ich schreibe“, „Meine digitale Bibliothek“ |
 | `satoshi.html`, `ursprung.html` | die Romane, je mit Globus |
 | `erzaehlungen.html`, `untertext.html`, `lesen.html` | Texte aus `daten/texte.js` (noch leer) |
 | `laender.html` | Länderregister und Globus |

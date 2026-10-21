@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Seite der Ursprungstrilogie (gestaltung-website-c.md, 9.3, 6.9, 19).
-   Links Titel, Unterzeile, Einleitung und die Ortsleiste, dann die drei Bände und der Satz zur Bibliothek. Rechts die Kugel ohne
+   Links Titel, Unterzeile und Einleitung, dann die drei Bände und der Satz zur Bibliothek. Rechts die Kugel ohne
    heutige Grenzen, mit den Flüssen, breit haftend, darunter Tafel und Steuerzeile. Beim ersten Sichtbarwerden entfaltet sich die
    Trilogie langsam: die Linie wandert von Göbekli Tepe über Uruk und Tyros nach Jerusalem. Danach führt breit die Leselinie die
    Kugel zum Band, den man liest; jeder Wechsel beendet einen laufenden Einspieler. Auf dem Telefon haftet die Kugel nicht, und
@@ -18,7 +18,6 @@
 
 /* ---------- Kopf des Werks ---------- */
 .titelei { margin-top: var(--z); }
-.orte { margin-top: var(--z); }
 
 /* ---------- Die drei Bände (6.9) ---------- */
 .baende { margin-top: var(--z-drei); }
@@ -27,8 +26,9 @@
    nur zwischen ihren Teilen (.nw): nach „Band I“, am Komma eines langen Titels, vor „Arbeitstitel“, nie mitten in einer Wendung */
 .band-titel { margin-bottom: var(--z-viertel); text-wrap: wrap; }
 .band-titel .band-nr { margin-right: .75em; }
-/* Die Zeile aus dem Exposé ist ein einzelner Satz: ausgeglichen, damit sie am Gedankenstrich bricht statt „… sie / zu begraben.“
-   (pretty) oder mit „begraben.“ allein in der zweiten Zeile (wrap) */
+/* Die Zeile aus dem Exposé ist ein einzelner Satz, kursiv (Dominik, 21. Oktober: „kann kursiv!“). Bricht sie, dann am
+   Gedankenstrich: beide Hälften halten zusammen (.nw, kursiv höchstens rund 270 px breit, auch bei 360 px in der Spalte), statt
+   „… ihre Götter / erfand – …“ (balance) oder „… sie / zu begraben.“ (pretty) */
 .band .zeile-expose { text-wrap: balance; }
 /* Ortszeile: der Ort als Knopf, die Zeit, in der nächsten Zeile die Koordinaten */
 .band-ort { font-variant-numeric: oldstyle-nums proportional-nums; }
@@ -77,9 +77,6 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   <p class="einleitung">Drei Romane über die Geburt der organisierten Religion am Göbekli Tepe, der Literatur in Uruk und der Heiligen Schrift in Jerusalem. In Taiwan begann Dominik Jäkels Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Trilogie.</p>
 
-  <!-- Die Ortsleiste: ohne Skript Text, mit Skript wählt jeder Ort seine Station auf der Kugel -->
-  <p class="ortsleiste orte" id="ortsleiste"><span class="glied"><span class="wird-knopf" data-station="0">Göbekli Tepe um&nbsp;8000&nbsp;v.&nbsp;Chr.</span>,</span> <span class="glied"><span class="wird-knopf" data-station="1">Uruk um&nbsp;2700&nbsp;v.&nbsp;Chr.</span>,</span> <span class="glied"><span class="wird-knopf" data-station="2">Tyros</span> und</span> <span class="glied"><span class="wird-knopf" data-station="3">Jerusalem um&nbsp;940&nbsp;v.&nbsp;Chr.</span></span></p>
-
   <figure class="globus" id="globus">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen der Trilogie; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <p class="hinweis" hidden></p>
@@ -91,8 +88,8 @@ html:not(.js) .globusseite > .globus { display: none; }
     <section class="band" id="band-i" data-band="I" aria-labelledby="band-i-titel">
       <h2 class="titel band-titel" id="band-i-titel"><span class="band-nr nw">Band I</span> <span class="nw">Kreise ohne Wiederkehr</span></h2>
       <p class="band-ort klein"><span class="wird-knopf" data-station="0">Göbekli Tepe</span>, um&nbsp;8000&nbsp;v.&nbsp;Chr.<br>37°&nbsp;13′&nbsp;N, 38°&nbsp;55′&nbsp;O</p>
-      <p>Die Geburt der organisierten Religion und die Sesshaftwerdung.</p>
-      <p class="zeile-expose">Als die Menschheit ihre Götter erfand&nbsp;– und beschloss, sie zu begraben.</p>
+      <p>Die Geburt der organisierten Religion und die Sesshaftwerdung der Menschheit.</p>
+      <p class="zeile-expose"><i><span class="nw">Als die Menschheit ihre Götter erfand&nbsp;–</span> <span class="nw">und beschloss, sie zu begraben.</span></i></p>
       <p>Am ersten Tempel der Menschheit kämpft der Priester Jaromir – der mit nur 37&nbsp;Sommern den Titel des „Ältesten“ trägt – um das Überleben seines Volkes. Die Winter werden kälter, die Ahnen wenden sich von den Menschen ab und die Jagdgründe versiegen. Zwischen den ersten sesshaften Bauern und den nomadischen Jägern des Umlands droht ein Krieg auszubrechen. Verzweifelt sucht Jaromir nach einem Schüler und Nachfolger, um die Verbindung zu den Ahnen wiederherzustellen. Doch als er gezwungen wird, die gefangene Jägerin Kannika in sein Dorf aufzunehmen, gerät nicht nur sein Glaube, sondern alles, wofür er jemals einstand, ins Wanken.</p>
       <p>Alles steht unter der Frage: Warum wurde der älteste Tempel der Menschheit nach zweitausend Jahren Blütezeit absichtlich unter Unmengen von Schutt und Erde begraben? Dieser Roman erzählt die Geschichte.</p>
     </section>
@@ -100,7 +97,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     <section class="band" id="band-ii" data-band="II" aria-labelledby="band-ii-titel">
       <h2 class="titel band-titel" id="band-ii-titel"><span class="band-nr nw">Band II</span> <span class="nw">Von dem König,</span> <span class="nw">der niemals sterben wollte</span> <span class="arbeitstitel">Arbeitstitel</span></h2>
       <p class="band-ort klein"><span class="wird-knopf" data-station="1">Uruk</span>, um&nbsp;2700&nbsp;v.&nbsp;Chr.<br>31°&nbsp;19′&nbsp;N, 45°&nbsp;38′&nbsp;O</p>
-      <p>Die Geburt der Literatur und der Wandel der Schrift von einer bürokratischen zu einer Sprache der Mythen und Legenden.</p>
+      <p>Die Geburt der Literatur und der Wandel der Schrift von einer Sprache zur Verwaltung zu einer Sprache der Mythen und Legenden.</p>
       <p>Der junge Schreiberlehrling Harran bricht auf, um seine Schwester Samhat zu retten, die König Gilgamesch entführt hat. Er trifft auf einen Herrscher, der von der Angst vor dem Tod besessen ist und nach Unsterblichkeit strebt. Harran erkennt, dass er den König nicht mit Gewalt besiegen kann, sondern nur, wenn er ihm eine Geschichte schreibt.</p>
     </section>
 
@@ -112,7 +109,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     </section>
   </div>
 
-  <p class="regal" id="regal">Zum Stoff der Trilogie stehen in seiner <a href="bibliothek.html">Bibliothek</a> unter anderem <span class="wird-knopf" data-buch="Gilgamesch"><i>Gilgamesch</i></span>, <span class="wird-knopf" data-buch="Sumerer und Akkader"><i>Sumerer und Akkader</i></span> von Gebhard&nbsp;J.&nbsp;Selz, <span class="wird-knopf" data-buch="The Dawn of Everything"><i>The Dawn of Everything</i></span> von David&nbsp;Graeber und David&nbsp;Wengrow und <span class="wird-knopf" data-buch="Sapiens"><i>Sapiens</i></span> von Yuval Noah&nbsp;Harari.</p>
+  <p class="regal" id="regal">Zum Stoff der Trilogie stehen in der <a href="bibliothek.html">Bibliothek</a> unter anderem <span class="wird-knopf" data-buch="Gilgamesch"><i>Gilgamesch</i></span>, <span class="wird-knopf" data-buch="Sumerer und Akkader"><i>Sumerer und Akkader</i></span> von Gebhard&nbsp;J.&nbsp;Selz, <span class="wird-knopf" data-buch="The Dawn of Everything"><i>The Dawn of Everything</i></span> von David&nbsp;Graeber und David&nbsp;Wengrow und <span class="wird-knopf" data-buch="Sapiens"><i>Sapiens</i></span> von Yuval Noah&nbsp;Harari.</p>
   <p id="buchzeile" hidden></p>
 </section>
 </main>
@@ -121,7 +118,7 @@ html:not(.js) .globusseite > .globus { display: none; }
   <div class="kontakt">
     <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
-      <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
+      <p><span id="post-satz">Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" placeholder="E-Mail-Adresse" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
@@ -166,7 +163,6 @@ html:not(.js) .globusseite > .globus { display: none; }
     s.replaceWith(b);
   });
   $$('.band-ort, .regal').forEach(F.satzzeichenBinden);
-  const leiste = $('#ortsleiste');
   const bandOrte = $$('.band-ort');
   F.gleichBreit($$('[data-station]'));
 
@@ -204,7 +200,7 @@ html:not(.js) .globusseite > .globus { display: none; }
   // ================= Ablauf =================
   let nachEnde = false;
   a = F.ablauf({
-    globus: g, stationen: ST, tafel: tafelEl, ortsleiste: [leiste].concat(bandOrte),
+    globus: g, stationen: ST, tafel: tafelEl, ortsleiste: bandOrte,
     takt: F.TAKT.ursprung,
     beiStation(i, info) {
       // Was die Leselinie wählt, sagt die Tafel nicht an

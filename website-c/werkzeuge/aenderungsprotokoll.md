@@ -99,3 +99,13 @@ Abweichungen von `docs/gestaltung-website-c.md`, je mit Grund (Abschnitt 1, „S
 32. **Ebene *Satoshi* der Startseite: Überblick wie auf `satoshi.html`** (aus dem sichtbaren Teil der Leinwand berechnet, breit 0,92-fach), damit Buenos Aires und Bariloche ihre Namen bekommen.
 33. **Anhang A, Kursiv höchstens 5 %: reine Titellisten zählen nicht.** Die Bibliothek liegt durch die Leseliste („Autor, *Titel*“, 6.14) bei 11 % (Telefon 16 %). Dort ist Kursive Buchsatz.
 34. **6.4, Zustand „am Ende“: auf der Startseite bleibt „später“ an**, denn nach Berlin folgt Mallorca. Nur die Regel ist ungenau, der Bau ist richtig.
+
+## 21. Oktober 2026, Runde 2 (Dominiks Rückmeldung), K1 bis K7
+
+Dominiks Rückmeldung geht `gestaltung-website-c.md` vor. Die Wörter stehen in `docs/text-aenderungen-c.md`, Nr. 61 bis 78.
+
+1. **Koordinaten nur noch auf *Satoshi* und *Ursprung*** (6.4, 6.9, 6.16). `FSeite.stationInhalt` gibt keine Koordinaten mehr. Die Startseite setzt die Tafel von *Ursprung* über `ursprungTafel` ohne `daten`, `FSeite.ursprungInhalt` behält sie für `ursprung.html`. In der Vita fallen die Zeilen, ihre Klasse `.koord` und das Skript weg, das sie füllte. Auf Länder fällt auch das Neusetzen der Tafel nach dem Laden von `welt-50m.js` weg, es war nur für die genaueren Koordinaten da.
+2. **Ebene Leben ohne Text der Ebene** (6.6). Ist kein Text der Ebene sichtbar, ist `.ebenentext` ausgeblendet (`:has`). So stehen auf dem Telefon zwischen Tafel und „Was ich schreibe“ 3 z wie zwischen allen großen Teilen, nicht 4 z.
+3. **Zeitband ohne die eigenen Werke** (6.11). Der Platz, den sie rechts hatten (22 px Lücke und sieben Umrisse), geht an die Bücher. Das Band füllt weiter die ganze Breite.
+4. **Zeile aus dem Exposé kursiv** (3.4 sagt aufrecht). Dominik: „kann kursiv!“ Ihre zwei Hälften halten je zusammen (`.nw`), damit sie wie vorher am Gedankenstrich bricht. Kursiv bricht `balance` sonst nach „Götter“. Die erste Hälfte ist kursiv rund 270 px breit und passt auch bei 360 px Fensterbreite in die Spalte (310 px).
+5. **Platzhalter „E-Mail-Adresse“ im Newsletter-Feld in `--leise`** (6.2, 4.2). Er ist ein Zustand des leeren Felds und kein Text, aufrecht, 5,1 : 1 auf Papier. In Tinte sähe er aus wie eine schon eingetragene Adresse.

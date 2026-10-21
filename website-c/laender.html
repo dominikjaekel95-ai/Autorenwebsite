@@ -11,7 +11,7 @@
 <style>
 /* Länder (gestaltung-website-c.md 6.15, 9.6). Links Titel, „Länderguides, in Arbeit.“, die Wahl der Kontinente und das
    Verzeichnis aller bereisten Länder und Gebiete, gesetzt wie ein Register im Buch. Rechts der Globus mit den bereisten Ländern
-   in Grau, darunter die Tafel. Jeder Name dreht den Globus zu seinem Land, die Tafel nennt es mit den Koordinaten seiner Mitte;
+   in Grau, darunter die Tafel. Jeder Name dreht den Globus zu seinem Land, und die Tafel nennt es (ohne Koordinaten);
    ohne Wahl steht dort der Überblick. Das Verzeichnis entsteht aus INHALT.bereist und INHALT.kontinente. Ein fertiger
    Länderguide ist ein Eintrag in daten/texte.js (art 'laenderguide', land mit dem ISO-Code); die Tafel seines Lands führt dann
    zu ihm. Schmal haftet über dem Verzeichnis ein Globusband, links die Scheibe, rechts die Tafel: wer einen Namen antippt,
@@ -121,7 +121,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   <div class="kontakt">
     <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
-      <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
+      <p><span id="post-satz">Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" placeholder="E-Mail-Adresse" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
@@ -206,7 +206,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   else { figur.classList.add('ohne-globus'); $('#ersatz').hidden = false; }
 
   // ================= Tafel =================
-  // Mitte eines Lands: Schwerpunkt seiner größten Fläche (wie auf der Startseite); Kleinstaaten ohne Fläche aus INHALT.winzig
+  // Mitte eines Lands, für den Blick auf einen Kontinent: Schwerpunkt seiner größten Fläche; Kleinstaaten ohne Fläche aus INHALT.winzig
   function mitte(iso, f) {
     f = f || (g && g.land(iso));
     return (f && f.punkt) || (I.winzig && I.winzig[iso]) || null;
@@ -215,13 +215,12 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   // Der Überblick und die Kontinente mit der Zahl ausgeschrieben im Satz; ohne Steuerzeile, denn hier läuft nichts ab
   const ueberblickInhalt = () => ({ kopf: 'Reisen', satz: zahl(bereist.length), fuss: false });
   const kontinentInhalt = k => ({ kopf: k, satz: zahl((KONTINENTE[k] || []).length), fuss: false });
+  // Das Land und ob er dort war; Koordinaten nennt die Tafel nicht mehr (Dominik, 21. Oktober)
   function landInhalt(iso, f) {
-    const ist = bereist.includes(iso), p = mitte(iso, f), guide = LAENDERGUIDES[iso];
-    // Bei einem Land, in dem er nicht war, sagt die Mitte des Lands nichts: dort keine Koordinaten
+    const ist = bereist.includes(iso), guide = LAENDERGUIDES[iso];
     return {
       kopf: ist || !f ? name(iso) : f.name,
       unter: ist ? 'bereist' : 'nicht bereist',
-      daten: ist && p ? F.koord(p[1], p[0]) : '',
       fuss: guide ? `<a href="${esc(guide)}">Zum Länderguide</a>` : false
     };
   }
@@ -328,12 +327,6 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   });
   // Ohne Land unter dem Zeiger gibt es auch keins, das ein Klick wählen könnte
   if (tipp) new MutationObserver(() => { if (tipp.hidden) zeiger = null; }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
-  /* Der Kern lädt die feineren Küsten (daten/welt-50m.js) nach; die Mitte eines Lands rückt damit um ein paar Bogenminuten.
-     Ist dann ein Land gewählt, nennt die Tafel gleich die genaueren Koordinaten, damit ein Land nicht zweierlei Mitten hat */
-  document.addEventListener('load', e => {
-    const s = e.target;
-    if (s && s.tagName === 'SCRIPT' && /welt-50m\.js$/.test(s.src || '')) setTimeout(() => { tafelStand = ''; tafelSetzen(); }, 0);
-  }, true);
 
   let uhr = 0;
   window.addEventListener('resize', () => { clearTimeout(uhr); uhr = setTimeout(() => { bandSetzen(); tafelHoehe(); }, 120); });

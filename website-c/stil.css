@@ -210,6 +210,9 @@ html:not(.js) .post { display: none; }
   border: 0; border-bottom: 1px solid var(--tinte); border-radius: 0; background: none; box-shadow: none;
   font: inherit; line-height: 1.25; color: var(--tinte); vertical-align: baseline;
 }
+/* Der Platzhalter „E-Mail-Adresse“ steht sichtbar im leeren Feld (Dominik, 21. Oktober), aufrecht, in --leise: ein Zustand des
+   Felds, kein Text, und so nicht mit einer eingetragenen Adresse zu verwechseln. Beim Tippen verschwindet er */
+.post-feld::placeholder { color: var(--leise); opacity: 1; font-style: normal; }
 .post-feld:-webkit-autofill { box-shadow: inset 0 0 0 2rem var(--papier); -webkit-text-fill-color: var(--tinte); }
 /* Fokus: der Strich wird 2 px; der durchsichtige Umriss erscheint nur im Kontrastmodus des Systems */
 .post-feld:focus-visible { outline: 2px solid transparent; box-shadow: inset 0 -1px 0 var(--tinte); }

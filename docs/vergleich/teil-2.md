@@ -1,6 +1,6 @@
 ## Teil 2: Farbe, Globus, Bewegung
 
-Stand der Bilder: 21. Oktober 2026, nachts. A ist unverändert. B ist mit dem Stand von 1:30 Uhr fotografiert. Kurz davor hat eine andere Arbeitssitzung in B die Zeichenerklärung an der Karte entfernt und auf dem Telefon einen Hinweis zum Wischen ergänzt. Wo das eine Rolle spielt, steht es dabei.
+Stand der Bilder: 21. Oktober 2026, nachts. A ist unverändert. B ist mit dem Stand zwischen 1:30 und 1:50 Uhr fotografiert. Kurz davor hat eine andere Arbeitssitzung in B die Zeichenerklärung an der Karte entfernt und auf dem Telefon einen Hinweis zum Wischen ergänzt. Wo das eine Rolle spielt, steht es dabei.
 
 So sind die Bilder entstanden: Desktop mit 1440 × 900 Pixeln, Telefon mit 390 × 844 bei doppelter Pixeldichte. Für A habe ich gewartet, bis der erste Satz eingeflogen und die Chronik einmal durchgelaufen ist (rund 31 Sekunden). Die Bilder zeigen also den Zustand nach dem Ende der Bewegung, ohne „reduzierte Bewegung“. Ausnahmen sind die Momentaufnahmen der Chronik unter 11.
 
@@ -15,15 +15,15 @@ So sind die Bilder entstanden: Desktop mit 1440 × 900 Pixeln, Telefon mit 390 �
 
 **Vorher (A).** Der Grund ist #FFFEFC, ein Weiß mit einem Hauch Gelb, das man mit bloßem Auge kaum von reinem Weiß unterscheidet. Text steht in Graphit (#1D1E21), Nebentext und Linien in bis zu sieben Grautönen. Siena (#9B5230), ein gebranntes Rotbraun, ist die Akzentfarbe, also die eine Farbe, die etwas hervorhebt. Sie bedeutet „eigenes Werk“: Seitentitel von *Satoshi* und *Ursprung*, die Bandziffern, die Signatur „DJ 1“ auf der Karteikarte, die feinen Linien an den eigenen Rücken und Weg und Punkte auf dem Globus bei *Satoshi* und *Ursprung*. Dazu kommen warme Flächen: die Karteikarte in Karton (#FBF9F4) mit Kartonrand, die eigenen Rücken in Creme (#F8F4EC), das Brett in Hellbeige (#E9E6E0) und die bereisten Länder auf dem Globus in Beige (#DBD5CB).
 
-**Nachher (B).** B hat fünf Farben. Papier ist reines Weiß (#FFFFFF), Tinte (#141414) trägt allen Text und alle Linien. Ein Blau (#2A5F99) und ein sehr helles Blau (#E5ECF3) kommen nur auf Karten vor, für Küste, Gradnetz und Wasser. Ein helles Grau (#C4C4C4) war für die Striche des Zeitbands gedacht und ist mit dem Zeitband aus der Seite verschwunden. Es gibt keinen Akzent für eigene Werke. Man erkennt sie an ihrer Stellung und am kursiven Titel. Es gibt kein Grau für Text, und Farbe erscheint nie bei Links oder unter der Maus.
+**Nachher (B).** B hat fünf Farben. Papier ist reines Weiß (#FFFFFF), Tinte (#141414) trägt allen Text und alle Linien. Ein Blau (#2A5F99) und ein sehr helles Blau (#E5ECF3) kommen nur auf Karten vor, für Küste, Gradnetz und Wasser. Ein helles Grau (#C4C4C4) dient nur den Strichen des Zeitbands in der Bibliothek, nie dem Text. Es gibt keinen Akzent für eigene Werke. Man erkennt sie an ihrer Stellung und am kursiven Titel. Es gibt kein Grau für Text, und Farbe erscheint nie bei Links oder unter der Maus.
 
 **Warum.** Drei Merkmale der Rangliste treffen hier zusammen: Rang 2 (warmer Creme- oder Papiergrund), Rang 9 (Serife als Abkürzung zu „literarisch“) und Rang 10 (Terrakotta-, Rost- oder Siena-Akzent). Alle drei sind „sehr häufig“ und bei Claude belegt. Dass gerade diese Mischung der häufigste Claude-Look ist, hat drei Gründe.
 
 - Anthropic beschreibt sie selbst. Im Leitfaden zu Opus 4.8 nennt Anthropic als Hausstil „warm cream/off-white backgrounds (~#F4F1EA)“, Serifen für Überschriften und „a terracotta/amber accent“ und nennt den Cremegrund „persistent“. Für Opus 5.5 steht der Cremegrund unter den Mustern, die man ausdrücklich verbieten soll.
-- Es sind Anthropics eigene Farben. Claudes Oberfläche hat den Grund #faf9f5 und den Akzent #D97757, ein Terrakotta. Anthropics eigener Gestaltungs-Skill schreibt, dieser Akzent wirke auf einer fremden Seite deshalb „as a tell“, also wie ein Erkennungszeichen. Siena gilt in der Liste als dunklere Spielart derselben Familie.
+- Es sind Anthropics eigene Farben. Anthropics Markenfläche ist #faf9f5, ein Cremeweiß, Claudes Akzentfarbe ist #D97757, ein Terrakotta. Anthropics eigener Gestaltungs-Skill schreibt, dieser Akzent wirke auf einer fremden Seite deshalb „as a tell“, also wie ein Erkennungszeichen. Siena gilt in der Liste als dunklere Spielart derselben Familie.
 - Der Look ist aus Anthropics eigenem Rat entstanden. 2025 riet Anthropic gegen die erste KI-Welle (Inter, Lila) zu Buchschriften und einem „editorial“ Ton. Daraus wurde die dritte Welle, die Kyle Chayka im New Yorker so beschreibt: „Beige backgrounds, rust-red text“.
 
-Die Zahlen sind deutlich. Opus 5.5 legt auf 11 von 20 Produktseiten einen warmen hellen Grund an, Vergleichsmodelle von OpenAI und Google auf 3 und 0. Von 17 Opus-Seiten mit benanntem Akzent haben 6 einen Terrakotta-Ton, in einer Galerie von 246 Seiten menschlicher Gestalter hat ihn eine einzige. Bei einem Autor fällt das besonders auf, weil Bücher genau das Thema sind, bei dem Claude in diese Farben rutscht. impeccable hat gemessen, dass „warm, bookish … subjects come out as cream grounds, serif display with italic accents“, auch wenn niemand danach gefragt hat.
+Die Zahlen sind deutlich. Opus 5.5 legt auf 11 von 20 Produktseiten einen warmen hellen Grund an, Vergleichsmodelle von OpenAI und Google auf 3 und 0. Von 17 Opus-Seiten mit benanntem Akzent haben 6 einen Terrakotta-Ton, in einer Galerie von 246 Seiten menschlicher Gestalter hat ihn eine einzige. Bei einem Autor fällt das besonders auf, weil Bücher genau das Thema sind, bei dem Claude in diese Farben rutscht. impeccable hat festgestellt, dass „warm, bookish … subjects come out as cream grounds, serif display with italic accents“, auch wenn niemand danach gefragt hat.
 
 A trifft das nur zum Teil. Der Grund ist praktisch weiß. Die Prüfung von A (B4) stuft Siena als „stark“ ein, die Cremeflächen als „mittel“: klein, aber zusammen mit Siena die Paarung aus Rang 2 und 10. Dass Siena genau eine Bedeutung hat, ist gutes Handwerk und mildert den Eindruck. Die Farbfamilie bleibt aber erkennbar. Die frühen Projektnotizen, vom selben Modell geschrieben, hatten Siena ausdrücklich empfohlen.
 
@@ -69,7 +69,7 @@ Das Blau von B steht der Liste ebenfalls nahe. Opus 5.5 wählt in 6 von 17 Fäll
 - **Datenwahl.** Eine Zeile entscheidet, wann die groben und wann die feinen Küsten gezeichnet werden (unter 10).
 - **Weg.** B führt längere Aufenthalte als Abstecher vom vorigen Wohnort hin und zurück, A verbindet alle Stationen der Reihe nach (unter 14b).
 - **Nur in B:** Schraffur, Flüsse, Gewässernamen (ausgeschaltet), „Äquator“ im Ring (ausgeschaltet), feste Flugdauer.
-- **Nur in A:** Länderzettel unter der Maus, leises Pendeln im Leerlauf (auf allen Seiten ausgeschaltet), Meldung der Ansicht („Welt › Deutschland“).
+- **Nur in A:** der Länderzettel unter der Maus und ein leises Pendeln im Leerlauf, das auf allen Seiten ausgeschaltet ist.
 
 **Warum.** Die Kugel selbst bleibt in beiden Fassungen. Sie ist ein Prunkstück im Sinn von Rang 27, also ein großes interaktives Element, um das die Seite gebaut ist. Die Liste verlangt dafür eine Aufgabe, die nur dieser Inhalt stellt, eigenen Bau, echte Daten und keine Dauerdrehung. Das erfüllt schon A, die Prüfung stuft den Globus als „schwach“ ein. Der Umbau in B hat zwei andere Gründe. Erstens die KI-Treffer an der Kugel von A: das Beige der Länder (Rang 2), Siena an den Wegen (Rang 10) und die kursiven Ortsnamen (Rang 8, kursiv ohne Grund). In der Kartografie stehen Ortsnamen aufrecht, kursiv sind Gewässer. Zweitens die Silhouette: Vier Seiten von A haben denselben ersten Bildschirm, links Text, rechts die angeschnittene Kugel (Rang 14, nah). Die Jury wählte die Richtung „Atlas“, weil man diesen Look nicht aus dem Wort „Autorenseite“ erraten kann. Das ist die Prüffrage von impeccable. B bringt dafür eigene Nähen zur Liste mit: die Schraffur (Rang 57, nah), das Blau (Rang 19, nah) und den Rahmen als Haarlinie (Rang 51).
 
@@ -116,7 +116,7 @@ Dominik findet das Zoomen in B besser. Das liegt fast ganz an der Technik. Die B
 
    In Worten: A zeichnet fein, sobald die Kugel stillsteht *oder* stärker als 1,8-fach vergrößert ist. B zeichnet fein nur, wenn sie stillsteht *und* vergrößert ist. Beim Zoomen ist die Kugel fast immer stärker vergrößert, also rechnet A genau dann mit der feinen Karte, wenn es schnell gehen müsste. Über der Zeile in A steht der Kommentar „In Bewegung grob zeichnen, in Ruhe fein“. Die Absicht war also dieselbe wie in B, der Code tut aber etwas anderes. B hat das beim Bau bemerkt und im Änderungsprotokoll notiert: „Sonst dauerte ein Bild über 100 ms.“ Dazu zeichnet A auch den Überblick in Ruhe fein. Nach jedem Drehen der ganzen Kugel steht die Seite deshalb einmal für 0,2 Sekunden still.
 
-2. **Gemessene Zeit pro Bild.** Gemessen im Prüfbrowser ohne Fenster und ohne Grafikkarte, bei 1440 × 900, über Berlin. „Ruhe“ heißt ein Bild nach dem Anhalten, „Bewegung“ ein Bild beim Drehen. Angegeben ist der Median in Millisekunden. Bei 60 Bildern pro Sekunde bleiben für ein Bild 16,7 Millisekunden.
+2. **Gemessene Zeit pro Bild.** Gemessen im Prüfbrowser ohne Fenster und ohne Grafikkarte, bei 1440 × 900, über Berlin. „Ruhe“ heißt ein Bild nach dem Anhalten, „Bewegung“ ein Bild beim Drehen. Angegeben ist der Median in Millisekunden, also der mittlere Wert aus 15 bis 20 Bildern. Bei 60 Bildern pro Sekunde bleiben für ein Bild 16,7 Millisekunden.
 
    | Vergrößerung | A in Ruhe | A in Bewegung | B in Ruhe | B in Bewegung |
    |---:|---:|---:|---:|---:|
@@ -146,7 +146,7 @@ Dominik findet das Zoomen in B besser. Das liegt fast ganz an der Technik. Die B
 
 9. **Gewässernamen.** B hat 24 Meeres- und Golfnamen und die Flussnamen im Code. Sie stehen kursiv in Blau und nur auf Wasser. Das prüft B, indem es das fertige Bild ausliest, deshalb nur in Ruhe. Zurzeit sind sie ausgeschaltet, weil A keine Gewässernamen hat und B kein Wort zeigen soll, das A nicht hat. Für den Eindruck beim Zoomen spielen sie also im Moment keine Rolle. A hat keine.
 
-10. **Flugdauer und Zoom der Stationen.** A fliegt je nach Entfernung 0,9 bis 2,4 Sekunden, B immer eine Sekunde. A zeigt jede Station 2,4-fach vergrößert, B die Stationen in Europa 3,6-fach, die übrigen 2,5-fach. Dortmund, Freiburg und Potsdam liegen bei 2,4-fach fast aufeinander.
+10. **Flugdauer und Zoom der Stationen.** A fliegt je nach Entfernung 0,9 bis 2,4 Sekunden, B immer eine Sekunde. A zeigt jede Station 2,4-fach vergrößert, B die Stationen in Europa 3,6-fach, die übrigen 2,5-fach. Bei 2,4-fach steht ganz Europa im Bild, bei 3,6-fach rückt die Kugel näher an Dortmund, Freiburg und Potsdam heran, und die Namen haben mehr Platz.
 
 11. **Eine Einstellung mit Nebenwirkung.** B öffnet seine Zeichenfläche mit `willReadFrequently: true`. Das sagt Chrome, das Bild werde oft ausgelesen, und Chrome rechnet die Fläche dann ohne Grafikkarte. Gebraucht wird das nur für die ausgeschalteten Gewässernamen. Auf einem Rechner mit Grafikkarte kann es B etwas bremsen. Messen konnte ich das hier nicht, der Prüfrechner hat keine Grafikkarte.
 
@@ -207,7 +207,7 @@ Offen ist, ob die Kugel beim Zoomen am Fensterrand angeschnitten bleiben darf. D
 
 **Sicherheit.** Geschmack. Die Liste selbst empfiehlt eine solche Chronik als die eine erzählende Bewegung. B hat sie aus Vorsicht gestrichen.
 
-**Für die Mischfassung.** Bei A bleiben, mit drei Änderungen. Erstens die Datenregel aus 10, damit die Flüge flüssig laufen. Zweitens startet die Chronik, ohne auf den einfliegenden Satz zu warten, sobald die Kugel im Bild ist. Drittens zeigt sie die Stationen in Europa 3,6-fach vergrößert, damit Dortmund, Freiburg und Potsdam getrennt erscheinen, und führt den Weg mit Abstechern (14b). „Früher“ und „später“ gibt es in A schon. Wer es lieber ganz ruhig hat, nimmt den Mittelweg: Beim Laden steht der ganze Weg wie in B, und die Chronik von A läuft erst auf „Noch einmal von Dortmund an“. Dann passt das Wort auch wieder zu dem, was es tut.
+**Für die Mischfassung.** Bei A bleiben, mit drei Änderungen. Erstens die Datenregel aus 10, damit die Flüge flüssig laufen. Zweitens startet die Chronik, ohne auf den einfliegenden Satz zu warten, sobald die Kugel im Bild ist. Drittens zeigt sie die Stationen in Europa wie B 3,6-fach vergrößert, damit die Namen dort mehr Platz haben, und führt den Weg mit Abstechern (14b). „Früher“ und „später“ gibt es in A schon. Wer es lieber ganz ruhig hat, nimmt den Mittelweg: Beim Laden steht der ganze Weg wie in B, und die Chronik von A läuft erst auf „Noch einmal von Dortmund an“. Dann passt das Wort auch wieder zu dem, was es tut.
 
 ---
 
@@ -223,7 +223,7 @@ Offen ist, ob die Kugel beim Zoomen am Fensterrand angeschnitten bleiben darf. D
 
 **Nachher (B).** Der Kopf der Tafel steht oben rechts im Zwickel, der Ecke zwischen Kugel und Rahmen. Vor dem Ort steht das Kartenzeichen, ein gefüllter Punkt für einen Wohnort, ein offener Kreis für einen längeren Aufenthalt („● Kaohsiung, Taiwan“). Darunter stehen klein und einzeln das Jahr und die Art („Wohnort“). Unter dem Rahmen folgt die Legende mit den Koordinaten und dem Satz zur Luftlinie, rechts „früher“ und „später“. Alles ist aufrecht und in Tinte, ohne Kapitälchen und ohne hängende Jahreszahl. Der Wortlaut ist seit dem Textabgleich derselbe wie in A. Bis heute Nacht stand unten links im Rahmen eine Zeichenerklärung „● Wohnort ○ längerer Aufenthalt“. Die andere Arbeitssitzung hat sie entfernt, weil A keine hat. Das Zeichen im Kopf ist geblieben.
 
-**Warum.** Die Tafel von A trägt mehrere Merkmale auf engem Raum. Das Kapitälchen-Label „wohnort“ ist Rang 1, das häufigste Merkmal der Liste überhaupt. Anthropic nennt „all caps for labels“ einen der häufigsten Tells, impeccable verbietet solche Labels ausdrücklich auch in Kapitälchen. Kursiver Ort, graues Label und grauer Satz ergeben die graue Kursive als zweite Stimme (Rang 24), dazu grauen Nebentext mit wenig Kontrast (Rang 11). Koordinaten und Luftlinie sind Mikro-Metadaten (Rang 26), kleine Angaben, die nach Genauigkeit aussehen. Die Liste lässt Koordinaten aber gerade dort gelten, „wo man mit ihnen etwas tut, etwa an einer echten Karte für den gerade gezeigten Ort“. Das ist hier der Fall. Die hängende Jahreszahl ist Rang 55, nur „gelegentlich“, und auch unter Gestaltern üblich. B wollte anfangs Koordinaten und Luftlinie streichen und den Kopf ganz weglassen. Beides kam mit dem Textabgleich zurück, weil B Dominiks Wortlaut aus A zeigen soll.
+**Warum.** Die Tafel von A trägt mehrere Merkmale auf engem Raum. Das Kapitälchen-Label „wohnort“ ist Rang 1, das häufigste Merkmal der Liste überhaupt. Anthropic nennt „all caps for labels“ einen der häufigsten Tells, impeccable verbietet solche Labels ausdrücklich auch in Kapitälchen. Kursiver Ort, graues Label und grauer Satz ergeben die graue Kursive als zweite Stimme (Rang 24), dazu grauen Nebentext mit wenig Kontrast (Rang 11). Koordinaten und Luftlinie sind Mikro-Metadaten (Rang 26), kleine Angaben, die nach Genauigkeit aussehen. Die Liste lässt Koordinaten aber gerade dort gelten, „wo man mit ihnen etwas tut, etwa an einer echten Karte für den gerade gezeigten Ort“. Das ist hier der Fall. Die hängende Jahreszahl ist Rang 55, nur „gelegentlich“, und auch unter Gestaltern üblich. B hatte Koordinaten und Luftlinie zuerst gestrichen und in einer Korrektur auch den Kopf der Tafel. Beides kam mit dem Textabgleich zurück, weil B Dominiks Wortlaut aus A zeigen soll.
 
 **Vorteile.**
 - Das Zeichen vor dem Namen verbindet Tafel und Karte. Man sieht ohne Zeichenerklärung, ob Punkt oder Kreis gemeint ist.
@@ -250,7 +250,7 @@ Offen ist, ob die Kugel beim Zoomen am Fensterrand angeschnitten bleiben darf. D
 ![A: Ebene „wo Satoshi spielt“ gewählt, Wahl als Satz mit unterstrichenen Wörtern, Punkte in Siena, Text der Ebene neben der Kugel](vergleich/13-kartenwahl-a.jpg)
 ![B: dieselbe Wahl, der Satz über dem Rahmen, das Gewählte halbfett, alles in Schwarz](vergleich/13-kartenwahl-b.jpg)
 
-**Vorher (A).** In der linken Spalte unter der Kurzvita steht ein Satz: „Auf dem Globus: wo ich gelebt habe, wohin ich gereist bin, wo *Satoshi* spielt, wo die Ursprungstrilogie spielt.“ „Auf dem Globus:“ ist grau, die vier Ebenen sind Wörter mit feiner, halb durchsichtiger Unterstreichung, die gewählte steht schwarz und ohne Strich. Darunter folgt, neben der Kugel, der Text der Ebene: die Stationenzeile, die Kontinente, die Schauplätze oder die drei Bände, jeweils mit Wörtern, die den Globus führen. Eine Wahl lässt die Kugel zur Ansicht der Ebene fliegen. *Satoshi* und *Ursprung* erscheinen in Siena, *Ursprung* startet eine eigene langsame Chronik, bei der die Bände nacheinander einblenden (siehe 14). Auf dem Telefon stehen Satz und Text über der Kugel.
+**Vorher (A).** In der linken Spalte unter der Kurzvita steht ein Satz: „Auf dem Globus: wo ich gelebt habe, wohin ich gereist bin, wo *Satoshi* spielt, wo die Ursprungstrilogie spielt.“ Der ganze Satz steht in einem dunklen Grau. Die vier Ebenen sind Wörter mit feiner, halb durchsichtiger Unterstreichung, die gewählte steht schwarz und ohne Strich. Darunter folgt, neben der Kugel, der Text der Ebene: die Stationenzeile, die Kontinente, die Schauplätze oder die drei Bände, jeweils mit Wörtern, die den Globus führen. Eine Wahl lässt die Kugel zur Ansicht der Ebene fliegen. *Satoshi* und *Ursprung* erscheinen in Siena, *Ursprung* startet eine eigene langsame Chronik, bei der die Bände nacheinander einblenden (siehe 14). Auf dem Telefon stehen Satz und Text über der Kugel.
 
 **Nachher (B).** Derselbe Satz steht seit dem Textabgleich über dem Rahmen. Die Ebenen sind nicht unterstrichen, die gewählte steht halbfett, unter der Maus erscheint ein Strich. Der Text der Ebene steht unter der Legende, auf dem Desktop also unterhalb des ersten Bildschirms. Eine Wahl lässt die Kugel fliegen und zeigt den ersten Schritt (*Satoshi*: den Roman, *Ursprung*: die Trilogie), ohne Chronik, alles in Schwarz. Früher stand in B an dieser Stelle eine Liste aus Substantiven im Zwickel: „Wohnorte, Reisen, *Satoshi*, *Ursprung*“.
 
@@ -270,7 +270,7 @@ Offen ist, ob die Kugel beim Zoomen am Fensterrand angeschnitten bleiben darf. D
 
 **Sicherheit.** Geschmack. Der Wortlaut ist jetzt gleich, es bleibt die Form.
 
-**Für die Mischfassung.** Bei A bleiben, mit leiserer Form. Satz und Platz von A bleiben, auch der Text der Ebene neben der Kugel. Die Unterstreichung wird ein gewöhnlicher Strich in Textfarbe statt des halb durchsichtigen. Die gewählte Ebene steht wie in A ohne Strich, dazu halbfett wie in B, damit man sie auch ohne Farbunterschied erkennt. „Auf dem Globus:“ steht in Graphit statt grau. Siena auf den Ebenen fällt weg (08). Die Textmerkmale bekommt Dominik als Vorschlag, etwa die Wahl ohne Doppelpunkt.
+**Für die Mischfassung.** Bei A bleiben, mit leiserer Form. Satz und Platz von A bleiben, auch der Text der Ebene neben der Kugel. Die Unterstreichung wird ein gewöhnlicher Strich in Textfarbe statt des halb durchsichtigen. Die gewählte Ebene steht wie in A ohne Strich, dazu halbfett wie in B, damit man sie auch ohne Farbunterschied erkennt. Der Satz steht in Graphit statt in Dunkelgrau. Siena auf den Ebenen fällt weg (08). Die Textmerkmale bekommt Dominik als Vorschlag, etwa die Wahl ohne Doppelpunkt.
 
 ---
 
@@ -281,7 +281,7 @@ Offen ist, ob die Kugel beim Zoomen am Fensterrand angeschnitten bleiben darf. D
 ![A: Ebene Ursprung, die Bände blenden nacheinander ein, nach 0,8 s keiner, nach 2,9 s Band I halb, nach 9 s Band II fast ganz](vergleich/14-bewegung-a2.jpg)
 ![B: Ebene Ursprung, alle drei Bände stehen sofort da](vergleich/14-bewegung-b2.jpg)
 ![A auf dem Telefon: das Zeitband schiebt sich beim senkrechten Scrollen seitlich mit, drei Lagen](vergleich/14-bewegung-a3.jpg)
-![B auf dem Telefon: an derselben Stelle nur der Verweis auf die Bibliothek, kein Zeitband](vergleich/14-bewegung-b3.jpg)
+![B auf dem Telefon: das Zeitband steht jetzt in der Bibliothek, beim Laden am rechten Ende, und bleibt beim Scrollen dort](vergleich/14-bewegung-b3.jpg)
 
 **Vorher (A).** Vier weitere Bewegungen.
 - **Hover-Lift.** Hover heißt, die Maus steht über einem Element. Steht sie über einem Rücken im Regalbild oder in der Bibliothek, hebt er sich in 0,2 Sekunden um 6 Pixel. Liegende Bücher rücken 6 bis 7 Pixel zur Seite. Steht die Maus auf einem Eintrag im Werkverzeichnis, hebt sich der passende Rücken.
@@ -289,7 +289,7 @@ Offen ist, ob die Kugel beim Zoomen am Fensterrand angeschnitten bleiben darf. D
 - **Kopplung an das Scrollen.** Auf *Satoshi* fliegt die Kugel zur Szene, die man gerade liest, auf *Ursprung* zum Ort des Bands. In der Bibliothek folgt eine haftende Zeitleiste dem Fach, in dem man liest. Gemessen wird das an einer gedachten Leselinie im oberen Teil des Fensters.
 - **Mitschieben des Zeitbands.** Auf dem Telefon ist das Zeitband der Startseite gut doppelt so breit wie der Bildschirm. Beim senkrechten Scrollen schiebt es sich von selbst seitlich mit, gemessen von 0 auf 318 und 660 Pixel. Das hört auf, sobald man selbst wischt.
 
-**Nachher (B).** In B gibt es keinen einzigen weichen Übergang, keine CSS-Animation und kein Einblenden. Unter der Maus wird ein Rücken sofort schwarz gefüllt, die Schrift weiß, nichts bewegt sich. Die Bände von *Ursprung* stehen sofort da. Die Kopplung an das Scrollen bleibt auf *Satoshi*, *Ursprung* und in der Bibliothek (dort am haftenden Standortregister). Das Zeitband gibt es in B weder auf der Startseite noch in der Bibliothek, also auch kein Mitschieben.
+**Nachher (B).** Außer den Flügen der Kugel bewegt sich in B nichts weich. Es gibt keinen Übergang im Stylesheet, keine Animation und kein Einblenden. Unter der Maus wird ein Rücken sofort schwarz gefüllt, die Schrift weiß, nichts bewegt sich. Die Bände von *Ursprung* stehen sofort da. Die Kopplung an das Scrollen bleibt auf *Satoshi*, *Ursprung* und in der Bibliothek. Das Zeitband steht in B nicht auf der Startseite, sondern seit dem Textabgleich in der Bibliothek. Dort steht es beim Laden am rechten Ende und bewegt sich nur unter dem Finger. Gemessen blieb es beim Scrollen der Seite in allen drei Lagen bei 642 Pixeln.
 
 **Warum.** Der Hover-Lift ist Rang 39 (Hover-Lift auf jeder Karte), das Tailwind-Muster, bei dem jedes Element unter der Maus ein paar Pixel steigt. Die Liste merkt dazu an: „Ein Buch zieht man nach vorn aus dem Regal, nicht nach oben.“ Die Überblendung ist ein Einblenden (Rang 6). Anthropic schreibt seit September 2026, dass solche Auftritte „read as AI-generated“. In A ist sie aber an die Chronik gebunden und nicht an jeden Abschnitt, also eine milde Form. Die Kopplung an das Scrollen ist Rang 56. Die Liste hält sie für vertretbar, wenn sie Inhalt abbildet und den Scroll nicht entführt. Das trifft auf *Satoshi*, *Ursprung* und die Bibliothek zu. Das Mitschieben des Zeitbands nennt die Prüfung von A „eine milde Form von Scroll-Jacking“, also ein Übernehmen des Scrollens: Die Seite bewegt etwas, das der Leser nicht angefasst hat.
 
@@ -302,7 +302,7 @@ Offen ist, ob die Kugel beim Zoomen am Fensterrand angeschnitten bleiben darf. D
 **Nachteile und Risiken.**
 - Die Rücken fühlen sich weniger wie Gegenstände an. Das kleine Heben in A hat Charme.
 - Das schwarze Füllen in B ist ein harter Zustand, der zur leisen Anmutung von A nicht passt.
-- Mit dem Zeitband fehlt in B ein ganzer Inhalt, das Verschwinden des Mitschiebens ist nur eine Folge davon. Über das Zeitband selbst entscheidet ein anderer Teil.
+- Das Zeitband ist in B von der Startseite in die Bibliothek gewandert. Auf der Startseite fehlt damit ein Stück Inhalt. Wo es hingehört, entscheidet ein anderer Teil.
 
 **Verworfene Alternativen.** Die Prüfung von A schlug statt des Hebens eine dunklere Kante vor, Titel und Autor erscheinen in der Zeile unter dem Brett. B wählte das schwarze Füllen. Ein Ziehen nach vorn (Vergrößern) wäre wieder eine Bewegung. Den Schuber der Bibliothek, der in 0,8 Sekunden aufgleitet, hat B ebenfalls gestrichen. Für das Zeitband auf dem Telefon sahen die Regeln von B vor, dass es am rechten Ende steht und sich nur unter dem Finger bewegt.
 
@@ -327,7 +327,7 @@ Dieser Unterschied fehlte in der Liste. Er liegt im Kern der Kugel und betrifft 
 
 **Nachher (B).** B zeichnet einen längeren Aufenthalt als Abstecher vom Wohnort davor, hin und zurück, gestrichelt: Potsdam nach Colombo und zurück, Potsdam nach Cotonou und zurück, Berlin nach Mallorca und zurück. Der durchgezogene Weg verbindet nur die Wohnorte.
 
-**Warum.** Kein KI-Merkmal. Die Prüfung „Form und Funktion“ von B fand in A „einen Weg, den es nicht gab“ (Befund A10). B hat das im Kern gelöst (`routeBauen` in `website-b/globus/kern.js`).
+**Warum.** Kein KI-Merkmal. Die Prüfung „Form und Funktion“ fand „einen Weg, den es nicht gab“ (Befund A10), in B, als B noch den Weg von A zeichnete. B hat das im Kern gelöst (`routeBauen` in `website-b/globus/kern.js`), A hat den Fehler noch.
 
 **Vorteile.**
 - Die Karte behauptet keine Reisen, die vermutlich nicht stattgefunden haben.

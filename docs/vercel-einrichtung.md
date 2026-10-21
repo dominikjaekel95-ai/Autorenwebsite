@@ -37,7 +37,10 @@ Dominik hat schon ein Vercel-Konto.
 ## Schritt 2: Einstellungen im Projekt
 
 1. **Settings → Git → Production Branch:** `claude/laughing-sagan-4dlccv` (ist meist schon voreingestellt).
-2. **Settings → Git → Ignored Build Step:** „Only build if there are changes in a folder“ wählen, bezogen auf das Root Directory. Falls ein Befehl verlangt ist: `git diff HEAD^ HEAD --quiet -- .`
+2. **Settings → Git → Ignored Build Step:** „Custom“ wählen und als Befehl eintragen: `git diff --quiet "$VERCEL_GIT_PREVIOUS_SHA" HEAD -- .`
+   - Der Befehl vergleicht mit dem letzten erfolgreichen Deployment, nicht nur mit dem letzten Commit. So geht kein Stand verloren, wenn ein Push mehrere Commits enthält.
+   - Beim ersten Deployment ist die Variable leer, der Befehl schlägt fehl, und Vercel baut. Das ist gewollt.
+   - Bietet Vercel stattdessen „Only build if there are changes in a folder“ an, geht auch das.
    - Grund: Die Cloud-Sitzung pusht oft Zwischenstände in `website-c/`. Online gehen soll nur, was sie bewusst nach `veroeffentlichung/` legt.
 3. **Settings → Deployment Protection:** Die Standardeinstellung lassen, bei der Vorschauen geschützt sind und die echte Seite öffentlich ist.
 4. **Analytics, Speed Insights, Toolbar:** aus lassen (siehe Regel 3). Die Toolbar für Production unter Settings → General abschalten, falls sie dort an ist.

@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dominik Jäkel</title>
+<meta name="description" content="Dominik Jäkel, Schriftsteller und Reisender, lebt in Berlin. Sein Debütroman Satoshi erzählt die Gründungslegende von Bitcoin, die Trilogie Ursprung von den Anfängen der Zivilisation.">
+<link rel="canonical" href="https://dominikjaekel.de/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dominik Jäkel">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Dominik Jäkel">
+<meta property="og:description" content="Dominik Jäkel, Schriftsteller und Reisender, lebt in Berlin. Sein Debütroman Satoshi erzählt die Gründungslegende von Bitcoin, die Trilogie Ursprung von den Anfängen der Zivilisation.">
+<meta property="og:url" content="https://dominikjaekel.de/">
+<meta property="og:image" content="https://dominikjaekel.de/bilder/vorschau.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller und Reisender. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FFFEFC">
+<script>
+document.documentElement.classList.add('js');
+</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="stil.css">
+<style>
+.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 3); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
+.einstieg.gesetzt .glied-satz, .einstieg .paar { white-space: nowrap; }
+.einstieg-satz { display: inline; }
+html:not(.js) .einstieg .glied-satz { display: block; }
+.einstieg-satz .w { display: inline-block; }
+.einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
+.einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 1.2s forwards; }
+@keyframes einstieg-notfall { to { opacity: 1; } }
+.globusseite > .vita { margin-top: var(--z-dreiviertel); }
+.ebenen, .kontinente { display: flex; flex-wrap: wrap; column-gap: .85em; }
+.globusseite > .ebenen { margin-top: var(--z); }
+.globusseite > .ebenentext { margin-top: var(--z-viertel); }
+.ebenentext p + p { margin-top: var(--z-dreiviertel); }
+.ebenentext:not(:has(> [data-text]:not([hidden]))) { display: none; }
+.ebenentext .band + .band { margin-top: var(--z-viertel); }
+.ebenentext p + .band { margin-top: var(--z-halb); }
+.ebenentext .band { padding-left: 1.9em; text-indent: -1.9em; }
+.ebenentext .band-nr { display: inline-block; width: 1.4em; margin-right: .25em; text-align: right; text-indent: 0; font-variant-numeric: lining-nums; }
+html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
+.schreiben-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); align-items: start; }
+.schreiben-raster .verzeichnis { grid-column: 1; grid-row: 1; }
+.schreiben-raster .regalbild { grid-column: 2; grid-row: 1; margin-left: max(calc(var(--z) * 1.5), calc(var(--globuskante) - var(--rand-l) - var(--spalte))); }
+.gruppe + .gruppe { margin-top: var(--z); }
+.eintrag + .eintrag { margin-top: var(--z-viertel); }
+.eintrag { scroll-margin-top: var(--z); }
+.regalbild { position: relative; }
+.regalbild-flaeche { position: relative; margin-top: var(--zh-klein); }
+.stueck {
+  position: absolute; bottom: 0; display: block; margin: 0; padding: 0; border: .75px solid var(--tinte); border-radius: 0;
+  background: var(--papier); color: var(--tinte); font: inherit; cursor: pointer; overflow: hidden;
+  transform-origin: 100% 100%; transform: rotate(var(--neig, 0deg)) translate(var(--hx, 0px), var(--hy, 0px));
+  transition: transform var(--zug-dauer) ease-out; -webkit-tap-highlight-color: transparent;
+}
+.stueck > span { position: absolute; white-space: nowrap; line-height: 1; letter-spacing: normal; pointer-events: none; }
+.stueck.eigen > span { left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+.stueck.liegt > span { left: 7px; right: 7px; top: 50%; transform: translateY(-50%); overflow: hidden; text-align: left; }
+.stueck.eigen { background: var(--tinte); color: var(--papier); border-color: var(--papier); }
+.stueck:hover, .stueck.ist-gemeint, .stueck.ist-ziel, .stueck.ist-offen { box-shadow: inset 0 0 0 .75px var(--tinte); }
+.stueck.dunkel:hover, .stueck.dunkel.ist-gemeint, .stueck.dunkel.ist-ziel, .stueck.dunkel.ist-offen { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); }
+.stueck:focus-visible { outline: 1.5px solid var(--tinte); outline-offset: 2px; z-index: 1; }
+.stueck.eigen.ist-offen { --hy: var(--zug); }
+.stueck.liegt.ist-offen { --hx: calc(var(--zug) * -1); }
+.brett { height: 4px; background: var(--brett); }
+.regal-name { position: absolute; left: 0; top: 0; width: max-content; max-width: 100%; font-size: var(--g-klein); line-height: var(--zh-klein); background: var(--papier); pointer-events: none; }
+.regal-name[hidden] { display: none; }
+html:not(.js) .regalbild { display: none; }
+.gelesen-vorwort { max-width: var(--mass); }
+.zeitband { margin-top: var(--z); }
+.zeitband-roll { position: relative; }
+.zb { display: block; overflow: visible; }
+.zb:focus { outline: none; }
+.zb:focus-visible { outline: 1.5px solid var(--tinte); outline-offset: 6px; }
+.zb rect { shape-rendering: geometricPrecision; }
+.zb .grau, .zb .ab { fill: var(--zb-strich); }
+.zb .lieb { fill: var(--tinte); }
+.zb .wieder { stroke: var(--tinte); stroke-width: 1; }
+.zb .quer { fill: var(--zb-strich); stroke: var(--tinte); stroke-width: .75; }
+.zb .haar { stroke: var(--tinte); stroke-width: .75; }
+.zb .bruch { stroke: var(--tinte); stroke-width: .9; fill: none; }
+.zb .jahr { font-family: var(--schrift); font-size: var(--g-klein); fill: var(--tinte); font-variant-numeric: oldstyle-nums tabular-nums; }
+.zb .marke { stroke: var(--tinte); stroke-width: 1.4; }
+.zb-kind rect { fill: var(--zb-kind); }
+.zb-warte rect { fill: var(--papier); stroke: var(--zb-warte); stroke-width: .65; }
+.zb rect.an, .zb rect.ist-offen { fill: var(--tinte); }
+.zb-warte rect.an, .zb-warte rect.ist-offen { stroke: var(--tinte); }
+.bandzeile { position: relative; margin-top: var(--z-viertel); min-height: var(--z); }
+.bandzeile > span { position: absolute; left: 0; top: 0; width: max-content; max-width: 100%; }
+.bandzeile .buchzeile { min-height: 0; margin-top: 0; }
+.bandzeile .zeile-zeigen { visibility: hidden; }
+.bandzeile.zeigt .zeile-zeigen { visibility: visible; }
+.bandzeile.zeigt .zeile-offen { visibility: hidden; }
+.bandname { margin-top: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); position: sticky; left: 0; width: max-content; max-width: 100%; }
+.zb-kind, .zb-warte { margin-top: var(--z-viertel); }
+.ganze { margin-top: var(--z-dreiviertel); }
+html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
+@media (max-width: 62rem) {
+  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); }
+  .globusseite > .ebenentext { order: 1; margin-top: var(--z); }
+  .globusseite > .globus { margin-top: var(--z-halb); }
+  .schreiben-raster { grid-template-columns: minmax(0, var(--mass)); }
+  .schreiben-raster .regalbild { grid-column: 1; grid-row: 1; margin: 0; }
+  .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 2; margin-top: var(--z); }
+}
+@media (max-width: 40rem) {
+  .zeitband-roll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; overscroll-behavior-x: contain; padding-bottom: var(--z-viertel); margin: 0 calc(var(--rand-l) * -1); padding-left: var(--rand-l); padding-right: var(--rand-l); scroll-padding: 0 var(--rand-l); }
+  .bandzeile > span { text-wrap: balance; hyphens: manual; -webkit-hyphens: manual; }
+  .stueck.liegt > span { left: 4px; right: 4px; }
+}
+</style>
+</head>
+<body class="mit-globus">
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="kopf">
+  <h1 class="briefkopf"><span class="name">Dominik Jäkel</span> <span class="rolle">Schriftsteller und Reisender</span></h1>
+  <nav class="nav" aria-label="Website">
+    <ul class="nav-liste" id="nav-liste">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inhalt">
+<section class="globusseite" aria-label="Vita und Globus">
+  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt tagsüber</span> <span class="glied-satz">unter fremden Namen</span> <span class="glied-satz">und abends unter seinem eigenen.</span></p>
+  <script>
+  (function () {
+    'use strict';
+    var el = document.getElementById('einstieg');
+    if (!el || !el.querySelector('.glied-satz')) return;
+    var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+    var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
+    var text = el.textContent.replace(/\s+/g, ' ').trim();
+    var satz = document.createElement('span');
+    satz.className = 'einstieg-satz';
+    satz.setAttribute('aria-hidden', 'true');
+    while (el.firstChild) satz.appendChild(el.firstChild);
+    var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
+    var PAARE = ['Dominik Jäkel', 'seinem eigenen.'];
+    glieder.forEach(function (g) {
+      var woerter = g.textContent.trim().split(/\s+/);
+      g.textContent = '';
+      var paar = null;
+      woerter.forEach(function (w, i) {
+        var s = document.createElement('span');
+        s.className = 'w';
+        s.textContent = w;
+        var beginnt = PAARE.some(function (p) { return p.split(' ')[0] === w && p.split(' ')[1] === woerter[i + 1]; });
+        if (beginnt) {
+          if (i) g.appendChild(document.createTextNode(' '));
+          paar = document.createElement('span');
+          paar.className = 'paar';
+          paar.appendChild(s);
+          g.appendChild(paar);
+          return;
+        }
+        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); paar = null; return; }
+        if (i) g.appendChild(document.createTextNode(' '));
+        g.appendChild(s);
+      });
+    });
+    var vorlesen = document.createElement('span');
+    vorlesen.className = 'unsichtbar einstieg-vorlesen';
+    vorlesen.textContent = text;
+    el.appendChild(vorlesen);
+    el.appendChild(satz);
+    var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
+    function setzen() {
+      el.style.fontSize = '';
+      el.classList.add('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var laengste = 0;
+      glieder.forEach(function (g) { laengste = Math.max(laengste, g.getBoundingClientRect().width); });
+      if (laengste <= breite) return;
+      var jetzt = parseFloat(getComputedStyle(el).fontSize);
+      var kleiner = Math.floor(jetzt * breite / laengste * 10) / 10 - .2;
+      if (kleiner >= (breit() ? 28.5 : 20.7)) el.style.fontSize = kleiner + 'px';
+      else el.classList.remove('gesetzt');
+    }
+    function imFell(ms) {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var laden = document.fonts.load('38px "IM Fell French Canon"').then(function (l) { return !!(l && l.length); });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
+    }
+    var FLUG = [];
+    function filterAnlegen() {
+      if (document.getElementById('einstieg-filter')) return;
+      var ns = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.id = 'einstieg-filter';
+      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+      var html = '';
+      for (var j = 0; j < woerter.length; j++) html += '<filter id="einstieg-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+      svg.innerHTML = html;
+      document.body.appendChild(svg);
+      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('einstieg-flug-' + m).querySelector('feGaussianBlur'));
+    }
+    function einfliegen() {
+      if (!woerter[0].animate) return;
+      filterAnlegen();
+      var em = parseFloat(getComputedStyle(el).fontSize) || 38;
+      var t = 0, laeufe = [];
+      glieder.forEach(function (g, gi) {
+        if (gi) t += 100;
+        Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
+          if (wi) t += 40;
+          laeufe.push(w.animate([
+            { opacity: 0, transform: 'translateX(.2em)' },
+            { opacity: 1, offset: .38 },
+            { opacity: 1, transform: 'translateX(0)' }
+          ], { duration: 360, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+        });
+      });
+      (function schritt() {
+        var offen = false;
+        laeufe.forEach(function (a, i) {
+          var w = woerter[i], ct = a.effect.getComputedTiming();
+          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
+          offen = true;
+          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
+          var s = Math.pow(1 - ct.progress, 1.6) * .06 * em;
+          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
+          w.style.filter = s > .06 ? 'url(#einstieg-flug-' + i + ')' : '';
+        });
+        if (offen) requestAnimationFrame(schritt);
+      })();
+    }
+    if (still()) setzen();
+    else el.classList.add('wartet');
+    imFell(600).then(function (da) {
+      setzen();
+      el.classList.remove('wartet');
+      if (da && !still()) einfliegen();
+    });
+    if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
+    var warte = 0, breiteVorher = window.innerWidth;
+    window.addEventListener('resize', function () {
+      clearTimeout(warte);
+      warte = setTimeout(function () {
+        if (window.innerWidth === breiteVorher) return;
+        breiteVorher = window.innerWidth;
+        setzen();
+      }, 140);
+    });
+  })();
+</script>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>
+
+  <p class="ebenen" role="group" aria-label="Globus"><button type="button" class="wort" data-ebene="leben" aria-pressed="true">Leben</button> <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">Reisen</button> <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false"><i>Satoshi</i></button> <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false"><i>Ursprung</i></button></p>
+
+  
+  <div class="ebenentext">
+    <div data-text="reisen" hidden>
+      <p class="kontinente" role="group" aria-label="Kontinente"><button type="button" class="wort" data-ueberblick aria-pressed="true">Alle Länder</button> <button type="button" class="wort" data-kontinent="Europa" aria-pressed="false">Europa</button> <button type="button" class="wort" data-kontinent="Asien" aria-pressed="false">Asien</button> <button type="button" class="wort" data-kontinent="Afrika" aria-pressed="false">Afrika</button> <button type="button" class="wort" data-kontinent="Amerika" aria-pressed="false">Amerika</button></p>
+      <p>Die <a href="laender.html">Länderguides</a> sind in Arbeit.</p>
+    </div>
+    <div data-text="satoshi" hidden id="satoshi-text"></div>
+    <div data-text="ursprung" hidden id="ursprung-text"></div>
+  </div>
+
+  <figure class="globus" id="globus">
+    <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Orten aus dem Text; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
+    <div class="tipp" hidden></div>
+    <p class="hinweis" hidden></p>
+    <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text und auf der Tafel.</p>
+    <div class="tafel" id="tafel" aria-live="polite"></div>
+  </figure>
+</section>
+
+<section class="abschnitt" id="schreiben" aria-labelledby="schreiben-titel">
+  <h2 class="titel" id="schreiben-titel">Was ich schreibe</h2>
+  <div class="schreiben-raster">
+    <div class="regalbild" id="regalbild">
+      <div class="regalbild-flaeche" id="regalbild-flaeche" role="group" aria-label="Eigene Bücher und der Stapel vom Nachttisch"></div>
+      <div class="brett"></div>
+      <p class="regal-name" id="regal-name" aria-hidden="true" hidden></p>
+      <p id="regal-zeile"></p>
+    </div>
+
+    
+    <div class="verzeichnis">
+      <div class="gruppe">
+        <p class="eintrag" id="satoshi"><a href="satoshi.html"><i>Satoshi</i></a>. Roman in vierzig Kapiteln. Die Gründungslegende von Bitcoin. Das Manuskript liegt vollständig vor.</p>
+        <p class="eintrag" id="ursprung"><a href="ursprung.html"><i>Ursprung</i></a>. Drei Romane über die Anfänge der Zivilisation, begonnen in Kaohsiung, Taiwan. In Arbeit.</p>
+      </div>
+      <div class="gruppe">
+        <p class="eintrag" id="erzaehlungen"><a href="erzaehlungen.html">Erzählungen</a>. Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin e.&nbsp;V. vorgestellt.</p>
+        <p class="eintrag" id="untertext"><a href="untertext.html"><i>Untertext</i></a>. Mein Journal.</p>
+      </div>
+      <div class="gruppe">
+        <p class="eintrag" id="laender"><a href="laender.html">Länder</a>. Länderguides, in Arbeit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="abschnitt" id="gelesen" aria-labelledby="gelesen-titel">
+  <h2 class="titel" id="gelesen-titel">Meine digitale Bibliothek</h2>
+  <p class="gelesen-vorwort">Von Gilgamesch bis Labatut, geordnet nach dem Jahr, in dem ein Buch zuerst erschien. Jeder Strich ist so breit wie der Rücken des Buchs. Dunkel stehen die liebsten, halb so hoch, was ich nicht zu Ende gelesen habe. Ein kleiner Strich darüber zeigt, dass ich ein Buch wieder gelesen habe. Quer darauf liegt, was ich gerade lese.</p>
+  <div class="zeitband" id="zeitband">
+    <div class="zeitband-roll" id="zeitband-roll">
+      <div id="zb-haupt-ort"></div>
+      <p class="bandzeile" id="bandzeile"><span class="zeile-zeigen" id="zeile-zeigen" aria-hidden="true"></span><span class="zeile-offen" id="zeile-offen"></span></p>
+      <p class="bandname">die wichtigsten aus Kindheit und Jugend</p>
+      <div id="zb-kind-ort"></div>
+      <p class="bandname">was noch wartet</p>
+      <div id="zb-warte-ort"></div>
+    </div>
+  </div>
+  <p class="ganze"><a href="bibliothek.html">Die ganze Bibliothek</a></p>
+</section>
+</main>
+
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="profile" hidden></p>
+  </div>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
+</footer>
+
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="daten/fluesse.js"></script>
+<script src="globus/kern.js"></script>
+<script src="daten/inhalt.js"></script>
+<script src="daten/buecher.js"></script>
+<script src="daten/leseliste.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+  const { $, $$, esc } = F;
+  const ruhig = F.ruhig();
+  const LEBEN = F.stationen();
+  const SZENEN = F.szenen();
+  const URSPRUNG = F.ursprungOrte();
+  const SAT = I.satoshi || {};
+  const BAND = {};
+  ((I.trilogie && I.trilogie.baende) || []).forEach(b => { BAND[b.band] = b; });
+  const HEUTE = LEBEN.map(s => !s.neben).lastIndexOf(true);
+  const einmal = liste => { const da = new Set(); return liste.filter(s => !da.has(s.name) && da.add(s.name)); };
+  const SATOSHI_ORTE = einmal(SZENEN).map(s => ({ name: s.name, kurz: s.kurz, notiz: s.notiz, lat: s.lat, lon: s.lon }));
+  const STATIONEN = { leben: LEBEN, satoshi: SZENEN, ursprung: URSPRUNG };
+  const BLICK = {
+    leben: { mitte: [62, 30], k: 1 },
+    reisen: { mitte: [52, 30], k: 1 },
+    satoshi: { mitte: [-48, 18], k: 1 },
+    ursprung: { mitte: [40.6, 33.8], k: 3.3 }
+  };
+  const EBENEN = {
+    leben: { orte: LEBEN, laender: false, blick: BLICK.leben },
+    reisen: { orte: [], laender: true, blick: BLICK.reisen },
+    satoshi: { orte: SATOSHI_ORTE, laender: false, blick: BLICK.satoshi },
+    ursprung: { orte: URSPRUNG, laender: false, grenzen: false, fluesse: true, blick: BLICK.ursprung }
+  };
+  const KONTINENTE = { Europa: [[13, 50], 3.3], Asien: [[94, 26], 1.75], Afrika: [[16, 4], 1.9], Amerika: [[-80, 12], 1.25] };
+  (function () {
+    const wort = o => {
+      const b = `<button type="button" class="wort" data-satoshi="${esc(o.name)}" aria-pressed="false">${esc(o.kurz || o.name)}</button>`;
+      if (o.name === 'Black Rock Desert') return 'die ' + b + ' in Nevada';
+      if (o.notiz === 'Patagonien') return b + ' in Patagonien';
+      return b;
+    };
+    const w = SATOSHI_ORTE.map(wort);
+    $('#satoshi-text').innerHTML =
+      `<p><a class="werk" href="${F.SEITEN.satoshi}">Satoshi</a> erzählt die Gründungslegende von Bitcoin. Der Roman beginnt 2001 in Buenos Aires, die Kernhandlung spielt 2007 bis 2010.</p>` +
+      `<p>Die Schauplätze in der Reihenfolge des Romans: ${w.slice(0, -1).join(', ')} und ${w[w.length - 1]}.</p>`;
+  })();
+  (function () {
+    const zeile = b => {
+      const orte = URSPRUNG.filter(o => o.band === b).map(o => `<button type="button" class="wort" data-station="${o.i}" aria-pressed="false">${esc(o.name)}</button>`);
+      return `<p class="band"><span class="band-nr">${b}</span> <i>${esc((BAND[b] || {}).titel || '')}</i>, ${orte.join(' und ')}</p>`;
+    };
+    $('#ursprung-text').innerHTML = `<p>Die drei Bände der <a href="${F.SEITEN.ursprung}">Ursprungstrilogie</a>:</p>` + ['I', 'II', 'III'].map(zeile).join('');
+  })();
+  $$('.ebenentext').forEach(F.satzzeichenBinden);
+  F.gleichBreit($$('.ebenen .wort, .kontinente .wort, [data-satoshi], #ursprung-text [data-station]'));
+  const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas'), tipp = $('.tipp', figur), tafelEl = $('#tafel');
+  let ebeneJetzt = 'leben';
+  const A = {};
+  function gezeigt(einzeln) {
+    const st = STATIONEN[ebeneJetzt];
+    if (!st) return [];
+    return einzeln ? einmal(st) : st;
+  }
+  function aktivName() {
+    const st = STATIONEN[ebeneJetzt], a = A[ebeneJetzt];
+    if (!st || !a) return null;
+    const z = a.zustand();
+    if (z === 'ruhe' || z === 'bereit') return null;
+    const s = st[a.jetzt()];
+    return s ? s.name : null;
+  }
+  const g = F.globus({
+    canvas, flaeche, tipp, hinweis: $('.hinweis', figur),
+    tippText: land => { landHover = land; return land.name; },
+    namen: { orte: () => gezeigt(true).map(s => ({ name: s.name, text: s.kurz || s.name, lat: s.lat, lon: s.lon, neben: !!s.neben })), spur: () => gezeigt(false), aktiv: aktivName }
+  });
+  const namenNeu = () => { if (g) g.namenNeu(); };
+  if (!g) {
+    figur.classList.add('ohne-globus');
+    $('#ersatz').hidden = false;
+  }
+  function blickBerechnen() {
+    if (!g) return;
+    const m = F.blickFuer(canvas, LEBEN, { lon: [20, 100], lat: [5, 50] });
+    if (m) BLICK.leben.mitte = m;
+    const u = F.blickFuer(canvas, URSPRUNG, { lon: [32, 48], lat: [26, 40], k: BLICK.ursprung.k, schritt: .25 });
+    if (u) BLICK.ursprung.mitte = u;
+    BLICK.reisen.mitte = F.breit() ? [52, 30] : [40, 28];
+    BLICK.satoshi.k = F.breit() ? .92 : 1;
+    const s = F.blickFuer(canvas, SATOSHI_ORTE.filter(o => o.lon < 40), { lon: [-90, 10], lat: [-10, 40], schritt: 2, k: BLICK.satoshi.k });
+    if (s) BLICK.satoshi.mitte = s;
+  }
+  function lebenInhalt(i) {
+    const s = LEBEN[i], t = F.stationInhalt(s);
+    if (i === HEUTE) t.marke = F.jahrMarke('seit ' + s.jahr);
+    return t;
+  }
+  function satoshiInhalt(i, mitText) {
+    if (i < 0) return { kopf: 'Satoshi', unter: 'Roman', text: SAT.hook || '' };
+    const s = SZENEN[i], notiz = s.notiz && String(s.text).indexOf(s.notiz) !== 0 ? s.notiz : '';
+    const text = String(s.text || '').replace(/(\d\.) (?=[A-ZÄÖÜ][a-zäöü]+ \d{4})/g, '$1' + F.NBSP);
+    return { zeichen: 'wohnort', marke: s.jahr, kopf: notiz ? s.kurz + ', ' + notiz : s.kurz, text: mitText ? text : '' };
+  }
+  const ursprungTafel = i => Object.assign(F.ursprungInhalt(i), { daten: '' });
+  const BEREIST = I.bereist || [];
+  let landHover = null, landGewaehlt = null, kontinentGewaehlt = null, reisenZuletzt = '';
+  function reisenInhalt(land, kontinent) {
+    if (land) return { kopf: land.name, unter: BEREIST.includes(land.iso) ? 'bereist' : 'nicht bereist' };
+    if (kontinent) return { kopf: kontinent, satz: F.gross(F.zahlwort((I.kontinente[kontinent] || []).length)) + ' Länder und Gebiete, grau auf dem Globus.' };
+    return { kopf: 'Reisen', satz: F.gross(F.zahlwort(BEREIST.length)) + ' Länder und Gebiete, grau auf dem Globus.' };
+  }
+  function reisenTafel() {
+    const land = landGewaehlt;
+    const schluessel = (land ? land.iso : '') + '|' + (kontinentGewaehlt || '');
+    if (schluessel === reisenZuletzt) return;
+    reisenZuletzt = schluessel;
+    F.tafel(tafelEl, reisenInhalt(land, kontinentGewaehlt));
+  }
+  const lebenAlle = () => LEBEN.map((s, i) => lebenInhalt(i));
+  const reisenAlle = () => [reisenInhalt(null, null), reisenInhalt(null, 'Europa'), reisenInhalt({ iso: BEREIST[0], name: 'Demokratische Republik Kongo' }, null)];
+  const satoshiAlle = mitText => [satoshiInhalt(-1)].concat(mitText ? SZENEN.map((s, i) => satoshiInhalt(i, true)) : []);
+  const ursprungAlle = () => [-1, 0, 1, 2, 3].map(ursprungTafel);
+  function tafelHoehe() {
+    if (F.breit()) F.tafelPlatz(tafelEl, lebenAlle().concat(reisenAlle(), satoshiAlle(true), ursprungAlle()));
+    else {
+      F.tafelPlatz(tafelEl, []);
+      const je = { leben: lebenAlle, reisen: reisenAlle, satoshi: () => satoshiAlle(true), ursprung: ursprungAlle };
+      F.tafelReservieren(tafelEl, (je[ebeneJetzt] || (() => []))());
+    }
+  }
+  F.tafel(tafelEl, lebenInhalt(0));
+  if (g) { blickBerechnen(); g.ebene(EBENEN.leben, { fliegen: false }); }
+  A.leben = F.ablauf({
+    globus: g, stationen: LEBEN, tafel: tafelEl, takt: F.TAKT.leben, endeBei: HEUTE,
+    beiStation: i => { if (i >= 0) F.tafel(tafelEl, lebenInhalt(i)); namenNeu(); }
+  });
+  const satoshiWorte = i => $$('[data-satoshi]').forEach(b => b.setAttribute('aria-pressed', String(i >= 0 && b.dataset.satoshi === SZENEN[i].name)));
+  A.satoshi = F.ablauf({
+    globus: g, stationen: SZENEN, tafel: tafelEl, takt: Object.assign({}, F.TAKT.satoshi, { schluss: BLICK.satoshi }),
+    taktAbspielen: Object.assign({}, F.TAKT.satoshiAbspielen, { schluss: null }), schrittZoom: F.TAKT.satoshiAbspielen.zoom,
+    ruhe: 'ruhe', aktiv: false,
+    beiStation: i => { F.tafel(tafelEl, satoshiInhalt(i, true)); satoshiWorte(i); namenNeu(); }
+  });
+  A.ursprung = F.ablauf({
+    globus: g, stationen: URSPRUNG, tafel: tafelEl, ortsleiste: $('#ursprung-text'), takt: F.TAKT.ursprung, aktiv: false,
+    beiStation: i => { F.tafel(tafelEl, ursprungTafel(i)); namenNeu(); }
+  });
+  $('#satoshi-text').addEventListener('click', e => {
+    const b = e.target.closest('[data-satoshi]');
+    if (b) { A.satoshi.waehlenName(b.dataset.satoshi); globusInSicht(b); }
+  });
+  function ebeneWaehlen(name) {
+    if (name === ebeneJetzt) return;
+    if (A[ebeneJetzt]) A[ebeneJetzt].loesen();
+    ebeneJetzt = name;
+    $$('[data-ebene]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ebene === name)));
+    $$('[data-text]').forEach(t => { t.hidden = t.dataset.text !== name; });
+    landHover = null; landGewaehlt = null; kontinentGewaehlt = null; reisenZuletzt = null;
+    $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', String(b.hasAttribute('data-ueberblick'))));
+    if (g) g.auswahl(null);
+    const a = A[name];
+    tafelHoehe();
+    if (g) g.ebene(EBENEN[name]);
+    if (a) a.zeigen();
+    else reisenTafel();
+    namenNeu();
+  }
+  function globusInSicht(wort) {
+    if (F.breit() || !g) return;
+    const f = flaeche.getBoundingClientRect(), fig = figur.getBoundingClientRect(), H = window.innerHeight;
+    const oben = Math.min(f.top, wort ? wort.getBoundingClientRect().top : f.top);
+    let d = 0;
+    if (fig.bottom > H - 8) d = fig.bottom - H + 12;
+    if (oben - d < 8) d = oben - 12;
+    if (f.bottom - d > H - 4) d = Math.min(f.bottom - H + 12, f.top - 12);
+    if (Math.abs(d) > 6) window.scrollBy({ top: d, behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  function landAn(e) {
+    const p = g && g.projektion, d3 = window.d3;
+    if (!p || !d3) return null;
+    const r = canvas.getBoundingClientRect();
+    const ll = p.invert([e.clientX - r.left, e.clientY - r.top]);
+    const rot = p.rotate();
+    if (!ll || d3.geoDistance(ll, [-rot[0], -rot[1]]) > Math.PI / 2 - .02) return null;
+    for (const iso of BEREIST) { const f = g.land(iso); if (f && d3.geoContains(f, ll)) return f; }
+    return null;
+  }
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button');
+    if (!t) return;
+    const d = t.dataset;
+    if (d.ebene) { ebeneWaehlen(d.ebene); globusInSicht($('.ebenen')); }
+    else if (d.kontinent) {
+      $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', String(b === t)));
+      kontinentGewaehlt = d.kontinent; landGewaehlt = null; reisenTafel();
+      const [mitte, k] = KONTINENTE[d.kontinent], versatz = F.breit() ? 5.2 / k : 0;
+      if (g) { g.auswahl(null); g.fliegen([mitte[0] + versatz, mitte[1]], k); }
+      globusInSicht(t);
+    } else if ('ueberblick' in d) {
+      $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', String(b === t)));
+      kontinentGewaehlt = null; landGewaehlt = null; reisenTafel();
+      if (g) { g.auswahl(null); g.fliegen(BLICK.reisen.mitte, BLICK.reisen.k); }
+      globusInSicht(t);
+    }
+  });
+  $('#ursprung-text').addEventListener('click', e => { const b = e.target.closest('[data-station]'); if (b) globusInSicht(b); });
+  if (tipp) new MutationObserver(() => { if (tipp.hidden) landHover = null; }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
+  canvas.addEventListener('click', e => {
+    if (ebeneJetzt !== 'reisen' || !g) return;
+    const land = landAn(e) || landHover;
+    if (!land) return;
+    landGewaehlt = land; kontinentGewaehlt = null;
+    $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    g.auswahl(land.iso);
+    reisenZuletzt = null; reisenTafel();
+  });
+  A.leben.einspielen();
+  tafelHoehe();
+  F.schriften(2500).then(() => { tafelHoehe(); if (g) { blickBerechnen(); g.zeichnen(); } namenNeu(); });
+  const BUECHER = F.buch.alle();
+  const regalFlaeche = $('#regalbild-flaeche'), regalName = $('#regal-name'), regalZeileEl = $('#regal-zeile');
+  const bzRegal = F.buchzeile(regalZeileEl);
+  const EIGEN = [
+    { id: 'satoshi', t: 'Satoshi', h: 205, d: 27, vor: 0 },
+    { id: 'ursprung-1', t: 'Ursprung I', h: 205, d: 24, vor: 4 },
+    { id: 'ursprung-2', t: 'Ursprung II', h: 205, d: 24, vor: 0 },
+    { id: 'ursprung-3', t: 'Ursprung III', h: 205, d: 24, vor: 0 },
+    { id: 'erzaehlungen', t: 'Erzählungen', h: 205, d: 21, vor: 14 },
+    { id: 'untertext', t: 'Untertext', h: 205, d: 16, vor: 1 },
+    { id: 'laender', t: 'Länder', h: 222, d: 19, vor: 12, lehnt: 7 }
+  ];
+  const WERK_GERADE = ['erzaehlungen', 'laender'];
+  const NACHTTISCH = BUECHER.filter(b => b.r === 'gerade');
+  const farbe = b => (F.buch && typeof F.buch.farbe === 'function' ? F.buch.farbe(b) : null);
+  const nurEigene = () => window.matchMedia('(max-width: 40rem)').matches;
+  function werkName(id) {
+    const w = (I.werke || []).find(x => x.id === id);
+    if (!w) return '';
+    const n = esc(w.buchtitel || w.titel);
+    return WERK_GERADE.includes(id) ? n : `<i>${n}</i>`;
+  }
+  function regalZeichnen() {
+    const platz = regalFlaeche.parentElement.clientWidth;
+    if (!platz) return;
+    bzRegal.schliessen();
+    const allein = nurEigene();
+    const liegend = allein ? [] : NACHTTISCH.map(b => ({ b, breite: b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185, dicke: (b.p || 250) * .06 + (b.b === 'h' ? 5 : 1) }));
+    const stapel = [[], []], hoch = [0, 0];
+    liegend.slice().sort((p, q) => q.dicke - p.dicke).forEach(s => { const i = hoch[0] <= hoch[1] ? 0 : 1; stapel[i].push(s); hoch[i] += s.dicke; });
+    if (hoch[1] > hoch[0]) { stapel.reverse(); hoch.reverse(); }
+    stapel.forEach(st => st.sort((p, q) => q.breite - p.breite || q.dicke - p.dicke));
+    let x = 0, lehne = null;
+    EIGEN.forEach(e => { x += e.vor; e.x = x; e.neigt = !!e.lehnt && !allein; if (e.neigt) lehne = { rechts: x + e.d, h: e.h, rad: e.lehnt * Math.PI / 180 }; x += e.d; });
+    const breiteVon = st => st.length ? Math.max(...st.map(s => s.breite)) : 0;
+    let x1 = 0, x2 = 0, gesamt = x + 1;
+    if (!allein) {
+      const kontakt = lehne.h * Math.cos(lehne.rad);
+      x1 = !stapel[0].length ? lehne.rechts + 20 : hoch[0] >= kontakt ? lehne.rechts + lehne.h * Math.sin(lehne.rad) + .6 : lehne.rechts + hoch[0] * Math.tan(lehne.rad) + .6;
+      x2 = x1 + breiteVon(stapel[0]) + 24;
+      gesamt = x2 + breiteVon(stapel[1]) + 3;
+    }
+    const m = Math.min(.86, (platz - 2) / gesamt);
+    const px = v => (v * m).toFixed(1) + 'px';
+    const schriftEigen = Math.min(13, m * 12.5), schriftLiegend = Math.min(13, m * 11.5);
+    let html = '';
+    const KONTUR = .75;
+    let schub = 0;
+    EIGEN.forEach((e, n) => {
+      if (n && !e.vor) schub += KONTUR;
+      const links = e.x * m - schub;
+      const text = schriftEigen >= 9 ? `<span style="font-size:${schriftEigen.toFixed(1)}px">${esc(e.t)}</span>` : '';
+      html += `<button type="button" class="stueck eigen dunkel" data-werk="${e.id}" aria-label="${esc(e.t)}" style="left:${links.toFixed(2)}px;width:${px(e.d)};height:${px(e.h)}${e.neigt ? `;--neig:${e.lehnt}deg` : ''}">${text}</button>`;
+    });
+    [x1, x2].forEach((sx, k) => {
+      let y = 0;
+      stapel[k].forEach((s, n) => {
+        const b = s.b, i = BUECHER.indexOf(b), f = farbe(b);
+        const text = schriftLiegend >= 9 && s.dicke * m >= schriftLiegend + 4 ? `<span style="font-size:${schriftLiegend.toFixed(1)}px">${esc(b.nn || b.autor)}<span class="leer">&ensp;</span>${esc(F.buch.titelKurz(b.t))}</span>` : '';
+        const ton = f ? `;background:${f.grund};color:${f.tinte}` : '';
+        html += `<button type="button" class="stueck liegt${f && f.dunkel ? ' dunkel' : ''}" data-buch="${i}" aria-label="${esc(b.autor + ', ' + b.t)}" style="left:${px(sx)};bottom:${(y * m - n * KONTUR).toFixed(2)}px;width:${px(s.breite)};height:${px(s.dicke)}${ton}">${text}</button>`;
+        y += s.dicke;
+      });
+    });
+    regalFlaeche.style.height = Math.ceil(Math.max(hoch[0], hoch[1], 222) * m + 2) + 'px';
+    regalFlaeche.style.width = Math.ceil(gesamt * m) + 'px';
+    regalFlaeche.innerHTML = html;
+    $$('.stueck.liegt > span', regalFlaeche).forEach(sp => {
+      if (sp.scrollWidth <= sp.clientWidth) return;
+      while (sp.childNodes.length > 1) sp.removeChild(sp.lastChild);
+      if (sp.scrollWidth > sp.clientWidth) sp.remove();
+    });
+    rovingSetzen();
+    zielZeigen();
+  }
+  const regalSatz = b => b.dataset.werk ? F.werkSatz(b.dataset.werk) : F.buch.satz(BUECHER[+b.dataset.buch]);
+  function regalNameZeigen(b) {
+    if (!b) { regalName.hidden = true; return; }
+    const buch = b.dataset.buch != null ? BUECHER[+b.dataset.buch] : null;
+    regalName.innerHTML = buch ? `${esc(buch.nn || buch.autor)}, <i>${esc(F.buch.titelKurz(buch.t))}</i>` : werkName(b.dataset.werk);
+    regalName.hidden = false;
+    const stapel = buch ? $$('.stueck.liegt', regalFlaeche).filter(x => x.style.left === b.style.left) : [b];
+    const oben = Math.min(...stapel.map(x => x.getBoundingClientRect().top));
+    const r = b.getBoundingClientRect(), o = regalName.offsetParent.getBoundingClientRect();
+    const breite = regalName.offsetWidth, platz = regalName.offsetParent.clientWidth;
+    const links = Math.max(0, Math.min(platz - breite, r.left - o.left));
+    const unter = $$('.stueck', regalFlaeche).map(x => x.getBoundingClientRect()).filter(q => q.right > o.left + links && q.left < o.left + links + breite);
+    const hoechst = Math.min(oben, ...unter.map(q => q.top));
+    regalName.style.left = links + 'px';
+    regalName.style.top = Math.round(hoechst - o.top - regalName.offsetHeight - 2) + 'px';
+  }
+  function zeileReservieren(el, saetze, breite) {
+    if (!el || !el.parentNode) return;
+    const probe = el.cloneNode(false);
+    probe.removeAttribute('id'); probe.removeAttribute('aria-live'); probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;margin:0;min-height:0;max-width:none;width:${Math.max(1, Math.floor(breite || el.clientWidth))}px`;
+    el.parentNode.appendChild(probe);
+    let h = 0;
+    saetze.forEach(s => { probe.innerHTML = s; h = Math.max(h, probe.getBoundingClientRect().height); });
+    probe.remove();
+    return Math.ceil(h);
+  }
+  const RUECKEN = { satoshi: ['satoshi'], ursprung: ['ursprung-1', 'ursprung-2', 'ursprung-3'], erzaehlungen: ['erzaehlungen'], untertext: ['untertext'], laender: ['laender'] };
+  function rueckenMarkieren(id, an, klasse) {
+    (RUECKEN[id] || []).forEach(w => { const b = $(`.stueck[data-werk="${w}"]`, regalFlaeche); if (b) b.classList.toggle(klasse, an); });
+  }
+  const anker = () => { try { return decodeURIComponent(location.hash.slice(1)); } catch (e) { return ''; } };
+  function zielZeigen() {
+    $$('.stueck.ist-ziel', regalFlaeche).forEach(b => b.classList.remove('ist-ziel'));
+    if (RUECKEN[anker()]) rueckenMarkieren(anker(), true, 'ist-ziel');
+  }
+  window.addEventListener('hashchange', zielZeigen);
+  $$('.verzeichnis .eintrag').forEach(e => {
+    e.addEventListener('pointerenter', ev => { if (ev.pointerType === 'mouse') rueckenMarkieren(e.id, true, 'ist-gemeint'); });
+    e.addEventListener('pointerleave', () => rueckenMarkieren(e.id, false, 'ist-gemeint'));
+    e.addEventListener('focusin', () => rueckenMarkieren(e.id, true, 'ist-gemeint'));
+    e.addEventListener('focusout', () => rueckenMarkieren(e.id, false, 'ist-gemeint'));
+  });
+  function rovingSetzen() {
+    const alle = $$('.stueck', regalFlaeche);
+    const offen = alle.find(b => b.classList.contains('ist-offen'));
+    alle.forEach((b, i) => { b.tabIndex = (offen ? b === offen : i === 0) ? 0 : -1; });
+  }
+  regalFlaeche.addEventListener('keydown', e => {
+    const b = e.target.closest('.stueck');
+    if (!b || e.altKey || e.ctrlKey || e.metaKey) return;
+    const alle = $$('.stueck', regalFlaeche), i = alle.indexOf(b);
+    const ziel = { ArrowRight: alle[i + 1], ArrowDown: alle[i + 1], ArrowLeft: alle[i - 1], ArrowUp: alle[i - 1], Home: alle[0], End: alle[alle.length - 1] }[e.key];
+    if (!ziel) return;
+    e.preventDefault();
+    alle.forEach(x => { x.tabIndex = x === ziel ? 0 : -1; });
+    ziel.focus();
+  });
+  regalFlaeche.addEventListener('pointerover', e => { const b = e.target.closest('.stueck'); if (b && e.pointerType === 'mouse') regalNameZeigen(b); });
+  regalFlaeche.addEventListener('pointerout', e => { const b = e.target.closest('.stueck'); if (b && !b.contains(e.relatedTarget) && document.activeElement !== b) regalNameZeigen(null); });
+  regalFlaeche.addEventListener('focusin', e => { const b = e.target.closest('.stueck'); if (b && b.matches(':focus-visible')) regalNameZeigen(b); });
+  regalFlaeche.addEventListener('focusout', () => regalNameZeigen(null));
+  regalFlaeche.addEventListener('click', e => {
+    const b = e.target.closest('.stueck');
+    if (!b) return;
+    $$('.stueck', regalFlaeche).forEach(x => { x.tabIndex = x === b ? 0 : -1; });
+    bzRegal.umschalten(b, regalSatz(b), b);
+  });
+  function ankerSetzen() {
+    const titel = $('#schreiben-titel'), z = F.masz('--z');
+    $$('.verzeichnis .eintrag').forEach(e => {
+      e.style.scrollMarginTop = F.breit() && titel ? Math.max(0, Math.round(e.getBoundingClientRect().top - titel.getBoundingClientRect().top + z)) + 'px' : '';
+    });
+  }
+  let angefasst = false;
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(t => window.addEventListener(t, () => { angefasst = true; }, { passive: true }));
+  function zielAnfahren() {
+    const el = RUECKEN[anker()] && document.getElementById(anker());
+    if (el && !angefasst) el.scrollIntoView({ block: 'start' });
+  }
+  regalZeichnen(); ankerSetzen();
+  const mitMass = b => {
+    const p = b.p > 0 ? b.p : 280, h = F.hash(b.key);
+    return { breite: p * 0.06 + (b.b === 'h' ? 5 : 1), hoehe: (b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185) * (0.975 + (h % 997) / 997 * 0.05) };
+  };
+  BUECHER.forEach(b => { b.mm = mitMass(b); b.h = F.hash(b.key); });
+  const ordnung = F.buch.ordnung;
+  const HAUPT = BUECHER.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort(ordnung);
+  const GERADE = BUECHER.filter(b => b.r === 'gerade' && b.j != null).sort(ordnung);
+  const KIND = BUECHER.filter(b => b.r === 'kindheit' && b.j != null).sort(ordnung);
+  const WARTE = BUECHER.filter(b => b.r === 'leseliste' && b.j != null).sort(ordnung);
+  const kurz = x => F.buch.zeile(x).html;
+  const satzVon = x => F.buch.satz(x);
+  const roll = $('#zeitband-roll'), bandzeile = $('#bandzeile'), zeileZeigenEl = $('#zeile-zeigen'), zeileOffenEl = $('#zeile-offen');
+  const ZB = { items: [], folgen: {}, aktiv: null, breite: 0, schmal: false, y0: 0, offen: null };
+  const bzBand = F.buchzeile(zeileOffenEl, { beimSchliessen: () => { ZB.offen = null; markeSetzen(); } });
+  const messCtx = document.createElement('canvas').getContext('2d');
+  const textBreite = (text, font) => { messCtx.font = font; return messCtx.measureText(text).width; };
+  const bandSchmal = () => window.matchMedia('(max-width: 40rem)').matches;
+  function bandBauen() {
+    if (!roll || !HAUPT.length) return;
+    const schmal = bandSchmal();
+    const verfuegbar = roll.clientWidth - (schmal ? 2 * (parseFloat(getComputedStyle(roll).paddingLeft) || 0) : 0);
+    if (verfuegbar <= 0) return;
+    bzBand.schliessen();
+    const sy = schmal ? 0.4 : Math.max(0.36, Math.min(0.5, verfuegbar / 2300));
+    let minL = schmal ? 0.45 : 0.5;
+    let minB = schmal ? 0.7 : 0.8;
+    const BRUCH = 40;
+    const BODEN = 7;
+    const luecke = d => d <= 0 ? 0 : 1.8 * Math.pow(d, 0.85);
+    const liegeLaenge = b => b.mm.hoehe * sy;
+    const liegeDicke = b => Math.max(5, b.mm.breite * sy);
+    function anordnen(sx) {
+      const pos = [], brueche = [], amBoden = []; let x = 0, vor = null;
+      HAUPT.forEach(b => {
+        if (vor) {
+          const d = b.j - vor.j;
+          if (d > 150) {
+            GERADE.forEach(l => { if (l.j > vor.j && l.j < b.j) { x += BODEN; amBoden.push({ b: l, x, len: liegeLaenge(l), dick: liegeDicke(l) }); x += liegeLaenge(l); } });
+            brueche.push({ von: x, bis: x + BRUCH });
+            x += BRUCH;
+          } else x += Math.max(minL, sx * luecke(d));
+        }
+        const w = Math.max(minB, sx * b.mm.breite);
+        pos.push({ b, x, w }); x += w; vor = b;
+      });
+      return { pos, brueche, amBoden, buecherEnde: x, ende: x };
+    }
+    let zielBreite = verfuegbar;
+    if (schmal) zielBreite = Math.round(Math.max(verfuegbar * 2.2, anordnen(0).ende * 1.15));
+    else for (let n = 0; n < 30 && anordnen(0).ende > zielBreite * .8; n++) { minB *= .9; minL *= .9; }
+    let lo = 0, hi = 1.5;
+    for (let n = 0; n < 40; n++) { const m = (lo + hi) / 2; if (anordnen(m).ende > zielBreite) hi = m; else lo = m; }
+    const sx = lo;
+    const A2 = anordnen(sx);
+    const W = Math.ceil(zielBreite);
+    const pos = A2.pos;
+    function X(jahr) {
+      let a = 0, c = pos.length;
+      while (a < c) { const m = (a + c) >> 1; if (pos[m].b.j < jahr) a = m + 1; else c = m; }
+      if (a === 0) return pos[0].x;
+      if (a === pos.length) return pos[a - 1].x + pos[a - 1].w;
+      const p = pos[a - 1], q = pos[a];
+      if (q.b.j === jahr) return q.x;
+      const t = (jahr - p.b.j) / (q.b.j - p.b.j);
+      return p.x + p.w + (q.x - p.x - p.w) * t;
+    }
+    function nebenband(liste, grenze) {
+      const out = []; let ende = -Infinity;
+      liste.forEach(b => {
+        const w = Math.max(minB, sx * b.mm.breite);
+        const x = Math.max(X(b.j), ende + minL);
+        out.push({ b, x, w }); ende = x + w;
+      });
+      let rechts = grenze;
+      for (let i = out.length - 1; i >= 0; i--) {
+        if (out[i].x + out[i].w > rechts) out[i].x = rechts - out[i].w;
+        rechts = out[i].x - minL;
+      }
+      return out;
+    }
+    const kind = nebenband(KIND, A2.buecherEnde);
+    const warte = nebenband(WARTE, A2.buecherEnde);
+    const maxH = 225 * 1.025 * sy;
+    const hoehe = (b, f) => b.mm.hoehe * sy * (f || 1);
+    const stehendHoehe = (x0, x1) => {
+      let m = 0;
+      for (const p of pos) { if (p.x > x1) break; if (p.x + p.w >= x0) m = Math.max(m, hoehe(p.b, p.b.r === 'abgebrochen' ? .5 : 1)); }
+      return m;
+    };
+    const amBoden = new Set(A2.amBoden.map(l => l.b));
+    const liegend = GERADE.filter(b => !amBoden.has(b)).map(b => ({ b, len: liegeLaenge(b), dick: liegeDicke(b), mitte: X(b.j) })).sort((a, b) => a.mitte - b.mitte);
+    const MAXDICK = maxH * .5;
+    const stapel = [];
+    liegend.forEach(l => {
+      const st = stapel[stapel.length - 1];
+      if (st) {
+        const mitte = st.buecher.reduce((a, x) => a + x.mitte, 0) / st.buecher.length;
+        const dicke = st.buecher.reduce((a, x) => a + x.dick, 0);
+        if (st.buecher.length < 3 && dicke + l.dick <= MAXDICK && Math.abs(l.mitte - mitte) < l.len * .6) { st.buecher.push(l); return; }
+      }
+      stapel.push({ buecher: [l] });
+    });
+    stapel.forEach(st => {
+      st.lang = Math.max(...st.buecher.map(l => l.len));
+      st.x0 = st.buecher.reduce((a, l) => a + l.mitte, 0) / st.buecher.length - st.lang / 2;
+    });
+    for (let n = 0; n < stapel.length; n++) { const vor = stapel[n - 1]; stapel[n].x0 = Math.max(stapel[n].x0, vor ? vor.x0 + vor.lang + 10 : 4); }
+    for (let n = stapel.length - 1; n >= 0; n--) { const nach = stapel[n + 1]; stapel[n].x0 = Math.min(stapel[n].x0, nach ? nach.x0 - stapel[n].lang - 10 : A2.buecherEnde - stapel[n].lang); }
+    const gelegt = [];
+    stapel.forEach(st => {
+      const x0 = st.x0, lang = st.lang;
+      let boden = stehendHoehe(x0, x0 + lang) + 0.5;
+      st.buecher.sort((a, b) => b.dick - a.dick || ordnung(a.b, b.b)).forEach(l => {
+        l.x = Math.max(0, Math.min(W - l.len, x0 + (lang - l.len) / 2));
+        l.boden = boden;
+        boden += l.dick + 1;
+        gelegt.push(l);
+      });
+    });
+    A2.amBoden.forEach(l => { l.boden = 0; gelegt.push(l); });
+    const oben = Math.max(maxH, ...gelegt.map(l => l.boden + l.dick)) + 4;
+    const y0 = Math.ceil(oben);
+    const items = []; const folgen = { quer: [], haupt: [], kind: [], warte: [] };
+    let sHaupt = '', sQuer = '', sKind = '', sWarte = '';
+    const rect = (x, y, w, h) => `x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${w.toFixed(2)}" height="${h.toFixed(2)}"`;
+    const label = x => esc(F.buch.zeile(x).text);
+    function eintragen(folge, o) {
+      o.id = 'zb' + items.length; o.folge = folge; o.idx = folgen[folge].length;
+      items.push(o); folgen[folge].push(o);
+      return o.id;
+    }
+    pos.forEach(p => {
+      const b = p.b, halb = b.r === 'abgebrochen';
+      const h = hoehe(b, halb ? .5 : 1);
+      const cls = halb ? 'ab' : b.s === 5 ? 'lieb' : 'grau';
+      const id = eintragen('haupt', { b, x: p.x, w: p.w, y: y0 - h, h });
+      sHaupt += `<rect id="${id}" role="option" aria-label="${label(b)}" class="${cls}" ${rect(p.x, y0 - h, p.w, h)}/>`;
+      if (b.w) sHaupt += `<line class="wieder" x1="${(p.x - 1.5).toFixed(2)}" x2="${(p.x + p.w + 1.5).toFixed(2)}" y1="${(y0 - h - 3).toFixed(2)}" y2="${(y0 - h - 3).toFixed(2)}"/>`;
+    });
+    gelegt.slice().sort((a, b) => a.boden - b.boden).forEach(l => {
+      const y = y0 - l.boden - l.dick;
+      const id = eintragen('quer', { b: l.b, x: l.x, w: l.len, y, h: l.dick, quer: true });
+      sQuer += `<rect class="quer" id="${id}" role="option" aria-label="${label(l.b)}" ${rect(l.x + .4, y + .4, l.len - .8, l.dick - .8)}/>`;
+    });
+    const gk = F.masz('--g-klein') || 15;
+    const yL = y0 + 5, yT = yL + Math.round(gk * 1.1);
+    const fontJ = `${gk}px "Vollkorn"`;
+    let sLeiste = '';
+    const linie = (x1, x2, y1, y2) => `<line class="haar" x1="${x1.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y1.toFixed(1)}" y2="${y2.toFixed(1)}"/>`;
+    let start = pos[0].x;
+    A2.brueche.forEach(br => {
+      const m = (br.von + br.bis) / 2;
+      sLeiste += linie(start, m - 5, yL, yL);
+      sLeiste += `<path class="bruch" d="M${(m - 4.5).toFixed(1)} ${yL + 4} L${(m - 1.5).toFixed(1)} ${yL - 4} M${(m + 1.5).toFixed(1)} ${yL + 4} L${(m + 4.5).toFixed(1)} ${yL - 4}"/>`;
+      start = m + 5;
+    });
+    sLeiste += linie(start, A2.buecherEnde, yL, yL);
+    const marken = [{ text: `${HAUPT[0].t}, ${F.jahrText(HAUPT[0].j)}`, x: pos[0].x + pos[0].w / 2, anker: 'start', tx: pos[0].x }]
+      .concat([1800, 1900, 1950, 2000].map(j => ({ text: String(j), x: X(j), anker: 'middle' })));
+    let belegtBis = -Infinity, sJahre = '';
+    marken.forEach(m => {
+      const b = textBreite(m.text, fontJ);
+      const tx = m.tx !== undefined ? m.tx : m.x;
+      const x0 = m.anker === 'start' ? tx : tx - b / 2;
+      if (x0 < belegtBis + 10) return;
+      belegtBis = x0 + b;
+      sLeiste += linie(m.x, m.x, yL, yL + 3.5);
+      sJahre += `<text class="jahr" x="${tx.toFixed(1)}" y="${yT}" text-anchor="${m.anker}">${esc(m.text)}</text>`;
+    });
+    const Hh = yT + Math.ceil(gk * .35);
+    kind.forEach(p => { p.h = hoehe(p.b, .55); });
+    warte.forEach(p => { p.h = hoehe(p.b, .42); });
+    const kH = Math.ceil(maxH * .55) + 2, wH = Math.ceil(maxH * .42) + 2;
+    kind.forEach(p => {
+      const id = eintragen('kind', { b: p.b, x: p.x, w: p.w, y: kH - p.h, h: p.h });
+      sKind += `<rect id="${id}" role="option" aria-label="${label(p.b)}" ${rect(p.x, kH - p.h, p.w, p.h)}/>`;
+    });
+    warte.forEach(p => {
+      const id = eintragen('warte', { b: p.b, x: p.x, w: p.w, y: wH - p.h, h: p.h });
+      sWarte += `<rect id="${id}" role="option" aria-label="${label(p.b)}" ${rect(p.x + .3, wH - p.h + .3, Math.max(.4, p.w - .6), p.h - .3)}/>`;
+    });
+    folgen.haupt.sort((a, b) => a.x - b.x); folgen.haupt.forEach((o, i) => { o.idx = i; });
+    folgen.quer.sort((a, b) => a.x - b.x); folgen.quer.forEach((o, i) => { o.idx = i; });
+    const svg = (id, cls, h, inhalt, name) => `<svg id="${id}" class="zb ${cls}" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" tabindex="0" role="listbox" aria-label="${name}">${inhalt}</svg>`;
+    $('#zb-haupt-ort').innerHTML = svg('zb-haupt', 'zb-hauptband', Hh, `<g>${sHaupt}</g><g>${sQuer}</g><g aria-hidden="true">${sLeiste}${sJahre}</g><line class="marke" id="zb-marke" x1="0" x2="0" y1="${y0 + 1}" y2="${y0 + 11}" visibility="hidden"/>`, 'Gelesen, nach dem Jahr des ersten Erscheinens. Pfeiltasten wählen ein Buch, Eingabe zeigt seine Angaben.');
+    $('#zb-kind-ort').innerHTML = svg('zb-kind', 'zb-kind', kH, sKind, 'Die wichtigsten Bücher aus Kindheit und Jugend');
+    $('#zb-warte-ort').innerHTML = svg('zb-warte', 'zb-warte', wH, sWarte, 'Was noch wartet');
+    Object.assign(ZB, { items, folgen, aktiv: null, breite: W, schmal, y0, offen: null });
+    bandzeile.style.width = W + 'px';
+    bandzeile.classList.remove('zeigt');
+    ['zb-haupt', 'zb-kind', 'zb-warte'].forEach(id => bandBedienung(document.getElementById(id)));
+    bandzeileReservieren();
+    if (schmal) roll.scrollLeft = roll.scrollWidth;
+  }
+  function sichtBreite() {
+    if (!ZB.schmal) return ZB.breite;
+    const pl = parseFloat(getComputedStyle(roll).paddingLeft) || 0;
+    return roll.clientWidth - 2 * pl;
+  }
+  function bandzeileReservieren() {
+    const breite = sichtBreite();
+    [zeileZeigenEl, zeileOffenEl].forEach(el => { el.style.maxWidth = breite + 'px'; });
+    const z = F.masz('--z');
+    if (ZB.schmal) { bandzeile.style.minHeight = z * 3 + 'px'; return; }
+    const ohneTags = s => s.replace(/<[^>]*>/g, '').length;
+    const alle = ZB.items.map(o => o.b).filter((b, i, a) => a.indexOf(b) === i);
+    const laengste = alle.map(satzVon).sort((p, q) => ohneTags(q) - ohneTags(p)).slice(0, 12);
+    const h = zeileReservieren(zeileOffenEl, laengste, Math.min(breite, ZB.breite));
+    bandzeile.style.minHeight = Math.max(h || 0, z) + 'px';
+  }
+  function treffer(svg, e) {
+    const r = svg.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const folge = svg.id === 'zb-kind' ? 'kind' : svg.id === 'zb-warte' ? 'warte' : 'haupt';
+    if (folge === 'haupt') {
+      const q = ZB.folgen.quer.find(o => x >= o.x && x <= o.x + o.w && y >= o.y - 1 && y <= o.y + o.h + 1);
+      if (q) return q;
+      if (y > ZB.y0 + 12) return null;
+    }
+    const f = ZB.folgen[folge];
+    if (!f.length) return null;
+    let lo = 0, hi = f.length - 1;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (f[m].x <= x) lo = m; else hi = m - 1; }
+    let best = null, abst = Infinity;
+    [f[lo], f[lo + 1]].filter(Boolean).forEach(o => { const d = x < o.x ? o.x - x : x > o.x + o.w ? x - o.x - o.w : 0; if (d < abst) { abst = d; best = o; } });
+    return abst <= 4 ? best : null;
+  }
+  function einpassen(el, o) {
+    if (!el || !o) return;
+    const bw = el.offsetWidth;
+    let links = o.x + o.w / 2 - 6;
+    if (ZB.schmal) {
+      const sl = roll.scrollLeft;
+      links = Math.max(sl, Math.min(sl + sichtBreite() - bw, links));
+    }
+    el.style.left = Math.round(Math.max(0, Math.min(ZB.breite - bw, links))) + 'px';
+  }
+  function markeSetzen() {
+    const marke = document.getElementById('zb-marke');
+    if (!marke) return;
+    const o = bandzeile.classList.contains('zeigt') ? ZB.aktiv : ZB.offen;
+    if (!o || o.folge !== 'haupt') { marke.setAttribute('visibility', 'hidden'); return; }
+    const m = o.x + o.w / 2;
+    marke.setAttribute('x1', m); marke.setAttribute('x2', m); marke.setAttribute('visibility', 'visible');
+  }
+  function zeigen(o) {
+    if (ZB.aktiv === o) return;
+    if (ZB.aktiv) { const alt = document.getElementById(ZB.aktiv.id); if (alt) alt.classList.remove('an'); }
+    ZB.aktiv = o;
+    if (!o) { bandzeile.classList.remove('zeigt'); zeileZeigenEl.innerHTML = ''; markeSetzen(); return; }
+    const el = document.getElementById(o.id);
+    if (el) { el.classList.add('an'); if (el.ownerSVGElement) el.ownerSVGElement.setAttribute('aria-activedescendant', o.id); }
+    zeileZeigenEl.innerHTML = kurz(o.b);
+    bandzeile.classList.add('zeigt');
+    einpassen(zeileZeigenEl, o);
+    markeSetzen();
+  }
+  function oeffnen(o) {
+    const el = document.getElementById(o.id);
+    if (!el) return;
+    const offen = bzBand.umschalten(o.id, satzVon(o.b), el);
+    ZB.offen = offen ? o : null;
+    bandzeile.classList.remove('zeigt');
+    if (offen) einpassen(zeileOffenEl, o);
+    markeSetzen();
+  }
+  function bandBedienung(svg) {
+    if (!svg) return;
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && (e.movementX || e.movementY)) { const t = treffer(svg, e); if (t) zeigen(t); } });
+    svg.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !svg.matches(':focus-visible')) zeigen(null); });
+    svg.addEventListener('click', e => {
+      const t = treffer(svg, e);
+      if (!t) return;
+      zeigen(null);
+      oeffnen(t);
+    });
+    svg.addEventListener('focus', () => {
+      if (ZB.aktiv && document.getElementById(ZB.aktiv.id) && document.getElementById(ZB.aktiv.id).ownerSVGElement === svg) return;
+      const f = svg.id === 'zb-kind' ? ZB.folgen.kind : svg.id === 'zb-warte' ? ZB.folgen.warte : ZB.folgen.haupt;
+      if (f.length && svg.matches(':focus-visible')) zeigen(f[f.length - 1]);
+    });
+    svg.addEventListener('blur', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('.zb')) zeigen(null); });
+    svg.addEventListener('keydown', e => {
+      const o = ZB.aktiv || ZB.offen; if (!o) return;
+      const reihen = ['quer', 'haupt', 'kind', 'warte'];
+      const f = ZB.folgen[o.folge];
+      let neu = null;
+      if (e.key === 'ArrowRight') neu = f[Math.min(f.length - 1, o.idx + 1)];
+      else if (e.key === 'ArrowLeft') neu = f[Math.max(0, o.idx - 1)];
+      else if (e.key === 'Home') neu = f[0];
+      else if (e.key === 'End') neu = f[f.length - 1];
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const ziel = ZB.folgen[reihen[reihen.indexOf(o.folge) + (e.key === 'ArrowUp' ? -1 : 1)]];
+        if (ziel && ziel.length) { const m = o.x + o.w / 2; neu = ziel.reduce((a, c) => Math.abs(c.x + c.w / 2 - m) < Math.abs(a.x + a.w / 2 - m) ? c : a); }
+      } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(o); return; }
+      else if (e.key === 'Escape') { if (!bzBand.offen()) zeigen(null); return; }
+      if (!neu) return;
+      e.preventDefault();
+      const zielSvg = document.getElementById(neu.id).ownerSVGElement;
+      zeigen(neu);
+      if (zielSvg !== svg) zielSvg.focus({ preventScroll: true });
+      if (ZB.schmal) {
+        const vw = sichtBreite();
+        if (neu.x < roll.scrollLeft || neu.x > roll.scrollLeft + vw - 40) roll.scrollLeft = neu.x - vw / 2;
+      }
+    });
+  }
+  let rollBild = 0;
+  roll.addEventListener('scroll', () => {
+    if (rollBild) return;
+    rollBild = requestAnimationFrame(() => { rollBild = 0; einpassen(zeileZeigenEl, ZB.aktiv); einpassen(zeileOffenEl, ZB.offen); });
+  }, { passive: true });
+  bandBauen();
+  F.schriften(3000).then(() => { regalZeichnen(); bandBauen(); ankerSetzen(); zielAnfahren(); });
+  let breiteVorher = window.innerWidth, warte = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(warte);
+    warte = setTimeout(() => {
+      if (g) { blickBerechnen(); namenNeu(); }
+      tafelHoehe();
+      if (window.innerWidth === breiteVorher) return;
+      breiteVorher = window.innerWidth;
+      regalZeichnen(); bandBauen(); ankerSetzen();
+    }, 140);
+  });
+})();
+</script>
+</body>
+</html>

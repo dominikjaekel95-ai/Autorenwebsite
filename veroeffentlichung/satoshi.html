@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Satoshi – Dominik Jäkel</title>
+<meta name="description" content="Der Roman Satoshi von Dominik Jäkel erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen. Das Manuskript liegt vollständig vor.">
+<link rel="canonical" href="https://dominikjaekel.de/satoshi.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dominik Jäkel">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Satoshi – Dominik Jäkel">
+<meta property="og:description" content="Der Roman Satoshi von Dominik Jäkel erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen. Das Manuskript liegt vollständig vor.">
+<meta property="og:url" content="https://dominikjaekel.de/satoshi.html">
+<meta property="og:image" content="https://dominikjaekel.de/bilder/vorschau.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller und Reisender. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FFFEFC">
+<script>
+document.documentElement.classList.add('js');
+</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="stil.css">
+<style>
+.titelei { margin-top: var(--z); }
+.vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
+html:not(.js) .globusseite > .globus { display: none; }
+.buch { display: flex; flex-direction: column; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
+.buch section { max-width: var(--mass); margin-top: var(--z-zwei); }
+.buch .rechts { display: contents; }
+.buch .klapp { order: 1; margin-top: 0; }
+.buch .eckdaten { order: 2; }
+.buch .bau { order: 3; }
+.buch .figuren { order: 4; }
+.buch .frage { order: 5; }
+.buch .machart { order: 6; }
+.tage { list-style: none; margin-top: var(--z-dreiviertel); }
+.tage li { display: grid; grid-template-columns: 3em 7.5em minmax(0, 1fr); }
+.tage li + li { margin-top: var(--z-viertel); }
+.tage .jahr { font-variant-numeric: oldstyle-nums tabular-nums; }
+.tage .tag { white-space: nowrap; }
+.tage, .figur h3 { hyphens: manual; -webkit-hyphens: manual; }
+.figur + .figur { margin-top: var(--z-dreiviertel); }
+.figur h3 { font-size: inherit; line-height: var(--z); }
+.figur p { margin-top: var(--z-viertel); }
+@media (min-width: 75rem) {
+  .buch { display: grid; grid-template-columns: calc(var(--globuskante) - var(--rand-l)) minmax(0, 24em); align-items: start; }
+  .buch > section { grid-column: 1; max-width: min(var(--mass), calc(100% - var(--z-zwei))); }
+  .buch .rechts { display: block; grid-column: 2; grid-row: 1 / span 4; }
+  .buch .rechts section { max-width: none; }
+  .buch .rechts .eckdaten { margin-top: 0; }
+}
+@media (max-width: 62rem) {
+  .buch { padding-right: var(--rand-l); }
+}
+@media (max-width: 40rem) {
+  .tage li { grid-template-columns: 2.6em minmax(0, 1fr); }
+  .tage .tag { display: block; }
+  .tage .tag, .tage .was { grid-column: 2; }
+}
+</style>
+</head>
+<body class="mit-globus">
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="kopf">
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
+  <nav class="nav" aria-label="Website">
+    <ul class="nav-liste" id="nav-liste">
+      <li><a href="satoshi.html" aria-current="page"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inhalt">
+<section class="globusseite" aria-labelledby="buch-titel">
+  <div class="titelei">
+    <h1 class="seitentitel" id="buch-titel">Satoshi</h1>
+    <p class="unterzeile">Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor, gerade entsteht die Endfassung.</p>
+  </div>
+
+  <p class="vorspann">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.</p>
+
+  <figure class="globus" id="globus">
+    <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
+    <p class="hinweis" hidden></p>
+    <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Schauplätze stehen auf der Tafel, mit ihren Koordinaten.</p>
+    <div class="tafel" id="tafel" aria-live="off"></div>
+  </figure>
+</section>
+
+
+<div class="buch" id="buch">
+  <section class="klapp" id="klappentext" aria-labelledby="klapp-titel">
+    <h2 class="titel" id="klapp-titel">Klappentext</h2>
+    <div class="prosa">
+      <p><i>Satoshi</i> erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen, die einander nicht vertrauen können&nbsp;– und die deshalb Geld bauen, das ohne Vertrauen funktioniert.</p>
+      <p>Jeder von ihnen baut an der Maschine, um etwas nicht tun zu müssen. Lana, die Ökonomin, deren Familie der argentinische Staat 2001 über Nacht enteignet hat, muss sich nicht entscheiden&nbsp;– zwischen zwei Männern, zwei Kontinenten und zwei Leben&nbsp;–, solange die Arbeit am Projekt sie davon abhält. Arthur, ein Kryptograph, der beim Zusammenbruch der UdSSR heimatlos wurde, muss nichts fühlen, solange er im Code versinkt. Samuel, ein Quant an der Wall Street, dessen Vater an der Finanzkrise zerbricht, muss niemandem mehr vertrauen, solange er nur die Mathematik kontrolliert.</p>
+      <p>Kennengelernt haben sie sich 2007 auf dem Burning-Man-Festival in Nevada: Zwei Männer verlieben sich in dieselbe Frau&nbsp;– und alle drei in dieselbe Idee. Im Rausch des Festivals finden sie eine Lösung für ein Problem, an dem Mathematiker seit Jahrzehnten scheitern&nbsp;– Geld ohne zentrale Instanz&nbsp;– und schließen einen gemeinsamen Pakt. Die oberste Regel: Wer enttarnt wird, verschwindet.</p>
+      <p>Unter dem Pseudonym Satoshi Nakamoto bauen sie in einer Kreuzberger Fabriketage das erste digitale Geld, das niemandem gehört: keiner Bank und keiner Regierung. Die Arbeit gibt ihnen den perfekten Vorwand, nie auszusprechen, was zwischen ihnen ist. Doch im Herbst 2008, als die neun Seiten erscheinen, ist Lana schwanger&nbsp;– von einem der beiden Männer. Sie will nicht wissen, von wem.</p>
+      <p>Die Erfindung von Bitcoin gelingt, gerade weil sie ohne Vertrauen auskommt. Die drei scheitern aus demselben Grund. Davon erzählt dieser Roman.</p>
+    </div>
+  </section>
+
+  <div class="rechts">
+    <section class="eckdaten" id="eckdaten" aria-labelledby="eck-titel">
+      <h2 class="titel" id="eck-titel">Eckdaten</h2>
+      <div class="prosa">
+        <p>Debütroman. Personal erzählt, aus der Sicht Lanas und kontrapunktisch aus der Samuels. Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.</p>
+        <p><a href="vita.html">Dominik Jäkel</a>, geboren 1995 in Dortmund, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam. Er lebt in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>.</p>
+      </div>
+    </section>
+
+    <section class="figuren" id="figuren" aria-labelledby="figuren-titel">
+      <h2 class="titel" id="figuren-titel">Die Figuren</h2>
+      <article class="figur">
+        <h3><span class="stichwort">Satoshi Nakamoto</span>, das&nbsp;Pseudonym</h3>
+        <p>Das berühmteste Phantom der Gegenwart. Die Faktenlage passt auf eine Karteikarte: ein Whitepaper, gut fünfhundert Forenposts, der erklärte Wunsch, sich selbst überflüssig zu machen. Dieser Roman gibt dem Pseudonym, was ihm bisher fehlte: eine Stimme&nbsp;– und drei Gesichter.</p>
+      </article>
+      <article class="figur">
+        <h3><span class="stichwort">Lana Álvarez</span>, die&nbsp;Schöpferin, 23&nbsp;Jahre alt</h3>
+        <p>Lana steht mit einem Fuß in der Welt, die sie retten, und mit dem anderen in der, die sie zerstören will. Als Tochter eines ruinierten argentinischen Bauunternehmers, die bei Lehman Brothers Bilanzen rechnet, kennt sie das Finanzsystem von beiden Seiten&nbsp;– als Opfer und als Komplizin.</p>
+      </article>
+      <article class="figur">
+        <h3><span class="stichwort">Arthur Volkov</span>, der&nbsp;Visionär, 32&nbsp;Jahre alt</h3>
+        <p>Arthur vertraut Algorithmen mehr als Menschen&nbsp;– was ihn zu einem der brillantesten Kryptographen seiner Generation und zum schwierigsten Menschen macht, den man lieben kann.</p>
+      </article>
+      <article class="figur">
+        <h3><span class="stichwort">Samuel Vaughn</span>, der&nbsp;Anker, 31&nbsp;Jahre alt</h3>
+        <p>Samuel ist der Realist des Trios&nbsp;– Sohn eines Ex-Army-Offiziers und einer deutschen Mutter, großgezogen in einer Familie, in der man Pflichten erfüllt, statt über sie zu sprechen.</p>
+      </article>
+    </section>
+  </div>
+
+  <section class="bau" id="bau" aria-labelledby="bau-titel">
+    <h2 class="titel" id="bau-titel">Gebaut wie ein Protokoll</h2>
+    <p>Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten <span class="nw">Bitcoin-Block</span> signiert.</p>
+    <ol class="tage">
+      <li><span class="jahr">2007</span> <span class="tag">14.&nbsp;September</span> <span class="was">Bankrun auf Northern Rock</span></li>
+      <li><span class="jahr">2008</span> <span class="tag">15.&nbsp;September</span> <span class="was">Lehman Brothers meldet Insolvenz an</span></li>
+      <li><span class="jahr"><span class="unsichtbar">2008</span></span> <span class="tag">31.&nbsp;Oktober</span> <span class="was">Das Whitepaper erscheint, neun Seiten</span></li>
+      <li><span class="jahr">2009</span> <span class="tag">3.&nbsp;Januar</span> <span class="was">Der erste Block</span></li>
+      <li><span class="jahr">2010</span> <span class="tag">15.&nbsp;August</span> <span class="was">Ein Fehler im Code erzeugt Milliarden Bitcoins aus dem Nichts</span></li>
+      <li><span class="jahr"><span class="unsichtbar">2010</span></span> <span class="tag">Dezember</span> <span class="was">Die Banken sperren WikiLeaks die Konten</span></li>
+    </ol>
+  </section>
+
+  <section class="frage" id="frage" aria-labelledby="frage-titel">
+    <h2 class="titel" id="frage-titel">Die Frage hinter dem Roman</h2>
+    <div class="prosa">
+      <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die Antworten, die im Umlauf sind, folgen zwei Bewegungen: das System reparieren&nbsp;– oder aussteigen und ein Parallelsystem bauen. Die 2020er Jahre sind das Jahrzehnt, in dem dieser Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
+      <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine umfangreiche Stabilitäts&shy;kultur, jedoch nur in seltensten Fällen lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
+      <p><i>Satoshi</i> ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat&nbsp;– die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.</p>
+      <p>Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
+    </div>
+  </section>
+
+  <section class="machart" id="machart" aria-labelledby="machart-titel">
+    <h2 class="titel" id="machart-titel">Wie er gemacht ist</h2>
+    <div class="prosa">
+      <p><i>Satoshi</i> ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand&nbsp;– Satoshi Nakamotos Mails, Forenbeiträgen, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin&nbsp;– und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.</p>
+      <p>Der Roman steht in einer Erzähltradition, die ihre Wurzeln in Borges’ <i>Ficciones</i> hat und zu deren heutigen Vertretern Hernan Diaz und Benjamín Labatut gehören: Literatur in den Leerstellen des Verbürgten.</p>
+      <p><i>Ficciones</i> steht in seiner <a href="bibliothek.html">Bibliothek</a>, ebenso Labatuts <i>When We Cease to Understand the World</i> und <i>The Maniac</i>.</p>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="profile" hidden></p>
+  </div>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
+</footer>
+
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="globus/kern.js"></script>
+<script src="daten/inhalt.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+  const { $ } = F;
+  const SAT = I.satoshi || {};
+  const ST = F.szenen();
+  const N = ST.length;
+  const ORTE = (SAT.orte || []).filter(o => o && o.lat != null && o.lon != null);
+  const SZENENORTE = ORTE.filter(o => ST.some(s => s.name === o.name));
+  const WEITERE = ORTE.filter(o => !SZENENORTE.includes(o));
+  const ortVon = name => ORTE.find(o => o.name === name) || null;
+  const datum = t => String(t).replace(/(\d\.) (?=[A-ZÄÖÜ][a-zäöü]+ \d{4})/g, '$1' + F.NBSP);
+  const notizBeiText = s => s.notiz && String(s.text).indexOf(s.notiz) !== 0 ? s.notiz : '';
+  const tafelEl = $('#tafel');
+  const ruheInhalt = () => ({ kopf: 'Die Schauplätze', satz: SAT.eckdaten && SAT.eckdaten.zeit ? SAT.eckdaten.zeit + '.' : '' });
+  const szeneInhalt = s => {
+    const notiz = notizBeiText(s);
+    return { zeichen: 'wohnort', marke: s.jahr, kopf: notiz ? s.kurz + ', ' + notiz : s.kurz, daten: F.koord(s.lat, s.lon), text: datum(s.text) };
+  };
+  const ortInhalt = o => ({ zeichen: 'aufenthalt', kopf: o.notiz ? o.name + ', ' + o.notiz : o.name, daten: F.koord(o.lat, o.lon) });
+  const tafelSetzen = x => F.tafel(tafelEl, x);
+  tafelSetzen(N ? szeneInhalt(ST[0]) : ruheInhalt());
+  const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
+  const NAH = 2.4;
+  const alsOrt = o => Object.assign({ name: o.name, kurz: o.kurz, text: o.kurz || o.name, lat: o.lat, lon: o.lon }, WEITERE.includes(o) ? { neben: true, abK: NAH } : {});
+  const EBENE_ORTE = WEITERE.map(alsOrt).concat(SZENENORTE.map(alsOrt));
+  const BLICK = { mitte: [-42, 22], k: 1 };
+  let a = null, ortJetzt = null;
+  function namenAktiv() {
+    if (ortJetzt) return ortJetzt;
+    if (!a) return null;
+    const z = a.zustand(), s = ST[a.jetzt()];
+    return z === 'ruhe' || z === 'bereit' || !s ? null : s.name;
+  }
+  const g = F.globus({
+    canvas, flaeche, hinweis: $('.hinweis', figur),
+    beiOrtKlick: ort => { if (WEITERE.some(o => o.name === ort.name)) ortZeigen(ort.name); },
+    namen: { orte: () => EBENE_ORTE, spur: () => ST, aktiv: namenAktiv }
+  });
+  const neuSetzen = () => { if (g) g.namenNeu(); };
+  function blickBerechnen() {
+    if (!g) return;
+    BLICK.k = F.breit() ? .92 : 1;
+    const m = F.blickFuer(canvas, SZENENORTE.filter(o => o.lon < 40), { lon: [-90, 10], lat: [-10, 40], schritt: 2, k: BLICK.k });
+    if (m) BLICK.mitte = m;
+  }
+  function tafelHoehe() {
+    F.tafelPlatz(tafelEl, [ruheInhalt()].concat(ST.map(szeneInhalt), WEITERE.map(ortInhalt)));
+  }
+  a = F.ablauf({
+    globus: g, stationen: ST, tafel: tafelEl,
+    takt: Object.assign({}, F.TAKT.satoshi, { schluss: BLICK }),
+    taktAbspielen: Object.assign({}, F.TAKT.satoshiAbspielen, { schluss: null }),
+    schrittZoom: F.TAKT.satoshiAbspielen.zoom,
+    ruhe: 'ruhe',
+    beiStation(i) {
+      ortJetzt = null;
+      tafelSetzen(i < 0 ? ruheInhalt() : szeneInhalt(ST[i]));
+      neuSetzen();
+    }
+  });
+  function ortZeigen(name) {
+    const o = ortVon(name);
+    if (!o || !a) return;
+    if (g && g.eingriffe) g.eingriffe.slice().forEach(f => f());
+    ortJetzt = name;
+    tafelEl.setAttribute('aria-live', 'polite');
+    tafelSetzen(ortInhalt(o));
+    if (g) { g.nurOrte(null); g.ortAnfliegen(o, o.kurz ? 6 : 3.5); }
+    neuSetzen();
+  }
+  if (g) {
+    tafelHoehe();
+    blickBerechnen();
+    g.ebene({ orte: EBENE_ORTE, laender: false, blick: BLICK }, { fliegen: false });
+  } else {
+    figur.classList.add('ohne-globus');
+    $('#ersatz').hidden = false;
+    tafelHoehe();
+  }
+  a.einspielen();
+  F.schriften(2500).then(() => {
+    tafelHoehe();
+    if (!g) return;
+    blickBerechnen();
+    g.zeichnen(); neuSetzen();
+  });
+  let warte = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(warte);
+    warte = setTimeout(() => { tafelHoehe(); blickBerechnen(); neuSetzen(); }, 140);
+  });
+})();
+</script>
+</body>
+</html>

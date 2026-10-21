@@ -6,7 +6,7 @@ Stand: 21. Oktober 2026. Zum Start ist der Newsletter ausgeblendet (Dominik: „
 
 1. Einen Newsletter-Dienst wählen. Er braucht einen Vertrag zur Auftragsverarbeitung und das Double-Opt-in-Verfahren.
 2. Den Abschnitt unten in `website-c/datenschutz.html` zwischen „E-Mail“ und „Ihre Rechte“ einsetzen. Den Satz „Welcher Dienst das sein wird, steht noch nicht fest …“ durch Name und Anschrift des Diensts ersetzen, dazu Speicherort und gegebenenfalls die Grundlage für die Übermittlung in ein Drittland. Den letzten Absatz („Im Testsystem …“) streichen.
-3. In `website-c/seite.js` `NEWSLETTER = false` auf `true` setzen. Das Formular so anbinden, dass es an den Dienst schickt, und den Dank `POST_DANKE` („Danke. Im Testsystem wird noch nichts verschickt.“) an den Dienst anpassen, etwa an die Bestätigungsmail.
+3. In `website-c/seite.js` `NEWSLETTER = false` auf `true` setzen. Das Formular so anbinden, dass es an den Dienst schickt, und in `POST_DANKE` einen Dank eintragen, der zum Dienst passt, etwa zur Bestätigungsmail. `POST_DANKE` ist zum Start leer, damit das Wort „Testsystem“ nicht in der ausgelieferten `seite.js` steht; im Testsystem hieß der Dank „Danke. Im Testsystem wird noch nichts verschickt.“ `veroeffentlichen.py` baut nicht, solange `NEWSLETTER` true und `POST_DANKE` leer ist.
 4. Schickt das Formular an einen fremden Server, braucht `website-c/vercel.json` dessen Adresse in `form-action` (oder, wenn das Skript sendet, in `connect-src`) der Content-Security-Policy.
 5. `website-c/werkzeuge/veroeffentlichen.py` baut nicht, solange `NEWSLETTER` true ist und der Abschnitt `id="d-newsletter"` im Datenschutz fehlt.
 

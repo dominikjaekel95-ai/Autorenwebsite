@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Länder – Dominik Jäkel</title>
+<meta name="description" content="Dominik Jäkel war in fünfundsechzig Ländern und Gebieten. Die Seite zeigt sie auf einem Globus und nach Kontinenten.">
+<link rel="canonical" href="https://dominikjaekel.de/laender.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dominik Jäkel">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Länder – Dominik Jäkel">
+<meta property="og:description" content="Dominik Jäkel war in fünfundsechzig Ländern und Gebieten. Die Seite zeigt sie auf einem Globus und nach Kontinenten.">
+<meta property="og:url" content="https://dominikjaekel.de/laender.html">
+<meta property="og:image" content="https://dominikjaekel.de/bilder/vorschau.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller und Reisender. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FFFEFC">
+<script>
+document.documentElement.classList.add('js');
+</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="stil.css">
+<style>
+.titelei { margin-top: var(--z); }
+.titelei .unterzeile { margin-bottom: 0; }
+.kontinente { margin-top: var(--z); text-wrap: balance; }
+.kontinente .wort { margin-right: .6em; }
+.kontinente .wort:last-child { margin-right: 0; }
+.register { margin-top: var(--z); }
+.register .gruppe { padding-left: 1em; text-indent: -1em; }
+.register .gruppe + .gruppe { margin-top: var(--z-dreiviertel); }
+.register dt { display: inline; margin-right: .3em; }
+.register dd { display: inline; }
+.register .wort { text-indent: 0; }
+html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none; }
+@media (min-width: 62.0625rem) {
+  .globusseite > .globus { position: sticky; top: var(--z-halb); }
+}
+@media (max-width: 62rem) {
+  .globusseite > .register { order: 1; }
+}
+:root { --band: min(calc((var(--vb, 100vw) - 2 * var(--rand-l)) * .55), calc(34svh - 12px)); }
+@media (max-width: 62rem) {
+  .globusseite > .globus.als-band {
+    position: sticky; top: 0; z-index: 5; grid-column: 1 / -1; justify-self: stretch; width: auto;
+    display: grid; grid-template-columns: var(--band) minmax(0, 1fr); column-gap: .9em; align-items: center;
+    margin: var(--z) 0 0; padding: var(--z-viertel) var(--rand-l);
+    background: var(--papier);
+  }
+  .globus.als-band .flaeche { grid-column: 1; grid-row: 1; }
+  .globusseite > .globus.als-band .tafel { grid-column: 2; grid-row: 1; display: block; margin: 0; min-height: 0; }
+  .globus.als-band .tafel-kopf { font-size: var(--g-text); line-height: var(--zh-text); }
+  .globus.als-band .tafel-satz { font-size: var(--g-klein); line-height: var(--zh-klein); }
+  .globus.als-band .tafel-marke { display: none; }
+  .globus.als-band .ersatz { grid-column: 1 / -1; }
+  .globus.als-band::after { content: ""; position: absolute; left: var(--rand-l); right: var(--rand-l); bottom: 0; border-bottom: 1px solid var(--brett); visibility: hidden; }
+  .globus.als-band.haftet::after { visibility: visible; }
+  .mit-band .register { margin-top: var(--z); }
+  .mit-band .register .wort { scroll-margin-top: calc(var(--band) + var(--z-halb) + var(--z)); }
+}
+@media (pointer: coarse) {
+  .register .gruppe { line-height: var(--zh-ueber); }
+  .register button.wort { padding-block: 5.25px; margin-block: -5.25px; }
+}
+</style>
+</head>
+<body class="mit-globus">
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="kopf">
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
+  <nav class="nav" aria-label="Website">
+    <ul class="nav-liste" id="nav-liste">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html" aria-current="page">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inhalt">
+<section class="globusseite" aria-labelledby="seiten-titel">
+  <div class="titelei">
+    <h1 class="seitentitel" id="seiten-titel">Länder</h1>
+    <p class="unterzeile">Länderguides, in&nbsp;Arbeit.</p>
+  </div>
+
+  <p class="kontinente" role="group" aria-label="Kontinente"><button type="button" class="wort" data-ueberblick aria-pressed="true">Alle Länder</button> <button type="button" class="wort" data-kontinent="Europa" aria-pressed="false">Europa</button> <button type="button" class="wort" data-kontinent="Asien" aria-pressed="false">Asien</button> <button type="button" class="wort" data-kontinent="Afrika" aria-pressed="false">Afrika</button> <button type="button" class="wort" data-kontinent="Amerika" aria-pressed="false">Amerika</button></p>
+
+  
+  <dl class="register wahlliste" id="register" aria-label="Verzeichnis der Länder und Gebiete"></dl>
+  <noscript><p class="register">Das Verzeichnis der Länder wird mit JavaScript gesetzt.</p></noscript>
+
+  <figure class="globus" id="globus">
+    <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den bereisten Ländern in Grau; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
+    <div class="tipp" hidden></div>
+    <p class="hinweis" hidden></p>
+    <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Länder stehen im Verzeichnis, die Tafel nennt jedes, das man wählt.</p>
+    <div class="tafel ohne-marke" id="tafel" aria-live="polite"></div>
+  </figure>
+</section>
+</main>
+
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="profile" hidden></p>
+  </div>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
+</footer>
+
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="globus/kern.js"></script>
+<script src="daten/inhalt.js"></script>
+<script src="daten/texte.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+  const { $, $$, esc } = F;
+  const ruhig = F.ruhig();
+  const bereist = I.bereist || [];
+  const KONTINENTE = I.kontinente || {};
+  const SONDER = Object.assign({ 'GB-ENG': 'England', 'GB-SCT': 'Schottland', 'GB-NIR': 'Nordirland', 'GB-WLS': 'Wales', 'PS-WB': 'Westjordanland', 'PS-GZ': 'Gazastreifen' }, I.sondernamen || {});
+  const DE = {};
+  Object.values((window.LAENDER_DE && window.LAENDER_DE.nach_id) || {}).forEach(e => { if (e[0] && !DE[e[0]]) DE[e[0]] = e[1]; });
+  const name = iso => SONDER[iso] || DE[iso] || iso;
+  const LAENDERGUIDES = {};
+  (F.texte ? F.texte.alle('laenderguide') : []).forEach(t => {
+    if (!LAENDERGUIDES[t.land]) LAENDERGUIDES[t.land] = F.SEITEN.lesen + '#' + t.slug;
+  });
+  const KONTINENT_BLICK = { Europa: [[13, 50], 3.3], Asien: [[94, 26], 1.75], Afrika: [[16, 4], 1.9], Amerika: [[-80, 12], 1.25] };
+  const registerEl = $('#register');
+  registerEl.innerHTML = Object.keys(KONTINENTE).map(k => {
+    const laender = KONTINENTE[k].slice().sort((a, b) => name(a).localeCompare(name(b), 'de'));
+    const woerter = laender.map(iso => `<button type="button" class="wort" data-land="${esc(iso)}">${esc(name(iso))}</button>`);
+    return `<div class="gruppe"><dt class="stichwort">${esc(k)}</dt> <dd>${woerter.join(', ')}</dd></div>`;
+  }).join('');
+  F.satzzeichenBinden(registerEl);
+  F.gleichBreit($$('.kontinente .wort, #register .wort'));
+  const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas'), tipp = $('.tipp', figur), tafelEl = $('#tafel');
+  const bandMoeglich = () => !F.breit() && window.innerHeight >= 560 && !!(window.d3 && window.Globus);
+  let bandAn = false;
+  function bandSetzen() {
+    bandAn = bandMoeglich();
+    figur.classList.toggle('als-band', bandAn);
+    document.documentElement.classList.toggle('mit-band', bandAn);
+    haftet();
+  }
+  function haftet() { figur.classList.toggle('haftet', bandAn && figur.getBoundingClientRect().top <= .5); }
+  bandSetzen();
+  let wahl = null, zeiger = null;
+  const g = F.globus({
+    canvas, flaeche, tipp, hinweis: $('.hinweis', figur),
+    tippText: land => { zeiger = land; return land.name; },
+    beimEingriff: () => { if (g && wahl && wahl.iso) g.auswahl(wahl.iso); },
+    namen: { orte: () => [], spur: () => [], aktiv: () => null }
+  });
+  const BLICK = { mitte: F.breit() ? [52, 30] : [40, 28], k: 1 };
+  if (g) g.ebene({ orte: [], laender: true, blick: BLICK }, { fliegen: false });
+  else { figur.classList.add('ohne-globus'); $('#ersatz').hidden = false; }
+  function mitte(iso, f) {
+    f = f || (g && g.land(iso));
+    return (f && f.punkt) || (I.winzig && I.winzig[iso]) || null;
+  }
+  const zahl = n => F.gross(F.zahlwort(n)) + ' Länder und Gebiete, grau auf dem Globus.';
+  const ueberblickInhalt = () => ({ kopf: 'Reisen', satz: zahl(bereist.length), fuss: false });
+  const kontinentInhalt = k => ({ kopf: k, satz: zahl((KONTINENTE[k] || []).length), fuss: false });
+  function landInhalt(iso, f) {
+    const ist = bereist.includes(iso), guide = LAENDERGUIDES[iso];
+    return {
+      kopf: ist || !f ? name(iso) : f.name,
+      unter: ist ? 'bereist' : 'nicht bereist',
+      fuss: guide ? `<a href="${esc(guide)}">Zum Länderguide</a>` : false
+    };
+  }
+  let wahlLand = null;
+  function inhaltJetzt() {
+    if (wahl && wahl.iso) return landInhalt(wahl.iso, wahlLand && wahlLand.iso === wahl.iso ? wahlLand : undefined);
+    if (wahl && wahl.kontinent) return kontinentInhalt(wahl.kontinent);
+    return ueberblickInhalt();
+  }
+  let tafelStand = '';
+  function tafelSetzen() {
+    const t = inhaltJetzt(), stand = JSON.stringify(t);
+    if (stand === tafelStand) return;
+    tafelStand = stand;
+    F.tafel(tafelEl, t);
+  }
+  function tafelHoehe() {
+    const lang = bereist.slice().sort((a, b) => name(b).length - name(a).length).slice(0, 3);
+    const alle = [ueberblickInhalt()].concat(Object.keys(KONTINENTE).map(kontinentInhalt), lang.map(iso => landInhalt(iso)), Object.keys(LAENDERGUIDES).map(iso => landInhalt(iso)));
+    if (g && F.breit()) { const f = g.land('CD'); if (f) alle.push(landInhalt('CD', f)); }
+    F.tafelPlatz(tafelEl, alle);
+  }
+  function markieren() {
+    $$('[data-ueberblick]').forEach(b => b.setAttribute('aria-pressed', String(!wahl)));
+    $$('[data-kontinent]').forEach(b => b.setAttribute('aria-pressed', String(!!wahl && wahl.kontinent === b.dataset.kontinent)));
+    $$('[data-land]').forEach(b => {
+      const an = !!wahl && wahl.iso === b.dataset.land;
+      b.classList.toggle('ist-aktiv', an);
+      if (an) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+    });
+  }
+  function globusInSicht() {
+    if (F.breit() || bandAn || !g) return;
+    const r = flaeche.getBoundingClientRect(), H = window.innerHeight;
+    if (r.top >= 0 && r.bottom <= H) return;
+    window.scrollBy({ top: r.top - 12, behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  function landZeigen(iso) {
+    wahl = { iso }; zeiger = null;
+    markieren(); tafelSetzen();
+    if (g) g.landAnfliegen(iso);
+    globusInSicht();
+  }
+  function kontinentZeigen(k) {
+    wahl = { kontinent: k }; zeiger = null;
+    markieren(); tafelSetzen();
+    if (g) {
+      let ziel = KONTINENT_BLICK[k];
+      if (!ziel) {
+        const punkte = (KONTINENTE[k] || []).map(iso => mitte(iso)).filter(Boolean);
+        ziel = punkte.length ? [window.d3.geoCentroid({ type: 'MultiPoint', coordinates: punkte }), 1.6] : [BLICK.mitte, 1];
+      }
+      const versatz = F.breit() ? 5.2 / ziel[1] : 0;
+      g.auswahl(null);
+      g.fliegen([ziel[0][0] + versatz, ziel[0][1]], ziel[1]);
+    }
+    globusInSicht();
+  }
+  function ueberblickZeigen() {
+    wahl = null; zeiger = null;
+    markieren(); tafelSetzen();
+    if (g) { g.auswahl(null); g.fliegen(BLICK.mitte, BLICK.k); }
+    globusInSicht();
+  }
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button');
+    if (!t || !t.closest('main')) return;
+    const d = t.dataset;
+    if (d.land) landZeigen(d.land);
+    else if (d.kontinent) kontinentZeigen(d.kontinent);
+    else if (d.ueberblick !== undefined) ueberblickZeigen();
+  });
+  function landAn(e) {
+    const p = g && g.projektion, d3 = window.d3;
+    if (!p || !d3) return null;
+    const r = canvas.getBoundingClientRect();
+    const rot = p.rotate(), blick = [-rot[0], -rot[1]];
+    const ll = p.invert([e.clientX - r.left, e.clientY - r.top]);
+    if (!ll || d3.geoDistance(ll, blick) > Math.PI / 2 - .02) return null;
+    const isos = bereist.concat(Object.keys(DE).filter(iso => !bereist.includes(iso)), Object.keys(SONDER).filter(iso => !bereist.includes(iso)));
+    for (const iso of isos) { const f = g.land(iso); if (f && d3.geoContains(f, ll)) return f; }
+    return null;
+  }
+  canvas.addEventListener('click', e => {
+    if (!g) return;
+    const f = landAn(e) || zeiger;
+    if (!f || !f.iso) return;
+    wahl = { iso: f.iso }; wahlLand = f;
+    markieren();
+    g.auswahl(f.iso);
+    tafelStand = ''; tafelSetzen();
+  });
+  if (tipp) new MutationObserver(() => { if (tipp.hidden) zeiger = null; }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
+  let uhr = 0;
+  window.addEventListener('resize', () => { clearTimeout(uhr); uhr = setTimeout(() => { bandSetzen(); tafelHoehe(); }, 120); });
+  let rollBild = 0;
+  window.addEventListener('scroll', () => { if (!rollBild) rollBild = requestAnimationFrame(() => { rollBild = 0; haftet(); }); }, { passive: true });
+  markieren();
+  tafelSetzen();
+  tafelHoehe();
+  F.schriften(2500).then(() => { tafelHoehe(); if (g) g.zeichnen(); });
+})();
+</script>
+</body>
+</html>

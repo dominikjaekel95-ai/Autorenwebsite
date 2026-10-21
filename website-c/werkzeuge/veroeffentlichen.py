@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Baut aus website-c/ (Version C) den Ordner veroeffentlichung/, den Vercel ausliefert (Root Directory „veroeffentlichung“,
 Framework „Other“, kein Build-Schritt; docs/vercel-einrichtung.md). Vercel baut nur neu, wenn sich in veroeffentlichung/ etwas
-ändert. Darum entsteht der Ordner nur mit diesem Werkzeug, als bewusster, geprüfter Stand.
+ändert. Darum entsteht der Ordner nur mit diesem Werkzeug, als bewusster, geprüfter Stand. Von Hand wird darin nichts geändert.
 
 Aufruf (aus einem beliebigen Ordner):
   python3 website-c/werkzeuge/veroeffentlichen.py              die echte Veröffentlichung
@@ -15,23 +15,27 @@ Was der Bau tut:
   - Er kopiert website-c/ ohne werkzeuge/, README.md, versteckte Dateien und ohne Bilder aus bilder/, auf die nichts verweist.
     Alle Seiten behalten ihr Gerüst (<!doctype>, <html>, <head>, <body>), auch index.html.
   - Aus HTML, CSS und den eigenen Skripten (nicht aus lib/) entfernt er alle Kommentare, wie werkzeuge/artefakt.py.
-  - Die Skripte, die in den Seiten stehen (<script> ohne src), legt er als Dateien nach skript/ und bindet sie an derselben Stelle
-    mit <script src> ein. So kommt die Content-Security-Policy in vercel.json ohne 'unsafe-inline' für Skripte aus. Ein Skript,
-    das auf mehreren Seiten gleich ist, wird eine Datei (skript/gemeinsam.js). Die Fehlerseite verweist vom Wurzelordner aus.
   - In den Kopf jeder Seite außer 404.html schreibt er Canonical, og:title (der <title>), og:description (die vorhandene
     Meta-Beschreibung), og:url, og:image (bilder/vorschau.jpg), og:locale de_DE und twitter:card summary_large_image.
+  - Die Skripte, die in den Seiten stehen (<script> ohne src), bleiben, wo sie sind. Für jedes trägt er den SHA-256-Hash
+    seines Texts in script-src der Content-Security-Policy in vercel.json ein (in website-c/vercel.json steht nur 'self').
+    So erlaubt die CSP genau diese Skripte und kein anderes, ohne 'unsafe-inline'.
   - Er schreibt sitemap.xml mit den elf Seiten und robots.txt (alles erlaubt, Verweis auf die Sitemap). lastmod ist das Datum
     des Baus, außer eine Seite (mit ihren Skripten und Stilen) ist gleich geblieben: dann bleibt das lastmod des letzten Baus.
+    Im Entwurf fehlen in der Sitemap die Seiten mit noindex (offene Stellen).
   - vercel.json, 404.html, die Icons und das Vorschaubild gehen mit.
   - Steht in einer ausgelieferten Datei noch „[[ZU PRÜFEN“, baut er nicht, außer mit --entwurf. Dann nennt er jede Stelle, und
     die Seiten mit offenen Stellen bekommen <meta name="robots" content="noindex">, damit kein Entwurf in Suchmaschinen landet.
-  - Ist in seite.js NEWSLETTER = true, aber der Abschnitt „Newsletter“ fehlt im Datenschutz, baut er nicht.
+  - Ist in seite.js NEWSLETTER = true, aber der Abschnitt „Newsletter“ fehlt im Datenschutz oder der Dank nach dem Eintragen
+    (POST_DANKE) ist leer oder spricht vom Testsystem, baut er nicht.
 
-Er baut zuerst in einen versteckten Ordner neben dem Ziel und prüft dort: keine Kommentare, keine Skripte in den Seiten, keine
-Ereignis-Attribute (onclick=), keine Ressource von fremden Servern, jeder lokale Verweis zeigt auf eine ausgelieferte Datei,
-jede Seite hat Icons und Vorschau-Angaben, kein Wort vom Testsystem in den Seiten, vercel.json ist gültig. Erst wenn alles
-stimmt, ersetzt er das Ziel. Ein abgebrochener Bau lässt den alten Stand stehen.
+Er baut zuerst in einen versteckten Ordner neben dem Ziel und prüft dort: keine Kommentare, jedes Skript in einer Seite hat
+seinen Hash in der CSP, keine Ereignis-Attribute (onclick=) und keine javascript:-Verweise, keine Ressource von fremden
+Servern, jeder lokale Verweis zeigt auf eine ausgelieferte Datei, jede Seite hat Icons und Vorschau-Angaben, kein Wort vom
+Testsystem (auch nicht von claude.ai oder Anthropic) in den Seiten, Stilen und eigenen Skripten, vercel.json hat alle Header. Erst wenn alles stimmt, ersetzt er das Ziel. Ein abgebrochener Bau lässt
+den alten Stand stehen.
 """
+import base64
 import datetime
 import hashlib
 import html
@@ -43,6 +47,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.dont_write_bytecode = True   # kein __pycache__ in werkzeuge/
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import artefakt  # noqa: E402  (die Bereinigung der Kommentare ist dieselbe wie für claude.ai)
 
@@ -63,6 +68,17 @@ SEITEN = ['index.html', 'satoshi.html', 'ursprung.html', 'erzaehlungen.html', 'u
 PFLICHT = ['vercel.json', FEHLERSEITE, 'favicon.svg', 'favicon-32.png', 'apple-touch-icon.png', 'icon-512.png', VORSCHAUBILD]
 MARKER = re.compile(r'\[\[ZU PRÜFEN[^\]]*\]\]|\[\[ZU PRÜFEN')
 TESTSYSTEM = re.compile(r'Testsystem|Testseite|Testphase|claude\.ai|Anthropic', re.I)
+# Was die Content-Security-Policy mindestens sagen muss (script-src bekommt dazu die Hashes)
+CSP_SOLL = {
+    'default-src': ["'self'"], 'script-src': ["'self'"], 'style-src': ["'self'", "'unsafe-inline'"], 'img-src': ["'self'", 'data:'],
+    'font-src': ["'self'"], 'connect-src': ["'self'"], 'frame-ancestors': ["'none'"], 'base-uri': ["'self'"],
+    'form-action': ["'self'"], 'object-src': ["'none'"],
+}
+HEADER_SOLL = {
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+}
 
 
 def fehler(text):
@@ -94,15 +110,23 @@ def vorher_pruefen(dateien):
     for p in PFLICHT:
         if p not in namen:
             fehler(f'{p} fehlt in {QUELLE} (Icons und Vorschaubild: werkzeuge/favicon.py, dann werkzeuge/bilder.cjs)')
+    for p in ('robots.txt', 'sitemap.xml'):
+        if p in namen:
+            fehler(f'website-c/{p} gibt es; beide schreibt nur der Bau (aus BASIS_URL). Bitte die Datei entfernen')
     seiten = {p.name for p in dateien if p.suffix == '.html' and len(p.parts) == 1} - {FEHLERSEITE}
     if seiten != set(SEITEN):
         fehler(f'Die Seiten in website-c/ sind nicht die elf aus SEITEN: zu viel {sorted(seiten - set(SEITEN))}, '
                f'es fehlt {sorted(set(SEITEN) - seiten)}')
-    m = re.search(r'^\s*const NEWSLETTER = (true|false);', (QUELLE / 'seite.js').read_text(encoding='utf-8'), re.M)
+    js = (QUELLE / 'seite.js').read_text(encoding='utf-8')
+    m = re.search(r'^\s*const NEWSLETTER = (true|false);', js, re.M)
     if not m:
         fehler('seite.js: „const NEWSLETTER = true|false;“ nicht gefunden')
-    if m.group(1) == 'true' and 'id="d-newsletter"' not in (QUELLE / 'datenschutz.html').read_text(encoding='utf-8'):
-        fehler('NEWSLETTER ist true, aber im Datenschutz fehlt der Abschnitt „Newsletter“ (docs/newsletter-datenschutz-entwurf.md)')
+    if m.group(1) == 'true':
+        if 'id="d-newsletter"' not in (QUELLE / 'datenschutz.html').read_text(encoding='utf-8'):
+            fehler('NEWSLETTER ist true, aber im Datenschutz fehlt der Abschnitt „Newsletter“ (docs/newsletter-datenschutz-entwurf.md)')
+        dank = re.search(r"^\s*const POST_DANKE = '([^']*)';", js, re.M)
+        if not dank or not dank.group(1).strip() or TESTSYSTEM.search(dank.group(1)):
+            fehler('NEWSLETTER ist true, aber POST_DANKE in seite.js ist leer oder spricht vom Testsystem (Dank passend zum Dienst eintragen)')
     try:
         json.loads((QUELLE / 'vercel.json').read_text(encoding='utf-8'))
     except ValueError as e:
@@ -115,50 +139,53 @@ def vorher_pruefen(dateien):
 SKRIPT_IN_SEITE = re.compile(r'<script\b([^>]*)>(.*?)</script>', re.S | re.I)
 
 
-def inline_skripte(seiten):
-    """{(seite, nr): inhalt} für jedes <script> ohne src; dazu die Dateinamen in skript/."""
-    funde = {}
-    for seite, text in seiten.items():
-        nr = 0
-        for m in SKRIPT_IN_SEITE.finditer(text):
-            attr = m.group(1)
-            if 'src=' in attr:
-                if m.group(2).strip():
-                    fehler(f'{seite}: <script src> mit Inhalt')
-                continue
-            if attr.strip():
-                fehler(f'{seite}: <script{attr}> ohne src, aber mit Attributen; der Bau kennt nur schlichte Skripte')
-            nr += 1
-            funde[(seite, nr)] = m.group(2).strip('\n') + '\n'
-    seiten_je_inhalt = {}
-    for (seite, _), inhalt in funde.items():
-        seiten_je_inhalt.setdefault(inhalt, set()).add(seite)
-    namen, gemeinsam, je_seite = {}, 0, {}
-    for (seite, nr), inhalt in funde.items():
-        if inhalt in namen:
-            continue
-        if len(seiten_je_inhalt[inhalt]) > 1:
-            gemeinsam += 1
-            namen[inhalt] = 'skript/gemeinsam.js' if gemeinsam == 1 else f'skript/gemeinsam-{gemeinsam}.js'
-        else:
-            je_seite[seite] = je_seite.get(seite, 0) + 1
-    zaehler = {}
-    for (seite, nr), inhalt in funde.items():
-        if inhalt in namen:
-            continue
-        stamm = Path(seite).stem
-        zaehler[seite] = zaehler.get(seite, 0) + 1
-        namen[inhalt] = f'skript/{stamm}.js' if je_seite[seite] == 1 else f'skript/{stamm}-{zaehler[seite]}.js'
-    return namen
+def skript_hash(inhalt):
+    """Der Hash, mit dem eine CSP ein Skript in der Seite erlaubt: SHA-256 über den Text zwischen <script> und </script>."""
+    return "'sha256-" + base64.b64encode(hashlib.sha256(inhalt.encode('utf-8')).digest()).decode('ascii') + "'"
 
 
-def skripte_auslagern(seite, text, namen):
-    def ersetzen(m):
-        if 'src=' in m.group(1):
-            return m.group(0)
-        name = namen[m.group(2).strip('\n') + '\n']
-        return f'<script src="{"/" if seite == FEHLERSEITE else ""}{name}"></script>'
-    return SKRIPT_IN_SEITE.sub(ersetzen, text)
+def skripte_in_seite(seite, text):
+    """Die Hashes aller <script> ohne src einer Seite."""
+    hashes = []
+    for m in SKRIPT_IN_SEITE.finditer(text):
+        attr, inhalt = m.group(1), m.group(2)
+        if 'src=' in attr:
+            if inhalt.strip():
+                fehler(f'{seite}: <script src> mit Inhalt')
+            continue
+        if attr.strip():
+            fehler(f'{seite}: <script{attr}> ohne src, aber mit Attributen; der Bau kennt nur schlichte Skripte')
+        hashes.append(skript_hash(inhalt))
+    return hashes
+
+
+def csp_zerlegen(wert):
+    return {t.split()[0]: t.split()[1:] for t in wert.split(';') if t.strip()}
+
+
+def vercel_mit_hashes(roh, hashes):
+    """vercel.json aus website-c/ mit den Hashes in script-src. Sonst bleibt die Datei Zeichen für Zeichen, wie sie ist."""
+    konfig = json.loads(roh)
+    werte = [h['value'] for r in konfig.get('headers', []) for h in r['headers'] if h['key'].lower() == 'content-security-policy']
+    if len(werte) != 1:
+        fehler(f'vercel.json: {len(werte)} Content-Security-Policy statt genau einer')
+    alt = werte[0]
+    teile = [t.strip() for t in alt.split(';') if t.strip()]
+    neu = []
+    for t in teile:
+        name, *quellen = t.split()
+        if name == 'script-src':
+            if "'unsafe-inline'" in quellen or any(q.startswith("'sha") for q in quellen):
+                fehler("website-c/vercel.json: script-src soll nur 'self' sein; die Hashes trägt der Bau ein")
+            quellen += hashes
+        neu.append(' '.join([name] + quellen))
+    neu = '; '.join(neu)
+    if roh.count(json.dumps(alt)) != 1:
+        fehler('vercel.json: die Content-Security-Policy steht nicht genau einmal wörtlich in der Datei')
+    aus = roh.replace(json.dumps(alt), json.dumps(neu))
+    if [h['value'] for r in json.loads(aus)['headers'] for h in r['headers'] if h['key'] == 'Content-Security-Policy'] != [neu]:
+        fehler('vercel.json: Einsetzen der Hashes ging schief')
+    return aus
 
 
 def attribut(text, muster, was, seite):
@@ -190,7 +217,7 @@ def kopf_ergaenzen(seite, text, entwurf_offen):
     ]
     if entwurf_offen:
         zeilen.insert(0, '<meta name="robots" content="noindex">')
-    if re.search(r'rel="canonical"|property="og:', text):
+    if re.search(r'rel="canonical"|property="og:|name="twitter:', text):
         fehler(f'{seite}: hat schon Canonical oder Open Graph; die schreibt nur der Bau (aus BASIS_URL)')
     m = re.search(r'<meta name="description" content="[^"]*">\n', text)
     return text[:m.end()] + '\n'.join(zeilen) + '\n' + text[m.end():]
@@ -222,10 +249,14 @@ def alte_lastmods(ziel):
     return dict(re.findall(r'<loc>([^<]+)</loc>\s*<lastmod>([^<]+)</lastmod>', datei.read_text(encoding='utf-8')))
 
 
-def sitemap(neu, ziel, heute):
+def sitemap(neu, ziel, heute, ohne):
+    """sitemap.xml und robots.txt. Seiten aus ohne (im Entwurf die mit noindex) stehen nicht in der Sitemap: Suchmaschinen sollen
+    keine Adresse gemeldet bekommen, die sie nicht aufnehmen dürfen."""
     alt = alte_lastmods(ziel)
     eintraege = []
     for seite in SEITEN:
+        if seite in ohne:
+            continue
         url = url_fuer(seite)
         gleich = fingerabdruck(neu, seite) == fingerabdruck(ziel, seite) and url in alt
         eintraege.append((url, alt[url] if gleich else heute))
@@ -265,26 +296,56 @@ def ziel_von(seite, ref):
     return Path(os.path.normpath((Path(seite).parent / ref).as_posix()))
 
 
+def vercel_pruefen(konfig, hashes, probleme):
+    if konfig.get('cleanUrls') is not False:
+        probleme.append('vercel.json: cleanUrls soll false sein (die Verweise enden auf .html)')
+    if konfig.get('trailingSlash') is not False:
+        probleme.append('vercel.json: trailingSlash soll false sein')
+    alle = {}
+    for r in konfig.get('headers', []):
+        if r.get('source') == '/(.*)':
+            alle.update({h['key']: h['value'] for h in r['headers']})
+    for k, v in HEADER_SOLL.items():
+        if alle.get(k) != v:
+            probleme.append(f'vercel.json: {k} für alle Pfade soll „{v}“ sein, ist „{alle.get(k)}“')
+    csp = csp_zerlegen(alle.get('Content-Security-Policy', ''))
+    for name, soll in CSP_SOLL.items():
+        ist = csp.get(name)
+        if ist is None:
+            probleme.append(f'vercel.json: CSP ohne {name}')
+            continue
+        rest = sorted(set(ist) - set(soll) - (set(hashes) if name == 'script-src' else set()))
+        if [q for q in soll if q not in ist] or rest:
+            probleme.append(f'vercel.json: CSP {name} ist {" ".join(ist)}')
+    fehlen = sorted(set(hashes) - set(csp.get('script-src', [])))
+    if fehlen:
+        probleme.append(f'vercel.json: script-src ohne die Hashes {fehlen}')
+    cache = {r['source']: h['value'] for r in konfig.get('headers', []) for h in r['headers'] if h['key'] == 'Cache-Control'}
+    for quelle, soll in (('/', 'must-revalidate'), ('/(.*)\\.html', 'must-revalidate'), ('/(schrift|lib|daten|bilder)/(.*)', 'max-age=86400')):
+        if soll not in cache.get(quelle, '') or 'immutable' in cache.get(quelle, ''):
+            probleme.append(f'vercel.json: Cache-Control für {quelle} ist „{cache.get(quelle)}“')
+
+
 def pruefen(neu, dateien, seiten):
     namen = {p.as_posix() for p in dateien}
-    probleme = []
+    probleme, hashes = [], set()
     for p in dateien:
         if p.suffix not in TEXTDATEIEN or p.parts[0] == 'lib':
             continue
         text = (neu / p).read_text(encoding='utf-8')
         if p.suffix == '.html' and '<!--' in text or p.suffix == '.css' and '/*' in text:
             probleme.append(f'{p}: Kommentar übrig')
-        if p.suffix == '.js' and TESTSYSTEM.search(text):
-            print(f'  Hinweis: {p} enthält „{TESTSYSTEM.search(text).group(0)}“ (nicht in einer Seite; prüfen, ob es sichtbar wird)')
+        if TESTSYSTEM.search(text):
+            probleme.append(f'{p}: „{TESTSYSTEM.search(text).group(0)}“ in der ausgelieferten Datei')
     for seite in seiten:
         text = (neu / seite).read_text(encoding='utf-8')
-        for m in SKRIPT_IN_SEITE.finditer(text):
-            if 'src=' not in m.group(1):
-                probleme.append(f'{seite}: Skript in der Seite (die CSP erlaubt nur Dateien)')
+        hashes.update(skripte_in_seite(seite, text))
+        # Für die Prüfung der Tags zählt nur das HTML, nicht der Text der Skripte in der Seite
+        text = re.sub(r'(<script\b[^>]*>).*?(</script>)', r'\1\2', text, flags=re.S | re.I)
         for m in re.finditer(r'<[a-zA-Z][^>]*\s(on[a-z]+)\s*=', text):
             probleme.append(f'{seite}: Ereignis-Attribut {m.group(1)}= (verbietet die CSP)')
-        if re.search(r'(?:href|src)="\s*javascript:', text, re.I):
-            probleme.append(f'{seite}: javascript:-Verweis')
+        if re.search(r'(?:href|src|action)="\s*javascript:', text, re.I):
+            probleme.append(f'{seite}: javascript:-Verweis (verbietet die CSP)')
         sichtbar = re.sub(r'<(script|style)\b.*?</\1>', '', text, flags=re.S | re.I)
         if TESTSYSTEM.search(sichtbar):
             probleme.append(f'{seite}: „{TESTSYSTEM.search(sichtbar).group(0)}“ in der Seite')
@@ -308,7 +369,9 @@ def pruefen(neu, dateien, seiten):
                 probleme.append(f'{seite}: url({ref}) zeigt auf keine ausgelieferte Datei')
         kopf = text.split('</head>')[0]
         pflicht = ['rel="icon" href="', 'rel="apple-touch-icon"', '<meta name="theme-color" content="#FFFEFC">']
-        if seite != FEHLERSEITE:
+        if seite == FEHLERSEITE:
+            pflicht += ['<meta name="robots" content="noindex">']
+        else:
             pflicht += ['rel="canonical"', 'property="og:title"', 'property="og:description"', 'property="og:url"',
                         'property="og:image"', 'property="og:locale" content="de_DE"', 'name="twitter:card" content="summary_large_image"']
         for teil in pflicht:
@@ -320,12 +383,10 @@ def pruefen(neu, dateien, seiten):
         for ref in re.findall(r'url\(\s*["\']?([^"\')]+)', (neu / css).read_text(encoding='utf-8')):
             if not re.match(r'data:|#', ref) and ziel_von(css.as_posix(), ref).as_posix() not in namen:
                 probleme.append(f'{css}: url({ref}) zeigt auf keine ausgelieferte Datei')
-    konfig = json.loads((neu / 'vercel.json').read_text(encoding='utf-8'))
-    csp = [h['value'] for r in konfig.get('headers', []) for h in r['headers'] if h['key'].lower() == 'content-security-policy']
-    if not csp:
-        probleme.append('vercel.json: keine Content-Security-Policy')
+    vercel_pruefen(json.loads((neu / 'vercel.json').read_text(encoding='utf-8')), hashes, probleme)
     if probleme:
         fehler('Prüfung fehlgeschlagen:\n  ' + '\n  '.join(probleme))
+    return hashes
 
 
 # ---------- Ziel ----------
@@ -356,7 +417,7 @@ def main():
     vorher_pruefen(dateien)
     heute = datetime.date.today().isoformat()
 
-    # Die Seiten und eigenen Texte ohne Kommentare
+    # Die Seiten und eigenen Texte ohne Kommentare, die Seiten mit Canonical und Vorschau-Angaben
     texte = {}
     for p in dateien:
         if p.suffix in TEXTDATEIEN:
@@ -365,30 +426,32 @@ def main():
                 texte[p] = neu
     seiten = [p.as_posix() for p in dateien if p.suffix == '.html']
     offen = {s for s in seiten if MARKER.search(texte[Path(s)])}
-    namen = inline_skripte({s: texte[Path(s)] for s in seiten})
     for s in seiten:
-        t = skripte_auslagern(s, texte[Path(s)], namen)
-        texte[Path(s)] = t if s == FEHLERSEITE else kopf_ergaenzen(s, t, entwurf and s in offen)
-    for inhalt, name in namen.items():
-        texte[Path(name)] = inhalt
+        if s != FEHLERSEITE:
+            texte[Path(s)] = kopf_ergaenzen(s, texte[Path(s)], entwurf and s in offen)
+
+    # vercel.json mit den Hashes der Skripte in den Seiten
+    hashes = sorted({h for s in seiten for h in skripte_in_seite(s, texte[Path(s)])})
+    texte[Path('vercel.json')] = vercel_mit_hashes((QUELLE / 'vercel.json').read_text(encoding='utf-8'), hashes)
 
     # Bilder, auf die nichts verweist, bleiben weg (das Vorschaubild steht nun im Kopf jeder Seite)
     alles = ''.join(texte.values())
     weg = sorted(p for p in dateien if p.parts[0] == 'bilder' and p.as_posix() not in alles)
     dateien = [p for p in dateien if p not in weg]
-    ausgeliefert = sorted(set(dateien) | set(texte) | {Path('sitemap.xml'), Path('robots.txt')})
+    ausgeliefert = sorted(set(dateien) | {Path('sitemap.xml'), Path('robots.txt')})
 
     ziel.parent.mkdir(parents=True, exist_ok=True)
     neu = Path(tempfile.mkdtemp(prefix='.veroeffentlichung-', dir=ziel.parent))
     try:
-        for p in sorted(set(dateien) | set(texte)):
+        for p in dateien:
             (neu / p).parent.mkdir(parents=True, exist_ok=True)
             if p in texte:
                 (neu / p).write_text(texte[p], encoding='utf-8', newline='\n')
             else:
                 shutil.copy2(QUELLE / p, neu / p)
-        eintraege = sitemap(neu, ziel, heute)
-        pruefen(neu, ausgeliefert, seiten)
+        eintraege = sitemap(neu, ziel, heute, offen if entwurf else set())
+        if pruefen(neu, ausgeliefert, seiten) != set(hashes):
+            fehler('Die Hashes in vercel.json passen nicht zu den Skripten in den Seiten')
 
         marker = marker_suchen(neu, ausgeliefert)
         if marker:
@@ -411,8 +474,7 @@ def main():
 
     groesse = sum((ziel / p).stat().st_size for p in ausgeliefert)
     print(f'{"Entwurf" if entwurf else "Veröffentlichung"} in {ziel}, Adresse {BASIS_URL}')
-    print(f'{len(ausgeliefert)} Dateien, {groesse / 1024:.1f} KB; Skripte aus den Seiten: '
-          + ', '.join(sorted(set(namen.values()))))
+    print(f'{len(ausgeliefert)} Dateien, {groesse / 1024:.1f} KB; {len(hashes)} Skripte in den Seiten, je mit Hash in script-src')
     print('Sitemap: ' + ', '.join(f'{u.removeprefix(BASIS_URL) or "/"} {d}' for u, d in eintraege))
     print('Ausgelassen: ' + ', '.join(sorted(AUSLASSEN) + [p.as_posix() + ' (nirgends verwiesen)' for p in weg]))
 

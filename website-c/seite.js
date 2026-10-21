@@ -1647,8 +1647,10 @@
      „Newsletter erstmal ausblenden“): Solange NEWSLETTER false ist, steht sie in keinem Fuß und nichts von ihr im HTML der Seiten.
      Mit true setzt fuss() sie in jeden Fuß, direkt unter die E-Mail-Zeile (6.2), Wortlaut wie vorher. Vorher nötig: ein Newsletter-
      Dienst, der Abschnitt „Newsletter“ in datenschutz.html (Entwurf in docs/newsletter-datenschutz-entwurf.md; veroeffentlichen.py
-     baut nicht, solange er fehlt) und ein Dank, der zum Dienst passt. Bis dahin schickt Eintragen nichts ab und lädt nichts, es leert
-     nur das Feld und zeigt POST_DANKE in der Statuszeile. Ohne Skript gibt es die Zeile nicht. */
+     baut nicht, solange er fehlt) und ein Dank in POST_DANKE, der zum Dienst passt (veroeffentlichen.py baut nicht, solange er leer
+     ist). Bis dahin schickt Eintragen nichts ab und lädt nichts, es leert nur das Feld und zeigt POST_DANKE in der Statuszeile. Ohne
+     Skript gibt es die Zeile nicht. Der Dank aus dem Testsystem („Danke. Im Testsystem wird noch nichts verschickt.“) ist entfernt,
+     damit das Wort nicht in der ausgelieferten seite.js steht; er steht in docs/newsletter-datenschutz-entwurf.md. */
   const NEWSLETTER = false;
   const POST_ZEILE = '<form class="post">'
     + '<p><span id="post-satz">Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe">'
@@ -1656,7 +1658,7 @@
     + ' <button class="wort" type="submit">Eintragen</button></span></p>'
     + '<p class="post-status" role="status"></p>'
     + '</form>';
-  const POST_DANKE = 'Danke. Im Testsystem wird noch nichts verschickt.';
+  const POST_DANKE = '';
   function fuss() {
     if (NEWSLETTER) {
       $$('.fuss .anfragen').forEach(zeile => {

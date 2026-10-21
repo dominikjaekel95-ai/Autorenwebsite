@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Vorschaubild</title>
+<!-- Vorlage für bilder/vorschau.jpg (Open Graph, 1200 × 630), gerechnet von werkzeuge/bilder.cjs. Wird nicht veröffentlicht.
+     Wie die Startseite: links Name, Tagline und der erste Satz, rechts die angeschnittene Kugel in feinen Linien. Farben, Schriften
+     und Linien aus stil.css und Abschnitt 4.1 der Regeln. Kein Verlauf, kein Schatten. Pfade relativ zu website-c/werkzeuge/. -->
+<style>
+@font-face { font-family: "Vollkorn"; src: url("../schrift/vollkorn.woff2") format("woff2"); font-weight: 400 600; font-style: normal; }
+@font-face { font-family: "IM Fell French Canon"; src: url("../schrift/im-fell-french-canon.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+:root {
+  --papier: #FFFEFC; --tinte: #1D1E21;
+  --karte-land: #F3F3F2; --karte-bereist: #C4C7CC; --karte-grenze: #B0B3B8; --karte-kueste: #9C9DA1; --karte-gradnetz: #ECEDEE;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1200px; height: 630px; overflow: hidden; background: var(--papier); color: var(--tinte); }
+body { position: relative; font-family: "Vollkorn", Georgia, serif; font-variant-numeric: oldstyle-nums proportional-nums; font-kerning: normal; -webkit-font-smoothing: antialiased; }
+.kugel { position: absolute; left: 0; top: 0; }
+.text { position: absolute; left: 84px; top: 80px; width: 556px; }
+.name { font-size: 34px; line-height: 44px; }
+.rolle { font-size: 26px; line-height: 36px; }
+.satz { position: absolute; left: 84px; bottom: 88px; width: 556px; font-family: "IM Fell French Canon", Georgia, serif; font-size: 48px; line-height: 62px; }
+.satz span { display: block; width: max-content; white-space: nowrap; }
+</style>
+</head>
+<body>
+<svg class="kugel" width="1200" height="630" aria-hidden="true"></svg>
+<div class="text">
+  <p class="name">Dominik Jäkel</p>
+  <p class="rolle">Schriftsteller und Reisender</p>
+</div>
+<p class="satz"><span>Dominik Jäkel schreibt tagsüber</span><span>unter fremden Namen</span><span>und abends unter seinem eigenen.</span></p>
+<script src="../lib/d3.min.js"></script>
+<script src="../lib/topojson-client.min.js"></script>
+<script src="../daten/welt-50m.js"></script>
+<script src="../daten/inhalt.js"></script>
+<script>
+(async function () {
+  'use strict';
+  // Der erste Satz: jedes Glied eine Zeile; passt das längste nicht in die Spalte, wird die Schrift kleiner (wie auf der Startseite)
+  await document.fonts.load('48px "IM Fell French Canon"');
+  await document.fonts.load('34px "Vollkorn"');
+  const satz = document.querySelector('.satz');
+  const laengste = Math.max(...Array.from(satz.children, s => s.getBoundingClientRect().width));
+  if (laengste > satz.clientWidth) {
+    const g = Math.floor(48 * satz.clientWidth / laengste * 10) / 10;
+    satz.style.fontSize = g + 'px';
+    satz.style.lineHeight = Math.round(g * 1.3) + 'px';
+  }
+
+  // Die Kugel: rechts angeschnitten, oben und unten knapp über den Rand, Europa und Afrika im sichtbaren Teil
+  const svg = d3.select('.kugel');
+  const R = 335, MX = 1025, MY = 315;
+  const proj = d3.geoOrthographic().scale(R).translate([MX, MY]).rotate([-28, -30]).clipAngle(90).precision(.2);
+  const pfad = d3.geoPath(proj);
+  const welt = window.WELT_50M;
+  const laender = topojson.feature(welt, welt.objects.countries).features;
+  const land = topojson.merge(welt, welt.objects.countries.geometries);
+  const grenzen = topojson.mesh(welt, welt.objects.countries, (a, b) => a !== b);
+  const kueste = topojson.mesh(welt, welt.objects.countries, (a, b) => a === b);
+
+  svg.append('path').datum({ type: 'Sphere' }).attr('d', pfad).attr('fill', 'var(--papier)');
+  svg.append('path').datum(d3.geoGraticule10()).attr('d', pfad).attr('fill', 'none').attr('stroke', 'var(--karte-gradnetz)').attr('stroke-width', .75);
+  svg.append('path').datum(land).attr('d', pfad).attr('fill', 'var(--karte-land)');
+  svg.append('path').datum(grenzen).attr('d', pfad).attr('fill', 'none').attr('stroke', 'var(--karte-grenze)').attr('stroke-width', .6);
+  svg.append('path').datum(kueste).attr('d', pfad).attr('fill', 'none').attr('stroke', 'var(--karte-kueste)').attr('stroke-width', .8);
+  svg.append('path').datum({ type: 'Sphere' }).attr('d', pfad).attr('fill', 'none').attr('stroke', 'var(--tinte)').attr('stroke-width', 1.25);
+  document.body.dataset.fertig = '1';
+})();
+</script>
+</body>
+</html>

@@ -9,8 +9,9 @@ Aufruf (aus einem beliebigen Ordner):
 Der Zielordner wird neu angelegt; liegt dort schon ein früherer Bau (ein Ordner mit index.html), wird er ersetzt.
 
 Was der Bau tut:
-  - Er kopiert website-c/ in den Zielordner, ohne werkzeuge/, README.md, versteckte Dateien und ohne Bilder aus bilder/,
-    auf die keine Seite, kein Skript und kein Stil verweist. Schriften (schrift/, mit den Lizenzen) und Bibliotheken (lib/)
+  - Er kopiert website-c/ in den Zielordner, ohne werkzeuge/, README.md, versteckte Dateien, ohne 404.html und vercel.json (die
+    gehören nur zur Veröffentlichung bei Vercel, siehe werkzeuge/veroeffentlichen.py) und ohne Bilder aus bilder/, auf die
+    keine Seite, kein Skript und kein Stil verweist (etwa bilder/vorschau.jpg, das erst die Veröffentlichung einträgt). Schriften (schrift/, mit den Lizenzen) und Bibliotheken (lib/)
     gehen mit, die Seiten laden nichts von fremden Servern.
   - Aus HTML, CSS und den eigenen Skripten (nicht aus lib/, dort stehen die Lizenzen) entfernt er alle Kommentare, auch die
     in <script> und <style> der Seiten. Ausgeliefert wird nur, was zur Seite gehört. Die übrigen Dateien bleiben Byte für Byte
@@ -36,7 +37,9 @@ from pathlib import Path
 
 QUELLE = Path(__file__).resolve().parents[1]
 HAUPTSEITE = 'index.html'
-AUSLASSEN = {'werkzeuge', 'README.md'}
+# 404.html und vercel.json gehören nur zur Veröffentlichung bei Vercel (werkzeuge/veroeffentlichen.py): die Fehlerseite verweist vom
+# Wurzelordner aus (/stil.css), was unter claude.ai ins Leere ginge
+AUSLASSEN = {'werkzeuge', 'README.md', '404.html', 'vercel.json'}
 TEXTDATEIEN = ('.html', '.css', '.js')
 
 

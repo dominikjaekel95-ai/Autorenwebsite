@@ -43,7 +43,8 @@
      karteikarte.oeffnen(inhalt, ausloeser), .schliessen(), .offen()   nur noch für den Übergang; C zeigt die Buchzeile
      texte.alle(art), texte.satz(s), texte.datum(d), texte.punkt(s), texte.ARTEN   Texte aus daten/texte.js
      navigation()                   Navigation einrichten (läuft beim Laden von selbst)
-     fuss(), PROFILE                Newsletter-Zeile und Profile im Fuß (läuft beim Laden von selbst); PROFILE: Liste der Profile
+     fuss(), PROFILE, NEWSLETTER    Newsletter-Zeile (nur mit NEWSLETTER = true) und Profile im Fuß (läuft beim Laden von selbst);
+                                    PROFILE: Liste der Profile
      leselinie(elemente, beiSchritt, o)   beim Scrollen: welches Element zuletzt die Leselinie erreicht hat (vor und zurück)
      fortschritt(element, beiWert, o)     beim Scrollen: wie weit ein Element durch das Fenster gewandert ist, 0 bis 1
      imBild(element, { starten, unterbrechen, fortsetzen })   eine Chronik hält an, wenn ihr Globus aus dem Bild ist
@@ -1642,11 +1643,26 @@
      sie stehen sollen, etwa { name: 'Instagram', url: 'https://…' }, { name: 'LinkedIn', url: 'https://…' }. Solange die Liste leer
      ist, bleibt die Zeile .profile verborgen; es gibt keine toten Verweise. */
   const PROFILE = [];
-  /* Die Zeile „Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht“ (form.post im Fuß jeder Seite). Einen Newsletter-Dienst
-     gibt es noch nicht: Eintragen schickt nichts ab und lädt nichts, es leert nur das Feld und zeigt den Dank in der Statuszeile.
-     Ohne Skript ist das Formular verborgen (stil.css). */
+  /* Die Zeile „Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht“ (form.post). Zum Start ausgeblendet (Dominik,
+     „Newsletter erstmal ausblenden“): Solange NEWSLETTER false ist, steht sie in keinem Fuß und nichts von ihr im HTML der Seiten.
+     Mit true setzt fuss() sie in jeden Fuß, direkt unter die E-Mail-Zeile (6.2), Wortlaut wie vorher. Vorher nötig: ein Newsletter-
+     Dienst, der Abschnitt „Newsletter“ in datenschutz.html (Entwurf in docs/newsletter-datenschutz-entwurf.md; veroeffentlichen.py
+     baut nicht, solange er fehlt) und ein Dank, der zum Dienst passt. Bis dahin schickt Eintragen nichts ab und lädt nichts, es leert
+     nur das Feld und zeigt POST_DANKE in der Statuszeile. Ohne Skript gibt es die Zeile nicht. */
+  const NEWSLETTER = false;
+  const POST_ZEILE = '<form class="post">'
+    + '<p><span id="post-satz">Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe">'
+    + '<label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" placeholder="E-Mail-Adresse" required aria-describedby="post-satz">'
+    + ' <button class="wort" type="submit">Eintragen</button></span></p>'
+    + '<p class="post-status" role="status"></p>'
+    + '</form>';
   const POST_DANKE = 'Danke. Im Testsystem wird noch nichts verschickt.';
   function fuss() {
+    if (NEWSLETTER) {
+      $$('.fuss .anfragen').forEach(zeile => {
+        if (!zeile.parentNode.querySelector('form.post')) zeile.insertAdjacentHTML('afterend', POST_ZEILE);
+      });
+    }
     $$('form.post').forEach(form => {
       if (form.dataset.bereit) return;
       form.dataset.bereit = '1';
@@ -1712,7 +1728,7 @@
     FARBEN, SIENA, SIENA_EBENE, globus, blickFuer, ueberblick,
     tafel, tafelReservieren, tafelPlatz, lesezeit, steuerzeile, ortsleiste, ablauf, TAKT,
     stationen, stationInhalt, szenen, ursprungOrte, ursprungInhalt,
-    karteikarte, buch, werkKarte, werkSatz, buchzeile, texte, navigation, fuss, PROFILE,
+    karteikarte, buch, werkKarte, werkSatz, buchzeile, texte, navigation, fuss, PROFILE, NEWSLETTER,
     leselinie, fortschritt, imBild
   };
 })();

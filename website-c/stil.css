@@ -201,8 +201,8 @@ a.name:hover, a.name:focus-visible { text-decoration-line: underline; }
 .kolophon-fuss { margin-top: var(--z); max-width: 36em; }
 .profile { display: flex; flex-wrap: wrap; column-gap: 1.2em; }
 .profile[hidden] { display: none; }
-/* Newsletter-Zeile: das Feld ist ein Strich von 1 px in Tinte, „Eintragen“ ein unterstrichenes Wort. Ohne Skript ist das Formular
-   verborgen (es schickt nichts ab, siehe FSeite.fuss) */
+/* Newsletter-Zeile: das Feld ist ein Strich von 1 px in Tinte, „Eintragen“ ein unterstrichenes Wort. Zum Start ausgeblendet: FSeite.fuss
+   setzt sie nur mit NEWSLETTER = true (seite.js). Ohne Skript ist das Formular verborgen (es schickt nichts ab) */
 html:not(.js) .post { display: none; }
 .post-eingabe { white-space: nowrap; }
 .post-feld {
@@ -222,7 +222,8 @@ html:not(.js) .post { display: none; }
 
 /* ---------- Rechtstexte (6.18) ---------- */
 .recht { max-width: var(--mass); }
-.recht .seitentitel { margin-bottom: 0; }
+/* Der Vermerk steht ¼ z unter dem Titel; fällt er weg (vor dem Start), hat der Titel wieder 1 z Abstand nach unten */
+.recht .seitentitel:has(+ .vermerk) { margin-bottom: 0; }
 .recht .vermerk { margin-top: var(--z-viertel); margin-bottom: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); font-style: normal; }
 .recht section + section, .recht .vorab + section { margin-top: var(--z-zwei); }
 .recht .titel { margin-top: 0; margin-bottom: var(--z-halb); }

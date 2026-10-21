@@ -811,7 +811,7 @@ Es gibt keine eigene Zeichenerklärung an den Globen. Das Zeichen vor dem Ort an
 Je Band ein Abschnitt in der linken Spalte:
 
 1. Überschrift (`h2`, Grad Überschrift, aufrecht): „Band I“, 1 em Abstand, der Titel. Bei Band II und III dahinter „Arbeitstitel“ im Grad klein (V39).
-2. Ortszeile, Grad klein: der Ort als Knopf, Komma, die Zeit. In der nächsten Zeile die Koordinaten. Bei Band III danach der Satz von A zu Tyros, Tyros als Knopf.
+2. Ortszeile, Grad klein: der Ort als Knopf, Komma, die Zeit. ~~In der nächsten Zeile die Koordinaten.~~ Die Koordinaten stehen nur noch auf der Tafel unter dem Globus (Runde 3, Dominik: „Es reicht wenn die Koordinaten unter dem Globus stehen. Müssen nicht nochmal doppelt in den Teasern auftauchen“). Bei Band III danach der Satz von A zu Tyros, Tyros als Knopf.
 3. Thema, Grad Text.
 4. Bei Band I die Zeile aus dem Exposé, Grad Text, aufrecht.
 5. Inhalt, Grad Text. Bei Band I danach „Alles steht unter der Frage: …“ (V42).

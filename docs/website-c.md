@@ -14,6 +14,7 @@ Stand: 21. Oktober 2026, abends. Das hat sich nach deiner Rückmeldung vom 21. O
 - **K8, Bibliothek auf dem Telefon.** „Was noch wartet“ steht dort als weiße, vorgezeichnete Rücken auf Brettern, alle 75 Bücher. Wo Platz ist, steht der Nachname aufrecht in Tinte darauf. Antippen zieht den Rücken heraus und zeigt Autor, Titel, Jahr und Seitenzahl, ein zweites Tippen schließt. Am Desktop bleibt die Liste. Die Grenze ist dieselbe Breite, an der C auf das Telefon wechselt.
 - **K9, *Satoshi*.** Der Einspieler und „abspielen“ laufen langsamer: Jede Szene steht 3 s plus 0,6 s je Wort, also 6 bis 18 s. Das ist doppelt so lang wie vorher beim Abspielen. Bei jeder Station erscheint der Szenentext von selbst in der Tafel, auch in der Ebene *Satoshi* der Startseite. Danach und beim Klicken ist alles wie bisher. Bei reduzierter Bewegung gibt es keinen Einspieler. Die Zeitleiste der Orte und „Weitere Schauplätze“ stehen jetzt in der Größe des Lauftexts.
   **Bitte bestätigen:** Der Einspieler hat denselben Takt bekommen wie „abspielen“, weil er jetzt Text zeigt. Er dauert damit rund 2 Minuten statt 14 Sekunden. Mit nur doppelt so langen Halten wie vorher (0,8 s) stünde jeder Szenentext unter 2 Sekunden, das wäre nicht zu lesen. Ein Griff an die Kugel beendet ihn jederzeit. Wenn er kürzer sein soll, ist das eine Zahl.
+  **Überholt durch „Runde 3: Takt“ am Ende dieses Dokuments:** Jetzt dauern Einspieler und Abspielen rund eine Minute, und die Zeitleiste und „Weitere Schauplätze“ sind entfallen.
 - **K10, Globus in Bewegung.** Gemessen und nicht übernommen. Eine mittlere Karte aus der feinen, vereinfacht auf 20 000 bis 30 000 Punkte, kommt auf diesem Rechner ohne Grafikkarte bei 2,4-facher Vergrößerung nur auf 17 bis 37 Bilder je Sekunde. Verlangt waren mindestens 40. Selbst 15 000 Punkte schaffen das nur am Desktop der Startseite (46), auf dem Telefon 38 und auf der Seite Länder 34 bis 36. Die grobe Karte von heute (rund 8 000 Punkte) läuft mit 59 bis 60 Bildern je Sekunde, die feine (rund 80 000) mit 8 bis 11. Deshalb bleibt es, wie es ist: in Bewegung die grobe Karte, kurz nach dem Stillstand die feine. Das Werkzeug für die mittlere Karte liegt bereit, falls du lieber etwas Ruckeln und dafür Mallorca und Sansibar auch in Bewegung möchtest.
 - **K11, Autorenforum.** Überall heißt es „Autorenforums Berlin e. V.“. Auf der Startseite, auf *Satoshi*, in der Vita und auf der Seite Erzählungen verweist das erste Vorkommen auf https://autorenforum-berlin.de/.
 
@@ -377,3 +378,49 @@ Hier steht alles, was ich für dich entschieden habe, wo du vielleicht etwas and
 - Die alte Karteikarte steht noch als ungenutzter Code im Skript. Sie erscheint nirgends.
 - Erzählungen und *Untertext* sind leer. Dort steht nur „Die ersten Erzählungen folgen.“ und „Die ersten Einträge folgen.“
 - Der Fünf-Sekunden-Test mit echten Menschen steht aus. Das kannst nur du: Zeig C zwei Leuten und frag nach drei Adjektiven. Ziel ist „souverän, literarisch, mit Freude gemacht“, nicht „süß“ und nicht „steif“.
+
+## Runde 3: Takt
+
+Stand: 21. Oktober 2026, spät abends. Grundlage sind deine Rückmeldung („Takt kürzer, etwa eine Minute insgesamt. … Entweder den Takt länger oder kurz halten. Aber dann nicht jedes Mal kurz die Details zeigen.“), deine beiden Nachträge zu *Satoshi* und *Ursprung* und die Empfehlung in `takt-empfehlung.md`. Wo die Teile oben etwas anderes sagen, gilt dieser Abschnitt. Die Texte stehen mit Vorher und Nachher in `text-aenderungen-c.md`, Nummer 90 bis 96. Beschriftungen haben sich nicht geändert: „früher“, „später“, „abspielen“, „anhalten“ und „noch einmal von vorn“ bleiben.
+
+**Was sich geändert hat**
+
+- **Startseite: kurz halten, ohne Details im Ablauf.** Im Einspieler und beim Abspielen zeigt die Tafel bei Leben nur Jahr, Zeichen und Ort, bei *Ursprung* Band, Ort und die Zeit klein dahinter („I Göbekli Tepe um 8000 v. Chr.“). Art und Vermerk, die Zeile zum Band und auf `ursprung.html` die Koordinaten kommen erst am Ende (Berlin mit „Wohnort“, Jerusalem mit allem), wenn du anhältst oder wenn du selbst einen Schritt machst. Dann bleiben sie stehen. Das Anhalten zeigt die ganzen Einzelheiten. Das stand nicht ausdrücklich in der Empfehlung, folgt aber ihrer Regel „Details in Ruhe“.
+- **Leben:** Halt 0,8 s statt 0,6 s, der Rückweg eines Abstechers 0,8 s statt 0,5 s. Auf dem Rückweg behält die Kugel die Vergrößerung des Abstechers und zoomt nicht mehr dreimal hin und her. **Ursprung:** Halt 1,4 s statt 2,0 s.
+- ***Satoshi*: rund eine Minute.** Halt = 1 s plus 0,3 s je Wort, mindestens 3 s, höchstens 9 s (vorher 3 s plus 0,6 s je Wort). Der Szenentext läuft weiter mit, auf der Seite und in der Ebene der Startseite.
+- **Erst die Linie, dann die Schrift.** Punkt, Name und Tafel wechseln, wenn die Linie am Ziel ist. Vorher geschah das schon bei 55 % des Flugs. Der Wechsel geschieht im selben Augenblick wie Punkt und Name. Die Messung sieht ihn im nächsten Bild nach dem Ende des Flugs, 0,01 bis 0,13 s später, je nach Bildrate.
+- **Kein Aufblitzen der Ruhetafel.** Vor dem Einspieler und beim Wählen einer Ebene steht sofort die erste Station auf der Tafel, nicht mehr kurz „*Satoshi*, Roman“, „I–III Ursprung“ oder „Die Schauplätze“.
+- **Die Tafel springt nicht und steht ganz im Bild.** Am Desktop bemisst sich die Kugel jetzt an der längsten Tafel. Bei 1440 × 900 endet die Tafel mit dem längsten Szenentext bei 886 px, vorher lag sie auf der Startseite bis 958 px und auf *Satoshi* bis 914 px unter dem Rand. Dafür ist die Kugel kleiner: auf der Startseite 672 statt 764 px, auf *Satoshi* 672 statt 700 px. Die Empfehlung hatte 55 bis 60 px geschätzt, es sind 92 px. Auf dem Telefon hält die Tafel auf *Satoshi* die Höhe der längsten Szene schon vom Laden an (258 px), auf *Ursprung* die ihres längsten Inhalts (163 px). Darunter springt nichts mehr, dafür bleibt in Ruhe unter der Tafel Platz frei.
+- ***Satoshi* (dein Nachtrag):** Die Zeitleiste der Orte und „Weitere Schauplätze: …“ sind weg, mit Knöpfen, CSS und Code. Der Globus folgt auf dem Telefon direkt auf den Aufhänger, am Desktop steht er wie bisher daneben. Die Szenen erreichst du über früher, später und abspielen, über die Punkte auf der Kugel und mit der Tastatur über die Steuerzeile. Temple City und die Anden sind weiter als Kreise auf der Kugel anklickbar. Der Satz für den Fall, dass der Globus nicht lädt, nennt den Text nicht mehr (Nummer 91).
+- ***Ursprung* (dein Nachtrag 2):** Die Koordinaten stehen nicht mehr in den Ortszeilen der Bände, nur noch auf der Tafel unter dem Globus.
+- Gleich geblieben sind die Pause von 0,6 s vor dem ersten Flug, das Easing, die Flugdauern (Leben 1,0 s, *Satoshi* 0,9 s und beim Abspielen 1,0 s, *Ursprung* 1,6 s), keine Schleife, „anhalten“ im Ablauf, das Schweigen für Vorleseprogramme im Einspieler, die Pause, wenn der Globus aus dem Bild geht, und bei reduzierter Bewegung kein Einspieler.
+
+**Gemessen** mit Playwright in Chromium ohne Grafikkarte, bei 1440 × 900 und 390 × 844. Die Dauer zählt vom ersten Flug bis zum Ende des Überblicksflugs, davor liegen 0,5 bis 0,7 s Pause. Die Werte für Desktop und Telefon weichen um höchstens 0,3 s voneinander ab.
+
+| Ablauf | Gesamt Desktop / Telefon | Tafel steht je Station | vorher |
+|---|---|---|---|
+| Startseite, Leben, Einspieler | 18,2 / 18,1 s | 1,8 s, Abstecher 2,6 bis 2,7 s, nur Jahr und Ort | 15,6 s, je Ort 1,6 s mit Details |
+| Startseite, *Satoshi*, Einspieler | 60,3 / 60,3 s | 3,9 bis 9,1 s | 118,3 s |
+| Startseite, *Satoshi*, Abspielen | 60,5 / 60,6 s | 4,1 bis 9,2 s | rund 118 s |
+| Startseite, *Ursprung*, Einspieler | 13,7 / 13,7 s | 3,0 s | 16,1 s |
+| Startseite, Reisen | kein Ablauf | wechselt bei Klick | – |
+| `satoshi.html`, Einspieler | 60,3 / 60,4 s | 3,9 bis 9,2 s | 118,2 s |
+| `satoshi.html`, Abspielen | 60,4 / 60,3 s | 4,0 bis 9,2 s | rund 118 s |
+| `ursprung.html`, Einspieler | 13,8 / 13,8 s | 3,0 s | 16,1 s |
+| `ursprung.html`, Abspielen | 13,8 / 13,7 s | 3,0 s | 16,1 s |
+
+Geprüft habe ich außerdem:
+- In keinem Ablauf steht ein Inhalt der Tafel kürzer als 1,5 s, und die Tafel ist nie leer. Die Messung liest die Tafel in jedem Bild. Kürzer war nur der Moment, in dem du selbst „anhalten“ drückst.
+- Die Höhe der Tafel und die Lage der Teile darunter ändern sich in keinem Ablauf und an keinem Ende. Auf dem Telefon ändert sich die Höhe nur, wenn du auf der Startseite eine andere Ebene wählst (Leben 96, *Satoshi* 238, *Ursprung* 143, Reisen 95 px).
+- Ein Schritt von Hand (früher, später, ein Ort) zeigt sofort die ganze Tafel.
+- Geht der Globus aus dem Bild, hält der Einspieler an. Kommt er zurück, läuft er an derselben Stelle weiter.
+- Bei reduzierter Bewegung gibt es keinen Einspieler, und sofort steht der Endzustand da: Berlin, „Die Schauplätze“, Jerusalem, in der Ebene *Satoshi* „*Satoshi*, Roman“.
+- Alle elf Seiten bei 1440 × 900, 1280 × 800, 390 × 844 und 360 × 740: keine Fehlermeldung, keine Anfrage an fremde Server, kein waagerechtes Scrollen. Die Prüfung des Baus für den claude.ai-Link besteht alle 37 Punkte.
+
+![Startseite, Leben, 1440 × 900, neu: Bildfolge alle 0,6 s (Videozeit, ungefähr). Die Tafel zeigt nur Jahr und Ort und wechselt alle 1,8 s, bei einem Abstecher alle 2,6 s.](c-bilder/takt-05-leben-desktop-neu.jpg)
+
+![satoshi.html, Telefon, neu: Bildfolge alle 2 s über den ganzen Einspieler. Die Tafel hält vom Laden an ihre Höhe, „Klappentext“ darunter bleibt stehen.](c-bilder/takt-06-satoshi-telefon-neu.jpg)
+
+![Startseite, 1440 × 900, Ebene Satoshi im Ablauf, neu: auch der längste Szenentext (Black Rock Desert) steht ganz im Bild.](c-bilder/takt-07-satoshi-startseite-desktop-neu.jpg)
+
+**Zu entscheiden:** Wenn dir *Satoshi* zu schnell ist, nimm 0,35 s statt 0,3 s je Wort. Dann dauert der Ablauf rund 66 s. Das ist eine Zahl in `satoshiHalt` (`seite.js`). Bleibt die Option von dir: ein Globus über die ganze Breite am Kopf von *Satoshi*.

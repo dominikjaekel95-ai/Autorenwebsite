@@ -16,20 +16,32 @@ if (/^https?:$/.test(location.protocol)) {
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Startseite: ein Blatt, gespiegelt wie die linke Seite eines Atlas. Am Desktop die Kartentafel am Außensteg, die Satzspalte
-   mit Briefkopf, erstem Satz, Kurzvita und Inhaltsverzeichnis am Bund. Auf Tablet und Telefon der Text zuerst. Nur Anordnung.
-   Der Briefkopf (Name und „Schriftsteller und Reisender“, wie in A) steht im Kopfsteg; die Navigation ist das Inhaltsverzeichnis. */
+   mit erstem Satz, Kurzvita, „Was ich schreibe“ (mit dem Regalbild) und „Was ich gelesen habe“ am Bund. Auf Tablet und Telefon
+   der Text zuerst. Der Kopf wie auf den Unterseiten (wie in A: Name, „Schriftsteller und Reisender“ und die Navigation), gespiegelt:
+   der Briefkopf über der Satzspalte, die Navigation über der Kartentafel. Nur Anordnung. */
 .kopf .briefkopf { justify-self: start; }
 .kopf .rolle { margin-left: 1em; }
 @media (min-width: 75rem) { .kopf .briefkopf { grid-row: 1; } }
 .start .kurzvita { margin-top: var(--z); }
 .inhaltsverzeichnis { margin-top: calc(var(--z) * 1.5); }
-.inhaltsverzeichnis > h2:first-child { margin-top: 0; }
+.inhaltsverzeichnis > section:first-child > h2 { margin-top: 0; }
 .start > .tafelfeld { margin-top: calc(var(--z) * 2); }
 @media (min-width: 75rem) {
   .start > .satzspalte, .start > .tafelfeld { grid-row: 1; margin-top: 0; }
-  /* Die Kartenwahl steht über dem Rahmen im Kopfsteg, die Oberkante des Rahmens auf der Höhe des ersten Satzes */
+  /* Die Kartenwahl steht im Kopfsteg unter der Navigation, die Oberkante des Rahmens auf der Höhe des ersten Satzes */
+  .kopf + .start { padding-top: calc(var(--z) * 2.75); }
   .start .zw-ol { margin-top: calc(var(--z) * -2.25); }
 }
+/* Das Regalbild (Abschnitt 12.7, Strichzeichnung): die eigenen Werke stehen, daneben liegen die Bücher vom Nachttisch in zwei
+   Stapeln, bündig, das größte zuunterst. In der Zeile unter dem Brett die Bildlegende oder an ihrer Stelle die Karteikarte als
+   Buchzeile (12.8); die Zeile hält Platz für die längste Karte, damit nichts springt. Die beiden Regeln für .stapel und .als-karte
+   stehen gleich in bibliothek.html und gehören nach stil.css. */
+.regalbild { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: var(--z); }
+.regalbild > .flaeche { grid-row: 1; }
+.regalbild > figcaption, .regalbild > .buchzeile { grid-row: 2; grid-column: 1; }
+.regalbild.mit-karte > figcaption { visibility: hidden; }
+.regalbild .stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; row-gap: 1px; flex: none; }
+.regalbild .als-karte { display: flex; flex-wrap: wrap; align-items: baseline; align-content: flex-start; column-gap: 1em; }
 </style>
 </head>
 <body>
@@ -37,6 +49,17 @@ if (/^https?:$/.test(location.protocol)) {
 
 <header class="bogen verso kopf">
   <p class="briefkopf"><a class="name" href="index.html" aria-current="page">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
+  <nav class="tafelfeld nav" aria-label="Website">
+    <ul class="wahl">
+      <li><a href="satoshi.html">Satoshi</a></li>
+      <li><a href="ursprung.html">Ursprung</a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html">Untertext</a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
 </header>
 
 <main class="bogen verso start" id="inhalt" aria-label="Vita und Globus">
@@ -45,24 +68,33 @@ if (/^https?:$/.test(location.protocol)) {
 
     <p class="kurzvita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des Autorenforums Berlin. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>
 
-    <nav class="inhaltsverzeichnis" aria-label="Website">
-      <h2>Was ich schreibe</h2>
-      <ul>
-        <li><a href="satoshi.html"><i>Satoshi</i></a>. Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor; gerade entsteht die Endfassung.</li>
-        <li><a href="ursprung.html"><i>Ursprung</i></a>. Drei Romane über die Anfänge der Zivilisation, in Arbeit; begonnen in Kaohsiung.</li>
-      </ul>
-      <ul>
-        <li><a href="erzaehlungen.html">Erzählungen</a>. Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.</li>
-        <li><a href="untertext.html"><i>Untertext</i></a>. Mein Journal.</li>
-      </ul>
-      <ul>
-        <li><a href="laender.html">Länder</a>. Länderguides, in Arbeit. <span class="nw">Auf dem Globus:</span> <span class="nw"><button type="button" class="wort" data-zeige="reisen">wohin ich gereist bin</button>.</span></li>
-      </ul>
-      <h2>Was ich gelesen habe</h2>
-      <ul>
-        <li><a href="bibliothek.html">Die ganze Bibliothek</a>, jedes Buch mit seinem Rücken im Regal.</li>
-      </ul>
-    </nav>
+    <div class="inhaltsverzeichnis">
+      <section id="schreiben" aria-labelledby="schreiben-titel">
+        <h2 id="schreiben-titel">Was ich schreibe</h2>
+        <ul>
+          <li id="satoshi"><a href="satoshi.html"><i>Satoshi</i></a>. Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor; gerade entsteht die Endfassung.</li>
+          <li id="ursprung"><a href="ursprung.html"><i>Ursprung</i></a>. Drei Romane über die Anfänge der Zivilisation, in Arbeit; begonnen in Kaohsiung.</li>
+        </ul>
+        <ul>
+          <li id="erzaehlungen"><a href="erzaehlungen.html">Erzählungen</a>. Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.</li>
+          <li id="untertext"><a href="untertext.html"><i>Untertext</i></a>. Mein Journal.</li>
+        </ul>
+        <ul>
+          <li id="laender"><a href="laender.html">Länder</a>. Länderguides, in Arbeit. <span class="nw">Auf dem Globus:</span> <span class="nw"><button type="button" class="wort" data-zeige="reisen">wohin ich gereist bin</button>.</span></li>
+        </ul>
+        <figure class="regalbild" id="regalbild" hidden>
+          <div class="flaeche" role="group" aria-label="Eigene Bücher und der Stapel vom Nachttisch"></div>
+          <figcaption class="legende">Was ich schreibe, und daneben, was gerade auf dem Nachttisch liegt.</figcaption>
+          <div class="buchzeile als-karte" aria-live="polite"></div>
+        </figure>
+      </section>
+      <section id="gelesen" aria-labelledby="gelesen-titel">
+        <h2 id="gelesen-titel">Was ich gelesen habe</h2>
+        <ul>
+          <li><a href="bibliothek.html">Die ganze Bibliothek</a>, jedes Buch mit seinem Rücken im Regal.</li>
+        </ul>
+      </section>
+    </div>
   </div>
 
   <div class="tafelfeld">
@@ -91,6 +123,8 @@ if (/^https?:$/.test(location.protocol)) {
 <script src="globus/kern.js"></script>
 <script src="daten/inhalt.js"></script>
 <script src="daten/fluesse.js"></script>
+<script src="daten/buecher.js"></script>
+<script src="daten/leseliste.js"></script>
 <script src="daten/texte.js"></script>
 <script src="seite.js"></script>
 <script>
@@ -108,6 +142,176 @@ if (/^https?:$/.test(location.protocol)) {
     var r = fig.getBoundingClientRect();
     if (r.top < 0 || r.top > window.innerHeight * .5) fig.scrollIntoView({ block: 'start' });
   });
+})();
+
+/* Was ich schreibe: das Regalbild von A als Strichzeichnung. Die eigenen Werke stehen (Maße in mm wie in A), daneben die Bücher vom
+   Nachttisch liegend in zwei Stapeln, verteilt wie in A, bündig und das größte zuunterst. Maßstab wie im Regal der Bibliothek
+   (0,9 px je mm am Desktop, 0,8 am Tablet, 0,68 am Telefon), kleiner, wenn das Bild sonst nicht in die Spalte passt. Rückenschrift
+   Baskervville 500 aufrecht, 9 bis 10 px, wie in A erst Name und Titel, sonst der Name, sonst nichts; eigene Werke von unten nach
+   oben. Ein Klick zeigt die Karteikarte von A (FSeite.werkKarte, FSeite.buch.karte) als Buchzeile an Stelle der Bildlegende, ein
+   zweiter Klick oder „zurücklegen“ (wie in A) legt sie zurück. Ein Tab-Halt für das Bild, die Pfeiltasten gehen von Rücken zu Rücken,
+   Escape legt zurück. */
+(function () {
+  'use strict';
+  var F = window.FSeite;
+  var bild = document.getElementById('regalbild');
+  if (!F || !F.buch || !bild || !(window.BUECHER || []).length) return;
+  var flaeche = bild.querySelector('.flaeche'), zeile = bild.querySelector('.buchzeile');
+  var esc = F.esc;
+  var EIGEN = [
+    { id: 'satoshi', t: 'Satoshi', h: 205, d: 27 },
+    { id: 'ursprung-1', t: 'Ursprung I', h: 205, d: 24 },
+    { id: 'ursprung-2', t: 'Ursprung II', h: 205, d: 24 },
+    { id: 'ursprung-3', t: 'Ursprung III', h: 205, d: 24 },
+    { id: 'erzaehlungen', t: 'Erzählungen', h: 205, d: 21 },
+    { id: 'untertext', t: 'Untertext', h: 205, d: 16 },
+    { id: 'laender', t: 'Länder', h: 222, d: 19 }
+  ];
+  // Abstand in mm wie in A: vom letzten eigenen Werk zum ersten Stapel und zwischen den Stapeln
+  var VOR_STAPEL = 20, ZWISCHEN = 14;
+  var GERADE = F.buch.alle().filter(function (b) { return b.r === 'gerade'; }).map(function (b) {
+    var d = F.buch.masse(b);
+    return { b: b, lang: d.hoehe, dick: d.breite };
+  });
+  // Zwei Stapel wie in A: die dicksten zuerst, jedes Buch auf den niedrigeren Stapel; im Stapel das längste zuunterst
+  var stapel = [[], []], hoch = [0, 0];
+  GERADE.slice().sort(function (p, q) { return q.dick - p.dick; }).forEach(function (s) { var i = hoch[0] <= hoch[1] ? 0 : 1; stapel[i].push(s); hoch[i] += s.dick; });
+  if (hoch[1] > hoch[0]) { stapel.reverse(); hoch.reverse(); }
+  stapel.forEach(function (st) { st.sort(function (p, q) { return q.lang - p.lang || q.dick - p.dick; }); });
+  stapel = stapel.filter(function (st) { return st.length; });
+
+  // Die Stücke in der Reihenfolge des Bilds: eigene Werke, dann die Stapel von unten nach oben
+  var STUECKE = EIGEN.map(function (e) { return { art: 'werk', id: e.id, label: e.t, aufschrift: e.t, e: e }; });
+  stapel.forEach(function (st, k) { st.forEach(function (s) { STUECKE.push({ art: 'buch', b: s.b, label: s.b.autor + ', ' + s.b.t, s: s, stapel: k }); }); });
+
+  var mess = document.createElement('canvas').getContext('2d');
+  var schrift = F.tokens().schrift || 'serif';
+  var breite = function (t, fs) { mess.font = '500 ' + fs + 'px ' + schrift; return mess.measureText(t).width; };
+  var VERSAL = {};
+  var versalhoehe = function (fs) { if (!VERSAL[fs]) { mess.font = '500 ' + fs + 'px ' + schrift; VERSAL[fs] = mess.measureText('H').actualBoundingBoxAscent || fs * .66; } return VERSAL[fs]; };
+  var GRADE = [10, 9.5, 9];
+  // Rückenschrift: erst alle Teile in einer Zeile, sonst nur der erste (der Name), sonst nichts; nie unter 9 px
+  function aufschrift(teile, dick, platz) {
+    var versuche = [teile, teile.slice(0, 1)];
+    for (var v = 0; v < versuche.length; v++) {
+      for (var g = 0; g < GRADE.length; g++) {
+        var fs = GRADE[g], t = versuche[v];
+        var w = t.reduce(function (a, x) { return a + breite(x, fs); }, 0) + (t.length - 1) * fs;
+        if (dick >= fs * 1.12 + 3 && w <= platz) return { teile: t, fs: fs };
+      }
+    }
+    return null;
+  }
+  function zeichnung(x, w, h, liegt, kontur) {
+    var o = kontur / 2;
+    var s = '<rect class="koerper" x="' + o + '" y="' + o + '" width="' + (w - kontur) + '" height="' + (h - kontur) + '" stroke-width="' + kontur + '"/>';
+    var a = liegt ? aufschrift([x.b.nn || x.b.autor, F.buch.titelKurz(x.b.t)].filter(Boolean), h, w - 16) : aufschrift([x.aufschrift], w, h - 16);
+    if (a) {
+      var y = (versalhoehe(a.fs) / 2).toFixed(1);
+      var spans = a.teile.map(function (t, i) { return '<tspan' + (i ? ' dx="' + a.fs + '"' : ' x="0" y="' + y + '"') + '>' + esc(t) + '</tspan>'; }).join('');
+      var lage = liegt ? 'translate(' + (w / 2).toFixed(1) + ' ' + (h / 2).toFixed(1) + ')' : 'translate(' + (w / 2).toFixed(1) + ' ' + (h / 2).toFixed(1) + ') rotate(-90)';
+      s += '<text transform="' + lage + '" font-size="' + a.fs + '" font-weight="500" text-anchor="middle">' + spans + '</text>';
+    }
+    return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true" focusable="false">' + s + '</svg>';
+  }
+  function knopf(x, i, w, h, liegt, kontur) {
+    return '<button type="button" class="ruecken' + (liegt ? ' liegt' : '') + '" data-i="' + i + '" style="width:' + w + 'px;height:' + h + 'px" tabindex="-1" aria-pressed="false" aria-label="' + esc(x.label) + '">' + zeichnung(x, w, h, liegt, kontur) + '</button>';
+  }
+
+  // Die Karteikarte von A als Zeile: ihre Felder in ihrer Folge, Wort für Wort, ohne Zeichen dazwischen, dazu „zurücklegen“
+  function karte(x) { return x.art === 'werk' ? F.werkKarte(x.id) : F.buch.karte(x.b); }
+  function karteHtml(x) {
+    var k = karte(x);
+    if (!k) return '';
+    var teil = function (v) { return v == null || v === '' ? '' : typeof v === 'object' ? String(v.html || '') : esc(v); };
+    var felder = [['signatur', k.signatur], ['titel', k.titel], ['unter', k.unter], ['autor', k.autor], ['zeilen', (k.zeilen || []).filter(Boolean)], ['notiz', k.notiz]]
+      .filter(function (f) { return Array.isArray(f[1]) ? f[1].length : f[1] != null && f[1] !== ''; });
+    return felder.map(function (f) {
+      var h = f[0] === 'zeilen' ? f[1].map(teil).join(' ') : teil(f[1]);
+      if (f[0] === 'titel' && typeof f[1] !== 'object') h = '<i>' + h + '</i>';
+      return '<div class="feld feld-' + f[0] + '">' + F.versalien(h) + '</div>';
+    }).join('') + '<button type="button" class="steuerwort zuruecklegen">zurücklegen</button>';
+  }
+
+  var knoepfe = [], gewaehlt = -1, standVorher = '';
+  function bauen(erzwingen) {
+    var W = Math.floor(flaeche.clientWidth);
+    var S = F.telefon() ? .68 : F.desktop() ? .9 : .8;
+    if (!W || (!erzwingen && W + '|' + S === standVorher)) return;
+    standVorher = W + '|' + S;
+    var fokus = knoepfe.indexOf(document.activeElement);
+    var kontur = (window.devicePixelRatio || 1) >= 2 ? .75 : 1;
+    var eigenMm = EIGEN.reduce(function (a, e) { return a + e.d; }, 0);
+    var stapelMm = stapel.reduce(function (a, st) { return a + Math.max.apply(null, st.map(function (s) { return s.lang; })); }, 0);
+    var mm = eigenMm + VOR_STAPEL + stapelMm + ZWISCHEN * Math.max(0, stapel.length - 1);
+    // Platz für die Lücken von 1 px zwischen den Stücken und für das Runden
+    var m = Math.min(S, (W - EIGEN.length - 2 * stapel.length - 8) / mm);
+    var px = function (v) { return Math.max(3, Math.round(v * m)); };
+    var html = '', n = 0, hoehe = 0;
+    EIGEN.forEach(function (e) { html += knopf(STUECKE[n], n, px(e.d), px(e.h), false, kontur); hoehe = Math.max(hoehe, px(e.h)); n++; });
+    stapel.forEach(function (st, k) {
+      html += '<span style="width:' + Math.round((k ? ZWISCHEN : VOR_STAPEL) * m) + 'px;flex:none" aria-hidden="true"></span><div class="stapel">';
+      var hs = 0;
+      st.forEach(function (s, j) { html += knopf(STUECKE[n], n, px(s.lang), px(s.dick), true, kontur); hs += px(s.dick) + (j ? 1 : 0); n++; });
+      html += '</div>';
+      hoehe = Math.max(hoehe, hs);
+    });
+    var viertel = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--z')) * parseFloat(getComputedStyle(document.documentElement).fontSize) / 4 || 7.5;
+    flaeche.style.height = Math.ceil((hoehe + viertel) / viertel) * viertel + 'px';
+    flaeche.innerHTML = html;
+    knoepfe = Array.prototype.slice.call(flaeche.querySelectorAll('.ruecken'));
+    // Die Zeile unter dem Brett hält Platz für die längste Karte; auf dem Telefon für zwei Zeilen, dort wächst sie bei der Wahl (12.8)
+    zeile.style.minHeight = '';
+    var max = 0;
+    if (F.telefon()) max = 2 * parseFloat(getComputedStyle(zeile).lineHeight);
+    else {
+      zeile.style.visibility = 'hidden';
+      STUECKE.forEach(function (x) { zeile.innerHTML = karteHtml(x); max = Math.max(max, zeile.offsetHeight); });
+      zeile.innerHTML = '';
+      zeile.style.visibility = '';
+    }
+    zeile.style.minHeight = max + 'px';
+    var i = gewaehlt;
+    gewaehlt = -1;
+    if (i >= 0) waehlen(i); else knoepfe.forEach(function (b, j) { b.tabIndex = j === 0 ? 0 : -1; });
+    if (fokus >= 0 && knoepfe[fokus]) { knoepfe.forEach(function (b, j) { b.tabIndex = j === fokus ? 0 : -1; }); knoepfe[fokus].focus(); }
+  }
+  function waehlen(i) {
+    if (i === gewaehlt) { zuruecklegen(false); return; }
+    gewaehlt = i;
+    knoepfe.forEach(function (b, j) { b.setAttribute('aria-pressed', j === i ? 'true' : 'false'); b.tabIndex = j === i ? 0 : -1; });
+    zeile.innerHTML = karteHtml(STUECKE[i]);
+    bild.classList.add('mit-karte');
+  }
+  function zuruecklegen(fokus) {
+    var vorher = gewaehlt;
+    gewaehlt = -1;
+    knoepfe.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+    zeile.innerHTML = '';
+    bild.classList.remove('mit-karte');
+    if (fokus && knoepfe[vorher]) knoepfe[vorher].focus();
+  }
+  flaeche.addEventListener('click', function (e) {
+    var b = e.target.closest('.ruecken');
+    if (b) waehlen(+b.dataset.i);
+  });
+  zeile.addEventListener('click', function (e) { if (e.target.closest('.zuruecklegen')) zuruecklegen(true); });
+  flaeche.addEventListener('keydown', function (e) {
+    var b = e.target.closest('.ruecken');
+    if (!b || e.altKey || e.ctrlKey || e.metaKey) return;
+    var i = knoepfe.indexOf(b);
+    var ziel = { ArrowRight: knoepfe[i + 1], ArrowDown: knoepfe[i + 1], ArrowLeft: knoepfe[i - 1], ArrowUp: knoepfe[i - 1], Home: knoepfe[0], End: knoepfe[knoepfe.length - 1] }[e.key];
+    if (!ziel) return;
+    e.preventDefault();
+    knoepfe.forEach(function (x) { x.tabIndex = x === ziel ? 0 : -1; });
+    ziel.focus();
+  });
+  bild.addEventListener('keydown', function (e) { if (e.key === 'Escape' && gewaehlt >= 0) { e.preventDefault(); zuruecklegen(true); } });
+
+  bild.hidden = false;
+  F.schriften(2500).then(function () { bauen(true); });
+  var warte = 0;
+  window.addEventListener('resize', function () { clearTimeout(warte); warte = setTimeout(function () { bauen(false); }, 150); });
 })();
 </script>
 </body>

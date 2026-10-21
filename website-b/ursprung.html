@@ -19,7 +19,8 @@ if (/^https?:$/.test(location.protocol)) {
    daneben die Tafel (höchstens 30 rem), die am Desktop während der Bände haftet; der Ort des Bands, den man liest, steht
    halbfett. Danach die Bücher zum Stoff, ein Titel zeigt seine Karteikarte als Zeile darunter. Auf Tablet hochkant und Telefon
    steht die Tafel über den Bänden und haftet nicht. Der Wortlaut aller Texte ist der von A.
-   Nur Anordnung; was hier über die Anordnung hinausgeht (Briefkopf, Bandtitel, Karteikarte als Zeile), gehört nach stil.css. */
+   Nur Anordnung; was hier über die Anordnung hinausgeht (Briefkopf, Bandtitel, Karteikarte als Zeile, Rückweg unter früher
+   und später), gehört nach stil.css. */
 
 /* Kopf: Name und Rolle in einer Zeile im Grad klein (wie der Briefkopf von A) */
 .kopf .briefkopf { justify-self: start; }
@@ -200,11 +201,10 @@ if (/^https?:$/.test(location.protocol)) {
   const legende = document.createElement('figcaption');
   legende.className = 'tafellegende';
   legende.innerHTML = '<div class="legendeninhalt"></div><p class="steuer">' +
-    '<button type="button" class="steuerwort" data-pos="-1">früher</button> <button type="button" class="steuerwort" data-pos="0">später</button> ' +
-    '<button type="button" class="steuerwort" data-zurueck hidden>zurück</button></p>';
+    '<button type="button" class="steuerwort" data-pos="-1">früher</button> <button type="button" class="steuerwort" data-pos="0">später</button></p>';
   fig.appendChild(legende);
   const inhaltEl = $('.legendeninhalt', legende);
-  const [frueher, spaeter, zurueckWort] = $$('.steuer button', legende);
+  const [frueher, spaeter] = $$('.steuer button', legende);
   fig.classList.add('ist-gebaut');
   // -1 ist die ganze Trilogie, danach die Orte der Reihe nach
   const inhalt = i => F.ursprungInhalt(i);
@@ -279,11 +279,15 @@ if (/^https?:$/.test(location.protocol)) {
   /* Wo die Tafel nicht haftet, steht sie über den Bänden. Wer aus einem Band zur Karte hinaufgesprungen ist (weiter als vier
      Fünftel eines Fensters), kommt wie in A über „zurück“ auf der Tafel wieder an dieselbe Stelle im Text. Wer selbst weiterscrollt,
      bis die Tafel aus dem Bild ist, braucht den Rückweg nicht mehr */
-  let rueck = null;
+  let rueck = null, zurueckWort = null;
+  // Das Wort steht nur da, solange es den Rückweg gibt
   function zurueckSetzen() {
-    zurueckWort.hidden = !rueck;
-    if (rueck) zurueckWort.setAttribute('aria-label', `zurück zu Band ${rueck.band} im Text`);
-    else zurueckWort.removeAttribute('aria-label');
+    if (rueck && !zurueckWort) {
+      zurueckWort = document.createElement('button');
+      zurueckWort.type = 'button'; zurueckWort.className = 'steuerwort'; zurueckWort.dataset.zurueck = ''; zurueckWort.textContent = 'zurück';
+      $('.steuer', legende).appendChild(zurueckWort);
+    } else if (!rueck && zurueckWort) { zurueckWort.remove(); zurueckWort = null; }
+    if (zurueckWort) zurueckWort.setAttribute('aria-label', `zurück zu Band ${rueck.band} im Text`);
   }
   function rueckMerken(el) {
     rueck = null;
@@ -339,7 +343,7 @@ if (/^https?:$/.test(location.protocol)) {
   document.addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
-    if (b === zurueckWort) zurueck();
+    if (b.hasAttribute('data-zurueck')) zurueck();
     else if (legende.contains(b)) {
       if (b.classList.contains('ist-aus')) return;
       gewaehltUm = performance.now(); clearTimeout(uhr);
@@ -350,7 +354,7 @@ if (/^https?:$/.test(location.protocol)) {
       zeigen(+b.dataset.ort);
       insBild(b);
       // Mit der Tastatur geht der Fokus mit hinauf, auf den Rückweg; mit Maus oder Finger bleibt er, wo er war (wie in A)
-      if (rueck && e.detail === 0) zurueckWort.focus({ preventScroll: true });
+      if (zurueckWort && e.detail === 0) zurueckWort.focus({ preventScroll: true });
     } else if (b.dataset.buch) karteSetzen(offen === b ? null : b);
     else if (b.hasAttribute('data-zuruecklegen')) { const w = offen; karteSetzen(null); if (w) w.focus({ preventScroll: true }); }
   });

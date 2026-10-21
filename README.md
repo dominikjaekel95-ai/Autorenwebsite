@@ -47,3 +47,6 @@ Alle Texte sind Beispieltexte, die Formulare verschicken nichts. Jede Seite ist 
 
 - Goodreads ergänzen: einige hundert gelesene Kurzgeschichten und ein paar Anthologien nachtragen (Wunsch von Dominik, Oktober 2026). Danach `entwuerfe/daten/buecher.js` neu erzeugen.
 - LinkedIn-Profil als Richtung für ein kommerzielles Publikum mitdenken; Text dafür liefert Dominik.
+- Newsletter: Anbieter wählen (Empfehlung Buttondown, Alternativen Brevo und Steady; bei einem Anbieter aus den USA wie Buttondown den Vertrag zur Auftragsverarbeitung und die Übermittlung in ein Drittland prüfen). Danach den Abschnitt „Newsletter“ im Datenschutz beider Versionen vervollständigen (Anbieter nennen, den Satz „Kurz gesagt“ anpassen) und die Zeile im Fuß (`form.post`, `fuss()` in `website/seite.js` und `website-b/seite.js`) an den Dienst anschließen. Bis dahin schickt sie nichts ab.
+- Instagram und LinkedIn: die Adressen in `PROFILE` in `website/seite.js` und `website-b/seite.js` eintragen. Sie erscheinen dann im Fuß unter Impressum und Datenschutz; solange die Liste leer ist, steht dort nichts.
+- Option: eine zweite Zeile zur Anmeldung auf *Untertext*, sobald es dort Einträge gibt.

@@ -332,6 +332,32 @@ html:not(.js) .rahmen, .kartentafel.ohne-kugel .rahmen { aspect-ratio: auto; bor
 /* ---------- Fuß ---------- */
 .fuss { padding-top: calc(var(--z) * 4); padding-bottom: calc(var(--z) * 2); }
 .fuss p + p { margin-top: calc(var(--z) * .5); }
+/* Newsletter-Zeile (form.post) im Grad klein, 0,5 z unter der Zeile der Anfragen; die Statuszeile 0,25 z darunter. Das Feld ist
+   ein Strich in Tinte in der Schrift des Satzes, ohne Rahmen, Grund und Rundung; „Eintragen“ ist ein Bedienwort (.wort).
+   Ohne Skript ist das Formular verborgen (es schickt nichts ab, siehe FSeite.fuss). Profile (.profile, aus FSeite PROFILE) als
+   Verweise mit 1 em Abstand; leer verborgen. */
+html:not(.js) .post { display: none; }
+.fuss .post, .fuss .post + p { margin-top: calc(var(--z) * .5); }
+.fuss .post-status { margin-top: 0; }
+.fuss .post-status:not(:empty) { margin-top: calc(var(--z) * .25); }
+.post-eingabe { white-space: nowrap; }
+.post-feld {
+  appearance: none; -webkit-appearance: none; width: 14em; max-width: calc(100% - 5.5em); margin: 0 .5em 0 0; padding: 0;
+  border: 0; border-bottom: 1px solid var(--tinte); border-radius: 0; background: none; box-shadow: none;
+  font: inherit; line-height: 1.25; color: inherit; vertical-align: baseline;
+}
+.post-feld:-webkit-autofill { box-shadow: inset 0 0 0 2rem var(--papier); -webkit-text-fill-color: var(--tinte); }
+/* Fokus: der Strich wird doppelt so stark statt des Rahmens aus Abschnitt 9; der stünde auf dem Telefon (44 px hoch) über den
+   Nachbarzeilen. Der durchsichtige Umriss erscheint nur im Kontrastmodus des Systems */
+.post-feld:focus-visible { outline: 2px solid transparent; box-shadow: inset 0 -1px 0 var(--tinte); }
+.post-feld:-webkit-autofill:focus-visible { box-shadow: inset 0 -1px 0 var(--tinte), inset 0 0 0 2rem var(--papier); }
+.profile { display: flex; flex-wrap: wrap; column-gap: 1em; }
+/* Telefon und Finger: Feld und „Eintragen“ 44 px hoch, die Fläche reicht nach oben, damit der Strich nahe an der
+   Schrift bleibt; im Feld mindestens 16 px, sonst vergrößert Safari auf dem iPhone die Seite beim Tippen */
+@media (max-width: 47.99rem), (pointer: coarse) {
+  .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
+  .post .wort { min-height: 2.75rem; padding: 1.25rem 0 0; }
+}
 
 /* ---------- Ohne Bewegung ---------- */
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

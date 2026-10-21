@@ -121,6 +121,32 @@ a.name[aria-current="page"]:hover { text-decoration-line: none; }
 .kontakt .titel { margin-bottom: calc(var(--z) * .5); }
 .impressum { margin-top: calc(var(--z) * .5); font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
 .kolophon-fuss { margin-top: calc(var(--z) * 2); max-width: 36em; font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
+/* Newsletter-Zeile (form.post) und Profile (.profile, aus FSeite PROFILE; leer verborgen): klein und grau wie die Zeile des
+   Impressums. Das Feld ist nur ein Strich in der Farbe der Unterstreichung, „Eintragen“ ein Wort wie jeder Verweis. Ohne Skript
+   ist das Formular verborgen (es schickt nichts ab, siehe FSeite.fuss). */
+html:not(.js) .post { display: none; }
+.post, .profile { margin-top: calc(var(--z) * .5); font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
+.post-eingabe { white-space: nowrap; }
+.post-feld {
+  appearance: none; -webkit-appearance: none; width: 16em; max-width: calc(100% - 5.5em); margin: 0 .45em 0 0; padding: 0 0 .05em;
+  border: 0; border-bottom: 1px solid color-mix(in srgb, currentColor 40%, transparent); border-radius: 0; background: none; box-shadow: none;
+  font: inherit; line-height: 1.25; color: var(--graphit); vertical-align: baseline;
+}
+.post-feld:hover, .post-feld:focus { border-bottom-color: currentColor; }
+.post-feld:-webkit-autofill { box-shadow: inset 0 0 0 2rem var(--papier); -webkit-text-fill-color: var(--graphit); }
+/* Fokus: der Strich wird doppelt so stark. Ein Rahmen stünde auf dem Telefon (44 px hoch) über den Nachbarzeilen; der durchsichtige
+   Umriss erscheint nur im Kontrastmodus des Systems */
+.post-feld:focus-visible { outline: 2px solid transparent; box-shadow: inset 0 -1px 0 currentColor; }
+.post-feld:-webkit-autofill:focus-visible { box-shadow: inset 0 -1px 0 currentColor, inset 0 0 0 2rem var(--papier); }
+.post-status:not(:empty) { margin-top: calc(var(--z) * .25); }
+.profile { display: flex; flex-wrap: wrap; column-gap: 1.2em; }
+.profile[hidden] { display: none; }
+/* Telefon und Finger: Feld und „Eintragen“ 44 px hoch, die Fläche reicht nach oben, damit der Strich nahe an der
+   Schrift bleibt; im Feld mindestens 16 px, sonst vergrößert Safari auf dem iPhone die Seite beim Tippen */
+@media (max-width: 40rem), (pointer: coarse) {
+  .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
+  .post .wort { min-height: 2.75rem; padding: 1.25rem 0 0; }
+}
 
 /* ---------- Rechtstexte (Impressum, Datenschutz) ----------
    Eine Textspalte, ruhige Kapitälchen-Überschriften, zwischen den Abschnitten eineinhalb Zeilen. Unter dem Titel ein grauer

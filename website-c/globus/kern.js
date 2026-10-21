@@ -4,6 +4,8 @@
  * (grob in Bewegung, fein in Ruhe), die Namen auch in Bewegung, das Gradnetz, das mit dem Zoom dichter wird, das Drehen mit
  * einem Finger, die feste Flugdauer, der Weg mit Abstechern (routeBauen) und die Flüsse. Nicht aus B: Blauplatte, Rahmen,
  * Ring, Schraffur, Gewässernamen. Regeln: docs/gestaltung-website-c.md, Abschnitte 09, 10, 14b, 4.1 und 8.4.
+ * Seit Runde 4 stehen gezoomt die feinen Linien auch in Bewegung, und die feine Fläche blendet ein und aus (siehe bewegung()).
+ * Ein Ablauf fliegt sanft an und aus, so lange, wie sein Takt es nach der Entfernung sagt (docs/website-c.md, Runde 4).
  *
  * Braucht d3 7.9 und topojson-client 3.1 (lib/) sowie daten/welt-110m.js (window.WELT_110M).
  * Optional: daten/welt-50m.js (wird nachgeladen), daten/uk-landesteile.js, daten/laender-de.js, daten/fluesse.js.
@@ -18,8 +20,9 @@
  *     schrift: { ort, ortAktiv }, // Kartenschrift, etwa '15px "Vollkorn"' und '600 15px "Vollkorn"'
  *     daten50: 'daten/welt-50m.js',
  *     dauer: 1000,                // feste Dauer jedes Flugs in ms (bei reduzierter Bewegung 0)
- *     namenInRuhe: true,          // false: in Ruhe setzt jemand anders die Namen (FSeite, Namensblöcke); in Bewegung immer der Kern
- *     beimZeichnen: info => {},   // nach jedem Bild: { bewegt, k }
+ *     namenInRuhe: true,          // false: in Ruhe setzt jemand anders die Namen (FSeite, Namensblöcke)
+ *     namenInBewegung: true,      // false: auch in Bewegung (FSeite seit Runde 4: dieselben Namen in Ruhe und Bewegung)
+ *     beimZeichnen: info => {},   // nach jedem Bild: { bewegt, k, fein, linien } (fein, linien: Anteil der feinen Fläche und Linien)
  *     beiOrtKlick: (ort, i) => {},// Klick auf einen Punkt (Trefferradius 12 px), i ist der Index in ebene.orte
  *     ortKlickbar: () => true,    // ob ein Punkt gerade wählbar ist (dann zeigt die Maus eine Hand)
  *     rechterRand: () => px,      // rechte Kante des sichtbaren Teils der Leinwand (der Fensterrand schneidet den Globus an)
@@ -28,7 +31,7 @@
  *   });
  *   g.ebene({ orte: [{ name, lat, lon, rang, kurz, neben }], laender, grenzen, fluesse, blick: { mitte: [lon, lat], k } }, { fliegen, behalten })
  *        neben: true ist ein längerer Aufenthalt (offener Kreis); auf dem Weg ein Abstecher vom Wohnort davor, hin und zurück
- *   g.fliegen([lon, lat], k, { dauer }) -> Promise 'fertig' | 'abgebrochen';  g.springen([lon, lat], k)
+ *   g.fliegen([lon, lat], k, { dauer, ease }) -> Promise 'fertig' | 'abgebrochen';  g.springen([lon, lat], k)
  *   g.ortAnfliegen(ort, k), g.mehrereAnfliegen(orte, k), g.landAnfliegen(iso), g.aktiv('Name' | null), g.auswahl(iso | null)
  *   g.zoomen(faktor), g.ganz(), g.k(), g.mitte(), g.land(iso), g.ortBei(x, y), g.zeichnen(), g.projektion, g.erstesBild
  *   g.chronik(stationen, takt) -> Promise 'fertig' | 'abgebrochen' | 'angehalten'   (Takt siehe chronik)
@@ -49,7 +52,7 @@
     const bereist = new Set(o.bereist || []);
     const winzig = o.winzig || {};
     const ansichten = o.ansichten || {};
-    const namenInRuhe = o.namenInRuhe !== false;
+    const namenInRuhe = o.namenInRuhe !== false, namenInBewegung = o.namenInBewegung !== false;
     const KMIN = .9, KMAX = 24;
     const ruhig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const melden = (name, ...werte) => { if (typeof o[name] === 'function') o[name](...werte); };
@@ -110,12 +113,40 @@
         isos: new Set(laender.map(f => f.iso))
       };
     }
+    /* Die feinen Linien (Grenzen, Küsten) in Stücken zu höchstens 32 Punkten, je Stück seine Mitte als Einheitsvektor und sein
+       Radius als Bogen. Gezeichnet werden nur die Stücke, die die Leinwand erreichen: gezoomt kosten die feinen Linien so 3 bis 7 ms
+       statt 30 und dürfen auch in Bewegung stehen (Runde 4) */
+    const einheit = ([lon, lat]) => { const l = lon * RAD, p = lat * RAD, c = Math.cos(p); return [c * Math.cos(l), c * Math.sin(l), Math.sin(p)]; };
+    function stueckeBauen(ml) {
+      const stuecke = [];
+      ml.coordinates.forEach(l => {
+        for (let i = 0; i < l.length - 1; i += 31) {
+          const s = l.slice(i, i + 32), v = s.map(einheit);
+          let x = 0, y = 0, z = 0;
+          v.forEach(q => { x += q[0]; y += q[1]; z += q[2]; });
+          const n = Math.hypot(x, y, z) || 1;
+          x /= n; y /= n; z /= n;
+          let r = 0;
+          v.forEach(q => { r = Math.max(r, Math.acos(Math.max(-1, Math.min(1, q[0] * x + q[1] * y + q[2] * z)))); });
+          stuecke.push({ s, x, y, z, r });
+        }
+      });
+      return stuecke;
+    }
     const grob = datensatz(window.WELT_110M);
-    let fein = null;
+    let fein = null, feinDa = null;
+    const feinBereit = new Promise(r => { feinDa = r; });
     function feinLaden() {
       if (fein || feinLaden.laeuft) return;
       feinLaden.laeuft = true;
-      const fertig = () => { if (window.WELT_50M) { fein = datensatz(window.WELT_50M); zeichnen(); } };
+      const fertig = () => {
+        if (!window.WELT_50M) return;
+        const d = datensatz(window.WELT_50M);
+        d.stuecke = { grenzen: stueckeBauen(d.grenzen), kueste: stueckeBauen(d.kueste) };
+        fein = d;
+        feinDa();
+        zeichnen();
+      };
       if (window.WELT_50M) return fertig();
       const s = document.createElement('script');
       s.src = o.daten50 || 'daten/welt-50m.js';
@@ -125,14 +156,143 @@
     const FLUESSE = (window.FLUESSE || []).map(f => ({ type: 'MultiLineString', coordinates: f.linien }));
 
     /* Datenregel aus B: in Bewegung und bis 1,8-fach grob, gezoomt in Ruhe fein. In A galt fein schon in Bewegung, sobald der
-       Zoom über 1,8 lag; ein Bild dauerte dann rund 90 ms. Ruhe heißt: 220 ms ohne Bewegung */
+       Zoom über 1,8 lag; ein Bild dauerte dann rund 90 ms. Ruhe heißt: 220 ms ohne Bewegung, oder ein Flug ist zu Ende (ein Ablauf
+       meldet die Ankunft an einer Station selbst, ruhe()).
+       Seit Runde 4 (Dominik, 21. Oktober abends: erst „unscharf“, dann „für eine Sekunde die detaillierten Ränder“, dann weiter)
+       wechselt nichts mehr hart:
+       - Die feinen Linien (Grenzen, Küsten) stehen auch in Bewegung, sobald die Kugel gezoomt ist: zwischen 1,6- und 2,1-fach
+         blenden sie über die groben, dem Ziel folgen sie höchstens in 300 ms (linien.a). Grob bleibt in Bewegung nur die Fläche.
+       - Die feine Fläche malt der Kern in Ruhe einmal in ein zweites Bild (bild) und blendet sie über 350 ms über die grobe
+         (blende.a). Geht es weiter, blendet sie über 300 ms aus; das Bild folgt dabei der Kugel (bildLegen), es springt nichts.
+       - In einem Ablauf nur, wenn der Halt danach noch 1,5 s mit der feinen Karte trägt (flaecheSoll, haltBis); ein Halt bei
+         gezoomter Kugel dauert dafür mindestens so lange (haltFuer). Die feinen Linien kommen dort nur auf dem Weg zu einem Halt
+         und gehen auf dem Weg davon (flugLage.an, flugLage.ab), nie für einen Augenblick dazwischen. */
     let bewegt = false, ruheTimer = null;
     function bewegung() {
       bewegt = true;
       clearTimeout(ruheTimer);
-      ruheTimer = setTimeout(() => { bewegt = false; zeichnen(); ansichtMelden(); }, 220);
+      ruheTimer = setTimeout(ruhe, 220);
+    }
+    function ruhe() {
+      clearTimeout(ruheTimer);
+      ruheTimer = null;
+      if (!bewegt) return;
+      bewegt = false;
+      torDanach = 1;
+      zeichnen();
+      ansichtMelden();
     }
     const daten = () => fein && k > 1.8 && !bewegt ? fein : grob;
+
+    // ---------- Überblendung grob zu fein ----------
+    const BLENDE_EIN = 350, BLENDE_AUS = 300, LINIEN_MS = 300, FEIN_MIN = 1500;
+    const glatt = t => t * t * (3 - 2 * t);
+    const blende = { a: 0, von: 0, nach: 0, start: 0, dauer: 0 };     // Anteil der feinen Fläche
+    const linien = { a: 0, t: 0 };                                     // Anteil der feinen Linien
+    let flugLage = null, torDanach = 1;  // im Flug { e, ab, an }; danach, ob die feinen Linien bis zum nächsten Flug stehen dürfen
+    let haltBis = 0;                     // Ende des Halts, in dem ein Ablauf gerade steht (performance.now), sonst 0
+    function blendeStand(jetzt) {
+      if (blende.dauer) {
+        const t = Math.min(1, (jetzt - blende.start) / blende.dauer);
+        blende.a = t >= 1 ? blende.nach : blende.von + (blende.nach - blende.von) * glatt(t);
+        if (t >= 1) blende.dauer = 0;
+      }
+      return blende.a;
+    }
+    function blendeNach(ziel, ms, jetzt) {
+      if (blende.nach === ziel && (blende.dauer || blende.a === ziel)) return;
+      blende.von = blende.a; blende.nach = ziel; blende.start = jetzt;
+      blende.dauer = Math.max(1, ms * Math.abs(ziel - blende.a));
+    }
+    function blendeAus() { blende.a = blende.von = blende.nach = 0; blende.dauer = 0; }
+    // Soll die feine Fläche jetzt stehen? Nur in Ruhe und gezoomt; im Ablauf nur mit genug Halt für Einblenden und 1,5 s fein
+    function flaecheSoll(jetzt) {
+      if (bewegt || !fein || k <= 1.8) return false;
+      if (blende.a > 0 || blende.nach === 1) return true;
+      if (chronikNummer) return !!haltBis && haltBis - jetzt >= BLENDE_EIN + FEIN_MIN;
+      return true;
+    }
+    // Ziel der feinen Linien: in Ruhe gezoomt ganz, in Bewegung nach der Vergrößerung, im Ablauf nur auf dem Weg zu oder von einem Halt
+    function linienSoll() {
+      if (!fein) return 0;
+      if (!bewegt) return k > 1.8 ? 1 : 0;
+      const tor = flugLage ? (flugLage.e < .5 ? flugLage.ab : flugLage.an) : torDanach;
+      return tor * Math.max(0, Math.min(1, (k - 1.6) / .5));
+    }
+    function linienStand(jetzt, soll) {
+      const dt = Math.min(34, Math.max(0, jetzt - linien.t));
+      linien.t = jetzt;
+      const schritt = dt / LINIEN_MS;
+      linien.a = soll > linien.a ? Math.min(soll, linien.a + schritt) : Math.max(soll, linien.a - schritt);
+      return linien.a;
+    }
+    // Das zweite Bild: Kugel, Gradnetz und die feine Fläche in der Ansicht, in der es gemalt wurde
+    const bild = document.createElement('canvas'), bctx = bild.getContext('2d');
+    let bildStand = null, bildDauer = 150, bildPlan = 0, nachBild = 0;
+    const ansicht = () => [mitte[0], mitte[1], k, seite, dpr, ebene.laender ? 1 : 0].join();
+    const bildPasst = () => !!bildStand && bildStand.ansicht === ansicht();
+    function bildMalen() {
+      const t0 = performance.now();
+      if (bild.width !== canvas.width || bild.height !== canvas.height) { bild.width = canvas.width; bild.height = canvas.height; }
+      bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      bctx.clearRect(0, 0, seite, seite);
+      grundZeichnen(bctx, fein);
+      const c = seite / 2, h = seite / 4;
+      bildStand = { ansicht: ansicht(), seite, c, h, punkte: [[c, c], [c + h, c], [c, c + h]].map(p => projektion.invert(p)) };
+      bildDauer = performance.now() - t0;
+    }
+    /* Nach der Ankunft: erst das Bild der Ankunft zeigen, im nächsten Durchlauf das feine Bild malen (rund 100 ms auf dem
+       Prüfrechner, die Kugel steht dabei) und dann einblenden, wenn es noch soll */
+    function bildPlanen() {
+      if (bildPlan) return;
+      bildPlan = requestAnimationFrame(() => setTimeout(() => {
+        bildPlan = 0;
+        if (!flaecheSoll(performance.now())) return;
+        projektionSetzen();
+        if (!bildPasst()) bildMalen();
+        const jetzt = performance.now();
+        if (!flaecheSoll(jetzt)) return;
+        blendeNach(1, BLENDE_EIN, jetzt);
+        zeichnen();
+      }, 0));
+    }
+    /* Das feine Bild auf die jetzige Projektion legen: in Ruhe deckungsgleich, beim Abflug über drei Punkte nachgeführt (eine
+       affine Abbildung; im kleinen Ausschnitt einer gezoomten Kugel weicht sie am Rand um 1 bis 2 px ab, während das Bild
+       ausblendet). false, wenn es nicht mehr passt */
+    function bildLegen(alpha) {
+      if (bildPasst()) { ctx.globalAlpha = alpha; ctx.drawImage(bild, 0, 0, seite, seite); ctx.globalAlpha = 1; return true; }
+      if (!bildStand || bildStand.punkte.some(p => !p || !sichtbar(p))) return false;
+      const q = bildStand.punkte.map(p => projektion(p)), { c, h } = bildStand;
+      const a = (q[1][0] - q[0][0]) / h, b = (q[1][1] - q[0][1]) / h, cc = (q[2][0] - q[0][0]) / h, d = (q[2][1] - q[0][1]) / h;
+      ctx.setTransform(dpr * a, dpr * b, dpr * cc, dpr * d, dpr * (q[0][0] - (a + cc) * c), dpr * (q[0][1] - (b + d) * c));
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(bild, 0, 0, bildStand.seite, bildStand.seite);
+      ctx.globalAlpha = 1;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return true;
+    }
+    // Solange etwas blendet und kein Flug die Bilder treibt, ein Bild je Durchlauf
+    function weiterZeichnen() {
+      if (nachBild || flug) return;
+      nachBild = requestAnimationFrame(() => { nachBild = 0; if (!flug) zeichnen(); });
+    }
+    // Die sichtbaren Stücke der feinen Linien (je Ansicht einmal): was die Ecken der Leinwand erreichen, mit etwas Rand
+    // (Die Listen werden wiederverwendet: im Flug wählt jedes Bild neu, ohne jedes Mal neue Felder anzulegen)
+    const stueckWahl = { schluessel: '', grenzen: { type: 'MultiLineString', coordinates: [] }, kueste: { type: 'MultiLineString', coordinates: [] } };
+    function sichtbareStuecke() {
+      const schluessel = mitte[0] + ',' + mitte[1] + ',' + k + ',' + seite;
+      if (stueckWahl.schluessel === schluessel) return stueckWahl;
+      const sicht = Math.asin(Math.min(1, Math.SQRT2 * (seite / 2) / (R * k))) + .03;
+      const m = einheit(mitte);
+      const wahl = (st, aus) => {
+        aus.length = 0;
+        for (const q of st) { const w = sicht + q.r; if (w >= Math.PI || q.x * m[0] + q.y * m[1] + q.z * m[2] > Math.cos(w)) aus.push(q.s); }
+      };
+      wahl(fein.stuecke.grenzen, stueckWahl.grenzen.coordinates);
+      wahl(fein.stuecke.kueste, stueckWahl.kueste.coordinates);
+      stueckWahl.schluessel = schluessel;
+      return stueckWahl;
+    }
 
     /* Gradnetz wie in B: dichter, je weiter man hineinzoomt. Gezoomt nur der sichtbare Ausschnitt (mit Rand): Meridiane als zwei
        Punkte (Großkreise), Breitenkreise alle 2° */
@@ -198,39 +358,90 @@
     const istAktiv = name => !!aktiverOrt && aktiverOrt.split(' · ').includes(name);
 
     let erstesBild = 0;
-    function zeichnen() {
+    function projektionSetzen() {
       const c = seite / 2;
       projektion.translate([c, c]).scale(R * k).rotate([-mitte[0], -mitte[1]]).clipExtent([[0, 0], [seite, seite]]);
-      const d = daten();
+    }
+    // Grund: Kugel, Gradnetz und Fläche (Land, bereiste Länder) aus dem Datensatz d, in die Leinwand c
+    function grundZeichnen(c, d) {
+      pfad.context(c);
+      c.beginPath(); pfad({ type: 'Sphere' }); c.fillStyle = F.papier; c.fill();
+      c.beginPath(); pfad(netz()); c.strokeStyle = F.gradnetz; c.lineWidth = .5; c.stroke();
+      c.beginPath(); pfad(d.land); c.fillStyle = F.land; c.fill();
+      if (ebene.laender) { c.beginPath(); pfad(d.bereistFlaeche); c.fillStyle = F.reise; c.fill(); }
+      pfad.context(ctx);
+    }
+    /* Die feinen Linien liegen gezoomt mit mehreren Punkten je Pixel auf der Leinwand (auf dem Telefon bei 3,6-fach rund drei).
+       Für sie lässt der Pfad Punkte aus, die weniger als 1 px vom zuletzt gesetzten liegen; der letzte Punkt jeder Linie bleibt.
+       Man sieht keinen Unterschied (im Mittel unter einer Graustufe), aber auf dem Telefon kostet ein Bild im Flug so 5 ms weniger
+       (40 statt 56 Bilder je Sekunde ohne). In Ruhe und Bewegung gleich, damit sich an den Linien beim Halt nichts ändert */
+    const duenn = {
+      x: 0, y: 0, px: 0, py: 0, offen: false,
+      moveTo(x, y) { this.ende(); ctx.moveTo(x, y); this.x = x; this.y = y; },
+      lineTo(x, y) {
+        const dx = x - this.x, dy = y - this.y;
+        if (dx * dx + dy * dy < 1) { this.px = x; this.py = y; this.offen = true; return; }
+        ctx.lineTo(x, y); this.x = x; this.y = y; this.offen = false;
+      },
+      closePath() { this.ende(); ctx.closePath(); },
+      arc(x, y, r, a0, a1) { this.ende(); ctx.arc(x, y, r, a0, a1); },
+      ende() { if (this.offen) { ctx.lineTo(this.px, this.py); this.offen = false; } }
+    };
+    // Grenzen und Küsten in gleicher Strichstärke und Farbe, grob wie fein (fein ausgedünnt)
+    function linienZeichnen(grenzen, kueste, alpha, ausduennen) {
+      ctx.globalAlpha = alpha;
+      if (ausduennen) pfad.context(duenn);
+      if (ebene.grenzen !== false) { ctx.beginPath(); pfad(grenzen); duenn.ende(); ctx.strokeStyle = F.grenze; ctx.lineWidth = k > 3 ? .7 : .45; ctx.stroke(); }
+      ctx.beginPath(); pfad(kueste); duenn.ende(); ctx.strokeStyle = F.kueste; ctx.lineWidth = .6; ctx.stroke();
+      pfad.context(ctx);
+      ctx.globalAlpha = 1;
+    }
+    function zeichnen() {
+      const jetzt = performance.now();
+      projektionSetzen();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, seite, seite);
       if (flaeche) flaeche.classList.toggle('ist-gezoomt', k > 1.15);
 
-      ctx.beginPath(); pfad({ type: 'Sphere' }); ctx.fillStyle = F.papier; ctx.fill();
-      ctx.beginPath(); pfad(netz()); ctx.strokeStyle = F.gradnetz; ctx.lineWidth = .5; ctx.stroke();
+      // Fläche: die grobe, darüber das feine Bild in seinem Anteil (in Ruhe ganz, beim Einblenden und Abflug teilweise)
+      let a = blendeStand(jetzt);
+      if (flaecheSoll(jetzt)) {
+        if (!bildPasst() && a > 0) bildMalen();      // die Ansicht hat sich in Ruhe geändert (Sprung, Größe): gleich fein
+        if (bildPasst()) { if (a < 1) blendeNach(1, BLENDE_EIN, jetzt); }
+        else bildPlanen();
+      } else if (a > 0) blendeNach(0, BLENDE_AUS, jetzt);
+      a = blendeStand(jetzt);
+      if (!(a >= 1 && !bewegt && bildPasst())) grundZeichnen(ctx, grob);
+      if (a > 0 && fein && !bildLegen(a)) { blendeAus(); a = 0; }
 
-      ctx.beginPath(); pfad(d.land); ctx.fillStyle = F.land; ctx.fill();
-      if (ebene.laender) { ctx.beginPath(); pfad(d.bereistFlaeche); ctx.fillStyle = F.reise; ctx.fill(); }
-      if (ebene.grenzen !== false) { ctx.beginPath(); pfad(d.grenzen); ctx.strokeStyle = F.grenze; ctx.lineWidth = k > 3 ? .7 : .45; ctx.stroke(); }
-      ctx.beginPath(); pfad(d.kueste); ctx.strokeStyle = F.kueste; ctx.lineWidth = .6; ctx.stroke();
+      // Linien: grob, darüber die feinen in ihrem Anteil
+      const lSoll = linienSoll(), l = linienStand(jetzt, lSoll);
+      if (l < 1) linienZeichnen(grob.grenzen, grob.kueste, 1 - l);
+      if (l > 0 && fein) { const w = sichtbareStuecke(); linienZeichnen(w.grenzen, w.kueste, l, true); }
       if (ebene.fluesse && FLUESSE.length) {
         ctx.lineJoin = 'round'; ctx.strokeStyle = F.kueste; ctx.lineWidth = .8;
         FLUESSE.forEach(f => { ctx.beginPath(); pfad(f); ctx.stroke(); });
       }
       if (ebene.laender) {
+        const d = fein && (bewegt ? l >= .5 : k > 1.8) ? fein : grob;
         const gewaehlt = auswahl ? d.laender.find(x => x.iso === auswahl.iso) || auswahl : null;
         [[gewaehlt, 1.2], [hover !== gewaehlt ? hover : null, 1]].forEach(([f, w]) => {
           if (!f || !f.geometry) return;
           ctx.beginPath(); pfad(f); ctx.strokeStyle = F.tinte; ctx.lineWidth = w; ctx.stroke();
         });
         // Kleinstaaten ohne Fläche im Maßstab: eine kleine Scheibe in der Farbe der bereisten Länder, ohne Kontur (wie ein Land,
-        // nicht wie ein Ortszeichen in Tinte); gezeigt oder gewählt mit Kontur
+        // nicht wie ein Ortszeichen in Tinte); gezeigt oder gewählt mit Kontur. Hat die feine Fläche das Land, geht die Scheibe
+        // mit ihr: sie blendet aus, wie die Fläche einblendet
         Object.entries(winzig).forEach(([iso, pos]) => {
-          if (!bereist.has(iso) || d.isos.has(iso) || !sichtbar(pos)) return;
+          if (!bereist.has(iso) || grob.isos.has(iso) || !sichtbar(pos)) return;
+          const deckend = fein && fein.isos.has(iso) ? 1 - a : 1;
+          if (deckend <= 0) return;
           const p = projektion(pos), an = (auswahl && auswahl.iso === iso) || (hover && hover.iso === iso);
+          ctx.globalAlpha = deckend;
           ctx.beginPath(); ctx.arc(p[0], p[1], 3.2, 0, Math.PI * 2);
           ctx.fillStyle = F.reise; ctx.fill();
           if (an) { ctx.lineWidth = 1.2; ctx.strokeStyle = F.tinte; ctx.stroke(); }
+          ctx.globalAlpha = 1;
         });
       }
       ctx.beginPath(); pfad({ type: 'Sphere' }); ctx.strokeStyle = F.tinte; ctx.lineWidth = 1; ctx.stroke();
@@ -260,11 +471,12 @@
         if (!istAktiv(ort.name)) return;
         ctx.beginPath(); ctx.arc(p[0], p[1], 6.5, 0, Math.PI * 2); ctx.lineWidth = 1; ctx.strokeStyle = F.tinte; ctx.stroke();
       });
-      if (namenInRuhe || bewegt) namenSetzen(orte);
+      if (bewegt ? namenInBewegung : namenInRuhe) namenSetzen(orte);
 
       if (!erstesBild) erstesBild = performance.now();
       if (!bewegt) ansichtMelden();
-      melden('beimZeichnen', { bewegt, k });
+      if (blende.dauer || l !== lSoll) weiterZeichnen();
+      melden('beimZeichnen', { bewegt, k, fein: a, linien: l });
     }
 
     /* Ortsnamen, aufrecht, mit 4 px Freistellung in Papier. Orte, deren Zeichen fast aufeinander liegen, teilen sich eine
@@ -465,32 +677,47 @@
     canvas.addEventListener('pointerleave', tippVerstecken);
 
     // ---------- Flug ----------
-    function flugBeenden(grund = 'abgebrochen') { if (flug) { flug.stop(); flug = null; } if (flugEnde) { const f = flugEnde; flugEnde = null; f(grund); } }
+    function flugBeenden(grund = 'abgebrochen') {
+      if (flug) { flug.stop(); flug = null; }
+      if (flugLage) { torDanach = grund === 'fertig' ? flugLage.an : 1; flugLage = null; }
+      if (flugEnde) { const f = flugEnde; flugEnde = null; f(grund); }
+    }
+    /* Ein Flug. extra: { dauer, jeBild(e), ease, ab, an, ruhen }
+         ease    Verlauf (Vorgabe d3.easeCubicInOut; ein Ablauf fliegt mit sanft)
+         ab, an  false: die feinen Linien stehen in der ersten (ab) oder zweiten Hälfte (an) des Flugs nicht (ein Ablauf: kein
+                 Halt davor oder danach)
+         ruhen   false: am Ende keine Ruhe (ein Ablauf fliegt gleich weiter oder meldet die Ruhe selbst) */
     function fliegen(ziel, zielK, extra) {
       flugBeenden();
       tippVerstecken();
+      extra = extra || {};
       zielK = Math.max(KMIN, Math.min(KMAX, zielK));
       if (zielK > 1.6) feinLaden();
       const start = mitte.slice(), startK = k;
       const weg = d3.geoInterpolate(start, ziel);
       const abstand = d3.geoDistance(start, ziel);
-      const dauer = ruhig ? 0 : (extra && extra.dauer != null ? extra.dauer : o.dauer || 1000);
+      const dauer = ruhig ? 0 : (extra.dauer != null ? extra.dauer : o.dauer || 1000);
       const delle = Math.min(Math.log(Math.max(startK, zielK)), abstand * 1.1);
-      const jeBild = extra && extra.jeBild;
+      const { jeBild } = extra, weich = extra.ease || d3.easeCubicInOut, ruhen = extra.ruhen !== false;
       if (!dauer) { mitte = ziel.slice(); k = zielK; if (jeBild) jeBild(1); zoomStandSetzen(); zeichnen(); return Promise.resolve('fertig'); }
       return new Promise(fertig => {
         flugEnde = fertig;
+        const lage = flugLage = { e: 0, ab: extra.ab === false ? 0 : 1, an: extra.an === false ? 0 : 1 };
+        bewegung();
         flug = d3.timer(verstrichen => {
           const t = Math.min(1, verstrichen / dauer);
-          const e = d3.easeCubicInOut(t);
+          const e = weich(t);
+          lage.e = e;
           mitte = weg(e);
           k = Math.max(KMIN, Math.exp((1 - e) * Math.log(startK) + e * Math.log(zielK) - delle * Math.sin(Math.PI * e)));
           if (jeBild) jeBild(e);
           zoomStandSetzen(); bewegung(); zeichnen();
-          if (t >= 1) flugBeenden('fertig');
+          if (t >= 1) { flugBeenden('fertig'); if (ruhen) ruhe(); }
         });
       });
     }
+    // Sanft an- und auslaufen (Smootherstep): langsamer Beginn, in der Mitte 1,9-mal so schnell wie im Schnitt (kubisch 3-mal)
+    const sanft = t => t * t * t * (t * (t * 6 - 15) + 10);
     function landSuchen(iso) {
       const f = (fein || grob).laender.find(x => x.iso === iso);
       if (f) return f;
@@ -532,6 +759,7 @@
       if (!chronikNummer) return;
       chronikNummer = 0;
       chronikStand = null;
+      haltBis = 0;
       haltAbbrechen();
       gezeigt = null;
       zeichnen();
@@ -544,6 +772,7 @@
       const stand = chronikStand ? { bei: chronikStand.bei, unterwegs: chronikStand.unterwegs } : null;
       chronikNummer = 0;
       chronikStand = null;
+      haltBis = 0;
       haltAbbrechen();
       flugBeenden('angehalten');
       zeichnen();
@@ -554,10 +783,12 @@
        takt: {
          ab: 0,                  // Start bei dieser Station; ab > 0 setzt eine angehaltene Chronik fort (der Weg wächst vom
                                  // jetzigen Stand aus weiter)
-         flug: 1000,             // ms je Flug
-         ersterFlug: 1000,       // ms für den Flug zur ersten Station (Vorgabe: flug)
-         halt: 600,              // ms Halt an jeder Station, oder (station, i) => ms
-         rueckweg: 500,          // ms für den Rückweg eines Abstechers, ohne Halt
+         flug: 1000,             // ms je Flug, oder (grad, station, i) => ms nach der Entfernung in Grad (auch für den Schluss)
+         ersterFlug: 1000,       // ms für den Flug zur ersten Station, Zahl oder Funktion wie flug (Vorgabe: flug)
+         halt: 600,              // ms Halt an jeder Station, oder (station, i) => ms; gezoomt (über 1,8-fach) mindestens so
+                                 // lange, dass die feine Karte danach noch 1,5 s steht (haltFuer)
+         rueckweg: 500,          // ms für den Rückweg eines Abstechers, ohne Halt; Zahl oder Funktion wie flug
+         ease: sanft,            // Verlauf jedes Flugs (Vorgabe: sanft an- und auslaufen)
          zoom: 2.6,              // Vergrößerung, oder (station, i) => k
          rueckZoom: (station, i) => k,   // Vergrößerung auf dem Rückweg eines Abstechers (Vorgabe: die des Wohnorts)
          schluss: { mitte, k },  // am Ende dorthin (Vorgabe: Mitte aller Punkte, k = 1); null: der Globus bleibt
@@ -573,25 +804,33 @@
       const nummer = chronikNummer = ++chronikZaehler;
       const n = stationen.length, ab = Math.max(0, Math.min(n, takt.ab || 0));
       const fn = (v, d) => typeof v === 'function' ? v : () => (v == null ? d : v);
-      const flugMs = takt.flug == null ? (o.dauer || 1000) : takt.flug, rueckMs = takt.rueckweg == null ? 500 : takt.rueckweg;
-      const haltMs = fn(takt.halt, 600), zoomZiel = fn(takt.zoom, 2.6);
+      const flugMs = fn(takt.flug, o.dauer || 1000), rueckMs = fn(takt.rueckweg, 500);
+      const ersterMs = takt.ersterFlug == null ? flugMs : fn(takt.ersterFlug, 1000);
+      const haltMs = fn(takt.halt, 600), zoomZiel = fn(takt.zoom, 2.6), weich = takt.ease || sanft;
+      const grad = z => d3.geoDistance(mitte, z) / RAD;
       const bis = takt.orte !== 'alle';
       if (ab === 0) route = routeBauen(stationen); else routeSetzen(stationen);
       gezeigt = bis ? new Set(stationen.slice(0, ab).map(s => s.name)) : null;
       chronikStand = { bei: ab - 1, unterwegs: null };
       const vorbei = () => chronikNummer !== nummer;
       const ende = () => stilleGruende.get(nummer) || 'abgebrochen';
-      let heim = null;
+      let heim = null, vonHalt = true;
       for (let j = 0; j < ab; j++) if (!stationen[j].neben) heim = j;
+      /* Die feine Karte (rund 0,3 s Rechnen) vor dem ersten Flug, nicht mitten darin: sonst stockte der Flug. Höchstens 2 s warten */
+      if (!fein && stationen.some((s, i) => zoomZiel(s, i) > 1.6)) {
+        feinLaden();
+        await Promise.race([feinBereit, new Promise(r => setTimeout(r, 2000))]);
+        if (vorbei()) return ende();
+      }
       for (let i = ab; i < n; i++) {
-        const s = stationen[i], von = route.fortschritt, ziel = route.an[i];
+        const s = stationen[i], von = route.fortschritt, ziel = route.an[i], zk = zoomZiel(s, i), punkt = [s.lon, s.lat];
         chronikStand.unterwegs = i;
-        await fliegen([s.lon, s.lat], zoomZiel(s, i), {
-          dauer: i === 0 && ab === 0 && takt.ersterFlug != null ? takt.ersterFlug : flugMs,
+        await fliegen(punkt, zk, {
+          dauer: (i === 0 && ab === 0 ? ersterMs : flugMs)(grad(punkt), s, i), ease: weich, ab: vonHalt, an: true, ruhen: false,
           jeBild: e => { route.fortschritt = von + (ziel - von) * e; }
         });
         if (vorbei()) return ende();
-        // Angekommen: Punkt, Name und Tafel wechseln in einem Bild, wenn die Linie am Ziel ist
+        // Angekommen: Punkt, Name und Tafel wechseln in einem Bild, wenn die Linie am Ziel ist; dann steht die Kugel (Ruhe)
         route.fortschritt = ziel;
         chronikStand.unterwegs = null;
         chronikStand.bei = i;
@@ -599,33 +838,45 @@
         aktiverOrt = s.name;
         if (typeof takt.beiStation === 'function') takt.beiStation(s, i);
         if (vorbei()) return ende();
-        zeichnen();
-        await halten(haltMs(s, i));
+        const ms = haltFuer(haltMs(s, i), zk);
+        haltBis = ms > 0 ? performance.now() + ms : 0;
+        if (ms > 0 && bewegt) ruhe(); else zeichnen();
+        await halten(ms);
+        haltBis = 0;
         if (vorbei()) return ende();
+        vonHalt = ms > 0;
         if (!s.neben) heim = i;
         // Rückweg eines Abstechers zum Wohnort davor, ohne Halt; die Tafel bleibt beim Abstecher
         if (s.neben && heim !== null && route.punkte.length > ziel + 1) {
-          const h = stationen[heim];
+          const h = stationen[heim], hp = [h.lon, h.lat];
           const rueckK = typeof takt.rueckZoom === 'function' ? takt.rueckZoom(s, i) : zoomZiel(h, heim);
-          await fliegen([h.lon, h.lat], rueckK, { dauer: rueckMs, jeBild: e => { route.fortschritt = ziel + e; } });
+          await fliegen(hp, rueckK, { dauer: rueckMs(grad(hp), s, i), ease: weich, ab: vonHalt, an: false, ruhen: false, jeBild: e => { route.fortschritt = ziel + e; } });
           if (vorbei()) return ende();
           route.fortschritt = ziel + 1;
+          vonHalt = false;
         }
       }
       route.fortschritt = route.punkte.length - 1;
       if (takt.schluss !== null) {
         const sch = takt.schluss || { mitte: d3.geoCentroid({ type: 'MultiPoint', coordinates: route.punkte }), k: 1 };
+        const sp = sch.mitte || sch;
         aktiverOrt = takt.endeAktiv || null;
-        await fliegen(sch.mitte || sch, sch.k || 1, { dauer: flugMs });
+        await fliegen(sp, sch.k || 1, { dauer: flugMs(grad(sp), null, n), ease: weich, ab: vonHalt, an: true, ruhen: false });
         if (vorbei()) return ende();
       }
       chronikNummer = 0;
       chronikStand = null;
       gezeigt = null;
       aktiverOrt = takt.endeAktiv || null;
-      zeichnen();
+      if (bewegt) ruhe(); else zeichnen();
       melden('beiChronikEnde', 'fertig');
       return 'fertig';
+    }
+    /* Ein Halt bei gezoomter Kugel (über 1,8-fach, die feine Karte kommt) dauert mindestens so lange, dass nach dem Malen des feinen
+       Bilds (zuletzt bildDauer) und dem Einblenden noch 1,5 s fein stehen, bevor es weitergeht */
+    function haltFuer(ms, zk) {
+      if (!(ms > 0) || zk <= 1.8 || !(fein || feinLaden.laeuft)) return ms;
+      return Math.max(ms, Math.ceil(bildDauer) + 100 + BLENDE_EIN + FEIN_MIN);
     }
     // Warum eine Chronik endete, wenn sie nicht von selbst fertig wurde: angehalten (chronikAnhalten) oder abgebrochen
     const stilleGruende = new Map();
@@ -646,7 +897,8 @@
       zeichnen();
     }
 
-    setTimeout(feinLaden, 1200);
+    // Die feine Karte gleich laden: meist ist sie da, bevor der erste Flug beginnt (vorher nach 1,2 s, oft mitten im Flug)
+    setTimeout(feinLaden, 0);
     messen();
     zeichnen();
     window.addEventListener('resize', () => { messen(); zeichnen(); });

@@ -550,16 +550,15 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
 
   // ================= Abläufe =================
-  /* Was von selbst läuft (Einspieler, Abspielen), zeigt auf Leben und Ursprung nur die Kopfzeile: Jahr, Zeichen und Ort, bei Ursprung
-     Band, Ort und Zeit. Die ganze Tafel (Art und Vermerk, die Zeile zum Band) kommt am Ende, beim Anhalten und nach einem Schritt von
-     Hand. Satoshi zeigt im Ablauf den Szenentext, mit einem Halt, der zum Lesen reicht (docs/takt-empfehlung.md, 3.1) */
-  const lebenTafel = (i, info) => F.imLauf(info) ? F.nurKopf(lebenInhalt(i)) : lebenInhalt(i);
-  F.tafel(tafelEl, F.nurKopf(lebenInhalt(0)));
+  /* Was von selbst läuft (Einspieler, Abspielen), zeigt dieselbe Tafel wie in Ruhe: bei Leben Jahr, Ort, Art und Vermerk aus der
+     Vita, bei Ursprung Band, Ort, Zeit und die Zeile zum Band, bei Satoshi den Szenentext (Runde 4: „Die Beschreibungen der Orte
+     sollen bleiben“). Jeder Halt reicht zum Lesen (FSeite.TAKT). Vor dem Einspieler steht schon die erste Station */
+  F.tafel(tafelEl, lebenInhalt(0));
   if (g) { blickBerechnen(); g.ebene(EBENEN.leben, { fliegen: false }); }
 
   A.leben = F.ablauf({
     globus: g, stationen: LEBEN, tafel: tafelEl, takt: F.TAKT.leben, endeBei: HEUTE,
-    beiStation: (i, info) => { if (i >= 0) F.tafel(tafelEl, lebenTafel(i, info)); namenNeu(); }
+    beiStation: i => { if (i >= 0) F.tafel(tafelEl, lebenInhalt(i)); namenNeu(); }
   });
   const satoshiWorte = i => $$('[data-satoshi]').forEach(b => b.setAttribute('aria-pressed', String(i >= 0 && b.dataset.satoshi === SZENEN[i].name)));
   A.satoshi = F.ablauf({
@@ -571,7 +570,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   });
   A.ursprung = F.ablauf({
     globus: g, stationen: URSPRUNG, tafel: tafelEl, ortsleiste: $('#ursprung-text'), takt: F.TAKT.ursprung, aktiv: false,
-    beiStation: (i, info) => { F.tafel(tafelEl, i >= 0 && F.imLauf(info) ? F.ursprungInhalt(i, true) : ursprungTafel(i)); namenNeu(); }
+    beiStation: i => { F.tafel(tafelEl, ursprungTafel(i)); namenNeu(); }
   });
 
   // Ein Ort im Text der Ebene Satoshi: die erste Szene dort, beim nächsten Klick die spätere

@@ -28,6 +28,7 @@
      texte.alle(art), texte.satz(s), texte.datum(d), texte.punkt(s), texte.ARTEN   Texte aus daten/texte.js (Erzählungen, Untertext,
                                    Länderguides): gültige Einträge, deutscher Satz, Datum, Liste je Art
      navigation()                  Navigation einrichten (läuft beim Laden von selbst)
+     fuss(), PROFILE               Newsletter-Zeile und Profile im Fuß (läuft beim Laden von selbst); PROFILE: Liste der Profile
      leselinie(elemente, beiSchritt, o)   beim Scrollen: welches Element zuletzt die Leselinie erreicht hat (vor und zurück)
      fortschritt(element, beiWert, o)     beim Scrollen: wie weit ein Element durch das Fenster gewandert ist, 0 bis 1
      imBild(element, { starten, unterbrechen, fortsetzen })   eine Chronik hält an, wenn ihr Globus aus dem Bild ist
@@ -1069,6 +1070,37 @@
     return { alle, satz, datum, punkt, zeichenAmEnde, ARTEN, BELEGT };
   })();
 
+  // ---------- Fuß: Newsletter und Profile ----------
+  /* Profile im Fuß, unter Impressum und Datenschutz. Hier eintragen, sobald Dominik die Adressen gibt, in der Reihenfolge, in der
+     sie stehen sollen, etwa { name: 'Instagram', url: 'https://…' }, { name: 'LinkedIn', url: 'https://…' }. Version B hat dieselbe
+     Liste in website-b/seite.js. Solange die Liste leer ist, bleibt die Zeile .profile verborgen. */
+  const PROFILE = [];
+  /* Die Zeile „Eine E-Mail, wenn ein Buch erscheint oder eine Lesung ansteht“ (form.post im Fuß jeder Seite). Einen Newsletter-Dienst
+     gibt es noch nicht: Eintragen schickt nichts ab und lädt nichts, es leert nur das Feld und zeigt den Dank in der Statuszeile.
+     Ohne Skript ist das Formular verborgen (stil.css), damit der Browser die Adresse nicht als Teil der Adresszeile abschickt. */
+  const POST_DANKE = 'Danke. Im Testsystem wird noch nichts verschickt.';
+  function fuss() {
+    $$('form.post').forEach(form => {
+      if (form.dataset.bereit) return;
+      form.dataset.bereit = '1';
+      const status = $('.post-status', form);
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        form.reset();
+        if (!status) return;
+        // Zweimal eingetragen: erst leeren, damit Vorleseprogramme die Zeile noch einmal ansagen
+        status.textContent = '';
+        setTimeout(() => { status.textContent = POST_DANKE; }, 60);
+      });
+    });
+    const profile = PROFILE.filter(p => p && p.name && /^https:\/\//.test(p.url || ''));
+    $$('.profile').forEach(el => {
+      el.innerHTML = profile.map(p => `<a href="${esc(p.url)}" rel="me">${esc(p.name)}</a>`).join(' ');
+      el.hidden = !profile.length;
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fuss); else fuss();
+
   // ---------- Navigation ----------
   /* Markiert die jetzige Seite (falls die Seite es nicht selbst tut) und klappt die Liste auf dem Telefon hinter „Inhalt“ zusammen;
      ein Tipp daneben, Esc oder die Wahl eines Verweises klappt sie wieder zu. Breit neben dem Globus läuft sie bis kurz vor ihn;
@@ -1120,7 +1152,7 @@
     schriften, satzzeichenBinden,
     FARBEN, SIENA, SIENA_EBENE, globus, blickFuer,
     tafel, tafelReservieren, tafelPlatz, stationen, stationInhalt, ursprungOrte, ursprungInhalt,
-    karteikarte, buch, werkKarte, texte, navigation,
+    karteikarte, buch, werkKarte, texte, navigation, fuss, PROFILE,
     leselinie, fortschritt, imBild
   };
 })();

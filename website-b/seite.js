@@ -40,6 +40,7 @@
      blickFuer(orte, bereich)       Mitte [lon, lat], bei der alle Orte mit Abstand zum Rand auf der Kugel stehen
      kartentafel(figur, o)          die Kartentafel, siehe dort
      navigation()                   läuft beim Laden von selbst
+     fuss(), PROFILE                Newsletter-Zeile und Profile im Fuß (läuft beim Laden von selbst); PROFILE: Liste der Profile
 */
 (function () {
   'use strict';
@@ -1076,6 +1077,38 @@
     };
   }
 
+  // ---------- Fuß: Newsletter und Profile ----------
+  /* Profile im Fuß, unter Impressum und Datenschutz. Hier eintragen, sobald Dominik die Adressen gibt, in der Reihenfolge, in der
+     sie stehen sollen, etwa { name: 'Instagram', url: 'https://…' }, { name: 'LinkedIn', url: 'https://…' }. Version A hat dieselbe
+     Liste in website/seite.js. Solange die Liste leer ist, bleibt die Zeile .profile verborgen. */
+  const PROFILE = [];
+  /* Die Zeile „Eine E-Mail, wenn ein Buch erscheint oder eine Lesung ansteht“ (form.post im Fuß jeder Seite), Wortlaut wie in A.
+     Einen Newsletter-Dienst gibt es noch nicht: Eintragen schickt nichts ab und lädt nichts, es leert nur das Feld und zeigt den
+     Dank in der Statuszeile. Ohne Skript ist das Formular verborgen (stil.css), damit der Browser die Adresse nicht als Teil der
+     Adresszeile abschickt. */
+  const POST_DANKE = 'Danke. Im Testsystem wird noch nichts verschickt.';
+  function fuss() {
+    $$('form.post').forEach(form => {
+      if (form.dataset.bereit) return;
+      form.dataset.bereit = '1';
+      const status = $('.post-status', form);
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        form.reset();
+        if (!status) return;
+        // Zweimal eingetragen: erst leeren, damit Vorleseprogramme die Zeile noch einmal ansagen
+        status.textContent = '';
+        setTimeout(() => { status.textContent = POST_DANKE; }, 60);
+      });
+    });
+    const profile = PROFILE.filter(p => p && p.name && /^https:\/\//.test(p.url || ''));
+    $$('.profile').forEach(el => {
+      el.innerHTML = profile.map(p => `<a href="${esc(p.url)}" rel="me">${esc(p.name)}</a>`).join(' ');
+      el.hidden = !profile.length;
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fuss); else fuss();
+
   // ---------- Navigation ----------
   /* Markiert die jetzige Seite in .nav (aria-current, halbfett). Erzählungen und Untertext stehen wie in A immer da: Elemente mit
      data-wenn-texte erscheinen, Elemente mit data-verweis-wenn-texte und data-href werden zum Verweis (die Attribute sind aus der
@@ -1099,6 +1132,7 @@
     SEITEN, NBSP, NNBSP, $, $$, esc, sauber, ruhig, desktop, telefon, tokens,
     zahlwort, gross, tausender, jahrText, chr, versalien, punkt, grad, koord, entfernungKm, km, jahrMarke, schriften, gleichBreit, zeichen,
     texte, buch, werkKarte, leselinie, stationen, szenen, landName, blickFuer,
-    stationInhalt, lebenUeberblick, satoshiInhalt, ursprungOrte, ursprungInhalt, reisenInhalt, tafelTeile, kartentafel, navigation
+    stationInhalt, lebenUeberblick, satoshiInhalt, ursprungOrte, ursprungInhalt, reisenInhalt, tafelTeile, kartentafel, navigation,
+    fuss, PROFILE
   };
 })();

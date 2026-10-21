@@ -549,7 +549,8 @@
       zeichnen();
       return stand;
     }
-    /* Eine Chronik: der Globus fliegt von Station zu Station, der Weg wächst mit, am Ziel erscheinen Punkt und Name.
+    /* Eine Chronik: der Globus fliegt von Station zu Station, der Weg wächst mit. Erst wenn der Flug zu Ende ist, erscheinen Punkt
+       und Name und kommt beiStation (die Linie zuerst, dann die Schrift; vorher bei 55 % des Flugs).
        takt: {
          ab: 0,                  // Start bei dieser Station; ab > 0 setzt eine angehaltene Chronik fort (der Weg wächst vom
                                  // jetzigen Stand aus weiter)
@@ -558,10 +559,11 @@
          halt: 600,              // ms Halt an jeder Station, oder (station, i) => ms
          rueckweg: 500,          // ms für den Rückweg eines Abstechers, ohne Halt
          zoom: 2.6,              // Vergrößerung, oder (station, i) => k
+         rueckZoom: (station, i) => k,   // Vergrößerung auf dem Rückweg eines Abstechers (Vorgabe: die des Wohnorts)
          schluss: { mitte, k },  // am Ende dorthin (Vorgabe: Mitte aller Punkte, k = 1); null: der Globus bleibt
          orte: 'bis' | 'alle',   // 'bis': nur die Orte der Stationen bis zur jetzigen zeigen (nach Namen); 'alle': alle
          endeAktiv: 'Name',      // der gewählte Ort am Ende (Vorgabe: keiner)
-         beiStation(station, i)  // wenn der Globus eine Station erreicht
+         beiStation(station, i)  // wenn der Globus eine Station erreicht hat
        }
        Ergebnis: 'fertig', 'abgebrochen' (ein Griff an die Kugel, eine neue Ebene) oder 'angehalten' (chronikAnhalten). */
     async function chronik(stationen, takt = {}) {
@@ -583,31 +585,29 @@
       for (let j = 0; j < ab; j++) if (!stationen[j].neben) heim = j;
       for (let i = ab; i < n; i++) {
         const s = stationen[i], von = route.fortschritt, ziel = route.an[i];
-        let da = false;
-        const ankommen = () => {
-          if (da) return;
-          da = true;
-          if (gezeigt) gezeigt.add(s.name);
-          aktiverOrt = s.name;
-          if (chronikStand) chronikStand.bei = i;
-          if (typeof takt.beiStation === 'function') takt.beiStation(s, i);
-        };
         chronikStand.unterwegs = i;
         await fliegen([s.lon, s.lat], zoomZiel(s, i), {
           dauer: i === 0 && ab === 0 && takt.ersterFlug != null ? takt.ersterFlug : flugMs,
-          jeBild: e => { route.fortschritt = von + (ziel - von) * e; if (e > .55) ankommen(); }
+          jeBild: e => { route.fortschritt = von + (ziel - von) * e; }
         });
         if (vorbei()) return ende();
-        ankommen();
+        // Angekommen: Punkt, Name und Tafel wechseln in einem Bild, wenn die Linie am Ziel ist
         route.fortschritt = ziel;
         chronikStand.unterwegs = null;
+        chronikStand.bei = i;
+        if (gezeigt) gezeigt.add(s.name);
+        aktiverOrt = s.name;
+        if (typeof takt.beiStation === 'function') takt.beiStation(s, i);
+        if (vorbei()) return ende();
+        zeichnen();
         await halten(haltMs(s, i));
         if (vorbei()) return ende();
         if (!s.neben) heim = i;
-        // Rückweg eines Abstechers zum Wohnort davor, ohne Halt
+        // Rückweg eines Abstechers zum Wohnort davor, ohne Halt; die Tafel bleibt beim Abstecher
         if (s.neben && heim !== null && route.punkte.length > ziel + 1) {
           const h = stationen[heim];
-          await fliegen([h.lon, h.lat], zoomZiel(h, heim), { dauer: rueckMs, jeBild: e => { route.fortschritt = ziel + e; } });
+          const rueckK = typeof takt.rueckZoom === 'function' ? takt.rueckZoom(s, i) : zoomZiel(h, heim);
+          await fliegen([h.lon, h.lat], rueckK, { dauer: rueckMs, jeBild: e => { route.fortschritt = ziel + e; } });
           if (vorbei()) return ende();
           route.fortschritt = ziel + 1;
         }

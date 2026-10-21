@@ -325,10 +325,10 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 
 **Umsetzung** (Aufbau der Seite in 9.2):
 - Keine Szenenliste, keine Wiedergabe „Szene für Szene“, keine Leselinie, kein haftender Globus.
-- Am Globus eine Zeitleiste (6.8): die zehn Szenen in der Reihenfolge des Romans, das Jahr nur vor dem ersten Ort seines Jahres.
+- ~~Am Globus eine Zeitleiste (6.8)~~ **Entfallen** (Dominik, 21. Oktober abends: „direkt den Globus unter dem Aufhänger“), mit der Zeile zu den weiteren Schauplätzen. Die Szenen erreicht man über früher, später und abspielen, über die Orte auf der Kugel und mit der Tastatur über die Steuerzeile.
 - In Ruhe zeigt der Globus den ganzen Weg ohne Szenentext. Die Tafel zeigt dann „Von Buenos Aires bis Penang“ und die Zeile „Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.“
-- Ein Klick auf einen Ort der Zeitleiste oder auf einen Punkt des Globus wählt die Szene. Dann fliegt der Globus dorthin, und die Tafel zeigt Jahr, Ort, Koordinaten und den Text der Szene.
-- Der Einspieler zeigt nur Orte und Linien, nie Szenentext (Nachtrag 1, Punkt 5). Szenentext erscheint nur nach einem Klick oder wenn der Besucher selbst „Abspielen“ wählt.
+- Ein Klick auf einen Punkt des Globus wählt die Szene. Dann fliegt der Globus dorthin, und die Tafel zeigt Jahr, Ort, Koordinaten und den Text der Szene.
+- ~~Der Einspieler zeigt nur Orte und Linien, nie Szenentext (Nachtrag 1, Punkt 5).~~ Seit Runde 2 (K9) zeigen Einspieler und Abspielen an jeder Station den Szenentext, seit Runde 3 in rund einer Minute für alle zehn Szenen (7.2).
 - Die Szenentexte bleiben wie in A (V36, Text-Flagge 25 ist nur ein Vorschlag). Der London-Satz (V33), der Auftakt (V34) und die drei Absätze nach der Frage (V35) bleiben wörtlich.
 - Titel in Tinte, aufrecht. Überschriften ruhig (04). Figurennamen in Kapitälchen, Rolle in Tinte.
 - Ab 75 rem eine Doppelseite unter dem Globus: links der Lesetext, rechts Eckdaten und Figuren (9.2, Standardentscheidung 19).
@@ -722,7 +722,7 @@ Alle vier Globen haben dieselben drei Teile. Das hält die Seiten gleich und ver
 **Ortsleiste.** Die Orte der Ebene in ihrer Reihenfolge, als Knöpfe in einer fließenden Zeile, Grad klein, Tinte, durch Komma getrennt.
 
 - Startseite, Leben: „Dortmund bis 2014, Freiburg 2014, Potsdam 2015, Colombo 2016, Cotonou 2018, Kaohsiung 2018, Berlin seit 2022, Mallorca 2023“. Ort und Jahr bleiben zusammen.
-- *Satoshi*: siehe 6.8.
+- *Satoshi*: keine (6.8 ist entfallen).
 - *Ursprung*: „Göbekli Tepe um 8000 v. Chr., Uruk um 2700 v. Chr., Tyros und Jerusalem um 940 v. Chr.“ Jeder Ort ist ein Knopf.
 - Strich nach 07: ohne Strich in Ruhe, Strich beim Zeigen und auf Touchgeräten. Der gewählte Ort halbfett.
 - **Text:** Die Halbgeviertstriche der Stationenzeile von A werden Kommas (R11).
@@ -761,8 +761,21 @@ Jahreszahl und Ortsname stehen auf einer Grundlinie. Die Tafel meldet sich Vorle
 
 - Jede Ebene spielt beim ersten Zeigen ihren Einspieler einmal: auf der Startseite Leben beim ersten Sichtbarwerden, die anderen Ebenen beim ersten Wählen, auf *Satoshi* und *Ursprung* beim ersten Sichtbarwerden des Globus. Danach steht der ganze Weg der Ebene.
 - „Sichtbar“ heißt: mindestens 50 % der Kugel im Fenster. Sinkt der Anteil unter 20 % oder wird der Tab verborgen, hält der Einspieler an und läuft weiter, wenn die Kugel wieder zur Hälfte zu sehen ist.
-- Die Linie wächst während des Flugs von der einen Stadt zur nächsten. Am Ziel erscheinen Punkt und Name.
-- Die Ortsleiste hebt die jetzige Station halbfett hervor. Die Tafel geht mit, außer auf *Satoshi* (dort bleibt sie beim Einspieler in Ruhe).
+- Die Linie wächst während des Flugs von der einen Stadt zur nächsten. Erst wenn sie am Ziel ist, erscheinen Punkt und Name, und im selben Bild wechselt die Tafel (bis Runde 2 schon bei 55 % des Flugs). Auf dem Rückweg eines Abstechers bleibt die Tafel beim Abstecher.
+- Die Ortsleiste hebt die jetzige Station halbfett hervor. Die Tafel geht mit.
+- **Was die Tafel wann zeigt** (Runde 3, Dominik: „nicht jedes Mal kurz die Details zeigen“; `takt-empfehlung.md`, 3.1). Was von selbst läuft, zeigt nur Jahr und Ort. Was der Besucher selbst wählt, zeigt alles. *Satoshi* ist die Ausnahme, dort laufen die Szenentexte mit (K9), mit Halten, die zum Lesen reichen.
+
+  | Zustand | Leben | *Ursprung* | *Satoshi* | Reisen |
+  |---|---|---|---|---|
+  | bevor der Einspieler läuft | die erste Station, nur die Kopfzeile | die erste Station, nur die Kopfzeile | die erste Szene mit Text | Überblick |
+  | im Einspieler und beim Abspielen | Kopfzeile: Jahr, Zeichen, Ort, Land | Kopfzeile: Band, Ort, die Zeit klein dahinter („um 8000 v. Chr.“) | Jahr, Ort, (auf der Seite Koordinaten,) Szenentext | kein Ablauf |
+  | angehalten | die ganze Tafel der jetzigen Station | die ganze Tafel | wie im Ablauf | – |
+  | am Ende | Berlin mit „Wohnort“ | Jerusalem mit Landschaft und Zeile zum Band | nach dem Einspieler die Ruhetafel, nach dem Abspielen Penang | – |
+  | nach einem Schritt von Hand | ganze Tafel, sofort | ganze Tafel, sofort | ganze Tafel, sofort | Kontinent oder Land, bei Klick |
+  | reduzierte Bewegung | Endzustand | Endzustand | Ruhetafel | Überblick |
+
+- Die Tafel zeigt schon vor dem Einspieler seine erste Station, und jeder Ablauf von vorn setzt sie sofort. Zwischen der Wahl einer Ebene und der ersten Station steht keine Ruhetafel.
+- Kein Inhalt der Tafel steht im Ablauf kürzer als 1,5 s. Die Tafel ist nie leer. Ihre Höhe ist die ihres längsten Inhalts und ändert sich im Ablauf und an seinem Ende nicht; im Ablauf bleibt unter der Kopfzeile Platz frei.
 - Am Ende zeigt die Kugel den ganzen Weg im Überblick.
 - Jeder Griff an die Kugel, jede Wahl und auf *Ursprung* jeder Wechsel der Leselinie beendet den Einspieler. Dann steht der ganze Weg, und die Steuerzeile zeigt „Noch einmal von vorn“, auf *Satoshi* „Abspielen“ (6.4).
 - Bei reduzierter Bewegung gibt es keinen Einspieler. Der ganze Weg steht sofort, die Tafel zeigt den Endzustand.
@@ -783,6 +796,8 @@ Jahreszahl und Ortsname stehen auf einer Grundlinie. Die Tafel meldet sich Vorle
 Es gibt keine eigene Zeichenerklärung an den Globen. Das Zeichen vor dem Ort an der Tafel und das Wort darunter erklären die Karte. Die Ebene Reisen und die Seite Länder erklären das Grau mit dem Satz von A („Fünfundsechzig Länder und Gebiete, grau auf dem Globus.“). Das Grau ist mit #C4C7CC weiter ein Grau, der Satz bleibt wahr.
 
 ### 6.8 Die Zeitleiste von *Satoshi*
+
+**Entfallen** (Runde 3, Dominik am 21. Oktober abends: „Und bei Satoshi kann im Grunde das noch raus .... Also direkt den Globus unter dem Aufhänger“), mit der Zeile „Weitere Schauplätze: Temple City im San Gabriel Valley und die Anden an der Grenze zu Chile.“, ihren Knöpfen, ihrem CSS und ihrem Code. Temple City und die Anden bleiben als offene Kreise auf der Kugel (ab 2,4-fach) und lassen sich dort anklicken. Bis Runde 2 galt:
 
 - Eine fließende Zeile im Grad klein, in der linken Spalte unter dem Vorspann, auf dem Telefon über dem Globus.
 - Das Jahr steht nur vor dem ersten Ort seines Jahres, in Mediävalziffern mit fester Breite, als Teil der Gruppe. Orte innerhalb eines Jahres durch Komma getrennt, Gruppen durch 1 em Abstand:
@@ -898,10 +913,10 @@ Knöpfe sind `<button>` ohne Rahmen, Grund und Radius. Verweise sind `<a>`. Kein
 | Was | Wo | Wie lange | Warum |
 |---|---|---|---|
 | Einflug des ersten Satzes | Startseite | 1,0 s, bei jedem Laden | V13 |
-| Einspieler Leben | Startseite | rund 15 s | V22, M7 |
-| Einspieler *Satoshi* | Startseite (Ebene), *Satoshi* | rund 14 s, ohne Szenentext | M7, V32 |
-| Einspieler *Ursprung* | Startseite (Ebene), *Ursprung* | rund 15 s, langsamer je Ort | V23 |
-| Abspielen mit Szenentext | Startseite (Ebene), *Satoshi* | je Szene 3 bis 9 s Halt | Nachtrag 1, Punkt 5 |
+| Einspieler Leben | Startseite | rund 18 s, nur Jahr und Ort | V22, M7, Runde 3 |
+| Einspieler *Satoshi* | Startseite (Ebene), *Satoshi* | rund 60 s, mit Szenentext | M7, K9, Runde 3 |
+| Einspieler *Ursprung* | Startseite (Ebene), *Ursprung* | rund 14 s, langsamer je Ort, nur Band, Ort und Zeit | V23, Runde 3 |
+| Abspielen | alle drei Abläufe | wie der Einspieler; *Satoshi* rund 60 s, endet in Penang | Nachtrag 1, Punkt 5, K9 |
 | Flug nach Klick, früher, später | alle Globen | 1,0 s | V26 |
 | Leselinie führt den Globus | *Ursprung*, ab 62,0625 rem | Flug 1,0 s | E19, V10 |
 | Drehen und Zoomen | alle Globen | folgt der Hand | V26 |
@@ -910,12 +925,18 @@ Knöpfe sind `<button>` ohne Rahmen, Grund und Radius. Verweise sind `<a>`. Kein
 
 ### 7.2 Takt der Einspieler
 
-| Einspieler | Flug | Halt | Vergrößerung | Gesamt |
-|---|---|---|---|---|
-| Leben | 1,0 s je Station, Rückweg eines Abstechers 0,5 s ohne Halt | 0,6 s | Europa 3,6-fach, Colombo, Cotonou, Kaohsiung 2,4-fach, am Ende Überblick | rund 15 s |
-| *Satoshi* | 0,9 s | 0,4 s | fest 1,2-fach, die Kugel dreht nur, am Ende Überblick | rund 14 s |
-| *Ursprung* | 1,6 s | 2,0 s | fest 3,3-fach (Blick von A auf die Region) | rund 15 s |
-| Abspielen *Satoshi* | 1,0 s | 1,5 s plus 0,3 s je Wort des Szenentexts, mindestens 3 s, höchstens 9 s | 2,4-fach, Europa 3,6-fach | je nach Text |
+Stand Runde 3 (21. Oktober abends, `takt-empfehlung.md`; Werte in `FSeite.TAKT`):
+
+| Einspieler | Flug | Halt | Vergrößerung | Tafel steht je Station | Gesamt |
+|---|---|---|---|---|---|
+| Leben | 1,0 s je Station, Rückweg eines Abstechers 0,8 s ohne Halt, mit der Vergrößerung des Abstechers | 0,8 s | Europa 3,6-fach, Colombo, Cotonou, Kaohsiung 2,4-fach, am Ende Überblick | 1,8 s, Abstecher 2,6 s | rund 18 s |
+| *Satoshi* | 0,9 s | 1 s plus 0,3 s je Wort des Szenentexts, mindestens 3 s, höchstens 9 s (zusammen 50 s) | fest 1,2-fach, die Kugel dreht nur, am Ende Überblick | 3,9 bis 9,1 s | rund 60 s |
+| *Ursprung* | 1,6 s | 1,4 s | fest 3,3-fach (Blick von A auf die Region) | 3,0 s | rund 14 s |
+| Abspielen *Satoshi* | 1,0 s | wie im Einspieler | 2,4-fach, Europa 3,6-fach | 4,0 bis 9,2 s | rund 60 s, endet in Penang |
+| Abspielen Leben, *Ursprung* | wie der Einspieler | | | | |
+
+- Vor dem ersten Flug 0,6 s nach dem ersten Bild der Kugel. Der erste Flug ist nur die Fahrt zur ersten Station, ohne Linie; ihre Tafel steht schon da.
+- Bis Runde 2: Leben Halt 0,6 s und Rückweg 0,5 s mit der Vergrößerung des Wohnorts (rund 16 s); *Satoshi* 3 s plus 0,6 s je Wort, 6 bis 18 s (rund 118 s); *Ursprung* Halt 2,0 s (rund 16 s).
 
 Easing der Flüge: `d3.easeCubicInOut`. Kein Nachfedern, keine Trägheit.
 
@@ -1009,7 +1030,7 @@ Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font"
 
 ### 9.2 *Satoshi* (`satoshi.html`)
 
-**Desktop ab 62,0625 rem.** Globusband wie auf der Startseite: links Kopf, `h1` „Satoshi“ (groß, aufrecht), Unterzeile (Grad Text), der Vorspann „Am 31. Oktober 2008 …“ (Grad Überschrift, Zeilenhöhe 1,25 z), darunter die Zeitleiste (6.8) mit dem Satz zu den weiteren Schauplätzen. Rechts die Kugel, angeschnitten, nicht haftend, darunter die Tafel mit Steuerzeile. 2 z unter dem Ende des Globusbands beginnt der Klappentext.
+**Desktop ab 62,0625 rem.** Globusband wie auf der Startseite: links Kopf, `h1` „Satoshi“ (groß, aufrecht), Unterzeile (Grad Text), der Vorspann „Am 31. Oktober 2008 …“ (Grad Überschrift, Zeilenhöhe 1,25 z); die Zeitleiste darunter ist entfallen (6.8). Rechts die Kugel, angeschnitten, nicht haftend, neben Titel und Vorspann, darunter die Steuerzeile und die Tafel. Die Kugel bemisst sich an der längsten Tafel, damit auch der längste Szenentext bei 1440 × 900 ganz im Bild steht. 2 z unter dem Ende des Globusbands beginnt der Klappentext.
 
 **Ab 75 rem** ist der Teil darunter eine Doppelseite:
 
@@ -1025,7 +1046,7 @@ Beide Spalten beginnen auf einer Höhe. Die Kapiteltage stehen als Register in d
 
 **Zwischen 62 und 75 rem** eine Spalte in der Reihenfolge von A: Klappentext, Eckdaten, Gebaut wie ein Protokoll, Die Figuren, Die Frage hinter dem Roman, Wie er gemacht ist.
 
-**Telefon.** `h1`, Unterzeile, Vorspann, Zeitleiste, Kugel, Tafel, dann direkt der Klappentext und die übrigen Abschnitte in der Reihenfolge von A.
+**Telefon.** `h1`, Unterzeile, Vorspann, Kugel, Tafel, dann direkt der Klappentext und die übrigen Abschnitte in der Reihenfolge von A. Die Tafel hält vom Laden an die Höhe der längsten Szene, auch in Ruhe, damit der Klappentext nie springt.
 
 Figuren: `h3` mit dem Namen in Kapitälchen, Komma, die Rolle im Grad Text, darunter ¼ z der Text. Zwischen Figuren ¾ z.
 

@@ -530,9 +530,10 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     F.tafel(tafelEl, reisenInhalt(land, kontinentGewaehlt));
   }
 
-  /* Breit bemisst sich die Kugel an Steuerzeile und Tafel des Lebens (FSeite.tafelPlatz): so ist sie in jeder Ebene gleich groß, und
-     Kugel, Steuerzeile und Tafel stehen im ersten Bildschirm. Die Tafel hält die Höhe des längsten Inhalts aller Ebenen, auch der
-     Szenentexte von Satoshi, die der Einspieler jetzt von selbst zeigt: so springt weder beim Wechsel der Ebene noch im Ablauf etwas.
+  /* Breit hält die Tafel die Höhe des längsten Inhalts aller Ebenen, auch der Szenentexte von Satoshi, die der Einspieler von selbst
+     zeigt, und die Kugel bemisst sich an ihr (FSeite.tafelPlatz): so ist sie in jeder Ebene gleich groß, Kugel, Steuerzeile und die
+     längste Tafel stehen ganz im ersten Bildschirm, und weder beim Wechsel der Ebene noch im Ablauf springt etwas (vorher bemaß sich
+     die Kugel an der Tafel des Lebens, und bei 1440 × 900 lag ein Szenentext zum größten Teil unter dem Rand).
      Einspaltig steht der Text der Ebene unter der Tafel: sie hält dort die Höhe des längsten Inhalts der jetzigen Ebene, auch der
      Szenentexte, damit die Wörter darunter beim Durchklicken nicht unter dem Finger wandern. */
   const lebenAlle = () => LEBEN.map((s, i) => lebenInhalt(i));
@@ -540,7 +541,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   const satoshiAlle = mitText => [satoshiInhalt(-1)].concat(mitText ? SZENEN.map((s, i) => satoshiInhalt(i, true)) : []);
   const ursprungAlle = () => [-1, 0, 1, 2, 3].map(ursprungTafel);
   function tafelHoehe() {
-    if (F.breit()) F.tafelPlatz(tafelEl, lebenAlle().concat(reisenAlle(), satoshiAlle(true), ursprungAlle()), lebenAlle());
+    if (F.breit()) F.tafelPlatz(tafelEl, lebenAlle().concat(reisenAlle(), satoshiAlle(true), ursprungAlle()));
     else {
       F.tafelPlatz(tafelEl, []);
       const je = { leben: lebenAlle, reisen: reisenAlle, satoshi: () => satoshiAlle(true), ursprung: ursprungAlle };
@@ -549,12 +550,16 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
 
   // ================= Abläufe =================
-  F.tafel(tafelEl, lebenInhalt(0));
+  /* Was von selbst läuft (Einspieler, Abspielen), zeigt auf Leben und Ursprung nur die Kopfzeile: Jahr, Zeichen und Ort, bei Ursprung
+     Band, Ort und Zeit. Die ganze Tafel (Art und Vermerk, die Zeile zum Band) kommt am Ende, beim Anhalten und nach einem Schritt von
+     Hand. Satoshi zeigt im Ablauf den Szenentext, mit einem Halt, der zum Lesen reicht (docs/takt-empfehlung.md, 3.1) */
+  const lebenTafel = (i, info) => F.imLauf(info) ? F.nurKopf(lebenInhalt(i)) : lebenInhalt(i);
+  F.tafel(tafelEl, F.nurKopf(lebenInhalt(0)));
   if (g) { blickBerechnen(); g.ebene(EBENEN.leben, { fliegen: false }); }
 
   A.leben = F.ablauf({
     globus: g, stationen: LEBEN, tafel: tafelEl, takt: F.TAKT.leben, endeBei: HEUTE,
-    beiStation: i => { if (i >= 0) F.tafel(tafelEl, lebenInhalt(i)); namenNeu(); }
+    beiStation: (i, info) => { if (i >= 0) F.tafel(tafelEl, lebenTafel(i, info)); namenNeu(); }
   });
   const satoshiWorte = i => $$('[data-satoshi]').forEach(b => b.setAttribute('aria-pressed', String(i >= 0 && b.dataset.satoshi === SZENEN[i].name)));
   A.satoshi = F.ablauf({
@@ -566,7 +571,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   });
   A.ursprung = F.ablauf({
     globus: g, stationen: URSPRUNG, tafel: tafelEl, ortsleiste: $('#ursprung-text'), takt: F.TAKT.ursprung, aktiv: false,
-    beiStation: i => { F.tafel(tafelEl, ursprungTafel(i)); namenNeu(); }
+    beiStation: (i, info) => { F.tafel(tafelEl, i >= 0 && F.imLauf(info) ? F.ursprungInhalt(i, true) : ursprungTafel(i)); namenNeu(); }
   });
 
   // Ein Ort im Text der Ebene Satoshi: die erste Szene dort, beim nächsten Klick die spätere
@@ -586,9 +591,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', String(b.hasAttribute('data-ueberblick'))));
     if (g) g.auswahl(null);
     const a = A[name];
-    // Die Tafel zeigt sofort, wovon die Ebene handelt; ein Einspieler setzt sie dann Station für Station
-    if (name === 'satoshi') F.tafel(tafelEl, satoshiInhalt(-1));
-    if (name === 'ursprung') F.tafel(tafelEl, ursprungTafel(-1));
+    /* Die Tafel setzt der Ablauf der Ebene (a.zeigen): beim ersten Mal sofort die erste Station seines Einspielers, sonst den Stand
+       von zuletzt. Vorher stand hier kurz die Ruhetafel („Satoshi, Roman“, „I–III Ursprung“) und wechselte nach 0,6 bis 0,9 s */
     tafelHoehe();
     if (g) g.ebene(EBENEN[name]);
     if (a) a.zeigen();

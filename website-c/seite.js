@@ -29,12 +29,13 @@
      blickFuer(canvas, orte, bereich)  Mitte [lon, lat], bei der alle Orte im sichtbaren Teil des Globus stehen
      ueberblick(canvas, orte, k)    { mitte, k } für den Schluss eines Einspielers
      tafel(el, inhalt), tafelReservieren(el, inhalte), tafelPlatz(el, inhalte, platz)
+     imLauf(info), nurKopf(inhalt)  läuft gerade ein Ablauf (beiStation); die Tafel nur mit ihrer Kopfzeile
      steuerzeile(tafelEl)           die Steuerzeile eines Globus, direkt unter der Kugel über der Tafel (früher, später, Steuerwort)
      ortsleiste(el, eintraege)      Orte als Knöpfe in einer fließenden Zeile, durch Komma getrennt
      ablauf(opts)                   Einspieler und Bedienung eines Globus (siehe dort); TAKT: die Takte aus Abschnitt 7.2
      stationen(), stationInhalt(s)  Lebensstationen aus INHALT.leben; ihre Tafel
      szenen()                       die Szenen von Satoshi mit Ort und Koordinaten
-     ursprungOrte(), ursprungInhalt(i)   die vier Orte der Trilogie; Tafel für einen Ort (-1: die ganze Trilogie)
+     ursprungOrte(), ursprungInhalt(i, kopfzeile)   die vier Orte der Trilogie; Tafel für einen Ort (-1: die ganze Trilogie)
      buchzeile(el, o)               die Buchzeile unter einem Brett: zeigen, schliessen, umschalten (Escape schließt)
      buch.alle(), buch.satz(b, { person }), buch.zeile(b), buch.karte(b), buch.nachname(a), buch.titelKurz(t), buch.ordnung
      buch.farbe(b), buch.familie(b), buch.DE_VERLAG   Rückenfarbe { grund, tinte, dunkel } aus den Verlagsfamilien (4.2)
@@ -572,8 +573,17 @@
     el.classList.toggle('ist-eigen', !!t.eigen);
     const zeile = (cls, v) => v ? `<p class="${cls}">${teil(v)}</p>` : '';
     const kopf = t.kopf ? `<p class="tafel-kopf">${t.zeichen ? zeichen(t.zeichen) : ''}${teil(t.kopf)}${t.zusatz ? ` <span class="zusatz">${teil(t.zusatz)}</span>` : ''}</p>` : '';
-    el.innerHTML = `<p class="tafel-marke">${teil(t.marke)}</p><div class="tafel-inhalt">${kopf}${zeile('tafel-unter', t.unter)}${zeile('tafel-daten', t.daten)}${zeile('tafel-satz', t.satz)}${zeile('tafel-text', t.text)}${typeof t.fuss === 'string' && t.fuss ? `<p class="tafel-fuss">${t.fuss}</p>` : ''}</div>`;
+    const html = `<p class="tafel-marke">${teil(t.marke)}</p><div class="tafel-inhalt">${kopf}${zeile('tafel-unter', t.unter)}${zeile('tafel-daten', t.daten)}${zeile('tafel-satz', t.satz)}${zeile('tafel-text', t.text)}${typeof t.fuss === 'string' && t.fuss ? `<p class="tafel-fuss">${t.fuss}</p>` : ''}</div>`;
+    // Derselbe Inhalt noch einmal (ein Ablauf meldet seine erste Station beim Start und bei der Ankunft): nichts neu setzen
+    if (el._tafelHtml === html && el.firstChild) return;
+    el.innerHTML = html;
+    el._tafelHtml = html;
   }
+  /* Im Ablauf (Einspieler, Abspielen) zeigen Leben und Ursprung nur die Kopfzeile: Marke, Zeichen, Ort, ein Zusatz. Art, Vermerk,
+     Koordinaten und Text kommen erst am Ende, beim Anhalten oder nach einem Schritt von Hand (Dominik, 21. Oktober abends:
+     „nicht jedes Mal kurz die Details zeigen“; docs/takt-empfehlung.md, 3.1) */
+  const imLauf = info => !!info && (info.quelle === 'einspieler' || info.quelle === 'abspielen');
+  const nurKopf = t => ({ zeichen: t.zeichen, marke: t.marke, kopf: t.kopf, zusatz: t.zusatz, neben: t.neben, eigen: t.eigen });
   // Hält die Höhe der Tafel fest: so hoch wie ihr längster Inhalt bei der jetzigen Breite, damit darunter nichts springt
   function tafelHoeheVon(el, inhalte) {
     if (!el || !el.parentNode || !el.clientWidth) return 0;
@@ -659,12 +669,15 @@
   // Die vier Orte der Reihe nach: Göbekli Tepe, Uruk, Tyros, Jerusalem
   const ursprungOrte = () => (inhalt().ursprung || []).map((o, i) => ({ i, name: o.name, lat: o.lat, lon: o.lon, band: o.band, jahr: o.jahr }));
   /* Tafel für einen Ort der Trilogie (Startseite und Seite der Trilogie gleich): die Bandziffer als Marke, der Ort als Kopf,
-     darunter Landschaft und Zeit, die Koordinaten und die Zeile zum Band (INHALT.baende, V40). -1 ist die ganze Trilogie. */
-  function ursprungInhalt(i) {
+     darunter Landschaft und Zeit, die Koordinaten und die Zeile zum Band (INHALT.baende, V40). -1 ist die ganze Trilogie.
+     kopfzeile: true gibt nur die Kopfzeile für den Ablauf: Band, Ort und die Zeit klein dahinter („I Göbekli Tepe um 8000 v. Chr.“) */
+  function ursprungInhalt(i, kopfzeile) {
     const I = inhalt(), orte = ursprungOrte(), band = {};
     ((I.trilogie && I.trilogie.baende) || []).forEach(b => { band[b.band] = b; });
     const o = orte[i];
     if (!o) return { eigen: true, marke: 'I–III', kopf: (I.trilogie && I.trilogie.titel) || 'Ursprung', satz: chr('Drei Bände, um 8000, 2700 und 940 v. Chr.') };
+    // Streng true: als Rückruf von map() käme der Index als zweites Argument
+    if (kopfzeile === true) return { eigen: true, marke: o.band, kopf: o.name, zusatz: chr(o.jahr || '') };
     const b = band[o.band] || {};
     const m = String((I.baende || {})[o.band] || '').match(/^(.*?v\. Chr\.)\s+(.+)$/);
     const landschaft = m ? m[1] : [b.ort, b.zeit].filter(Boolean).join(', ');
@@ -678,23 +691,31 @@
   // Die Takte der Einspieler; zoom und halt als Zahl oder als Funktion (station, i)
   const europa = s => s.lon > -25 && s.lon < 45 && s.lat > 34;
   const woerter = s => String(s.text || '').trim().split(/\s+/).filter(Boolean).length;
-  /* Satoshi (Dominik, 21. Oktober): Einspieler und Abspielen laufen langsamer, mit doppelt so langen Halten wie vorher beim
-     Abspielen, und beide zeigen an jeder Station den Szenentext. Der Halt ist die Lesezeit: 3 s plus 0,6 s je Wort, mindestens 6 s,
-     höchstens 18 s (vorher 1,5 s plus 0,3 s je Wort, 3 bis 9 s; der Einspieler hielt 0,4 s ohne Text) */
-  const satoshiHalt = s => Math.max(6000, Math.min(18000, 3000 + 600 * woerter(s)));
+  /* Satoshi: Einspieler und Abspielen zeigen an jeder Station den Szenentext (Dominik, 21. Oktober). Der Halt ist die Lesezeit:
+     1 s plus 0,3 s je Wort, mindestens 3 s, höchstens 9 s; die zehn Halte dauern zusammen 50 s, der Einspieler rund 60 s
+     (Dominik, 21. Oktober abends: „etwa eine Minute insgesamt“; vorher 3 s plus 0,6 s je Wort, 6 bis 18 s, rund 118 s).
+     Mit dem folgenden Flug steht jeder Text 3,9 bis 9,1 s, 117 bis 158 Wörter je Minute (docs/takt-empfehlung.md, 3.2) */
+  const satoshiHalt = s => Math.max(3000, Math.min(9000, 1000 + 300 * woerter(s)));
+  const lebenZoom = s => europa(s) ? 3.6 : 2.4;
+  /* Leben: jeder Ort steht 1,8 s (Halt und Flug zum nächsten), ein Abstecher 2,6 s; der Rückweg so lang wie ein Flug und mit der
+     Vergrößerung des Abstechers, damit die Kugel nicht zwischen 3,6- und 2,4-fach hin und her zoomt. Ursprung: 3,0 s je Ort */
   const TAKT = {
-    leben: { flug: 1000, halt: 600, rueckweg: 500, zoom: s => europa(s) ? 3.6 : 2.4 },
+    leben: { flug: 1000, halt: 800, rueckweg: 800, zoom: lebenZoom, rueckZoom: s => lebenZoom(s) },
     satoshi: { flug: 900, halt: satoshiHalt, rueckweg: 450, zoom: 1.2 },
-    satoshiAbspielen: { flug: 1000, halt: satoshiHalt, zoom: s => europa(s) ? 3.6 : 2.4 },
-    ursprung: { flug: 1600, halt: 2000, zoom: 3.3, schlussK: 3.3, schlussBereich: { lon: [32, 48], lat: [26, 40], schritt: .25 } },
+    satoshiAbspielen: { flug: 1000, halt: satoshiHalt, zoom: lebenZoom },
+    ursprung: { flug: 1600, halt: 1400, zoom: 3.3, schlussK: 3.3, schlussBereich: { lon: [32, 48], lat: [26, 40], schritt: .25 } },
     europa
   };
   const STEUERWORT = { laeuft: 'anhalten', weiter: 'abspielen', ende: 'noch einmal von vorn' };
 
   /* Ein Ablauf verbindet Globus, Ortsleiste, Tafel und Steuerzeile einer Ebene, auf allen vier Globen gleich (6.4, 6.5).
      Beim ersten Sichtbarwerden läuft der Einspieler einmal: die Linie wandert von Stadt zu Stadt, Punkte und Namen erscheinen mit
-     ihr, die Ortsleiste und die Tafel gehen mit (auf Satoshi mit dem Szenentext). Danach steuert man selbst. Jeder Griff an die Kugel beendet
-     den Einspieler, dann steht der ganze Weg. Bei reduzierter Bewegung gibt es keinen Einspieler und kein Steuerwort.
+     ihr, wenn sie am Ziel ist, die Ortsleiste und die Tafel gehen mit (auf Satoshi mit dem Szenentext). Danach steuert man selbst.
+     Jeder Griff an die Kugel beendet den Einspieler, dann steht der ganze Weg. Bei reduzierter Bewegung gibt es keinen Einspieler und
+     kein Steuerwort.
+     Die Tafel zeigt schon vor dem Einspieler die erste Station, und jeder Ablauf von vorn meldet sie sofort: zwischen Wahl und erster
+     Station blitzt keine Ruhetafel auf. Beim Anhalten meldet er die jetzige Station noch einmal (quelle 'angehalten'), damit die
+     Seite die ganze Tafel zeigt.
 
      const a = FSeite.ablauf({
        globus: g,                    // FSeite.globus(…); ohne Globus gehen Ortsleiste, Tafel und früher/später trotzdem
@@ -707,7 +728,8 @@
        ortsleiste: el | [el, …],     // Elemente mit Knöpfen [data-station]; ein Klick wählt die Station
        sichtbar: el,                 // der Einspieler beginnt, wenn el zur Hälfte im Bild ist (Vorgabe: die Fläche des Globus)
        beiStation(i, info),          // die Seite setzt die Tafel; i = -1 heißt: keine Station (Satoshi in Ruhe).
-                                     // info: { quelle: 'einspieler' | 'abspielen' | 'hand' | 'ende' | 'ruhe' | 'wieder', zustand, station }
+                                     // info: { quelle: 'einspieler' | 'abspielen' | 'hand' | 'ende' | 'ruhe' | 'wieder' | 'angehalten',
+                                     // zustand, station }; FSeite.imLauf(info): die Tafel nur mit der Kopfzeile (FSeite.nurKopf)
        tafelImEinspieler: true,      // false: beiStation kommt während des Einspielers nicht
        ruhe: 'ende' | 'ruhe',        // nach dem Einspieler: 'ende' (die Tafel zeigt endeBei) oder 'ruhe' (nichts gewählt, Satoshi)
        endeBei: n - 1,               // die Station, die die Tafel am Ende zeigt (Leben: Berlin)
@@ -798,8 +820,11 @@
       const ende = st[endeBei()];
       t.ab = ab; t.orte = modus;
       t.endeAktiv = o.ruhe === 'ruhe' && neuArt === 'einspieler' ? null : ende ? ende.name : null;
-      t.beiStation = (s, i) => { if (nr === lauf) melden(i, neuArt); };
+      // Steht die Station schon auf der Tafel (die erste eines Ablaufs von vorn), bleibt die Tafel bei der Ankunft, wie sie ist
+      t.beiStation = (s, i) => { if (nr === lauf && i !== jetzt) melden(i, neuArt); };
       if (tafelEl && neuArt === 'einspieler') tafelEl.setAttribute('aria-live', 'off');
+      // Von vorn: die erste Station steht sofort auf der Tafel, der erste Flug ist nur die Fahrt dorthin (ohne Linie)
+      if (!ab && jetzt !== 0) melden(0, neuArt);
       const r = await g.chronik(st, t);
       if (nr !== lauf || !aktiv) return;
       if (r === 'fertig') amEnde(neuArt);
@@ -818,8 +843,11 @@
         if (g && g.chronikLaeuft()) g.chronikStoppen();
         zustand = 'angehalten'; weiterAb = jetzt + 1;
         steuerZeigen();
+        angehaltenMelden();
       }
     }
+    // Angehalten (von Hand oder mit einem Griff): die jetzige Station mit der ganzen Tafel, sie bleibt jetzt stehen
+    function angehaltenMelden() { if (jetzt >= 0 && liste()[jetzt]) melden(jetzt, 'angehalten'); }
     function anhalten() {
       if (!laeuft()) return;
       lauf++;
@@ -827,11 +855,12 @@
       if (systemPause) systemPause = false;
       else {
         const stand = g ? g.chronikAnhalten() : null;
-        weiterAb = stand ? (stand.unterwegs != null ? stand.unterwegs : stand.bei + 1) : jetzt + 1;
+        // Ohne laufende Chronik wartet der Einspieler noch auf seinen ersten Flug: weiter ab der ersten Station
+        weiterAb = stand ? (stand.unterwegs != null ? stand.unterwegs : stand.bei + 1) : zustand === 'einspieler' ? 0 : jetzt + 1;
       }
-      if (zustand === 'einspieler' && jetzt < 0) weiterAb = 0;
       zustand = 'angehalten';
       steuerZeigen();
+      angehaltenMelden();
     }
     function abspielen() {
       const n = liste().length;
@@ -909,6 +938,8 @@
       }
       g.nurOrte([]);
       g.routeZeigen(st, -1);
+      // Die Tafel zeigt schon vor dem Einspieler seine erste Station, wie er sie zeigen wird (keine Ruhetafel, die gleich wechselt)
+      melden(0, 'einspieler');
       if (!imBildGenug()) { wartetAufSicht = true; steuerZeigen(); return; }
       einspielenJetzt();
     }
@@ -1652,7 +1683,7 @@
     zahlwort, gross, tausender, grad, koord, entfernungKm, km, jahrText, chr, jahrMarke,
     schriften, schriftEinstieg, satzzeichenBinden, gleichBreit, zeichen,
     FARBEN, SIENA, SIENA_EBENE, globus, blickFuer, ueberblick,
-    tafel, tafelReservieren, tafelPlatz, steuerzeile, ortsleiste, ablauf, TAKT,
+    tafel, tafelReservieren, tafelPlatz, imLauf, nurKopf, steuerzeile, ortsleiste, ablauf, TAKT,
     stationen, stationInhalt, szenen, ursprungOrte, ursprungInhalt,
     karteikarte, buch, werkKarte, werkSatz, buchzeile, texte, navigation, fuss, PROFILE,
     leselinie, fortschritt, imBild

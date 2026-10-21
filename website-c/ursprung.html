@@ -169,9 +169,11 @@ html:not(.js) .globusseite > .globus { display: none; }
   // ================= Tafel =================
   const tafelEl = $('#tafel');
   let leise = false, a = null;
-  // Neu setzen; die Steuerzeile steht über der Tafel und bleibt dabei, wie sie ist (auch ihr Fokus)
-  const tafelSetzen = i => F.tafel(tafelEl, F.ursprungInhalt(i));
-  tafelSetzen(-1);
+  /* Neu setzen; die Steuerzeile steht über der Tafel und bleibt dabei, wie sie ist (auch ihr Fokus). Im Ablauf (Einspieler,
+     Abspielen) nur die Kopfzeile: Band, Ort und Zeit; Landschaft, Koordinaten und die Zeile zum Band kommen am Ende, beim Anhalten
+     und nach einer Wahl (docs/takt-empfehlung.md, 3.1). Vor dem Einspieler steht schon sein erster Ort da, nicht die Ruhetafel */
+  const tafelSetzen = (i, info) => F.tafel(tafelEl, i >= 0 && F.imLauf(info) ? F.ursprungInhalt(i, true) : F.ursprungInhalt(i));
+  tafelSetzen(0, { quelle: 'einspieler' });
 
   // ================= Globus =================
   const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
@@ -190,11 +192,11 @@ html:not(.js) .globusseite > .globus { display: none; }
   const START = { mitte: [40, 30], k: 1 };
   function ueberblick() { return g ? F.ueberblick(canvas, ST, F.TAKT.ursprung.schlussK, F.TAKT.ursprung.schlussBereich) : null; }
 
-  /* Breit: die Tafel hält die Höhe ihres längsten Inhalts, die Steuerzeile steht unten darin, und die Kugel bekommt, was übrig
-     bleibt (--tafel-h). Einspaltig steht die Steuerzeile direkt unter der Kugel, und die Tafel wächst nach unten */
+  /* Die Tafel hält die Höhe ihres längsten Inhalts. Breit bekommt die Kugel, was darüber übrig bleibt (--tafel-h). Einspaltig steht
+     die Steuerzeile direkt unter der Kugel; die Tafel wächst nicht mehr mit ihrem Text (vorher), denn im Ablauf zeigt sie erst nur
+     die Kopfzeile und am Ende die ganze Tafel: die Bände darunter sprängen sonst am Ende des Einspielers */
   function tafelHoehe() {
-    if (F.breit()) F.tafelPlatz(tafelEl, [-1, 0, 1, 2, 3].map(F.ursprungInhalt));
-    else { F.tafelPlatz(tafelEl, []); tafelEl.style.minHeight = ''; }
+    F.tafelPlatz(tafelEl, [-1, 0, 1, 2, 3].map(i => F.ursprungInhalt(i)));
   }
 
   // ================= Ablauf =================
@@ -205,7 +207,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     beiStation(i, info) {
       // Was die Leselinie wählt, sagt die Tafel nicht an
       if (leise) tafelEl.setAttribute('aria-live', 'off');
-      tafelSetzen(i);
+      tafelSetzen(i, info);
       if (info.quelle === 'ende') nachEnde = true;
       neuSetzen();
     }

@@ -405,11 +405,11 @@ html:not(.js) .post { display: none; }
   .briefkopf .name { font-size: var(--g-text); }
 }
 /* Finger: Bedienwörter 44 px hoch, ohne dass die Zeile wächst (die Fläche reicht so weit über und unter die Zeile, wie zu 44 px
-   fehlt). Ortsleisten und die weiteren Schauplätze stehen dafür etwas weiter auseinander (1,25 z statt ¾ z): so überdecken die
-   Flächen benachbarter Zeilen einander kaum, und ein Tipp trifft das Wort, auf das er zielt */
+   fehlt). Ortsleisten stehen dafür etwas weiter auseinander (1,25 z statt ¾ z): so überdecken die Flächen benachbarter Zeilen
+   einander kaum, und ein Tipp trifft das Wort, auf das er zielt */
 @media (pointer: coarse) {
   button.wort { padding-block: 12px; margin-block: -12px; padding-block: max(0px, calc((2.75rem - 1lh) / 2)); margin-block: min(0px, calc((1lh - 2.75rem) / 2)); }
-  .ortsleiste, .weitere { line-height: var(--zh-ueber); }
+  .ortsleiste { line-height: var(--zh-ueber); }
   /* Fuß und Name: 44 px Trefferfläche; ein Verweis im Satz wächst nur in seiner Fläche, nicht in der Zeile */
   .fuss .impressum { line-height: var(--z); }
   .fuss a { padding-block: 8px; padding-block: max(0px, calc((2.75rem - 1lh) / 2)); }

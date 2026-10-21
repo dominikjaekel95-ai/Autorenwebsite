@@ -1,0 +1,1428 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dominik Jäkel</title>
+<meta name="description" content="Dominik Jäkel, Schriftsteller und Reisender. Der Roman Satoshi, die Ursprungstrilogie, Erzählungen, das Journal Untertext und Länderguides.">
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&family=IM+Fell+French+Canon&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Startseite: oben die Globusseite mit der Tafel unter dem Globus,
+   darunter, was ich schreibe (das Regalbild und das Werkverzeichnis) und was ich gelesen habe (das Zeitband). */
+
+/* ---------- Einstieg: der erste Satz der Vita ---------- */
+/* Die einzige zweite Schrift der Website, nur für diesen Satz: IM Fell French Canon, Igino Marinis Nachschnitt der Fell-Typen
+   aus Oxford, ein Grad, der im 17. Jahrhundert eigens für große Zeilen geschnitten wurde. Sie ist alt-holländisch wie die Vollkorn
+   und trägt noch den Abdruck von Blei und Tinte; dadurch steht der Satz gedruckt auf dem Papierweiß, nicht als Überschrift darüber. */
+.einstieg { margin-top: var(--z); min-height: calc(var(--z) * 3.75); font-size: 1.625em; line-height: calc(var(--z) * 1.25); }
+/* So breit wie die Vita: 31 em der Grundschrift (var(--mass) gälte hier in der größeren Schrift) */
+.globusseite > .einstieg { max-width: calc(31 * 1.1875rem); }
+.einstieg.gesetzt .glied-satz, .einstieg .fremd, .einstieg .paar { white-space: nowrap; }
+.einstieg-satz { display: inline; }
+.einstieg-satz .w { display: inline-block; }
+/* Die Vorlesekopie zählt beim Markieren und Kopieren nicht mit; kopiert wird der sichtbare Satz */
+.einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
+/* Bis die Schriften da sind, steht der Platz leer; läuft das Skript nicht weiter, erscheint der Satz nach drei Sekunden von selbst */
+.einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 3.2s forwards; }
+@keyframes einstieg-notfall { to { opacity: 1; } }
+.einstieg + script + .vita, .einstieg + .vita { margin-top: calc(var(--z) * .5); }
+
+/* ---------- Globusseite ---------- */
+.vita { margin-top: var(--z); }
+.ebenen { margin-top: var(--z); color: var(--grau-1); }
+.ebenen .wort { color: var(--grau-1); }
+.ebenen .wort[aria-pressed="true"] { color: var(--schwarz); }
+.ebenentext { margin-top: var(--z); }
+.ebenentext > div > p + p { margin-top: calc(var(--z) * .5); }
+/* Kolophon der Stationen nach Joyce, die Nebenorte kleiner und heller */
+.kolophon { font-style: italic; font-size: .9375em; line-height: 1.65; color: var(--grau-2); }
+.kolophon .station { white-space: nowrap; color: var(--grau-2); text-decoration-color: color-mix(in srgb, currentColor 30%, transparent); }
+.kolophon .station.neben { color: var(--grau-neben); font-size: .86em; }
+.kolophon .station.ist-aktiv { color: var(--schwarz); text-decoration-line: none; }
+.kolophon .strich { color: var(--grau-3); }
+.nochmal { font-size: .9375em; color: var(--grau-2); }
+.nochmal.still { visibility: hidden; }
+/* Ursprung: die Bände erscheinen langsam mit dem Globus, die Bandnummer hängt in Siena */
+.band { padding-left: 2.1em; text-indent: -2.1em; opacity: 0; visibility: hidden; transition: opacity 1.6s ease, visibility 0s linear 1.6s; }
+.band.da { opacity: 1; visibility: visible; transition: opacity 1.6s ease; }
+.band .band-nr { display: inline-block; width: 2.1em; text-indent: 0; }
+.ebenentext .band + .band { margin-top: calc(var(--z) * .25); }
+
+/* ---------- Was ich schreibe ---------- */
+.schreiben-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); align-items: start; }
+/* Breit: links das Werkverzeichnis auf der Achse der Vita, rechts das Bild an der linken Kante des Globus */
+.schreiben-raster .verzeichnis { grid-column: 1; grid-row: 1; }
+.schreiben-raster .regalbild { grid-column: 2; grid-row: 1; margin-left: max(calc(var(--z) * 1.5), calc(var(--globuskante) - var(--rand-l) - var(--spalte))); margin-top: calc(var(--z) * .25); }
+/* Das Regalbild: eigene Bände mit feiner Siena-Linie, quer liegende Bücher vom Nachttisch, das Brett wie in der Bibliothek */
+.regalbild { margin: 0; }
+.regalbild-flaeche { position: relative; }
+.regalbild-flaeche .stueck { position: absolute; bottom: 0; display: block; margin: 0; padding: 0; border: .75px solid #6E7075; border-radius: 0; background: var(--papier); color: var(--graphit); font: inherit; cursor: pointer; overflow: hidden; transition: transform .2s ease; transform: rotate(var(--neig, 0deg)) translate(var(--hx, 0), var(--hy, 0)); -webkit-tap-highlight-color: transparent; }
+.stueck.eigen { background: #F8F4EC; border-color: color-mix(in srgb, var(--siena) 78%, transparent); transform-origin: 100% 100%; }
+/* zwei feine Bünde in Siena, wie auf einem Rücken */
+.stueck.eigen::before, .stueck.eigen::after { content: ""; position: absolute; left: 0; right: 0; height: 2.5px; border-top: .75px solid color-mix(in srgb, var(--siena) 70%, transparent); border-bottom: .75px solid color-mix(in srgb, var(--siena) 70%, transparent); pointer-events: none; }
+.stueck.eigen::before { top: 7%; }
+.stueck.eigen::after { bottom: 6%; }
+.stueck.eigen span { position: absolute; left: 50%; top: 50%; white-space: nowrap; font-family: var(--sc); line-height: 1; letter-spacing: .05em; color: var(--graphit); transform: translate(-50%, -50%) rotate(-90deg); pointer-events: none; }
+.stueck.liegt.h { background: #F3F1EB; }
+.stueck.liegt span { display: block; position: absolute; left: 7px; right: 7px; top: 50%; transform: translateY(-50%); white-space: nowrap; overflow: hidden; line-height: 1.05; text-align: left; color: var(--graphit); pointer-events: none; }
+.stueck.liegt span b { font-weight: 400; font-family: var(--sc); letter-spacing: .04em; }
+.stueck.eigen:hover, .stueck.eigen:focus-visible, .stueck.eigen.ist-offen { --hy: -6px; }
+.stueck.liegt:hover, .stueck.liegt:focus-visible, .stueck.liegt.ist-offen { --hx: 6px; }
+.stueck:focus-visible { outline-offset: 2px; z-index: 1; }
+/* Eintrag und Rücken gehören zusammen: zeigt man auf einen Eintrag im Werkverzeichnis oder kommt über einen Anker dorthin (index.html#satoshi), hebt sich sein Band */
+.stueck.eigen.ist-gemeint, .stueck.eigen.ist-ziel { --hy: -6px; }
+.brett { height: 7px; background: var(--brett); border-top: 1px solid var(--brettkante); }
+.regalbild figcaption { margin-top: calc(var(--z) * .5); font-style: italic; font-size: .9375em; color: var(--grau-2); max-width: 30em; }
+
+/* Werkverzeichnis: ein Absatz je Werk, Gruppen mit einer Zeile Abstand, ohne Linien */
+.verzeichnis { margin-top: calc(var(--z) * 2); }
+.schreiben-raster .verzeichnis { margin-top: 0; }
+.gruppe + .gruppe { margin-top: var(--z); }
+.eintrag + .eintrag { margin-top: calc(var(--z) * .5); }
+.eintrag { scroll-margin-top: var(--z); }
+.eintrag-titel { color: var(--schwarz); }
+
+/* ---------- Was ich gelesen habe: das Zeitband ---------- */
+.gelesen-vorwort { max-width: var(--mass); }
+.zeitband { margin-top: calc(var(--z) * 1.5); position: relative; }
+.zeitband-roll { position: relative; }
+.zb { display: block; overflow: visible; }
+.zb:focus { outline: none; }
+.zb:focus-visible { outline: 1.5px solid var(--graphit); outline-offset: 6px; }
+.zb rect { shape-rendering: geometricPrecision; }
+.zb .grau { fill: #BDBBB5; }
+.zb .lieb { fill: var(--graphit); }
+.zb .ab { fill: #D3D1CB; }
+.zb .wieder { stroke: var(--graphit); stroke-width: 1; }
+/* Eigene Werke am Ende: offene Striche mit Siena-Kante */
+.zb .werk { fill: var(--papier); stroke: var(--siena); stroke-width: 1.1; }
+/* Was gerade gelesen wird, liegt quer darauf: Papier mit feiner Kante */
+.zb .quer { fill: var(--karton); stroke: #55575C; stroke-width: .75; }
+.zb .haar { stroke: var(--grau-3); stroke-width: .75; }
+.zb .bruch { stroke: var(--grau-1); stroke-width: .9; fill: none; }
+.zb .jahr { font-family: var(--schrift); font-style: italic; font-size: 13px; fill: var(--grau-2); font-variant-numeric: oldstyle-nums; }
+.zb .marke { stroke: var(--schwarz); stroke-width: 1.4; }
+.zb-kind rect { fill: #AFADA7; }
+.zb-warte rect { fill: var(--papier); stroke: #97958F; stroke-width: .65; }
+.zb rect.an, .zb rect.ist-offen { fill: var(--schwarz); }
+.zb .werk.an, .zb .werk.ist-offen { fill: color-mix(in srgb, var(--siena) 30%, var(--papier)); }
+.zb .quer.an, .zb .quer.ist-offen { fill: #E4E1D9; stroke: var(--schwarz); }
+.zb-warte rect.an, .zb-warte rect.ist-offen { fill: var(--schwarz); stroke: var(--schwarz); }
+.bandzeile { min-height: var(--z); margin-top: calc(var(--z) * .25); white-space: nowrap; font-size: .9375em; }
+/* Die Zeile wird mit left unter den Strich gerückt, nicht mit einem Rand: so bricht sie nach der Breite des Fensters um, nicht nach dem Rest */
+.bandzeile span { display: inline-block; position: relative; }
+.bandname { margin-top: var(--z); font-style: italic; color: var(--grau-2); font-size: .9375em; position: sticky; left: 0; width: max-content; max-width: 100%; }
+.zb-kind, .zb-warte { margin-top: calc(var(--z) * .25); }
+.ganze { margin-top: calc(var(--z) * 1.5); max-width: var(--mass); }
+.ganze a { font-size: 1.0625em; }
+
+@media (max-width: 62rem) {
+  .einstieg { font-size: 1.5em; }
+  .globusseite > .einstieg { max-width: calc(31 * 1.125rem); }
+  .ebenen { scroll-margin-top: 12px; }
+  .schreiben-raster { grid-template-columns: minmax(0, var(--mass)); }
+  .schreiben-raster .regalbild { grid-column: 1; grid-row: 1; margin: 0; }
+  .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 2; margin-top: calc(var(--z) * 2); }
+}
+@media (max-width: 40rem) {
+  .einstieg { font-size: 1.4em; }
+  .zeitband-roll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; padding-bottom: .5rem; margin: 0 calc(var(--rand-l) * -1); padding-left: var(--rand-l); padding-right: var(--rand-l); scroll-padding: 0 var(--rand-l); }
+  /* Die Zeile unter dem Band bleibt im sichtbaren Teil (das Skript rückt sie nach) und bricht lange Titel in zwei Zeilen um;
+     sie hält Platz für beide, damit darunter nichts springt */
+  .bandzeile { white-space: normal; min-height: calc(var(--z) * 2); }
+  .bandzeile + .bandname { margin-top: calc(var(--z) * .5); }
+  .bandzeile span { max-width: calc(100vw - 2 * var(--rand-l)); text-wrap: balance; hyphens: manual; }
+  .stueck.liegt span { left: 4px; right: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .band, .band.da, .stueck { transition: none !important; }
+}
+</style>
+</head>
+<body class="mit-globus">
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="kopf">
+  <h1 class="briefkopf"><a class="name" href="index.html" aria-current="page">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></h1>
+  <nav class="nav" aria-label="Website">
+    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
+    <ul class="nav-liste" id="nav-liste">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inhalt">
+<section class="globusseite" aria-label="Vita und Globus">
+  <!-- Der erste Satz der Vita als Einstieg, in drei Gliedern; das Skript gleich darunter setzt ihn und spielt ihn einmal ab -->
+  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt tagsüber</span> <span class="glied-satz fremd">unter fremden Namen</span> <span class="glied-satz eigen">und abends unter seinem eigenen.</span></p>
+  <script>
+  /* Einstieg: der Satz fliegt einmal ein, sobald die Schriften da sind; danach steht er still. Bei reduzierter Bewegung steht er
+     sofort da. Vorgelesen wird der Satz einmal als Ganzes (die Kopie in .unsichtbar); die Wortkästen sind aria-hidden.
+     Bewegt werden nur transform, opacity und ein Filter: der Satz behält von Anfang an seinen Platz.
+     window.FEinstieg.fertig löst auf, wenn der Satz steht; erst danach beginnt die Chronik auf dem Globus. */
+  (function () {
+    'use strict';
+    var el = document.getElementById('einstieg');
+    if (!el || !el.querySelector('.glied-satz')) return;
+    var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+
+    // Satz in Wörter zerlegen; die Leerzeichen bleiben echte Leerzeichen, damit Markieren und Kopieren den Satz ergeben
+    var text = el.textContent.replace(/\s+/g, ' ').trim();
+    var satz = document.createElement('span');
+    satz.className = 'einstieg-satz';
+    satz.setAttribute('aria-hidden', 'true');
+    while (el.firstChild) satz.appendChild(el.firstChild);
+    var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
+    // Was nie getrennt wird, auch wenn der Satz frei bricht: der Name und „seinem eigenen.“ (dazu „unter fremden Namen“ als Ganzes)
+    var PAARE = ['Dominik Jäkel', 'seinem eigenen.'];
+    glieder.forEach(function (g) {
+      var woerter = g.textContent.trim().split(/\s+/);
+      g.textContent = '';
+      var paar = null;
+      woerter.forEach(function (w, i) {
+        var s = document.createElement('span');
+        s.className = 'w';
+        s.textContent = w;
+        var beginnt = PAARE.some(function (p) { return p.split(' ')[0] === w && p.split(' ')[1] === woerter[i + 1]; });
+        if (beginnt) {
+          if (i) g.appendChild(document.createTextNode(' '));
+          paar = document.createElement('span');
+          paar.className = 'paar';
+          paar.appendChild(s);
+          g.appendChild(paar);
+          return;
+        }
+        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); paar = null; return; }
+        if (i) g.appendChild(document.createTextNode(' '));
+        g.appendChild(s);
+      });
+    });
+    var vorlesen = document.createElement('span');
+    vorlesen.className = 'unsichtbar einstieg-vorlesen';
+    vorlesen.textContent = text;
+    el.appendChild(vorlesen);
+    el.appendChild(satz);
+    var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
+
+    /* Zeilen nach dem Sinn: jedes Glied eine Zeile. Passt das längste nicht in die Spalte, wird die Schrift kleiner,
+       bis hinab zum 1,15-Fachen der Grundschrift (so passen die drei Glieder noch bei 360 px Breite); reicht auch das nicht
+       (unter etwa 350 px), bricht der Satz in voller Größe frei und ausgeglichen. */
+    function setzen() {
+      el.style.fontSize = '';
+      el.classList.add('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var laengste = 0;
+      glieder.forEach(function (g) { laengste = Math.max(laengste, g.getBoundingClientRect().width); });
+      if (laengste <= breite) return;
+      var jetzt = parseFloat(getComputedStyle(el).fontSize);
+      var kleiner = Math.floor(jetzt * breite / laengste * 10) / 10 - .2;
+      var grund = parseFloat(getComputedStyle(el.parentNode).fontSize) || 18;
+      if (kleiner >= grund * 1.15) el.style.fontSize = kleiner + 'px';
+      else el.classList.remove('gesetzt');
+    }
+
+    // Warten auf die Anzeigeschrift und die Vollkorn (die Zeilen darüber dürfen sich nicht mehr verschieben), höchstens 2,5 s
+    function schriften() {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve();
+      var laden = Promise.all(['31px "IM Fell French Canon"', '19px "Vollkorn"', '19px "Vollkorn SC"'].map(function (f) { return document.fonts.load(f); }));
+      return Promise.race([laden, new Promise(function (r) { setTimeout(r, 2500); })]).catch(function () {});
+    }
+
+    var lauf = 0, bild = 0;
+    function zuruecksetzen() {
+      lauf++;
+      cancelAnimationFrame(bild);
+      woerter.forEach(function (w) {
+        if (w.getAnimations) w.getAnimations().forEach(function (a) { a.cancel(); });
+        w.style.filter = '';
+      });
+    }
+
+    // Je Wort ein Filter für die waagrechte Bewegungsunschärfe
+    var FLUG = [];
+    function filterAnlegen() {
+      if (document.getElementById('einstieg-filter')) return;
+      var ns = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.id = 'einstieg-filter';
+      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+      var html = '';
+      for (var j = 0; j < woerter.length; j++) {
+        html += '<filter id="einstieg-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+      }
+      svg.innerHTML = html;
+      document.body.appendChild(svg);
+      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('einstieg-flug-' + m).querySelector('feGaussianBlur'));
+    }
+
+    /* Einfliegend: Wort für Wort, wie Lettern, die der Setzer im Winkelhaken von rechts an die Zeile schiebt.
+       Kurzer Weg (0,3 em), keine Drehung, kein Nachfedern. Die Unschärfe ist eine waagrechte Bewegungsunschärfe der Buchstaben
+       selbst (kein Schatten), die beim Ankommen vergeht.
+       Zwischen den Gliedern eine Pause, wie beim Lesen: tagsüber … unter fremden Namen … und abends unter seinem eigenen. */
+    function einfliegen() {
+      if (!woerter[0].animate) return Promise.resolve();
+      filterAnlegen();
+      var em = parseFloat(getComputedStyle(el).fontSize) || 31;
+      var t = 0, laeufe = [], nr = lauf;
+      glieder.forEach(function (g, gi) {
+        if (gi) t += 230;
+        Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
+          if (wi) t += 80;
+          laeufe.push(w.animate([
+            { opacity: 0, transform: 'translateX(.3em)' },
+            { opacity: 1, offset: .38 },
+            { opacity: 1, transform: 'translateX(0)' }
+          ], { duration: 640, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+        });
+      });
+      // Die Unschärfe folgt dem Fortschritt jedes Worts; vor dem Start (unsichtbar) und nach der Landung ohne Filter
+      (function schritt() {
+        if (nr !== lauf) return;
+        var offen = false;
+        laeufe.forEach(function (a, i) {
+          var w = woerter[i], ct = a.effect.getComputedTiming();
+          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
+          offen = true;
+          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
+          var s = Math.pow(1 - ct.progress, 1.6) * .08 * em;
+          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
+          w.style.filter = s > .06 ? 'url(#einstieg-flug-' + i + ')' : '';
+        });
+        if (offen) bild = requestAnimationFrame(schritt);
+      })();
+      return Promise.all(laeufe.map(function (a) { return a.finished; })).catch(function () {});
+    }
+
+    // Einmal spielen; bei reduzierter Bewegung gleich der Endzustand
+    function spielen() {
+      zuruecksetzen();
+      setzen();
+      el.classList.remove('wartet');
+      if (still()) return Promise.resolve();
+      return einfliegen();
+    }
+    // Bei reduzierter Bewegung steht der Satz sofort da; sonst bleibt sein Platz leer, bis die Schriften geladen sind
+    if (still()) setzen();
+    else el.classList.add('wartet');
+    var fertig = schriften().then(spielen);
+
+    var warte = 0, breiteVorher = window.innerWidth;
+    window.addEventListener('resize', function () {
+      clearTimeout(warte);
+      warte = setTimeout(function () {
+        if (window.innerWidth === breiteVorher) return;
+        breiteVorher = window.innerWidth;
+        setzen();
+      }, 140);
+    });
+    window.FEinstieg = { fertig: fertig, spielen: spielen };
+  })();
+  </script>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des Autorenforums Berlin. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. <span class="leise">Ausführlich in der <a href="vita.html">Vita</a>.</span></p>
+
+  <p class="ebenen">Auf dem Globus: <button type="button" class="wort" data-ebene="leben" aria-pressed="true">wo ich gelebt habe</button>, <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">wohin ich gereist bin</button>, <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false">wo <i>Satoshi</i> spielt</button>, <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false">wo die Ursprungstrilogie spielt</button>.</p>
+
+  <!-- Der Text der Ebene steht vor dem Globus: breit links neben ihm, auf dem Telefon über ihm, damit man tippt und darunter Globus und Tafel sieht -->
+  <div class="ebenentext">
+    <div data-text="leben">
+      <p class="kolophon" id="kolophon"></p>
+      <p class="nochmal still" id="nochmal-leben"><button type="button" class="wort" data-nochmal="leben">Noch einmal von Dortmund an</button></p>
+    </div>
+    <div data-text="reisen" hidden>
+      <p>Die meisten Länder liegen in <button type="button" class="wort" data-kontinent="Europa">Europa</button>, viele in <button type="button" class="wort" data-kontinent="Asien">Asien</button>, einige in <button type="button" class="wort" data-kontinent="Afrika">Afrika</button>, wenige in <button type="button" class="wort" data-kontinent="Amerika">Amerika</button>.</p>
+      <p class="weiter">Die <a href="laender.html">Länderguides</a> sind in Arbeit.</p>
+    </div>
+    <div data-text="satoshi" hidden id="satoshi-text"></div>
+    <div data-text="ursprung" hidden id="ursprung-text"></div>
+  </div>
+
+  <figure class="globus" id="globus">
+    <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Orten aus dem Text; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
+    <div class="tipp" hidden></div>
+    <p class="hinweis" hidden></p>
+    <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text und auf der Tafel, mit ihren Koordinaten.</p>
+    <div class="tafel" id="tafel" aria-live="polite"></div>
+  </figure>
+</section>
+
+<section class="abschnitt" id="schreiben" aria-labelledby="schreiben-titel">
+  <h2 class="titel" id="schreiben-titel">Was ich schreibe</h2>
+  <div class="schreiben-raster">
+    <figure class="regalbild" id="regalbild">
+      <div class="regalbild-flaeche" id="regalbild-flaeche" role="group" aria-label="Eigene Bücher und der Stapel vom Nachttisch"></div>
+      <div class="brett"></div>
+      <figcaption>Was ich schreibe, und daneben, was gerade auf dem Nachttisch liegt.</figcaption>
+    </figure>
+
+    <!-- Werkverzeichnis: ein, zwei Zeilen je Werk, der Titel führt zur Seite des Werks -->
+    <div class="verzeichnis">
+      <div class="gruppe">
+        <p class="eintrag" id="satoshi"><a class="eintrag-titel" href="satoshi.html"><i>Satoshi</i></a>. Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor; gerade entsteht die Endfassung.</p>
+        <p class="eintrag" id="ursprung"><a class="eintrag-titel" href="ursprung.html"><i>Ursprung</i></a>. Drei Romane über die Anfänge der Zivilisation, in Arbeit; begonnen in Kaohsiung.</p>
+      </div>
+      <div class="gruppe">
+        <p class="eintrag" id="erzaehlungen"><a class="eintrag-titel" href="erzaehlungen.html">Erzählungen</a>. Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.</p>
+        <p class="eintrag" id="untertext"><a class="eintrag-titel" href="untertext.html"><i>Untertext</i></a>. Mein Journal.</p>
+      </div>
+      <div class="gruppe">
+        <p class="eintrag" id="laender"><a class="eintrag-titel" href="laender.html">Länder</a>. Länderguides, in Arbeit. Auf&nbsp;dem&nbsp;Globus: <button type="button" class="wort" data-zeige="reisen">wohin ich gereist bin</button>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="abschnitt" id="gelesen" aria-labelledby="gelesen-titel">
+  <h2 class="titel" id="gelesen-titel">Was ich gelesen habe</h2>
+  <p class="gelesen-vorwort">Von Gilgamesch bis Labatut, geordnet nach dem Jahr, in dem ein Buch zuerst erschien; jeder Strich so breit wie sein Rücken. Dunkel stehen die liebsten; halb so hoch, was ich nicht zu Ende gelesen habe; ein kleiner Strich darüber, wenn ich es wieder gelesen habe. Quer darauf liegt, was ich gerade lese; ganz rechts steht, woran ich selbst schreibe. Eine Auswahl, längst nicht alles.</p>
+  <div class="zeitband" id="zeitband">
+    <div class="zeitband-roll" id="zeitband-roll"></div>
+  </div>
+  <p class="ganze"><a href="bibliothek.html">Die ganze Bibliothek</a>, jedes Buch mit seinem Rücken im Regal.</p>
+</section>
+</main>
+
+<footer class="fuss" id="kontakt">
+  <section class="kontakt" aria-labelledby="kontakt-titel">
+    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <form class="post">
+      <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
+      <p class="post-status" role="status"></p>
+    </form>
+    <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="profile" hidden></p>
+  </section>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="globus/kern.js"></script>
+<script src="daten/inhalt.js"></script>
+<script src="daten/buecher.js"></script>
+<script src="daten/leseliste.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+  const { $, $$, esc } = F;
+  const ruhig = F.ruhig();
+  const zeit = ms => new Promise(r => setTimeout(r, ms));
+  const knopf = (text, attr, aus) => `<button type="button" class="wort" ${attr}${aus ? ' disabled' : ''}>${text}</button>`;
+
+  // ================= Inhalte =================
+  const stationen = F.stationen();
+  const AUSGANG = stationen[0];
+  const ursprung = (I.ursprung || []).map(o => ({ name: o.name, lat: o.lat, lon: o.lon, band: o.band, jahr: o.jahr, volk: o.volk }));
+  const BAND = {};
+  ((I.trilogie && I.trilogie.baende) || []).forEach(b => { BAND[b.band] = b; });
+  const SAT = I.satoshi || {};
+  const szenen = SAT.szenen || [];
+  // Auf der Startseite die Schauplätze, an denen eine Szene spielt, in der Reihenfolge des Romans
+  const satoshiOrte = [];
+  szenen.forEach(s => { const o = (SAT.orte || []).find(x => x.name === s.ort); if (o && !satoshiOrte.includes(o)) satoshiOrte.push(o); });
+  const satoshiOrt = name => satoshiOrte.find(o => o.name === name);
+
+  const BLICK = {
+    leben: { mitte: [62, 30], k: 1 },      // wird aus dem sichtbaren Teil der Leinwand berechnet
+    reisen: { mitte: [52, 30], k: 1 },
+    satoshi: { mitte: [-48, 18], k: 1 },
+    ursprung: { mitte: [40.6, 33.8], k: 3.3 }
+  };
+  // Vor dem ersten Lauf steht der Globus leer; die Orte kommen mit der Chronik
+  const lebenOrte = [];
+  const LEBEN_ORTE = stationen.map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: s.neben, rang: s.neben ? 2 : 1 }));
+  const lebenOrteFuellen = () => { if (!lebenOrte.length) lebenOrte.push(...LEBEN_ORTE); };
+  const EBENEN = {
+    leben: { orte: lebenOrte, laender: false, blick: BLICK.leben },
+    reisen: { orte: [], laender: true, blick: BLICK.reisen },
+    satoshi: { orte: satoshiOrte.map(o => ({ name: o.name, lat: o.lat, lon: o.lon })), laender: false, blick: BLICK.satoshi, farben: F.SIENA_EBENE },
+    ursprung: { orte: ursprung.map(o => ({ name: o.name, lat: o.lat, lon: o.lon })), laender: false, blick: BLICK.ursprung, farben: F.SIENA_EBENE }
+  };
+  // Zoom nie zwischen 1 und 1,15: dort zeichnet der Kern die Kugel größer als die Leinwand, ohne den runden Zuschnitt
+  const KONTINENTE = { Europa: [[13, 50], 3.3], Asien: [[94, 26], 1.75], Afrika: [[16, 4], 1.9], Amerika: [[-80, 12], 1.25] };
+
+  // Kolophon nach Joyce: Station – Station – …, Nebenorte leiser. Station und folgender Strich bleiben zusammen
+  $('#kolophon').innerHTML = stationen.map((s, i) =>
+    `<span class="glied"><button type="button" class="wort station${s.neben ? ' neben' : ''}" data-station="${i}">${esc(s.name)} ${esc(s.jahr)}</button>${i < stationen.length - 1 ? '<span class="strich"> –</span>' : ''}</span>`
+  ).join(' ');
+
+  // Satoshi: zwei Sätze, die Schauplätze als Wörter, die den Globus dorthin drehen
+  (function () {
+    const wort = o => {
+      const name = `<button type="button" class="wort" data-satoshi="${esc(o.name)}">${esc(o.kurz || o.name)}</button>`;
+      if (o.name === 'Black Rock Desert') return 'die ' + name + ' in Nevada';
+      if (o.notiz === 'Patagonien') return name + ' in Patagonien';
+      return name;
+    };
+    const w = satoshiOrte.map(wort);
+    // Der Titel selbst führt zur Seite des Romans
+    $('#satoshi-text').innerHTML =
+      `<p><a class="werk" href="${F.SEITEN.satoshi}">Satoshi</a> erzählt die Gründungslegende von Bitcoin. Der Roman beginnt 2001 in Buenos Aires; die Kernhandlung spielt 2007 bis 2010.</p>` +
+      `<p>Die Schauplätze in der Reihenfolge des Romans: ${w.slice(0, -1).join(', ')} und ${w[w.length - 1]}.</p>`;
+  })();
+
+  // Ursprung: drei Bände, die Ortsnamen darin drehen den Globus dorthin; worum es geht, sagt die Tafel
+  (function () {
+    const zeile = b => {
+      const orte = ursprung.map((o, i) => ({ o, i })).filter(x => x.o.band === b);
+      const namen = orte.map(x => `<button type="button" class="wort" data-ursprung="${x.i}">${esc(x.o.name)}</button>`);
+      return `<p class="band" data-band="${b}"><span class="band-nr">${b}</span><i>${esc((BAND[b] || {}).titel || '')}</i>, ${namen.join(' und ')}</p>`;
+    };
+    $('#ursprung-text').innerHTML =
+      `<p>Die drei Bände der <a href="${F.SEITEN.ursprung}">Ursprungstrilogie</a>:</p>` +
+      ['I', 'II', 'III'].map(zeile).join('') +
+      `<p class="nochmal still" id="nochmal-ursprung"><button type="button" class="wort" data-nochmal="ursprung">Noch einmal von Göbekli Tepe an</button></p>`;
+  })();
+  $$('.ebenen, .ebenentext, .verzeichnis').forEach(F.satzzeichenBinden);
+
+  // ================= Tafel =================
+  const tafelEl = $('#tafel');
+  const tafelLaut = an => tafelEl.setAttribute('aria-live', an ? 'polite' : 'off');
+  // Leben: 0 ist das Ende der Chronik (und die Tafel ohne Globus), danach die Stationen.
+  // Am Ende steht kein Zahlenfeld, sondern der Ort, an dem er heute lebt: der letzte Wohnort
+  function lebenUeberblick() {
+    const heute = stationen.filter(s => !s.neben).pop();
+    return { marke: F.jahrMarke('seit ' + heute.jahr), kopf: heute.name, unter: 'Wohnort', daten: F.koord(heute.lat, heute.lon), satz: 'Hier lebt er heute.' };
+  }
+  let lebenP = 0;
+  function lebenInhalt(p) {
+    const t = p === 0 ? lebenUeberblick() : F.stationInhalt(stationen[p - 1], AUSGANG);
+    // Heute steht am Ende: später führt von der letzten Station dorthin, früher von dort zur letzten Station zurück
+    t.fuss = knopf('früher', 'data-schritt="-1"', p === 1) + knopf('später', 'data-schritt="1"');
+    return t;
+  }
+  function lebenTafel(p) { lebenP = p; F.tafel(tafelEl, lebenInhalt(p)); }
+
+  // Reisen: die Zahl, ein Kontinent oder das Land unter dem Zeiger
+  const bereist = I.bereist || [];
+  let landHover = null, landGewaehlt = null, kontinentGewaehlt = null;
+  function reisenInhalt(land, kontinent) {
+    if (land) {
+      const ist = bereist.includes(land.iso);
+      const p = land.punkt || (I.winzig && I.winzig[land.iso]);
+      return { kopf: land.name, unter: ist ? 'bereist' : 'nicht bereist', daten: p ? F.koord(p[1], p[0]) : '' };
+    }
+    // Keine große Zahl als Kachel: der Kontinent als Ort, die Zahl ausgeschrieben im Satz
+    if (kontinent) return { kopf: kontinent, satz: F.gross(F.zahlwort((I.kontinente[kontinent] || []).length)) + ' Länder und Gebiete, grau auf dem Globus.' };
+    return { kopf: 'Wohin ich gereist bin', satz: F.gross(F.zahlwort(bereist.length)) + ' Länder und Gebiete, grau auf dem Globus.' };
+  }
+  let reisenZuletzt = '';
+  function reisenTafel() {
+    const land = landHover || landGewaehlt;
+    const schluessel = (land ? land.iso : '') + '|' + (kontinentGewaehlt || '');
+    if (schluessel === reisenZuletzt) return;
+    reisenZuletzt = schluessel;
+    F.tafel(tafelEl, reisenInhalt(land, kontinentGewaehlt));
+  }
+
+  // Satoshi: 0 ist der Roman, danach die Szenen in der Reihenfolge des Romans
+  let satoshiP = 0;
+  function satoshiInhalt(p) {
+    const fuss = knopf('früher', 'data-szene="-1"', p === 0) + knopf('später', 'data-szene="1"');
+    if (p === 0) return { kopf: 'Satoshi', unter: 'Roman', text: SAT.hook || '', fuss };
+    const s = szenen[p - 1], o = satoshiOrt(s.ort) || {};
+    return { marke: s.jahr, kopf: (o.kurz || s.ort) + (o.notiz ? ', ' + o.notiz : ''), daten: o.lat != null ? F.koord(o.lat, o.lon) : '', text: s.text, fuss };
+  }
+  function satoshiTafel(p) { satoshiP = p; F.tafel(tafelEl, satoshiInhalt(p)); }
+
+  // Ursprung: dieselbe Tafel wie auf der Seite der Trilogie (FSeite.ursprungInhalt); -1 ist die ganze Trilogie
+  const ursprungInhalt = F.ursprungInhalt;
+  function ursprungTafel(i) { F.tafel(tafelEl, ursprungInhalt(i)); }
+
+  // Die Tafel bekommt die Höhe des längsten Inhalts ihrer Ebene, damit darunter nichts springt, solange die Ebene gilt.
+  // Breit lässt der Globus unter sich Platz für die Tafel des Lebens (FSeite.tafelPlatz), der Ebene beim Laden: Globus und Tafel passen
+  // zusammen auf einen Schirm, auch wo die Tafel schmal ist; der Globus behält diese Größe in allen Ebenen.
+  // Einspaltig steht unter der Tafel nur noch der nächste Abschnitt: dort hält sie nur für die Chronik ihre Höhe, sonst so hoch wie ihr Inhalt
+  const lebenAlle = () => { const a = []; for (let p = 0; p <= stationen.length; p++) a.push(lebenInhalt(p)); return a; };
+  function tafelHoehe() {
+    F.tafelPlatz(tafelEl, lebenAlle());
+    if (!F.breit() && ebeneJetzt !== 'leben') { tafelEl.style.minHeight = '0px'; return; }
+    const alle = [];
+    if (ebeneJetzt === 'leben') alle.push(...lebenAlle());
+    if (ebeneJetzt === 'satoshi') for (let p = 0; p <= szenen.length; p++) alle.push(satoshiInhalt(p));
+    if (ebeneJetzt === 'ursprung') for (let i = -1; i < ursprung.length; i++) alle.push(ursprungInhalt(i));
+    if (ebeneJetzt === 'reisen') alle.push(reisenInhalt(null, null), reisenInhalt(null, 'Europa'), reisenInhalt({ iso: 'XX', name: 'Demokratische Republik Kongo', punkt: [20, -3] }, null));
+    F.tafelReservieren(tafelEl, alle);
+  }
+
+  // ================= Globus =================
+  const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas'), tipp = $('.tipp', figur);
+  let ebeneJetzt = 'leben', laufend = null, begonnen = false;
+  // Stand für die Beschriftung: welche Orte schon zu sehen sind, wie weit die Spur reicht, welcher Ort gewählt ist
+  let sichtbarBis = null, spurBis = -1, aktivName = null;
+
+  function namenOrte() {
+    let liste = [];
+    if (ebeneJetzt === 'leben') liste = lebenOrte.map(o => ({ name: o.name, lat: o.lat, lon: o.lon, neben: !!o.neben }));
+    else if (ebeneJetzt === 'satoshi') liste = EBENEN.satoshi.orte;
+    else if (ebeneJetzt === 'ursprung') liste = EBENEN.ursprung.orte;
+    return sichtbarBis === null ? liste : liste.slice(0, sichtbarBis + 1);
+  }
+  function namenSpur() {
+    const st = ebeneJetzt === 'leben' ? stationen : ebeneJetzt === 'ursprung' ? ursprung : [];
+    return st.slice(0, spurBis + 1);
+  }
+
+  const g = F.globus({
+    canvas, flaeche, tipp, hinweis: $('.hinweis', figur),
+    tippText: land => { if (ebeneJetzt === 'reisen' && landHover !== land) { landHover = land; reisenTafel(); } return land.name; },
+    beimEingriff: () => eingriff(),
+    beiChronikEnde: grund => chronikEnde(grund),
+    namen: { orte: namenOrte, spur: namenSpur, aktiv: () => aktivName }
+  });
+  const neuSetzen = () => { if (g) g.namenNeu(); };
+  if (!g) {
+    figur.classList.add('ohne-globus');
+    $('#ersatz').hidden = false;
+  }
+
+  // Der Überblick über das Leben: alle acht Orte im sichtbaren Teil der Leinwand, keiner am Rand
+  function lebenBlickBerechnen() {
+    const m = F.blickFuer(canvas, stationen, { lon: [20, 100], lat: [5, 50] });
+    if (m) BLICK.leben.mitte = m;
+    const u = F.blickFuer(canvas, ursprung, { lon: [32, 48], lat: [26, 40], k: BLICK.ursprung.k, schritt: .25 });
+    if (u) BLICK.ursprung.mitte = u;
+    BLICK.reisen.mitte = F.breit() ? [52, 30] : [40, 28];
+  }
+  if (g) {
+    lebenBlickBerechnen();
+    g.ebene(EBENEN.leben, { fliegen: false });
+  }
+
+  // Wer den Globus anfasst, bevor die Chronik lief, bekommt sofort alle Orte und die ganze Spur.
+  // Wer ihn mitten in einer Chronik anfasst (Leben oder Ursprung), ebenso: der Kern ließe sonst ein halbes Wegstück stehen, während schon alle Namen stehen
+  let abgebrochen = null;
+  function eingriff() {
+    if (!begonnen) {
+      begonnen = true;
+      if (ebeneJetzt === 'leben' && g) { lebenOrteFuellen(); g.routeZeigen(stationen); spurBis = stationen.length - 1; nochmal('leben', true); lebenTafel(0); }
+    } else if (g && abgebrochen === 'leben' && ebeneJetzt === 'leben') {
+      g.routeZeigen(stationen); spurBis = stationen.length - 1;
+    } else if (g && abgebrochen === 'ursprung' && ebeneJetzt === 'ursprung') {
+      g.routeZeigen(ursprung); spurBis = ursprung.length - 1;
+    }
+    abgebrochen = null;
+    neuSetzen();
+  }
+  function chronikEnde(grund) {
+    const war = laufend;
+    laufend = null;
+    abgebrochen = grund === 'abgebrochen' ? war : null;
+    if (war === 'leben') lebenFertig(grund);
+    else if (war === 'ursprung') ursprungFertig(grund);
+  }
+  // Die Chronik von der Seite aus anhalten (Ebenenwechsel, Station, Neustart): das ist kein Eingriff am Globus
+  function anhalten() { if (g) g.chronikStoppen(); abgebrochen = null; }
+  function nochmal(welche, zeigen) { const el = $('#nochmal-' + welche); if (el) el.classList.toggle('still', !zeigen || !g); }
+  function aktivSetzen(gruppe, el) { $$(gruppe).forEach(b => b.classList.toggle('ist-aktiv', b === el)); }
+  function stationMarkieren(i) {
+    $$('.station').forEach((b, j) => { b.classList.toggle('ist-aktiv', j === i); if (j === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+  }
+
+  function ebeneWaehlen(name, einst) {
+    einst = einst || {};
+    begonnen = true;
+    anhalten();
+    laufend = null;
+    ursprungNr++;
+    ebeneJetzt = name;
+    $$('[data-ebene]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ebene === name)));
+    $$('[data-text]').forEach(t => { t.hidden = t.dataset.text !== name; });
+    $$('[data-kontinent], [data-satoshi], [data-ursprung]').forEach(b => b.classList.remove('ist-aktiv'));
+    if (g) g.sperren(name === 'satoshi' || name === 'ursprung');
+    aktivName = null; sichtbarBis = null; spurBis = -1;
+    landHover = null; landGewaehlt = null; kontinentGewaehlt = null; reisenZuletzt = null;
+    stationMarkieren(null);
+    tafelLaut(true);
+    tafelHoehe();
+    if (name === 'leben') lebenTafel(0);
+    else if (name === 'reisen') reisenTafel();
+    else if (name === 'satoshi') satoshiTafel(0);
+    neuSetzen();
+    if (name === 'ursprung') { ursprungStarten(); return; }
+    if (!g) return;
+    if (name === 'leben') lebenOrteFuellen();
+    g.ebene(EBENEN[name], { fliegen: einst.fliegen !== false });
+    if (name === 'leben') { g.routeZeigen(stationen); spurBis = stationen.length - 1; nochmal('leben', true); }
+  }
+
+  // Leben: springt von Station zu Station, die Spur bleibt stehen, die Tafel folgt
+  function lebenStarten() {
+    begonnen = true;
+    if (ebeneJetzt !== 'leben') ebeneWaehlen('leben', { fliegen: false });
+    if (!g) return;
+    lebenOrteFuellen();
+    anhalten();
+    laufend = 'leben';
+    nochmal('leben', false);
+    tafelLaut(false);
+    sichtbarBis = 0; spurBis = 0; neuSetzen();
+    g.chronik(stationen, {
+      dauer: 900, pause: 2200, zoom: 2.4, schluss: BLICK.leben,
+      beiStation: (s, i) => { sichtbarBis = i; spurBis = i; aktivName = s.name; neuSetzen(); stationMarkieren(i); lebenTafel(i + 1); }
+    });
+  }
+  function lebenFertig(grund) {
+    sichtbarBis = null;
+    tafelLaut(true);
+    if (grund === 'fertig') { aktivName = null; spurBis = stationen.length - 1; stationMarkieren(null); lebenTafel(0); }
+    nochmal('leben', true);
+    neuSetzen();
+  }
+  function stationSchritt(i) {
+    begonnen = true;
+    if (ebeneJetzt !== 'leben') ebeneWaehlen('leben', { fliegen: false });
+    laufend = null;
+    if (g) { lebenOrteFuellen(); anhalten(); g.chronikSchritt(stationen, i, { zoom: 2.4, dauer: 900 }); }
+    tafelLaut(true);
+    sichtbarBis = null; spurBis = i; aktivName = stationen[i].name; neuSetzen();
+    stationMarkieren(i);
+    lebenTafel(i + 1);
+    nochmal('leben', true);
+  }
+  function lebenUeberblickZeigen() {
+    begonnen = true;
+    laufend = null;
+    if (g) { lebenOrteFuellen(); g.routeZeigen(stationen); g.fliegen(BLICK.leben.mitte, BLICK.leben.k); }
+    sichtbarBis = null; spurBis = stationen.length - 1; aktivName = null; neuSetzen();
+    stationMarkieren(null);
+    tafelLaut(true);
+    lebenTafel(0);
+  }
+
+  // Satoshi: ein Schauplatz, die Tafel zeigt seine Szene
+  function szeneZeigen(p) {
+    satoshiTafel(p);
+    $$('[data-satoshi]').forEach(b => b.classList.toggle('ist-aktiv', p > 0 && b.dataset.satoshi === szenen[p - 1].ort));
+    if (!g) return;
+    if (p === 0) { aktivName = null; g.fliegen(BLICK.satoshi.mitte, BLICK.satoshi.k); }
+    else { const o = satoshiOrt(szenen[p - 1].ort); if (o) { aktivName = o.name; g.ortAnfliegen(o, o.name === 'Bariloche' ? 6 : 4); } }
+    neuSetzen();
+  }
+
+  // Ursprung: langsam, Band für Band. Band I erst, wenn der Globus Göbekli Tepe erreicht hat
+  let ursprungNr = 0;
+  function baendeZeigen(alle) { $$('.band').forEach(b => b.classList.toggle('da', !!alle)); }
+  function bandZeigen(band) { const b = $('.band[data-band="' + band + '"]'); if (b) b.classList.add('da'); }
+  // Das Ortswort der jetzigen Station steht schwarz, wie im Kolophon des Lebens; null löscht die Markierung
+  function ursprungWort(i) { $$('[data-ursprung]').forEach(b => b.classList.toggle('ist-aktiv', i !== null && +b.dataset.ursprung === i)); }
+  function ursprungStarten() {
+    const nr = ++ursprungNr;
+    ursprungWort(null);
+    baendeZeigen(false);
+    ursprungTafel(-1);
+    if (!g) { baendeZeigen(true); return; }
+    anhalten();
+    g.ebene(EBENEN.ursprung);
+    laufend = 'ursprung';
+    nochmal('ursprung', false);
+    tafelLaut(false);
+    sichtbarBis = 0; spurBis = 0; aktivName = ursprung[0] && ursprung[0].name; neuSetzen();
+    const dauer = 2600;
+    setTimeout(() => { if (nr === ursprungNr && laufend === 'ursprung') { bandZeigen('I'); ursprungTafel(0); ursprungWort(0); } }, ruhig ? 0 : dauer * .85);
+    g.chronik(ursprung, {
+      dauer, pause: 3800, zoom: 4.5, schluss: BLICK.ursprung,
+      beiStation: (s, i) => { if (nr !== ursprungNr) return; sichtbarBis = i; spurBis = i; aktivName = s.name; neuSetzen(); if (i > 0) { bandZeigen(s.band); ursprungTafel(i); ursprungWort(i); } }
+    });
+  }
+  function ursprungFertig(grund) {
+    baendeZeigen(true); nochmal('ursprung', true);
+    tafelLaut(true);
+    sichtbarBis = null;
+    if (grund === 'fertig') { aktivName = null; spurBis = ursprung.length - 1; ursprungTafel(-1); ursprungWort(null); }
+    neuSetzen();
+  }
+
+  /* Auf dem Telefon (einspaltig): nach einer Wahl Globus und Tafel ins Bild holen. Gemessen wird die Scheibe selbst:
+     sie muss ganz zu sehen sein, die Tafel darunter möglichst auch; nach oben rückt dabei nur so weit, wie nötig. */
+  function globusInSicht(wort) {
+    if (F.breit() || !g) return;
+    const f = flaeche.getBoundingClientRect(), fig = figur.getBoundingClientRect(), H = window.innerHeight;
+    const oben = Math.min(f.top, wort ? wort.getBoundingClientRect().top : f.top);
+    let d = 0;
+    if (fig.bottom > H - 8) d = fig.bottom - H + 12;           // die Tafel ganz ins Bild
+    if (oben - d < 8) d = oben - 12;                          // das getippte Wort und den Globus nicht oben hinaus
+    if (f.bottom - d > H - 4) d = Math.min(f.bottom - H + 12, f.top - 12);   // die Scheibe muss in jedem Fall ganz zu sehen sein
+    if (Math.abs(d) > 6) window.scrollBy({ top: d, behavior: ruhig ? 'auto' : 'smooth' });
+  }
+
+  // Ein Land antippen: das Land unter dem Finger aus den bereisten Ländern
+  function landAn(e) {
+    const p = g && g.projektion, d3 = window.d3;
+    if (!p || !d3) return null;
+    const r = canvas.getBoundingClientRect();
+    const xy = [e.clientX - r.left, e.clientY - r.top];
+    const rot = p.rotate(), mitte = [-rot[0], -rot[1]];
+    const ll = p.invert(xy);
+    if (!ll || d3.geoDistance(ll, mitte) > Math.PI / 2 - .02) return null;
+    for (const iso of bereist) { const f = g.land(iso); if (f && d3.geoContains(f, ll)) return f; }
+    return null;
+  }
+
+  // ================= Bedienung =================
+  // Die Tafel wird bei jedem Schritt neu gesetzt; wer mit der Tastatur blättert, behält den Fokus auf „früher“ oder „später“
+  function tafelFokus(attr, wert) {
+    const ziel = $(`#tafel [data-${attr}="${wert}"]:not([disabled])`) || $(`#tafel [data-${attr}]:not([disabled])`);
+    if (ziel) ziel.focus({ preventScroll: true });
+  }
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button, a');
+    if (!t) return;
+    const d = t.dataset;
+    if (d.ebene) { if (t.getAttribute('aria-pressed') !== 'true' || d.ebene === 'ursprung') { ebeneWaehlen(d.ebene); globusInSicht($('.ebenen')); } }
+    else if (d.zeige) {
+      F.karteikarte.schliessen();
+      if (ebeneJetzt !== d.zeige) ebeneWaehlen(d.zeige, { fliegen: false });
+      (F.breit() ? document.body : $('.ebenen')).scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+    }
+    else if (d.station !== undefined) { stationSchritt(+d.station); globusInSicht(t); }
+    else if (d.schritt) {
+      const fokus = document.activeElement === t;
+      const ziel = lebenP + +d.schritt;
+      const p = ziel > stationen.length ? 0 : ziel < 0 ? stationen.length : ziel;
+      if (p === 0) lebenUeberblickZeigen(); else stationSchritt(p - 1);
+      if (fokus) tafelFokus('schritt', d.schritt);
+      globusInSicht();
+    }
+    else if (d.szene) {
+      const fokus = document.activeElement === t;
+      szeneZeigen(satoshiP + +d.szene > szenen.length ? 0 : Math.max(0, satoshiP + +d.szene));
+      if (fokus) tafelFokus('szene', d.szene);
+      globusInSicht();
+    }
+    else if (d.nochmal === 'leben') lebenStarten();
+    else if (d.nochmal === 'ursprung') ursprungStarten();
+    else if (d.kontinent) {
+      aktivSetzen('[data-kontinent]', t);
+      kontinentGewaehlt = d.kontinent; landGewaehlt = null; reisenTafel();
+      // Ist der Globus rechts angeschnitten, liegt die Mitte des sichtbaren Teils etwas links; der Kontinent rückt dorthin
+      const [mitte, k] = KONTINENTE[d.kontinent], versatz = F.breit() ? 5.2 / k : 0;
+      if (g) { g.auswahl(null); g.fliegen([mitte[0] + versatz, mitte[1]], k); }
+      globusInSicht(t);
+    }
+    else if (d.satoshi) {
+      const p = szenen.findIndex(s => s.ort === d.satoshi) + 1;
+      if (p > 0) szeneZeigen(p);
+      globusInSicht(t);
+    }
+    else if (d.ursprung !== undefined) {
+      const i = +d.ursprung, o = ursprung[i];
+      ursprungNr++;
+      if (g && o) { anhalten(); laufend = null; aktivSetzen('[data-ursprung]', t); aktivName = o.name; sichtbarBis = null; spurBis = ursprung.length - 1; g.ortAnfliegen(o, 7); neuSetzen(); }
+      baendeZeigen(true); nochmal('ursprung', true); tafelLaut(true);
+      ursprungTafel(i);
+      globusInSicht(t);
+    }
+  });
+
+  // Reisen: ohne Land unter dem Zeiger zeigt die Tafel wieder die Auswahl oder die Zahl
+  if (tipp) new MutationObserver(() => { if (tipp.hidden && landHover) { landHover = null; if (ebeneJetzt === 'reisen') reisenTafel(); } }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
+  canvas.addEventListener('click', e => {
+    if (ebeneJetzt !== 'reisen' || !g) return;
+    const land = landAn(e) || landHover;
+    if (!land) return;
+    landGewaehlt = land; kontinentGewaehlt = null;
+    $$('[data-kontinent]').forEach(b => b.classList.remove('ist-aktiv'));
+    g.auswahl(land.iso);
+    reisenZuletzt = null; reisenTafel();
+  });
+
+  // Die Chronik läuft einmal von selbst, sobald der Globus im Bild ist: erst anderthalb Sekunden der ganze Globus, leer.
+  // Bis dahin zeigt die Tafel Dortmund, wo die Chronik beginnt; ohne Globus gleich den Überblick über alle Orte
+  lebenTafel(g ? 1 : 0);
+  // Die Chronik wartet, bis der erste Satz steht (window.FEinstieg.fertig), und danach noch einen Augenblick
+  const einstiegFertig = (window.FEinstieg && window.FEinstieg.fertig) || Promise.resolve();
+  F.schriften(2500).then(() => {
+    tafelHoehe();
+    if (!g) return;
+    g.zeichnen(); neuSetzen();
+    const t0 = performance.now();
+    const los = () => einstiegFertig.then(() => setTimeout(() => { if (!begonnen) lebenStarten(); }, ruhig ? 600 : Math.max(700, 1500 - (performance.now() - t0))));
+    if (!('IntersectionObserver' in window)) { los(); return; }
+    const io = new IntersectionObserver(eintraege => {
+      if (!eintraege.some(x => x.isIntersecting)) return;
+      io.disconnect();
+      los();
+    }, { threshold: .5 });
+    io.observe(flaeche);
+  });
+
+  // ================= Karteikarten =================
+  // Karte eines eigenen Werks: der Titel selbst führt zur Seite des Werks (FSeite.werkKarte); die Startseite spricht in der ersten Person
+  const werkKarte = id => F.werkKarte(id);
+  /* Wo die Karte liegt: FSeite.karteikarte stellt sie mittig über den Auslöser, begrenzt nur durch die Seitenränder.
+     Hier bleibt die Karte des Regalbilds in dessen Spalte (sie deckt das Werkverzeichnis nicht zu),
+     und die Karte eines Strichs legt sich unter das Band, über die schmaleren Bänder, statt über Vorwort und Querbücher. */
+  function karteRuecken(el, art) {
+    const k = document.getElementById('karteikarte');
+    if (!k || k.hidden || k.classList.contains('als-blatt') || !el) return;
+    const vw = document.documentElement.clientWidth, H = window.innerHeight;
+    const kb = k.offsetWidth, kh = k.offsetHeight, randR = Math.max(16, F.masz('--rand-r'));
+    let links = parseFloat(k.style.left) - window.scrollX, oben = parseFloat(k.style.top) - window.scrollY;
+    if (art === 'regal' && F.breit()) {
+      const b = $('#regalbild').getBoundingClientRect();
+      links = Math.max(b.left, Math.min(vw - kb - randR, links));
+    } else if (art === 'band') {
+      const svg = el.ownerSVGElement || el, band = svg.getBoundingClientRect();
+      // unter der Zeile zum Strich; reicht der Schirm nicht, rückt die Karte hoch, höchstens bis an die Unterkante des Bands
+      const unten = Math.min((svg.id === 'zb-haupt' ? $('#bandzeile') : svg).getBoundingClientRect().bottom + 10, H - 12 - kh);
+      const darueber = band.top - kh - 14;
+      if (unten >= band.bottom + 6) oben = unten;
+      else if (darueber >= 12) oben = darueber;
+    }
+    k.style.left = Math.round(links + window.scrollX) + 'px';
+    k.style.top = Math.round(oben + window.scrollY) + 'px';
+  }
+
+  // ================= Was ich schreibe: das Regalbild =================
+  const BUECHER = F.buch.alle();
+  const regalFlaeche = $('#regalbild-flaeche');
+  const EIGEN = [
+    { id: 'satoshi', t: 'Satoshi', h: 205, d: 27, vor: 0 },
+    { id: 'ursprung-1', t: 'Ursprung I', h: 205, d: 24, vor: 4 },
+    { id: 'ursprung-2', t: 'Ursprung II', h: 205, d: 24, vor: 0 },
+    { id: 'ursprung-3', t: 'Ursprung III', h: 205, d: 24, vor: 0 },
+    { id: 'erzaehlungen', t: 'Erzählungen', h: 205, d: 21, vor: 14 },
+    { id: 'untertext', t: 'Untertext', h: 205, d: 16, vor: 1 },
+    { id: 'laender', t: 'Länder', h: 222, d: 19, vor: 12, lehnt: 7 }
+  ];
+  // Eigene Bände stehen, Länder lehnt am höheren Stapel; die Bücher vom Nachttisch liegen quer auf zwei Stapeln
+  function regalZeichnen() {
+    const platz = regalFlaeche.parentElement.clientWidth;
+    if (!platz) return;
+    const liegend = BUECHER.filter(b => b.r === 'gerade').map(b => ({ b, breite: b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185, dicke: (b.p || 250) * .06 + (b.b === 'h' ? 5 : 1), versatz: 1 + F.hash(b.key) % 7 }));
+    const stapel = [[], []], hoch = [0, 0];
+    liegend.slice().sort((p, q) => q.dicke - p.dicke).forEach(s => { const i = hoch[0] <= hoch[1] ? 0 : 1; stapel[i].push(s); hoch[i] += s.dicke; });
+    if (hoch[1] > hoch[0]) { stapel.reverse(); hoch.reverse(); }
+    stapel.forEach(st => st.sort((p, q) => q.breite - p.breite || q.dicke - p.dicke));
+    let x = 0, lehne = null;
+    EIGEN.forEach(e => { x += e.vor; e.x = x; if (e.lehnt) lehne = { rechts: x + e.d, h: e.h, rad: e.lehnt * Math.PI / 180 }; x += e.d; });
+    // Wo das lehnende Buch den Stapel berührt: mit der oberen Ecke oder, ist der Stapel niedriger, an dessen Kante
+    let x1;
+    const kontakt = lehne.h * Math.cos(lehne.rad);
+    if (!stapel[0].length) x1 = lehne.rechts + 20;
+    else if (hoch[0] >= kontakt) {
+      let y = 0, v = 0; stapel[0].forEach(s => { if (kontakt >= y && kontakt < y + s.dicke) v = s.versatz; y += s.dicke; });
+      x1 = lehne.rechts + lehne.h * Math.sin(lehne.rad) + .6 - v;
+    } else x1 = lehne.rechts + hoch[0] * Math.tan(lehne.rad) + .6 - stapel[0][stapel[0].length - 1].versatz;
+    const breiteVon = st => st.length ? Math.max(...st.map(s => s.versatz + s.breite)) : 0;
+    const x2 = x1 + breiteVon(stapel[0]) + 14;
+    const gesamt = x2 + breiteVon(stapel[1]) + 3;
+    const m = Math.min(.86, (platz - 2) / gesamt);           // Pixel je Millimeter
+    const px = v => (v * m).toFixed(1) + 'px';
+    const schriftEigen = Math.max(8, Math.min(11, m * 12.5)), schriftLiegend = Math.max(7.5, Math.min(10, m * 11.5));
+    let html = '';
+    EIGEN.forEach(e => {
+      html += `<button type="button" class="stueck eigen" data-werk="${e.id}" aria-label="${esc(e.t)}" style="left:${px(e.x)};width:${px(e.d)};height:${px(e.h)}${e.lehnt ? `;--neig:${e.lehnt}deg` : ''}"><span style="font-size:${schriftEigen.toFixed(1)}px">${esc(e.t)}</span></button>`;
+    });
+    [x1, x2].forEach((sx, k) => {
+      let y = 0;
+      stapel[k].forEach(s => {
+        const b = s.b, i = BUECHER.indexOf(b);
+        const text = s.dicke * m >= schriftLiegend + 4 ? `<span style="font-size:${schriftLiegend.toFixed(1)}px"><b>${esc(b.nn || b.autor)}</b><i>&ensp;${esc(F.buch.titelKurz(b.t))}</i></span>` : '';
+        html += `<button type="button" class="stueck liegt ${b.b}" data-buch="${i}" aria-label="${esc(b.autor + ', ' + b.t)}" style="left:${px(sx + s.versatz)};bottom:${px(y)};width:${px(s.breite)};height:${px(s.dicke)}">${text}</button>`;
+        y += s.dicke;
+      });
+    });
+    regalFlaeche.style.height = Math.ceil(Math.max(hoch[0], hoch[1], 222) * m + 2) + 'px';
+    regalFlaeche.style.width = Math.ceil(gesamt * m) + 'px';
+    regalFlaeche.innerHTML = html;
+    // Auf dem Rücken steht nur, was mit Rand hineinpasst: erst Name und Titel, sonst der Name, sonst nichts
+    $$('.stueck.liegt span', regalFlaeche).forEach(sp => {
+      if (sp.scrollWidth <= sp.clientWidth) return;
+      sp.querySelector('i').remove();
+      if (sp.scrollWidth > sp.clientWidth) sp.remove();
+    });
+    rovingSetzen();
+    zielZeigen();
+  }
+  // Werkverzeichnis und Regalbild: der Eintrag unter dem Zeiger (oder mit dem Fokus) hebt seinen Rücken, ebenso der Eintrag,
+  // zu dem ein Anker geführt hat (#satoshi, #ursprung, #erzaehlungen, #untertext, #laender)
+  const RUECKEN = { satoshi: ['satoshi'], ursprung: ['ursprung-1', 'ursprung-2', 'ursprung-3'], erzaehlungen: ['erzaehlungen'], untertext: ['untertext'], laender: ['laender'] };
+  function rueckenHeben(id, an, klasse) {
+    (RUECKEN[id] || []).forEach(w => { const b = $(`.stueck[data-werk="${w}"]`, regalFlaeche); if (b) b.classList.toggle(klasse, an); });
+  }
+  function zielZeigen() {
+    $$('.stueck.ist-ziel', regalFlaeche).forEach(b => b.classList.remove('ist-ziel'));
+    let id = '';
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = ''; }
+    if (RUECKEN[id]) rueckenHeben(id, true, 'ist-ziel');
+  }
+  window.addEventListener('hashchange', zielZeigen);
+  $$('.verzeichnis .eintrag').forEach(e => {
+    e.addEventListener('pointerenter', ev => { if (ev.pointerType === 'mouse') rueckenHeben(e.id, true, 'ist-gemeint'); });
+    e.addEventListener('pointerleave', () => rueckenHeben(e.id, false, 'ist-gemeint'));
+    e.addEventListener('focusin', () => rueckenHeben(e.id, true, 'ist-gemeint'));
+    e.addEventListener('focusout', () => rueckenHeben(e.id, false, 'ist-gemeint'));
+  });
+  // Ein Tab-Halt für das ganze Bild, die Pfeiltasten gehen von Buch zu Buch
+  function rovingSetzen() {
+    const alle = $$('.stueck', regalFlaeche);
+    const offen = alle.find(b => b.classList.contains('ist-offen'));
+    alle.forEach((b, i) => { b.tabIndex = (offen ? b === offen : i === 0) ? 0 : -1; });
+  }
+  regalFlaeche.addEventListener('keydown', e => {
+    const b = e.target.closest('.stueck');
+    if (!b || e.altKey || e.ctrlKey || e.metaKey) return;
+    const alle = $$('.stueck', regalFlaeche), i = alle.indexOf(b);
+    const ziel = { ArrowRight: alle[i + 1], ArrowDown: alle[i + 1], ArrowLeft: alle[i - 1], ArrowUp: alle[i - 1], Home: alle[0], End: alle[alle.length - 1] }[e.key];
+    if (!ziel) return;
+    e.preventDefault();
+    alle.forEach(x => { x.tabIndex = x === ziel ? 0 : -1; });
+    ziel.focus();
+  });
+  regalFlaeche.addEventListener('click', e => {
+    const b = e.target.closest('.stueck');
+    if (!b) return;
+    if (F.karteikarte.offen() && F.karteikarte.ausloeser() === b) { F.karteikarte.schliessen(); return; }
+    const inhalt = b.dataset.werk ? werkKarte(b.dataset.werk) : F.buch.karte(BUECHER[+b.dataset.buch]);
+    if (!inhalt) return;
+    $$('.stueck', regalFlaeche).forEach(x => { x.tabIndex = x === b ? 0 : -1; });
+    F.karteikarte.oeffnen(inhalt, b);
+    karteRuecken(b, 'regal');
+  });
+  // ================= Anker =================
+  // Breit: wer über einen Anker zu einem Eintrag kommt, landet mit der Überschrift des Abschnitts oben
+  // und sieht daneben das Bild mit dem gehobenen Rücken. Einspaltig steht das Bild über der Liste; dort bleibt der Eintrag selbst oben
+  function ankerSetzen() {
+    const titel = $('#schreiben-titel'), z = F.masz('--z');
+    $$('.verzeichnis .eintrag').forEach(e => {
+      e.style.scrollMarginTop = F.breit() && titel ? Math.max(0, Math.round(e.getBoundingClientRect().top - titel.getBoundingClientRect().top + z)) + 'px' : '';
+    });
+  }
+  // Nach dem Laden der Schriften verschiebt sich der Satz; hat noch niemand gescrollt, fährt die Seite den Eintrag noch einmal an
+  let angefasst = false;
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(t => window.addEventListener(t, () => { angefasst = true; }, { passive: true }));
+  function zielAnfahren() {
+    let id = '';
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = ''; }
+    const el = RUECKEN[id] && document.getElementById(id);
+    if (el && !angefasst) el.scrollIntoView({ block: 'start' });
+  }
+  regalZeichnen(); ankerSetzen();
+
+  // ================= Was ich gelesen habe: das Zeitband =================
+  const NBSP = F.NBSP;
+  const mitMass = b => {
+    const p = b.p > 0 ? b.p : 280, h = F.hash(b.key);
+    return { breite: p * 0.06 + (b.b === 'h' ? 5 : 1), hoehe: (b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185) * (0.975 + (h % 997) / 997 * 0.05) };
+  };
+  BUECHER.forEach(b => { b.mm = mitMass(b); b.h = F.hash(b.key); });
+  const ordnung = F.buch.ordnung;
+  const HAUPT = BUECHER.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort(ordnung);
+  const GERADE = BUECHER.filter(b => b.r === 'gerade' && b.j != null).sort(ordnung);
+  const KIND = BUECHER.filter(b => b.r === 'kindheit' && b.j != null).sort(ordnung);
+  const WARTE = BUECHER.filter(b => b.r === 'leseliste' && b.j != null).sort(ordnung);
+  const WERKE = (I.werke || []).map(w => ({ werk: true, id: w.id, w }));
+  function zeile(x) {
+    if (x.werk) {
+      const w = x.w, t = w.buchtitel || w.titel;
+      const art = w.band ? 'Band ' + w.band + ' der Ursprungstrilogie' : w.art;
+      return { text: `Jäkel, ${t}, ${art}`, html: `Jäkel, <i>${esc(t)}</i>, ${esc(art)}` };
+    }
+    return F.buch.zeile(x);
+  }
+  const roll = $('#zeitband-roll');
+  const ZB = { items: [], folgen: {}, aktiv: null, breite: 0 };
+  const messCtx = document.createElement('canvas').getContext('2d');
+  const textBreite = (text, font) => { messCtx.font = font; return messCtx.measureText(text).width; };
+  const bandSchmal = () => window.matchMedia('(max-width: 40rem)').matches;
+
+  function bandBauen() {
+    if (!roll || !HAUPT.length) return;
+    const schmal = bandSchmal();
+    const verfuegbar = roll.clientWidth - (schmal ? 2 * (parseFloat(getComputedStyle(roll).paddingLeft) || 0) : 0);
+    if (verfuegbar <= 0) return;
+    const sy = schmal ? 0.4 : Math.max(0.36, Math.min(0.5, verfuegbar / 2300));   // px je mm in der Höhe
+    let minL = schmal ? 0.45 : 0.5;              // kleinste Lücke zwischen zwei Rücken in px
+    let minB = schmal ? 0.7 : 0.8;
+    const BRUCH = 40;                            // Lücke für ausgelassene Jahrhunderte
+    const WERKLUECKE = 22, BODEN = 7;
+    const luecke = d => d <= 0 ? 0 : 1.8 * Math.pow(d, 0.85);   // in mm, mit dem Abstand der Jahre wachsend, gestaucht
+    const liegeLaenge = b => b.mm.hoehe * sy;
+    const liegeDicke = b => Math.max(5, b.mm.breite * sy);
+    function anordnen(sx) {
+      const pos = [], brueche = [], amBoden = []; let x = 0, vor = null;
+      HAUPT.forEach(b => {
+        if (vor) {
+          const d = b.j - vor.j;
+          if (d > 150) {
+            // was gerade gelesen wird und in diese Lücke fällt, liegt hier flach auf dem Boden
+            GERADE.forEach(l => { if (l.j > vor.j && l.j < b.j) { x += BODEN; amBoden.push({ b: l, x, len: liegeLaenge(l), dick: liegeDicke(l) }); x += liegeLaenge(l); } });
+            brueche.push({ von: x, bis: x + BRUCH });
+            x += BRUCH;
+          } else x += Math.max(minL, sx * luecke(d));
+        }
+        const w = Math.max(minB, sx * b.mm.breite);
+        pos.push({ b, x, w }); x += w; vor = b;
+      });
+      const buecherEnde = x;
+      x += WERKLUECKE;
+      const ww = Math.max(6, 40 * sx), wl = 2;
+      const werke = WERKE.map(b => { const o = { b, x, w: ww }; x += ww + wl; return o; });
+      return { pos, werke, brueche, amBoden, buecherEnde, ende: x - wl };
+    }
+    // Breit: das Band füllt die Satzbreite; Telefon: gut doppelt so breit, seitlich verschiebbar
+    let zielBreite = verfuegbar;
+    if (schmal) zielBreite = Math.round(Math.max(verfuegbar * 2.2, anordnen(0).ende * 1.15));
+    else for (let n = 0; n < 30 && anordnen(0).ende > zielBreite * .8; n++) { minB *= .9; minL *= .9; }
+    let lo = 0, hi = 1.5;
+    for (let n = 0; n < 40; n++) { const m = (lo + hi) / 2; if (anordnen(m).ende > zielBreite) hi = m; else lo = m; }
+    const sx = lo;
+    const A = anordnen(sx);
+    const W = Math.ceil(zielBreite);
+    const pos = A.pos;
+
+    // Zeitachse aus den gelesenen Büchern: X(jahr)
+    function X(jahr) {
+      let a = 0, c = pos.length;
+      while (a < c) { const m = (a + c) >> 1; if (pos[m].b.j < jahr) a = m + 1; else c = m; }
+      if (a === 0) return pos[0].x;
+      if (a === pos.length) return pos[a - 1].x + pos[a - 1].w;
+      const p = pos[a - 1], q = pos[a];
+      if (q.b.j === jahr) return q.x;
+      const t = (jahr - p.b.j) / (q.b.j - p.b.j);
+      return p.x + p.w + (q.x - p.x - p.w) * t;
+    }
+    // Nebenbänder auf derselben Achse; dichte Jahre schieben nach rechts, am Ende zurück nach links
+    function nebenband(liste, grenze) {
+      const out = []; let ende = -Infinity;
+      liste.forEach(b => {
+        const w = Math.max(minB, sx * b.mm.breite);
+        const x = Math.max(X(b.j), ende + minL);
+        out.push({ b, x, w }); ende = x + w;
+      });
+      let rechts = grenze;
+      for (let i = out.length - 1; i >= 0; i--) {
+        if (out[i].x + out[i].w > rechts) out[i].x = rechts - out[i].w;
+        rechts = out[i].x - minL;
+      }
+      return out;
+    }
+    const kind = nebenband(KIND, A.buecherEnde);
+    const warte = nebenband(WARTE, A.buecherEnde);
+
+    const maxH = 225 * 1.025 * sy;
+    const hoehe = (b, f) => b.mm.hoehe * sy * (f || 1);
+    const stehendHoehe = (x0, x1) => {
+      let m = 0;
+      for (const p of pos) { if (p.x > x1) break; if (p.x + p.w >= x0) m = Math.max(m, hoehe(p.b, p.b.r === 'abgebrochen' ? .5 : 1)); }
+      return m;
+    };
+    // Liegende Bücher: an ihrem Jahr quer auf den Rücken, höchstens drei aufeinander, die dicksten zuunterst
+    const amBoden = new Set(A.amBoden.map(l => l.b));
+    const liegend = GERADE.filter(b => !amBoden.has(b)).map(b => ({ b, len: liegeLaenge(b), dick: liegeDicke(b), mitte: X(b.j) })).sort((a, b) => a.mitte - b.mitte);
+    const MAXDICK = maxH * .5;
+    const stapel = [];
+    liegend.forEach(l => {
+      const st = stapel[stapel.length - 1];
+      if (st) {
+        const mitte = st.buecher.reduce((a, x) => a + x.mitte, 0) / st.buecher.length;
+        const dicke = st.buecher.reduce((a, x) => a + x.dick, 0);
+        if (st.buecher.length < 3 && dicke + l.dick <= MAXDICK && Math.abs(l.mitte - mitte) < l.len * .6) { st.buecher.push(l); return; }
+      }
+      stapel.push({ buecher: [l] });
+    });
+    // Stapel nebeneinander, nie übereinander geschoben: was zu nah kommt, rückt ein Stück weiter
+    stapel.forEach(st => {
+      st.lang = Math.max(...st.buecher.map(l => l.len));
+      st.x0 = st.buecher.reduce((a, l) => a + l.mitte, 0) / st.buecher.length - st.lang / 2;
+    });
+    for (let n = 0; n < stapel.length; n++) { const vor = stapel[n - 1]; stapel[n].x0 = Math.max(stapel[n].x0, vor ? vor.x0 + vor.lang + 10 : 4); }
+    for (let n = stapel.length - 1; n >= 0; n--) { const nach = stapel[n + 1]; stapel[n].x0 = Math.min(stapel[n].x0, nach ? nach.x0 - stapel[n].lang - 10 : A.buecherEnde - stapel[n].lang); }
+    const gelegt = [];
+    stapel.forEach(st => {
+      const x0 = st.x0, lang = st.lang;
+      let boden = stehendHoehe(x0, x0 + lang) + 0.5;
+      st.buecher.sort((a, b) => b.dick - a.dick || ordnung(a.b, b.b)).forEach((l, n) => {
+        // zwei bis sechs Pixel Versatz, Richtung und Maß aus Titel und Autor abgeleitet
+        const spiel = n === 0 ? 0 : (2 + (l.b.h % 5)) * ((l.b.h >> 4) & 1 ? 1 : -1);
+        l.x = Math.max(0, Math.min(W - l.len, x0 + (lang - l.len) / 2 + spiel));
+        l.boden = boden;
+        boden += l.dick + 1;
+        gelegt.push(l);
+      });
+    });
+    A.amBoden.forEach(l => { l.boden = 0; gelegt.push(l); });
+    const oben = Math.max(maxH, ...gelegt.map(l => l.boden + l.dick)) + 4;
+    const y0 = Math.ceil(oben);
+
+    const items = []; const folgen = { quer: [], haupt: [], kind: [], warte: [] };
+    let sHaupt = '', sQuer = '', sKind = '', sWarte = '';
+    const rect = (x, y, w, h) => `x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${w.toFixed(2)}" height="${h.toFixed(2)}"`;
+    function eintragen(folge, o) {
+      o.id = 'zb' + items.length; o.folge = folge; o.idx = folgen[folge].length;
+      items.push(o); folgen[folge].push(o);
+      return o.id;
+    }
+    pos.forEach(p => {
+      const b = p.b, halb = b.r === 'abgebrochen';
+      const h = hoehe(b, halb ? .5 : 1);
+      const cls = halb ? 'ab' : b.s === 5 ? 'lieb' : 'grau';
+      const id = eintragen('haupt', { b, x: p.x, w: p.w, y: y0 - h, h });
+      sHaupt += `<rect id="${id}" role="option" aria-label="${esc(zeile(b).text)}" class="${cls}" ${rect(p.x, y0 - h, p.w, h)}/>`;
+      if (b.w) sHaupt += `<line class="wieder" x1="${(p.x - 1.5).toFixed(2)}" x2="${(p.x + p.w + 1.5).toFixed(2)}" y1="${(y0 - h - 3).toFixed(2)}" y2="${(y0 - h - 3).toFixed(2)}"/>`;
+    });
+    // Eigenes: offene Striche in voller Höhe mit Siena-Kante
+    A.werke.forEach(p => {
+      const id = eintragen('haupt', { b: p.b, x: p.x, w: p.w, y: y0 - maxH, h: maxH });
+      sHaupt += `<rect id="${id}" role="option" aria-label="${esc(zeile(p.b).text)}" class="werk" ${rect(p.x + .6, y0 - maxH + .6, p.w - 1.2, maxH - .6)}/>`;
+    });
+    gelegt.slice().sort((a, b) => a.boden - b.boden).forEach(l => {
+      const y = y0 - l.boden - l.dick;
+      const id = eintragen('quer', { b: l.b, x: l.x, w: l.len, y, h: l.dick, quer: true });
+      sQuer += `<rect class="quer" id="${id}" role="option" aria-label="${esc(zeile(l.b).text)}" ${rect(l.x + .4, y + .4, l.len - .8, l.dick - .8)}/>`;
+    });
+    // Unter dem Band eine Haarlinie mit Strichen an den Jahresmarken; Brüche für die ausgelassenen Jahrhunderte
+    const yL = y0 + 5, yT = yL + 17;
+    const fontJ = 'italic 13px "Vollkorn"';
+    let sLeiste = '';
+    const linie = (x1, x2, y1, y2) => `<line class="haar" x1="${x1.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y1.toFixed(1)}" y2="${y2.toFixed(1)}"/>`;
+    let start = pos[0].x;
+    A.brueche.forEach(br => {
+      const m = (br.von + br.bis) / 2;
+      sLeiste += linie(start, m - 5, yL, yL);
+      sLeiste += `<path class="bruch" d="M${(m - 4.5).toFixed(1)} ${yL + 4} L${(m - 1.5).toFixed(1)} ${yL - 4} M${(m + 1.5).toFixed(1)} ${yL + 4} L${(m + 4.5).toFixed(1)} ${yL - 4}"/>`;
+      start = m + 5;
+    });
+    sLeiste += linie(start, A.buecherEnde, yL, yL);
+    const marken = [{ text: `${HAUPT[0].t}, ${F.jahrText(HAUPT[0].j)}`, x: pos[0].x + pos[0].w / 2, anker: 'start', tx: pos[0].x }]
+      .concat([1800, 1900, 1950, 2000].map(j => ({ text: String(j), x: X(j), anker: 'middle' })));
+    let belegtBis = -Infinity, sJahre = '';
+    marken.forEach(m => {
+      const b = textBreite(m.text, fontJ);
+      const tx = m.tx !== undefined ? m.tx : m.x;
+      const x0 = m.anker === 'start' ? tx : tx - b / 2;
+      if (x0 < belegtBis + 10) return;
+      belegtBis = x0 + b;
+      sLeiste += linie(m.x, m.x, yL, yL + 3.5);
+      sJahre += `<text class="jahr" x="${tx.toFixed(1)}" y="${yT}" text-anchor="${m.anker}">${esc(m.text)}</text>`;
+    });
+    // unter den eigenen Strichen dieselbe Haarlinie, darunter „Eigenes“
+    const wA = A.werke[0].x, wE = A.werke[A.werke.length - 1].x + A.werke[A.werke.length - 1].w;
+    sLeiste += linie(wA, wE, yL, yL);
+    const eig = 'Eigenes', eigB = textBreite(eig, fontJ);
+    const eigX = Math.min(W - eigB / 2, (wA + wE) / 2);
+    if (eigX - eigB / 2 > belegtBis + 10) sJahre += `<text class="jahr" x="${eigX.toFixed(1)}" y="${yT}" text-anchor="middle">${eig}</text>`;
+    const Hh = y0 + 27;
+
+    kind.forEach(p => { p.h = hoehe(p.b, .55); });
+    warte.forEach(p => { p.h = hoehe(p.b, .42); });
+    const kH = Math.ceil(maxH * .55) + 2, wH = Math.ceil(maxH * .42) + 2;
+    kind.forEach(p => {
+      const id = eintragen('kind', { b: p.b, x: p.x, w: p.w, y: kH - p.h, h: p.h });
+      sKind += `<rect id="${id}" role="option" aria-label="${esc(zeile(p.b).text)}" ${rect(p.x, kH - p.h, p.w, p.h)}/>`;
+    });
+    warte.forEach(p => {
+      const id = eintragen('warte', { b: p.b, x: p.x, w: p.w, y: wH - p.h, h: p.h });
+      sWarte += `<rect id="${id}" role="option" aria-label="${esc(zeile(p.b).text)}" ${rect(p.x + .3, wH - p.h + .3, Math.max(.4, p.w - .6), p.h - .3)}/>`;
+    });
+    folgen.haupt.sort((a, b) => a.x - b.x); folgen.haupt.forEach((o, i) => { o.idx = i; });
+    folgen.quer.sort((a, b) => a.x - b.x); folgen.quer.forEach((o, i) => { o.idx = i; });
+
+    const svg = (id, cls, h, inhalt, label) => `<svg id="${id}" class="zb ${cls}" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" tabindex="0" role="listbox" aria-label="${label}">${inhalt}</svg>`;
+    roll.innerHTML =
+      svg('zb-haupt', 'zb-hauptband', Hh, `<g>${sHaupt}</g><g>${sQuer}</g><g>${sLeiste}${sJahre}</g><line class="marke" id="zb-marke" x1="0" x2="0" y1="${y0 + 1}" y2="${y0 + 11}" visibility="hidden"/>`, 'Gelesen, nach dem Jahr des ersten Erscheinens; Pfeiltasten wählen, Eingabe öffnet die Karteikarte') +
+      `<p class="bandzeile" id="bandzeile" aria-live="polite"><span id="zeile-text"></span></p>` +
+      `<p class="bandname">die wichtigsten aus Kindheit und Jugend</p>` +
+      svg('zb-kind', 'zb-kind', kH, sKind, 'Die wichtigsten Bücher aus Kindheit und Jugend') +
+      `<p class="bandname">was noch wartet</p>` +
+      svg('zb-warte', 'zb-warte', wH, sWarte, 'Was noch wartet');
+
+    Object.assign(ZB, { items, folgen, aktiv: null, breite: W, schmal, y0 });
+    ['zb-haupt', 'zb-kind', 'zb-warte'].forEach(id => bandBedienung(document.getElementById(id)));
+    // Auf dem Telefon steht das Band am rechten Ende (das Neueste und das Eigene), es sei denn, das Scrollen schiebt es mit
+    MITSCHIEBEN.links = null;
+    if (schmal && !schiebt()) roll.scrollLeft = roll.scrollWidth;
+    else if (MITSCHIEBEN.leser) MITSCHIEBEN.leser.pruefen(true);
+  }
+
+  // Treffer unter dem Zeiger: liegende Bücher zuerst, sonst der nächste Rücken entlang der Zeit
+  function treffer(svg, e) {
+    const r = svg.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const folge = svg.id === 'zb-kind' ? 'kind' : svg.id === 'zb-warte' ? 'warte' : 'haupt';
+    if (folge === 'haupt') {
+      const q = ZB.folgen.quer.find(o => x >= o.x && x <= o.x + o.w && y >= o.y - 1 && y <= o.y + o.h + 1);
+      if (q) return q;
+      if (y > ZB.y0 + 12) return null;
+    }
+    const f = ZB.folgen[folge];
+    if (!f.length) return null;
+    let lo = 0, hi = f.length - 1;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (f[m].x <= x) lo = m; else hi = m - 1; }
+    let best = null, abst = Infinity;
+    [f[lo], f[lo + 1]].filter(Boolean).forEach(o => { const d = x < o.x ? o.x - x : x > o.x + o.w ? x - o.x - o.w : 0; if (d < abst) { abst = d; best = o; } });
+    return abst <= 4 ? best : null;
+  }
+  function waehle(o) {
+    if (ZB.aktiv === o) return;
+    if (ZB.aktiv) { const alt = document.getElementById(ZB.aktiv.id); if (alt) alt.classList.remove('an'); }
+    ZB.aktiv = o;
+    const textEl = document.getElementById('zeile-text'), marke = document.getElementById('zb-marke');
+    if (!textEl) return;
+    if (!o) { textEl.innerHTML = ''; if (marke) marke.setAttribute('visibility', 'hidden'); return; }
+    const el = document.getElementById(o.id);
+    if (el) {
+      el.classList.add('an');
+      const svg = el.ownerSVGElement;
+      if (svg) svg.setAttribute('aria-activedescendant', o.id);
+    }
+    const z = zeile(o.b);
+    textEl.innerHTML = ZB.schmal ? `<button class="wort" type="button" id="zeile-karte">${z.html}</button>` : z.html;
+    zeileEinpassen();
+    const mitte = o.x + o.w / 2;
+    if (marke) {
+      if (o.folge === 'haupt') { marke.setAttribute('x1', mitte); marke.setAttribute('x2', mitte); marke.setAttribute('visibility', 'visible'); }
+      else marke.setAttribute('visibility', 'hidden');
+    }
+    const k = document.getElementById('zeile-karte');
+    if (k) k.addEventListener('click', () => karteAusBand(o, false));
+  }
+  /* Die Zeile steht unter dem gewählten Strich. Auf dem Telefon liegt sie im seitlich rollenden Band: sie bleibt im sichtbaren Teil,
+     innerhalb des Rands, auch während das Band rollt, und bricht, wenn sie länger ist, in zwei Zeilen um */
+  function zeileEinpassen() {
+    const textEl = document.getElementById('zeile-text'), o = ZB.aktiv;
+    if (!textEl || !o) return;
+    const bw = textEl.offsetWidth;
+    let links = o.x + o.w / 2 - 6;
+    if (ZB.schmal) {
+      const pl = parseFloat(getComputedStyle(roll).paddingLeft) || 0;
+      const sl = roll.scrollLeft, vw = roll.clientWidth - 2 * pl;
+      links = Math.max(sl, Math.min(sl + vw - bw, links));
+    }
+    links = Math.max(0, Math.min(ZB.breite - bw, links));
+    textEl.style.left = Math.round(links) + 'px';
+  }
+  // Karteikarte zu einem Strich; der Fokus kehrt danach in sein Band zurück
+  function karteAusBand(o, perTaste) {
+    const el = document.getElementById(o.id);
+    if (!el) return;
+    const svg = el.ownerSVGElement;
+    const inhalt = o.b.werk ? werkKarte(o.b.id) : F.buch.karte(o.b);
+    if (!inhalt) return;
+    inhalt.beimSchliessen = () => { if (perTaste && svg && document.activeElement === document.body) svg.focus({ preventScroll: true }); };
+    F.karteikarte.oeffnen(inhalt, el);
+    karteRuecken(el, 'band');
+  }
+  function bandBedienung(svg) {
+    if (!svg) return;
+    let art = 'mouse';
+    svg.addEventListener('pointerdown', e => { art = e.pointerType; });
+    // Nur eine wirkliche Mausbewegung wählt; nach dem Scrollen schickt der Browser eine Bewegung ohne Weg
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && (e.movementX || e.movementY)) { const t = treffer(svg, e); if (t) waehle(t); } });
+    svg.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && document.activeElement !== svg && !F.karteikarte.offen()) waehle(null); });
+    svg.addEventListener('click', e => {
+      const t = treffer(svg, e);
+      if (!t) return;
+      if (art !== 'mouse' && ZB.aktiv !== t) { waehle(t); return; }
+      const el = document.getElementById(t.id);
+      if (F.karteikarte.offen() && F.karteikarte.ausloeser() === el) { F.karteikarte.schliessen(); return; }
+      waehle(t); karteAusBand(t, false);
+    });
+    svg.addEventListener('focus', () => {
+      if (ZB.aktiv && document.getElementById(ZB.aktiv.id) && document.getElementById(ZB.aktiv.id).ownerSVGElement === svg) return;
+      const f = svg.id === 'zb-kind' ? ZB.folgen.kind : svg.id === 'zb-warte' ? ZB.folgen.warte : ZB.folgen.haupt;
+      if (f.length) waehle(svg.id === 'zb-haupt' ? f[f.length - 1 - WERKE.length] || f[f.length - 1] : f[f.length - 1]);
+    });
+    svg.addEventListener('keydown', e => {
+      const o = ZB.aktiv; if (!o) return;
+      const reihen = ['quer', 'haupt', 'kind', 'warte'];
+      const f = ZB.folgen[o.folge];
+      let neu = null;
+      if (e.key === 'ArrowRight') neu = f[Math.min(f.length - 1, o.idx + 1)];
+      else if (e.key === 'ArrowLeft') neu = f[Math.max(0, o.idx - 1)];
+      else if (e.key === 'Home') neu = f[0];
+      else if (e.key === 'End') neu = f[f.length - 1];
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const ziel = ZB.folgen[reihen[reihen.indexOf(o.folge) + (e.key === 'ArrowUp' ? -1 : 1)]];
+        if (ziel && ziel.length) { const m = o.x + o.w / 2; neu = ziel.reduce((a, c) => Math.abs(c.x + c.w / 2 - m) < Math.abs(a.x + a.w / 2 - m) ? c : a); }
+      } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); karteAusBand(o, true); return; }
+      else if (e.key === 'Escape') { if (!F.karteikarte.offen()) waehle(null); return; }
+      if (!neu) return;
+      e.preventDefault();
+      const zielSvg = document.getElementById(neu.id).ownerSVGElement;
+      waehle(neu);
+      if (zielSvg !== svg) zielSvg.focus({ preventScroll: true });
+      if (ZB.schmal) {
+        const vw = roll.clientWidth;
+        if (neu.x < roll.scrollLeft || neu.x > roll.scrollLeft + vw - 40) roll.scrollLeft = neu.x - vw / 2;
+      }
+    });
+  }
+
+  // ================= Beim Scrollen: das Band auf dem Telefon =================
+  /* Auf dem Telefon ist das Band gut doppelt so breit wie der Schirm. Solange niemand es selbst bedient, schiebt es sich mit dem
+     Scrollen durch die Zeit, von Gilgamesch bis zum Eigenen am rechten Ende (FSeite.fortschritt): erst wenn es ganz im Bild ist
+     (Oberkante bei drei Fünfteln des Fensters), bis seine Oberkante ein Achtel unter dem oberen Rand steht. Zurückscrollen schiebt
+     es zurück. Die Zeile darunter nennt dabei nichts; sie nennt nur, was man selbst wählt. Wer das Band antippt, seitlich wischt
+     oder mit der Tastatur bedient, hat es von da an in der Hand.
+     Breit steht das Band still: es ist eine Abbildung, die man auf einen Blick erfasst, und die Startseite hat ihre Bewegung schon
+     in der springenden Chronik. Bei reduzierter Bewegung steht es auch auf dem Telefon still, am rechten Ende. */
+  const MITSCHIEBEN = { selbst: !!ruhig, links: null, leser: null };
+  function schiebt() { return !!ZB.schmal && !MITSCHIEBEN.selbst; }
+  function mitschieben() {
+    const M = MITSCHIEBEN;
+    if (!schiebt() || !M.leser || F.karteikarte.offen()) return;
+    const max = roll.scrollWidth - roll.clientWidth;
+    if (max <= 0) return;
+    roll.scrollLeft = Math.round(M.leser.wert() * max);
+    M.links = roll.scrollLeft;
+  }
+  (function () {
+    const zb = $('#zeitband');
+    if (!zb || !roll) return;
+    // Ein Tippen ist ein Klick; ein Finger, der nur die Seite scrollt, zählt nicht
+    const selbst = () => { MITSCHIEBEN.selbst = true; };
+    zb.addEventListener('click', selbst);
+    zb.addEventListener('keydown', selbst);
+    zb.addEventListener('focusin', selbst);
+    // Seitliches Wischen: das Band steht nicht mehr dort, wo das Scrollen es hingeschoben hat. Die Zeile wandert mit in den sichtbaren Teil
+    let bild = 0;
+    roll.addEventListener('scroll', () => {
+      if (MITSCHIEBEN.links !== null && Math.abs(roll.scrollLeft - MITSCHIEBEN.links) > 2) selbst();
+      if (!bild) bild = requestAnimationFrame(() => { bild = 0; zeileEinpassen(); });
+    }, { passive: true });
+    if (ruhig) return;
+    // Gemessen wird am Rahmen des Bands, der beim Neubauen bleibt; seine Oberkante ist die des Hauptbands
+    MITSCHIEBEN.leser = F.fortschritt(zb, mitschieben, { von: .6, bis: .12 });
+  })();
+
+  // ================= Aufbau und Größe =================
+  bandBauen();
+  F.schriften(3000).then(() => { regalZeichnen(); bandBauen(); ankerSetzen(); zielAnfahren(); });
+  let breiteVorher = window.innerWidth, warte = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(warte);
+    warte = setTimeout(() => {
+      if (g) { lebenBlickBerechnen(); neuSetzen(); }
+      tafelHoehe();
+      if (window.innerWidth === breiteVorher) return;
+      breiteVorher = window.innerWidth;
+      F.karteikarte.schliessen();
+      regalZeichnen(); bandBauen(); ankerSetzen();
+    }, 140);
+  });
+})();
+</script>
+</body>
+</html>

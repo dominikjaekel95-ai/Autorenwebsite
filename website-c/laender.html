@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Länder – Dominik Jäkel</title>
+<meta name="description" content="Länder: wohin Dominik Jäkel gereist ist, fünfundsechzig Länder und Gebiete auf dem Globus, nach Kontinenten verzeichnet. Die Länderguides sind in Arbeit.">
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Länder: links Titel, ein Satz zum Globus und das Verzeichnis aller bereisten Länder und Gebiete, nach Kontinenten gesetzt wie
+   ein Register im Buch; rechts der Globus mit den bereisten Ländern in Grau (dieselben Farben wie auf der Startseite), darunter die
+   Tafel. Jeder Name im Verzeichnis dreht den Globus zu seinem Land, die Tafel nennt es mit den Koordinaten seiner Mitte; ohne Wahl
+   steht dort der Überblick. Das Verzeichnis entsteht aus den Daten (INHALT.bereist und INHALT.kontinente): ein neues Land ist ein
+   Eintrag dort. Ein fertiger Länderguide ist ein Eintrag in daten/texte.js (art 'laenderguide', land mit dem ISO-Code); die Tafel
+   seines Lands führt dann zu ihm, lesen.html zeigt ihn und führt mit „Alle Länder“ hierher zurück.
+   Breit steht der Globus mit der Tafel neben dem Verzeichnis still. Schmal haftet über dem Verzeichnis ein Globusband, links die
+   Scheibe, rechts die Tafel: wer einen Namen antippt, sieht Land und Tafel, ohne zu scrollen. */
+
+.titelei { margin-top: var(--z); }
+.einleitung p + p { margin-top: calc(var(--z) * .5); }
+/* „Auf dem Globus: wohin ich gereist bin“ wie auf der Startseite: schwarz, solange der Überblick gilt, sonst der Weg zurück dorthin */
+.ebenen { color: var(--grau-1); }
+.ebenen .wort { color: var(--grau-1); }
+.ebenen .wort[aria-pressed="true"] { color: var(--schwarz); }
+
+/* Das Verzeichnis: je Kontinent ein Absatz mit hängendem Einzug, der Kontinent in Kapitälchen vorneweg, dahinter die Länder
+   alphabetisch, durch Kommas getrennt. Jeder Name ist ein Wort, das den Globus dorthin dreht; das gezeigte steht schwarz */
+.register { margin-top: calc(var(--z) * 1.5); }
+.register .gruppe { padding-left: 1.25em; text-indent: -1.25em; }
+.register .gruppe + .gruppe { margin-top: calc(var(--z) * .5); }
+.register dt { display: inline; margin-right: .3em; font-family: var(--sc); text-transform: lowercase; letter-spacing: .06em; color: var(--graphit); }
+.register dd { display: inline; }
+.register .wort { text-indent: 0; text-decoration-color: color-mix(in srgb, currentColor 20%, transparent); }   /* 65 Namen dicht: leiser als im Fließtext */
+.register .wort:hover { text-decoration-color: currentColor; }
+/* Ohne Skript gibt es keinen Globus; das Verzeichnis sagt es selbst (noscript) */
+html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
+
+/* Breit: Globus und Tafel bleiben neben dem Verzeichnis stehen */
+@media (min-width: 62.0625rem) {
+  .globusseite > .globus { position: sticky; top: calc(var(--z) * .5); }
+}
+/* Schmal: im Quelltext steht das Verzeichnis vor dem Globus (Tabfolge wie breit); im Bild steht der Globus davor */
+@media (max-width: 62rem) {
+  .globusseite > .register { order: 1; }
+  .register .gruppe { line-height: calc(var(--z) * 1.15); }
+}
+/* Das Globusband (das Skript setzt .als-band, wenn das Fenster hoch genug ist): die Scheibe gut halb so breit wie die Spalte,
+   höchstens ein Drittel der Fensterhöhe; rechts daneben die Tafel ohne Zahlenspalte. Eine feine Linie schließt das Band nach unten
+   ab, sobald es haftet und das Verzeichnis unter ihm durchläuft */
+:root { --band: min(calc((var(--vb, 100vw) - 2 * var(--rand-l)) * .55), calc(34svh - 12px)); }
+@media (max-width: 62rem) {
+  .globusseite > .globus.als-band {
+    position: sticky; top: 0; z-index: 5; grid-column: 1 / -1; justify-self: stretch; width: auto;
+    display: grid; grid-template-columns: var(--band) minmax(0, 1fr); column-gap: .9em; align-items: center;
+    margin: var(--z) 0 0; padding: 6px var(--rand-l);
+    background: var(--papier);
+  }
+  .globus.als-band .flaeche { grid-column: 1; grid-row: 1; }
+  /* Die Tafel als Legende neben der Scheibe: etwas kleiner und enger gesetzt, damit auch lange Namen neben ihr Platz haben */
+  .globus.als-band .tafel { grid-column: 2; grid-row: 1; display: block; margin: 0; font-size: .875em; line-height: 1.45; }
+  .globus.als-band .tafel-kopf { line-height: 1.25; }
+  .globus.als-band .tafel-marke { display: none; }
+  .globus.als-band .ersatz { grid-column: 1 / -1; }
+  .globus.als-band::after { content: ""; position: absolute; left: var(--rand-l); right: var(--rand-l); bottom: 0; border-bottom: 1px solid var(--grau-4); visibility: hidden; }
+  .globus.als-band.haftet::after { visibility: visible; }
+  .mit-band .register { margin-top: var(--z); }
+  /* Wer mit der Tastatur durch das Verzeichnis geht, landet nicht unter dem Band */
+  .mit-band .register .wort { scroll-margin-top: calc(var(--band) + 12px + var(--z)); }
+}
+</style>
+</head>
+<body class="mit-globus">
+<a class="sprung" href="#inhalt">Zum Inhalt</a>
+
+<header class="kopf">
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
+  <nav class="nav" aria-label="Website">
+    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
+    <ul class="nav-liste" id="nav-liste">
+      <li><a href="satoshi.html"><i>Satoshi</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="erzaehlungen.html">Erzählungen</a></li>
+      <li><a href="untertext.html"><i>Untertext</i></a></li>
+      <li><a href="laender.html" aria-current="page">Länder</a></li>
+      <li><a href="bibliothek.html">Bibliothek</a></li>
+      <li><a href="vita.html">Vita</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inhalt">
+<section class="globusseite" aria-labelledby="seiten-titel">
+  <div class="titelei">
+    <h1 class="seitentitel" id="seiten-titel">Länder</h1>
+    <p class="unterzeile">Länderguides, in&nbsp;Arbeit.</p>
+  </div>
+
+  <div class="einleitung">
+    <p class="ebenen">Auf dem Globus: <button type="button" class="wort" data-ueberblick aria-pressed="true">wohin ich gereist bin</button>.</p>
+    <p>Die meisten Länder liegen in <button type="button" class="wort" data-kontinent="Europa">Europa</button>, viele in <button type="button" class="wort" data-kontinent="Asien">Asien</button>, einige in <button type="button" class="wort" data-kontinent="Afrika">Afrika</button>, wenige in <button type="button" class="wort" data-kontinent="Amerika">Amerika</button>.</p>
+  </div>
+
+  <!-- Das Verzeichnis setzt das Skript aus INHALT.kontinente; die deutschen Namen kommen aus daten/laender-de.js -->
+  <dl class="register" id="register" aria-label="Verzeichnis der Länder und Gebiete"></dl>
+  <noscript><p class="register leise">Das Verzeichnis der Länder wird mit JavaScript gesetzt.</p></noscript>
+
+  <figure class="globus" id="globus">
+    <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den bereisten Ländern in Grau; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
+    <div class="tipp" hidden></div>
+    <p class="hinweis" hidden></p>
+    <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Länder stehen im Verzeichnis, die Tafel nennt jedes, das man wählt.</p>
+    <div class="tafel" id="tafel" aria-live="polite"></div>
+  </figure>
+</section>
+</main>
+
+<footer class="fuss" id="kontakt">
+  <section class="kontakt" aria-labelledby="kontakt-titel">
+    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
+    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <form class="post">
+      <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
+      <p class="post-status" role="status"></p>
+    </form>
+    <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
+    <p class="profile" hidden></p>
+  </section>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="globus/kern.js"></script>
+<script src="daten/inhalt.js"></script>
+<script src="daten/texte.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+  const { $, $$, esc } = F;
+  const ruhig = F.ruhig();
+
+  // ================= Daten =================
+  const bereist = I.bereist || [];
+  const KONTINENTE = I.kontinente || {};
+  // Deutsche Namen: Landesteile und Gebiete eigens (wie der Globus sie nennt), sonst aus daten/laender-de.js
+  const SONDER = Object.assign({ 'GB-ENG': 'England', 'GB-SCT': 'Schottland', 'GB-NIR': 'Nordirland', 'GB-WLS': 'Wales', 'PS-WB': 'Westjordanland', 'PS-GZ': 'Gazastreifen' }, I.sondernamen || {});
+  const DE = {};
+  Object.values((window.LAENDER_DE && window.LAENDER_DE.nach_id) || {}).forEach(e => { if (e[0] && !DE[e[0]]) DE[e[0]] = e[1]; });
+  const name = iso => SONDER[iso] || DE[iso] || iso;
+  /* Fertige Länderguides kommen aus daten/texte.js (über FSeite.texte, dieselben Einträge wie auf lesen.html): art: 'laenderguide'
+     und land: 'TW' (der ISO-Code wie in INHALT.bereist). Die Tafel des Lands führt dann zu lesen.html#<slug>; der neueste je Land.
+     Bis es den ersten gibt, bleibt die Liste leer */
+  const LAENDERGUIDES = {};
+  (F.texte ? F.texte.alle('laenderguide') : []).forEach(t => {
+    if (!LAENDERGUIDES[t.land]) LAENDERGUIDES[t.land] = F.SEITEN.lesen + '#' + t.slug;
+  });
+  // Blick auf einen Kontinent (wie auf der Startseite); Zoom nie zwischen 1 und 1,15, dort fehlte der runde Zuschnitt
+  const KONTINENT_BLICK = { Europa: [[13, 50], 3.3], Asien: [[94, 26], 1.75], Afrika: [[16, 4], 1.9], Amerika: [[-80, 12], 1.25] };
+
+  // ================= Verzeichnis =================
+  const registerEl = $('#register');
+  registerEl.innerHTML = Object.keys(KONTINENTE).map(k => {
+    const laender = KONTINENTE[k].slice().sort((a, b) => name(a).localeCompare(name(b), 'de'));
+    const woerter = laender.map(iso => `<button type="button" class="wort" data-land="${esc(iso)}">${esc(name(iso))}</button>`);
+    return `<div class="gruppe"><dt>${esc(k)}</dt> <dd>${woerter.join(', ')}</dd></div>`;
+  }).join('');
+  $$('.einleitung, .register').forEach(F.satzzeichenBinden);
+
+  // ================= Globus =================
+  const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas'), tipp = $('.tipp', figur), tafelEl = $('#tafel');
+  // Schmal haftet der Globus als Band über dem Verzeichnis, wenn das Fenster hoch genug ist; die Klasse steht, bevor der Kern misst
+  const bandMoeglich = () => !F.breit() && window.innerHeight >= 560 && !!(window.d3 && window.Globus);
+  let bandAn = false;
+  function bandSetzen() {
+    bandAn = bandMoeglich();
+    figur.classList.toggle('als-band', bandAn);
+    document.documentElement.classList.toggle('mit-band', bandAn);
+    haftet();
+  }
+  function haftet() { figur.classList.toggle('haftet', bandAn && figur.getBoundingClientRect().top <= .5); }
+  bandSetzen();
+
+  // wahl: null (Überblick), { kontinent } oder { iso }; zeiger: das Land unter dem Zeiger (nur mit Maus)
+  let wahl = null, zeiger = null;
+  const g = F.globus({
+    canvas, flaeche, tipp, hinweis: $('.hinweis', figur),
+    tippText: land => { if (zeiger !== land) { zeiger = land; tafelSetzen(); } return land.name; },
+    // Wer den Globus dreht, behält das gewählte Land umrandet (der Kern löst die Auswahl sonst bei jedem Griff)
+    beimEingriff: () => { if (g && wahl && wahl.iso) g.auswahl(wahl.iso); },
+    // Ohne Ortsnamen; die Angabe gibt der Seite die Projektion, mit der ein Tippen sein Land findet
+    namen: { orte: () => [], spur: () => [], aktiv: () => null }
+  });
+  const BLICK = { mitte: F.breit() ? [52, 30] : [40, 28], k: 1 };
+  if (g) g.ebene({ orte: [], laender: true, blick: BLICK }, { fliegen: false });
+  else { figur.classList.add('ohne-globus'); $('#ersatz').hidden = false; }
+
+  // ================= Tafel =================
+  // Mitte eines Lands: Schwerpunkt seiner größten Fläche (wie auf der Startseite); Kleinstaaten ohne Fläche aus INHALT.winzig
+  function mitte(iso, f) {
+    f = f || (g && g.land(iso));
+    return (f && f.punkt) || (I.winzig && I.winzig[iso]) || null;
+  }
+  const zahl = n => F.gross(F.zahlwort(n)) + ' Länder und Gebiete, grau auf dem Globus.';
+  // Keine große Zahl als Kachel: der Überblick und die Kontinente mit der Zahl ausgeschrieben im Satz
+  const ueberblickInhalt = () => ({ kopf: 'Wohin ich gereist bin', satz: zahl(bereist.length) });
+  const kontinentInhalt = k => ({ kopf: k, satz: zahl((KONTINENTE[k] || []).length) });
+  function landInhalt(iso, f) {
+    const ist = bereist.includes(iso), p = mitte(iso, f), guide = LAENDERGUIDES[iso];
+    return {
+      kopf: ist || !f ? name(iso) : f.name,
+      unter: ist ? 'bereist' : 'nicht bereist',
+      daten: p ? F.koord(p[1], p[0]) : '',
+      fuss: guide ? `<a href="${esc(guide)}">Zum Länderguide</a>` : ''
+    };
+  }
+  function inhaltJetzt() {
+    if (zeiger) return landInhalt(zeiger.iso, zeiger);
+    if (wahl && wahl.iso) return landInhalt(wahl.iso);
+    if (wahl && wahl.kontinent) return kontinentInhalt(wahl.kontinent);
+    return ueberblickInhalt();
+  }
+  let tafelStand = '';
+  function tafelSetzen() {
+    const t = inhaltJetzt(), stand = JSON.stringify(t);
+    if (stand === tafelStand) return;
+    tafelStand = stand;
+    F.tafel(tafelEl, t);
+  }
+  /* Die Tafel hält die Höhe ihres längsten Inhalts, damit nichts springt: breit passen Globus und Tafel so zusammen auf einen Schirm
+     (FSeite.tafelPlatz), schmal bleibt das Verzeichnis darunter an seinem Platz */
+  function tafelHoehe() {
+    const lang = bereist.slice().sort((a, b) => name(b).length - name(a).length).slice(0, 3);
+    const alle = [ueberblickInhalt()].concat(Object.keys(KONTINENTE).map(kontinentInhalt), lang.map(iso => landInhalt(iso)), Object.keys(LAENDERGUIDES).map(iso => landInhalt(iso)));
+    if (g && F.breit()) { const f = g.land('CD'); if (f) alle.push(landInhalt('CD', f)); }   // ein langer Name unter dem Zeiger
+    F.tafelPlatz(tafelEl, alle);
+  }
+
+  // Die Wörter: gewählter Kontinent und gewähltes Land schwarz, „wohin ich gereist bin“ gedrückt, solange der Überblick gilt
+  function markieren() {
+    $$('[data-ueberblick]').forEach(b => b.setAttribute('aria-pressed', String(!wahl)));
+    $$('[data-kontinent]').forEach(b => b.classList.toggle('ist-aktiv', !!wahl && wahl.kontinent === b.dataset.kontinent));
+    $$('[data-land]').forEach(b => {
+      const an = !!wahl && wahl.iso === b.dataset.land;
+      b.classList.toggle('ist-aktiv', an);
+      if (an) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+    });
+  }
+
+  // Schmal ohne Band (niedriges Fenster): nach einer Wahl die Scheibe ins Bild holen, wenn sie nicht ganz zu sehen ist
+  function globusInSicht() {
+    if (F.breit() || bandAn || !g) return;
+    const r = flaeche.getBoundingClientRect(), H = window.innerHeight;
+    if (r.top >= 0 && r.bottom <= H) return;
+    window.scrollBy({ top: r.top - 12, behavior: ruhig ? 'auto' : 'smooth' });
+  }
+
+  function landZeigen(iso) {
+    wahl = { iso }; zeiger = null;
+    markieren(); tafelSetzen();
+    if (g) g.landAnfliegen(iso);
+    globusInSicht();
+  }
+  function kontinentZeigen(k) {
+    wahl = { kontinent: k }; zeiger = null;
+    markieren(); tafelSetzen();
+    if (g) {
+      let ziel = KONTINENT_BLICK[k];
+      // Ein Kontinent, für den es keinen Blick gibt: die Mitte seiner Länder
+      if (!ziel) {
+        const punkte = (KONTINENTE[k] || []).map(iso => mitte(iso)).filter(Boolean);
+        ziel = punkte.length ? [window.d3.geoCentroid({ type: 'MultiPoint', coordinates: punkte }), 1.6] : [BLICK.mitte, 1];
+      }
+      // Ist der Globus rechts angeschnitten, liegt die Mitte des sichtbaren Teils etwas links; der Kontinent rückt dorthin
+      const versatz = F.breit() ? 5.2 / ziel[1] : 0;
+      g.auswahl(null);
+      g.fliegen([ziel[0][0] + versatz, ziel[0][1]], ziel[1]);
+    }
+    globusInSicht();
+  }
+  function ueberblickZeigen() {
+    wahl = null; zeiger = null;
+    markieren(); tafelSetzen();
+    if (g) { g.auswahl(null); g.fliegen(BLICK.mitte, BLICK.k); }
+    globusInSicht();
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button');
+    if (!t || !t.closest('main')) return;
+    const d = t.dataset;
+    if (d.land) landZeigen(d.land);
+    else if (d.kontinent) kontinentZeigen(d.kontinent);
+    else if (d.ueberblick !== undefined) ueberblickZeigen();
+  });
+
+  // Ein Land antippen oder anklicken: zuerst die bereisten Länder, dann alle übrigen (die Tafel sagt „nicht bereist“)
+  function landAn(e) {
+    const p = g && g.projektion, d3 = window.d3;
+    if (!p || !d3) return null;
+    const r = canvas.getBoundingClientRect();
+    const rot = p.rotate(), blick = [-rot[0], -rot[1]];
+    const ll = p.invert([e.clientX - r.left, e.clientY - r.top]);
+    if (!ll || d3.geoDistance(ll, blick) > Math.PI / 2 - .02) return null;
+    const isos = bereist.concat(Object.keys(DE).filter(iso => !bereist.includes(iso)), Object.keys(SONDER).filter(iso => !bereist.includes(iso)));
+    for (const iso of isos) { const f = g.land(iso); if (f && d3.geoContains(f, ll)) return f; }
+    return null;
+  }
+  canvas.addEventListener('click', e => {
+    if (!g) return;
+    const f = landAn(e) || zeiger;
+    if (!f || !f.iso) return;
+    wahl = { iso: f.iso };
+    markieren();
+    g.auswahl(f.iso);
+    tafelStand = ''; tafelSetzen();
+  });
+  // Verlässt der Zeiger den Globus, zeigt die Tafel wieder die Wahl oder den Überblick
+  if (tipp) new MutationObserver(() => { if (tipp.hidden && zeiger) { zeiger = null; tafelSetzen(); } }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
+  /* Der Kern lädt die feineren Küsten (daten/welt-50m.js) nach; die Mitte eines Lands rückt damit um ein paar Bogenminuten.
+     Ist dann ein Land gewählt, nennt die Tafel gleich die genaueren Koordinaten, damit ein Land nicht zweierlei Mitten hat */
+  document.addEventListener('load', e => {
+    const s = e.target;
+    if (s && s.tagName === 'SCRIPT' && /welt-50m\.js$/.test(s.src || '')) setTimeout(tafelSetzen, 0);
+  }, true);
+
+  let uhr = 0;
+  window.addEventListener('resize', () => { clearTimeout(uhr); uhr = setTimeout(() => { bandSetzen(); tafelHoehe(); }, 120); });
+  let rollBild = 0;
+  window.addEventListener('scroll', () => { if (!rollBild) rollBild = requestAnimationFrame(() => { rollBild = 0; haftet(); }); }, { passive: true });
+
+  markieren();
+  tafelSetzen();
+  tafelHoehe();
+  F.schriften(2500).then(() => { tafelHoehe(); if (g) g.zeichnen(); });
+})();
+</script>
+</body>
+</html>

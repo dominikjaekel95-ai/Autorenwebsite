@@ -126,7 +126,7 @@ abbr { text-decoration: none; }
    Verweis im Text und Bedienwort: in Ruhe 1 px in voller Tinte unterstrichen. Gewählt: halbfett ohne Strich.
    Nicht verfügbar: --leise, ohne Strich. Farbe tritt nie beim Zeigen auf, und nichts geht über. */
 a, .wort {
-  color: inherit;
+  color: inherit; hyphens: none; -webkit-hyphens: none;
   text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .12em;
   text-decoration-color: currentColor; text-decoration-skip-ink: auto;
 }
@@ -220,7 +220,7 @@ html:not(.js) .post { display: none; }
 /* ---------- Rechtstexte (6.18) ---------- */
 .recht { max-width: var(--mass); }
 .recht .seitentitel { margin-bottom: 0; }
-.recht .vermerk { margin-top: 0; margin-bottom: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); font-style: normal; }
+.recht .vermerk { margin-top: var(--z-viertel); margin-bottom: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); font-style: normal; }
 .recht section + section, .recht .vorab + section { margin-top: var(--z-zwei); }
 .recht .titel { margin-top: 0; margin-bottom: var(--z-halb); }
 .recht section > * + * { margin-top: var(--z-dreiviertel); }
@@ -232,7 +232,6 @@ html:not(.js) .post { display: none; }
 .recht .rechte li { position: relative; padding-left: 1.1em; }
 .recht .rechte li + li { margin-top: var(--z-viertel); }
 .recht .rechte li::before { content: "–"; position: absolute; left: 0; }
-.recht .rechte .leise { white-space: nowrap; }
 
 /* ---------- Globus (6.3) ---------- */
 .flaeche { position: relative; width: 100%; aspect-ratio: 1; }
@@ -256,6 +255,8 @@ html:not(.js) .post { display: none; }
 .tipp { left: 0; top: 0; transform: translate(14px, -50%); }
 .tipp.links { transform: translate(calc(-100% - 14px), -50%); }
 .hinweis { left: 14%; top: 4%; }
+/* Ausgelöst von Rad oder Finger: beim Zeiger, im sichtbaren Teil des Fensters (FSeite setzt left und top) */
+.hinweis.am-zeiger { position: fixed; z-index: 20; }
 .tipp[hidden], .hinweis[hidden], .ersatz[hidden] { display: none; }
 /* Ohne Globus (kein Skript, Fehler): ein Satz an seiner Stelle */
 .ersatz { font-style: normal; max-width: 22em; padding: var(--z-zwei) 0 var(--z); }
@@ -287,17 +288,22 @@ html:not(.js) .post { display: none; }
   width: var(--globus);
   margin: calc(var(--z) * .5 - var(--kopf-h)) calc(var(--globus) * -.09) 0 0;
 }
-/* Die Tafel steht unter dem sichtbaren Teil des Globus; die Jahreszahl hängt, wo Platz ist, links in den Steg */
-.globusseite > .globus .tafel { min-height: var(--tafel-h); margin: var(--z-viertel) calc(var(--globus) * .09 + var(--rand-r)) 0 calc(-1 * clamp(0px, var(--globuskante) - var(--rand-l) - var(--spalte) - 1.5em, 5.2em)); }
+/* Unter dem sichtbaren Teil des Globus die Steuerzeile, darunter die Tafel; die Jahreszahl hängt, wo Platz ist, links in den Steg.
+   Die Höhe der Tafel hält die Seite fest (FSeite.tafelReservieren), damit darunter nichts springt */
+.globusseite > .globus .tafel, .globusseite > .globus .steuer { margin: var(--z-viertel) calc(var(--globus) * .09 + var(--rand-r)) 0 calc(-1 * clamp(0px, var(--globuskante) - var(--rand-l) - var(--spalte) - 1.5em, 5.2em)); }
+.globusseite > .globus .steuer + .tafel { margin-top: var(--z-halb); }
+/* Eine Tafel ohne Marke (Länder): ihr Inhalt steht an der Kante der Kugel */
+.globusseite > .globus .tafel.ohne-marke { margin-left: 0; }
 
 /* ---------- Tafel (6.4) ----------
    Links die Marke (Jahr oder Bandziffer, Grad groß; „bis“, „seit“, „um“ klein darüber), rechts Kopf (Kartenzeichen und Ort,
    Grad Überschrift), Unterzeile und Koordinaten (Grad klein), ein Text (Grad Text) und im Fuß die Steuerzeile.
    Jahreszahl und Ortsname stehen auf einer Grundlinie. */
-.tafel {
-  display: grid; grid-template-columns: 4.4em minmax(0, 1fr); column-gap: .8em; align-items: first baseline; align-content: start;
-  line-height: var(--z);
-}
+.tafel, .steuer { display: grid; grid-template-columns: 4.4em minmax(0, 1fr); column-gap: .8em; }
+.tafel { align-items: first baseline; align-content: start; line-height: var(--z); }
+.tafel.ohne-marke { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
+.tafel.ohne-marke .tafel-marke { display: none; }
+.tafel.ohne-marke .tafel-inhalt { grid-column: 1; }
 .tafel-marke { grid-column: 1; position: relative; text-align: right; font-size: var(--g-gross); line-height: var(--zh-ueber); white-space: nowrap; font-variant-numeric: oldstyle-nums proportional-nums; }
 .tafel-marke .vor, .tafel-marke .bis { position: absolute; right: 0; bottom: calc(100% - .5em); font-size: var(--g-klein); line-height: var(--zh-klein); font-style: normal; }
 .tafel-inhalt { grid-column: 2; min-width: 0; }
@@ -310,11 +316,19 @@ html:not(.js) .post { display: none; }
 .tafel-fuss { margin-top: var(--z-halb); display: flex; flex-wrap: wrap; column-gap: 1.2em; }
 .tafel-fuss:empty, .tafel-fuss[hidden] { display: none; }
 
-/* Gezeichnete Zeichen (FSeite.zeichen): in Tinte, auf der x-Höhe */
+/* Gezeichnete Zeichen (FSeite.zeichen): in Tinte, auf der x-Höhe. Die Zeichen des Regals stehen auf einem kleinen gefüllten
+   Rücken in der Farbe der gelesenen Bücher im Zeitband, damit sie wie Bücher aussehen und nicht wie Kästchen zum Ankreuzen */
 .zeichen { display: inline-block; vertical-align: .05em; overflow: visible; color: inherit; }
+.zeichen .ruecken-grund { fill: var(--zb-strich); }
 
-/* Steuerzeile: früher, später und ein Steuerwort, unterstrichen; das nicht verfügbare Wort leise an seinem Platz */
-.steuerzeile { display: flex; flex-wrap: wrap; column-gap: 1.2em; }
+/* Steuerzeile (6.4): früher, später und ein Steuerwort, unterstrichen; das nicht verfügbare Wort leise an seinem Platz. Sie steht
+   direkt unter der Kugel, im Raster der Tafel: breit bündig mit dem Inhalt der Tafel, auf dem Telefon über die ganze Breite.
+   Hat die Ebene keinen Ablauf (Reisen), ist sie verborgen und hält ihren Platz, damit die Tafel nicht springt */
+.steuer { line-height: var(--z); }
+.steuer-rand { grid-column: 1; grid-row: 1; }
+.steuer .tafel-inhalt { grid-column: 2; grid-row: 1; }
+.steuerzeile { display: flex; flex-wrap: wrap; column-gap: 1.2em; row-gap: var(--z-viertel); margin: 0; }
+.steuerzeile[hidden] { display: flex; visibility: hidden; }
 .steuerzeile .wort[hidden] { display: none; }
 
 /* Ortsleiste: die Orte der Ebene als Knöpfe in einer fließenden Zeile, Grad klein, durch Komma getrennt */
@@ -367,7 +381,10 @@ html:not(.js) .post { display: none; }
   .globusseite { grid-template-columns: var(--rand-l) minmax(0, 1fr) var(--rand-l); grid-template-rows: none; }
   .globusseite > *, .globusseite > .globus { grid-column: 2; grid-row: auto; }
   .globusseite > .globus { justify-self: center; width: min(100%, calc(100svh - 6rem)); margin: var(--z) 0 0; scroll-margin-top: 12px; }
-  .globusseite > .globus .tafel { margin: var(--z-viertel) 0 0; }
+  .globusseite > .globus .tafel, .globusseite > .globus .steuer { margin: var(--z-viertel) 0 0; }
+  .globusseite > .globus .steuer + .tafel { margin-top: var(--z-halb); }
+  /* Die Steuerzeile beginnt an der Kante der Kugel, hier am Rand der Spalte, und hat die ganze Breite */
+  .steuer .tafel-inhalt { grid-column: 1 / -1; }
   .abschnitt { padding-left: var(--rand-l); padding-right: var(--rand-l); }
   .fuss { padding-left: var(--rand-l); padding-right: var(--rand-l); }
   .unterseite { padding-top: var(--z); }
@@ -377,11 +394,23 @@ html:not(.js) .post { display: none; }
   .nav { margin-top: calc(var(--z) - 8.5px); }
   .nav-liste { column-gap: .75em; }
   .nav-liste a { display: inline-block; padding: 8.5px 0; }
-  .tafel { grid-template-columns: 3.6em minmax(0, 1fr); column-gap: .65em; }
+  .tafel, .steuer { grid-template-columns: 3.6em minmax(0, 1fr); column-gap: .65em; }
+  /* „früher  später  noch einmal von vorn“ passt so auch bei 360 px in eine Zeile */
+  .steuerzeile { column-gap: 1em; }
+  .tafel.ohne-marke { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
+  /* Der Name im Grad Text: auf dem Telefon steht der erste Satz größer als der Name (M9) */
+  .briefkopf .name { font-size: var(--g-text); }
 }
-/* Finger: Bedienwörter 44 px hoch, ohne dass die Zeile wächst */
+/* Finger: Bedienwörter 44 px hoch, ohne dass die Zeile wächst (die Fläche reicht so weit über und unter die Zeile, wie zu 44 px
+   fehlt). Ortsleisten und die weiteren Schauplätze stehen dafür etwas weiter auseinander (1,25 z statt ¾ z): so überdecken die
+   Flächen benachbarter Zeilen einander kaum, und ein Tipp trifft das Wort, auf das er zielt */
 @media (pointer: coarse) {
-  button.wort { padding-block: 12px; margin-block: -12px; }
+  button.wort { padding-block: 12px; margin-block: -12px; padding-block: max(0px, calc((2.75rem - 1lh) / 2)); margin-block: min(0px, calc((1lh - 2.75rem) / 2)); }
+  .ortsleiste, .weitere { line-height: var(--zh-ueber); }
+  /* Fuß und Name: 44 px Trefferfläche; ein Verweis im Satz wächst nur in seiner Fläche, nicht in der Zeile */
+  .fuss .impressum { line-height: var(--z); }
+  .fuss a { padding-block: 8px; padding-block: max(0px, calc((2.75rem - 1lh) / 2)); }
+  .briefkopf a.name { padding-block: 8.5px; margin-block: -8.5px; }
   .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
   .post .wort { padding-block: 1.25rem 0; margin-block: 0; min-height: 2.75rem; }
 }

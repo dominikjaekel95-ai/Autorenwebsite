@@ -11,7 +11,7 @@
 <style>
 /* Untertext, das Journal (gestaltung-website-c.md, 6.19 und 9.7): Kopf, Titel, eine ruhige Zeile im Grad Text, Fuß. Eine Spalte in der Satzbreite.
    Die Einträge kommen aus daten/texte.js (art: 'untertext') über FSeite.texte, der neueste zuerst. Je Eintrag eine Zeile: der Titel
-   schlicht als Verweis zur Leseseite (ohne Kursive, ohne Anführungszeichen), der Untertitel und das Datum im Grad klein dahinter.
+   schlicht als Verweis zur Leseseite (ohne Kursive, ohne Anführungszeichen), der Untertitel, dahinter das Datum im Grad klein.
    Einträge ¼ z auseinander; bricht ein Eintrag um, hängt die Folgezeile 1 em ein wie in einem Register.
    Solange es keinen Eintrag gibt, steht der Satz #texte-leer im Grad Text. Ohne Skript steht er auch, mit Skript erst, wenn die Liste
    wirklich leer ist (so blitzt er nicht auf, bevor die Liste kommt). */
@@ -63,7 +63,7 @@
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
   </div>
-  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
 </footer>
 
 <script src="daten/texte.js"></script>
@@ -81,8 +81,8 @@
     const titel = T.satz(t.titel), d = T.datum(t.datum);
     const unter = t.untertitel ? T.punkt(T.satz(t.untertitel)) : '';
     let zeile = '<a href="' + F.SEITEN.lesen + '#' + t.slug + '">' + titel + '</a>';
-    if (unter) zeile += (T.zeichenAmEnde(titel) ? ' ' : '. ') + '<span class="klein">' + unter + '</span>';
-    if (d) zeile += (unter || T.zeichenAmEnde(titel) ? ' ' : ', ') + '<span class="klein"><time datetime="' + F.esc(String(t.datum).trim()) + '">' + d + '</time></span>';
+    if (unter) zeile += (T.zeichenAmEnde(titel) ? ' ' : '. ') + unter;
+    if (d) zeile += (unter || T.zeichenAmEnde(titel) ? ' ' : ', ') + '<span class="klein nw"><time datetime="' + F.esc(String(t.datum).trim()) + '">' + d + '</time></span>';
     return '<li>' + zeile + '</li>';
   }).join('');
   liste.hidden = false;

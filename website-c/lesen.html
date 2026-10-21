@@ -18,6 +18,8 @@
 .lese-kopf { margin-bottom: var(--z); }
 .lese-kopf .seitentitel { margin-bottom: 0; }
 .lese-ort { margin-top: var(--z-viertel); font-size: var(--g-klein); line-height: var(--zh-klein); }
+/* Auch ein Text, der als html kommt (etwa mit einem Zitat oder einer Liste), hat ¾ z zwischen seinen Teilen */
+.lese-satz > * + * { margin-top: var(--z-dreiviertel); }
 .lese-satz .zaesur { height: var(--z); margin: var(--z) 0; border: 0; overflow: visible; text-align: center; color: var(--tinte); }
 .lese-satz .zaesur::after { content: "*\2002\2002*\2002\2002*"; display: block; line-height: var(--z); }
 .lese-fuss { margin-top: var(--z-zwei); }
@@ -71,7 +73,7 @@
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
   </div>
-  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
 </footer>
 
 <script src="daten/texte.js"></script>
@@ -108,7 +110,7 @@
   function ortZeile(t) {
     const o = t.ort, d = T.datum(t.datum);
     const name = typeof o === 'string' ? o : o && o.name ? o.name : '';
-    const zeile = [name ? T.satz(name) : '', d ? '<time datetime="' + F.esc(String(t.datum).trim()) + '">' + d + '</time>' : ''].filter(Boolean).join(', ');
+    const zeile = [name ? T.satz(name) : '', d ? '<time class="nw" datetime="' + F.esc(String(t.datum).trim()) + '">' + d + '</time>' : ''].filter(Boolean).join(', ');
     return zeile ? '<p class="lese-ort">' + zeile + '</p>' : '';
   }
 
@@ -125,8 +127,10 @@
     if (!t) {
       navMarke(null);
       document.title = 'Lesen' + NAME;
+      // Nennt die Adresse eine Stelle der Seite (#inhalt, #kontakt), ist sie kein fehlender Text
+      const fehlt = slug && !document.getElementById(slug);
       ziel.innerHTML = '<h1 class="seitentitel">Lesen</h1>'
-        + '<p>' + (slug ? 'Unter dieser Adresse steht kein Text. ' : '') + HINWEIS + '</p>';
+        + '<p>' + (fehlt ? 'Unter dieser Adresse steht kein Text. ' : '') + HINWEIS + '</p>';
       return;
     }
     const L = T.ARTEN[t.art], reihe = alle.filter(x => x.art === t.art), i = reihe.indexOf(t);

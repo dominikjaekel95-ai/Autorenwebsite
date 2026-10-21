@@ -23,18 +23,18 @@
 /* ---------- Die drei Bände (6.9) ---------- */
 .baende { margin-top: var(--z-drei); }
 .band + .band { margin-top: var(--z-zwei); }
-/* „Band I“, 1 em Abstand, der Titel; aufrecht, ohne Randziffer. „Arbeitstitel“ klein dahinter */
-.band-titel { margin-bottom: var(--z-viertel); }
+/* „Band I“, 1 em Abstand, der Titel; aufrecht, ohne Randziffer. „Arbeitstitel“ klein dahinter. Umbrechen darf die Überschrift
+   nur zwischen ihren Teilen (.nw): nach „Band I“, am Komma eines langen Titels, vor „Arbeitstitel“, nie mitten in einer Wendung */
+.band-titel { margin-bottom: var(--z-viertel); text-wrap: wrap; }
 .band-titel .band-nr { margin-right: .75em; }
+/* Die Zeile aus dem Exposé ist ein einzelner Satz: ausgeglichen, damit sie am Gedankenstrich bricht statt „… sie / zu begraben.“
+   (pretty) oder mit „begraben.“ allein in der zweiten Zeile (wrap) */
+.band .zeile-expose { text-wrap: balance; }
 /* Ortszeile: der Ort als Knopf, die Zeit, in der nächsten Zeile die Koordinaten */
 .band-ort { font-variant-numeric: oldstyle-nums proportional-nums; }
 .band > p + p { margin-top: var(--z-dreiviertel); }
 .regal { margin-top: var(--z-zwei); }
 .regal .wort.ist-offen { font-weight: 600; letter-spacing: var(--ausgleich, 0); text-decoration-line: none; }
-
-/* Tafel: die Steuerzeile steht immer an derselben Stelle, unten in der reservierten Höhe */
-.tafel.fuss-unten { position: relative; padding-bottom: calc(var(--z) + var(--z-halb)); }
-.tafel.fuss-unten .steuerzeile { position: absolute; left: calc(4.4em + .8em); right: 0; bottom: 0; margin: 0; }
 
 /* Ohne Skript: kein Globus; Orte und Bände stehen als Text */
 html:not(.js) .globusseite > .globus { display: none; }
@@ -44,14 +44,6 @@ html:not(.js) .globusseite > .globus { display: none; }
   .globusseite > .globus { position: sticky; top: var(--z-halb); }
   /* Ein Sprung zu einem Band setzt die Überschrift auf die Leselinie */
   .band { scroll-margin-top: 40svh; }
-}
-@media (max-width: 62rem) {
-  /* Einspaltig: die Steuerzeile direkt unter der Kugel; die Tafel wächst nach unten */
-  .globusseite > .globus .tafel.fuss-unten { min-height: 0; padding: 0; }
-  .tafel.fuss-unten .tafel-inhalt { display: contents; }
-  .tafel.fuss-unten .steuerzeile { position: static; grid-column: 1 / -1; grid-row: 1; row-gap: var(--z-halb); margin: 0 0 var(--z-halb); }
-  .tafel.fuss-unten .tafel-marke, .tafel.fuss-unten .tafel-kopf { grid-row: 2; }
-  .tafel.fuss-unten .tafel-inhalt > :not(.steuerzeile) { grid-column: 2; }
 }
 @media (max-width: 40rem) {
   .baende { margin-top: var(--z-zwei); }
@@ -92,28 +84,28 @@ html:not(.js) .globusseite > .globus { display: none; }
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen der Trilogie; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <p class="hinweis" hidden></p>
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text und auf der Tafel, mit ihren Koordinaten.</p>
-    <div class="tafel fuss-unten" id="tafel" aria-live="off"></div>
+    <div class="tafel" id="tafel" aria-live="off"></div>
   </figure>
 
   <div class="baende" id="baende">
     <section class="band" id="band-i" data-band="I" aria-labelledby="band-i-titel">
-      <h2 class="titel band-titel" id="band-i-titel"><span class="band-nr">Band I</span> Kreise ohne Wiederkehr</h2>
+      <h2 class="titel band-titel" id="band-i-titel"><span class="band-nr nw">Band I</span> <span class="nw">Kreise ohne Wiederkehr</span></h2>
       <p class="band-ort klein"><span class="wird-knopf" data-station="0">Göbekli Tepe</span>, um&nbsp;8000&nbsp;v.&nbsp;Chr.<br>37°&nbsp;13′&nbsp;N, 38°&nbsp;55′&nbsp;O</p>
       <p>Die Geburt der organisierten Religion und die Sesshaftwerdung.</p>
-      <p>Als die Menschheit ihre Götter erfand – und beschloss, sie zu begraben.</p>
+      <p class="zeile-expose">Als die Menschheit ihre Götter erfand&nbsp;– und beschloss, sie zu begraben.</p>
       <p>Am ersten Tempel der Menschheit kämpft der Priester Jaromir – der mit nur 37&nbsp;Sommern den Titel des „Ältesten“ trägt – um das Überleben seines Volkes. Die Winter werden kälter, die Ahnen wenden sich von den Menschen ab und die Jagdgründe versiegen. Zwischen den ersten sesshaften Bauern und den nomadischen Jägern des Umlands droht ein Krieg auszubrechen. Verzweifelt sucht Jaromir nach einem Schüler und Nachfolger, um die Verbindung zu den Ahnen wiederherzustellen. Doch als er gezwungen wird, die gefangene Jägerin Kannika in sein Dorf aufzunehmen, gerät nicht nur sein Glaube, sondern alles, wofür er jemals einstand, ins Wanken.</p>
       <p>Alles steht unter der Frage: Warum wurde der älteste Tempel der Menschheit nach zweitausend Jahren Blütezeit absichtlich unter Unmengen von Schutt und Erde begraben? Dieser Roman erzählt die Geschichte.</p>
     </section>
 
     <section class="band" id="band-ii" data-band="II" aria-labelledby="band-ii-titel">
-      <h2 class="titel band-titel" id="band-ii-titel"><span class="band-nr">Band II</span> Von dem König, der niemals sterben wollte <span class="arbeitstitel">Arbeitstitel</span></h2>
+      <h2 class="titel band-titel" id="band-ii-titel"><span class="band-nr nw">Band II</span> <span class="nw">Von dem König,</span> <span class="nw">der niemals sterben wollte</span> <span class="arbeitstitel">Arbeitstitel</span></h2>
       <p class="band-ort klein"><span class="wird-knopf" data-station="1">Uruk</span>, um&nbsp;2700&nbsp;v.&nbsp;Chr.<br>31°&nbsp;19′&nbsp;N, 45°&nbsp;38′&nbsp;O</p>
       <p>Die Geburt der Literatur und der Wandel der Schrift von einer bürokratischen zu einer Sprache der Mythen und Legenden.</p>
       <p>Der junge Schreiberlehrling Harran bricht auf, um seine Schwester Samhat zu retten, die König Gilgamesch entführt hat. Er trifft auf einen Herrscher, der von der Angst vor dem Tod besessen ist und nach Unsterblichkeit strebt. Harran erkennt, dass er den König nicht mit Gewalt besiegen kann, sondern nur, wenn er ihm eine Geschichte schreibt.</p>
     </section>
 
     <section class="band" id="band-iii" data-band="III" aria-labelledby="band-iii-titel">
-      <h2 class="titel band-titel" id="band-iii-titel"><span class="band-nr">Band III</span> Das steinerne Wort <span class="arbeitstitel">Arbeitstitel</span></h2>
+      <h2 class="titel band-titel" id="band-iii-titel"><span class="band-nr nw">Band III</span> <span class="nw">Das steinerne Wort</span> <span class="arbeitstitel">Arbeitstitel</span></h2>
       <p class="band-ort klein"><span class="wird-knopf" data-station="3">Jerusalem</span>, um&nbsp;940&nbsp;v.&nbsp;Chr.<br>31°&nbsp;47′&nbsp;N, 35°&nbsp;13′&nbsp;O<br>Auf dem Globus auch <span class="wird-knopf" data-station="2">Tyros</span>, die Stadt der Phönizier.</p>
       <p>Die Geburt der Heiligen Schrift als politisches Werkzeug.</p>
       <p>Die phönizische Gelehrte Thyra, eine Meisterin aller Mythen der Mittelmeervölker, strandet in Jerusalem. Dort zwingt sie der alternde König Salomo, ihm bei seinem Monumentalwerk zu helfen: aus den vielen Göttern seines zerfallenden Reiches einen einzigen, allmächtigen Gott zu schaffen, um sein zerstrittenes Volk zu einen.</p>
@@ -135,7 +127,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
   </div>
-  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
 </footer>
 
 <script src="lib/d3.min.js"></script>
@@ -180,39 +172,17 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   // ================= Tafel =================
   const tafelEl = $('#tafel');
-  let gedrueckt = null, leise = false, alleImLauf = false, a = null;
-  tafelEl.addEventListener('click', e => {
-    gedrueckt = e.target.closest('button');
-    // Spielt das Steuerwort nach einer Wahl weiter, zeigt die Kugel alle Orte; von vorn nur die erreichten (wie FSeite.ablauf)
-    if (gedrueckt && gedrueckt.dataset.steuer === 'wort' && a) {
-      const z = a.zustand();
-      if (z === 'hand') alleImLauf = true;
-      else if (z === 'ende' || z === 'bereit') alleImLauf = false;
-    }
-  }, true);
-  // Neu setzen; die Steuerzeile bleibt dasselbe Element und behält den Fokus (auch wenn das gedrückte Wort leise geworden ist)
-  function tafelSetzen(i) {
-    const fokus = tafelEl.contains(document.activeElement) ? document.activeElement : gedrueckt && document.activeElement === document.body ? gedrueckt : null;
-    gedrueckt = null;
-    F.tafel(tafelEl, F.ursprungInhalt(i));
-    if (!fokus) return;
-    const ziel = !fokus.disabled && !fokus.hidden && tafelEl.contains(fokus) ? fokus : $$('button', tafelEl).find(b => !b.disabled && !b.hidden);
-    if (ziel) ziel.focus({ preventScroll: true });
-  }
+  let leise = false, a = null;
+  // Neu setzen; die Steuerzeile steht über der Tafel und bleibt dabei, wie sie ist (auch ihr Fokus)
+  const tafelSetzen = i => F.tafel(tafelEl, F.ursprungInhalt(i));
   tafelSetzen(-1);
 
   // ================= Globus =================
   const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
   const ORTE = ST.map(s => ({ name: s.name, lat: s.lat, lon: s.lon }));
-  // Namen in Ruhe: während eines Laufs von vorn nur die Orte bis zum jetzigen, sonst alle vier
-  function namenOrte() {
-    if (!a) return [];
-    const z = a.zustand();
-    if (z === 'bereit') return [];
-    if ((z === 'einspieler' || z === 'abspielen' || z === 'angehalten') && !alleImLauf) return ORTE.slice(0, a.jetzt() + 1);
-    return ORTE;
-  }
-  const namenAktiv = () => { const s = a && ST[a.jetzt()]; return !s || a.zustand() === 'bereit' ? null : s.name; };
+  // Namen in Ruhe: die vier Orte; welche davon während eines Einspielers schon stehen, weiß der Kern (g.gezeigt)
+  const namenOrte = () => ORTE;
+  const namenAktiv = () => { const s = a && ST[a.jetzt()]; return !s || a.zustand() === 'bereit' || a.zustand() === 'ruhe' ? null : s.name; };
   const g = F.globus({
     canvas, flaeche, hinweis: $('.hinweis', figur),
     // Breit haftet die Kugel neben dem Text, und man scrollt über sie hinweg: dort kein Hinweis auf Strg oder ⌘
@@ -309,7 +279,12 @@ html:not(.js) .globusseite > .globus { display: none; }
   }
   const leser = F.leselinie(BAENDE, (i, info) => {
     clearTimeout(leseUhr);
-    if (!fuehrt() || i < 0) return;
+    if (!fuehrt()) return;
+    // Zurück über den ersten Band nach oben: die Kugel zeigt wieder die ganze Trilogie, die Tafel ihren Überblick
+    if (i < 0) {
+      if (info.vorher != null && info.vorher >= 0) leseUhr = setTimeout(() => { if (leser.jetzt() < 0) { leise = true; a.ruhen(); leise = false; } }, 200);
+      return;
+    }
     nachEnde = false;
     if (info.vorher === null) { lesenWaehlen(i); return; }
     leseUhr = setTimeout(() => lesenWaehlen(i), 200);
@@ -351,7 +326,6 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   // ================= Start =================
   if (g) {
-    g.sperren(true);
     tafelHoehe();
     const blick = ruhig ? ueberblick() || START : START;
     g.ebene({ orte: ORTE, laender: false, grenzen: false, fluesse: true, blick }, { fliegen: false });

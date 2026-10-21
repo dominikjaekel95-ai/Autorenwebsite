@@ -44,6 +44,9 @@ html:not(.js) .zeichenerklaerung { display: none; }
 }
 .ruecken.ist-offen { --hy: var(--zug); box-shadow: inset 0 0 0 1.5px var(--tinte); }
 @media (hover: hover) { .ruecken:hover { box-shadow: inset 0 0 0 1.5px var(--tinte); } }
+/* Auf dunklen Rücken (Schrift in Papier) sähe man die Kontur in Tinte nicht: dort zeigt eine Linie in Papier dasselbe an */
+.ruecken.dunkel.ist-offen { box-shadow: inset 0 0 0 1.5px var(--tinte), inset 0 0 0 2.5px var(--papier); }
+@media (hover: hover) { .ruecken.dunkel:hover { box-shadow: inset 0 0 0 1.5px var(--tinte), inset 0 0 0 2.5px var(--papier); } }
 .ruecken:focus-visible { outline-offset: 2px; z-index: 1; }
 /* Rückenschrift: aufrecht, gewöhnliche Vollkorn, 9 bis 13 px aus der Messung; nie mit Auslassungspunkten gekürzt */
 .aufschrift { display: block; writing-mode: vertical-rl; line-height: 1.12; white-space: nowrap; overflow: hidden; max-height: calc(100% - 20px); pointer-events: none; font-variant-numeric: oldstyle-nums; }
@@ -64,8 +67,9 @@ html:not(.js) .zeichenerklaerung { display: none; }
 .liegt.de .aufschrift { transform: none; }
 .liegt .z-punkt { left: auto; right: 6px; bottom: calc(50% - 1.5px); }
 
-/* Eigene Werke: weiß mit Kontur in Tinte, der Titel aufrecht; die Trilogie im Schuber */
-.eigen { --grund: var(--papier); --farbe: var(--tinte); box-shadow: inset 0 0 0 1px var(--tinte); }
+/* Eigene Werke: eine einheitliche Ausgabe in Tinte, der Titel aufrecht in Papier; die Trilogie im Schuber. So sind sie die
+   stärksten Rücken im Regal, ohne eine neue Farbe */
+.eigen { --grund: var(--tinte); --farbe: var(--papier); }
 .eigen .aufschrift { font-size: var(--sf); transform: rotate(180deg); max-height: calc(100% - 16px); }
 .eigen-gruppe { gap: 2px; }
 /* Der Schuber: ein Klick schiebt die drei Bände in 300 ms nach rechts heraus. Sie gleiten nebeneinander, keiner fährt über einen
@@ -105,7 +109,7 @@ html:not(.js) .zeichenerklaerung { display: none; }
 html:not(.js) .wartet { display: none; }
 
 @media (max-width: 40rem) {
-  .leseliste li { padding-bottom: var(--z-viertel); }
+  .regal { padding-top: var(--z); }
 }
 /* Finger: Rücken und Einträge 44 px hoch treffbar, ohne dass eine Zeile wächst */
 @media (pointer: coarse) {
@@ -176,7 +180,7 @@ html:not(.js) .wartet { display: none; }
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
   </div>
-  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
 </footer>
 
 <script src="daten/inhalt.js"></script>
@@ -200,52 +204,11 @@ html:not(.js) .wartet { display: none; }
   // Noch kürzer, nur wenn der Platz fehlt: ohne „oder …“, ohne „and Other Stories“, ohne Artikel
   const titelKuerzer = s => s.replace(/,? (or|oder),? .+$/i, '').replace(/,? (and|und|&) (other|andere) .+$/i, '').replace(/^(The|A|An|Der|Die|Das|Ein|Eine) (?=\S)/, '').trim();
   // Deutsche Rücken laufen von unten nach oben
-  const DE_VERLAG = /suhrkamp|rowohlt|diogenes|kiepenheuer|kiwi|deutscher taschenbuch|\bdtv\b|hanser|fischer|insel|reclam|piper|ullstein|aufbau|luchterhand|wagenbach|klett|heyne|goldmann|\bbtb\b|kein & aber|\bmare\b|matthes|beck|thienemann|arena|bastei|droemer|knaur|scherz|dumont|hoffmann und campe|arche|kirschbuch|cornelsen|rediroma|carlsen|oetinger|ravensburger|blessing|verlag/i;
+  const DE_VERLAG = F.buch.DE_VERLAG;
   const DE_TITEL = /[äöüß]|\b(der|die|das|und|ein|eine|im|vom|zum|nicht|ich|wir|über|mit)\b/i;
-
-  /* Verlagsfamilien (4.2): die Farben von A, gedämpft auf eine OKLCH-Buntheit von höchstens 0,035 (Reclam 0,07). Geändert sind
-     nur #D8CC9F (jetzt #D2CCB3), die zwei Reclam-Töne (#DED39F, #D7CB98) und #76857E (jetzt #7B8A83, sonst unter 4,5 : 1).
-     Die Rückenschrift steht in Tinte oder Papier, je nachdem, was auf dieser Farbe mehr Kontrast gibt; jede Farbe hier erreicht
-     mindestens 4,5 : 1. */
-  const FAMILIEN = {
-    schwarz: ['#262628', '#2D2D2F'],
-    suhrkamp: ['#C9BBAF', '#B8C2AF', '#C6C0D2', '#D2CCB3', '#AABAC6', '#CDB5B2', '#B4C7C0'],
-    reclam: ['#DED39F', '#D7CB98'],
-    vintage: ['#EFEDE7', '#E7E5DF'],
-    nyrb: ['#D7D6D0', '#CACCC7', '#DCD9CF'],
-    dunkel: ['#3D4045', '#55585D', '#6E7175', '#8D8F92', '#A4A5A6'],
-    genre: ['#5A6A7B', '#7B8A83', '#8A8F96', '#9EA3A6', '#B5B5B0', '#4F5961'],
-    leinen: ['#DCD5C6', '#D1CAB9', '#E4DED1', '#C8C1B1'],
-    creme: ['#F2EFE7', '#EAE7DF', '#E1DDD4', '#D5D2CA', '#E7E5E0', '#C9C7C2', '#BAB8B3']
-  };
-  function familie(b) {
-    const v = (b.v || '').toLowerCase();
-    if (/penguin (classics|modern classics|english library|twentieth)/.test(v)) return 'schwarz';
-    if (/suhrkamp|insel/.test(v)) return 'suhrkamp';
-    if (/reclam/.test(v)) return 'reclam';
-    if (/vintage/.test(v)) return 'vintage';
-    if (/new directions|nyrb|new york review/.test(v)) return 'nyrb';
-    if (b.b === 'm' || /bantam|signet|del rey|orbit|ballantine|\btor\b|\bace\b|\bdaw\b|scholastic|puffin|speak|walker|hodder|philomel|amulet|hyperion|miramax|voyager|gollancz|pocket|\bdell\b|avon/.test(v)) return 'genre';
-    if (DE_VERLAG.test(v)) return 'leinen';
-    if (b.b === 'h' && /knopf|farrar|straus|scribner|little, brown|random house|harper|ecco|grove|pantheon|doubleday|houghton|picador|riverhead|viking|penguin press|simon|norton|crown|bloomsbury/.test(v)) return 'dunkel';
-    return 'creme';
-  }
-  // Kontrast nach WCAG; Tinte und Papier kommen aus den Token von stil.css
-  const token = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim() || (n === '--tinte' ? '#1D1E21' : '#FFFEFC');
-  const hell = hex => {
-    const c = hex.replace('#', '').match(/../g).map(x => parseInt(x, 16) / 255).map(v => v <= .04045 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4));
-    return .2126 * c[0] + .7152 * c[1] + .0722 * c[2];
-  };
-  const kontrast = (a, b) => { const x = hell(a), y = hell(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
-  const TINTE = token('--tinte'), PAPIER = token('--papier');
-  const schriftAuf = grund => kontrast(grund, TINTE) >= kontrast(grund, PAPIER) ? 'var(--tinte)' : 'var(--papier)';
-  // Farbe eines Buchs: dieselbe für dasselbe Buch auf jeder Seite (FSeite.buch.farbe, sobald es sie gibt; sonst hier)
-  function farbeVon(b) {
-    if (F.buch && typeof F.buch.farbe === 'function') { const f = F.buch.farbe(b); if (f && f.grund) return f; }
-    const farben = FAMILIEN[familie(b)];
-    const grund = farben[hash(b.key + 'f') % farben.length];
-    return { grund, tinte: schriftAuf(grund) };
-  }
+  /* Farbe eines Buchs aus den Verlagsfamilien (FSeite.buch.farbe, 4.2): dieselbe wie auf der Startseite. Die Rückenschrift steht in
+     Tinte oder Papier, je nachdem, was mehr Kontrast gibt */
+  const farbeVon = b => F.buch.farbe(b);
 
   // Alles, was im Regal einen Rücken hat; die Nummer ist data-id am Knopf
   const ALLE = [];
@@ -260,7 +223,7 @@ html:not(.js) .wartet { display: none; }
     const farbe = farbeVon(b);
     const x = {
       b, key, mm, fach, titel, kurz: titelKuerzer(titel), nn: b.nn, autor: b.autor,
-      de: DE_VERLAG.test(b.v || '') || DE_TITEL.test(b.t), grund: farbe.grund, tinte: farbe.tinte
+      de: DE_VERLAG.test(b.v || '') || DE_TITEL.test(b.t), grund: farbe.grund, tinte: farbe.tinte, dunkel: !!farbe.dunkel
     };
     x.label = (x.autor ? x.autor + ', ' : '') + b.t;
     x.id = ALLE.length;
@@ -424,6 +387,7 @@ html:not(.js) .wartet { display: none; }
     const x = it.x, b = x.b;
     let cls = 'ruecken';
     if (x.de) cls += ' de';
+    if (x.dunkel) cls += ' dunkel';
     let st = `width:${it.w}px;height:${it.h}px;--grund:${x.grund};--farbe:${x.tinte}`;
     const rechts = it.abstand + (o.luecke || 0);
     if (rechts) st += `;margin-right:${rechts}px`;
@@ -511,19 +475,19 @@ html:not(.js) .wartet { display: none; }
         const auf = cw + 3 + BAENDE.length * (VB + 2);
         breiteOffen += auf;
         werke += `<div class="schuber-platz${schuberOffen ? ' offen' : ''}" style="--zu:${cw}px;--auf:${auf}px;--hc:${hc}px">`;
-        werke += `<button type="button" class="ruecken eigen schuber" style="width:${cw}px;height:${hc}px" tabindex="-1" aria-expanded="${schuberOffen}" aria-label="Ursprungstrilogie, Schuber mit drei Bänden">${titel('Ursprung I–III')}</button>`;
+        werke += `<button type="button" class="ruecken eigen dunkel schuber" style="width:${cw}px;height:${hc}px" tabindex="-1" aria-expanded="${schuberOffen}" aria-label="Ursprungstrilogie, Schuber mit drei Bänden">${titel('Ursprung I–III')}</button>`;
         BAENDE.forEach((b, k) => {
           const innen = 3 + k * VB;
           const weg = cw + 3 + k * (VB + 2) - innen;
           const w = b.eintrag.werk;
-          werke += `<button type="button" class="ruecken eigen bandbuch${offenCls(b)}" data-id="${b.eintrag.id}" style="width:${VB}px;height:${H}px;--innen:${innen}px;--weg:${weg}px" tabindex="-1"${schuberOffen ? '' : ' aria-hidden="true"'} aria-label="${esc('Ursprung, Band ' + b.band + ': ' + (w.buchtitel || ''))}">${titel(w.titel || 'Ursprung ' + b.band)}</button>`;
+          werke += `<button type="button" class="ruecken eigen dunkel bandbuch${offenCls(b)}" data-id="${b.eintrag.id}" style="width:${VB}px;height:${H}px;--innen:${innen}px;--weg:${weg}px" tabindex="-1"${schuberOffen ? '' : ' aria-hidden="true"'} aria-label="${esc('Ursprung, Band ' + b.band + ': ' + (w.buchtitel || ''))}">${titel(w.titel || 'Ursprung ' + b.band)}</button>`;
         });
         werke += '</div>';
       } else {
         const w = px(e.dicke), h = Math.round(e.hoehe * se);
         const wk = e.eintrag.werk;
         breiteOffen += w;
-        werke += `<button type="button" class="ruecken eigen${offenCls(e)}" data-id="${e.eintrag.id}" style="width:${w}px;height:${h}px" tabindex="-1" aria-label="${esc((wk.buchtitel || wk.titel || e.id) + ', ' + (wk.art || ''))}">${titel(wk.titel || e.id)}</button>`;
+        werke += `<button type="button" class="ruecken eigen dunkel${offenCls(e)}" data-id="${e.eintrag.id}" style="width:${w}px;height:${h}px" tabindex="-1" aria-label="${esc((wk.buchtitel || wk.titel || e.id) + ', ' + (wk.art || ''))}">${titel(wk.titel || e.id)}</button>`;
       }
     });
     const hoeheEigen = Math.max(...EIGENE.map(e => Math.round(e.hoehe * se)));
@@ -545,7 +509,7 @@ html:not(.js) .wartet { display: none; }
       const x = it.x;
       const schrift = aufschrift(x, it.dicke, it.laenge - 22);
       const punkt = x.b.s === 5 ? '<span class="z-punkt" aria-hidden="true"></span>' : '';
-      return `<button type="button" class="ruecken liegt${x.de ? ' de' : ''}${offenId === x.id ? ' ist-offen' : ''}" data-id="${x.id}" style="width:${it.laenge}px;height:${it.dicke}px;margin-top:1px;--grund:${x.grund};--farbe:${x.tinte}" tabindex="-1" aria-label="${esc(x.label)}">${schrift}${punkt}</button>`;
+      return `<button type="button" class="ruecken liegt${x.de ? ' de' : ''}${x.dunkel ? ' dunkel' : ''}${offenId === x.id ? ' ist-offen' : ''}" data-id="${x.id}" style="width:${it.laenge}px;height:${it.dicke}px;margin-top:1px;--grund:${x.grund};--farbe:${x.tinte}" tabindex="-1" aria-label="${esc(x.label)}">${schrift}${punkt}</button>`;
     }).join('') + '</div>').join('');
     const tischBreite = T.breite;
     const tischHoehe = Math.max(...hoehe);
@@ -750,6 +714,19 @@ html:not(.js) .wartet { display: none; }
     t.setAttribute('aria-pressed', String(offen));
   });
   F.gleichBreit($$('button[data-warte]', liste));
+  // Ein Tab-Halt für die ganze Liste; die Pfeiltasten gehen von Eintrag zu Eintrag (wie im Regal)
+  const eintraege = () => $$('button[data-warte]', liste);
+  eintraege().forEach((b, i) => { b.tabIndex = i === 0 ? 0 : -1; });
+  liste.addEventListener('focusin', e => { const t = e.target.closest('button[data-warte]'); if (t) eintraege().forEach(b => { b.tabIndex = b === t ? 0 : -1; }); });
+  liste.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const kn = eintraege(), i = kn.indexOf(e.target);
+    if (i < 0) return;
+    const ziel = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? kn[Math.min(kn.length - 1, i + 1)] : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? kn[Math.max(0, i - 1)] : e.key === 'Home' ? kn[0] : e.key === 'End' ? kn[kn.length - 1] : null;
+    if (!ziel) return;
+    e.preventDefault();
+    ziel.focus();
+  });
 
   // ================= Standortregister =================
   /* Die Zeiten des Regals in einer Zeile, die oben haftet, solange Bretter darunter sind. Halbfett steht die Zeit, in der man

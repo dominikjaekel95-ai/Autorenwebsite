@@ -189,8 +189,10 @@
       return punkte;
     }
     // Die Orte, die jetzt gezeigt werden, mit ihrer Lage auf der Leinwand
+    // Ein Ort mit abK (etwa ein weiterer Schauplatz) erscheint erst ab dieser Vergrößerung, oder wenn er gewählt ist
     function sichtbareOrte() {
       return ebene.orte.map((ort, i) => ({ ort, i })).filter(({ ort }) => gezeigt === null || gezeigt.has(ort.name))
+        .filter(({ ort }) => !ort.abK || k > ort.abK - .01 || istAktiv(ort.name))
         .filter(({ ort }) => sichtbar([ort.lon, ort.lat])).map(x => Object.assign(x, { p: projektion([x.ort.lon, x.ort.lat]) }));
     }
     const istAktiv = name => !!aktiverOrt && aktiverOrt.split(' · ').includes(name);
@@ -221,12 +223,14 @@
           if (!f || !f.geometry) return;
           ctx.beginPath(); pfad(f); ctx.strokeStyle = F.tinte; ctx.lineWidth = w; ctx.stroke();
         });
-        // Kleinstaaten ohne Fläche im Maßstab: ein kleines Quadrat, damit sie nicht wie ein Ortszeichen aussehen
+        // Kleinstaaten ohne Fläche im Maßstab: eine kleine Scheibe in der Farbe der bereisten Länder, ohne Kontur (wie ein Land,
+        // nicht wie ein Ortszeichen in Tinte); gezeigt oder gewählt mit Kontur
         Object.entries(winzig).forEach(([iso, pos]) => {
           if (!bereist.has(iso) || d.isos.has(iso) || !sichtbar(pos)) return;
           const p = projektion(pos), an = (auswahl && auswahl.iso === iso) || (hover && hover.iso === iso);
-          ctx.beginPath(); ctx.rect(p[0] - 3, p[1] - 3, 6, 6);
-          ctx.fillStyle = F.reise; ctx.fill(); ctx.lineWidth = an ? 1.2 : .6; ctx.strokeStyle = F.tinte; ctx.stroke();
+          ctx.beginPath(); ctx.arc(p[0], p[1], 3.2, 0, Math.PI * 2);
+          ctx.fillStyle = F.reise; ctx.fill();
+          if (an) { ctx.lineWidth = 1.2; ctx.strokeStyle = F.tinte; ctx.stroke(); }
         });
       }
       ctx.beginPath(); pfad({ type: 'Sphere' }); ctx.strokeStyle = F.tinte; ctx.lineWidth = 1; ctx.stroke();
@@ -676,6 +680,9 @@
       chronikStoppen: () => chronikStoppen('abgebrochen'),
       chronikLaeuft: () => !!chronikNummer,
       nurOrte(namen) { gezeigt = namen ? new Set(namen) : null; zeichnen(); },
+      // Welche Orte gerade stehen (eine Kopie; null heißt alle) und welcher gewählt ist: die Namen in Ruhe folgen dem Kern
+      gezeigt: () => (gezeigt ? new Set(gezeigt) : null),
+      aktiverOrt: () => aktiverOrt,
       ortBei: (x, y) => ortBei(x, y),
       zeichnen,
       projektion,

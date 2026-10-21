@@ -14,3 +14,88 @@ Abweichungen von `docs/gestaltung-website-c.md`, je mit Grund (Abschnitt 1, „S
 8. **„Tausender erst ab fünf Stellen“ gilt jetzt in `FSeite.tausender`** (3.9). In A stand „1 040 Seiten“, jetzt „1040 Seiten“.
 9. **Karteikarte bleibt vorerst als Funktion** (22). `FSeite.karteikarte` zeichnet eine schlichte Karte in Papier und Tinte, bis die Seiten auf `FSeite.buchzeile` umgestellt sind. Der Knopf heißt „schließen“ (Textänderung 48). Danach kann sie weg.
 10. **Die Hilfen der Bibliothekszeichen tragen den Namen `auszug`** (6.12). B nannte das Zeichen `auszuege`. Beide Namen gehen.
+
+## 21. Oktober 2026, Startseite und Vita (Bau der Seiten)
+
+1. **Zeilenhöhe des ersten Satzes in der Vita 1,25 z statt 1,5 z** (02). Bei drei Zeilen im Grad groß fiele der Satz mit 1,5 z sichtbar auseinander.
+2. **Zeilenhöhe des ersten Satzes auf dem Telefon 1,25 z** (Startseite und Vita). Bei 21 bis 23 px Schrift ergäbe 1,5 z ein Verhältnis von 1,8.
+3. **Erster Satz der Vita auf dem Telefon unter dem Grad groß** (22,5 px bei 390 px, 20,8 px bei 360 px). Nur so passt jedes Glied auf eine Zeile, wie auf der Startseite.
+4. **Breite des Vita-Fotos auch durch die Fensterhöhe begrenzt** (6.16). So stehen Foto und Legende bei 1280 × 800 im ersten Bildschirm. Bei 1440 × 900 bleibt es bei 456 px.
+5. **Reservierte Höhe der Buchzeile unter dem Zeitband:** auf dem Telefon 3 z statt 2 z, am Desktop die Höhe des längsten Satzes (6.11). Ein gewöhnlicher Satz hat auf dem Telefon drei Zeilen, ohne Reserve sprängen die Reihen darunter.
+6. **Herausziehen mit einer eigenen Transformation statt der Klasse `.zug`** (14). `.zug` hebt die Neigung von „Länder“ auf. Dieselben Token, liegende Bücher gleiten 12 px seitlich aus dem Stapel.
+7. **Tafel bei Berlin zeigt immer „seit 2022“**, wie es Textänderung 11 voraussetzt.
+8. **Zusatz am Ort** („Nevada“, „Patagonien“): 6.4 will ihn klein, 3.5 im selben Grad. Seit dem Korrekturlauf gilt auf der Startseite wie auf *Satoshi* und an der Tafel des Lebens („Colombo, Sri Lanka“) 3.5.
+9. **Tafel der Ebene *Satoshi* in Ruhe wie in A** („Satoshi“, „Roman“, Auftakt). Textänderung 25 gilt nur für `satoshi.html`.
+10. **Wartezeit des ersten Satzes inline**, gleichwertig zu `FSeite.schriftEinstieg`, weil `seite.js` erst am Ende der Seite lädt.
+
+## 21. Oktober 2026, *Satoshi* und *Ursprung* (Bau der Seiten)
+
+1. **Temple City und die Anden erst ab 2,4-fach** (oder gewählt), statt immer als Kreis (6.8). Im Überblick las sich der namenlose Kreis neben New York wie „◦ New York“, die Anden lagen auf Bariloche. Seit dem Korrekturlauf über `abK` im Kern.
+2. **Kopf „Black Rock Desert, Nevada“ ganz im Grad Überschrift**, nach 3.5 („keine zweite Abstufung“), gegen 6.4. `FSeite.stationInhalt` setzt „Colombo, Sri Lanka“ genauso.
+3. **„alle Schauplätze“ entfällt** (das Wort von A auf der Tafel eines weiteren Orts). Die Steuerzeile ersetzt diesen Fuß. Das Wort steht nicht in der Textliste und braucht dort eine Nummer.
+4. ***Ursprung* auf dem Telefon: der Einspieler läuft auch dort**, sobald die Kugel zur Hälfte zu sehen ist (6.5, M7, V23). „Kein Aufklappen von selbst“ (19, 9.3) betrifft den Mechanismus von A.
+5. **„zurück“ auf dem Telefon (*Ursprung*)** bleibt wie in A und B, als viertes Wort der Steuerzeile, Name „zurück zu Band III im Text“. Es erscheint nur, wenn man einen Ort weit unter der Kugel getippt hat.
+6. **Leselinie bei reduzierter Bewegung ausgeschaltet**, wie in A. 7.4 regelt das nicht.
+7. **Kapiteltage unter 40 rem: Jahr | Tag über Ereignis** statt drei Spalten. Die Spalte für das Ereignis wäre sonst nur rund 150 px breit.
+8. **Ortszeile unter der Bandüberschrift ¼ z** (Nebentext unter seinem Gegenstand, 5.2) statt ½ z.
+9. ***Satoshi* lädt `daten/buecher.js` und `daten/leseliste.js` nicht mehr**, sie braucht sie nicht.
+
+## 21. Oktober 2026, Bibliothek und Länder (Bau der Seiten)
+
+1. **Länder: der Satz zum Grau nur an der Tafel**, nicht auch links (9.6, 6.15). Beides zugleich wäre im Überblick eine Wiederholung (3.5, R7). Textänderung 51 behält ihn an der Tafel.
+2. **Länder: ¾ z zwischen den Kontinenten statt ¼ z.** Jeder Kontinent ist ein mehrzeiliger Absatz (6.15), dafür gilt der Absatzabstand.
+3. **Länder: Zeilenhöhe des Registers auf Touch 1,25 z**, damit die Namen 44 px hoch treffbar sind, ohne dass sich die Flächen der Zeilen überlagern.
+4. **Bibliothek: Strich „mehr als einmal gelesen“ in Tinte.** Er sitzt über dem Kopf auf Papier, in Papierschrift wäre er auf dunklen Rücken unsichtbar.
+5. **Bibliothek: 1 px Papier zwischen den Rücken** statt der Kante aus 7 % Schwarz von A. Keine Transparenz, keine Farbmischung (4.2).
+6. **Bibliothek: eigene Transformation statt `.zug`**, wie auf der Startseite (lehnende Bücher behalten ihre Neigung).
+7. **Bibliothek: Schilderzeile nur unter Brettern, auf denen eine Zeit beginnt.** Eine leere Zeile unter jedem Brett machte die Telefonseite rund 700 px länger. Die Buchzeile bleibt je Brett reserviert.
+8. **Bibliothek: die Zeile zur Leseliste haftet am unteren Rand** (Lösung aus B). Unter 84 Einträgen stünde sie sonst weit vom gewählten Eintrag.
+9. **Bibliothek: liegende Bücher mindestens 14 px dick** (A: 11 px), damit der Name in 9 px hineinpasst.
+10. **Feine Linien in `--brett`** unter dem haftenden Register, über der haftenden Listenzeile und unter dem Globusband der Länder. 4.1 nennt das Token nur für das Brett.
+11. **Leseliste mit einem Tab-Halt und Pfeiltasten**, wie das Regal. Sonst wären es 84 Tab-Halte bis zum Fuß.
+
+## 21. Oktober 2026, Lesen, Erzählungen, *Untertext*, Impressum, Datenschutz (Bau der Seiten)
+
+1. **Leseseite: Untertitel im Grad Text statt klein** (6.17). Er gehört zum Titel, so steht er auch auf *Satoshi* (9.2). Zurück mit `.lese-unter { font-size: var(--g-klein); line-height: var(--zh-klein) }`.
+2. **Hängender Einzug in den Listen von Erzählungen und *Untertext*** (aus 6.15). Bei ¼ z Abstand sähe man auf dem Telefon sonst nicht, wo ein umbrochener Eintrag endet.
+3. **Der Satz für die leere Liste steht auch ohne Skript.** A zeigte ohne Skript nichts.
+4. **Schlusssatz im Impressum im Grad Text statt klein.** Er ist ein Verweis mit Inhalt, keine „Stand“-Zeile (wie B).
+5. **Vermerk ¼ z unter dem `h1`** (5.2: Nebentext unter seinem Gegenstand). Seit dem Korrekturlauf in `stil.css`.
+6. **Kursivanteil über 5 % auf sehr kurzen Seiten** (Lesen ohne Text 7,0 %, unbekannte Adresse 6,5 %, Journal-Eintrag 5,8 %, *Untertext* leer 5,1 %). Es sind nur die Werktitel in der Navigation und „*Untertext*“ selbst.
+
+## 21. Oktober 2026, Korrekturlauf nach den beiden Kritiken
+
+1. **Die Steuerzeile steht an allen vier Globen direkt unter der Kugel, über der Tafel** (6.4: „im Fuß der Tafel“). Breit bündig mit dem Inhalt der Tafel und der Kante der Kugel, auf dem Telefon über die ganze Breite. Grund: Im Fuß sprang sie mit der Länge des Szenentexts (Startseite bis 120 px), oder sie stand fest unten mit vier leeren Zeilen darüber (*Satoshi*), und auf dem Telefon stand sie auf zwei Seiten oben, auf der Startseite unten (Rang 50). Jetzt springt sie nie, liegt immer im ersten Bildschirm und ist überall gleich. Ist eine Ebene ohne Ablauf gewählt (Reisen), bleibt ihr Platz frei, damit die Tafel nicht springt. Die Regeln `.tafel.fuss-unten` der Seiten entfallen.
+2. **Globus der Startseite in jeder Ebene gleich groß** (12). Er bemisst sich an Steuerzeile und Tafel des Lebens; die Tafel hält die Höhe des längsten Inhalts aller Ebenen in Ruhe. Vorher wuchs die Kugel beim Wechsel zu Reisen von 671 auf 714 px und rückte 39 px nach links. Bei 1440 × 900 hat sie jetzt 743 px.
+3. **Startseite einspaltig: die Kartenwahl steht direkt über der Kugel, der Text der Ebene unter der Tafel** (9.1, 6.6: darüber). Vorher rückte die Kugel beim Wechsel der Ebene um bis zu 182 px, weil der Text der Ebenen verschieden lang ist. Die Tafel hält dort je Ebene die Höhe ihres längsten Inhalts (auch der Szenentexte), damit die Wörter darunter nicht unter dem Finger wandern. Die Wahl liest sich so auch als Teil des Globus.
+4. **Kartenwahl am Desktop ¼ z über dem Text der Ebene** (vorher ½ z), damit beide als ein Bedienteil zu lesen sind und nicht als zweite Navigation.
+5. **Steuerzeile auf dem Telefon mit 1 em Abstand** (6.4: 1,2 em). „früher  später  noch einmal von vorn“ passt so auch bei 360 px in eine Zeile.
+6. **Ortsleisten und weitere Schauplätze auf Touch mit 1,25 z Zeilenhöhe** (5.2, 3.2: ¾ z), alle Bedienwörter genau 44 px hoch (aus der Zeilenhöhe berechnet, vorher pauschal 12 px Polster). Vorher trafen auf *Satoshi* 5 von 10 Szenen und auf *Ursprung* 2 von 4 Orten über ihre Mitte den Nachbarn. Jetzt treffen alle Mitten. Die Regel steht in `stil.css` für alle Seiten.
+7. **Name im Kopf auf dem Telefon im Grad Text** (6.1: Überschrift). Sonst war der erste Satz bei 360 px kleiner als der Name (M9).
+8. **Eigene Rücken in Tinte, ihre Titel in Papier** (08, 21, 6.10: weiß mit Kontur). Startseite und Bibliothek, mit dem Schuber. Als leere weiße Kästen sahen die wichtigsten Bücher neben den farbigen Stapeln wie Platzhalter aus. Es ist keine neue Farbe. Beim Zeigen und Herausziehen zeigt auf dunklen Rücken (auch Penguin Classics und andere dunkle Familien) eine Linie in Papier innerhalb der Kontur dasselbe an.
+9. **Regalbild der Startseite auf dem Telefon nur mit den eigenen Werken** (6.10: dazu der Nachttisch). Mit dem Nachttisch wäre die Rückenschrift unter 7 px gefallen, alle Rücken blieben leer, und die liegenden Bücher wären 7 bis 33 px dick gewesen. Der Nachttisch steht in der Bibliothek und quer im Zeitband. „Länder“ lehnt dort nicht, weil kein Stapel daneben steht.
+10. **`FAMILIEN` steht in `seite.js` (`FSeite.buch.farbe`)**, nicht mehr in `bibliothek.html` (4.2, 05, 8.3, Anhang A). Startseite und Bibliothek geben demselben Buch dieselbe Farbe; vorher hatte der Nachttisch der Startseite gar keine.
+11. **Die Orte der Zeitleiste auf *Satoshi* sind in Ruhe unterstrichen** (07: Ortsleisten ohne Strich). Nur über sie erreicht man den Text einer Szene (V32); ohne Strich sah gerade diese Bedienung nicht bedienbar aus, während die weiteren Schauplätze darunter unterstrichen waren.
+12. **Jahresgruppen der Zeitleiste brechen nicht in sich um** (6.8). Die längste Gruppe passt auch bei 360 px.
+13. ***Satoshi* breit: die Kugel bemisst sich an einer mittellangen Szene, die Tafel hält die Höhe der längsten** (12). So bleibt die Kugel groß (700 statt 660 px bei 1440 × 900), und der Klappentext springt beim Durchklicken nicht.
+14. **Tafel von *Ursprung* ohne Kartenzeichen** (6.4: Zeichen und Ort). Auf dieser Karte sind alle Orte gleich, und neben der Bandziffer las sich der Punkt wie „I •“. Gilt auf der Startseite und auf *Ursprung*.
+15. **Bandüberschriften auf *Ursprung* brechen nur zwischen ihren Teilen**: nach „Band I“, am Komma des langen Titels, vor „Arbeitstitel“ (`text-wrap: wrap`, Teile in `.nw`). Vorher brachen sie mitten in der Wendung („Das / steinerne Wort“). „Arbeitstitel“ darf so in eine eigene Zeile rücken.
+16. **Die Zeile aus dem Exposé bei Band I steht ausgeglichen** (`text-wrap: balance`, 3.3 sieht `wrap` vor), mit einem geschützten Leerzeichen vor dem Gedankenstrich. Mit `pretty` brach sie zu früh („… sie / zu begraben.“), mit `wrap` stünde „begraben.“ allein in der zweiten Zeile. Jetzt bricht sie am Gedankenstrich.
+17. ***Ursprung* breit: wer über Band I hinaus nach oben scrollt, sieht wieder den Überblick** (neu: `ablauf.ruhen()`). Vorher blieb die Tafel bei Band II stehen.
+18. **Ebene *Ursprung* der Startseite: die Bandziffern rechtsbündig in einer festen Spalte** (6.6: 0,5 em Abstand), damit die Titel in einer Flucht beginnen. Zwischen Ziffer und Titel steht ein echtes Leerzeichen, Vorleseprogramme lesen nicht mehr „IKreise“.
+19. **Reisen und Länder: die Tafel wechselt erst mit einem Klick**, beim Zeigen nennt nur der Zettel das Land. Vorher flackerte die Tafel bei jeder Mausbewegung und wiederholte den Zettel. Bei einem Land, in dem er nicht war, stehen keine Koordinaten (die Mitte eines fremden Lands sagt nichts); die Koordinaten seiner Orte und Länder bleiben (V29).
+20. **Tafel der Länder ohne Markenspalte**, ihr Inhalt steht an der Kante der Kugel (vorher 59 px rechts davon).
+21. **Kleinstaaten als kleine Scheibe ohne Kontur in `--karte-bereist`**, mit Kontur nur gezeigt oder gewählt. Ersetzt Punkt 3 des Fundaments: die Quadrate wirkten wie Bildfehler.
+22. **Zeichenerklärung der Bibliothek: die Zeichen auf einem kleinen gefüllten Rücken** (9 × 21 px, in `--zb-strich`), damit sie wie Bücher aussehen und nicht wie Kästchen zum Ankreuzen.
+23. **Zeitband: quer liegende Bücher in `--zb-strich` gefüllt** (6.11: Papier mit Kontur). Als leere Rahmen wirkten sie wie Platzhalter.
+24. **Hinweis zum Zoomen beim Zeiger oder Finger, fest im Fenster** (6.3: oben an der Kugel). Wer mit dem Rad über der Kugel scrollt, scrollt die Seite; oben an der Kugel stand der Hinweis dann außerhalb des Fensters.
+25. **Regalbild der Startseite: die Stapel 24 mm auseinander** (vorher 14), damit ein herausgezogenes Buch nicht an den zweiten Stapel stößt. Der Name beim Zeigen steht über allem, was unter seiner Breite liegt, auch über dem lehnenden Buch.
+26. **Verweise werden nicht getrennt** (`hyphens: none` an `a` und `.wort`), Stationen der Vita, Kapiteltage und Figuren nur von Hand. Vorher stand „Ursprungs- / trilogie“ als Verweis über zwei Zeilen.
+27. **Geschützte Leerzeichen**: im Kolophon in „Friedrich Althausen“, „IM Fell French Canon“, „Igino Marini“, „Natural Earth“; bei den Figuren nach „die“, „der“, „das“; „Bitcoin-Block“ bleibt zusammen. Der Wortlaut ist derselbe.
+28. **Fuß und Name im Kopf auf Touch 44 px hoch treffbar**, die Zeile mit Impressum und Datenschutz dafür 1 z hoch. Vorschlag aus dem Bau der kleinen Seiten.
+29. **Tafel unter 62 rem ohne Mindesthöhe aus `stil.css`**; die Seiten halten sie selbst (`FSeite.tafelReservieren`). Vorher blieb unter jeder Tafel bis zu 6,5 z leer.
+30. **`g.sperren()` hat keine Wirkung mehr.** Sein Zuhörer verschluckte auf dem Telefon das Drehen mit einem Finger. Der Kern hebt Länder ohnehin nur auf Ebenen mit Ländern hervor.
+31. **Die Namen auf dem Globus folgen dem Kern** (`g.gezeigt()`, `g.aktiverOrt()`). Vorher standen auf der Startseite in den 600 ms vor dem Einspieler alle acht Namen des Endzustands auf der leeren Kugel.
+32. **Ebene *Satoshi* der Startseite: Überblick wie auf `satoshi.html`** (aus dem sichtbaren Teil der Leinwand berechnet, breit 0,92-fach), damit Buenos Aires und Bariloche ihre Namen bekommen.
+33. **Anhang A, Kursiv höchstens 5 %: reine Titellisten zählen nicht.** Die Bibliothek liegt durch die Leseliste („Autor, *Titel*“, 6.14) bei 11 % (Telefon 16 %). Dort ist Kursive Buchsatz.
+34. **6.4, Zustand „am Ende“: auf der Startseite bleibt „später“ an**, denn nach Berlin folgt Mallorca. Nur die Regel ist ungenau, der Bau ist richtig.

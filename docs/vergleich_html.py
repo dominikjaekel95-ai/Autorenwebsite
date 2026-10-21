@@ -37,7 +37,7 @@ def figur(m):
     bilder.append(src)
     marke, _, rest = alt.partition(':')
     marke = marke.strip()
-    klasse = 'a' if marke.upper().startswith('A') else 'b' if marke.upper().startswith('B') else 'x'
+    klasse = 'a' if marke.upper().startswith('A') else 'b' if marke.upper().startswith('B') else 'c' if marke.upper().startswith('C') else 'x'
     if klasse == 'x':
         marke, rest = '', alt
     unter = (f'<span class="marke {klasse}">{html.escape(marke)}</span> ' if marke else '') + html.escape(rest.strip())
@@ -95,12 +95,12 @@ seite = f'''<title>{titel}</title>
 /* Arbeitsdokument: eine Lesespalte, Bildpaare A | B in voller Breite, A trägt das Siena von Version A, B das Kartenblau von Version B */
 :root {{
   --grund: #fafaf8; --flaeche: #f0f0ec; --tinte: #1e2023; --leise: #5a5d63; --linie: #d9d9d3;
-  --a: #8f4a2b; --b: #2f5f8a;
+  --a: #8f4a2b; --b: #2f5f8a; --c: #2e6b57;
   --text: 'IBM Plex Sans', system-ui, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace;
 }}
 @media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) {{
-  --grund: #16171a; --flaeche: #202226; --tinte: #e8e8e4; --leise: #a3a6ab; --linie: #34363b; --a: #d9906c; --b: #8bb6dc; color-scheme: dark; }} }}
-:root[data-theme="dark"] {{ --grund: #16171a; --flaeche: #202226; --tinte: #e8e8e4; --leise: #a3a6ab; --linie: #34363b; --a: #d9906c; --b: #8bb6dc; color-scheme: dark; }}
+  --grund: #16171a; --flaeche: #202226; --tinte: #e8e8e4; --leise: #a3a6ab; --linie: #34363b; --a: #d9906c; --b: #8bb6dc; --c: #86c7ae; color-scheme: dark; }} }}
+:root[data-theme="dark"] {{ --grund: #16171a; --flaeche: #202226; --tinte: #e8e8e4; --leise: #a3a6ab; --linie: #34363b; --a: #d9906c; --b: #8bb6dc; --c: #86c7ae; color-scheme: dark; }}
 * {{ box-sizing: border-box; }}
 body {{ background: var(--grund); color: var(--tinte); font: 400 1.0625rem/1.6 var(--text); margin: 0;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 2.5rem 5rem; }}
@@ -130,8 +130,8 @@ figure img {{ display: block; width: 100%; height: auto; border: 1px solid var(-
 figure a {{ display: block; }}
 figcaption {{ font-size: .875rem; line-height: 1.45; color: var(--leise); margin-top: .4rem; }}
 .marke {{ font-family: var(--mono); font-weight: 500; font-size: .8rem; color: var(--grund); padding: .05em .45em; border-radius: 3px; margin-right: .2em; }}
-.marke.a {{ background: var(--a); }} .marke.b {{ background: var(--b); }}
-figure.a img {{ border-top: 3px solid var(--a); }} figure.b img {{ border-top: 3px solid var(--b); }}
+.marke.a {{ background: var(--a); }} .marke.b {{ background: var(--b); }} .marke.c {{ background: var(--c); }}
+figure.a img {{ border-top: 3px solid var(--a); }} figure.b img {{ border-top: 3px solid var(--b); }} figure.c img {{ border-top: 3px solid var(--c); }}
 .tabelle {{ overflow-x: auto; margin: 0 0 1.5rem; max-width: none !important; }}
 table {{ border-collapse: collapse; font-size: .92rem; line-height: 1.4; }}
 table.breit {{ min-width: 40rem; }}
@@ -155,7 +155,7 @@ hr {{ border: 0; border-top: 1px solid var(--linie); margin: 2rem 0; }}
 <header>
 <h1>{titel}</h1>
 <p>{unterzeile}</p>
-<p class="links">Version A: <a href="https://claude.ai/artifact/BkC8hBJNRG4Q42ragcoZzW" target="_blank" rel="noopener">bisheriges Testsystem</a><br>Version B: <a href="https://claude.ai/artifact/T6FyzumK6vqoeRxso8G2wd" target="_blank" rel="noopener">neue Gestalt „Atlas“</a></p>
+<p class="links">Version A: <a href="https://claude.ai/artifact/BkC8hBJNRG4Q42ragcoZzW" target="_blank" rel="noopener">bisheriges Testsystem</a><br>Version B: <a href="https://claude.ai/artifact/T6FyzumK6vqoeRxso8G2wd" target="_blank" rel="noopener">neue Gestalt „Atlas“</a><br>Version C: <a href="https://claude.ai/artifact/AnmtFCzJT8c4Q7rCgZrQFq" target="_blank" rel="noopener">Neubau aus A und B</a></p>
 </header>
 <nav class="toc" aria-label="Inhalt"><details><summary>Inhalt</summary>{inhalt_toc}</details></nav>
 {rumpf}

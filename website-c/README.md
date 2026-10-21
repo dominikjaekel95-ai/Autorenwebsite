@@ -30,7 +30,7 @@ Der Bau kopiert `website-c/` ohne `werkzeuge/`, ohne diese Datei und ohne Bilder
 | `laender.html` | Länderregister und Globus |
 | `bibliothek.html`, `vita.html`, `impressum.html`, `datenschutz.html` | die übrigen Seiten |
 | `stil.css` | Token (Farben, Grade, Abstände), Kopf, Fuß, Globus, Tafel, Steuerzeile, Ortsleiste, Buchzeile |
-| `seite.js` | `window.FSeite`: Globus, Tafel, Ablauf am Globus, Buchzeile, Bücher, Texte, Navigation, Fuß. Die Übersicht steht oben in der Datei |
+| `seite.js` | `window.FSeite`: Globus, Tafel, Ablauf am Globus, Buchzeile, Bücher mit ihren Rückenfarben (`FAMILIEN`), Texte, Navigation, Fuß. Die Übersicht steht oben in der Datei |
 | `globus/kern.js` | der Globus auf der Leinwand (d3) |
 | `daten/` | Inhalte, Bücher, Karten. `inhalt.js` und `buecher.js` sind in C von Hand geändert und werden nicht neu erzeugt |
 | `schrift/`, `lib/` | Vollkorn und IM Fell French Canon mit Lizenzen; d3 und topojson-client mit Lizenzen |

@@ -112,7 +112,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     <div class="tipp" hidden></div>
     <p class="hinweis" hidden></p>
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Länder stehen im Verzeichnis, die Tafel nennt jedes, das man wählt.</p>
-    <div class="tafel" id="tafel" aria-live="polite"></div>
+    <div class="tafel ohne-marke" id="tafel" aria-live="polite"></div>
   </figure>
 </section>
 </main>
@@ -127,7 +127,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
   </div>
-  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
 </footer>
 
 <script src="lib/d3.min.js"></script>
@@ -194,7 +194,8 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   let wahl = null, zeiger = null;
   const g = F.globus({
     canvas, flaeche, tipp, hinweis: $('.hinweis', figur),
-    tippText: land => { if (zeiger !== land) { zeiger = land; tafelSetzen(); } return land.name; },
+    // Beim Zeigen nennt nur der Zettel das Land; die Tafel wechselt erst mit einem Klick
+    tippText: land => { zeiger = land; return land.name; },
     // Wer den Globus dreht, behält das gewählte Land umrandet (der Kern löst die Auswahl sonst bei jedem Griff)
     beimEingriff: () => { if (g && wahl && wahl.iso) g.auswahl(wahl.iso); },
     // Ohne Ortsnamen; die Angabe gibt der Seite die Projektion, mit der ein Tippen sein Land findet
@@ -216,16 +217,17 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   const kontinentInhalt = k => ({ kopf: k, satz: zahl((KONTINENTE[k] || []).length), fuss: false });
   function landInhalt(iso, f) {
     const ist = bereist.includes(iso), p = mitte(iso, f), guide = LAENDERGUIDES[iso];
+    // Bei einem Land, in dem er nicht war, sagt die Mitte des Lands nichts: dort keine Koordinaten
     return {
       kopf: ist || !f ? name(iso) : f.name,
       unter: ist ? 'bereist' : 'nicht bereist',
-      daten: p ? F.koord(p[1], p[0]) : '',
+      daten: ist && p ? F.koord(p[1], p[0]) : '',
       fuss: guide ? `<a href="${esc(guide)}">Zum Länderguide</a>` : false
     };
   }
+  let wahlLand = null;      // die Fläche des gewählten Lands, wenn es nicht bereist ist (für seinen Namen)
   function inhaltJetzt() {
-    if (zeiger) return landInhalt(zeiger.iso, zeiger);
-    if (wahl && wahl.iso) return landInhalt(wahl.iso);
+    if (wahl && wahl.iso) return landInhalt(wahl.iso, wahlLand && wahlLand.iso === wahl.iso ? wahlLand : undefined);
     if (wahl && wahl.kontinent) return kontinentInhalt(wahl.kontinent);
     return ueberblickInhalt();
   }
@@ -319,13 +321,13 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     if (!g) return;
     const f = landAn(e) || zeiger;
     if (!f || !f.iso) return;
-    wahl = { iso: f.iso };
+    wahl = { iso: f.iso }; wahlLand = f;
     markieren();
     g.auswahl(f.iso);
     tafelStand = ''; tafelSetzen();
   });
-  // Verlässt der Zeiger den Globus, zeigt die Tafel wieder die Wahl oder den Überblick
-  if (tipp) new MutationObserver(() => { if (tipp.hidden && zeiger) { zeiger = null; tafelSetzen(); } }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
+  // Ohne Land unter dem Zeiger gibt es auch keins, das ein Klick wählen könnte
+  if (tipp) new MutationObserver(() => { if (tipp.hidden) zeiger = null; }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
   /* Der Kern lädt die feineren Küsten (daten/welt-50m.js) nach; die Mitte eines Lands rückt damit um ein paar Bogenminuten.
      Ist dann ein Land gewählt, nennt die Tafel gleich die genaueren Koordinaten, damit ein Land nicht zweierlei Mitten hat */
   document.addEventListener('load', e => {

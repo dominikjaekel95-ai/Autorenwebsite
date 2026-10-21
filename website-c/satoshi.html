@@ -21,18 +21,15 @@
 /* Der Vorspann aus dem Exposé im Grad Überschrift */
 .vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
 /* Zeitleiste (6.8): eine fließende Zeile, Grad klein. Das Jahr nur vor dem ersten Ort seines Jahres, als Teil der Gruppe;
-   Gruppen mit 1 em Abstand (das Leerzeichen und .75 em), Orte einer Gruppe mit Komma */
+   Gruppen mit 1 em Abstand (das Leerzeichen und .75 em), Orte einer Gruppe mit Komma. Eine Gruppe bricht nicht in sich um.
+   Die Orte sind unterstrichen wie Bedienwörter im Satz: nur über sie erreicht man den Text einer Szene (V32) */
 .zeitleiste { margin-top: var(--z); }
-.zeitleiste .gruppe { margin-right: .75em; }
+.zeitleiste .gruppe { margin-right: .75em; white-space: nowrap; }
+.zeitleiste .wort { text-decoration-line: underline; }
 .zeitleiste .gruppe:last-child { margin-right: 0; }
 .zeitleiste .jahr { font-variant-numeric: oldstyle-nums tabular-nums; }
 .weitere { margin-top: var(--z-viertel); }
 .weitere .wort { white-space: nowrap; }
-
-/* Tafel: die Steuerzeile steht immer an derselben Stelle, unten in der reservierten Höhe, auch wenn der Szenentext eine oder
-   fünf Zeilen hat; so bleibt „später“ beim Durchklicken unter der Maus */
-.tafel.fuss-unten { position: relative; padding-bottom: calc(var(--z) + var(--z-halb)); }
-.tafel.fuss-unten .steuerzeile { position: absolute; left: calc(4.4em + .8em); right: 0; bottom: 0; margin: 0; }
 
 /* Ohne Skript: kein Globus, die Zeitleiste steht als Text */
 html:not(.js) .globusseite > .globus { display: none; }
@@ -53,6 +50,7 @@ html:not(.js) .globusseite > .globus { display: none; }
 .tage li + li { margin-top: var(--z-viertel); }
 .tage .jahr { font-variant-numeric: oldstyle-nums tabular-nums; }
 .tage .tag { white-space: nowrap; }
+.tage, .figur h3 { hyphens: manual; -webkit-hyphens: manual; }
 /* Figuren: Name in Kapitälchen, Komma, die Rolle; darunter der Text */
 .figur + .figur { margin-top: var(--z-dreiviertel); }
 .figur h3 { font-size: inherit; line-height: var(--z); }
@@ -69,13 +67,6 @@ html:not(.js) .globusseite > .globus { display: none; }
 }
 @media (max-width: 62rem) {
   .buch { padding-right: var(--rand-l); }
-  /* Einspaltig: die Steuerzeile direkt unter der Kugel, über Jahr und Ort. Der Szenentext darunter darf wachsen, ohne dass die
-     Wörter unter dem Finger wandern, und in Ruhe steht keine leere Fläche zwischen Text und Steuerzeile */
-  .globusseite > .globus .tafel.fuss-unten { min-height: 0; padding: 0; }
-  .tafel.fuss-unten .tafel-inhalt { display: contents; }
-  .tafel.fuss-unten .steuerzeile { position: static; grid-column: 1 / -1; grid-row: 1; row-gap: var(--z-halb); margin: 0 0 var(--z-halb); }
-  .tafel.fuss-unten .tafel-marke, .tafel.fuss-unten .tafel-kopf { grid-row: 2; }
-  .tafel.fuss-unten .tafel-inhalt > :not(.steuerzeile) { grid-column: 2; }
 }
 @media (max-width: 40rem) {
   /* Schmal: Jahr, darunter Tag und Ereignis in einer Spalte daneben */
@@ -120,7 +111,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <p class="hinweis" hidden></p>
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Schauplätze stehen im Text und auf der Tafel, mit ihren Koordinaten.</p>
-    <div class="tafel fuss-unten" id="tafel" aria-live="off"></div>
+    <div class="tafel" id="tafel" aria-live="off"></div>
   </figure>
 </section>
 
@@ -150,19 +141,19 @@ html:not(.js) .globusseite > .globus { display: none; }
     <section class="figuren" id="figuren" aria-labelledby="figuren-titel">
       <h2 class="titel" id="figuren-titel">Die Figuren</h2>
       <article class="figur">
-        <h3><span class="stichwort">Satoshi Nakamoto</span>, das Pseudonym</h3>
+        <h3><span class="stichwort">Satoshi Nakamoto</span>, das&nbsp;Pseudonym</h3>
         <p>Das berühmteste Phantom der Gegenwart. Die Faktenlage passt auf eine Karteikarte: ein Whitepaper, gut fünfhundert Forenposts, der erklärte Wunsch, sich selbst überflüssig zu machen. Dieser Roman gibt dem Pseudonym, was ihm bisher fehlte: eine Stimme&nbsp;– und drei Gesichter.</p>
       </article>
       <article class="figur">
-        <h3><span class="stichwort">Lana Álvarez</span>, die Schöpferin, 23&nbsp;Jahre alt</h3>
+        <h3><span class="stichwort">Lana Álvarez</span>, die&nbsp;Schöpferin, 23&nbsp;Jahre alt</h3>
         <p>Lana steht mit einem Fuß in der Welt, die sie retten, und mit dem anderen in der, die sie zerstören will. Als Tochter eines ruinierten argentinischen Bauunternehmers, die bei Lehman Brothers Bilanzen rechnet, kennt sie das Finanzsystem von beiden Seiten&nbsp;– als Opfer und als Komplizin.</p>
       </article>
       <article class="figur">
-        <h3><span class="stichwort">Arthur Volkov</span>, der Visionär, 32&nbsp;Jahre alt</h3>
+        <h3><span class="stichwort">Arthur Volkov</span>, der&nbsp;Visionär, 32&nbsp;Jahre alt</h3>
         <p>Arthur vertraut Algorithmen mehr als Menschen&nbsp;– was ihn zu einem der brillantesten Kryptographen seiner Generation und zum schwierigsten Menschen macht, den man lieben kann.</p>
       </article>
       <article class="figur">
-        <h3><span class="stichwort">Samuel Vaughn</span>, der Anker, 31&nbsp;Jahre alt</h3>
+        <h3><span class="stichwort">Samuel Vaughn</span>, der&nbsp;Anker, 31&nbsp;Jahre alt</h3>
         <p>Samuel ist der Realist des Trios&nbsp;– Sohn eines Ex-Army-Offiziers und einer deutschen Mutter, großgezogen in einer Familie, in der man Pflichten erfüllt, statt über sie zu sprechen.</p>
       </article>
     </section>
@@ -170,7 +161,7 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   <section class="bau" id="bau" aria-labelledby="bau-titel">
     <h2 class="titel" id="bau-titel">Gebaut wie ein Protokoll</h2>
-    <p>Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten Bitcoin-Block signiert.</p>
+    <p>Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten <span class="nw">Bitcoin-Block</span> signiert.</p>
     <ol class="tage">
       <li><span class="jahr">2007</span> <span class="tag">14.&nbsp;September</span> <span class="was">Bankrun auf Northern Rock</span></li>
       <li><span class="jahr">2008</span> <span class="tag">15.&nbsp;September</span> <span class="was">Lehman Brothers meldet Insolvenz an</span></li>
@@ -213,7 +204,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
   </div>
-  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
 </footer>
 
 <script src="lib/d3.min.js"></script>
@@ -284,63 +275,22 @@ html:not(.js) .globusseite > .globus { display: none; }
   };
   // Ein weiterer Schauplatz: offener Kreis, Ort, Koordinaten
   const ortInhalt = o => ({ zeichen: 'aufenthalt', kopf: o.notiz ? o.name + ', ' + o.notiz : o.name, daten: F.koord(o.lat, o.lon) });
-  /* Neu setzen. Die Steuerzeile bleibt dasselbe Element; hatte eines ihrer Wörter den Fokus, bekommt es ihn danach wieder
-     (oder das andere Wort, wenn es nicht mehr geht) */
-  let gedrueckt = null, alleImLauf = false;
-  tafelEl.addEventListener('click', e => {
-    gedrueckt = e.target.closest('button');
-    // Vor dem Ablauf: spielt das Steuerwort aus der Ruhe oder nach einer Wahl, zeigt die Kugel alle Orte (wie FSeite.ablauf)
-    if (gedrueckt && gedrueckt.dataset.steuer === 'wort' && a) {
-      const z = a.zustand();
-      if (z === 'ruhe' || z === 'hand') alleImLauf = true;
-      else if (z === 'ende' || z === 'bereit') alleImLauf = false;
-    }
-  }, true);
-  function tafelSetzen(x) {
-    // Ein Wort, das gerade gedrückt wurde und dabei leise geworden ist (später an der letzten Szene), hat den Fokus schon verloren
-    const fokus = tafelEl.contains(document.activeElement) ? document.activeElement : gedrueckt && document.activeElement === document.body ? gedrueckt : null;
-    gedrueckt = null;
-    F.tafel(tafelEl, x);
-    if (!fokus) return;
-    const ziel = !fokus.disabled && !fokus.hidden && tafelEl.contains(fokus) ? fokus : $$('button', tafelEl).find(b => !b.disabled && !b.hidden);
-    if (ziel) ziel.focus({ preventScroll: true });
-  }
+  // Neu setzen. Die Steuerzeile steht über der Tafel und bleibt dabei, wie sie ist (auch ihr Fokus)
+  const tafelSetzen = x => F.tafel(tafelEl, x);
   tafelSetzen(ruheInhalt());
 
   // ================= Globus =================
   const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
-  const alsOrt = o => ({ name: o.name, kurz: o.kurz, lat: o.lat, lon: o.lon, neben: WEITERE.includes(o) });
-  /* Was die Kugel zeichnet; der Kern hält dieselbe Liste. Die weiteren Schauplätze stehen als offene Kreise erst ab 2,4-fach
-     (oder wenn man sie gewählt hat): im Überblick lägen sie unbeschriftet neben Black Rock Desert, New York und Bariloche.
-     Sie stehen vorn, damit kein offener Kreis einen Schauplatz verdeckt */
-  const EBENE_ORTE = SZENENORTE.map(alsOrt);
+  /* Was die Kugel zeichnet. Die weiteren Schauplätze stehen als offene Kreise erst ab 2,4-fach (abK; oder wenn man sie gewählt hat):
+     im Überblick lägen sie unbeschriftet neben Black Rock Desert, New York und Bariloche. Sie stehen vorn, damit kein offener Kreis
+     einen Schauplatz verdeckt. Welche Orte während eines Einspielers schon stehen, weiß der Kern (g.gezeigt); die Namen folgen ihm */
   const NAH = 2.4;
-  const weitereJetzt = k => WEITERE.filter(o => k > NAH - .01 || o.name === ortJetzt);
-  function weitereAbgleichen(k) {
-    const soll = weitereJetzt(k).map(alsOrt);
-    const ist = EBENE_ORTE.filter(o => o.neben);
-    if (soll.length === ist.length && soll.every((o, i) => o.name === ist[i].name)) return false;
-    EBENE_ORTE.length = 0;
-    EBENE_ORTE.push(...soll, ...SZENENORTE.map(alsOrt));
-    return true;
-  }
+  const alsOrt = o => Object.assign({ name: o.name, kurz: o.kurz, text: o.kurz || o.name, lat: o.lat, lon: o.lon }, WEITERE.includes(o) ? { neben: true, abK: NAH } : {});
+  const EBENE_ORTE = WEITERE.map(alsOrt).concat(SZENENORTE.map(alsOrt));
   // Der Überblick am Ende des Einspielers: die Schauplätze diesseits (Kobe und Penang liegen auf der anderen Seite) im
   // sichtbaren Teil der Leinwand; breit schneidet der Fensterrand die Kugel an, dort steht sie etwas kleiner
   const BLICK = { mitte: [-42, 22], k: 1 };
-  let a = null, ortJetzt = null, abgleichBild = 0;
-
-  // Namen in Ruhe: was gerade auf der Kugel steht. Während eines Laufs nur die Orte bis zur jetzigen Szene
-  const einmal = liste => liste.filter((s, i) => liste.findIndex(x => x.name === s.name) === i);
-  const alsName = o => ({ name: o.name, text: o.kurz || o.name, lat: o.lat, lon: o.lon, neben: WEITERE.includes(o) });
-  function namenOrte() {
-    if (!a) return [];
-    const z = a.zustand(), j = a.jetzt(), gewaehlt = WEITERE.filter(o => o.name === ortJetzt).map(alsName);
-    if (z === 'bereit') return gewaehlt;
-    // Spielt der Weg von vorn (Einspieler, „noch einmal von vorn“), stehen nur die Orte bis zur jetzigen Szene auf der Kugel;
-    // spielt er aus der Ruhe oder nach einer Wahl weiter, stehen alle
-    if ((z === 'einspieler' || z === 'abspielen' || z === 'angehalten') && !alleImLauf) return einmal(ST.slice(0, j + 1)).map(s => alsName(ortVon(s.name))).concat(gewaehlt);
-    return SZENENORTE.map(alsName).concat(weitereJetzt(g ? g.k() : 1).map(alsName));
-  }
+  let a = null, ortJetzt = null;
   function namenAktiv() {
     if (ortJetzt) return ortJetzt;
     if (!a) return null;
@@ -352,12 +302,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     canvas, flaeche, hinweis: $('.hinweis', figur),
     // Ein Klick auf einen weiteren Schauplatz zeigt ihn; die Szenenorte wählt FSeite.ablauf
     beiOrtKlick: ort => { if (WEITERE.some(o => o.name === ort.name)) ortZeigen(ort.name); },
-    // Nach jedem Bild: stimmen die weiteren Orte nicht mehr zur Vergrößerung, im nächsten Bild neu zeichnen
-    beimZeichnen: info => {
-      if (abgleichBild || !weitereAbgleichen(info.k)) return;
-      abgleichBild = requestAnimationFrame(() => { abgleichBild = 0; if (g) { g.zeichnen(); g.namenNeu(); } });
-    },
-    namen: { orte: namenOrte, spur: () => ST, aktiv: namenAktiv }
+    namen: { orte: () => EBENE_ORTE, spur: () => ST, aktiv: namenAktiv }
   });
   const neuSetzen = () => { if (g) g.namenNeu(); };
 
@@ -368,12 +313,16 @@ html:not(.js) .globusseite > .globus { display: none; }
     if (m) BLICK.mitte = m;
   }
 
-  /* Breit: die Tafel hält die Höhe ihres längsten Inhalts, die Steuerzeile steht unten darin, und die Kugel bekommt, was übrig
-     bleibt (--tafel-h). Einspaltig steht die Steuerzeile direkt unter der Kugel; die Tafel wächst mit dem Szenentext nach
-     unten, und es bleibt keine leere Fläche stehen */
+  /* Die Steuerzeile steht über der Tafel, direkt unter der Kugel, und springt nie. Breit hält die Tafel die Höhe ihres längsten
+     Inhalts, damit der Klappentext darunter beim Durchklicken nicht springt; die Kugel bemisst sich an einer mittellangen Szene
+     (--tafel-h), so bleibt sie groß, und nur sehr lange Szenentexte reichen unter den ersten Bildschirm. Einspaltig wächst die Tafel
+     mit dem Szenentext nach unten, es bleibt keine leere Fläche stehen */
   function tafelHoehe() {
-    if (F.breit()) F.tafelPlatz(tafelEl, [ruheInhalt()].concat(ST.map(szeneInhalt), WEITERE.map(ortInhalt)));
-    else { F.tafelPlatz(tafelEl, []); tafelEl.style.minHeight = ''; }
+    if (F.breit()) {
+      const szenen = ST.map(szeneInhalt);
+      const mittel = szenen.slice().sort((p, q) => String(p.text).length - String(q.text).length)[Math.floor(szenen.length / 2)];
+      F.tafelPlatz(tafelEl, [ruheInhalt()].concat(szenen, WEITERE.map(ortInhalt)), [ruheInhalt(), mittel].filter(Boolean));
+    } else { F.tafelPlatz(tafelEl, []); tafelEl.style.minHeight = ''; }
   }
 
   // ================= Ablauf: Einspieler, Steuerzeile, Wahl =================
@@ -402,7 +351,6 @@ html:not(.js) .globusseite > .globus { display: none; }
     if (!o || !a) return;
     if (g && g.eingriffe) g.eingriffe.slice().forEach(f => f());
     ortJetzt = name;
-    if (g && weitereAbgleichen(g.k())) g.zeichnen();
     weitereMarkieren(name);
     if (leiste) $$('[data-station]', leiste).forEach(b => b.setAttribute('aria-pressed', 'false'));
     tafelEl.setAttribute('aria-live', 'polite');
@@ -417,7 +365,6 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   // ================= Start =================
   if (g) {
-    g.sperren(true);
     tafelHoehe();
     blickBerechnen();
     g.ebene({ orte: EBENE_ORTE, laender: false, blick: BLICK }, { fliegen: false });

@@ -588,7 +588,7 @@
      aus Runde 3, einen Ticken schneller): 0,9 s für die Kopfzeile (Jahr oder Band und Ort) und 0,27 s je Wort darunter (Art und
      Vermerk, Landschaft und Zeit, die Zeile zum Band, der Szenentext; die Koordinaten zählen nicht), mindestens 2,5 s, höchstens
      8 s. plus: ein Grundhalt dazu (Ursprung 0,5 s). Bis Nachtrag: 1,5 s und 1 s je 15 Zeichen der ganzen Tafel */
-  const LESEN = { sockel: 900, jeWort: 270, mindestens: 2500, hoechstens: 8000 };
+  const LESEN = { sockel: 900, jeWort: 240, mindestens: 2500, hoechstens: 8000 };
   const wortzahl = text => String(text || '').trim().split(/\s+/).filter(Boolean).length;
   const lesehalt = (n, plus) => Math.round(Math.max(LESEN.mindestens, Math.min(LESEN.hoechstens, LESEN.sockel + (plus || 0) + LESEN.jeWort * n)));
   function lesezeit(el, plus) {

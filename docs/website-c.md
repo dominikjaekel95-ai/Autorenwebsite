@@ -427,6 +427,8 @@ Geprüft habe ich außerdem:
 
 ## Runde 4: langsamer
 
+**Nachtrag (21. Oktober, spät):** Die Lesezeit je Wort ist von 0,27 s auf 0,24 s gesenkt (`LESEN.jeWort` in `website-c/seite.js`). Gemessen am Desktop: Leben 33,4 s, Satoshi 55,2 s (Startseite 55,3 s), Ursprung 25,3 s (Seite 25,7 s). Satoshi liegt damit im Ziel von 50 bis 55 s, Leben und Ursprung bleiben im Rahmen.
+
 Stand: 21. Oktober 2026, nachts. Grundlage ist deine Rückmeldung: „Du bewegst dich sehr schnell über den Globus. Dann wird der Globus kurz unscharf. Dann für eine Sekunde kommen die detaillierten Ränder (das meinte ich mit dem aufblitzen!). Und dann wandert er super schnell wieder weiter. … Ich glaube, es ist am besten die Animation zu verlangsamen. Beschreibungen der Orte und Bedeutungen für mein Leben sollen aber bleiben.“ Wo die Teile oben etwas anderes sagen, gilt dieser Abschnitt, auch gegenüber „Runde 3: Takt“. Am Wortlaut der Seiten hat sich nichts geändert.
 
 Während der Runde kam dein Nachtrag: „Mit der Animation von Satoshi bin ich Recht zufrieden. Die könnte als Orientierung dienen. Aber sie ist vielleicht sogar noch einen Ticken zu langsam. Die anderen sind zu schnell. Ursprung könnte dagegen langsamer sein. Versuch die mal alle aufeinander abzustimmen.“ Die Zahlen unten folgen dem Nachtrag: ein Rhythmus für alle Abläufe, geeicht an *Satoshi*. Ein erster Stand (Zwischenstand `d6595e1`) flog 1,8 bis 2,4 s und hielt nach Zeichen; Leben dauerte so 64 s, *Satoshi* 76 s und *Ursprung* 44 s, also alles langsamer als *Satoshi* in Runde 3.

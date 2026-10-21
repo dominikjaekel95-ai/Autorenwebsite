@@ -11,8 +11,9 @@
 <style>
 /* Seite des Romans Satoshi (gestaltung-website-c.md, 9.2, 6.8, 18).
    Oben das Globusband: links Titel, Unterzeile, Vorspann und die Zeitleiste der Szenen, rechts die Kugel mit Tafel und Steuerzeile,
-   nicht haftend. Beim ersten Sichtbarwerden läuft der Einspieler (Orte und Linien, kein Szenentext); danach ruht die Tafel bei
-   „Die Schauplätze“, und eine Szene zeigt ihren Text erst nach einer Wahl oder beim Abspielen.
+   nicht haftend. Beim ersten Sichtbarwerden läuft der Einspieler: Orte und Linien, und an jeder Station steht der Szenentext in der
+   Tafel (Dominik, 21. Oktober: langsamer, „die Geschehnisse sollten automatisch ablaufen“). Danach ruht die Tafel bei
+   „Die Schauplätze“; eine Wahl oder das Abspielen zeigt die Szene wieder.
    Darunter das Buch, 2 z unter dem Globusband: ab 75 rem als Doppelseite (links Klappentext, Bau, Frage, Machart; rechts an der
    Kante der Kugel Eckdaten und Figuren), darunter eine Spalte in der Reihenfolge von A. */
 
@@ -20,15 +21,22 @@
 .titelei { margin-top: var(--z); }
 /* Der Vorspann aus dem Exposé im Grad Überschrift */
 .vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
-/* Zeitleiste (6.8): eine fließende Zeile, Grad klein. Das Jahr nur vor dem ersten Ort seines Jahres, als Teil der Gruppe;
-   Gruppen mit 1 em Abstand (das Leerzeichen und .75 em), Orte einer Gruppe mit Komma. Eine Gruppe bricht nicht in sich um.
+/* Zeitleiste (6.8): eine fließende Zeile im Grad des Lauftexts (Dominik, 21. Oktober; vorher Grad klein). Das Jahr nur vor dem
+   ersten Ort seines Jahres, als Teil der Gruppe;
+   Gruppen mit 1 em Abstand (das Leerzeichen und .75 em), Orte einer Gruppe mit Komma. Eine Gruppe beginnt auf einer neuen Zeile,
+   wenn sie nicht mehr passt; nur wenn sie länger ist als die Zeile (2007 auf dem Telefon), bricht sie nach einem Komma um.
    Die Orte sind unterstrichen wie Bedienwörter im Satz: nur über sie erreicht man den Text einer Szene (V32) */
-.zeitleiste { margin-top: var(--z); }
-.zeitleiste .gruppe { margin-right: .75em; white-space: nowrap; }
+.zeitleiste { margin-top: var(--z); font-size: var(--g-text); line-height: var(--zh-text); }
+.zeitleiste .gruppe { display: inline-block; max-width: 100%; margin-right: .75em; padding-left: var(--jahr-b, 2.4em); text-indent: calc(-1 * var(--jahr-b, 2.4em)); }
+.zeitleiste .gruppe .wort { text-indent: 0; }
+.zeitleiste .glied { white-space: nowrap; }
 .zeitleiste .wort { text-decoration-line: underline; }
 .zeitleiste .gruppe:last-child { margin-right: 0; }
 .zeitleiste .jahr { font-variant-numeric: oldstyle-nums tabular-nums; }
+/* Die weiteren Schauplätze stehen im selben Grad wie die Zeitleiste darüber */
 .weitere { margin-top: var(--z-viertel); }
+/* Finger: die Zeilen etwas weiter auseinander wie jede Ortsleiste (stil.css), damit sich die Trefferflächen kaum überdecken */
+@media (pointer: coarse) { .zeitleiste, .weitere { line-height: var(--zh-ueber); } }
 .weitere .wort { white-space: nowrap; }
 
 /* Ohne Skript: kein Globus, die Zeitleiste steht als Text */
@@ -105,7 +113,7 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   <!-- Die Zeitleiste: ohne Skript steht sie als Text; mit Skript wird jeder Ort ein Knopf, der die Szene wählt -->
   <p class="ortsleiste zeitleiste" id="zeitleiste" role="group" aria-label="Die Schauplätze in der Reihenfolge des Romans"><span class="gruppe">2001 Buenos Aires</span> <span class="gruppe">2007 London, Black Rock Desert, London, Kobe</span> <span class="gruppe">2008 New York, Berlin</span> <span class="gruppe">2009 Buenos Aires</span> <span class="gruppe">2010 Bariloche</span> <span class="gruppe">2013 Penang</span></p>
-  <p class="weitere klein" id="weitere">Weitere Schauplätze: <span class="wird-knopf" data-ort="Temple City">Temple City</span> im San Gabriel Valley und die <span class="wird-knopf" data-ort="Anden an der Grenze zu Chile">Anden</span> an der Grenze zu Chile.</p>
+  <p class="weitere" id="weitere">Weitere Schauplätze: <span class="wird-knopf" data-ort="Temple City">Temple City</span> im San Gabriel Valley und die <span class="wird-knopf" data-ort="Anden an der Grenze zu Chile">Anden</span> an der Grenze zu Chile.</p>
 
   <figure class="globus" id="globus">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
@@ -134,7 +142,7 @@ html:not(.js) .globusseite > .globus { display: none; }
       <h2 class="titel" id="eck-titel">Eckdaten</h2>
       <div class="prosa">
         <p>Debütroman. Personal erzählt, aus der Sicht Lanas und kontrapunktisch aus der Samuels. Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.</p>
-        <p><a href="vita.html">Dominik Jäkel</a>, geboren 1995 in Dortmund, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam. Er lebt in Berlin und moderiert die Werkstattbühne des Autorenforums Berlin. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>.</p>
+        <p><a href="vita.html">Dominik Jäkel</a>, geboren 1995 in Dortmund, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam. Er lebt in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>.</p>
       </div>
     </section>
 
@@ -317,25 +325,37 @@ html:not(.js) .globusseite > .globus { display: none; }
      Inhalts, damit der Klappentext darunter beim Durchklicken nicht springt; die Kugel bemisst sich an einer mittellangen Szene
      (--tafel-h), so bleibt sie groß, und nur sehr lange Szenentexte reichen unter den ersten Bildschirm. Einspaltig wächst die Tafel
      mit dem Szenentext nach unten, es bleibt keine leere Fläche stehen */
+  /* Einspaltig hält die Tafel nur während eines Ablaufs die Höhe der längsten Szene: Einspieler und Abspielen setzen den Szenentext
+     von selbst, und der Klappentext darunter soll dabei nicht bei jeder Station springen */
+  let imLauf = false;
   function tafelHoehe() {
     if (F.breit()) {
       const szenen = ST.map(szeneInhalt);
       const mittel = szenen.slice().sort((p, q) => String(p.text).length - String(q.text).length)[Math.floor(szenen.length / 2)];
       F.tafelPlatz(tafelEl, [ruheInhalt()].concat(szenen, WEITERE.map(ortInhalt)), [ruheInhalt(), mittel].filter(Boolean));
-    } else { F.tafelPlatz(tafelEl, []); tafelEl.style.minHeight = ''; }
+    } else {
+      F.tafelPlatz(tafelEl, []); tafelEl.style.minHeight = '';
+      if (imLauf) F.tafelReservieren(tafelEl, ST.map(szeneInhalt));
+    }
+  }
+  function laufPlatz(an) {
+    if (an === imLauf) return;
+    imLauf = an;
+    if (!F.breit()) tafelHoehe();
   }
 
   // ================= Ablauf: Einspieler, Steuerzeile, Wahl =================
   a = F.ablauf({
     globus: g, stationen: ST, tafel: tafelEl, ortsleiste: leiste,
-    // Einspieler: die Kugel dreht nur (1,2-fach), am Ende der Überblick; Abspielen mit Szenentext endet in Penang
+    // Einspieler: die Kugel dreht nur (1,2-fach), am Ende der Überblick; Abspielen endet in Penang. Beide mit Szenentext
     takt: Object.assign({}, F.TAKT.satoshi, { schluss: BLICK }),
     taktAbspielen: Object.assign({}, F.TAKT.satoshiAbspielen, { schluss: null }),
     schrittZoom: F.TAKT.satoshiAbspielen.zoom,
-    ruhe: 'ruhe', tafelImEinspieler: false,
+    ruhe: 'ruhe',
     beiStation(i, info) {
       ortJetzt = null; weitereMarkieren(null);
-      // Szenentext nur nach einer Wahl oder beim Abspielen; während des Einspielers ruft FSeite hier nicht an
+      // An jeder Station der Szenentext, auch im Einspieler; danach ruht die Tafel bei „Die Schauplätze“
+      laufPlatz(info.quelle === 'einspieler' || info.quelle === 'abspielen');
       tafelSetzen(i < 0 ? ruheInhalt() : szeneInhalt(ST[i]));
       neuSetzen();
     }
@@ -351,6 +371,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     if (!o || !a) return;
     if (g && g.eingriffe) g.eingriffe.slice().forEach(f => f());
     ortJetzt = name;
+    laufPlatz(false);
     weitereMarkieren(name);
     if (leiste) $$('[data-station]', leiste).forEach(b => b.setAttribute('aria-pressed', 'false'));
     tafelEl.setAttribute('aria-live', 'polite');

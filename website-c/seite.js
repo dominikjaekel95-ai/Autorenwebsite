@@ -678,10 +678,14 @@
   // Die Takte der Einspieler; zoom und halt als Zahl oder als Funktion (station, i)
   const europa = s => s.lon > -25 && s.lon < 45 && s.lat > 34;
   const woerter = s => String(s.text || '').trim().split(/\s+/).filter(Boolean).length;
+  /* Satoshi (Dominik, 21. Oktober): Einspieler und Abspielen laufen langsamer, mit doppelt so langen Halten wie vorher beim
+     Abspielen, und beide zeigen an jeder Station den Szenentext. Der Halt ist die Lesezeit: 3 s plus 0,6 s je Wort, mindestens 6 s,
+     höchstens 18 s (vorher 1,5 s plus 0,3 s je Wort, 3 bis 9 s; der Einspieler hielt 0,4 s ohne Text) */
+  const satoshiHalt = s => Math.max(6000, Math.min(18000, 3000 + 600 * woerter(s)));
   const TAKT = {
     leben: { flug: 1000, halt: 600, rueckweg: 500, zoom: s => europa(s) ? 3.6 : 2.4 },
-    satoshi: { flug: 900, halt: 400, rueckweg: 450, zoom: 1.2 },
-    satoshiAbspielen: { flug: 1000, halt: s => Math.max(3000, Math.min(9000, 1500 + 300 * woerter(s))), zoom: s => europa(s) ? 3.6 : 2.4 },
+    satoshi: { flug: 900, halt: satoshiHalt, rueckweg: 450, zoom: 1.2 },
+    satoshiAbspielen: { flug: 1000, halt: satoshiHalt, zoom: s => europa(s) ? 3.6 : 2.4 },
     ursprung: { flug: 1600, halt: 2000, zoom: 3.3, schlussK: 3.3, schlussBereich: { lon: [32, 48], lat: [26, 40], schritt: .25 } },
     europa
   };
@@ -689,7 +693,7 @@
 
   /* Ein Ablauf verbindet Globus, Ortsleiste, Tafel und Steuerzeile einer Ebene, auf allen vier Globen gleich (6.4, 6.5).
      Beim ersten Sichtbarwerden läuft der Einspieler einmal: die Linie wandert von Stadt zu Stadt, Punkte und Namen erscheinen mit
-     ihr, die Ortsleiste und (außer auf Satoshi) die Tafel gehen mit. Danach steuert man selbst. Jeder Griff an die Kugel beendet
+     ihr, die Ortsleiste und die Tafel gehen mit (auf Satoshi mit dem Szenentext). Danach steuert man selbst. Jeder Griff an die Kugel beendet
      den Einspieler, dann steht der ganze Weg. Bei reduzierter Bewegung gibt es keinen Einspieler und kein Steuerwort.
 
      const a = FSeite.ablauf({
@@ -704,7 +708,7 @@
        sichtbar: el,                 // der Einspieler beginnt, wenn el zur Hälfte im Bild ist (Vorgabe: die Fläche des Globus)
        beiStation(i, info),          // die Seite setzt die Tafel; i = -1 heißt: keine Station (Satoshi in Ruhe).
                                      // info: { quelle: 'einspieler' | 'abspielen' | 'hand' | 'ende' | 'ruhe' | 'wieder', zustand, station }
-       tafelImEinspieler: true,      // false: beiStation kommt während des Einspielers nicht (Satoshi)
+       tafelImEinspieler: true,      // false: beiStation kommt während des Einspielers nicht
        ruhe: 'ende' | 'ruhe',        // nach dem Einspieler: 'ende' (die Tafel zeigt endeBei) oder 'ruhe' (nichts gewählt, Satoshi)
        endeBei: n - 1,               // die Station, die die Tafel am Ende zeigt (Leben: Berlin)
        wegBisStation: true,          // ein Schritt von Hand zeigt den Weg bis zu dieser Station; false: der ganze Weg bleibt

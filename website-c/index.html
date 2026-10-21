@@ -293,7 +293,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     });
   })();
   </script>
-  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des Autorenforums Berlin. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>
 
   <p class="ebenen" role="group" aria-label="Globus"><button type="button" class="wort" data-ebene="leben" aria-pressed="true">Leben</button> <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">Reisen</button> <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false"><i>Satoshi</i></button> <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false"><i>Ursprung</i></button></p>
 
@@ -503,7 +503,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (i === HEUTE) t.marke = F.jahrMarke('seit ' + s.jahr);
     return t;
   }
-  // Satoshi: in Ruhe der Roman mit dem Auftakt; eine Szene mit Jahr und Ort, ihr Text nur nach einer Wahl (V32)
+  // Satoshi: in Ruhe der Roman mit dem Auftakt; eine Szene mit Jahr, Ort und ihrem Text (im Einspieler, beim Abspielen, nach einer Wahl)
   function satoshiInhalt(i, mitText) {
     if (i < 0) return { kopf: 'Satoshi', unter: 'Roman', text: SAT.hook || '' };
     // Wie auf satoshi.html: der Zusatz („Nevada“) im selben Grad hinter dem Ort (3.5), außer die Szene beginnt schon damit
@@ -531,8 +531,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
 
   /* Breit bemisst sich die Kugel an Steuerzeile und Tafel des Lebens (FSeite.tafelPlatz): so ist sie in jeder Ebene gleich groß, und
-     Kugel, Steuerzeile und Tafel stehen im ersten Bildschirm. Die Tafel hält die Höhe des längsten Inhalts aller Ebenen in Ruhe,
-     damit beim Wechsel der Ebene nichts springt; nur lange Szenentexte von Satoshi wachsen darüber hinaus, unter den ersten Bildschirm.
+     Kugel, Steuerzeile und Tafel stehen im ersten Bildschirm. Die Tafel hält die Höhe des längsten Inhalts aller Ebenen, auch der
+     Szenentexte von Satoshi, die der Einspieler jetzt von selbst zeigt: so springt weder beim Wechsel der Ebene noch im Ablauf etwas.
      Einspaltig steht der Text der Ebene unter der Tafel: sie hält dort die Höhe des längsten Inhalts der jetzigen Ebene, auch der
      Szenentexte, damit die Wörter darunter beim Durchklicken nicht unter dem Finger wandern. */
   const lebenAlle = () => LEBEN.map((s, i) => lebenInhalt(i));
@@ -540,7 +540,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   const satoshiAlle = mitText => [satoshiInhalt(-1)].concat(mitText ? SZENEN.map((s, i) => satoshiInhalt(i, true)) : []);
   const ursprungAlle = () => [-1, 0, 1, 2, 3].map(ursprungTafel);
   function tafelHoehe() {
-    if (F.breit()) F.tafelPlatz(tafelEl, lebenAlle().concat(reisenAlle(), satoshiAlle(false), ursprungAlle()), lebenAlle());
+    if (F.breit()) F.tafelPlatz(tafelEl, lebenAlle().concat(reisenAlle(), satoshiAlle(true), ursprungAlle()), lebenAlle());
     else {
       F.tafelPlatz(tafelEl, []);
       const je = { leben: lebenAlle, reisen: reisenAlle, satoshi: () => satoshiAlle(true), ursprung: ursprungAlle };
@@ -560,8 +560,9 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   A.satoshi = F.ablauf({
     globus: g, stationen: SZENEN, tafel: tafelEl, takt: Object.assign({}, F.TAKT.satoshi, { schluss: BLICK.satoshi }),
     taktAbspielen: Object.assign({}, F.TAKT.satoshiAbspielen, { schluss: null }), schrittZoom: F.TAKT.satoshiAbspielen.zoom,
-    ruhe: 'ruhe', tafelImEinspieler: false, aktiv: false,
-    beiStation: (i, info) => { F.tafel(tafelEl, satoshiInhalt(i, info.quelle !== 'einspieler')); satoshiWorte(info.quelle === 'einspieler' ? -1 : i); namenNeu(); }
+    ruhe: 'ruhe', aktiv: false,
+    // Wie auf satoshi.html: an jeder Station der Szenentext, auch im Einspieler (Dominik, 21. Oktober)
+    beiStation: i => { F.tafel(tafelEl, satoshiInhalt(i, true)); satoshiWorte(i); namenNeu(); }
   });
   A.ursprung = F.ablauf({
     globus: g, stationen: URSPRUNG, tafel: tafelEl, ortsleiste: $('#ursprung-text'), takt: F.TAKT.ursprung, aktiv: false,

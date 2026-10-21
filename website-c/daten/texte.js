@@ -21,7 +21,7 @@
                  passendem Ende zu ‚…‘, jedes andere ' zu ’ (geht’s, Grass’), ... zu …, ' - ' zu ' – '.
                  <i>…</i> setzt kursiv; ein Absatz '***' ist ein Szenenwechsel.
      html        statt absaetze: der ganze Text als HTML ('<p>…</p><p>…</p>'), wird unverändert übernommen
-     notiz       wahlweise, ein Satz am Ende des Textes, etwa 'Gelesen auf der Werkstattbühne des Autorenforums Berlin.'
+     notiz       wahlweise, ein Satz am Ende des Textes, etwa 'Gelesen auf der Werkstattbühne des Autorenforums Berlin e.\u00a0V.'
 
    Ein neuer Text: das Beispiel unten kopieren, die Zeichen // am Zeilenanfang entfernen, die Felder füllen.
    Jeder Eintrag endet mit einem Komma. */
@@ -39,6 +39,6 @@ window.TEXTE = [
   //     '***',
   //     'Erster Absatz nach dem Szenenwechsel.'
   //   ],
-  //   notiz: 'Gelesen auf der Werkstattbühne des Autorenforums Berlin.'
+  //   notiz: 'Gelesen auf der Werkstattbühne des Autorenforums Berlin e.\u00a0V.'
   // },
 ];

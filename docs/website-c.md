@@ -1,5 +1,22 @@
 # Was Version C macht und was du entscheidest
 
+## Runde 2
+
+Stand: 21. Oktober 2026, abends. Das hat sich nach deiner Rückmeldung vom 21. Oktober und deinen beiden Nachträgen geändert. Wo die Teile darunter etwas anderes sagen, gilt diese Runde. Jede Textänderung steht mit Vorher und Nachher in `text-aenderungen-c.md`, Abschnitt „Runde 2“, Nummer 61 bis 89.
+
+- **K1, Koordinaten.** Sie sind weg auf der Startseite (in allen vier Ebenen der Tafel), in der Vita und auf der Seite Länder. Auf *Ursprung* bleiben sie in den Bandzeilen und auf der Tafel, auf *Satoshi* auf der Tafel jeder Szene, wie in deinem Nachtrag.
+- **K2, Startseite.** Die Zeile „Dortmund bis 2014, Freiburg 2014, …, Mallorca 2023“ unter „Leben“ ist weg. Die Tafel nennt jeden Ort. „früher“, „später“, „abspielen“ und „noch einmal von vorn“ gehen weiter, auch mit der Tastatur.
+- **K3, Werkverzeichnis.** Die drei Zeilen stehen in deinem Wortlaut. „gelesen“ heißt jetzt „vorgestellt“, auch auf der Seite Erzählungen und in der Zeile des Buchs im Regal.
+- **K4.** Die Überschrift über dem Zeitband heißt „Meine digitale Bibliothek“. „Die ganze Bibliothek“ bleibt.
+- **K5, Zeitband.** Deine eigenen Werke rechts sind weg, mit dem Teilsatz dazu. Der Satz endet mit „Quer darauf liegt, was ich gerade lese.“
+- **K6, Fuß aller Seiten.** „Benachrichtigung, wenn ein Buch erscheint oder eine Lesung ansteht:“, im leeren Feld steht hell „E-Mail-Adresse“.
+- **K7, *Ursprung*.** Die Zeile mit Göbekli Tepe, Uruk, Tyros und Jerusalem unter der Einleitung ist weg. Band I und Band II haben deine neuen Sätze. Die Zeile aus dem Exposé steht kursiv. „in der Bibliothek“ statt „in seiner Bibliothek“.
+- **K8, Bibliothek auf dem Telefon.** „Was noch wartet“ steht dort als weiße, vorgezeichnete Rücken auf Brettern, alle 75 Bücher. Wo Platz ist, steht der Nachname aufrecht in Tinte darauf. Antippen zieht den Rücken heraus und zeigt Autor, Titel, Jahr und Seitenzahl, ein zweites Tippen schließt. Am Desktop bleibt die Liste. Die Grenze ist dieselbe Breite, an der C auf das Telefon wechselt.
+- **K9, *Satoshi*.** Der Einspieler und „abspielen“ laufen langsamer: Jede Szene steht 3 s plus 0,6 s je Wort, also 6 bis 18 s. Das ist doppelt so lang wie vorher beim Abspielen. Bei jeder Station erscheint der Szenentext von selbst in der Tafel, auch in der Ebene *Satoshi* der Startseite. Danach und beim Klicken ist alles wie bisher. Bei reduzierter Bewegung gibt es keinen Einspieler. Die Zeitleiste der Orte und „Weitere Schauplätze“ stehen jetzt in der Größe des Lauftexts.
+  **Bitte bestätigen:** Der Einspieler hat denselben Takt bekommen wie „abspielen“, weil er jetzt Text zeigt. Er dauert damit rund 2 Minuten statt 14 Sekunden. Mit nur doppelt so langen Halten wie vorher (0,8 s) stünde jeder Szenentext unter 2 Sekunden, das wäre nicht zu lesen. Ein Griff an die Kugel beendet ihn jederzeit. Wenn er kürzer sein soll, ist das eine Zahl.
+- **K10, Globus in Bewegung.** Gemessen und nicht übernommen. Eine mittlere Karte aus der feinen, vereinfacht auf 20 000 bis 30 000 Punkte, kommt auf diesem Rechner ohne Grafikkarte bei 2,4-facher Vergrößerung nur auf 17 bis 37 Bilder je Sekunde. Verlangt waren mindestens 40. Selbst 15 000 Punkte schaffen das nur am Desktop der Startseite (46), auf dem Telefon 38 und auf der Seite Länder 34 bis 36. Die grobe Karte von heute (rund 8 000 Punkte) läuft mit 59 bis 60 Bildern je Sekunde, die feine (rund 80 000) mit 8 bis 11. Deshalb bleibt es, wie es ist: in Bewegung die grobe Karte, kurz nach dem Stillstand die feine. Das Werkzeug für die mittlere Karte liegt bereit, falls du lieber etwas Ruckeln und dafür Mallorca und Sansibar auch in Bewegung möchtest.
+- **K11, Autorenforum.** Überall heißt es „Autorenforums Berlin e. V.“. Auf der Startseite, auf *Satoshi*, in der Vita und auf der Seite Erzählungen verweist das erste Vorkommen auf https://autorenforum-berlin.de/.
+
 ## 1. Kurz vorweg
 
 Version C ist die dritte Fassung deiner Website. Sie hat die Anmutung von A: die Vollkorn, Papierweiß und Graphit, die große Kugel, die Chronik, das farbige Regal, das Zeitband. Das Zoomen kommt aus B. Weg sind die vielen kleinen Markierungen: graue Kursive, gesperrte Kapitälchen, Randbemerkungen ohne Inhalt, Siena, Requisiten und ungleiche Abstände.

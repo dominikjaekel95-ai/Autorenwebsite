@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Baut aus docs/aenderungen-website-b.md eine Artefakt-Seite (ohne eigenes Gerüst) mit den Bildern aus docs/vergleich/.
 
-Aufruf: python3 vergleich_html.py <markdown> <zielordner>
+Aufruf: python3 vergleich_html.py <markdown> <zielordner> [titel]
 Im Zielordner entstehen index.html und vergleich/*.jpg (nur die eingebundenen Bilder) und dateien.json (Karte für `files`).
 """
 import html
@@ -56,10 +56,15 @@ def bildabsatz(m):
 
 rumpf = re.sub(r'<p>((?:\s*<img[^>]*>\s*(?:<br\s*/?>)?\s*)+)</p>', bildabsatz, rumpf)
 # Tabellen dürfen seitlich rollen
-rumpf = rumpf.replace('<table>', '<div class="tabelle"><table>').replace('</table>', '</table></div>')
+def tabelle(m):
+    spalten = m.group(0).split('</thead>')[0].count('<th')
+    return f'<div class="tabelle"><table class="{"breit" if spalten >= 5 else "schmal"}">' + m.group(0)[len('<table>'):] + '</div>'
+
+
+rumpf = re.sub(r'<table>.*?</table>', tabelle, rumpf, flags=re.S)
 # Elementabschnitte (### NN. Name) als eigene Blöcke, jeweils bis zum nächsten h3 oder h2
 def abschnitte(stueck):
-    teile = re.split(r'(?=<h3 id="[^"]*">\d\d[a-z]?\. )', stueck)
+    teile = re.split(r'(?=<h3 id="[^"]*">\d+[a-z]?\. )', stueck)
     return teile[0] + ''.join(f'<section class="element">{t}</section>' for t in teile[1:])
 
 
@@ -77,7 +82,7 @@ for src in dict.fromkeys(bilder):
     shutil.copy2(q, d)
 
 inhalt_toc = md.toc
-titel = 'Fassungen im Vergleich'
+titel = sys.argv[3] if len(sys.argv) > 3 else 'Fassungen im Vergleich'
 unterzeile = html.escape(titel_md.group(1)) if titel_md else ''
 
 seite = f'''<title>{titel}</title>
@@ -128,10 +133,13 @@ figcaption {{ font-size: .875rem; line-height: 1.45; color: var(--leise); margin
 .marke.a {{ background: var(--a); }} .marke.b {{ background: var(--b); }}
 figure.a img {{ border-top: 3px solid var(--a); }} figure.b img {{ border-top: 3px solid var(--b); }}
 .tabelle {{ overflow-x: auto; margin: 0 0 1.5rem; max-width: none !important; }}
-table {{ border-collapse: collapse; font-size: .92rem; line-height: 1.4; min-width: 40rem; }}
+table {{ border-collapse: collapse; font-size: .92rem; line-height: 1.4; }}
+table.breit {{ min-width: 40rem; }}
+table.schmal {{ max-width: 44rem; width: 100%; }}
 th, td {{ text-align: left; vertical-align: top; padding: .5rem .75rem .5rem 0; border-bottom: 1px solid var(--linie); }}
 th {{ font-weight: 600; border-bottom-color: var(--tinte); }}
-td:first-child {{ font-variant-numeric: tabular-nums; white-space: nowrap; }}
+td:first-child {{ font-variant-numeric: tabular-nums; }}
+table.breit td:first-child {{ white-space: nowrap; }}
 nav.toc {{ margin: 0 0 2rem; }}
 nav.toc details {{ border: 1px solid var(--linie); border-radius: 4px; padding: .75rem 1rem; background: var(--flaeche); }}
 nav.toc summary {{ cursor: pointer; font-weight: 600; }}

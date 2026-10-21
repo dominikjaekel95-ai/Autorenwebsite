@@ -11,7 +11,8 @@
 <style>
 /* Bibliothek (gestaltung-website-c.md 6.12 bis 6.14, 9.4). Oben Titel, ein Satz und die Zeichenerklärung in der Satzbreite.
    Darunter über die ganze Breite das Standortregister (haftet), das oberste Brett mit den eigenen Werken und dem Nachttisch,
-   die Bretter nach der Zeit, das Brett aus Kindheit und Jugend und „Was noch wartet“ als Liste. Unter jedem Brett die Buchzeile.
+   die Bretter nach der Zeit, das Brett aus Kindheit und Jugend und „Was noch wartet“: am Desktop als Liste, auf dem Telefon
+   (bis 40 rem) als vorgezeichnete weiße Rücken auf Brettern (Dominik, 21. Oktober). Unter jedem Brett die Buchzeile.
    Rückenbreite aus der Seitenzahl, Höhe aus der Bindung, Farben nach Verlagsfamilien (gedämpft), Schrift in Tinte oder Papier.
    Keine Requisiten: statt Bleistift und Lesezeichen gezeichnete Zeichen, keine Buchstützen, keine Muster, kein Karton. */
 
@@ -97,6 +98,13 @@ html:not(.js) .zeichenerklaerung { display: none; }
 /* ---------- Was noch wartet: eine Liste, am Desktop zwei Spalten, nach dem Jahr des ersten Erscheinens ---------- */
 .wartet { position: relative; }
 .wartet .titel { margin-top: var(--z-zwei); }
+/* Auf dem Telefon stehen dieselben Bücher als vorgezeichnete Rücken auf Brettern: weiß, nur die Kontur in der Farbe der Reihe
+   „was noch wartet“ im Zeitband der Startseite (--zb-warte, 1 px), der Nachname aufrecht in Tinte. Gezeigt und gewählt wie jeder
+   Rücken: Kontur 1,5 px in Tinte, gewählt steigt er heraus, darunter die Buchzeile. */
+.wartebretter:empty { display: none; }
+.ruecken.warte { box-shadow: inset 0 0 0 1px var(--zb-warte); }
+.ruecken.warte.ist-offen { box-shadow: inset 0 0 0 1.5px var(--tinte); }
+@media (hover: hover) { .ruecken.warte:hover { box-shadow: inset 0 0 0 1.5px var(--tinte); } }
 .leseliste { list-style: none; max-width: calc(2 * 23em + var(--z-zwei)); }
 .leseliste li { break-inside: avoid; padding-bottom: var(--z-viertel); }
 .leseliste .wort { display: block; width: 100%; text-align: left; padding-left: 1em; text-indent: -1em; }
@@ -164,6 +172,7 @@ html:not(.js) .wartet { display: none; }
 
   <section class="wartet" id="wartet" aria-labelledby="wartet-titel">
     <h2 class="titel" id="wartet-titel">Was noch wartet</h2>
+    <div class="wartebretter" id="wartebretter"></div>
     <ul class="leseliste wahlliste" id="leseliste"></ul>
     <p class="wartezeile" id="wartezeile"></p>
   </section>
@@ -251,9 +260,12 @@ html:not(.js) .wartet { display: none; }
   KIND.buecher = BUECHER.filter(b => b.r === 'kindheit').map(b => buch(b, KIND)).sort(nachJahr);
   const TISCH = { z: 'N', name: 'Auf dem Nachttisch' };
   TISCH.buecher = BUECHER.filter(b => b.r === 'gerade').map(b => buch(b, TISCH)).sort(nachJahr);
-  // Was noch wartet: die eigene Leseliste als Liste, nach dem Jahr; ohne Jahr am Ende
+  // Was noch wartet: die eigene Leseliste, nach dem Jahr; ohne Jahr am Ende. Am Desktop eine Liste, auf dem Telefon Rücken
   const WARTET = { z: 'W', name: 'Was noch wartet', art: 'wartet', anker: 'wartet', marke: 'Was noch wartet' };
   WARTET.buecher = BUECHER.filter(b => b.r === 'leseliste').sort(F.buch.ordnung);
+  WARTET.ruecken = WARTET.buecher.map(b => Object.assign(buch(b, WARTET), { warte: true }));
+  // Die Grenze, an der C auf das Telefon wechselt (stil.css, 5.4)
+  const alsRuecken = () => window.matchMedia('(max-width: 40rem)').matches;
 
   // Eigene Werke: alle im selben Format, die Trilogie im Schuber
   const werk = id => (I.werke || []).find(w => w.id === id) || {};
@@ -288,14 +300,16 @@ html:not(.js) .wartet { display: none; }
   }
   const zeile100 = (nn, t) => (nn ? breite100(nn) + (t ? 50 : 0) : 0) + (t ? breite100(t) : 0);
   const zeileHtml = (nn, t) => `<span class="z">${nn ? `<span class="nn">${esc(nn)}</span>` : ''}${t ? `<span class="t">${esc(t)}</span>` : ''}</span>`;
-  const SCHRIFT_MIN = 9, SCHRIFT_MAX = 13;
-  // Erst die volle Zeile, dann zwei Zeilen, dann kürzer; nie mit Auslassungspunkten
-  function aufschrift(x, w, L) {
+  // NAME_MAX: Die vorgezeichneten Rücken tragen nur den Nachnamen, ruhig und klein, damit die Umrisse das Bild bestimmen
+  const SCHRIFT_MIN = 9, SCHRIFT_MAX = 13, NAME_MAX = 10;
+  // Erst die volle Zeile, dann zwei Zeilen, dann kürzer; nie mit Auslassungspunkten. nurName: nur der Nachname oder nichts
+  function aufschrift(x, w, L, nurName) {
     const SICHER = .94, MIN = SCHRIFT_MIN;
     const f1Max = Math.min(SCHRIFT_MAX, (w - 3) / 1.12);
     if (f1Max < MIN || L < 20) return '';
     const fuer = (nn, t, fmax) => Math.min(fmax, L * SICHER * 100 / Math.max(1, zeile100(nn, t)));
     const eine = (nn, t, f) => `<span class="aufschrift" style="font-size:${f.toFixed(2)}px">${zeileHtml(nn, t)}</span>`;
+    if (nurName) { const f = fuer(x.nn, '', Math.min(NAME_MAX, f1Max)); return x.nn && f >= MIN ? eine(x.nn, '', f) : ''; }
     const voll = fuer(x.nn, x.titel, f1Max);
     if (voll >= 10.5 || (voll >= MIN && voll >= f1Max - .01)) return eine(x.nn, x.titel, voll);
     const f2Max = Math.min(SCHRIFT_MAX, (w - 4) / 2.3);
@@ -317,9 +331,11 @@ html:not(.js) .wartet { display: none; }
     return '';
   }
 
-  // Ein Rücken in Pixeln; zwischen zwei Rücken immer 1 px Papier, manchmal 2
+  // Ein Rücken in Pixeln; zwischen zwei Rücken immer 1 px Papier, manchmal 2. Was noch wartet, steht mit 3 bis 5 px Luft (A),
+  // sonst liefen die Konturen ineinander
   function stueck(x, s) {
-    return { x, w: Math.max(minBreite(), Math.round(x.mm.b * s)), h: Math.round(x.mm.h * s), abstand: 1 + (hash(x.key + 'a') % 3 === 0 ? 1 : 0) };
+    const abstand = x.warte ? 3 + hash(x.key + 'ab') % 3 : 1 + (hash(x.key + 'a') % 3 === 0 ? 1 : 0);
+    return { x, w: Math.max(minBreite(), Math.round(x.mm.b * s)), h: Math.round(x.mm.h * s), abstand };
   }
 
   // ---------- Packen: die Zeiten fließen über die Bretter, eine kleine Lücke markiert den Wechsel ----------
@@ -386,15 +402,17 @@ html:not(.js) .wartet { display: none; }
   function rueckenHtml(it, o) {
     const x = it.x, b = x.b;
     let cls = 'ruecken';
+    if (x.warte) cls += ' warte';
     if (x.de) cls += ' de';
-    if (x.dunkel) cls += ' dunkel';
-    let st = `width:${it.w}px;height:${it.h}px;--grund:${x.grund};--farbe:${x.tinte}`;
+    if (x.dunkel && !x.warte) cls += ' dunkel';
+    let st = x.warte ? `width:${it.w}px;height:${it.h}px;--grund:var(--papier);--farbe:var(--tinte)` : `width:${it.w}px;height:${it.h}px;--grund:${x.grund};--farbe:${x.tinte}`;
     const rechts = it.abstand + (o.luecke || 0);
     if (rechts) st += `;margin-right:${rechts}px`;
     if (o.neigung) { cls += ' lehnt'; st += `;margin-left:${o.versatz}px;--neigung:${(-o.neigung).toFixed(2)}deg`; }
-    const schrift = aufschrift(x, it.w, it.h - 24);
+    const schrift = aufschrift(x, it.w, it.h - 24, x.warte);
     let zeichen = '';
-    if (b.s === 5) zeichen += '<span class="z-punkt" aria-hidden="true"></span>';
+    if (x.warte) { /* ungelesen: keine Zeichen der Leseart */ }
+    else if (b.s === 5) zeichen += '<span class="z-punkt" aria-hidden="true"></span>';
     if (b.w) zeichen += '<span class="z-wieder" aria-hidden="true"></span>';
     if (b.x) zeichen += kontur(it.w, it.h, '1 2');
     else if (b.r === 'abgebrochen') zeichen += kontur(it.w, it.h, '3 2');
@@ -415,14 +433,14 @@ html:not(.js) .wartet { display: none; }
     const von = mitJahr.length ? F.jahrText(mitJahr[0].x.b.j) : '', bis = mitJahr.length ? F.jahrText(mitJahr[mitJahr.length - 1].x.b.j) : '';
     const spanne = !von ? '' : von === bis ? ', ' + von : `, ${von} bis ${bis}`;
     const fach = reihe[0].x.fach;
-    const name = (fach === KIND ? 'Kindheit und Jugend' : 'Brett') + spanne;
+    const name = (fach === KIND ? 'Kindheit und Jugend' : fach === WARTET ? 'Was noch wartet' : 'Brett') + spanne;
     let html = `<div class="reihe"><div class="buecher" data-gruppe role="group" aria-label="${esc(name)}" style="--h:${hmax + KOPF}px">`;
     const marken = [];
     let x = 0;
     reihe.forEach((it, j) => {
       const o = {};
       if (it.beginnt && j > 0) { o.vor = ZEITLUECKE; x += ZEITLUECKE; }
-      if (it.beginnt) marken.push({ x, fach: it.beginnt.fach || it.beginnt });
+      if (it.beginnt && fach !== WARTET) marken.push({ x, fach: it.beginnt.fach || it.beginnt });
       if (j === lueckeBei) o.luecke = lueckeBreite;
       if (lehnt && j === n - 1 && j > 0) {
         const nachbar = reihe[j - 1];
@@ -583,6 +601,12 @@ html:not(.js) .wartet { display: none; }
     const lehnen = lehnendeWaehlen(lesen.concat(kind));
     ziel.innerHTML = lesen.map(r => reiheHtml(r.reihe, r.schluessel, W, s, lehnen.has(r.schluessel))).join('');
     $('#kinderzimmer').innerHTML = kind.map(r => reiheHtml(r.reihe, r.schluessel, W, s, lehnen.has(r.schluessel))).join('');
+    // Was noch wartet: auf dem Telefon Bretter mit vorgezeichneten Rücken statt der Liste; ohne Schild, die Überschrift steht darüber
+    const ruecken = alsRuecken() && WARTET.ruecken.length;
+    if (ruecken && listeZeile.offen()) listeZeile.schliessen();
+    $('#wartebretter').innerHTML = ruecken ? packen([{ fach: WARTET, buecher: WARTET.ruecken }], W, s, gelesen.fuellung).map((reihe, i) => reiheHtml(reihe, 'w' + i, W, s, false)).join('') : '';
+    liste.hidden = !!ruecken;
+    $('#wartezeile').hidden = !!ruecken;
     rovingSetzen();
     if (warOffen != null) {
       const el = regal.querySelector('button.ruecken[data-id="' + warOffen + '"]');
@@ -636,8 +660,8 @@ html:not(.js) .wartet { display: none; }
       if (x.werkId === 'erzaehlungen') return esc(t);
       return x.werkId === 'satoshi' || x.werkId === 'untertext' ? `<i>${esc(t)}</i>, ${esc(w.art || '')}` : esc(w.art || t);
     }
-    // Auf dem Nachttisch sagt schon das Schild, dass ich es gerade lese
-    return F.buch.zeile(x.fach === TISCH ? Object.assign({}, x.b, { r: '' }) : x.b).html;
+    // Auf dem Nachttisch sagt schon das Schild, dass ich es gerade lese, bei der Leseliste die Überschrift, dass es noch wartet
+    return F.buch.zeile(x.fach === TISCH || x.fach === WARTET ? Object.assign({}, x.b, { r: '' }) : x.b).html;
   }
   function tippAuf(el) {
     if (!tipp) return;
@@ -789,8 +813,8 @@ html:not(.js) .wartet { display: none; }
     gewaehlt = { f, y, da: false, bis: performance.now() + 2500 };
     window.scrollTo({ top: y, behavior: sanft && !F.ruhig() && !fern ? 'smooth' : 'auto' });
     if (fokus) {
-      const el = f === WARTET ? $('button[data-warte]', liste) : s.el;
-      if (el) { if (f !== WARTET) gruppeZeigen(el); el.focus({ preventScroll: true }); }
+      const el = f === WARTET ? ($('#wartebretter button.ruecken') || $('button[data-warte]', liste)) : s.el;
+      if (el) { if (el.matches('button.ruecken')) gruppeZeigen(el); el.focus({ preventScroll: true }); }
     }
     leisteSetzen();
   }

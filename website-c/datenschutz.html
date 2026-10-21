@@ -6,10 +6,18 @@
 <title>Datenschutz – Dominik Jäkel</title>
 <meta name="description" content="Datenschutzerklärung der Website von Dominik Jäkel.">
 <script>document.documentElement.classList.add('js');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
+<style>
+/* Datenschutz (gestaltung-website-c.md, 6.18 und 9.9): eine Spalte in der Satzbreite, gleich auf allen Breiten.
+   Die Grundformen stehen in stil.css (.recht). Hier nur, was diese Seite dazu braucht: Der Entwurfsvermerk steht als Nebentext
+   ¼ z unter dem Titel (5.2), 1 z danach beginnt der Inhalt. Artikelangaben werden nicht getrennt (.nw). Die Rechte als Liste mit hängendem Halbgeviertstrich in Tinte (stil.css), „Stand“ am Ende im Grad klein. */
+.recht .vermerk { margin-top: var(--z-viertel); }
+/* Finger: Verweise im Text 44 px hoch, ohne dass die Zeilen wachsen */
+@media (pointer: coarse) {
+  .recht a { padding-block: calc((2.75rem - 1.4em) / 2); }
+}
+</style>
 </head>
 <body>
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
@@ -17,7 +25,6 @@
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="nav" aria-label="Website">
-    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>
       <li><a href="ursprung.html"><i>Ursprung</i></a></li>
@@ -34,9 +41,9 @@
 <div class="abschnitt unterseite">
   <article class="recht">
     <h1 class="seitentitel">Datenschutz</h1>
-    <p class="vermerk leise">Entwurf, vor der Veröffentlichung zu prüfen.</p>
+    <p class="vermerk">Entwurf, vor der Veröffentlichung zu prüfen.</p>
 
-    <p class="vorab">Kurz gesagt: Diese Website selbst setzt keine Cookies, speichert nichts in Ihrem Browser und verwendet keine Analyse- oder Trackingdienste; ein Kontaktformular gibt es nicht. Personenbezogene Daten, vor allem Ihre <span class="nw">IP-Adresse</span>, fallen nur an, weil Ihr Browser Seiten, Schriften und zwei Programmbibliotheken von Servern lädt, und wenn Sie mir eine <span class="nw">E-Mail</span> schreiben.</p>
+    <p class="vorab">Diese Website selbst setzt keine Cookies, speichert nichts in Ihrem Browser und verwendet keine Analyse- oder Trackingdienste. Ein Kontaktformular gibt es nicht. Personenbezogene Daten, vor allem Ihre <span class="nw">IP-Adresse</span>, fallen nur an, weil Ihr Browser Seiten, Schriften und zwei Programmbibliotheken von Servern lädt, und wenn Sie mir eine <span class="nw">E-Mail</span> schreiben.</p>
 
     <section aria-labelledby="d-verantwortlich">
       <h2 class="titel" id="d-verantwortlich">Verantwortlich</h2>
@@ -46,74 +53,72 @@
 
     <section aria-labelledby="d-hosting">
       <h2 class="titel" id="d-hosting">Hosting und Server-Logfiles</h2>
-      <p>Diese Fassung der Website ist eine Testseite. Sie liegt auf claude.ai, einem Dienst von Anthropic; was Anthropic dabei verarbeitet, regelt die Datenschutzerklärung von Anthropic. Zum Start zieht die Website auf eine eigene Adresse um, der Hoster wird dann an dieser Stelle genannt.</p>
-      <p>Ruft Ihr Browser eine Seite ab, übermittelt er dem Server des Hosters technisch notwendige Angaben: Ihre <span class="nw">IP-Adresse</span>, Datum und Uhrzeit, die aufgerufene Adresse, gegebenenfalls die Seite, von der Sie kommen, sowie Browser und Betriebssystem. Der Hoster kann diese Angaben in Protokolldateien (Server-Logfiles) speichern, um die Website auszuliefern und vor Missbrauch zu schützen. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO; mein berechtigtes Interesse ist, die Website sicher und zuverlässig bereitzustellen.</p>
+      <p>Diese Fassung der Website ist eine Testseite. Sie liegt auf claude.ai, einem Dienst von Anthropic. Was Anthropic dabei verarbeitet, regelt die Datenschutzerklärung von Anthropic. Zum Start zieht die Website auf eine eigene Adresse um, der Hoster wird dann an dieser Stelle genannt.</p>
+      <p>Ruft Ihr Browser eine Seite ab, übermittelt er dem Server des Hosters technisch notwendige Angaben: Ihre <span class="nw">IP-Adresse</span>, Datum und Uhrzeit, die aufgerufene Adresse, gegebenenfalls die Seite, von der Sie kommen, sowie Browser und Betriebssystem. Der Hoster kann diese Angaben in Protokolldateien (Server-Logfiles) speichern, um die Website auszuliefern und vor Missbrauch zu schützen. Rechtsgrundlage ist <span class="nw">Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO</span>. Mein berechtigtes Interesse ist, die Website sicher und zuverlässig bereitzustellen.</p>
     </section>
 
     <section aria-labelledby="d-schriften">
-      <h2 class="titel" id="d-schriften">Schriften von Google Fonts</h2>
-      <p>Die Schriften der Website (Vollkorn, Vollkorn SC und für den ersten Satz IM Fell French Canon) lädt Ihr Browser derzeit von Servern von Google Fonts, einem Dienst der Google Ireland Limited, Gordon House, Barrow Street, Dublin&nbsp;4, Irland. Dabei erhält Google Ihre <span class="nw">IP-Adresse</span> und die üblichen Angaben einer Anfrage, etwa Ihren Browser und die Adresse der Seite, welche die Schrift anfordert. Eine Übermittlung in die USA ist dabei nicht ausgeschlossen; die Google LLC ist nach dem <span class="nw">EU-U.S.</span> Data Privacy Framework zertifiziert, für das ein Angemessenheits&shy;beschluss der EU-Kommission gilt. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO; mein berechtigtes Interesse ist eine einheitliche Darstellung der Schrift auf allen Geräten.</p>
-      <p>Für die endgültige Website werden die Schriften auf dem eigenen Server liegen. Dann gelangen beim Laden der Schriften keine Daten mehr an Google.</p>
+      <h2 class="titel" id="d-schriften">Schriften</h2>
+      <p>Die Schriften der Website (Vollkorn und für den ersten Satz IM Fell French Canon) lädt Ihr Browser vom Server des Hosters. Dabei erhält der Hoster Ihre <span class="nw">IP-Adresse</span> und die üblichen Angaben einer Anfrage, etwa Ihren Browser und die Adresse der Seite, welche die Schrift anfordert. Rechtsgrundlage ist <span class="nw">Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO</span>. Mein berechtigtes Interesse ist eine einheitliche Darstellung der Schrift auf allen Geräten.</p>
     </section>
 
     <section aria-labelledby="d-bibliotheken">
-      <h2 class="titel" id="d-bibliotheken">Programmbibliotheken von jsDelivr</h2>
-      <p>Die Seiten mit dem Globus laden die freien Programm&shy;bibliotheken d3 und topojson-client vom Dienst jsDelivr der Volentio JSD Limited, eingetragen in England und Wales. jsDelivr liefert die Dateien über ein weltweites Netz von Servern aus und erhält dabei Ihre <span class="nw">IP-Adresse</span> und die üblichen Angaben einer Anfrage. Diese Angaben können auch außerhalb der EU verarbeitet werden: im Vereinigten Königreich, für das ein Angemessenheits&shy;beschluss der EU-Kommission gilt, und in den USA, wo einige der Anbieter sitzen, über deren Server jsDelivr ausliefert. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO; mein berechtigtes Interesse ist, den Globus schnell und zuverlässig anzuzeigen.</p>
+      <h2 class="titel" id="d-bibliotheken">Programmbibliotheken</h2>
+      <p>Die Seiten mit dem Globus laden die freien Programm&shy;bibliotheken d3 und topojson-client vom Server des Hosters. Der Hoster liefert die Dateien aus und erhält dabei Ihre <span class="nw">IP-Adresse</span> und die üblichen Angaben einer Anfrage. Rechtsgrundlage ist <span class="nw">Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO</span>. Mein berechtigtes Interesse ist, den Globus schnell und zuverlässig anzuzeigen.</p>
     </section>
 
     <section aria-labelledby="d-email">
       <h2 class="titel" id="d-email"><span class="nw">E-Mail</span></h2>
-      <p>Wenn Sie mir eine <span class="nw">E-Mail</span> schreiben, verarbeite ich Ihre Adresse, Ihren Namen, soweit Sie ihn angeben, und den Inhalt Ihrer Nachricht, um Ihnen zu antworten. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO, wenn es um eine Lesung oder eine andere Vereinbarung geht, sonst Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO; mein berechtigtes Interesse ist, Ihre Anfrage zu beantworten.</p>
-      <p>Mein Postfach liegt bei Google (Gmail); Ihre Nachricht wird also auch dort gespeichert. Ich bewahre <span class="nw">E-Mails</span> nur so lange auf, wie es für Ihre Anfrage und mögliche Rückfragen nötig ist oder gesetzliche Aufbewahrungs&shy;fristen es verlangen.</p>
+      <p>Wenn Sie mir eine <span class="nw">E-Mail</span> schreiben, verarbeite ich Ihre Adresse, Ihren Namen, soweit Sie ihn angeben, und den Inhalt Ihrer Nachricht, um Ihnen zu antworten. Rechtsgrundlage ist <span class="nw">Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO</span>, wenn es um eine Lesung oder eine andere Vereinbarung geht, sonst <span class="nw">Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO</span>. Mein berechtigtes Interesse ist, Ihre Anfrage zu beantworten.</p>
+      <p>Mein Postfach liegt bei Google (Gmail). Ihre Nachricht wird also auch dort gespeichert. Ich bewahre <span class="nw">E-Mails</span> nur so lange auf, wie es für Ihre Anfrage und mögliche Rückfragen nötig ist oder gesetzliche Aufbewahrungs&shy;fristen es verlangen.</p>
     </section>
 
     <section aria-labelledby="d-newsletter">
       <h2 class="titel" id="d-newsletter">Newsletter</h2>
-      <p>Wenn Sie sich am Ende einer Seite für den Newsletter eintragen, speichert ein Newsletter-Dienst Ihre <span class="nw">E-Mail-Adresse</span>, damit ich Ihnen Nachrichten zu neuen Büchern und Lesungen schicken kann. Welcher Dienst das sein wird, steht noch nicht fest; er wird an dieser Stelle genannt, bevor das Formular in Betrieb geht. Rechtsgrundlage ist Ihre Einwilligung (Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a DSGVO).</p>
+      <p>Wenn Sie sich am Ende einer Seite für den Newsletter eintragen, speichert ein Newsletter-Dienst Ihre <span class="nw">E-Mail-Adresse</span>, damit ich Ihnen Nachrichten zu neuen Büchern und Lesungen schicken kann. Welcher Dienst das sein wird, steht noch nicht fest. Er wird an dieser Stelle genannt, bevor das Formular in Betrieb geht. Rechtsgrundlage ist Ihre Einwilligung <span class="nw">(Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a DSGVO)</span>.</p>
       <p>Die Anmeldung gilt erst, wenn Sie sie bestätigen: Dazu erhalten Sie zuerst eine <span class="nw">E-Mail</span> mit einem Link (Double-Opt-in-Verfahren). Ihre Einwilligung können Sie jederzeit widerrufen, über den Link zum Abmelden in jeder <span class="nw">E-Mail</span> oder mit einer <span class="nw">E-Mail</span> an <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a>. Ihre Adresse wird dann gelöscht.</p>
-      <p>Im Testsystem hat das Formular noch keine Funktion; es werden keine Daten übermittelt.</p>
+      <p>Im Testsystem hat das Formular noch keine Funktion. Es werden keine Daten übermittelt.</p>
     </section>
 
     <section aria-labelledby="d-rechte">
       <h2 class="titel" id="d-rechte">Ihre Rechte</h2>
       <p>Sie haben das Recht auf</p>
       <ul class="rechte">
-        <li>Auskunft über die Daten, die ich über Sie verarbeite <span class="leise">(Art.&nbsp;15 DSGVO)</span></li>
-        <li>Berichtigung unrichtiger Daten <span class="leise">(Art.&nbsp;16 DSGVO)</span></li>
-        <li>Löschung <span class="leise">(Art.&nbsp;17 DSGVO)</span></li>
-        <li>Einschränkung der Verarbeitung <span class="leise">(Art.&nbsp;18 DSGVO)</span></li>
-        <li>Datenübertragbarkeit <span class="leise">(Art.&nbsp;20 DSGVO)</span></li>
-        <li>Widerspruch gegen die Verarbeitung <span class="leise">(Art.&nbsp;21 DSGVO)</span></li>
+        <li>Auskunft über die Daten, die ich über Sie verarbeite <span class="nw">(Art.&nbsp;15 DSGVO)</span></li>
+        <li>Berichtigung unrichtiger Daten <span class="nw">(Art.&nbsp;16 DSGVO)</span></li>
+        <li>Löschung <span class="nw">(Art.&nbsp;17 DSGVO)</span></li>
+        <li>Einschränkung der Verarbeitung <span class="nw">(Art.&nbsp;18 DSGVO)</span></li>
+        <li>Datenübertragbarkeit <span class="nw">(Art.&nbsp;20 DSGVO)</span></li>
+        <li>Widerspruch gegen die Verarbeitung <span class="nw">(Art.&nbsp;21 DSGVO)</span></li>
       </ul>
       <p>Eine <span class="nw">E-Mail</span> an mich genügt.</p>
     </section>
 
     <section aria-labelledby="d-widerspruch">
       <h2 class="titel" id="d-widerspruch">Widerspruchsrecht</h2>
-      <p>Verarbeite ich Daten auf Grund eines berechtigten Interesses (Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO), können Sie dem jederzeit aus Gründen widersprechen, die sich aus Ihrer besonderen Situation ergeben.</p>
+      <p>Verarbeite ich Daten auf Grund eines berechtigten Interesses <span class="nw">(Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO)</span>, können Sie dem jederzeit aus Gründen widersprechen, die sich aus Ihrer besonderen Situation ergeben.</p>
     </section>
 
     <section aria-labelledby="d-beschwerde">
       <h2 class="titel" id="d-beschwerde">Beschwerde</h2>
-      <p>Sie können sich außerdem bei einer Datenschutz-Aufsichtsbehörde beschweren (Art.&nbsp;77 DSGVO). Für mich zuständig ist die Berliner Beauftragte für Datenschutz und Informationsfreiheit, <span class="nw">Alt-Moabit 59–61</span>, 10555&nbsp;Berlin.</p>
+      <p>Sie können sich außerdem bei einer Datenschutz-Aufsichtsbehörde beschweren <span class="nw">(Art.&nbsp;77 DSGVO)</span>. Für mich zuständig ist die Berliner Beauftragte für Datenschutz und Informationsfreiheit, <span class="nw">Alt-Moabit 59–61</span>, 10555&nbsp;Berlin.</p>
     </section>
 
-    <p class="stand leise">Stand: Oktober 2026</p>
+    <p class="stand">Stand: Oktober 2026</p>
   </article>
 </div>
 </main>
 
-<footer class="fuss" id="kontakt">
-  <section class="kontakt" aria-labelledby="kontakt-titel">
-    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
       <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html" aria-current="page">Datenschutz</a></p>
     <p class="profile" hidden></p>
-  </section>
+  </div>
   <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
 </footer>
 

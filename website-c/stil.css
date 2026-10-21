@@ -1,98 +1,174 @@
-/* Gemeinsames Stylesheet aller Seiten der Website.
-   Eine Schrift (Vollkorn mit Vollkorn SC), Papierweiß und Graphit, Grautöne.
-   Siena bedeutet nur eines: die eigenen Werke. Maßeinheit ist die Zeile (--z), Abstände sind Vielfache davon.
+/* Gemeinsames Stylesheet von Version C. Verbindlich: docs/gestaltung-website-c.md.
+
+   Eine Schrift (Vollkorn, mit Kapitälchen aus derselben Datei), für den ersten Satz die IM Fell French Canon. Papierweiß und
+   eine Tinte für allen Text. Ein Grau (--leise) nur für Zustände. Kursiv nur für Werktitel, fremde Wörter und Betonung.
+   Nebentext hat ein Mittel: eine Stufe kleiner. Alle senkrechten Abstände sind Stufen der Zeile --z.
+
+   Token (Abschnitt 4 und 5 der Regeln):
+     Farben     --papier, --tinte, --leise; Karte: --karte-land, --karte-bereist, --karte-grenze, --karte-kueste, --karte-gradnetz;
+                Regal: --brett; Zeitband: --zb-strich, --zb-kind, --zb-warte
+     Grade      --g-klein, --g-text, --g-ueber, --g-gross, --g-einstieg; Zeilenhöhen --zh-klein, --zh-text, --zh-ueber, --zh-gross
+     Abstände   --z (eine Zeile) und die Stufen --z-viertel, --z-halb, --z-dreiviertel, --z-zwei, --z-drei
+     Raster     --rand-l, --rand-r, --mass, --spalte, --globus, --globuskante, --kopf-h, --tafel-h, --vb (setzt FSeite)
+     Bewegung   --zug (Herausziehen eines Rückens), --zug-dauer, --schuber-dauer
 
    Klassen für alle Seiten, kurz:
-     .kopf (Briefkopf und Navigation), .fuss (Kontakt und Kolophon),
-     .spalte (Textspalte mit asymmetrischem linken Rand), .abschnitt (Abschnitt mit Rand), .titel (ruhige Abschnittsüberschrift),
-     .seitentitel (Titel einer Unterseite), .wort (Wort, das etwas tut), .leise (grauer Text), .werk (Titel eines eigenen Werks),
-     .globusseite (Text links, Globus rechts), .globus/.flaeche (Globus), .tafel (Stationstafel), .karte (Karteikarte),
-     .arbeitstitel (der Zusatz „Arbeitstitel“ hinter einem Titel), .leitsatz (der erste Satz der Vita in der Anzeigeschrift),
-     .recht (Impressum und Datenschutz).
-   --vb ist die Breite des Fensters ohne Bildlaufleiste; FSeite setzt sie (ohne Skript gilt 100vw). */
+     .kopf, .briefkopf, .name, .rolle, .nav, .nav-liste    Kopf und Navigation
+     .fuss, .kontakt, .anfragen, .post…, .impressum, .profile, .kolophon-fuss    Fuß
+     .abschnitt (großer Teil einer Seite), .spalte (Satzbreite), .prosa (Absätze), .titel (h2), .seitentitel (h1), .unterzeile
+     .klein (Nebentext), .stichwort (Kapitälchen eines Verzeichniseintrags), .werk (Werktitel im Satz), .arbeitstitel
+     .wort (Knopf oder Verweis, der etwas tut), .wahlliste (Auswahlliste: ohne Strich in Ruhe), .steuerzeile, .ortsleiste
+     .globusseite, .globus, .flaeche, .tipp, .hinweis, .ersatz    Globus
+     .tafel und ihre Teile, .zeichen (gezeichnetes Kartenzeichen), .zeichenerklaerung, .buchzeile
+     .recht (Impressum, Datenschutz), .unterseite, .leitsatz (erster Satz), .sprung, .unsichtbar, .glied, .nw
+
+   Altnamen aus A (--graphit, --schwarz, --grau-1 … --grau-4, --siena, --sc, --karton, --kartonrand, --brettkante) zeigen auf
+   die Token von C, damit die Seiten von A weiter lesbar sind, bis sie umgebaut sind. Neue Stile benutzen sie nicht.
+   .leise und .karte (Karteikarte) sind ebenso nur noch für den Übergang da. */
+
+@font-face { font-family: "Vollkorn"; src: url("schrift/vollkorn.woff2") format("woff2"); font-weight: 400 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Vollkorn"; src: url("schrift/vollkorn-kursiv.woff2") format("woff2"); font-weight: 400 600; font-style: italic; font-display: swap; }
+@font-face { font-family: "IM Fell French Canon"; src: url("schrift/im-fell-french-canon.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 
 :root {
   color-scheme: light;
+  /* Farben */
   --papier: #FFFEFC;
-  --graphit: #1D1E21;
-  --schwarz: #0A0B0D;
-  --grau-1: #47494E;
-  --grau-2: #6B6D72;
-  --grau-neben: #7C7E83;
-  --grau-3: #96989C;
-  --grau-4: #C9C8C3;               /* feine Linien, gedämpfte Striche */
-  --brett: #E9E6E0;
-  --brettkante: #D2CEC5;
-  --karton: #FBF9F4;
-  --kartonrand: #D8D4CB;
-  --siena: #9B5230;
-  --z: 1.78125rem;                 /* eine Zeile: 19 px × 1,5 */
+  --tinte: #1D1E21;
+  --leise: #6B6D72;
+  --karte-land: #F3F3F2;
+  --karte-bereist: #C4C7CC;
+  --karte-grenze: #B0B3B8;
+  --karte-kueste: #9C9DA1;
+  --karte-gradnetz: #ECEDEE;
+  --brett: #DCDDDF;
+  --zb-strich: #BEC0C3;
+  --zb-kind: #A9ABAF;
+  --zb-warte: #8E9095;
+
+  /* Schrift und Grade (Desktop ab 62,0625 rem; darunter siehe unten) */
   --schrift: "Vollkorn", "Iowan Old Style", Georgia, serif;
-  --sc: "Vollkorn SC", "Vollkorn", Georgia, serif;
+  --anzeige: "IM Fell French Canon", var(--schrift);
+  --g-klein: .96484375rem;         /* 15,4375 px */
+  --g-text: 1.1875rem;             /* 19 px */
+  --g-ueber: 1.484375rem;          /* 23,75 px */
+  --g-gross: 1.78125rem;           /* 28,5 px */
+  --g-einstieg: 2.375rem;          /* 38 px, nur der erste Satz der Startseite */
+
+  /* Die Zeile und ihre Stufen */
+  --z: 1.78125rem;                 /* 28,5 px */
+  --z-viertel: calc(var(--z) * .25);
+  --z-halb: calc(var(--z) * .5);
+  --z-dreiviertel: calc(var(--z) * .75);
+  --z-zwei: calc(var(--z) * 2);
+  --z-drei: calc(var(--z) * 3);
+  --zh-klein: calc(var(--z) * .75);
+  --zh-text: var(--z);
+  --zh-ueber: calc(var(--z) * 1.25);
+  --zh-gross: calc(var(--z) * 1.5);
+
+  /* Waagrechtes Raster wie A */
   --rand-l: clamp(16px, 7vw, 136px);
-  --anzeige: "IM Fell French Canon", var(--schrift);   /* nur für den ersten Satz der Vita (.leitsatz) */
   --rand-r: clamp(16px, 3vw, 48px);
-  --mass: 31em;                    /* Satzbreite einer Textspalte, rund 62 Zeichen */
-  --spalte: clamp(23em, calc(62vw - 330px), 30em);   /* linke Spalte neben dem Globus */
+  --mass: 31em;                    /* Satzbreite, rund 62 Zeichen */
+  --spalte: clamp(23em, calc(62vw - 330px), 30em);   /* Textspalte neben dem Globus */
+
+  /* Bewegung: nur Herausziehen und Schuber (7.3) */
+  --zug: -12px;
+  --zug-dauer: 160ms;
+  --schuber-dauer: 300ms;
+
+  /* Altnamen aus A, nur für den Übergang */
+  --graphit: var(--tinte);
+  --schwarz: var(--tinte);
+  --grau-1: var(--tinte);
+  --grau-2: var(--tinte);
+  --grau-neben: var(--tinte);
+  --grau-3: var(--leise);
+  --grau-4: var(--zb-strich);
+  --siena: var(--tinte);
+  --sc: var(--schrift);
+  --karton: var(--papier);
+  --kartonrand: var(--tinte);
+  --brettkante: var(--brett);
 }
+
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
-  margin: 0; background: var(--papier); color: var(--graphit);
-  font-family: var(--schrift); font-size: 1.1875rem; line-height: 1.5;
+  margin: 0; background: var(--papier); color: var(--tinte);
+  font-family: var(--schrift); font-size: var(--g-text); line-height: var(--zh-text); font-weight: 400;
   font-variant-numeric: oldstyle-nums proportional-nums; font-kerning: normal;
   hyphens: auto; -webkit-hyphens: auto; text-wrap: pretty;
   -webkit-font-smoothing: antialiased;
 }
 p, h1, h2, h3, h4, figure, blockquote, ul, ol, dl, dd { margin: 0; }
 ul, ol { padding: 0; }
-h1, h2, h3, h4 { font-weight: 400; font-size: inherit; }
-i, em { font-style: italic; }
+h1, h2, h3, h4 { font-weight: 400; font-size: inherit; hyphens: manual; -webkit-hyphens: manual; text-wrap: balance; }
+i, em, cite { font-style: italic; }
+b, strong { font-weight: 600; }
 img { max-width: 100%; height: auto; }
+abbr { text-decoration: none; }
+::selection { background: var(--tinte); color: var(--papier); }
 
-/* ---------- Wörter und Verweise ---------- */
-/* Links sind unterstrichene Wörter, das Gewählte steht schwarz und ohne Strich */
+/* ---------- Grade und Nebentext ---------- */
+.klein { font-size: var(--g-klein); line-height: var(--zh-klein); }
+.stichwort { font-variant-caps: small-caps; letter-spacing: .04em; }
+.werk { font-style: italic; }
+.arbeitstitel { font-family: var(--schrift); font-style: normal; font-size: var(--g-klein); letter-spacing: normal; white-space: nowrap; }
+.leitsatz { font-family: var(--anzeige); font-weight: 400; font-variant-numeric: normal; hyphens: manual; -webkit-hyphens: manual; text-wrap: balance; }
+.band-nr { font-family: var(--schrift); letter-spacing: normal; }
+.leise { color: inherit; }
+.unsichtbar { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.glied, .nw { white-space: nowrap; }   /* Wort und folgendes Satzzeichen bleiben zusammen */
+
+/* ---------- Verweise und Bedienung (6.20) ----------
+   Verweis im Text und Bedienwort: in Ruhe 1 px in voller Tinte unterstrichen. Gewählt: halbfett ohne Strich.
+   Nicht verfügbar: --leise, ohne Strich. Farbe tritt nie beim Zeigen auf, und nichts geht über. */
 a, .wort {
   color: inherit;
-  text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .2em;
-  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .12em;
+  text-decoration-color: currentColor; text-decoration-skip-ink: auto;
 }
-a:hover, .wort:hover { text-decoration-color: currentColor; }
-button.wort { appearance: none; background: none; border: 0; border-radius: 0; padding: 0; margin: 0; font: inherit; color: inherit; letter-spacing: inherit; text-align: inherit; line-height: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.wort.ist-aktiv, .wort[aria-pressed="true"], a[aria-current="page"] { color: var(--schwarz); text-decoration-line: none; cursor: default; }
-.wort:disabled { color: var(--grau-3); text-decoration-line: none; cursor: default; }
-:focus-visible { outline: 1.5px solid var(--graphit); outline-offset: 3px; }
-.unsichtbar { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.glied, .nw { white-space: nowrap; }       /* Wort und folgendes Satzzeichen bleiben zusammen */
-.leise { color: var(--grau-2); }
-.werk { font-style: italic; }               /* Titel eines Werks im Satz */
-.band-nr { font-family: var(--sc); letter-spacing: .05em; color: var(--siena); }   /* Bandnummer der Trilogie, Siena */
-/* „Arbeitstitel“ steht klein, grau und gerade hinter dem Titel, auf Tafel, Karte und im Text gleich */
-.arbeitstitel { font-family: var(--schrift); font-style: normal; font-size: .7em; letter-spacing: normal; color: var(--grau-2); white-space: nowrap; }
-/* Der erste Satz der Vita in der IM Fell French Canon: die einzige zweite Schrift, nur für diesen einen Satz (Startseite und Vita) */
-.leitsatz { font-family: var(--anzeige); font-weight: 400; color: var(--graphit); font-variant-numeric: normal; hyphens: manual; -webkit-hyphens: manual; text-wrap: balance; }
+button.wort {
+  appearance: none; -webkit-appearance: none; background: none; border: 0; border-radius: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; letter-spacing: inherit; text-align: inherit; line-height: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.wort.ist-aktiv, .wort[aria-pressed="true"] { font-weight: 600; letter-spacing: var(--ausgleich, 0); text-decoration-line: none; cursor: default; }
+.wort:disabled { color: var(--leise); text-decoration-line: none; cursor: default; }
+:focus-visible { outline: 1.5px solid var(--tinte); outline-offset: 3px; }
+
+/* Auswahlliste (Ortsleisten, Register, Standortregister, Leseliste): in Ruhe ohne Strich, beim Zeigen und beim Fokus mit;
+   auf Geräten ohne Maus bleibt der Strich, damit man sieht, dass man tippen kann */
+.wahlliste a, .wahlliste .wort, .ortsleiste a, .ortsleiste .wort { text-decoration-line: none; }
+.wahlliste a:hover, .wahlliste .wort:hover, .ortsleiste a:hover, .ortsleiste .wort:hover,
+.wahlliste a:focus-visible, .wahlliste .wort:focus-visible, .ortsleiste a:focus-visible, .ortsleiste .wort:focus-visible { text-decoration-line: underline; }
+@media (hover: none) {
+  .wahlliste a, .wahlliste .wort, .ortsleiste a, .ortsleiste .wort { text-decoration-line: underline; }
+}
+.wahlliste .wort[aria-pressed="true"], .wahlliste .wort.ist-aktiv, .wahlliste a[aria-current],
+.ortsleiste .wort[aria-pressed="true"], .ortsleiste .wort.ist-aktiv { font-weight: 600; letter-spacing: var(--ausgleich, 0); text-decoration-line: none; }
 
 /* Sprungmarke für die Tastatur: erst sichtbar, wenn sie den Fokus hat */
-.sprung { position: absolute; left: var(--rand-l); top: 8px; z-index: 50; padding: .1em .4em; background: var(--papier); transform: translateY(-200%); }
+.sprung { position: absolute; left: var(--rand-l); top: 8px; z-index: 50; padding: 0 .3em; background: var(--papier); transform: translateY(-200%); }
 .sprung:focus { transform: none; }
 
-/* ---------- Kopf: Briefkopf und Navigation ---------- */
+/* ---------- Kopf und Navigation (6.1) ---------- */
 .kopf { padding: calc(var(--z) * 1.5) var(--rand-r) 0 var(--rand-l); line-height: var(--z); }
-.briefkopf { line-height: var(--z); }
-.briefkopf .name { display: block; width: max-content; font-family: var(--sc); font-size: 1.15em; letter-spacing: .07em; color: var(--graphit); text-decoration-line: none; }
-a.name:hover { text-decoration-line: underline; }
-a.name[aria-current="page"]:hover { text-decoration-line: none; }
-.briefkopf .rolle { display: block; color: var(--grau-2); }
-/* Navigation: Wörter in der Buchschrift, grau unterstrichen; die jetzige Seite schwarz */
+.briefkopf { font-size: inherit; line-height: var(--z); text-wrap: initial; }
+/* Der Name im Grad Überschrift; in der festen Kopfhöhe der Globusseiten steht er auf einer Zeile von 1 z */
+.briefkopf .name { display: block; width: max-content; max-width: 100%; font-size: var(--g-ueber); line-height: var(--z); font-weight: 400; color: var(--tinte); text-decoration-line: none; }
+a.name:hover, a.name:focus-visible { text-decoration-line: underline; }
+.briefkopf .rolle { display: block; font-size: var(--g-text); line-height: var(--z); }
 .nav { margin-top: var(--z); }
-.nav-liste { list-style: none; display: flex; flex-wrap: wrap; column-gap: .85em; font-size: .9375em; line-height: var(--z); }
-.nav-liste a { color: var(--grau-1); text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); }
-.nav-liste a:hover { text-decoration-color: currentColor; }
-.nav-liste a[aria-current="page"] { color: var(--schwarz); }
-/* Auf der Leseseite steht die Liste, zu der ein Text gehört, schwarz wie eine gewählte Seite, bleibt aber ein Verweis */
-.nav-liste a[aria-current="true"] { color: var(--schwarz); text-decoration-line: none; }
+.nav-liste { list-style: none; display: flex; flex-wrap: wrap; column-gap: .85em; line-height: var(--z); }
+.nav-liste a { text-decoration-line: none; }
+.nav-liste a:hover, .nav-liste a:focus-visible { text-decoration-line: underline; }
+.nav-liste a[aria-current="page"] { font-weight: 600; text-decoration-line: none; cursor: default; }
+/* Auf der Leseseite: die Liste, zu der ein Text gehört, halbfett, bleibt aber ein Verweis */
+.nav-liste a[aria-current="true"] { font-weight: 600; }
 .nav-liste a[aria-current="true"]:hover { text-decoration-line: underline; }
-.nav-schalter { display: none; }
 /* Breit, neben dem Globus: die Navigation darf über die Textspalte hinaus bis kurz vor den Globus laufen;
    bricht sie doch, dann nach „Untertext“ (FSeite setzt .zweizeilig) statt vor einem einzelnen Wort */
 @media (min-width: 62.0625rem) {
@@ -101,70 +177,64 @@ a.name[aria-current="page"]:hover { text-decoration-line: none; }
   .nav.zweizeilig .nav-liste::before { content: ""; flex-basis: 100%; order: 1; height: 0; }
 }
 
-/* ---------- Abschnitte und Spalten ---------- */
-.abschnitt { padding: calc(var(--z) * 4) var(--rand-r) 0 var(--rand-l); }
+/* ---------- Abschnitte, Spalten, Überschriften (3.6, 5.2) ---------- */
+.abschnitt { padding: var(--z-drei) var(--rand-r) 0 var(--rand-l); }
 .spalte { max-width: var(--mass); }
-.spalte > p + p, .absatz + .absatz { margin-top: calc(var(--z) * .5); }
-/* Ruhige Abschnittsüberschrift in Kapitälchen; der Abstand darunter ist eine Zeile */
-.titel { font-family: var(--sc); font-size: 1.0625em; line-height: var(--z); letter-spacing: .06em; text-transform: lowercase; color: var(--graphit); margin-bottom: var(--z); }
-.titel i { font-family: var(--sc); font-style: normal; }
-/* Titel einer Unterseite, höchstens eineinhalbfach */
-.seitentitel { font-size: 1.5em; line-height: calc(var(--z) * 1.5); color: var(--schwarz); margin-bottom: var(--z); hyphens: manual; text-wrap: balance; }
-.unterzeile { color: var(--grau-2); margin-top: calc(var(--z) * -1); margin-bottom: var(--z); }
-.weiter { margin-top: calc(var(--z) * .5); }
-/* Schlichte Unterseite (Erzählungen, Untertext, Länder, Lesen, Impressum, Datenschutz): der Titel steht auf derselben Höhe
-   wie auf Vita und Bibliothek */
-.unterseite { padding-top: calc(var(--z) * 2); }
+.spalte > p + p, .prosa > p + p, .absatz + .absatz { margin-top: var(--z-dreiviertel); }
+/* h2: Grad Überschrift, aufrecht, normale Schreibung; ½ z danach, 2 z davor, wenn etwas vorausgeht */
+.titel { font-family: var(--schrift); font-size: var(--g-ueber); line-height: var(--zh-ueber); font-weight: 400; letter-spacing: normal; text-transform: none; margin-bottom: var(--z-halb); }
+.titel i { font-family: var(--schrift); font-style: italic; }
+* + .titel { margin-top: var(--z-zwei); }
+.abschnitt > .titel:first-child { margin-top: 0; }
+/* h1: Grad groß, 1 z danach */
+.seitentitel { font-size: var(--g-gross); line-height: var(--zh-gross); font-weight: 400; margin-bottom: var(--z); }
+.unterzeile { margin-top: calc(var(--z) * -1); margin-bottom: var(--z); }
+.weiter { margin-top: var(--z-dreiviertel); }
+/* Unterseite ohne Globus: 2 z zwischen Kopf und Inhalt */
+.unterseite { padding-top: var(--z-zwei); }
 
-/* ---------- Fuß ---------- */
-.fuss { margin-top: calc(var(--z) * 4); padding: calc(var(--z) * 2) var(--rand-r) calc(var(--z) * 2) var(--rand-l); }
-.kontakt .titel { margin-bottom: calc(var(--z) * .5); }
-.impressum { margin-top: calc(var(--z) * .5); font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
-.kolophon-fuss { margin-top: calc(var(--z) * 2); max-width: 36em; font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
-/* Newsletter-Zeile (form.post) und Profile (.profile, aus FSeite PROFILE; leer verborgen): klein und grau wie die Zeile des
-   Impressums. Das Feld ist nur ein Strich in der Farbe der Unterstreichung, „Eintragen“ ein Wort wie jeder Verweis. Ohne Skript
-   ist das Formular verborgen (es schickt nichts ab, siehe FSeite.fuss). */
+/* ---------- Fuß (6.2) ---------- */
+.fuss { margin-top: var(--z-drei); padding: 0 var(--rand-r) var(--z-zwei) var(--rand-l); }
+.kontakt > * + * { margin-top: var(--z-halb); }
+.anfragen { font-size: var(--g-text); line-height: var(--zh-text); }
+.post, .impressum, .profile, .kolophon-fuss { font-size: var(--g-klein); line-height: var(--zh-klein); }
+.kolophon-fuss { margin-top: var(--z); max-width: 36em; }
+.profile { display: flex; flex-wrap: wrap; column-gap: 1.2em; }
+.profile[hidden] { display: none; }
+/* Newsletter-Zeile: das Feld ist ein Strich von 1 px in Tinte, „Eintragen“ ein unterstrichenes Wort. Ohne Skript ist das Formular
+   verborgen (es schickt nichts ab, siehe FSeite.fuss) */
 html:not(.js) .post { display: none; }
-.post, .profile { margin-top: calc(var(--z) * .5); font-size: .875rem; line-height: 1.6; color: var(--grau-2); }
 .post-eingabe { white-space: nowrap; }
 .post-feld {
   appearance: none; -webkit-appearance: none; width: 16em; max-width: calc(100% - 5.5em); margin: 0 .45em 0 0; padding: 0 0 .05em;
-  border: 0; border-bottom: 1px solid color-mix(in srgb, currentColor 40%, transparent); border-radius: 0; background: none; box-shadow: none;
-  font: inherit; line-height: 1.25; color: var(--graphit); vertical-align: baseline;
+  border: 0; border-bottom: 1px solid var(--tinte); border-radius: 0; background: none; box-shadow: none;
+  font: inherit; line-height: 1.25; color: var(--tinte); vertical-align: baseline;
 }
-.post-feld:hover, .post-feld:focus { border-bottom-color: currentColor; }
-.post-feld:-webkit-autofill { box-shadow: inset 0 0 0 2rem var(--papier); -webkit-text-fill-color: var(--graphit); }
-/* Fokus: der Strich wird doppelt so stark. Ein Rahmen stünde auf dem Telefon (44 px hoch) über den Nachbarzeilen; der durchsichtige
-   Umriss erscheint nur im Kontrastmodus des Systems */
-.post-feld:focus-visible { outline: 2px solid transparent; box-shadow: inset 0 -1px 0 currentColor; }
-.post-feld:-webkit-autofill:focus-visible { box-shadow: inset 0 -1px 0 currentColor, inset 0 0 0 2rem var(--papier); }
-.post-status:not(:empty) { margin-top: calc(var(--z) * .25); }
-.profile { display: flex; flex-wrap: wrap; column-gap: 1.2em; }
-.profile[hidden] { display: none; }
-/* Telefon und Finger: Feld und „Eintragen“ 44 px hoch, die Fläche reicht nach oben, damit der Strich nahe an der
-   Schrift bleibt; im Feld mindestens 16 px, sonst vergrößert Safari auf dem iPhone die Seite beim Tippen */
-@media (max-width: 40rem), (pointer: coarse) {
-  .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
-  .post .wort { min-height: 2.75rem; padding: 1.25rem 0 0; }
-}
+.post-feld:-webkit-autofill { box-shadow: inset 0 0 0 2rem var(--papier); -webkit-text-fill-color: var(--tinte); }
+/* Fokus: der Strich wird 2 px; der durchsichtige Umriss erscheint nur im Kontrastmodus des Systems */
+.post-feld:focus-visible { outline: 2px solid transparent; box-shadow: inset 0 -1px 0 var(--tinte); }
+.post-feld:-webkit-autofill:focus-visible { box-shadow: inset 0 -1px 0 var(--tinte), inset 0 0 0 2rem var(--papier); }
+.post-status:not(:empty) { margin-top: var(--z-viertel); }
+.post-status:empty { margin-top: 0; }
 
-/* ---------- Rechtstexte (Impressum, Datenschutz) ----------
-   Eine Textspalte, ruhige Kapitälchen-Überschriften, zwischen den Abschnitten eineinhalb Zeilen. Unter dem Titel ein grauer
-   kursiver Vermerk, solange die Texte Entwurf sind; die Rechte als Liste mit hängendem Halbgeviertstrich. */
+/* ---------- Rechtstexte (6.18) ---------- */
 .recht { max-width: var(--mass); }
-.recht .seitentitel { margin-bottom: calc(var(--z) * .5); }
-.recht .vermerk { margin-bottom: calc(var(--z) * 1.5); font-size: .9375em; font-style: italic; }
-.recht section + section, .recht .vorab + section { margin-top: calc(var(--z) * 1.5); }
-.recht .titel { margin-bottom: calc(var(--z) * .5); }
-.recht section > * + * { margin-top: calc(var(--z) * .5); }
+.recht .seitentitel { margin-bottom: 0; }
+.recht .vermerk { margin-top: 0; margin-bottom: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); font-style: normal; }
+.recht section + section, .recht .vorab + section { margin-top: var(--z-zwei); }
+.recht .titel { margin-top: 0; margin-bottom: var(--z-halb); }
+.recht section > * + * { margin-top: var(--z-dreiviertel); }
+.recht section > .titel + * { margin-top: 0; }
+.recht .vorab > * + * { margin-top: var(--z-dreiviertel); }
 .recht address { font-style: normal; }
-.recht .stand { margin-top: calc(var(--z) * 2); font-size: .875rem; line-height: 1.6; }
+.recht .stand { margin-top: var(--z-zwei); font-size: var(--g-klein); line-height: var(--zh-klein); }
 .recht .rechte { list-style: none; }
 .recht .rechte li { position: relative; padding-left: 1.1em; }
-.recht .rechte li::before { content: "–"; position: absolute; left: 0; color: var(--grau-2); }
+.recht .rechte li + li { margin-top: var(--z-viertel); }
+.recht .rechte li::before { content: "–"; position: absolute; left: 0; }
 .recht .rechte .leise { white-space: nowrap; }
 
-/* ---------- Globus ---------- */
+/* ---------- Globus (6.3) ---------- */
 .flaeche { position: relative; width: 100%; aspect-ratio: 1; }
 .flaeche canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
 .flaeche canvas:active { cursor: grabbing; }
@@ -172,43 +242,39 @@ html:not(.js) .post { display: none; }
 /* Fokus auf dem Globus: ein Ring innerhalb der Scheibe; der runde Zuschnitt beim Zoomen schneidet ihn nicht ab */
 @supports selector(:has(*)) {
   .flaeche canvas:focus-visible { outline: none; }
-  .flaeche:has(canvas:focus-visible)::after { opacity: 1; box-shadow: inset 0 0 0 2.5px var(--papier), inset 0 0 0 4.5px var(--graphit); }
+  .flaeche:has(canvas:focus-visible)::after { opacity: 1; box-shadow: inset 0 0 0 2.5px var(--papier), inset 0 0 0 4.5px var(--tinte); }
 }
 .flaeche canvas.namen { position: absolute; left: 0; top: 0; pointer-events: none; cursor: auto; }
 .flaeche canvas[hidden] { display: none; }
-/* Gezoomt bleibt der Globus eine Scheibe am selben Ort, wie unter einer Lupe */
-.flaeche.ist-gezoomt { clip-path: circle(calc(50% - 1.5px)); }
-.flaeche::after { content: ""; position: absolute; inset: 1.5px; border-radius: 50%; border: 1px solid var(--graphit); pointer-events: none; opacity: 0; }
-.flaeche.ist-gezoomt::after { opacity: 1; }
-/* Zwischen k = 1 und dem Lupenrand des Kerns (ab k = 1,15) wäre die Kugel beim Heranfliegen kurz eckig vom Rand der Leinwand
-   beschnitten; FSeite hält sie schon ab k > 1 rund, mit demselben Rand */
-.flaeche.ist-rund { clip-path: circle(calc(50% - 1.5px)); }
-.flaeche.ist-rund::after { opacity: 1; }
+/* Gezoomt bleibt der Globus eine Scheibe am selben Ort, wie unter einer Lupe; FSeite hält sie schon ab k > 1 rund */
+.flaeche.ist-gezoomt, .flaeche.ist-rund { clip-path: circle(calc(50% - 1.5px)); }
+.flaeche::after { content: ""; position: absolute; inset: 1.5px; border-radius: 50%; border: 1px solid var(--tinte); pointer-events: none; opacity: 0; }
+.flaeche.ist-gezoomt::after, .flaeche.ist-rund::after { opacity: 1; }
 .globus { position: relative; }
-.tipp { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; white-space: nowrap; font-style: italic; font-size: .875rem; line-height: 1.3; padding: 0 .3em; background: var(--papier); transform: translate(14px, -50%); }
+/* Name des Lands unter der Maus und Hinweis zum Zoomen: aufrecht, Grad klein, Tinte auf Papier, ohne Rahmen */
+.tipp, .hinweis { position: absolute; z-index: 2; pointer-events: none; white-space: nowrap; font-style: normal; font-size: var(--g-klein); line-height: var(--zh-klein); color: var(--tinte); background: var(--papier); padding: 0 .3em; }
+.tipp { left: 0; top: 0; transform: translate(14px, -50%); }
 .tipp.links { transform: translate(calc(-100% - 14px), -50%); }
+.hinweis { left: 14%; top: 4%; }
 .tipp[hidden], .hinweis[hidden], .ersatz[hidden] { display: none; }
-.hinweis { position: absolute; left: 14%; top: 4%; z-index: 2; pointer-events: none; font-style: italic; font-size: .8125rem; color: var(--grau-2); background: var(--papier); padding: 0 .3em; }
-/* Ohne Globus (kein Netz): ein ruhiger Satz an seiner Stelle */
-.ersatz { font-style: italic; color: var(--grau-2); max-width: 22em; padding: calc(var(--z) * 2) 0 var(--z); }
+/* Ohne Globus (kein Skript, Fehler): ein Satz an seiner Stelle */
+.ersatz { font-style: normal; max-width: 22em; padding: var(--z-zwei) 0 var(--z); }
 .ohne-globus .flaeche { display: none; }
 
-/* Globusseite: links Text, rechts der Globus, auf breiten Schirmen vom rechten Rand angeschnitten.
-   Seiten mit <body class="mit-globus"> setzen den Kopf in feste Höhe (--kopf-h) und lassen den Globus darüber bis an den oberen Rand reichen.
-   Links stehen bis zu fünf Elemente untereinander, die letzte Zeile nimmt den Rest der Globushöhe auf.
-   Der Globus lässt unter sich Platz für die Tafel (--tafel-h), damit beide auf einen Schirm passen. */
+/* Globusseite: links Text, rechts der Globus, breit vom rechten Rand angeschnitten (wie A).
+   <body class="mit-globus"> setzt den Kopf in feste Höhe (--kopf-h); der Globus reicht darüber bis an den oberen Rand und lässt
+   unter sich Platz für die Tafel (--tafel-h), damit Kopf, Kugel und Tafel auf einen Bildschirm passen. */
 :root {
   --kopf-h: calc(var(--z) * 6.5); --tafel-h: calc(var(--z) * 6.5);
   --globus: max(24rem, min(calc((var(--vb, 100vw) - var(--rand-l) - var(--spalte) - 2.75rem) / .91), calc(100svh - var(--z) - var(--tafel-h)), 1000px));
-  /* linke Kante des Globus, vom linken Fensterrand aus; daran richten sich Navigation und Bilder weiter unten aus */
+  /* linke Kante des Globus, vom linken Fensterrand aus; daran richten sich Navigation, Regalbild und rechte Spalten aus */
   --globuskante: calc(var(--vb, 100vw) - var(--globus) * .91);
 }
-/* Sehr breite Schirme: der Globus ist dann von der Fensterhöhe begrenzt, und zwischen Text und Globus öffnete sich eine Lücke.
-   Drei Viertel der Breite über 1700 px gehen in den linken Rand; Briefkopf, Text und Regal rücken auf allen Seiten gleich ein. */
+/* Sehr breite Schirme: drei Viertel der Breite über 1700 px gehen in den linken Rand (A) */
 @media (min-width: 106.25rem) {
   :root { --rand-l: calc(136px + (var(--vb, 100vw) - 1700px) * .75); }
 }
-.mit-globus .kopf { width: calc(var(--rand-l) + var(--spalte)); padding-right: 0; height: var(--kopf-h); }
+.mit-globus .kopf { width: calc(var(--rand-l) + var(--spalte)); padding-right: 0; min-height: var(--kopf-h); }
 .globusseite {
   display: grid;
   grid-template-columns: var(--rand-l) minmax(0, var(--spalte)) minmax(0, 1fr);
@@ -219,89 +285,109 @@ html:not(.js) .post { display: none; }
 .globusseite > .globus {
   grid-column: 3; grid-row: 1 / -1; justify-self: end; align-self: start;
   width: var(--globus);
-  /* bis an den oberen Seitenrand, über den Kopf hinaus */
   margin: calc(var(--z) * .5 - var(--kopf-h)) calc(var(--globus) * -.09) 0 0;
 }
 /* Die Tafel steht unter dem sichtbaren Teil des Globus; die Jahreszahl hängt, wo Platz ist, links in den Steg */
-.globusseite > .globus .tafel { min-height: var(--tafel-h); margin: calc(var(--z) * .25) calc(var(--globus) * .09 + var(--rand-r)) 0 calc(-1 * clamp(0px, var(--globuskante) - var(--rand-l) - var(--spalte) - 1.5em, 5.2em)); }
+.globusseite > .globus .tafel { min-height: var(--tafel-h); margin: var(--z-viertel) calc(var(--globus) * .09 + var(--rand-r)) 0 calc(-1 * clamp(0px, var(--globuskante) - var(--rand-l) - var(--spalte) - 1.5em, 5.2em)); }
 
-/* ---------- Stationstafel ----------
-   Links die große Jahreszahl in Mediävalziffern, rechts Ort, Art, Koordinaten und ein Satz; darunter früher und später.
-   Nebenorte stehen grau, die Bandnummer der Trilogie in Siena. */
+/* ---------- Tafel (6.4) ----------
+   Links die Marke (Jahr oder Bandziffer, Grad groß; „bis“, „seit“, „um“ klein darüber), rechts Kopf (Kartenzeichen und Ort,
+   Grad Überschrift), Unterzeile und Koordinaten (Grad klein), ein Text (Grad Text) und im Fuß die Steuerzeile.
+   Jahreszahl und Ortsname stehen auf einer Grundlinie. */
 .tafel {
   display: grid; grid-template-columns: 4.4em minmax(0, 1fr); column-gap: .8em; align-items: first baseline; align-content: start;
   line-height: var(--z);
 }
-.tafel-marke { grid-column: 1; text-align: right; font-size: 1.6em; line-height: calc(var(--z) * 1.25); color: var(--graphit); white-space: nowrap; font-variant-numeric: oldstyle-nums proportional-nums; }
-.tafel-marke .bis { font-style: italic; font-size: .55em; color: var(--grau-2); }
+.tafel-marke { grid-column: 1; position: relative; text-align: right; font-size: var(--g-gross); line-height: var(--zh-ueber); white-space: nowrap; font-variant-numeric: oldstyle-nums proportional-nums; }
+.tafel-marke .vor, .tafel-marke .bis { position: absolute; right: 0; bottom: calc(100% - .5em); font-size: var(--g-klein); line-height: var(--zh-klein); font-style: normal; }
 .tafel-inhalt { grid-column: 2; min-width: 0; }
-.tafel-kopf { font-size: 1.25em; line-height: calc(var(--z) * 1.25); font-style: italic; color: var(--schwarz); hyphens: manual; text-wrap: balance; }
-.tafel-kopf .zusatz { font-style: normal; color: var(--grau-2); font-size: .75em; }
-.tafel-unter { font-family: var(--sc); text-transform: lowercase; letter-spacing: .04em; color: var(--grau-2); }
-.tafel-daten { font-variant-numeric: oldstyle-nums; }
-.tafel-daten .ortzeit { color: var(--graphit); }
-.tafel-satz { color: var(--grau-2); }
-.tafel-text { font-size: .9375em; line-height: 1.42; margin-top: calc(var(--z) * .15); }
-.tafel-fuss { margin-top: calc(var(--z) * .2); display: flex; flex-wrap: wrap; column-gap: 1.2em; }
-.tafel-fuss:empty { display: none; }
-.tafel.ist-neben .tafel-kopf, .tafel.ist-neben .tafel-marke { color: var(--grau-2); }
-.tafel.ist-eigen .tafel-marke { font-family: var(--sc); font-size: 1.35em; letter-spacing: .04em; color: var(--siena); }
+.tafel-kopf { font-size: var(--g-ueber); line-height: var(--zh-ueber); font-style: normal; hyphens: manual; -webkit-hyphens: manual; text-wrap: balance; }
+.tafel-kopf .zusatz { font-size: var(--g-klein); }
+.tafel-kopf .zeichen { margin-right: .3em; }
+.tafel-unter, .tafel-daten { font-size: var(--g-klein); line-height: var(--zh-klein); font-variant-numeric: oldstyle-nums proportional-nums; }
+.tafel-daten .ortzeit { display: block; }
+.tafel-satz, .tafel-text { margin-top: var(--z-viertel); }
+.tafel-fuss { margin-top: var(--z-halb); display: flex; flex-wrap: wrap; column-gap: 1.2em; }
+.tafel-fuss:empty, .tafel-fuss[hidden] { display: none; }
 
-/* ---------- Karteikarte: Zettelkasten, A6 quer, eine feine Linie unter der Signatur ---------- */
+/* Gezeichnete Zeichen (FSeite.zeichen): in Tinte, auf der x-Höhe */
+.zeichen { display: inline-block; vertical-align: .05em; overflow: visible; color: inherit; }
+
+/* Steuerzeile: früher, später und ein Steuerwort, unterstrichen; das nicht verfügbare Wort leise an seinem Platz */
+.steuerzeile { display: flex; flex-wrap: wrap; column-gap: 1.2em; }
+.steuerzeile .wort[hidden] { display: none; }
+
+/* Ortsleiste: die Orte der Ebene als Knöpfe in einer fließenden Zeile, Grad klein, durch Komma getrennt */
+.ortsleiste { font-size: var(--g-klein); line-height: var(--zh-klein); }
+.ortsleiste .wort { white-space: nowrap; }
+
+/* Zeichenerklärung: je Eintrag eine Zeile, davor das Zeichen */
+.zeichenerklaerung { list-style: none; font-size: var(--g-klein); line-height: var(--zh-klein); }
+.zeichenerklaerung li { display: flex; align-items: baseline; gap: .5em; }
+.zeichenerklaerung .zeichen { flex: none; align-self: center; }
+
+/* Buchzeile (6.13): ein Satz unter dem Brett, Höhe einer Zeile reserviert, auf dem Telefon zwei */
+.buchzeile { min-height: var(--z); margin-top: var(--z-viertel); }
+@media (max-width: 40rem) { .buchzeile { min-height: calc(var(--z) * 2); } }
+
+/* Herausziehen eines Rückens und Schuber: die einzigen Übergänge (7.3). Seiten setzen die Klasse an ihre Rücken */
+.zug { transition: transform var(--zug-dauer) ease-out; }
+.zug.ist-offen { transform: translateY(var(--zug)); }
+
+/* ---------- Karteikarte (nur noch für den Übergang; C zeigt die Buchzeile) ---------- */
 .karte {
-  position: absolute; z-index: 30; width: min(24rem, calc(100vw - 32px)); min-height: calc(min(24rem, calc(100vw - 32px)) * 105 / 148);
+  position: absolute; z-index: 30; width: min(24rem, calc(100vw - 32px));
   display: flex; flex-direction: column;
-  background: var(--karton); border: 1px solid var(--kartonrand); padding: .9rem 1.2rem 1rem;
-  font-size: 1rem; line-height: 1.4; color: var(--graphit);
+  background: var(--papier); border: 1px solid var(--tinte); padding: .9rem 1.2rem 1rem;
+  font-size: var(--g-text); line-height: var(--z); color: var(--tinte);
 }
 .karte[hidden] { display: none; }
 .karte:focus { outline: none; }
-.karte:focus-visible { outline: 1.5px solid var(--graphit); outline-offset: 2px; }
-.karte-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-bottom: .35rem; margin-bottom: .75rem; border-bottom: 1px solid #B9B5AC; font-size: .875rem; color: var(--grau-2); }
-.signatur { font-family: var(--sc); letter-spacing: .06em; color: var(--graphit); }
-.karte.ist-eigen .signatur { color: var(--siena); }
-.karte-titel { font-size: 1.25rem; line-height: 1.25; text-wrap: balance; hyphens: manual; }
-.karte.ist-eigen .karte-titel { font-style: italic; }
-.karte.ist-eigen.titel-gerade .karte-titel { font-style: normal; }   /* Sammelbegriffe: Erzählungen, Länder */
+.karte:focus-visible { outline: 1.5px solid var(--tinte); outline-offset: 2px; }
+.karte-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: var(--z-halb); font-size: var(--g-klein); line-height: var(--zh-klein); }
+.signatur { font-family: var(--schrift); letter-spacing: normal; }
+.karte-titel { font-size: var(--g-ueber); line-height: var(--zh-ueber); }
 .karte-titel a { color: inherit; }
-.karte-unter { font-style: italic; color: var(--grau-2); font-size: .9375rem; margin-top: .15rem; }
-.karte-autor { margin-top: .3rem; }
-.karte-zeilen { margin-top: .7rem; color: var(--grau-2); font-size: .9375rem; }
-.karte-notiz { font-style: italic; margin-top: .3rem; font-size: .9375rem; }
-.karte-verweis { margin-top: auto; padding-top: .6rem; font-size: .9375rem; }
-/* Auf dem Telefon liegt die Karte unten am Bildschirm */
-.karte.als-blatt { position: fixed; left: 0; right: 0; bottom: 0; top: auto !important; width: auto; min-height: 15rem; max-height: 75vh; overflow: auto; border-width: 1px 0 0; padding: 1rem 16px calc(1.25rem + env(safe-area-inset-bottom)); }
+.karte-unter, .karte-zeilen, .karte-notiz, .karte-verweis { font-size: var(--g-klein); line-height: var(--zh-klein); font-style: normal; }
+.karte-autor, .karte-zeilen, .karte-notiz, .karte-verweis { margin-top: var(--z-viertel); }
+.karte.als-blatt { position: fixed; left: 0; right: 0; bottom: 0; top: auto !important; width: auto; max-height: 75vh; overflow: auto; border-width: 1px 0 0; padding: 1rem 16px calc(1.25rem + env(safe-area-inset-bottom)); }
 
-/* ---------- Telefon und schmale Fenster ---------- */
+/* ---------- Unter 62 rem: eine Spalte, Grade für das Telefon ---------- */
 @media (max-width: 62rem) {
-  body { font-size: 1.125rem; }
-  :root { --z: 1.6875rem; }
+  :root {
+    --z: 1.6875rem;                /* 27 px */
+    --g-klein: .9375rem;           /* 15 px */
+    --g-text: 1.125rem;            /* 18 px */
+    --g-ueber: 1.40625rem;         /* 22,5 px */
+    --g-gross: 1.6875rem;          /* 27 px */
+    --g-einstieg: clamp(1.29375rem, 7.4vw, 1.875rem);   /* 20,7 bis 30 px; die Startseite passt ihn an die Spalte an */
+  }
   .kopf { padding-top: var(--z); }
-  .kopf, .mit-globus .kopf { width: auto; height: auto; padding-right: var(--rand-l); }
+  .kopf, .mit-globus .kopf { width: auto; min-height: 0; padding-right: var(--rand-l); }
   .globusseite { grid-template-columns: var(--rand-l) minmax(0, 1fr) var(--rand-l); grid-template-rows: none; }
   .globusseite > *, .globusseite > .globus { grid-column: 2; grid-row: auto; }
   .globusseite > .globus { justify-self: center; width: min(100%, calc(100svh - 6rem)); margin: var(--z) 0 0; scroll-margin-top: 12px; }
-  .globusseite > .globus .tafel { margin: calc(var(--z) * .25) 0 0; }
+  .globusseite > .globus .tafel { margin: var(--z-viertel) 0 0; }
   .abschnitt { padding-left: var(--rand-l); padding-right: var(--rand-l); }
   .fuss { padding-left: var(--rand-l); padding-right: var(--rand-l); }
   .unterseite { padding-top: var(--z); }
 }
+/* Telefon: die Navigation steht offen in zwei Zeilen, jede Trefferfläche 44 px hoch */
 @media (max-width: 40rem) {
-  /* Die Navigation klappt hinter dem Wort „Inhalt“ zusammen */
-  .kopf { display: grid; grid-template-columns: minmax(0, 1fr); }
-  .briefkopf { grid-column: 1; grid-row: 1; }
-  /* Die Navigation liegt über der Briefkopfzeile: rechts das Wort, darunter die Liste über die ganze Breite */
-  .js .nav { grid-column: 1; grid-row: 1; margin-top: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: calc(var(--z) * 2) auto; pointer-events: none; }
-  .js .nav > * { pointer-events: auto; }
-  .js .nav-schalter { display: block; grid-column: 2; grid-row: 1; align-self: start; color: var(--grau-1); padding: .3em .4em; margin: -.3em -.4em 0 .6em; }
-  .js .nav-schalter[aria-expanded="true"] { color: var(--schwarz); text-decoration-line: none; }
-  .js .nav-liste { display: none; grid-column: 1 / -1; grid-row: 2; margin-top: calc(var(--z) * .5); flex-direction: column; align-items: flex-start; font-size: 1.0625em; }
-  .js .nav.ist-offen .nav-liste { display: flex; }
-  .nav-liste a { display: inline-block; padding: .2em 0; }
+  .nav { margin-top: calc(var(--z) - 8.5px); }
+  .nav-liste { column-gap: .75em; }
+  .nav-liste a { display: inline-block; padding: 8.5px 0; }
   .tafel { grid-template-columns: 3.6em minmax(0, 1fr); column-gap: .65em; }
-  .tafel-marke { font-size: 1.45em; }
-  .tafel-kopf { font-size: 1.2em; }
+}
+/* Finger: Bedienwörter 44 px hoch, ohne dass die Zeile wächst */
+@media (pointer: coarse) {
+  button.wort { padding-block: 12px; margin-block: -12px; }
+  .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
+  .post .wort { padding-block: 1.25rem 0; margin-block: 0; min-height: 2.75rem; }
+}
+@media (max-width: 40rem) {
+  .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition-duration: 0s !important; scroll-behavior: auto !important; }
+  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; scroll-behavior: auto !important; }
 }

@@ -1,5 +1,6 @@
 /* Gemeinsame Inhalte der Website: Orte, Stationen, Länder, eigene Werke.
-   Erzeugt von werkzeuge/daten.cjs (nicht von Hand ändern); nur, was die Seiten lesen. Keine privaten Kontaktdaten. */
+   Erzeugt von werkzeuge/daten.cjs; in Version C von Hand geändert (Textänderungen 12, 22, 36 bis 38 in docs/text-aenderungen-c.md),
+   darum nicht mit --erzwingen neu erzeugen. Nur, was die Seiten lesen. Keine privaten Kontaktdaten. */
 window.INHALT = {
   // Bereiste Länder und Gebiete (ISO-Codes; die Landesteile des Vereinigten Königreichs einzeln, Westjordanland als PS-WB)
   bereist: ['AT', 'BE', 'BG', 'DK', 'DE', 'GB-ENG', 'EE', 'FI', 'FR', 'IE', 'IT', 'HR', 'LV', 'LT', 'MC', 'NL', 'GB-NIR', 'PL', 'PT', 'RO', 'RU', 'GB-SCT', 'SE', 'CH', 'RS', 'SK', 'SI', 'ES', 'CZ', 'HU', 'VA', 'AM', 'BD', 'CN', 'GE', 'HK', 'IN', 'ID', 'IL', 'KW', 'MY', 'OM', 'KR', 'LK', 'TW', 'TH', 'TR', 'AE', 'VN', 'PS-WB', 'EG', 'ET', 'BJ', 'GH', 'CV', 'KE', 'MA', 'ZA', 'TZ', 'TG', 'TN', 'AR', 'CA', 'UY', 'US'],
@@ -21,12 +22,12 @@ window.INHALT = {
   // Lebensstationen in zeitlicher Reihenfolge (Chronik der Startseite, Koordinaten der Vita).
   // neben: ein längerer Aufenthalt, während der Wohnort woanders war
   leben: [
-    { name: 'Dortmund', jahr: 'bis 2014', lat: 51.51, lon: 7.47 },
-    { name: 'Freiburg', jahr: '2014', lat: 47.99, lon: 7.85 },
-    { name: 'Potsdam', jahr: '2015', lat: 52.39, lon: 13.06 },
+    { name: 'Dortmund', jahr: 'bis 2014', projekt: 'geboren 1995', lat: 51.51, lon: 7.47 },
+    { name: 'Freiburg', jahr: '2014', projekt: 'Studium Liberal Arts & Sciences', lat: 47.99, lon: 7.85 },
+    { name: 'Potsdam', jahr: '2015', projekt: 'Studium IT-Systems Engineering am Hasso-Plattner-Institut', lat: 52.39, lon: 13.06 },
     { name: 'Colombo', land: 'Sri Lanka', jahr: '2016', neben: true, projekt: 'Freiwilligenprojekt mit AIESEC', lat: 6.93, lon: 79.86 },
     { name: 'Cotonou', land: 'Benin', jahr: '2018', neben: true, projekt: 'Freiwilligenprojekt mit AIESEC', lat: 6.37, lon: 2.43 },
-    { name: 'Kaohsiung', land: 'Taiwan', jahr: '2018', lat: 22.63, lon: 120.3 },
+    { name: 'Kaohsiung', land: 'Taiwan', jahr: '2018', projekt: 'vier Jahre als Lektor und freier Autor', lat: 22.63, lon: 120.3 },
     { name: 'Berlin', jahr: '2022', lat: 52.52, lon: 13.4 },
     { name: 'Mallorca', jahr: '2023', neben: true, lat: 39.57, lon: 2.65 }
   ],
@@ -66,7 +67,7 @@ window.INHALT = {
       { ort: 'Penang', jahr: '2013', text: 'Der Epilog, 2013.' }
     ],
     hook: 'Am 31. Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.',
-    eckdaten: { zeit: 'Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013', stand: 'Das Manuskript liegt vollständig vor; gerade entsteht die Endfassung.' },
+    eckdaten: { zeit: 'Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013', stand: 'Das Manuskript liegt vollständig vor, gerade entsteht die Endfassung.' },
     figuren: [
       { name: 'Satoshi Nakamoto', rolle: 'Das Pseudonym' }
     ]
@@ -83,8 +84,8 @@ window.INHALT = {
   // Ein Satz je Band für die Tafel: Landschaft und Zeit, dann worum es geht
   baende: {
     I: 'Göbekli Tepe in Südostanatolien, um 8000 v. Chr. Der älteste Tempel der Menschheit, und warum er von Menschenhand begraben wurde.',
-    II: 'Uruk im Süden Mesopotamiens, um 2700 v. Chr. König Gilgamesch und die Geburt der Literatur.',
-    III: 'Jerusalem zur Zeit des ersten Tempels, um 940 v. Chr. Eine phönizische Gelehrte und die Geburt der Heiligen Schrift.'
+    II: 'Uruk im Süden Mesopotamiens, um 2700 v. Chr. König Gilgamesch und der Schreiberlehrling Harran.',
+    III: 'Jerusalem zur Zeit des ersten Tempels, um 940 v. Chr. König Salomo und die phönizische Gelehrte Thyra.'
   },
 
   // Die Bände im Einzelnen; als Stand gilt für die ganze Trilogie nur „in Arbeit“. Die Texte stehen in ursprung.html
@@ -98,7 +99,7 @@ window.INHALT = {
         arbeitstitel: true,
         ort: 'Uruk',
         zeit: 'um 2700 v. Chr.',
-        thema: 'Die Geburt der Literatur: Die Schrift wird von einer Sprache der Verwaltung zu einer Sprache der Mythen und Legenden'
+        thema: 'Die Geburt der Literatur und der Wandel der Schrift von einer bürokratischen zu einer Sprache der Mythen und Legenden'
       },
       { band: 'III', titel: 'Das steinerne Wort', arbeitstitel: true, ort: 'Jerusalem', zeit: 'um 940 v. Chr.', thema: 'Die Geburt der Heiligen Schrift als politisches Werkzeug' }
     ]

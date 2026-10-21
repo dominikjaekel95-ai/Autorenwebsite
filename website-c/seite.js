@@ -1,34 +1,47 @@
-/* Gemeinsame Hilfen aller Seiten der Website, als window.FSeite.
-   Braucht daten/inhalt.js (window.INHALT). Für den Globus außerdem d3, topojson-client, daten/welt-110m.js, daten/laender-de.js,
-   daten/uk-landesteile.js und globus/kern.js; für Bücher daten/buecher.js und daten/leseliste.js. Fehlt etwas (etwa ohne Netz),
-   geben die Funktionen null oder leere Listen zurück, und die Seite bleibt ruhig.
+/* Gemeinsame Hilfen aller Seiten von Version C, als window.FSeite. Verbindlich: docs/gestaltung-website-c.md.
+   Grundlage ist seite.js von Version A; alle Funktionen von A stehen weiter bereit, damit die Seiten laufen, solange sie
+   umgebaut werden. Neu in C: die Tafel mit fester Steuerzeile, Ortsleiste, Ablauf (Einspieler und eigene Bedienung an jedem
+   Globus), Buchzeile, gezeichnete Zeichen, die Namen auf dem Globus aufrecht und in Tinte.
+
+   Braucht daten/inhalt.js (window.INHALT). Für den Globus außerdem lib/d3.min.js, lib/topojson-client.min.js, daten/welt-110m.js,
+   daten/laender-de.js, daten/uk-landesteile.js und globus/kern.js (auf Ursprung auch daten/fluesse.js); für Bücher daten/buecher.js
+   und daten/leseliste.js. Fehlt etwas (etwa ohne Netz), geben die Funktionen null oder leere Listen zurück, und die Seite bleibt ruhig.
 
    Übersicht (alles unter window.FSeite):
-     SEITEN                         Dateinamen der Seiten (relativ, flach in einem Ordner)
+     SEITEN, NBSP, NNBSP            Dateinamen der Seiten (relativ, flach in einem Ordner); geschützte Leerzeichen
      $(sel, wurzel), $$(sel, wurzel) querySelector, querySelectorAll als Liste
      esc(s), sauber(s)              HTML maskieren; Zeichenreste aus dem Export entfernen
      hash(s), wert(s, a, b)         fester Hash statt Zufall; Zahl zwischen a und b aus einem Text
-     ruhig(), schmal(), breit()     reduzierte Bewegung; Telefonbreite (< 640 px); breites Layout mit angeschnittenem Globus
-     masz(name)                    eine CSS-Länge oder Variable in Pixeln, etwa masz('--rand-l')
+     ruhig(), schmal(), breit()     reduzierte Bewegung; Telefonbreite (< 640 px); zwei Spalten mit angeschnittenem Globus (ab 62,0625 rem)
+     masz(name)                     eine CSS-Länge oder Variable in Pixeln, etwa masz('--rand-l')
      zahlwort(n), gross(s), tausender(n)
      grad(x, plus, minus), koord(lat, lon)        „51° 31′ N, 7° 28′ O“
-     entfernungKm(a, b), km(a, b)  Luftlinie auf 10 km gerundet (Zahl); als Text „8 190 km“. a, b: {lat, lon} oder [lon, lat]
-     jahrText(j), chr(t), jahrMarke(jahr)          „um 1800 v. Chr.“; „v. Chr.“ zusammenhalten; „bis 2014“, „seit 2022“ für die Tafel
-     schriften(ms)                 Promise: Vollkorn, Vollkorn kursiv und Vollkorn SC geladen (oder Zeit abgelaufen)
-     satzzeichenBinden(wurzel)     Satzzeichen nach einem Knopf-Wort an das Wort binden
-     FARBEN, SIENA, SIENA_EBENE   Grundfarben des Globus; Farben für Ebenen eigener Werke
-     globus(opts)                  Globus mit den gemeinsamen Farben und Schriften; gibt die Maschine zurück oder null
+     entfernungKm(a, b), km(a, b)   Luftlinie (C zeigt sie nicht mehr; bleibt für alte Aufrufe)
+     jahrText(j), chr(t), jahrMarke(jahr)          „um 1800 v. Chr.“; „v. Chr.“ zusammenhalten; Marke der Tafel („seit“ klein darüber)
+     schriften(ms)                  Promise: Vollkorn aufrecht und kursiv geladen (oder Zeit abgelaufen)
+     schriftEinstieg(ms)            Promise<boolean>: die IM Fell ist innerhalb von ms da (Vorgabe 600 ms)
+     satzzeichenBinden(wurzel)      Satzzeichen nach einem Knopf-Wort an das Wort binden
+     gleichBreit(elemente)          halbfett ohne Sprung: eine Sperrung (--ausgleich) gleicht die Mehrbreite aus
+     zeichen(art)                   gezeichnetes Zeichen als SVG: 'wohnort', 'aufenthalt' (Karte); 'ruecken', 'liebste', 'wieder',
+                                    'abgebrochen', 'auszug' (Regal)
+     FARBEN                         Farben des Globus (Abschnitt 4.1); SIENA, SIENA_EBENE sind Altnamen ohne Wirkung
+     globus(opts)                   Globus mit den gemeinsamen Farben, Schriften und Namen; gibt die Maschine zurück oder null
      blickFuer(canvas, orte, bereich)  Mitte [lon, lat], bei der alle Orte im sichtbaren Teil des Globus stehen
-     tafel(el, inhalt), tafelReservieren(el, inhalte), tafelPlatz(el, inhalte), stationInhalt(station, ausgang)
-     stationen()                   Lebensstationen aus INHALT.leben
+     ueberblick(canvas, orte, k)    { mitte, k } für den Schluss eines Einspielers
+     tafel(el, inhalt), tafelReservieren(el, inhalte), tafelPlatz(el, inhalte)
+     steuerzeile(tafelEl)           die feste Steuerzeile im Fuß einer Tafel (früher, später, Steuerwort)
+     ortsleiste(el, eintraege)      Orte als Knöpfe in einer fließenden Zeile, durch Komma getrennt
+     ablauf(opts)                   Einspieler und Bedienung eines Globus (siehe dort); TAKT: die Takte aus Abschnitt 7.2
+     stationen(), stationInhalt(s)  Lebensstationen aus INHALT.leben; ihre Tafel
+     szenen()                       die Szenen von Satoshi mit Ort und Koordinaten
      ursprungOrte(), ursprungInhalt(i)   die vier Orte der Trilogie; Tafel für einen Ort (-1: die ganze Trilogie)
-     karteikarte.oeffnen(inhalt, ausloeser), .schliessen(), .offen()
-     buch.alle(), buch.karte(b, { person }), buch.zeile(b), buch.nachname(a), buch.titelKurz(t)
-     werkKarte(id, { person })     Karteikarte für ein eigenes Werk (id aus INHALT.werke)
-     texte.alle(art), texte.satz(s), texte.datum(d), texte.punkt(s), texte.ARTEN   Texte aus daten/texte.js (Erzählungen, Untertext,
-                                   Länderguides): gültige Einträge, deutscher Satz, Datum, Liste je Art
-     navigation()                  Navigation einrichten (läuft beim Laden von selbst)
-     fuss(), PROFILE               Newsletter-Zeile und Profile im Fuß (läuft beim Laden von selbst); PROFILE: Liste der Profile
+     buchzeile(el, o)               die Buchzeile unter einem Brett: zeigen, schliessen, umschalten (Escape schließt)
+     buch.alle(), buch.satz(b, { person }), buch.zeile(b), buch.karte(b), buch.nachname(a), buch.titelKurz(t), buch.ordnung
+     werkSatz(id, { person }), werkKarte(id, { person })   Buchzeile und Karteikarte eines eigenen Werks
+     karteikarte.oeffnen(inhalt, ausloeser), .schliessen(), .offen()   nur noch für den Übergang; C zeigt die Buchzeile
+     texte.alle(art), texte.satz(s), texte.datum(d), texte.punkt(s), texte.ARTEN   Texte aus daten/texte.js
+     navigation()                   Navigation einrichten (läuft beim Laden von selbst)
+     fuss(), PROFILE                Newsletter-Zeile und Profile im Fuß (läuft beim Laden von selbst); PROFILE: Liste der Profile
      leselinie(elemente, beiSchritt, o)   beim Scrollen: welches Element zuletzt die Leselinie erreicht hat (vor und zurück)
      fortschritt(element, beiWert, o)     beim Scrollen: wie weit ein Element durch das Fenster gewandert ist, 0 bis 1
      imBild(element, { starten, unterbrechen, fortsetzen })   eine Chronik hält an, wenn ihr Globus aus dem Bild ist
@@ -36,7 +49,7 @@
 (function () {
   'use strict';
   const inhalt = () => window.INHALT || {};
-  const NBSP = '\u00A0', NNBSP = '\u202F';
+  const NBSP = ' ', NNBSP = ' ';
 
   // Dateinamen der Seiten; alle liegen nebeneinander in einem Ordner, Verweise sind relativ (für http:// und file://)
   const SEITEN = {
@@ -45,25 +58,23 @@
   };
 
   // ---------- Kleine Werkzeuge ----------
-  // querySelector und querySelectorAll als Liste
   const $ = (s, el) => (el || document).querySelector(s);
   const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
   // Reste aus dem Export entfernen: doppelt maskiertes &, Richtungszeichen
-  const sauber = s => String(s == null ? '' : s).replace(/&amp;(amp;)*/g, '&').replace(/[\u200E\u200F]/g, '').trim();
-  // HTML maskieren
+  const sauber = s => String(s == null ? '' : s).replace(/&amp;(amp;)*/g, '&').replace(/[‎‏]/g, '').trim();
   const esc = s => sauber(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   // Feld als Text (maskiert) oder als { html } (unverändert)
   const teil = v => v == null || v === '' ? '' : typeof v === 'object' ? String(v.html || '') : esc(v);
+  const warten = ms => new Promise(r => setTimeout(r, ms));
   // Unregelmäßiges nur aus den Daten: ein fester Hash statt Zufall
   function hash(s) { let h = 2166136261 >>> 0; s = String(s); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h; }
   const wert = (s, a, b) => a + (hash(s) % 100003) / 100003 * (b - a);
-  // Bewegung reduziert? Telefonbreite? Breites Layout mit angeschnittenem Globus?
-  const ruhig = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mq = q => !!(window.matchMedia && window.matchMedia(q).matches);
+  const ruhig = () => mq('(prefers-reduced-motion: reduce)');
   const schmal = () => window.innerWidth < 640;
-  const breit = () => window.matchMedia('(min-width: 62.0625rem)').matches;
-  // Wert einer CSS-Länge in Pixeln, auch für Variablen mit clamp() oder vw: masz('--rand-l').
-  // Zeile und Ränder (ohne el gemessen) gelten bis zur nächsten Größenänderung des Fensters; was eine Seite selbst setzt
-  // (etwa --tafel-h), wird jedes Mal gemessen
+  const breit = () => mq('(min-width: 62.0625rem)');
+  /* Wert einer CSS-Länge in Pixeln, auch für Variablen mit clamp() oder vw: masz('--rand-l'). Zeile und Ränder (ohne el gemessen)
+     gelten bis zur nächsten Größenänderung des Fensters; was eine Seite selbst setzt (etwa --tafel-h), wird jedes Mal gemessen */
   const maszSpeicher = new Map(), FEST = ['--z', '--rand-l', '--rand-r'];
   function masz(name, el) {
     const fest = !el && FEST.includes(name);
@@ -77,9 +88,8 @@
     return w;
   }
   /* --vb: die Breite des Fensters ohne Bildlaufleiste (100vw zählt eine sichtbare Leiste mit; dann wäre der Globus um ihre Breite
-     stärker angeschnitten, und Navigation und Bilder stünden neben seiner wirklichen Kante). Gesetzt, bevor die Seite ihren Globus
-     baut, und bei jeder Größenänderung zuerst (dieser Listener steht vor dem des Kerns). Ändert sich die Breite ohne Größenänderung
-     des Fensters (die Leiste erscheint), meldet FSeite eine Größenänderung, damit Kern und Seite neu messen. */
+     stärker angeschnitten). Gesetzt, bevor die Seite ihren Globus baut, und bei jeder Größenänderung zuerst. Ändert sich die Breite
+     ohne Größenänderung des Fensters (die Leiste erscheint), meldet FSeite eine Größenänderung, damit Kern und Seite neu messen. */
   let vbJetzt = 0;
   function vbSetzen() {
     const w = document.documentElement.clientWidth;
@@ -112,10 +122,9 @@
     if (n < 100) return (n % 10 ? EINER[n % 10] + 'und' : '') + ZEHNER[Math.floor(n / 10)];
     return String(n);
   }
-  // erster Buchstabe groß
   const gross = s => String(s).charAt(0).toUpperCase() + String(s).slice(1);
-  // Tausender mit schmalem geschütztem Leerzeichen: 8 190
-  const tausender = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, NNBSP);
+  // Tausender erst ab fünf Stellen, mit schmalem geschütztem Leerzeichen: 1040, 12 000 (Abschnitt 3.9)
+  const tausender = n => { const s = String(n); return /^\d{5,}$/.test(s) ? s.replace(/\B(?=(\d{3})+(?!\d))/g, NNBSP) : s; };
   // Grad und Minuten: 51° 31′ N
   function grad(x, plus, minus) {
     const a = Math.abs(x);
@@ -123,10 +132,8 @@
     if (m === 60) { g += 1; m = 0; }
     return g + '°' + NBSP + String(m).padStart(2, '0') + '′' + NBSP + (x >= 0 ? plus : minus);
   }
-  // Deutsche Koordinaten: „51° 31′ N, 7° 28′ O“
   const koord = (lat, lon) => grad(lat, 'N', 'S') + ', ' + grad(lon, 'O', 'W');
   const lonLat = x => Array.isArray(x) ? [x[0], x[1]] : [x.lon, x.lat];
-  // Luftlinie in km, auf 10 km gerundet; mit d3 oder, ohne Netz, nach der Haversine-Formel
   function entfernungKm(a, b) {
     const A = lonLat(a), B = lonLat(b);
     let rad;
@@ -138,25 +145,30 @@
     }
     return Math.round(rad * 6371 / 10) * 10;
   }
-  // Luftlinie als Text: „8 190 km“
   const km = (a, b) => tausender(entfernungKm(a, b)) + NBSP + 'km';
-  // Jahr als Text: negative Jahre vor Christus, „um“ davor
-  // Frühe Jahre nach Christus mit „n. Chr.“, damit „um 8“ nicht wie eine Zahl ohne Bezug dasteht
+  // Jahr als Text: negative Jahre vor Christus, „um“ davor; frühe Jahre nach Christus mit „n. Chr.“
   const jahrText = j => j == null ? '' : j < 0 ? 'um' + NBSP + (-j) + NBSP + 'v.' + NBSP + 'Chr.' : j < 1000 ? 'um' + NBSP + j + NBSP + 'n.' + NBSP + 'Chr.' : String(j);
   // „um 8000 v. Chr.“ in einem Stück halten
   const chr = t => String(t).replace(/(\d) v\. Chr\./g, '$1' + NBSP + 'v.' + NBSP + 'Chr.').replace(/\bum (\d)/g, 'um' + NBSP + '$1');
-  // Jahr für die große Zahl der Tafel; „bis 2014“ mit kleinem, kursivem „bis“ und einem echten Leerzeichen (Vorlesen und Kopieren)
+  /* Marke der Tafel: „bis 2014“, „seit 2022“, „um 940“. Das Vorwort steht im Grad klein über der Zahl (stil.css: .tafel-marke .vor);
+     ein echtes Leerzeichen bleibt für Vorlesen und Kopieren */
   const jahrMarke = jahr => {
-    const m = /^(bis|seit) (.+)$/.exec(jahr || '');
-    return m ? { html: '<span class="bis">' + m[1] + NBSP + '</span>' + esc(m[2]) } : String(jahr || '');
+    const m = /^(bis|seit|um) (.+)$/.exec(jahr || '');
+    return m ? { html: '<span class="vor">' + m[1] + ' </span>' + esc(m[2]) } : String(jahr || '');
   };
 
   // ---------- Schrift und Satz ----------
-  // Wartet, bis die drei Schnitte geladen sind, höchstens ms Millisekunden
+  // Wartet, bis die Vollkorn aufrecht und kursiv geladen ist, höchstens ms Millisekunden
   function schriften(ms) {
     if (!document.fonts || !document.fonts.load) return Promise.resolve();
-    const laden = Promise.all(['15px "Vollkorn"', 'italic 15px "Vollkorn"', '15px "Vollkorn SC"'].map(f => document.fonts.load(f)));
-    return Promise.race([laden, new Promise(r => setTimeout(r, ms || 2500))]).catch(() => {});
+    const laden = Promise.all(['19px "Vollkorn"', 'italic 19px "Vollkorn"'].map(f => document.fonts.load(f)));
+    return Promise.race([laden, warten(ms || 2500)]).catch(() => {});
+  }
+  // Die IM Fell French Canon für den ersten Satz: true, wenn sie innerhalb von ms da ist (Abschnitt 02: höchstens 600 ms warten)
+  function schriftEinstieg(ms) {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+    const laden = document.fonts.load('38px "IM Fell French Canon"').then(l => !!(l && l.length));
+    return Promise.race([laden, warten(ms == null ? 600 : ms).then(() => false)]).catch(() => false);
   }
   // Knöpfe sind Inline-Blöcke: das folgende Satzzeichen wird an das Wort gebunden, sonst rutscht es allein in die nächste Zeile
   function satzzeichenBinden(wurzel) {
@@ -173,56 +185,98 @@
       n.textContent = n.textContent.slice(m[0].length);
     });
   }
+  /* Halbfett ohne Sprung: eine Sperrung (--ausgleich, je Element gemessen, in em) gleicht die Mehrbreite des halbfetten Worts
+     aus, damit Ortsleisten und Register beim Wählen nicht neu umbrechen (stil.css setzt sie nur im gewählten Zustand) */
+  function gleichBreit(els) {
+    const c = document.createElement('canvas').getContext('2d');
+    return schriften(2500).then(() => {
+      (els || []).forEach(el => {
+        const t = el.textContent, n = Array.from(t).length;
+        if (!n) return;
+        const kursiv = getComputedStyle(el).fontStyle === 'italic' ? 'italic ' : '';
+        c.font = kursiv + '400 100px Vollkorn'; const a = c.measureText(t).width;
+        c.font = kursiv + '600 100px Vollkorn'; const b = c.measureText(t).width;
+        el.style.setProperty('--ausgleich', ((a - b) / n / 100).toFixed(4) + 'em');
+      });
+    });
+  }
+
+  // ---------- Gezeichnete Zeichen ----------
+  /* In Tinte (currentColor), ohne feste Farbe. Kartenzeichen wie auf der Kugel (Durchmesser 6 px, Kontur 1,1 px); die Zeichen des
+     Regals auf einem kleinen Rücken: Punkt über dem Fuß (liebste), Strich über dem Kopf (wieder gelesen), gestrichelte Kontur
+     (nicht zu Ende gelesen), gepunktete Kontur (in Auszügen) */
+  function zeichen(art) {
+    const svg = (w, h, innen) => `<svg class="zeichen zeichen-${art}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true" focusable="false">${innen}</svg>`;
+    const ruecken = (zusatz, strich) => `<rect x=".5" y="3.5" width="7" height="14" fill="none" stroke="currentColor"${strich || ''}/>` + (zusatz || '');
+    switch (art) {
+      case 'wohnort': case 'punkt': return svg(8, 8, '<circle cx="4" cy="4" r="3" fill="currentColor"/>');
+      case 'aufenthalt': case 'kreis': return svg(8, 8, '<circle cx="4" cy="4" r="2.45" fill="none" stroke="currentColor" stroke-width="1.1"/>');
+      case 'ruecken': return svg(8, 18, ruecken());
+      case 'liebste': return svg(8, 18, ruecken('<circle cx="4" cy="11.5" r="1.5" fill="currentColor"/>'));
+      case 'wieder': return svg(8, 18, ruecken('<path d="M0 1.5H8" stroke="currentColor"/>'));
+      case 'abgebrochen': return svg(8, 18, ruecken('', ' stroke-dasharray="3 2"'));
+      case 'auszug': case 'auszuege': return svg(8, 18, ruecken('', ' stroke-dasharray="1 2" stroke-linecap="round"'));
+      default: return '';
+    }
+  }
 
   // ---------- Globus ----------
-  // Grundfarben: Graphit für Spur und Orte, ein leises warmes Grau für bereiste Länder
-  const FARBEN = { papier: '#FFFEFC', land: '#F2F1EE', reise: '#DBD5CB', grenze: '#CAC9C5', kueste: '#9C9DA1', rand: '#1D1E21', text: '#1D1E21', textLeise: '#7A7C81', akzent: '#1D1E21', akzentHauch: 'rgba(29, 30, 33, .09)', gradnetz: '#EEEDEA' };
-  const SIENA = '#9B5230';
-  // Für Ebenen eigener Werke: nur Punkte und Spur Siena, der Hof um den gewählten Ort bleibt Graphit
-  const SIENA_EBENE = { akzent: SIENA, akzentHauch: 'rgba(29, 30, 33, .08)' };
+  // Farben aus Abschnitt 4.1 (dieselben Werte wie die Token in stil.css)
+  const FARBEN = { papier: '#FFFEFC', land: '#F3F3F2', reise: '#C4C7CC', grenze: '#B0B3B8', kueste: '#9C9DA1', gradnetz: '#ECEDEE', tinte: '#1D1E21' };
+  // Altnamen aus A: C hat keine Farbe für eigene Werke
+  const SIENA = FARBEN.tinte;
+  const SIENA_EBENE = {};
 
   /* Globus mit den gemeinsamen Farben und Schriften. Optionen wie Globus.erstellen (canvas, flaeche, tipp, hinweis, tippText,
-     beimEingriff, beiChronikEnde, beimAnsichtWechsel, farben, schrift); bereist, winzig und ansichten kommen aus INHALT.
+     beimEingriff, beiChronikEnde, beimAnsichtWechsel, beiOrtKlick, farben, schrift, dauer); bereist, winzig und ansichten kommen
+     aus INHALT.
      radHinweis: false (oder eine Funktion, die false gibt), wo der Globus beim Scrollen mitgeht: kein Hinweis auf Strg oder ⌘.
-     Mit namen: { orte(), spur(), aktiv() } setzt FSeite die Ortsnamen selbst, in einer zweiten Leinwand über dem Globus
-     (dicht beieinander liegende Orte als Block mit Führungslinie, Namen meiden die Spur und den angeschnittenen Rand):
+     namen: { orte(), spur(), aktiv() }: in Ruhe setzt FSeite die Ortsnamen selbst, als Namensblöcke wie in A, in einer zweiten
+     Leinwand über dem Globus (dicht beieinander liegende Orte als Block mit Führungslinie; Namen meiden den Weg und den
+     angeschnittenen Rand). In Bewegung setzt der Kern schlichte Namen an die Punkte.
        orte()  -> [{ name, text?, lat, lon, neben? }]   was jetzt beschriftet wird
-       spur()  -> [{ lat, lon }]                        Stationen der Spur bis zur jetzigen
-       aktiv() -> 'Name' | null                         der gewählte Ort, schwarz und mit Ring
-     Rückgabe: die Maschine des Kerns mit drei Zusätzen: g.projektion (oder null), g.namenNeu() (Namen neu setzen),
-     g.sperren(an) (keine Länderhervorhebung, etwa auf Ebenen der eigenen Werke). Ohne d3 oder Kern: null. */
+       spur()  -> [{ lat, lon }]                        Stationen des Wegs bis zur jetzigen
+       aktiv() -> 'Name' | null                         der gewählte Ort, halbfett
+     Rückgabe: die Maschine des Kerns mit den Zusätzen g.projektion, g.namenNeu() (Namen neu setzen), g.sperren(an) (keine
+     Länderhervorhebung), g.eingriffe und g.ortKlicks (Listen von Funktionen, die FSeite.ablauf nutzt). Ohne d3 oder Kern: null. */
   function globus(o) {
     o = o || {};
     const I = inhalt();
     if (!o.canvas || !(window.d3 && window.topojson && window.Globus && window.WELT_110M)) return null;
-    const d3 = window.d3;
-    const schrift = Object.assign({ ort: (schmal() ? 'italic 14px' : 'italic 15px') + ' "Vollkorn"', land: 'italic 13px "Vollkorn"' }, o.schrift || {});
-    // Die Projektion des Kerns wird beim Erstellen nur mitgelesen; der Kern zeichnet unverändert
-    let proj = null, mitlesen = false;
-    const urOrtho = d3.geoOrthographic;
-    if (o.namen) {
-      try { d3.geoOrthographic = function () { const p = urOrtho.apply(this, arguments); if (!proj) proj = p; return p; }; mitlesen = d3.geoOrthographic !== urOrtho; } catch (e) { mitlesen = false; }
-    }
-    let g = null, namenNeu = () => {};
+    const px = schmal() ? 14 : 15;
+    const schrift = Object.assign({ ort: px + 'px "Vollkorn"', ortAktiv: '600 ' + px + 'px "Vollkorn"' }, o.schrift || {});
+    const eingriffe = [], ortKlicks = [];
+    let g = null, beschrifter = null, rund = false;
+    const rundSetzen = k => {
+      // Zwischen k = 1 und dem Lupenrand des Kerns (ab k = 1,15) wäre die Kugel kurz eckig vom Rand der Leinwand beschnitten
+      const jetzt = k > 1.0005;
+      if (o.flaeche && jetzt !== rund) { rund = jetzt; o.flaeche.classList.toggle('ist-rund', rund); }
+    };
     try {
       g = window.Globus.erstellen({
         canvas: o.canvas, flaeche: o.flaeche, tipp: o.tipp, hinweis: o.hinweis,
         bereist: o.bereist || I.bereist || [], winzig: o.winzig || I.winzig || {}, ansichten: o.ansichten || I.ansichten || {},
         farben: Object.assign({}, FARBEN, o.farben || {}),
-        schrift, versalien: false, pendeln: false, daten50: o.daten50 || 'daten/welt-50m.js',
+        schrift, daten50: o.daten50 || 'daten/welt-50m.js', dauer: o.dauer || 1000,
+        namenInRuhe: !o.namen,
         tippText: o.tippText || (land => land.name),
-        beimEingriff: () => { namenNeu(); if (typeof o.beimEingriff === 'function') o.beimEingriff(); },
+        beimZeichnen: info => { rundSetzen(info.k); if (beschrifter) beschrifter(info); if (typeof o.beimZeichnen === 'function') o.beimZeichnen(info); },
+        beiOrtKlick: (ort, i) => { ortKlicks.slice().forEach(f => f(ort, i)); if (typeof o.beiOrtKlick === 'function') o.beiOrtKlick(ort, i); },
+        ortKlickbar: () => ortKlicks.length > 0 || typeof o.beiOrtKlick === 'function',
+        rechterRand: () => Math.min(o.canvas.clientWidth, document.documentElement.clientWidth - o.canvas.getBoundingClientRect().left) - 4,
+        beimEingriff: () => { eingriffe.slice().forEach(f => f()); if (typeof o.beimEingriff === 'function') o.beimEingriff(); },
         beiChronikEnde: grund => { if (typeof o.beiChronikEnde === 'function') o.beiChronikEnde(grund); },
         beimAnsichtWechsel: teile => { if (typeof o.beimAnsichtWechsel === 'function') o.beimAnsichtWechsel(teile); }
       });
     } catch (fehler) { g = null; }
-    try { if (o.namen) d3.geoOrthographic = urOrtho; } catch (e) { /* bleibt */ }
-    if (!mitlesen) proj = null;
     if (!g) return null;
-    g.projektion = proj;
+    g.eingriffe = eingriffe;
+    g.ortKlicks = ortKlicks;
+    g.canvas = o.canvas;
+    g.flaeche = o.flaeche || null;
 
     /* Der Kern misst seine Leinwand nur bei einer Größenänderung des Fensters neu. Ändert sich ihre Größe anders (die Seite setzt
-       --tafel-h, die Bildlaufleiste erscheint, das Globusband wechselt), meldet FSeite eine Größenänderung */
+       --tafel-h, die Bildlaufleiste erscheint), meldet FSeite eine Größenänderung */
     if ('ResizeObserver' in window) {
       let breite = o.canvas.clientWidth, uhr = 0;
       new ResizeObserver(() => {
@@ -234,10 +288,9 @@
       }).observe(o.canvas);
     }
 
-    /* Der Kern zeigt bei jedem Rad über dem Globus, wie man zoomt, und hält den Hinweis, solange man ohne Pause weiterscrollt.
-       Jeder Hinweis erscheint darum höchstens einmal je Besuch und dann höchstens zwei Sekunden lang, egal wie oft der Kern ihn
-       neu anstößt. Wo der Globus beim Scrollen mitgeht (radHinweis: false, oder eine Funktion, die false gibt), ist das Rad über
-       ihm die gewollte Lesegeste: dort entfällt der Hinweis auf Strg oder ⌘ ganz; der Hinweis für zwei Finger bleibt */
+    /* Jeder Hinweis erscheint höchstens einmal je Besuch und dann höchstens zwei Sekunden lang, egal wie oft der Kern ihn neu
+       anstößt. Wo der Globus beim Scrollen mitgeht (radHinweis: false), entfällt der Hinweis auf Strg oder ⌘; der Hinweis für
+       das Telefon bleibt */
     if (o.hinweis && 'MutationObserver' in window) {
       const el = o.hinweis;
       let zeigt = null, uhr = 0;
@@ -254,45 +307,23 @@
       }).observe(el, { attributes: true, attributeFilter: ['hidden'], childList: true, characterData: true, subtree: true });
     }
 
-    // Rund schon ab k > 1 (siehe .ist-rund im Stil): ein Blick je Bild, nur solange der Globus im Bild und die Seite sichtbar ist
-    if (o.flaeche && typeof g.k === 'function') {
-      let rund = false, an = false;
-      const rundHalten = () => {
-        if (!an) return;
-        requestAnimationFrame(rundHalten);
-        if (document.hidden) return;
-        const jetzt = g.k() > 1.0005;
-        if (jetzt !== rund) { rund = jetzt; o.flaeche.classList.toggle('ist-rund', rund); }
-      };
-      const los = () => { if (!an) { an = true; requestAnimationFrame(rundHalten); } };
-      if ('IntersectionObserver' in window) new IntersectionObserver(e => { if (e[e.length - 1].isIntersecting) los(); else an = false; }).observe(o.flaeche);
-      else los();
-    }
-
     // Keine Länderhervorhebung, solange gesperrt
     let gesperrt = false;
     if (o.flaeche) o.flaeche.addEventListener('pointermove', e => { if (gesperrt) e.stopPropagation(); }, true);
     g.sperren = an => { gesperrt = !!an; };
 
-    if (o.namen && proj) {
-      // Der Kern soll keine Ortsnamen setzen: in seiner Ortsschrift ist jedes Wort breiter als der Globus, er findet keinen Platz
-      const ctx = o.canvas.getContext('2d');
-      const beschreibung = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(ctx), 'font');
-      let ortsschrift = false;
-      if (beschreibung && beschreibung.set) {
-        Object.defineProperty(ctx, 'font', { configurable: true, get() { return beschreibung.get.call(this); }, set(v) { ortsschrift = v === schrift.ort; beschreibung.set.call(this, v); } });
-        const messen = ctx.measureText.bind(ctx);
-        ctx.measureText = t => ortsschrift ? { width: 1e6 } : messen(t);
-        namenNeu = namenEinrichten(g, proj, o);
-      }
-    }
-    g.namenNeu = () => namenNeu();
+    if (o.namen) beschrifter = namenEinrichten(g, o, schrift);
+    g.namenNeu = () => { if (beschrifter) beschrifter.neu(); };
+    if (beschrifter) beschrifter.neu();
     return g;
   }
 
-  // Ortsnamen in einer eigenen Leinwand. Gibt die Funktion zurück, die ein Neusetzen anfordert.
-  function namenEinrichten(g, proj, o) {
-    const d3 = window.d3;
+  /* Ortsnamen in Ruhe, in einer eigenen Leinwand über dem Globus: aufrecht, alle in Tinte und gleich groß (auch die Nebenorte),
+     der gewählte halbfett; dicht beieinander liegende Orte als Block mit Führungslinie (A). In Bewegung ist die Leinwand leer, dann
+     setzt der Kern seine schlichten Namen. Gibt eine Funktion zurück, die der Kern nach jedem Bild aufruft; .neu() fordert ein
+     Neusetzen an. */
+  function namenEinrichten(g, o, schrift) {
+    const d3 = window.d3, proj = g.projektion;
     const canvas = o.canvas, flaeche = o.flaeche || canvas.parentNode;
     let leinwand = $('canvas.namen', flaeche);
     if (!leinwand) { leinwand = document.createElement('canvas'); leinwand.className = 'namen'; leinwand.setAttribute('aria-hidden', 'true'); flaeche.appendChild(leinwand); }
@@ -315,12 +346,11 @@
       const eltern = pkte.map((_, i) => i);
       const wurzel = i => eltern[i] === i ? i : (eltern[i] = wurzel(eltern[i]));
       for (let a = 0; a < pkte.length; a++) for (let b = a + 1; b < pkte.length; b++) {
-        if (pkte[a].neben !== pkte[b].neben) continue;
         if (Math.hypot(pkte[a].p[0] - pkte[b].p[0], pkte[a].p[1] - pkte[b].p[1]) < T) eltern[wurzel(a)] = wurzel(b);
       }
       const m = new Map();
       pkte.forEach((x, i) => { const r = wurzel(i); if (!m.has(r)) m.set(r, []); m.get(r).push(x); });
-      return [...m.values()].map(orte => ({ orte: orte.sort((x, y) => x.i - y.i), neben: orte[0].neben }));
+      return [...m.values()].map(orte => ({ orte: orte.sort((x, y) => x.i - y.i) }));
     }
     function leeren() { nctx.setTransform(1, 0, 0, 1, 0, 0); nctx.clearRect(0, 0, leinwand.width, leinwand.height); }
     function beschriften() {
@@ -329,7 +359,7 @@
       if (leinwand.width !== Math.round(S * dpr)) { leinwand.width = Math.round(S * dpr); leinwand.height = Math.round(S * dpr); }
       leeren();
       nctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const orte = liste(N.orte).map((x, i) => Object.assign({ i, text: x.text || x.kurz || x.name, neben: !!x.neben }, x));
+      const orte = liste(N.orte).map((x, i) => Object.assign({ i, text: x.text || x.kurz || x.name }, x));
       if (!orte.length || !S) return;
       const rot = proj.rotate(), mitte = [-rot[0], -rot[1]];
       const R = S / 2 - 2, k = proj.scale() / R, gezoomt = k > 1.15;
@@ -337,26 +367,21 @@
       const rechts = Math.min(S, document.documentElement.clientWidth - cr.left) - 4;
       const ecken = b => [[b[0], b[1]], [b[2], b[1]], [b[0], b[3]], [b[2], b[3]]];
       const imBereich = b => b[0] >= 2 && b[2] <= rechts && b[1] >= 2 && b[3] <= S - 2 &&
-        (!gezoomt || ecken(b).every(([x, y]) => Math.hypot(x - S / 2, y - S / 2) < S / 2 - 7));
+        ecken(b).every(([x, y]) => Math.hypot(x - S / 2, y - S / 2) < (gezoomt ? S / 2 - 7 : R * k - 3));
       const sicht = orte.filter(x => d3.geoDistance([x.lon, x.lat], mitte) < Math.PI / 2 - .02).map(x => Object.assign({ p: proj([x.lon, x.lat]) }, x));
       if (!sicht.length) return;
       const klein = schmal();
       const aktivName = typeof N.aktiv === 'function' ? N.aktiv() : null;
-      const einerAktiv = !!aktivName && sicht.some(x => x.name === aktivName);
       const stil = x => {
-        const px = x.neben ? (klein ? 12.5 : 13) : (klein ? 14 : 15);
-        let farbe;
-        if (einerAktiv && x.name === aktivName) farbe = '#0A0B0D';
-        else if (einerAktiv) farbe = x.neben ? '#9A9CA0' : '#6B6D72';
-        else farbe = x.neben ? '#7C7E83' : '#1D1E21';
-        return { px, farbe, font: `italic ${px}px "Vollkorn"` };
+        const px = klein ? 14 : 15, aktiv = !!aktivName && x.name === aktivName;
+        return { px, font: (aktiv ? schrift.ortAktiv : schrift.ort) };
       };
       const belegt = sicht.map(x => [x.p[0] - 4.5, x.p[1] - 4.5, x.p[0] + 4.5, x.p[1] + 4.5]);
       const spur = spurPunkte(mitte, R * k);
       const trifft = (a, b, luft) => a[0] - luft < b[2] && a[2] + luft > b[0] && a[1] - luft < b[3] && a[3] + luft > b[1];
       const gruppen = gruppieren(sicht, klein ? 22 : 26);
-      gruppen.forEach(gr => { gr.aktiv = gr.orte.some(x => einerAktiv && x.name === aktivName); });
-      gruppen.sort((a, b) => b.aktiv - a.aktiv || a.neben - b.neben || b.orte.length - a.orte.length || a.orte[0].i - b.orte[0].i);
+      gruppen.forEach(gr => { gr.aktiv = gr.orte.some(x => aktivName && x.name === aktivName); });
+      gruppen.sort((a, b) => b.aktiv - a.aktiv || b.orte.length - a.orte.length || a.orte[0].i - b.orte[0].i);
       const platziert = [];
       gruppen.forEach(gr => {
         const zeilen = gr.orte.map(x => { const st = stil(x); nctx.font = st.font; return Object.assign({ text: x.text, b: nctx.measureText(x.text).width, h: Math.round(st.px * 1.2) }, st); });
@@ -391,7 +416,7 @@
         gedaechtnis.set(schluessel, best.seite);
         platziert.push({ box: best.box, zeilen, gr, seite: best.seite });
       });
-      // Führungslinien, dann die Namen mit Papierhof, zuletzt ein Ring um den gewählten Ort
+      // Führungslinien in der Farbe der Küste, dann die Namen mit 4 px Freistellung in Papier
       nctx.textBaseline = 'middle';
       nctx.lineJoin = 'round';
       platziert.forEach(({ box, zeilen, gr, seite }) => {
@@ -404,7 +429,7 @@
           if (d > 12) {
             const ux = (zx - nah.p[0]) / d, uy = (zy - nah.p[1]) / d;
             nctx.beginPath(); nctx.moveTo(nah.p[0] + ux * 5, nah.p[1] + uy * 5); nctx.lineTo(zx, zy);
-            nctx.strokeStyle = '#8A8C90'; nctx.lineWidth = .7; nctx.stroke();
+            nctx.strokeStyle = FARBEN.kueste; nctx.lineWidth = .7; nctx.stroke();
           }
         }
         let y = box[1];
@@ -413,32 +438,27 @@
           const mittig = seite === 'N' || seite === 'S';
           nctx.textAlign = mittig ? 'center' : links ? 'right' : 'left';
           const x = mittig ? (box[0] + box[2]) / 2 : links ? box[2] - 1 : box[0] + 1;
-          nctx.lineWidth = 3.5; nctx.strokeStyle = '#FFFEFC';
+          nctx.lineWidth = 4; nctx.strokeStyle = FARBEN.papier;
           nctx.strokeText(z.text, x, y + z.h / 2);
-          nctx.fillStyle = z.farbe;
+          nctx.fillStyle = FARBEN.tinte;
           nctx.fillText(z.text, x, y + z.h / 2);
           y += z.h;
         });
       });
-      const aktiv = einerAktiv && sicht.find(x => x.name === aktivName);
-      if (aktiv) { nctx.beginPath(); nctx.arc(aktiv.p[0], aktiv.p[1], 6.5, 0, Math.PI * 2); nctx.strokeStyle = '#1D1E21'; nctx.lineWidth = .9; nctx.stroke(); }
     }
-    // Beobachtet die Projektion: in Bewegung keine Namen, nach zwei ruhigen Bildern neu setzen
-    let stand = '', ruheBilder = 0, gesetzt = false, schmutzig = true, an = false;
-    function schleife() {
-      if (!an) return;
-      requestAnimationFrame(schleife);
-      if (document.hidden) return;
-      const r = proj.rotate();
-      const jetzt = r[0].toFixed(3) + ',' + r[1].toFixed(3) + ',' + proj.scale().toFixed(2) + ',' + canvas.clientWidth;
-      if (jetzt !== stand) { stand = jetzt; ruheBilder = 0; if (gesetzt) { leeren(); gesetzt = false; } return; }
-      if (++ruheBilder >= 2 && (!gesetzt || schmutzig)) { beschriften(); gesetzt = true; schmutzig = false; }
-    }
-    const starten = () => { if (!an) { an = true; requestAnimationFrame(schleife); } };
-    if ('IntersectionObserver' in window) new IntersectionObserver(e => { if (e.some(x => x.isIntersecting)) starten(); else an = false; }).observe(flaeche);
-    else starten();
-    window.addEventListener('resize', () => { schmutzig = true; });
-    return () => { schmutzig = true; };
+    // Der Kern meldet jedes Bild: in Bewegung leer, in Ruhe (ein Bild später) die Namensblöcke
+    let gesetzt = false, bild = 0;
+    const anstossen = () => {
+      if (bild) return;
+      bild = requestAnimationFrame(() => { bild = 0; if (g.bewegt && g.bewegt()) return; beschriften(); gesetzt = true; });
+    };
+    const beiBild = info => {
+      if (info.bewegt) { if (bild) { cancelAnimationFrame(bild); bild = 0; } if (gesetzt) { leeren(); gesetzt = false; } return; }
+      anstossen();
+    };
+    beiBild.neu = anstossen;
+    window.addEventListener('resize', anstossen);
+    return beiBild;
   }
 
   /* Mitte für einen Überblick: alle Orte im sichtbaren Teil der Leinwand (rechts kann der Fensterrand den Globus anschneiden),
@@ -502,11 +522,22 @@
     return best ? [best.lon, best.lat] : null;
   }
 
-  // ---------- Stationstafel ----------
-  /* Setzt eine Tafel. inhalt: { marke, kopf, unter, daten, satz, text, fuss, neben, eigen }
-       marke  große Zahl links (Jahr, „65“, Bandnummer); kopf  Ort oder Titel, kursiv; unter  Art in Kapitälchen;
-       daten  Koordinaten; satz  ein grauer Satz; text  ein längerer Absatz; fuss  HTML für „früher“ und „später“;
-       neben  Nebenort (grau); eigen  Bandnummer in Siena. Textfelder werden maskiert, { html } bleibt unverändert. */
+  // Schluss eines Einspielers: alle Orte im Überblick, bei Vergrößerung k (Vorgabe 1), gesucht im bereich ({ lon, lat, schritt })
+  function ueberblick(canvas, orte, k, bereich) {
+    const m = blickFuer(canvas, orte, Object.assign({}, bereich || {}, { k: k || 1 }));
+    return m ? { mitte: m, k: k || 1 } : undefined;
+  }
+
+  // ---------- Tafel (6.4) ----------
+  /* Setzt eine Tafel. inhalt: { marke, kopf, zeichen, zusatz, unter, daten, satz, text, fuss }
+       marke   Jahr oder Bandziffer, Grad groß; jahrMarke() setzt „bis“, „seit“, „um“ klein darüber
+       kopf    Ort oder Titel, Grad Überschrift; zeichen: 'wohnort' oder 'aufenthalt' davor; zusatz klein dahinter („Nevada“)
+       unter   Art und Vermerk, Grad klein („Wohnort“, „längerer Aufenthalt, Freiwilligenprojekt mit AIESEC“)
+       daten   Koordinaten, Grad klein
+       satz, text   ein Satz oder Absatz im Grad Text (Szenentext, die Zeile zum Band)
+       fuss    HTML für den Fuß; ohne fuss steht dort die feste Steuerzeile (steuerzeile), wenn die Tafel eine hat; fuss: false
+               lässt den Fuß leer
+     Textfelder werden maskiert, { html } bleibt unverändert. neben und eigen bleiben als Klassen (ist-neben, ist-eigen) ohne Aussehen. */
   function tafel(el, t) {
     if (!el) return;
     t = t || {};
@@ -514,7 +545,11 @@
     el.classList.toggle('ist-neben', !!t.neben);
     el.classList.toggle('ist-eigen', !!t.eigen);
     const zeile = (cls, v) => v ? `<p class="${cls}">${teil(v)}</p>` : '';
-    el.innerHTML = `<p class="tafel-marke">${teil(t.marke)}</p><div class="tafel-inhalt">${zeile('tafel-kopf', t.kopf)}${zeile('tafel-unter', t.unter)}${zeile('tafel-daten', t.daten)}${zeile('tafel-satz', t.satz)}${zeile('tafel-text', t.text)}${t.fuss ? `<p class="tafel-fuss">${t.fuss}</p>` : ''}</div>`;
+    const kopf = t.kopf ? `<p class="tafel-kopf">${t.zeichen ? zeichen(t.zeichen) : ''}${teil(t.kopf)}${t.zusatz ? ` <span class="zusatz">${teil(t.zusatz)}</span>` : ''}</p>` : '';
+    const fest = el._steuerzeile || null;
+    if (fest && fest.parentNode) fest.parentNode.removeChild(fest);
+    el.innerHTML = `<p class="tafel-marke">${teil(t.marke)}</p><div class="tafel-inhalt">${kopf}${zeile('tafel-unter', t.unter)}${zeile('tafel-daten', t.daten)}${zeile('tafel-satz', t.satz)}${zeile('tafel-text', t.text)}${typeof t.fuss === 'string' && t.fuss ? `<p class="tafel-fuss">${t.fuss}</p>` : ''}</div>`;
+    if (fest && t.fuss == null) $('.tafel-inhalt', el).appendChild(fest);
   }
   // Hält die Höhe der Tafel fest: so hoch wie ihr längster Inhalt bei der jetzigen Breite, damit darunter nichts springt
   function tafelReservieren(el, inhalte) {
@@ -523,6 +558,7 @@
     probe.removeAttribute('id'); probe.removeAttribute('aria-live');
     probe.setAttribute('aria-hidden', 'true');
     probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;margin:0;min-height:0;width:${el.clientWidth}px`;
+    if (el._steuerzeile) { probe._steuerzeile = el._steuerzeile.cloneNode(true); $$('[id]', probe._steuerzeile).forEach(x => x.removeAttribute('id')); }
     el.parentNode.appendChild(probe);
     let h = 0;
     (inhalte || []).forEach(x => { tafel(probe, x); h = Math.max(h, probe.getBoundingClientRect().height); });
@@ -530,9 +566,7 @@
     el.style.minHeight = Math.ceil(h) + 'px';
   }
   /* Wie tafelReservieren; breit dazu --tafel-h: so hoch wie die Tafel mit ihrem längsten Inhalt und einer halben Zeile. Der Globus
-     nimmt die übrige Fensterhöhe, so passen Globus und Tafel zusammen auf einen Schirm, auch wenn die Tafel in einer schmalen Spalte
-     mehr Zeilen braucht. Ein größerer Globus macht die Tafel schmaler, darum bis zu dreimal nachgemessen; die Leinwand misst der Kern
-     danach selbst neu (siehe globus). Schmal gilt der Wert aus dem Stil. */
+     nimmt die übrige Fensterhöhe, so passen Globus und Tafel zusammen auf einen Schirm. Bis zu dreimal nachgemessen. */
   function tafelPlatz(el, inhalte) {
     const wurzel = document.documentElement.style;
     if (!breit()) wurzel.removeProperty('--tafel-h');
@@ -544,54 +578,354 @@
       wurzel.setProperty('--tafel-h', soll + 'px');
     }
   }
-  // Lebensstationen aus INHALT.leben
-  const stationen = () => (inhalt().leben || []).map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, jahr: s.jahr, land: s.land || '', projekt: s.projekt || '' }));
-  // Tafel für eine Lebensstation, Entfernung vom ersten Ort (Dortmund) aus gemessen
-  function stationInhalt(s, ausgang) {
-    ausgang = ausgang || stationen()[0];
-    return {
-      marke: jahrMarke(s.jahr), kopf: s.land ? s.name + ', ' + s.land : s.name, neben: !!s.neben,
-      unter: s.neben ? 'längerer Aufenthalt' : 'Wohnort',
-      daten: koord(s.lat, s.lon),
-      satz: (s.projekt ? s.projekt + '. ' : '') + (ausgang && s.name === ausgang.name ? 'Von hier aus sind die Entfernungen gemessen.' : km(ausgang, s) + ' Luftlinie von ' + ausgang.name + '.')
-    };
+  /* Die feste Steuerzeile im Fuß einer Tafel: „früher“, „später“ und ein Steuerwort, drei Knöpfe, die beim Neusetzen der Tafel
+     erhalten bleiben (der Fokus bleibt auf dem Wort, das man gerade gedrückt hat). Einmal je Tafel; FSeite.ablauf beschriftet sie. */
+  function steuerzeile(el) {
+    if (!el) return null;
+    if (el._steuerzeile) return el._steuerzeile;
+    const p = document.createElement('p');
+    p.className = 'tafel-fuss steuerzeile';
+    p.innerHTML = '<button type="button" class="wort" data-steuer="frueher">früher</button><button type="button" class="wort" data-steuer="spaeter">später</button><button type="button" class="wort" data-steuer="wort" hidden>abspielen</button>';
+    el._steuerzeile = p;
+    const inhaltEl = $('.tafel-inhalt', el);
+    if (inhaltEl) inhaltEl.appendChild(p);
+    return p;
+  }
+  /* Ortsleiste: eintraege [{ text, name? }] als Knöpfe mit data-station (der Index), durch Komma getrennt; text ist sichtbar
+     („Dortmund bis 2014“), name der Name für Vorleseprogramme, wenn er anders lauten soll („Kobe, 2007“). Ort und Jahr bleiben
+     zusammen. Die Knöpfe bekommen aria-pressed; FSeite.ablauf markiert die jetzige Station. */
+  function ortsleiste(el, eintraege) {
+    if (!el) return null;
+    el.classList.add('ortsleiste');
+    el.innerHTML = (eintraege || []).map((e, i) => `<span class="glied"><button type="button" class="wort" data-station="${i}" aria-pressed="false"${e.name ? ` aria-label="${esc(e.name)}"` : ''}>${teil(e.html ? { html: e.html } : e.text)}</button>${i < eintraege.length - 1 ? ',' : ''}</span>`).join(' ');
+    gleichBreit($$('[data-station]', el));
+    return el;
   }
 
-  // ---------- Ursprungstrilogie ----------
+  // ---------- Lebensstationen, Szenen, Trilogie ----------
+  // Lebensstationen aus INHALT.leben
+  const stationen = () => (inhalt().leben || []).map(s => ({ name: s.name, lat: s.lat, lon: s.lon, neben: !!s.neben, jahr: s.jahr, land: s.land || '', projekt: s.projekt || '' }));
+  /* Tafel für eine Lebensstation: Kartenzeichen und Ort, darunter die Art mit dem Vermerk aus der Vita, dann die Koordinaten.
+     Die Luftlinie entfällt (V20, Textänderung 12) */
+  function stationInhalt(s) {
+    return {
+      zeichen: s.neben ? 'aufenthalt' : 'wohnort',
+      marke: jahrMarke(s.jahr), kopf: s.land ? s.name + ', ' + s.land : s.name, neben: !!s.neben,
+      unter: (s.neben ? 'längerer Aufenthalt' : 'Wohnort') + (s.projekt ? ', ' + s.projekt : ''),
+      daten: koord(s.lat, s.lon)
+    };
+  }
+  // Die Szenen von Satoshi der Reihe nach, mit Ort und Koordinaten: { name, kurz, notiz, jahr, text, lat, lon }
+  function szenen() {
+    const S = inhalt().satoshi || {}, orte = {};
+    (S.orte || []).forEach(o => { orte[o.name] = o; });
+    return (S.szenen || []).map((sz, i) => {
+      const o = orte[sz.ort] || {};
+      return { i, name: sz.ort, kurz: o.kurz || sz.ort, notiz: o.notiz || '', jahr: sz.jahr, text: sz.text, lat: o.lat, lon: o.lon };
+    }).filter(s => s.lat != null);
+  }
   // Die vier Orte der Reihe nach: Göbekli Tepe, Uruk, Tyros, Jerusalem
   const ursprungOrte = () => (inhalt().ursprung || []).map((o, i) => ({ i, name: o.name, lat: o.lat, lon: o.lon, band: o.band, jahr: o.jahr }));
-  /* Tafel für einen Ort der Trilogie (Startseite und Seite der Trilogie gleich): Titel des Bands, darunter Landschaft und Zeit und die
-     Koordinaten, dann ein Satz zum Band (aus INHALT.baende). -1 ist die ganze Trilogie. Stand nur „in Arbeit“, für die ganze Trilogie. */
+  /* Tafel für einen Ort der Trilogie (Startseite und Seite der Trilogie gleich): die Bandziffer als Marke, der Ort als Kopf,
+     darunter Landschaft und Zeit, die Koordinaten und die Zeile zum Band (INHALT.baende, V40). -1 ist die ganze Trilogie. */
   function ursprungInhalt(i) {
     const I = inhalt(), orte = ursprungOrte(), band = {};
     ((I.trilogie && I.trilogie.baende) || []).forEach(b => { band[b.band] = b; });
     const o = orte[i];
-    if (!o) {
-      const a = orte[0], z = orte[orte.length - 1];
-      return { eigen: true, marke: 'I–III', kopf: (I.trilogie && I.trilogie.titel) || 'Ursprung', unter: 'Trilogie, in Arbeit',
-        satz: a && z ? chr(('Von ' + a.name + ' ' + a.jahr + ' bis ' + z.name + ' ' + z.jahr).replace(/([^.])$/, '$1.')) : '' };
-    }
+    if (!o) return { eigen: true, marke: 'I–III', kopf: (I.trilogie && I.trilogie.titel) || 'Ursprung', satz: chr('Drei Bände, um 8000, 2700 und 940 v. Chr.') };
     const b = band[o.band] || {};
     const m = String((I.baende || {})[o.band] || '').match(/^(.*?v\. Chr\.)\s+(.+)$/);
     const landschaft = m ? m[1] : [b.ort, b.zeit].filter(Boolean).join(', ');
-    const satz = m ? m[2] : b.thema ? b.thema.replace(/([^.])$/, '$1.') : '';
     // Tyros steht nur auf dem Globus, als die Stadt der Phönizier, aus der Thyra kommt
-    const ort = o.name === b.ort ? landschaft : o.name + ', die Stadt der Phönizier, ' + (b.zeit || o.jahr || '');
+    const unter = o.name === b.ort ? landschaft.replace(new RegExp('^' + o.name + '\\s+'), '') : 'die Stadt der Phönizier, ' + (b.zeit || o.jahr || '');
+    return { eigen: true, zeichen: 'wohnort', marke: o.band, kopf: o.name, unter: chr(unter), daten: koord(o.lat, o.lon), text: m ? m[2] : '' };
+  }
+
+  // ---------- Ablauf am Globus (6.4, 6.5, 7.2) ----------
+  // Die Takte der Einspieler; zoom und halt als Zahl oder als Funktion (station, i)
+  const europa = s => s.lon > -25 && s.lon < 45 && s.lat > 34;
+  const woerter = s => String(s.text || '').trim().split(/\s+/).filter(Boolean).length;
+  const TAKT = {
+    leben: { flug: 1000, halt: 600, rueckweg: 500, zoom: s => europa(s) ? 3.6 : 2.4 },
+    satoshi: { flug: 900, halt: 400, rueckweg: 450, zoom: 1.2 },
+    satoshiAbspielen: { flug: 1000, halt: s => Math.max(3000, Math.min(9000, 1500 + 300 * woerter(s))), zoom: s => europa(s) ? 3.6 : 2.4 },
+    ursprung: { flug: 1600, halt: 2000, zoom: 3.3, schlussK: 3.3, schlussBereich: { lon: [32, 48], lat: [26, 40], schritt: .25 } },
+    europa
+  };
+  const STEUERWORT = { laeuft: 'anhalten', weiter: 'abspielen', ende: 'noch einmal von vorn' };
+
+  /* Ein Ablauf verbindet Globus, Ortsleiste, Tafel und Steuerzeile einer Ebene, auf allen vier Globen gleich (6.4, 6.5).
+     Beim ersten Sichtbarwerden läuft der Einspieler einmal: die Linie wandert von Stadt zu Stadt, Punkte und Namen erscheinen mit
+     ihr, die Ortsleiste und (außer auf Satoshi) die Tafel gehen mit. Danach steuert man selbst. Jeder Griff an die Kugel beendet
+     den Einspieler, dann steht der ganze Weg. Bei reduzierter Bewegung gibt es keinen Einspieler und kein Steuerwort.
+
+     const a = FSeite.ablauf({
+       globus: g,                    // FSeite.globus(…); ohne Globus gehen Ortsleiste, Tafel und früher/später trotzdem
+       stationen: [...] | () => [...],   // { name, lat, lon, neben?, text? } in der Reihenfolge des Wegs
+       takt: FSeite.TAKT.leben,      // Takt des Einspielers (Felder wie g.chronik); schluss: { mitte, k } | null (der Globus bleibt);
+                                     // ohne schluss der Überblick über alle Orte bei schlussK (Vorgabe 1) im schlussBereich
+       taktAbspielen: …,             // Takt, wenn der Besucher „abspielen“ wählt (Vorgabe: takt)
+       schrittZoom: k | (s, i) => k, // Vergrößerung bei einem Schritt von Hand (Vorgabe: zoom des Takts)
+       tafel: el,                    // die Tafel; bekommt die Steuerzeile in ihren Fuß (steuerzeile: false, wenn keine)
+       ortsleiste: el | [el, …],     // Elemente mit Knöpfen [data-station]; ein Klick wählt die Station
+       sichtbar: el,                 // der Einspieler beginnt, wenn el zur Hälfte im Bild ist (Vorgabe: die Fläche des Globus)
+       beiStation(i, info),          // die Seite setzt die Tafel; i = -1 heißt: keine Station (Satoshi in Ruhe).
+                                     // info: { quelle: 'einspieler' | 'abspielen' | 'hand' | 'ende' | 'ruhe' | 'wieder', zustand, station }
+       tafelImEinspieler: true,      // false: beiStation kommt während des Einspielers nicht (Satoshi)
+       ruhe: 'ende' | 'ruhe',        // nach dem Einspieler: 'ende' (die Tafel zeigt endeBei) oder 'ruhe' (nichts gewählt, Satoshi)
+       endeBei: n - 1,               // die Station, die die Tafel am Ende zeigt (Leben: Berlin)
+       wegBisStation: true,          // ein Schritt von Hand zeigt den Weg bis zu dieser Station; false: der ganze Weg bleibt
+       aktiv: true                   // false: erst mit a.zeigen() (Ebenen der Startseite)
+     });
+     a.einspielen()   Einspieler starten (wartet, bis der Globus zur Hälfte zu sehen ist, und mindestens 600 ms nach seinem ersten Bild)
+     a.abspielen(), a.anhalten(), a.vonVorn(), a.waehlen(i), a.waehlenName(name), a.frueher(), a.spaeter()
+     a.zeigen()       die Ebene wird gezeigt: Weg und Tafel wie zuletzt, beim ersten Mal der Einspieler
+     a.loesen()       die Ebene geht: ein laufender Ablauf endet, Klicks und Griffe gelten nicht mehr ihr
+     a.zustand()      'bereit' | 'einspieler' | 'abspielen' | 'angehalten' | 'hand' | 'ende' | 'ruhe'
+     a.jetzt()        Index der jetzigen Station oder -1
+     Ein Klick auf einen Punkt des Globus wählt die Station dieses Orts; hat ein Ort mehrere Stationen (London), wählt der erste
+     Klick die frühere, der nächste die spätere. */
+  function ablauf(o) {
+    o = o || {};
+    const g = o.globus || null;
+    const liste = () => (typeof o.stationen === 'function' ? o.stationen() : o.stationen) || [];
+    const takt = o.takt || TAKT.leben;
+    const zoomVon = v => typeof v === 'function' ? v : () => (v == null ? 2.4 : v);
+    const schrittZoom = zoomVon(o.schrittZoom != null ? o.schrittZoom : takt.zoom);
+    const endeBei = () => { const n = liste().length; const e = typeof o.endeBei === 'function' ? o.endeBei() : o.endeBei; return e == null ? n - 1 : Math.max(0, Math.min(n - 1, e)); };
+    const tafelEl = o.tafel || null;
+    const sz = o.steuerzeile === false ? null : (o.steuerzeile || (tafelEl ? steuerzeile(tafelEl) : null));
+    const leisten = [].concat(o.ortsleiste || []).filter(Boolean);
+    const flaeche = o.sichtbar || (g && g.flaeche) || null;
+    let zustand = 'bereit', art = null, jetzt = -1, weiterAb = 0, orteModus = 'bis';
+    let gespielt = false, aktiv = o.aktiv !== false, lauf = 0, systemPause = false, wartetAufSicht = false, startUhr = 0;
+    let anteil = 1;
+
+    const laeuft = () => zustand === 'einspieler' || zustand === 'abspielen';
+    function steuerZeigen() {
+      if (!sz || !aktiv) return;
+      sz.hidden = false;
+      const n = liste().length;
+      const [fr, sp, wo] = ['frueher', 'spaeter', 'wort'].map(k => $(`[data-steuer="${k}"]`, sz));
+      fr.disabled = !(jetzt > 0);
+      sp.disabled = !(jetzt < n - 1);
+      if (ruhig() || !g) { wo.hidden = true; return; }
+      wo.hidden = false;
+      wo.textContent = laeuft() ? STEUERWORT.laeuft : zustand === 'ende' ? STEUERWORT.ende : STEUERWORT.weiter;
+    }
+    function leisteZeigen() {
+      leisten.forEach(l => $$('[data-station]', l).forEach(b => {
+        b.setAttribute('aria-pressed', String(+b.dataset.station === jetzt && zustand !== 'ruhe' && zustand !== 'bereit'));
+      }));
+    }
+    function melden(i, quelle) {
+      jetzt = i;
+      leisteZeigen(); steuerZeigen();
+      if (tafelEl) tafelEl.setAttribute('aria-live', quelle === 'einspieler' ? 'off' : 'polite');
+      if (quelle === 'einspieler' && o.tafelImEinspieler === false) return;
+      if (typeof o.beiStation === 'function') o.beiStation(i, { quelle, zustand, station: liste()[i] || null });
+    }
+    // Ende eines Ablaufs: Leben und Ursprung zeigen die Station endeBei, Satoshi nach dem Einspieler nichts
+    function amEnde(vonArt) {
+      if (o.ruhe === 'ruhe' && vonArt === 'einspieler') {
+        zustand = 'ruhe'; jetzt = -1;
+        if (g) g.aktiv(null);
+        leisteZeigen(); steuerZeigen();
+        if (tafelEl) tafelEl.setAttribute('aria-live', 'polite');
+        if (typeof o.beiStation === 'function') o.beiStation(-1, { quelle: 'ruhe', zustand, station: null });
+        return;
+      }
+      zustand = 'ende';
+      const e = endeBei(), s = liste()[e];
+      if (g && s) g.aktiv(s.name);
+      melden(e, 'ende');
+    }
+    async function spielen(neuArt, ab, modus) {
+      const st = liste();
+      if (!g || !st.length) return;
+      const nr = ++lauf;
+      clearTimeout(startUhr);
+      art = neuArt; zustand = neuArt; orteModus = modus; systemPause = false; gespielt = true;
+      steuerZeigen();
+      const t = Object.assign({}, neuArt === 'abspielen' && o.taktAbspielen ? o.taktAbspielen : takt);
+      if (t.schluss === undefined) t.schluss = g.canvas ? ueberblick(g.canvas, st, t.schlussK || 1, t.schlussBereich) : undefined;
+      const ende = st[endeBei()];
+      t.ab = ab; t.orte = modus;
+      t.endeAktiv = o.ruhe === 'ruhe' && neuArt === 'einspieler' ? null : ende ? ende.name : null;
+      t.beiStation = (s, i) => { if (nr === lauf) melden(i, neuArt); };
+      if (tafelEl && neuArt === 'einspieler') tafelEl.setAttribute('aria-live', 'off');
+      const r = await g.chronik(st, t);
+      if (nr !== lauf || !aktiv) return;
+      if (r === 'fertig') amEnde(neuArt);
+      else if (r === 'abgebrochen') griff();
+    }
+    // Ein Griff an die Kugel: der Einspieler endet mit dem ganzen Weg; ein Abspielen hält an, der Weg bleibt, wie weit er ist
+    function griff() {
+      if (!aktiv) return;
+      clearTimeout(startUhr);
+      if (zustand === 'einspieler' || (zustand === 'angehalten' && art === 'einspieler') || (zustand === 'bereit' && wartetAufSicht)) {
+        lauf++; wartetAufSicht = false; systemPause = false; gespielt = true;
+        if (g) { if (g.chronikLaeuft()) g.chronikStoppen(); g.nurOrte(null); g.routeZeigen(liste()); }
+        amEnde('einspieler');
+      } else if (zustand === 'abspielen') {
+        lauf++; systemPause = false;
+        if (g && g.chronikLaeuft()) g.chronikStoppen();
+        zustand = 'angehalten'; weiterAb = jetzt + 1;
+        steuerZeigen();
+      }
+    }
+    function anhalten() {
+      if (!laeuft()) return;
+      lauf++;
+      clearTimeout(startUhr);
+      if (systemPause) systemPause = false;
+      else {
+        const stand = g ? g.chronikAnhalten() : null;
+        weiterAb = stand ? (stand.unterwegs != null ? stand.unterwegs : stand.bei + 1) : jetzt + 1;
+      }
+      if (zustand === 'einspieler' && jetzt < 0) weiterAb = 0;
+      zustand = 'angehalten';
+      steuerZeigen();
+    }
+    function abspielen() {
+      const n = liste().length;
+      if (zustand === 'angehalten') return spielen('abspielen', Math.min(weiterAb, n), art === 'einspieler' ? 'bis' : orteModus);
+      if (zustand === 'hand') return spielen('abspielen', Math.min(jetzt + 1, n), 'alle');
+      if (zustand === 'ende') return vonVorn();
+      if (zustand === 'ruhe') return spielen('abspielen', 0, 'alle');
+      if (zustand === 'bereit') { if (g) g.nurOrte([]); return spielen('abspielen', 0, 'bis'); }
+    }
+    function vonVorn() { if (g) g.nurOrte([]); return spielen('abspielen', 0, 'bis'); }
+    function waehlen(i) {
+      const st = liste();
+      if (!st[i] || !aktiv) return;
+      lauf++;
+      clearTimeout(startUhr);
+      wartetAufSicht = false; systemPause = false; gespielt = true;
+      if (g) {
+        if (g.chronikLaeuft()) g.chronikStoppen();
+        g.nurOrte(null);
+        const z = schrittZoom(st[i], i);
+        if (o.wegBisStation === false) { g.routeZeigen(st); g.ortAnfliegen(st[i], z); }
+        else g.chronikSchritt(st, i, { zoom: z, dauer: 1000 });
+      }
+      art = 'hand';
+      zustand = i === st.length - 1 ? 'ende' : 'hand';
+      melden(i, 'hand');
+    }
+    function waehlenName(name) {
+      const idx = liste().map((s, i) => s.name === name ? i : -1).filter(i => i >= 0);
+      if (!idx.length) return false;
+      const pos = idx.indexOf(jetzt);
+      waehlen(pos >= 0 ? idx[(pos + 1) % idx.length] : idx[0]);
+      return true;
+    }
+    const frueher = () => { if (jetzt > 0) waehlen(jetzt - 1); };
+    const spaeter = () => { if (jetzt < liste().length - 1) waehlen(jetzt + 1); };
+
+    // Sichtbarkeit: Start ab der Hälfte im Bild, Pause unter einem Fünftel oder bei verborgenem Tab, weiter ab der Hälfte
+    const imBildGenug = () => anteil >= .5 && !document.hidden;
+    function einspielenJetzt() {
+      wartetAufSicht = false;
+      zustand = 'einspieler'; art = 'einspieler'; gespielt = true;
+      steuerZeigen();
+      const warte = Math.max(0, 600 - (performance.now() - (g.erstesBild || 0)));
+      clearTimeout(startUhr);
+      const nr = lauf;
+      startUhr = setTimeout(() => { if (aktiv && nr === lauf && zustand === 'einspieler') spielen('einspieler', 0, 'bis'); }, warte);
+    }
+    function einspielen() {
+      if (gespielt || !aktiv) return;
+      const st = liste();
+      if (ruhig() || !g || !st.length) {
+        gespielt = true;
+        if (g) { g.nurOrte(null); g.routeZeigen(st); }
+        amEnde('einspieler');
+        return;
+      }
+      g.nurOrte([]);
+      g.routeZeigen(st, -1);
+      if (!imBildGenug()) { wartetAufSicht = true; steuerZeigen(); return; }
+      einspielenJetzt();
+    }
+    function sichtPruefen() {
+      if (!aktiv || !g) return;
+      if (imBildGenug()) {
+        if (wartetAufSicht) einspielenJetzt();
+        else if (systemPause && laeuft()) { systemPause = false; spielen(art, weiterAb, orteModus); }
+      } else if ((anteil < .2 || document.hidden) && laeuft() && !systemPause && g.chronikLaeuft()) {
+        lauf++;
+        const stand = g.chronikAnhalten();
+        weiterAb = stand ? (stand.unterwegs != null ? stand.unterwegs : stand.bei + 1) : jetzt + 1;
+        systemPause = true;
+      }
+    }
+    if (flaeche && 'IntersectionObserver' in window) {
+      anteil = 0;
+      new IntersectionObserver(e => { anteil = e[e.length - 1].intersectionRatio; sichtPruefen(); }, { threshold: [0, .2, .5, .75, 1] }).observe(flaeche);
+    }
+    document.addEventListener('visibilitychange', sichtPruefen);
+
+    // Bedienung: Steuerzeile, Ortsleiste, Punkte auf dem Globus, Griffe
+    if (sz) sz.addEventListener('click', e => {
+      const b = e.target.closest('[data-steuer]');
+      if (!b || b.disabled || !aktiv) return;
+      const k = b.dataset.steuer;
+      if (k === 'frueher') frueher();
+      else if (k === 'spaeter') spaeter();
+      else if (laeuft()) anhalten();
+      else abspielen();
+    });
+    leisten.forEach(l => l.addEventListener('click', e => {
+      const b = e.target.closest('[data-station]');
+      if (b && l.contains(b) && aktiv) waehlen(+b.dataset.station);
+    }));
+    if (g && g.ortKlicks) g.ortKlicks.push(ort => { if (aktiv) waehlenName(ort.name); });
+    if (g && g.eingriffe) g.eingriffe.push(() => griff());
+
+    function zeigen() {
+      aktiv = true;
+      const st = liste();
+      if (!gespielt) { einspielen(); steuerZeigen(); return; }
+      if (g) {
+        g.nurOrte(null);
+        if (zustand === 'hand' || zustand === 'angehalten') { g.routeZeigen(st, jetzt); g.aktiv(st[jetzt] ? st[jetzt].name : null); }
+        else { g.routeZeigen(st); g.aktiv(zustand === 'ruhe' || !st[jetzt] ? null : st[jetzt].name); }
+      }
+      if (zustand === 'einspieler' || zustand === 'abspielen') zustand = 'angehalten';
+      leisteZeigen(); steuerZeigen();
+      if (typeof o.beiStation === 'function') o.beiStation(zustand === 'ruhe' ? -1 : jetzt, { quelle: 'wieder', zustand, station: st[jetzt] || null });
+    }
+    function loesen() {
+      if (!aktiv) return;
+      lauf++;
+      clearTimeout(startUhr);
+      if (g && g.chronikLaeuft()) g.chronikStoppen();
+      if (zustand === 'einspieler' || (zustand === 'angehalten' && art === 'einspieler') || (zustand === 'bereit' && wartetAufSicht)) {
+        gespielt = true; wartetAufSicht = false;
+        if (o.ruhe === 'ruhe') { zustand = 'ruhe'; jetzt = -1; } else { zustand = 'ende'; jetzt = endeBei(); }
+      } else if (zustand === 'abspielen') { zustand = 'angehalten'; weiterAb = jetzt + 1; }
+      systemPause = false;
+      leisteZeigen();
+      aktiv = false;
+      if (sz) sz.hidden = true;
+    }
+
+    if (aktiv) { leisteZeigen(); steuerZeigen(); }
     return {
-      eigen: true, marke: o.band,
-      kopf: { html: esc(b.titel || '') + (b.arbeitstitel ? ' <span class="arbeitstitel">Arbeitstitel</span>' : '') },
-      daten: { html: `<span class="ortzeit">${esc(chr(ort))}</span><br>${esc(koord(o.lat, o.lon))}` },
-      satz
+      einspielen, abspielen, anhalten, vonVorn, waehlen, waehlenName, frueher, spaeter, zeigen, loesen,
+      zustand: () => zustand, jetzt: () => jetzt, aktiv: () => aktiv, gespielt: () => gespielt
     };
   }
 
-  // ---------- Karteikarte ----------
-  /* Eine Karteikarte, A6 quer; auf dem Telefon unten am Bildschirm. Esc, „zurücklegen“, ein Klick daneben oder Tab aus der Karte
+  // ---------- Karteikarte (nur noch für den Übergang) ----------
+  /* C zeigt statt der Karte die Buchzeile (FSeite.buchzeile, Abschnitt 22). Die Karte bleibt, bis die Seiten umgebaut sind.
+     Eine Karteikarte; auf dem Telefon unten am Bildschirm. Esc, „schließen“, ein Klick daneben oder Tab aus der Karte
      hinaus legt sie zurück, der Fokus geht an das auslösende Element zurück. Breit liegt sie über dem Auslöser, sonst darunter,
      sonst daneben; nie unter dem Kopf der Seite oder unter dem, was oben haftet (scroll-padding-top). Gerät der Auslöser beim
      Scrollen dorthin oder aus dem Fenster, legt sie sich zurück.
      oeffnen(inhalt, ausloeser): inhalt = { signatur, titel, unter, autor, zeilen: [], notiz, verweis: { href, text }, eigen, beimSchliessen }
-       eigen: eigenes Werk (Signatur Siena, Titel kursiv); titelGerade: der Titel ist ein Sammelbegriff (Erzählungen, Länder)
+       eigen: eigenes Werk (Titel kursiv); titelGerade: der Titel ist ein Sammelbegriff (Erzählungen, Länder)
        und steht gerade wie in Navigation und Werkverzeichnis. Textfelder werden maskiert, { html } bleibt unverändert.
        beimSchliessen(still): danach aufgerufen; still ist wahr, wenn ein Klick daneben die Karte zurückgelegt hat.
        Das auslösende Element bekommt solange die Klasse ist-offen. */
@@ -683,7 +1017,7 @@
       k.classList.toggle('titel-gerade', !!x.titelGerade);
       const zeilen = (x.zeilen || []).filter(Boolean).map(teil);
       k.innerHTML =
-        `<div class="karte-kopf"><span class="signatur">${teil(x.signatur)}</span><button type="button" class="wort karte-zu">zurücklegen</button></div>` +
+        `<div class="karte-kopf"><span class="signatur">${teil(x.signatur)}</span><button type="button" class="wort karte-zu">schließen</button></div>` +
         `<h3 class="karte-titel" id="karte-titel">${teil(x.titel)}</h3>` +
         (x.unter ? `<p class="karte-unter">${teil(x.unter)}</p>` : '') +
         (x.autor ? `<p class="karte-autor">${teil(x.autor)}</p>` : '') +
@@ -805,6 +1139,15 @@
       if (b.w) notiz.push('Mehr als einmal gelesen.');
       return { signatur: b.sig || '', titel: b.t, unter: b.u, autor: b.autor, zeilen: [satz(jahr), satz(ausgabe)], notiz: notiz.join(' ') };
     }
+    /* Die Buchzeile (6.13): ein Satz über ein Buch, als HTML. „Thomas Mann, <i>Buddenbrooks</i>. Zuerst erschienen 1901.
+       Everyman’s Library, 731 Seiten.“ Dahinter die Notizen der Karte von A im selben Wortlaut („In Auszügen gelesen.“,
+       „Lese ich gerade.“). person: 3 spricht von ihm, sonst spricht er selbst */
+    function buchSatz(b, o) {
+      const k = karte(b, o);
+      const kopf = (b.autor ? esc(b.autor) + ', ' : '') + `<i>${esc(b.t)}</i>`;
+      const ende = /[.!?…]$/.test(b.t) ? '' : '.';
+      return [kopf + ende].concat((k.zeilen || []).filter(Boolean).map(esc), k.notiz ? [esc(k.notiz)] : []).join(' ');
+    }
     // Eine Zeile über ein Buch: „Bukowski, Pulp, 1994“ als Text und als HTML (Titel kursiv)
     function zeile(b) {
       const zusatz = b.r === 'abgebrochen' ? 'nicht zu Ende gelesen' : b.r === 'gerade' ? 'lese ich gerade' : b.r === 'leseliste' ? 'wartet noch' : b.x ? 'in Auszügen' : '';
@@ -814,17 +1157,16 @@
         html: [b.nn ? esc(b.nn) : '', `<i>${esc(b.t)}</i>`, j, zusatz].filter(Boolean).join(', ')
       };
     }
-    return { alle, karte, zeile, nachname, titelKurz, ordnung };
+    return { alle, karte, satz: buchSatz, zeile, nachname, titelKurz, ordnung };
   })();
 
   // ---------- Eigene Werke ----------
   const WERK_SIG = { satoshi: 'DJ 1', 'ursprung-1': 'DJ 2/I', 'ursprung-2': 'DJ 2/II', 'ursprung-3': 'DJ 2/III', erzaehlungen: 'DJ 3', untertext: 'DJ 4', laender: 'DJ 5' };
-  // Sammelbegriffe statt Werktitel: auf der Karte gerade wie in Navigation, Werkverzeichnis und Seitentitel (kursiv nur Satoshi,
-  // Ursprung mit seinen Bänden und Untertext)
+  // Sammelbegriffe statt Werktitel: aufrecht wie in Navigation und Werkverzeichnis (kursiv nur Satoshi, Ursprung mit seinen Bänden
+  // und Untertext)
   const WERK_GERADE = ['erzaehlungen', 'laender'];
-  /* Karteikarte für ein eigenes Werk (id aus INHALT.werke): Signatur Siena, Titel kursiv; der Titel selbst führt zur Seite des Werks
-     (die Bände der Trilogie zur Seite der Trilogie). „Arbeitstitel“ steht klein hinter dem Titel. Für die Trilogie gilt nur „in Arbeit“,
-     für die ganze Trilogie, ohne Stand je Band. person: 3 spricht von ihm (Seiten in der dritten Person), sonst spricht er selbst. */
+  /* Karteikarte für ein eigenes Werk (id aus INHALT.werke); der Titel führt zur Seite des Werks (die Bände der Trilogie zur Seite der
+     Trilogie). „Arbeitstitel“ steht klein hinter dem Titel. Für die Trilogie gilt nur „in Arbeit“. person: 3 spricht von ihm. */
   function werkKarte(id, o) {
     const I = inhalt(), er = !!o && o.person === 3;
     const w = (I.werke || []).find(x => x.id === id);
@@ -842,10 +1184,9 @@
     } else if (w.band) {
       const b = ((I.trilogie && I.trilogie.baende) || []).find(y => y.band === w.band) || {};
       x.unter = 'Band ' + w.band + ' der Ursprungstrilogie';
-      x.zeilen = [chr([b.ort, b.zeit].filter(Boolean).join(', ')), 'Die Trilogie ist in Arbeit.'];
+      x.zeilen = [chr([b.ort, b.zeit].filter(Boolean).join(', ')), 'In Arbeit.'];
       x.notiz = punkt(b.thema || '');
     } else if (id === 'erzaehlungen') {
-      // „Erzählungen, Kurzgeschichten“ sagte dasselbe zweimal
       x.unter = '';
       x.notiz = er ? 'Viele davon hat er auf der Werkstattbühne des Autorenforums Berlin gelesen.' : 'Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.';
     } else {
@@ -853,6 +1194,66 @@
     }
     return x;
   }
+  /* Die Buchzeile eines eigenen Werks (6.10, 6.13): Titel als Verweis auf die Seite des Werks, Art und Stand. Ohne Stand (Erzählungen)
+     steht der Satz der Karte dahinter. „<i>Satoshi</i>. Roman. Das Manuskript liegt vollständig vor, gerade entsteht die Endfassung.“ */
+  function werkSatz(id, o) {
+    const I = inhalt(), w = (I.werke || []).find(x => x.id === id), k = werkKarte(id, o);
+    if (!w || !k) return '';
+    const ziel = w.band ? SEITEN.ursprung : SEITEN[id] || '';
+    const name = esc(w.buchtitel || w.titel), titel = WERK_GERADE.includes(id) ? name : `<i>${name}</i>`;
+    const punkt = t => t && !/[.!?…]$/.test(t) ? t + '.' : t;
+    const kopf = (ziel ? `<a href="${ziel}">${titel}</a>` : titel) + (w.arbeitstitel ? ' <span class="arbeitstitel">Arbeitstitel</span>' : '') + '.';
+    const zeilen = (k.zeilen || []).filter(Boolean);
+    const rest = [k.unter].concat(zeilen, zeilen.length ? [] : [k.notiz]).filter(Boolean).map(s => esc(punkt(s)));
+    return [kopf].concat(rest).join(' ');
+  }
+
+  // ---------- Buchzeile (6.13) ----------
+  /* Der Satz unter einem Brett, im Grad Text, aria-live. buchzeile(el, { beimSchliessen }) gibt zurück:
+       zeigen(html, ausloeser, schluessel)   den Satz zeigen; der Auslöser (ein Rücken) bekommt die Klasse ist-offen (herausgezogen)
+       umschalten(schluessel, html, ausloeser)   ein zweiter Klick auf dasselbe Buch schließt; gibt zurück, ob jetzt offen
+       schliessen(fokus)   leeren, der Rücken geht zurück; mit fokus geht der Fokus an ihn zurück
+       offen(), schluessel(), ausloeser()
+     Escape schließt jede offene Buchzeile. Keine Signatur, kein „zurücklegen“, kein Kasten. */
+  const buchzeilen = new Set();
+  function buchzeile(el, o) {
+    if (!el) return null;
+    o = o || {};
+    el.classList.add('buchzeile');
+    el.setAttribute('aria-live', 'polite');
+    let ausloeser = null, schluessel = null;
+    const api = {
+      el,
+      zeigen(html, aus, key) {
+        if (ausloeser && ausloeser !== aus) ausloeser.classList.remove('ist-offen');
+        ausloeser = aus || null;
+        schluessel = key == null ? (aus || html) : key;
+        if (ausloeser) ausloeser.classList.add('ist-offen');
+        el.innerHTML = html || '';
+      },
+      schliessen(fokus) {
+        const a = ausloeser, warOffen = schluessel !== null;
+        el.innerHTML = '';
+        if (a) { a.classList.remove('ist-offen'); if (fokus && document.contains(a)) a.focus({ preventScroll: true }); }
+        ausloeser = null; schluessel = null;
+        if (warOffen && typeof o.beimSchliessen === 'function') o.beimSchliessen(a);
+      },
+      umschalten(key, html, aus) {
+        if (schluessel !== null && key === schluessel) { api.schliessen(); return false; }
+        api.zeigen(html, aus, key);
+        return true;
+      },
+      offen: () => schluessel !== null,
+      schluessel: () => schluessel,
+      ausloeser: () => ausloeser
+    };
+    buchzeilen.add(api);
+    return api;
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    buchzeilen.forEach(b => { if (b.offen()) b.schliessen(true); });
+  });
 
   // ---------- Beim Scrollen ----------
   /* Was dem Scrollen folgt, folgt ihm in beide Richtungen: Zurückscrollen nimmt zurück, nichts wird einmal ausgelöst und bleibt.
@@ -1070,14 +1471,14 @@
     return { alle, satz, datum, punkt, zeichenAmEnde, ARTEN, BELEGT };
   })();
 
-  // ---------- Fuß: Newsletter und Profile ----------
+  // ---------- Fuß: Newsletter und Profile (6.2) ----------
   /* Profile im Fuß, unter Impressum und Datenschutz. Hier eintragen, sobald Dominik die Adressen gibt, in der Reihenfolge, in der
-     sie stehen sollen, etwa { name: 'Instagram', url: 'https://…' }, { name: 'LinkedIn', url: 'https://…' }. Version B hat dieselbe
-     Liste in website-b/seite.js. Solange die Liste leer ist, bleibt die Zeile .profile verborgen. */
+     sie stehen sollen, etwa { name: 'Instagram', url: 'https://…' }, { name: 'LinkedIn', url: 'https://…' }. Solange die Liste leer
+     ist, bleibt die Zeile .profile verborgen; es gibt keine toten Verweise. */
   const PROFILE = [];
   /* Die Zeile „Eine E-Mail, wenn ein Buch erscheint oder eine Lesung ansteht“ (form.post im Fuß jeder Seite). Einen Newsletter-Dienst
      gibt es noch nicht: Eintragen schickt nichts ab und lädt nichts, es leert nur das Feld und zeigt den Dank in der Statuszeile.
-     Ohne Skript ist das Formular verborgen (stil.css), damit der Browser die Adresse nicht als Teil der Adresszeile abschickt. */
+     Ohne Skript ist das Formular verborgen (stil.css). */
   const POST_DANKE = 'Danke. Im Testsystem wird noch nichts verschickt.';
   function fuss() {
     $$('form.post').forEach(form => {
@@ -1101,10 +1502,10 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fuss); else fuss();
 
-  // ---------- Navigation ----------
-  /* Markiert die jetzige Seite (falls die Seite es nicht selbst tut) und klappt die Liste auf dem Telefon hinter „Inhalt“ zusammen;
-     ein Tipp daneben, Esc oder die Wahl eines Verweises klappt sie wieder zu. Breit neben dem Globus läuft sie bis kurz vor ihn;
-     passt sie dort nicht in eine Zeile, bricht sie nach „Untertext“ (.zweizeilig) statt vor einem einzelnen Wort. */
+  // ---------- Navigation (6.1) ----------
+  /* Markiert die jetzige Seite (falls die Seite es nicht selbst tut). Die Navigation steht auf allen Breiten offen, ohne Schalter.
+     Breit neben dem Globus läuft sie bis kurz vor ihn; passt sie dort nicht in eine Zeile, bricht sie nach „Untertext“
+     (.zweizeilig) statt vor einem einzelnen Wort. */
   function navZeilen() {
     $$('.nav').forEach(nav => {
       const liste = $('.nav-liste', nav);
@@ -1125,16 +1526,6 @@
         const datei = decodeURIComponent(location.pathname.split('/').pop() || '');
         $$('a', nav).forEach(a => { const h = a.getAttribute('href') || ''; if (datei && h === datei) a.setAttribute('aria-current', 'page'); });
       }
-      const knopf = $('.nav-schalter', nav), liste = $('.nav-liste', nav);
-      if (!knopf || !liste) return;
-      if (!liste.id) liste.id = 'nav-liste';
-      knopf.setAttribute('aria-controls', liste.id);
-      const setzen = auf => { knopf.setAttribute('aria-expanded', String(auf)); nav.classList.toggle('ist-offen', auf); };
-      setzen(false);
-      knopf.addEventListener('click', () => setzen(knopf.getAttribute('aria-expanded') !== 'true'));
-      document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('ist-offen')) { setzen(false); knopf.focus(); } });
-      document.addEventListener('pointerdown', e => { if (nav.classList.contains('ist-offen') && !nav.contains(e.target)) setzen(false); }, true);
-      liste.addEventListener('click', e => { if (e.target.closest('a')) setzen(false); });
     });
     navZeilen();
     if (navBereit) return;
@@ -1149,10 +1540,11 @@
     SEITEN, NBSP, NNBSP,
     $, $$, esc, sauber, hash, wert, ruhig, schmal, breit, masz,
     zahlwort, gross, tausender, grad, koord, entfernungKm, km, jahrText, chr, jahrMarke,
-    schriften, satzzeichenBinden,
-    FARBEN, SIENA, SIENA_EBENE, globus, blickFuer,
-    tafel, tafelReservieren, tafelPlatz, stationen, stationInhalt, ursprungOrte, ursprungInhalt,
-    karteikarte, buch, werkKarte, texte, navigation, fuss, PROFILE,
+    schriften, schriftEinstieg, satzzeichenBinden, gleichBreit, zeichen,
+    FARBEN, SIENA, SIENA_EBENE, globus, blickFuer, ueberblick,
+    tafel, tafelReservieren, tafelPlatz, steuerzeile, ortsleiste, ablauf, TAKT,
+    stationen, stationInhalt, szenen, ursprungOrte, ursprungInhalt,
+    karteikarte, buch, werkKarte, werkSatz, buchzeile, texte, navigation, fuss, PROFILE,
     leselinie, fortschritt, imBild
   };
 })();

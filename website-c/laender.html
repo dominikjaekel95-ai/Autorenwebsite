@@ -4,72 +4,75 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Länder – Dominik Jäkel</title>
-<meta name="description" content="Länder: wohin Dominik Jäkel gereist ist, fünfundsechzig Länder und Gebiete auf dem Globus, nach Kontinenten verzeichnet. Die Länderguides sind in Arbeit.">
+<meta name="description" content="Dominik Jäkel war in fünfundsechzig Ländern und Gebieten. Die Seite zeigt sie auf einem Globus und nach Kontinenten.">
 <script>document.documentElement.classList.add('js');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Länder: links Titel, ein Satz zum Globus und das Verzeichnis aller bereisten Länder und Gebiete, nach Kontinenten gesetzt wie
-   ein Register im Buch; rechts der Globus mit den bereisten Ländern in Grau (dieselben Farben wie auf der Startseite), darunter die
-   Tafel. Jeder Name im Verzeichnis dreht den Globus zu seinem Land, die Tafel nennt es mit den Koordinaten seiner Mitte; ohne Wahl
-   steht dort der Überblick. Das Verzeichnis entsteht aus den Daten (INHALT.bereist und INHALT.kontinente): ein neues Land ist ein
-   Eintrag dort. Ein fertiger Länderguide ist ein Eintrag in daten/texte.js (art 'laenderguide', land mit dem ISO-Code); die Tafel
-   seines Lands führt dann zu ihm, lesen.html zeigt ihn und führt mit „Alle Länder“ hierher zurück.
-   Breit steht der Globus mit der Tafel neben dem Verzeichnis still. Schmal haftet über dem Verzeichnis ein Globusband, links die
-   Scheibe, rechts die Tafel: wer einen Namen antippt, sieht Land und Tafel, ohne zu scrollen. */
+/* Länder (gestaltung-website-c.md 6.15, 9.6). Links Titel, „Länderguides, in Arbeit.“, die Wahl der Kontinente und das
+   Verzeichnis aller bereisten Länder und Gebiete, gesetzt wie ein Register im Buch. Rechts der Globus mit den bereisten Ländern
+   in Grau, darunter die Tafel. Jeder Name dreht den Globus zu seinem Land, die Tafel nennt es mit den Koordinaten seiner Mitte;
+   ohne Wahl steht dort der Überblick. Das Verzeichnis entsteht aus INHALT.bereist und INHALT.kontinente. Ein fertiger
+   Länderguide ist ein Eintrag in daten/texte.js (art 'laenderguide', land mit dem ISO-Code); die Tafel seines Lands führt dann
+   zu ihm. Schmal haftet über dem Verzeichnis ein Globusband, links die Scheibe, rechts die Tafel: wer einen Namen antippt,
+   sieht Land und Tafel, ohne zu scrollen. */
 
 .titelei { margin-top: var(--z); }
-.einleitung p + p { margin-top: calc(var(--z) * .5); }
-/* „Auf dem Globus: wohin ich gereist bin“ wie auf der Startseite: schwarz, solange der Überblick gilt, sonst der Weg zurück dorthin */
-.ebenen { color: var(--grau-1); }
-.ebenen .wort { color: var(--grau-1); }
-.ebenen .wort[aria-pressed="true"] { color: var(--schwarz); }
+.titelei .unterzeile { margin-bottom: 0; }
+/* Die Wahl der Kontinente: fünf Bedienwörter, das gewählte halbfett ohne Strich (wie die Kartenwahl der Startseite) */
+.kontinente { margin-top: var(--z); text-wrap: balance; }
+/* Abstand wie zwischen den Wörtern der Navigation (0,85 em mit dem Wortzwischenraum); bricht die Zeile auf dem Telefon, dann
+   ausgeglichen in zwei Zeilen statt mit einem Wort allein in der zweiten */
+.kontinente .wort { margin-right: .6em; }
+.kontinente .wort:last-child { margin-right: 0; }
 
-/* Das Verzeichnis: je Kontinent ein Absatz mit hängendem Einzug, der Kontinent in Kapitälchen vorneweg, dahinter die Länder
-   alphabetisch, durch Kommas getrennt. Jeder Name ist ein Wort, das den Globus dorthin dreht; das gezeigte steht schwarz */
-.register { margin-top: calc(var(--z) * 1.5); }
-.register .gruppe { padding-left: 1.25em; text-indent: -1.25em; }
-.register .gruppe + .gruppe { margin-top: calc(var(--z) * .5); }
-.register dt { display: inline; margin-right: .3em; font-family: var(--sc); text-transform: lowercase; letter-spacing: .06em; color: var(--graphit); }
+/* Das Verzeichnis: je Kontinent ein Absatz mit hängendem Einzug, das Stichwort in Kapitälchen, dahinter die Länder
+   alphabetisch, durch Kommas getrennt. Jeder Name dreht den Globus dorthin; das gewählte steht halbfett */
+.register { margin-top: var(--z); }
+.register .gruppe { padding-left: 1em; text-indent: -1em; }
+.register .gruppe + .gruppe { margin-top: var(--z-dreiviertel); }
+.register dt { display: inline; margin-right: .3em; }
 .register dd { display: inline; }
-.register .wort { text-indent: 0; text-decoration-color: color-mix(in srgb, currentColor 20%, transparent); }   /* 65 Namen dicht: leiser als im Fließtext */
-.register .wort:hover { text-decoration-color: currentColor; }
-/* Ohne Skript gibt es keinen Globus; das Verzeichnis sagt es selbst (noscript) */
-html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
+.register .wort { text-indent: 0; }
+/* Ohne Skript gibt es keinen Globus und keine Wahl; das Verzeichnis sagt es selbst (noscript) */
+html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none; }
 
 /* Breit: Globus und Tafel bleiben neben dem Verzeichnis stehen */
 @media (min-width: 62.0625rem) {
-  .globusseite > .globus { position: sticky; top: calc(var(--z) * .5); }
+  .globusseite > .globus { position: sticky; top: var(--z-halb); }
 }
 /* Schmal: im Quelltext steht das Verzeichnis vor dem Globus (Tabfolge wie breit); im Bild steht der Globus davor */
 @media (max-width: 62rem) {
   .globusseite > .register { order: 1; }
-  .register .gruppe { line-height: calc(var(--z) * 1.15); }
 }
 /* Das Globusband (das Skript setzt .als-band, wenn das Fenster hoch genug ist): die Scheibe gut halb so breit wie die Spalte,
-   höchstens ein Drittel der Fensterhöhe; rechts daneben die Tafel ohne Zahlenspalte. Eine feine Linie schließt das Band nach unten
-   ab, sobald es haftet und das Verzeichnis unter ihm durchläuft */
+   höchstens ein Drittel der Fensterhöhe; rechts daneben die Tafel ohne Marke. Eine feine Linie schließt das Band nach unten ab,
+   sobald es haftet und das Verzeichnis unter ihm durchläuft */
 :root { --band: min(calc((var(--vb, 100vw) - 2 * var(--rand-l)) * .55), calc(34svh - 12px)); }
 @media (max-width: 62rem) {
   .globusseite > .globus.als-band {
     position: sticky; top: 0; z-index: 5; grid-column: 1 / -1; justify-self: stretch; width: auto;
     display: grid; grid-template-columns: var(--band) minmax(0, 1fr); column-gap: .9em; align-items: center;
-    margin: var(--z) 0 0; padding: 6px var(--rand-l);
+    margin: var(--z) 0 0; padding: var(--z-viertel) var(--rand-l);
     background: var(--papier);
   }
   .globus.als-band .flaeche { grid-column: 1; grid-row: 1; }
-  /* Die Tafel als Legende neben der Scheibe: etwas kleiner und enger gesetzt, damit auch lange Namen neben ihr Platz haben */
-  .globus.als-band .tafel { grid-column: 2; grid-row: 1; display: block; margin: 0; font-size: .875em; line-height: 1.45; }
-  .globus.als-band .tafel-kopf { line-height: 1.25; }
+  /* Die Tafel neben der kleinen Scheibe: der Ort im Grad Text, damit auch lange Namen Platz haben */
+  .globusseite > .globus.als-band .tafel { grid-column: 2; grid-row: 1; display: block; margin: 0; min-height: 0; }
+  .globus.als-band .tafel-kopf { font-size: var(--g-text); line-height: var(--zh-text); }
+  .globus.als-band .tafel-satz { font-size: var(--g-klein); line-height: var(--zh-klein); }
   .globus.als-band .tafel-marke { display: none; }
   .globus.als-band .ersatz { grid-column: 1 / -1; }
-  .globus.als-band::after { content: ""; position: absolute; left: var(--rand-l); right: var(--rand-l); bottom: 0; border-bottom: 1px solid var(--grau-4); visibility: hidden; }
+  .globus.als-band::after { content: ""; position: absolute; left: var(--rand-l); right: var(--rand-l); bottom: 0; border-bottom: 1px solid var(--brett); visibility: hidden; }
   .globus.als-band.haftet::after { visibility: visible; }
   .mit-band .register { margin-top: var(--z); }
   /* Wer mit der Tastatur durch das Verzeichnis geht, landet nicht unter dem Band */
-  .mit-band .register .wort { scroll-margin-top: calc(var(--band) + 12px + var(--z)); }
+  .mit-band .register .wort { scroll-margin-top: calc(var(--band) + var(--z-halb) + var(--z)); }
+}
+/* Finger: die Namen im Register 44 px hoch treffbar; die Zeilen stehen dafür etwas weiter auseinander */
+@media (pointer: coarse) {
+  .register .gruppe { line-height: var(--zh-ueber); }
+  .register button.wort { padding-block: 5.25px; margin-block: -5.25px; }
 }
 </style>
 </head>
@@ -79,7 +82,6 @@ html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="nav" aria-label="Website">
-    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>
       <li><a href="ursprung.html"><i>Ursprung</i></a></li>
@@ -99,14 +101,11 @@ html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
     <p class="unterzeile">Länderguides, in&nbsp;Arbeit.</p>
   </div>
 
-  <div class="einleitung">
-    <p class="ebenen">Auf dem Globus: <button type="button" class="wort" data-ueberblick aria-pressed="true">wohin ich gereist bin</button>.</p>
-    <p>Die meisten Länder liegen in <button type="button" class="wort" data-kontinent="Europa">Europa</button>, viele in <button type="button" class="wort" data-kontinent="Asien">Asien</button>, einige in <button type="button" class="wort" data-kontinent="Afrika">Afrika</button>, wenige in <button type="button" class="wort" data-kontinent="Amerika">Amerika</button>.</p>
-  </div>
+  <p class="kontinente" role="group" aria-label="Kontinente"><button type="button" class="wort" data-ueberblick aria-pressed="true">Alle Länder</button> <button type="button" class="wort" data-kontinent="Europa" aria-pressed="false">Europa</button> <button type="button" class="wort" data-kontinent="Asien" aria-pressed="false">Asien</button> <button type="button" class="wort" data-kontinent="Afrika" aria-pressed="false">Afrika</button> <button type="button" class="wort" data-kontinent="Amerika" aria-pressed="false">Amerika</button></p>
 
   <!-- Das Verzeichnis setzt das Skript aus INHALT.kontinente; die deutschen Namen kommen aus daten/laender-de.js -->
-  <dl class="register" id="register" aria-label="Verzeichnis der Länder und Gebiete"></dl>
-  <noscript><p class="register leise">Das Verzeichnis der Länder wird mit JavaScript gesetzt.</p></noscript>
+  <dl class="register wahlliste" id="register" aria-label="Verzeichnis der Länder und Gebiete"></dl>
+  <noscript><p class="register">Das Verzeichnis der Länder wird mit JavaScript gesetzt.</p></noscript>
 
   <figure class="globus" id="globus">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den bereisten Ländern in Grau; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
@@ -118,22 +117,21 @@ html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
 </section>
 </main>
 
-<footer class="fuss" id="kontakt">
-  <section class="kontakt" aria-labelledby="kontakt-titel">
-    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
       <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
-  </section>
+  </div>
   <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
 <script src="daten/welt-110m.js"></script>
 <script src="daten/laender-de.js"></script>
 <script src="daten/uk-landesteile.js"></script>
@@ -172,9 +170,11 @@ html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
   registerEl.innerHTML = Object.keys(KONTINENTE).map(k => {
     const laender = KONTINENTE[k].slice().sort((a, b) => name(a).localeCompare(name(b), 'de'));
     const woerter = laender.map(iso => `<button type="button" class="wort" data-land="${esc(iso)}">${esc(name(iso))}</button>`);
-    return `<div class="gruppe"><dt>${esc(k)}</dt> <dd>${woerter.join(', ')}</dd></div>`;
+    return `<div class="gruppe"><dt class="stichwort">${esc(k)}</dt> <dd>${woerter.join(', ')}</dd></div>`;
   }).join('');
-  $$('.einleitung, .register').forEach(F.satzzeichenBinden);
+  F.satzzeichenBinden(registerEl);
+  // Halbfett ohne Sprung: gewählte Wörter brechen die Zeilen nicht neu um
+  F.gleichBreit($$('.kontinente .wort, #register .wort'));
 
   // ================= Globus =================
   const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas'), tipp = $('.tipp', figur), tafelEl = $('#tafel');
@@ -211,16 +211,16 @@ html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
     return (f && f.punkt) || (I.winzig && I.winzig[iso]) || null;
   }
   const zahl = n => F.gross(F.zahlwort(n)) + ' Länder und Gebiete, grau auf dem Globus.';
-  // Keine große Zahl als Kachel: der Überblick und die Kontinente mit der Zahl ausgeschrieben im Satz
-  const ueberblickInhalt = () => ({ kopf: 'Wohin ich gereist bin', satz: zahl(bereist.length) });
-  const kontinentInhalt = k => ({ kopf: k, satz: zahl((KONTINENTE[k] || []).length) });
+  // Der Überblick und die Kontinente mit der Zahl ausgeschrieben im Satz; ohne Steuerzeile, denn hier läuft nichts ab
+  const ueberblickInhalt = () => ({ kopf: 'Reisen', satz: zahl(bereist.length), fuss: false });
+  const kontinentInhalt = k => ({ kopf: k, satz: zahl((KONTINENTE[k] || []).length), fuss: false });
   function landInhalt(iso, f) {
     const ist = bereist.includes(iso), p = mitte(iso, f), guide = LAENDERGUIDES[iso];
     return {
       kopf: ist || !f ? name(iso) : f.name,
       unter: ist ? 'bereist' : 'nicht bereist',
       daten: p ? F.koord(p[1], p[0]) : '',
-      fuss: guide ? `<a href="${esc(guide)}">Zum Länderguide</a>` : ''
+      fuss: guide ? `<a href="${esc(guide)}">Zum Länderguide</a>` : false
     };
   }
   function inhaltJetzt() {
@@ -236,8 +236,8 @@ html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
     tafelStand = stand;
     F.tafel(tafelEl, t);
   }
-  /* Die Tafel hält die Höhe ihres längsten Inhalts, damit nichts springt: breit passen Globus und Tafel so zusammen auf einen Schirm
-     (FSeite.tafelPlatz), schmal bleibt das Verzeichnis darunter an seinem Platz */
+  /* Die Tafel hält die Höhe ihres längsten Inhalts, damit nichts springt: breit passen Globus und Tafel so zusammen auf einen
+     Schirm (FSeite.tafelPlatz), schmal bleibt das Verzeichnis darunter an seinem Platz */
   function tafelHoehe() {
     const lang = bereist.slice().sort((a, b) => name(b).length - name(a).length).slice(0, 3);
     const alle = [ueberblickInhalt()].concat(Object.keys(KONTINENTE).map(kontinentInhalt), lang.map(iso => landInhalt(iso)), Object.keys(LAENDERGUIDES).map(iso => landInhalt(iso)));
@@ -245,10 +245,10 @@ html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
     F.tafelPlatz(tafelEl, alle);
   }
 
-  // Die Wörter: gewählter Kontinent und gewähltes Land schwarz, „wohin ich gereist bin“ gedrückt, solange der Überblick gilt
+  // Die Wörter: gewählter Kontinent oder „Alle Länder“ gedrückt, das gewählte Land halbfett
   function markieren() {
     $$('[data-ueberblick]').forEach(b => b.setAttribute('aria-pressed', String(!wahl)));
-    $$('[data-kontinent]').forEach(b => b.classList.toggle('ist-aktiv', !!wahl && wahl.kontinent === b.dataset.kontinent));
+    $$('[data-kontinent]').forEach(b => b.setAttribute('aria-pressed', String(!!wahl && wahl.kontinent === b.dataset.kontinent)));
     $$('[data-land]').forEach(b => {
       const an = !!wahl && wahl.iso === b.dataset.land;
       b.classList.toggle('ist-aktiv', an);
@@ -330,7 +330,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .ebenen { display: none; }
      Ist dann ein Land gewählt, nennt die Tafel gleich die genaueren Koordinaten, damit ein Land nicht zweierlei Mitten hat */
   document.addEventListener('load', e => {
     const s = e.target;
-    if (s && s.tagName === 'SCRIPT' && /welt-50m\.js$/.test(s.src || '')) setTimeout(tafelSetzen, 0);
+    if (s && s.tagName === 'SCRIPT' && /welt-50m\.js$/.test(s.src || '')) setTimeout(() => { tafelStand = ''; tafelSetzen(); }, 0);
   }, true);
 
   let uhr = 0;

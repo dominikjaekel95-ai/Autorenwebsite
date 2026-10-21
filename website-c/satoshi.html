@@ -4,120 +4,93 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Satoshi – Dominik Jäkel</title>
-<meta name="description" content="Satoshi, Roman von Dominik Jäkel: die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen. Das Manuskript liegt vollständig vor.">
+<meta name="description" content="Der Roman Satoshi von Dominik Jäkel erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen. Das Manuskript liegt vollständig vor.">
 <script>document.documentElement.classList.add('js');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Seite des Romans Satoshi: oben die Globusseite (Titel, erste Sätze, die Szenen der Reihe nach,
-   rechts der Globus mit der Tafel), darunter Klappentext mit den Eckdaten daneben, Bau, Figuren, Frage und Machart.
-   Siena steht nur für das Buch selbst: der Titel und, auf dem Globus, seine Orte und Wege.
-   Beim Scrollen: jede Szene, die die Leselinie erreicht, führt den Globus an ihren Ort; zurückscrollen führt zurück.
-   Breit bleiben Globus und Tafel dafür neben den Szenen stehen. Schmal haftet über den Szenen ein kleines Globusband ohne Tafel
-   (gut ein Drittel der Fensterhöhe); Jahr und Ort der gezeigten Szene stehen schwarz in der Liste darunter.
-   Von selbst spielt nichts ab; das Wort über den Szenen spielt sie auf Wunsch der Reihe nach. */
+/* Seite des Romans Satoshi (gestaltung-website-c.md, 9.2, 6.8, 18).
+   Oben das Globusband: links Titel, Unterzeile, Vorspann und die Zeitleiste der Szenen, rechts die Kugel mit Tafel und Steuerzeile,
+   nicht haftend. Beim ersten Sichtbarwerden läuft der Einspieler (Orte und Linien, kein Szenentext); danach ruht die Tafel bei
+   „Die Schauplätze“, und eine Szene zeigt ihren Text erst nach einer Wahl oder beim Abspielen.
+   Darunter das Buch, 2 z unter dem Globusband: ab 75 rem als Doppelseite (links Klappentext, Bau, Frage, Machart; rechts an der
+   Kante der Kugel Eckdaten und Figuren), darunter eine Spalte in der Reihenfolge von A. */
 
-/* ---------- Kopf des Buchs ---------- */
+/* ---------- Globusband ---------- */
 .titelei { margin-top: var(--z); }
-.buchtitel { color: var(--siena); }
-.anfang { font-size: 1.125em; line-height: calc(var(--z) * 1.125); color: var(--schwarz); }
-/* Die Szenen der Reihe nach: das Jahr hängt im linken Rand wie bei den Tagen im Bau, der Ort steht kursiv, darunter die Szene.
-   Ein Jahr, das sich wiederholt, steht nur, solange seine Szene die gezeigte ist; die gezeigte Szene hat Jahr und Ort schwarz */
-.reihe { margin-top: calc(var(--z) * 1.5); }
-.reihe .titel { margin-bottom: calc(var(--z) * .5); }
-.nochmal { font-size: .9375em; color: var(--grau-2); margin-bottom: calc(var(--z) * .5); }
-.nochmal.still { visibility: hidden; }
-.szenen { list-style: none; }
-.szene { position: relative; }
-.szene + .szene { margin-top: calc(var(--z) * .75); }
-.szene .jahr { position: absolute; right: 100%; top: 0; padding-right: .75em; color: var(--grau-2); white-space: nowrap; }
-.szene .jahr.wieder { opacity: 0; }
-.szene.ist-aktiv .jahr { opacity: 1; color: var(--schwarz); }
-.szene-ort { display: block; font-style: italic; color: var(--graphit); }
-.szene-ort .zusatz { font-style: normal; font-size: .875em; color: var(--grau-2); }
-.szene-text { display: block; }
-.weitere { margin-top: var(--z); color: var(--grau-1); }
-.weitere .wort { color: var(--grau-1); }
-.weitere .wort.ist-aktiv { color: var(--schwarz); }
-/* Ohne Skript gibt es keinen Globus und nichts zu drücken; Kolophon und weitere Orte stehen als Text */
-html:not(.js) .globusseite > .globus, html:not(.js) .nochmal { display: none; }
+/* Der Vorspann aus dem Exposé im Grad Überschrift */
+.vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
+/* Zeitleiste (6.8): eine fließende Zeile, Grad klein. Das Jahr nur vor dem ersten Ort seines Jahres, als Teil der Gruppe;
+   Gruppen mit 1 em Abstand (das Leerzeichen und .75 em), Orte einer Gruppe mit Komma */
+.zeitleiste { margin-top: var(--z); }
+.zeitleiste .gruppe { margin-right: .75em; }
+.zeitleiste .gruppe:last-child { margin-right: 0; }
+.zeitleiste .jahr { font-variant-numeric: oldstyle-nums tabular-nums; }
+.weitere { margin-top: var(--z-viertel); }
+.weitere .wort { white-space: nowrap; }
 
-/* ---------- Textabschnitte ---------- */
-.buch .abschnitt + .abschnitt { padding-top: calc(var(--z) * 3); }
-.schluss { margin-top: var(--z) !important; }
-/* Klappentext links; rechts die Eckdaten an der linken Kante des Globus, höchstens sechs Zeilen vom Text entfernt.
-   Im Quelltext stehen die Eckdaten gleich nach dem Klappentext; einspaltig folgen sie ihm auch dort */
-.zwei-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); align-items: start; }
-.zwei-raster > .spalte { grid-column: 1; }
-.zwei-raster > .rechts { grid-column: 2; max-width: 22em; margin-left: clamp(calc(var(--z) * 1.5), calc(var(--globuskante) - var(--rand-l) - var(--spalte)), calc(var(--z) * 6)); }
-.klapp p + p, .rechts p + p, #bau p + p { margin-top: calc(var(--z) * .5); }
-/* Die Tage im Bau: das Jahr hängt im linken Rand, Tag und Ereignis stehen an der Textkante */
-.protokoll-vor { margin-top: var(--z); }
-.protokoll { list-style: none; margin-top: calc(var(--z) * .5); }
-.protokoll li { position: relative; }
-.protokoll li + li { margin-top: calc(var(--z) * .25); }
-.protokoll .jahr { position: absolute; right: 100%; top: 0; padding-right: .75em; color: var(--grau-2); white-space: nowrap; }
-/* Das unsichtbare geschützte Leerzeichen im Jahr trennt Jahr und Tag beim Kopieren („2007 14. September“) */
-.protokoll .tag { color: var(--grau-2); white-space: nowrap; }
-/* Figuren: Name in Kapitälchen, Rolle und Alter leise dahinter */
-.figur + .figur { margin-top: var(--z); }
-.figur-kopf { color: var(--schwarz); }
-.figur-name { font-family: var(--sc); letter-spacing: .04em; }
-.figur-rolle { color: var(--grau-2); }
-.figur p { margin-top: calc(var(--z) * .25); }
-.machart .regal { margin-top: calc(var(--z) * .5); font-size: .9375em; color: var(--grau-2); }
+/* Tafel: die Steuerzeile steht immer an derselben Stelle, unten in der reservierten Höhe, auch wenn der Szenentext eine oder
+   fünf Zeilen hat; so bleibt „später“ beim Durchklicken unter der Maus */
+.tafel.fuss-unten { position: relative; padding-bottom: calc(var(--z) + var(--z-halb)); }
+.tafel.fuss-unten .steuerzeile { position: absolute; left: calc(4.4em + .8em); right: 0; bottom: 0; margin: 0; }
 
-/* Breit: alle Textspalten so breit wie die Spalte neben dem Globus. Globus und Tafel bleiben neben den Szenen stehen,
-   bis die letzte gelesen ist */
-@media (min-width: 62.0625rem) {
-  .globusseite > .globus { position: sticky; top: calc(var(--z) * .5); }
-  .buch .abschnitt .spalte { max-width: var(--spalte); }
+/* Ohne Skript: kein Globus, die Zeitleiste steht als Text */
+html:not(.js) .globusseite > .globus { display: none; }
+
+/* ---------- Das Buch ---------- */
+.buch { display: flex; flex-direction: column; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
+.buch section { max-width: var(--mass); margin-top: var(--z-zwei); }
+.buch .rechts { display: contents; }
+.buch .klapp { order: 1; margin-top: 0; }
+.buch .eckdaten { order: 2; }
+.buch .bau { order: 3; }
+.buch .figuren { order: 4; }
+.buch .frage { order: 5; }
+.buch .machart { order: 6; }
+/* Die Kapiteltage als Register: Jahr, Tag, Ereignis; ein Jahr, das sich wiederholt, steht nur für Vorleseprogramme */
+.tage { list-style: none; margin-top: var(--z-dreiviertel); }
+.tage li { display: grid; grid-template-columns: 3em 7.5em minmax(0, 1fr); }
+.tage li + li { margin-top: var(--z-viertel); }
+.tage .jahr { font-variant-numeric: oldstyle-nums tabular-nums; }
+.tage .tag { white-space: nowrap; }
+/* Figuren: Name in Kapitälchen, Komma, die Rolle; darunter der Text */
+.figur + .figur { margin-top: var(--z-dreiviertel); }
+.figur h3 { font-size: inherit; line-height: var(--z); }
+.figur p { margin-top: var(--z-viertel); }
+
+/* Ab 75 rem: Doppelseite. Links der Lesetext in der Satzbreite, rechts ab der linken Kante der Kugel Eckdaten und Figuren,
+   höchstens 24 em breit; beide beginnen auf einer Höhe */
+@media (min-width: 75rem) {
+  .buch { display: grid; grid-template-columns: calc(var(--globuskante) - var(--rand-l)) minmax(0, 24em); align-items: start; }
+  .buch > section { grid-column: 1; max-width: min(var(--mass), calc(100% - var(--z-zwei))); }
+  .buch .rechts { display: block; grid-column: 2; grid-row: 1 / span 4; }
+  .buch .rechts section { max-width: none; }
+  .buch .rechts .eckdaten { margin-top: 0; }
 }
 @media (max-width: 62rem) {
-  /* Im Quelltext stehen die Szenen vor dem Globus (Tabfolge wie auf dem breiten Schirm); einspaltig steht der Globus davor */
-  .globusseite > .reihe { order: 1; }
-  /* Einspaltig: erst der Klappentext, gleich darunter die Eckdaten */
-  .zwei-raster { grid-template-columns: minmax(0, var(--mass)); }
-  .zwei-raster > .rechts { grid-column: 1; max-width: var(--mass); margin: calc(var(--z) * 2) 0 0; }
-  /* Die Tafel hält ihre Höhe für die längste Szene; früher und später stehen unten, immer an derselben Stelle */
-  .tafel.fuss-unten { position: relative; padding-bottom: calc(var(--z) * 1.2); }
-  .tafel.fuss-unten .tafel-fuss { position: absolute; left: calc(4.4em + .8em); bottom: 0; margin: 0; }
-}
-/* Schmal: das Globusband über den Szenen (das Skript setzt .als-band, wenn das Fenster hoch genug ist und Bewegung erlaubt ist).
-   Es hat keine Tafel; eine feine Linie schließt es nach unten ab, sobald es haftet und die Liste unter ihm durchläuft */
-:root { --band: min(calc(34svh - 12px), calc(100vw - 2 * var(--rand-l))); }
-@media (max-width: 62rem) {
-  .globusseite > .globus.als-band {
-    position: sticky; top: 0; z-index: 5; grid-column: 1 / -1; justify-self: stretch; width: auto;
-    margin: calc(var(--z) * .5) 0 0; padding: 6px var(--rand-l);
-    background: var(--papier);
-  }
-  .globus.als-band .flaeche { width: var(--band); margin: 0 auto; }
-  .globus.als-band .tafel { display: none; }
-  .globus.als-band::after { content: ""; position: absolute; left: var(--rand-l); right: var(--rand-l); bottom: 0; border-bottom: 1px solid var(--grau-4); visibility: hidden; }
-  .globus.als-band.haftet::after { visibility: visible; }
-  /* Wer mit der Tastatur durch die Szenen geht, landet nicht unter dem Band */
-  .mit-band .reihe .wort { scroll-margin-top: calc(var(--band) + 12px + var(--z)); }
-}
-@media (max-width: 48rem) {
-  /* Der Rand ist zu schmal für die Jahre: sie hängen in einem Einzug der Liste */
-  .protokoll, .szenen { padding-left: 3em; }
+  .buch { padding-right: var(--rand-l); }
+  /* Einspaltig: die Steuerzeile direkt unter der Kugel, über Jahr und Ort. Der Szenentext darunter darf wachsen, ohne dass die
+     Wörter unter dem Finger wandern, und in Ruhe steht keine leere Fläche zwischen Text und Steuerzeile */
+  .globusseite > .globus .tafel.fuss-unten { min-height: 0; padding: 0; }
+  .tafel.fuss-unten .tafel-inhalt { display: contents; }
+  .tafel.fuss-unten .steuerzeile { position: static; grid-column: 1 / -1; grid-row: 1; row-gap: var(--z-halb); margin: 0 0 var(--z-halb); }
+  .tafel.fuss-unten .tafel-marke, .tafel.fuss-unten .tafel-kopf { grid-row: 2; }
+  .tafel.fuss-unten .tafel-inhalt > :not(.steuerzeile) { grid-column: 2; }
 }
 @media (max-width: 40rem) {
-  .anfang { font-size: 1.0625em; }
-  .tafel.fuss-unten .tafel-fuss { left: calc(3.6em + .65em); }
+  /* Schmal: Jahr, darunter Tag und Ereignis in einer Spalte daneben */
+  .tage li { grid-template-columns: 2.6em minmax(0, 1fr); }
+  .tage .tag { display: block; }
+  .tage .tag, .tage .was { grid-column: 2; }
 }
 </style>
 </head>
-<body class="mit-globus buch">
+<body class="mit-globus">
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
 
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="nav" aria-label="Website">
-    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html" aria-current="page"><i>Satoshi</i></a></li>
       <li><a href="ursprung.html"><i>Ursprung</i></a></li>
@@ -133,30 +106,15 @@ html:not(.js) .globusseite > .globus, html:not(.js) .nochmal { display: none; }
 <main id="inhalt">
 <section class="globusseite" aria-labelledby="buch-titel">
   <div class="titelei">
-    <h1 class="seitentitel buchtitel" id="buch-titel">Satoshi</h1>
-    <p class="unterzeile">Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor; gerade entsteht die Endfassung.</p>
+    <h1 class="seitentitel" id="buch-titel">Satoshi</h1>
+    <p class="unterzeile">Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor, gerade entsteht die Endfassung.</p>
   </div>
 
-  <p class="anfang">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.</p>
+  <p class="vorspann">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.</p>
 
-  <!-- Die Szenen der Reihe nach. Breit steht der Globus daneben still, und wer liest, führt ihn von Szene zu Szene -->
-  <div class="reihe" id="reihe">
-    <h2 class="titel">Der Roman der Reihe nach</h2>
-    <p class="nochmal still" id="nochmal"><button type="button" class="wort" data-nochmal>Szene für Szene, von Buenos Aires an</button></p>
-    <ol class="szenen" id="szenen">
-      <li class="szene"><span class="jahr">2001</span> <span class="szene-ort">Buenos Aires</span> <span class="szene-text">Dezember 2001. Die siebzehnjährige Lana erlebt, wie die Ersparnisse ihrer Familie per Dekret verschwinden.</span></li>
-      <li class="szene"><span class="jahr">2007</span> <span class="szene-ort">London</span> <span class="szene-text">Lana macht ein Praktikum bei Lehman Brothers und erkennt in den Bilanzen Muster, die sie beunruhigen und an Buenos Aires erinnern.</span></li>
-      <li class="szene"><span class="jahr wieder">2007</span> <span class="szene-ort">Black Rock Desert<span class="zusatz">, Nevada</span></span> <span class="szene-text">Burning Man. In den Nächten des Festivals lösen Lana, Arthur und Samuel ein Problem, an dem Mathematiker seit Jahrzehnten scheitern, und schließen einen Pakt.</span></li>
-      <li class="szene"><span class="jahr wieder">2007</span> <span class="szene-ort">London</span> <span class="szene-text">September 2007. Ein Bankrun vor einer Filiale von Northern Rock.</span></li>
-      <li class="szene"><span class="jahr wieder">2007</span> <span class="szene-ort">Kobe</span> <span class="szene-text">In Japan bekommt der Pakt seinen Namen: Satoshi Nakamoto.</span></li>
-      <li class="szene"><span class="jahr">2008</span> <span class="szene-ort">New York</span> <span class="szene-text">Samuel ist CTO eines Quant-Fonds an der Wall Street, als die anderen ihn nach Berlin holen.</span></li>
-      <li class="szene"><span class="jahr wieder">2008</span> <span class="szene-ort">Berlin</span> <span class="szene-text">Eine Kreuzberger Fabriketage. Hier entsteht das erste digitale Geld, das niemandem gehört.</span></li>
-      <li class="szene"><span class="jahr">2009</span> <span class="szene-ort">Buenos Aires</span> <span class="szene-text">3.&nbsp;Januar 2009. Ein Internetcafé mit wackeligem Strom, zwischen zwei Stromausfällen der erste Block.</span></li>
-      <li class="szene"><span class="jahr">2010</span> <span class="szene-ort">Bariloche</span> <span class="szene-text">Patagonien, 2010.</span></li>
-      <li class="szene"><span class="jahr">2013</span> <span class="szene-ort">Penang</span> <span class="szene-text">Der Epilog, 2013.</span></li>
-    </ol>
-    <p class="weitere" id="weitere">Weitere Schauplätze: <span class="wird-knopf" data-ort="Temple City">Temple City</span> im San Gabriel Valley und die <span class="wird-knopf" data-ort="Anden an der Grenze zu Chile">Anden</span> an der Grenze zu Chile.</p>
-  </div>
+  <!-- Die Zeitleiste: ohne Skript steht sie als Text; mit Skript wird jeder Ort ein Knopf, der die Szene wählt -->
+  <p class="ortsleiste zeitleiste" id="zeitleiste" role="group" aria-label="Die Schauplätze in der Reihenfolge des Romans"><span class="gruppe">2001 Buenos Aires</span> <span class="gruppe">2007 London, Black Rock Desert, London, Kobe</span> <span class="gruppe">2008 New York, Berlin</span> <span class="gruppe">2009 Buenos Aires</span> <span class="gruppe">2010 Bariloche</span> <span class="gruppe">2013 Penang</span></p>
+  <p class="weitere klein" id="weitere">Weitere Schauplätze: <span class="wird-knopf" data-ort="Temple City">Temple City</span> im San Gabriel Valley und die <span class="wird-knopf" data-ort="Anden an der Grenze zu Chile">Anden</span> an der Grenze zu Chile.</p>
 
   <figure class="globus" id="globus">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
@@ -166,109 +124,105 @@ html:not(.js) .globusseite > .globus, html:not(.js) .nochmal { display: none; }
   </figure>
 </section>
 
-<!-- Klappentext links, die Eckdaten rechts daneben; einspaltig folgen sie gleich darauf -->
-<div class="abschnitt zwei-raster">
-  <section class="klapp spalte" id="klappentext" aria-labelledby="klapp-titel">
+<!-- Das Buch. Ab 75 rem: links Klappentext, Bau, Frage, Machart; rechts Eckdaten und Figuren. Schmaler eine Spalte in der
+     Reihenfolge Klappentext, Eckdaten, Bau, Figuren, Frage, Machart -->
+<div class="buch" id="buch">
+  <section class="klapp" id="klappentext" aria-labelledby="klapp-titel">
     <h2 class="titel" id="klapp-titel">Klappentext</h2>
-    <p><i>Satoshi</i> erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen, die einander nicht vertrauen können&nbsp;– und die deshalb Geld bauen, das ohne Vertrauen funktioniert.</p>
-    <p>Jeder von ihnen baut an der Maschine, um etwas nicht tun zu müssen. Lana, die Ökonomin, deren Familie der argentinische Staat 2001 über Nacht enteignet hat, muss sich nicht entscheiden&nbsp;– zwischen zwei Männern, zwei Kontinenten und zwei Leben&nbsp;–, solange die Arbeit am Projekt sie davon abhält. Arthur, ein Kryptograph, der beim Zusammenbruch der UdSSR heimatlos wurde, muss nichts fühlen, solange er im Code versinkt. Samuel, ein Quant an der Wall Street, dessen Vater an der Finanzkrise zerbricht, muss niemandem mehr vertrauen, solange er nur die Mathematik kontrolliert.</p>
-    <p>Kennengelernt haben sie sich 2007 auf dem Burning-Man-Festival in Nevada: Zwei Männer verlieben sich in dieselbe Frau&nbsp;– und alle drei in dieselbe Idee. Im Rausch des Festivals finden sie eine Lösung für ein Problem, an dem Mathematiker seit Jahrzehnten scheitern&nbsp;– Geld ohne zentrale Instanz&nbsp;– und schließen einen gemeinsamen Pakt. Die oberste Regel: Wer enttarnt wird, verschwindet.</p>
-    <p>Unter dem Pseudonym Satoshi Nakamoto bauen sie in einer Kreuzberger Fabriketage das erste digitale Geld, das niemandem gehört: keiner Bank und keiner Regierung. Die Arbeit gibt ihnen den perfekten Vorwand, nie auszusprechen, was zwischen ihnen ist. Doch im Herbst 2008, als die neun Seiten erscheinen, ist Lana schwanger&nbsp;– von einem der beiden Männer. Sie will nicht wissen, von wem.</p>
-    <p class="schluss">Die Erfindung von Bitcoin gelingt, gerade weil sie ohne Vertrauen auskommt. Die drei scheitern aus demselben Grund. Davon erzählt dieser Roman.</p>
+    <div class="prosa">
+      <p><i>Satoshi</i> erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen, die einander nicht vertrauen können&nbsp;– und die deshalb Geld bauen, das ohne Vertrauen funktioniert.</p>
+      <p>Jeder von ihnen baut an der Maschine, um etwas nicht tun zu müssen. Lana, die Ökonomin, deren Familie der argentinische Staat 2001 über Nacht enteignet hat, muss sich nicht entscheiden&nbsp;– zwischen zwei Männern, zwei Kontinenten und zwei Leben&nbsp;–, solange die Arbeit am Projekt sie davon abhält. Arthur, ein Kryptograph, der beim Zusammenbruch der UdSSR heimatlos wurde, muss nichts fühlen, solange er im Code versinkt. Samuel, ein Quant an der Wall Street, dessen Vater an der Finanzkrise zerbricht, muss niemandem mehr vertrauen, solange er nur die Mathematik kontrolliert.</p>
+      <p>Kennengelernt haben sie sich 2007 auf dem Burning-Man-Festival in Nevada: Zwei Männer verlieben sich in dieselbe Frau&nbsp;– und alle drei in dieselbe Idee. Im Rausch des Festivals finden sie eine Lösung für ein Problem, an dem Mathematiker seit Jahrzehnten scheitern&nbsp;– Geld ohne zentrale Instanz&nbsp;– und schließen einen gemeinsamen Pakt. Die oberste Regel: Wer enttarnt wird, verschwindet.</p>
+      <p>Unter dem Pseudonym Satoshi Nakamoto bauen sie in einer Kreuzberger Fabriketage das erste digitale Geld, das niemandem gehört: keiner Bank und keiner Regierung. Die Arbeit gibt ihnen den perfekten Vorwand, nie auszusprechen, was zwischen ihnen ist. Doch im Herbst 2008, als die neun Seiten erscheinen, ist Lana schwanger&nbsp;– von einem der beiden Männer. Sie will nicht wissen, von wem.</p>
+      <p>Die Erfindung von Bitcoin gelingt, gerade weil sie ohne Vertrauen auskommt. Die drei scheitern aus demselben Grund. Davon erzählt dieser Roman.</p>
+    </div>
   </section>
-  <section class="rechts eckdaten" id="eckdaten" aria-labelledby="eck-titel">
-    <h2 class="titel" id="eck-titel">Eckdaten</h2>
-    <p>Debütroman. Personal erzählt, aus der Sicht Lanas und kontrapunktisch aus der Samuels. Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.</p>
-    <p><a href="vita.html">Dominik Jäkel</a>, geboren 1995 in Dortmund, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam. Er lebt in Berlin und moderiert die Werkstattbühne des Autorenforums Berlin. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>.</p>
+
+  <div class="rechts">
+    <section class="eckdaten" id="eckdaten" aria-labelledby="eck-titel">
+      <h2 class="titel" id="eck-titel">Eckdaten</h2>
+      <div class="prosa">
+        <p>Debütroman. Personal erzählt, aus der Sicht Lanas und kontrapunktisch aus der Samuels. Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.</p>
+        <p><a href="vita.html">Dominik Jäkel</a>, geboren 1995 in Dortmund, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam. Er lebt in Berlin und moderiert die Werkstattbühne des Autorenforums Berlin. 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>.</p>
+      </div>
+    </section>
+
+    <section class="figuren" id="figuren" aria-labelledby="figuren-titel">
+      <h2 class="titel" id="figuren-titel">Die Figuren</h2>
+      <article class="figur">
+        <h3><span class="stichwort">Satoshi Nakamoto</span>, das Pseudonym</h3>
+        <p>Das berühmteste Phantom der Gegenwart. Die Faktenlage passt auf eine Karteikarte: ein Whitepaper, gut fünfhundert Forenposts, der erklärte Wunsch, sich selbst überflüssig zu machen. Dieser Roman gibt dem Pseudonym, was ihm bisher fehlte: eine Stimme&nbsp;– und drei Gesichter.</p>
+      </article>
+      <article class="figur">
+        <h3><span class="stichwort">Lana Álvarez</span>, die Schöpferin, 23&nbsp;Jahre alt</h3>
+        <p>Lana steht mit einem Fuß in der Welt, die sie retten, und mit dem anderen in der, die sie zerstören will. Als Tochter eines ruinierten argentinischen Bauunternehmers, die bei Lehman Brothers Bilanzen rechnet, kennt sie das Finanzsystem von beiden Seiten&nbsp;– als Opfer und als Komplizin.</p>
+      </article>
+      <article class="figur">
+        <h3><span class="stichwort">Arthur Volkov</span>, der Visionär, 32&nbsp;Jahre alt</h3>
+        <p>Arthur vertraut Algorithmen mehr als Menschen&nbsp;– was ihn zu einem der brillantesten Kryptographen seiner Generation und zum schwierigsten Menschen macht, den man lieben kann.</p>
+      </article>
+      <article class="figur">
+        <h3><span class="stichwort">Samuel Vaughn</span>, der Anker, 31&nbsp;Jahre alt</h3>
+        <p>Samuel ist der Realist des Trios&nbsp;– Sohn eines Ex-Army-Offiziers und einer deutschen Mutter, großgezogen in einer Familie, in der man Pflichten erfüllt, statt über sie zu sprechen.</p>
+      </article>
+    </section>
+  </div>
+
+  <section class="bau" id="bau" aria-labelledby="bau-titel">
+    <h2 class="titel" id="bau-titel">Gebaut wie ein Protokoll</h2>
+    <p>Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten Bitcoin-Block signiert.</p>
+    <ol class="tage">
+      <li><span class="jahr">2007</span> <span class="tag">14.&nbsp;September</span> <span class="was">Bankrun auf Northern Rock</span></li>
+      <li><span class="jahr">2008</span> <span class="tag">15.&nbsp;September</span> <span class="was">Lehman Brothers meldet Insolvenz an</span></li>
+      <li><span class="jahr"><span class="unsichtbar">2008</span></span> <span class="tag">31.&nbsp;Oktober</span> <span class="was">Das Whitepaper erscheint, neun Seiten</span></li>
+      <li><span class="jahr">2009</span> <span class="tag">3.&nbsp;Januar</span> <span class="was">Der erste Block</span></li>
+      <li><span class="jahr">2010</span> <span class="tag">15.&nbsp;August</span> <span class="was">Ein Fehler im Code erzeugt Milliarden Bitcoins aus dem Nichts</span></li>
+      <li><span class="jahr"><span class="unsichtbar">2010</span></span> <span class="tag">Dezember</span> <span class="was">Die Banken sperren WikiLeaks die Konten</span></li>
+    </ol>
+  </section>
+
+  <section class="frage" id="frage" aria-labelledby="frage-titel">
+    <h2 class="titel" id="frage-titel">Die Frage hinter dem Roman</h2>
+    <div class="prosa">
+      <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die Antworten, die im Umlauf sind, folgen zwei Bewegungen: das System reparieren&nbsp;– oder aussteigen und ein Parallelsystem bauen. Die 2020er Jahre sind das Jahrzehnt, in dem dieser Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
+      <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine umfangreiche Stabilitäts&shy;kultur, jedoch nur in seltensten Fällen lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
+      <p><i>Satoshi</i> ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat&nbsp;– die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.</p>
+      <p>Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
+    </div>
+  </section>
+
+  <section class="machart" id="machart" aria-labelledby="machart-titel">
+    <h2 class="titel" id="machart-titel">Wie er gemacht ist</h2>
+    <div class="prosa">
+      <p><i>Satoshi</i> ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand&nbsp;– Satoshi Nakamotos Mails, Forenbeiträgen, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin&nbsp;– und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.</p>
+      <p>Der Roman steht in einer Erzähltradition, die ihre Wurzeln in Borges’ <i>Ficciones</i> hat und zu deren heutigen Vertretern Hernan Diaz und Benjamín Labatut gehören: Literatur in den Leerstellen des Verbürgten.</p>
+      <p><i>Ficciones</i> steht in seiner <a href="bibliothek.html">Bibliothek</a>, ebenso Labatuts <i>When We Cease to Understand the World</i> und <i>The Maniac</i>.</p>
+    </div>
   </section>
 </div>
 
-<section class="abschnitt" id="bau" aria-labelledby="bau-titel">
-  <h2 class="titel" id="bau-titel">Gebaut wie ein Protokoll</h2>
-  <div class="spalte">
-    <p>Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten Bitcoin-Block signiert.</p>
-    <p class="protokoll-vor">Die Tage, mit denen die Kapitel geschnitten sind:</p>
-    <ol class="protokoll">
-      <li><span class="jahr">2007<span class="unsichtbar">&nbsp;</span></span> <i class="tag">14.&nbsp;September</i> Bankrun auf Northern Rock</li>
-      <li><span class="jahr">2008<span class="unsichtbar">&nbsp;</span></span> <i class="tag">15.&nbsp;September</i> Lehman Brothers meldet Insolvenz an</li>
-      <li><span class="jahr unsichtbar">2008<span class="unsichtbar">&nbsp;</span></span> <i class="tag">31.&nbsp;Oktober</i> Das Whitepaper erscheint, neun Seiten</li>
-      <li><span class="jahr">2009<span class="unsichtbar">&nbsp;</span></span> <i class="tag">3.&nbsp;Januar</i> Der erste Block</li>
-      <li><span class="jahr">2010<span class="unsichtbar">&nbsp;</span></span> <i class="tag">15.&nbsp;August</i> Ein Fehler im Code erzeugt Milliarden Bitcoins aus dem Nichts</li>
-      <li><span class="jahr unsichtbar">2010<span class="unsichtbar">&nbsp;</span></span> <i class="tag">Dezember</i> Die Banken sperren WikiLeaks die Konten</li>
-    </ol>
-  </div>
-</section>
-
-<section class="abschnitt" id="figuren" aria-labelledby="figuren-titel">
-  <h2 class="titel" id="figuren-titel">Die Figuren</h2>
-  <div class="spalte">
-    <article class="figur">
-      <h3 class="figur-kopf"><span class="figur-name">Satoshi Nakamoto</span>, <span class="figur-rolle">das Pseudonym</span></h3>
-      <p>Das berühmteste Phantom der Gegenwart. Die Faktenlage passt auf eine <span class="wird-knopf" data-karte="nakamoto">Karteikarte</span>: ein Whitepaper, gut fünfhundert Forenposts, der erklärte Wunsch, sich selbst überflüssig zu machen. Dieser Roman gibt dem Pseudonym, was ihm bisher fehlte: eine Stimme&nbsp;– und drei Gesichter.</p>
-    </article>
-    <article class="figur">
-      <h3 class="figur-kopf"><span class="figur-name">Lana Álvarez</span>, <span class="figur-rolle">die Schöpferin, 23&nbsp;Jahre alt</span></h3>
-      <p>Lana steht mit einem Fuß in der Welt, die sie retten, und mit dem anderen in der, die sie zerstören will. Als Tochter eines ruinierten argentinischen Bauunternehmers, die bei Lehman Brothers Bilanzen rechnet, kennt sie das Finanzsystem von beiden Seiten&nbsp;– als Opfer und als Komplizin.</p>
-    </article>
-    <article class="figur">
-      <h3 class="figur-kopf"><span class="figur-name">Arthur Volkov</span>, <span class="figur-rolle">der Visionär, 32&nbsp;Jahre alt</span></h3>
-      <p>Arthur vertraut Algorithmen mehr als Menschen&nbsp;– was ihn zu einem der brillantesten Kryptographen seiner Generation und zum schwierigsten Menschen macht, den man lieben kann.</p>
-    </article>
-    <article class="figur">
-      <h3 class="figur-kopf"><span class="figur-name">Samuel Vaughn</span>, <span class="figur-rolle">der Anker, 31&nbsp;Jahre alt</span></h3>
-      <p>Samuel ist der Realist des Trios&nbsp;– Sohn eines Ex-Army-Offiziers und einer deutschen Mutter, großgezogen in einer Familie, in der man Pflichten erfüllt, statt über sie zu sprechen.</p>
-    </article>
-  </div>
-</section>
-
-<section class="abschnitt" id="frage" aria-labelledby="frage-titel">
-  <h2 class="titel" id="frage-titel">Die Frage hinter dem Roman</h2>
-  <div class="spalte">
-    <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die 2020er Jahre sind das Jahrzehnt, in dem der Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
-    <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine umfangreiche Stabilitäts&shy;kultur, jedoch nur in seltensten Fällen lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
-    <p><i>Satoshi</i> ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat&nbsp;– die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.</p>
-    <p>Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
-  </div>
-</section>
-
-<section class="abschnitt machart" id="machart" aria-labelledby="machart-titel">
-  <h2 class="titel" id="machart-titel">Wie er gemacht ist</h2>
-  <div class="spalte">
-    <p><i>Satoshi</i> ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand&nbsp;– Satoshi Nakamotos Mails, Forenbeiträgen, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin&nbsp;– und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.</p>
-    <p>Eine Erzähltradition, die ihre Wurzeln in Borges’ <i>Ficciones</i> hat und zu deren heutigen Vertretern Hernan Diaz und Benjamín Labatut gehören: Literatur in den Leerstellen des Verbürgten.</p>
-    <p class="regal"><i>Ficciones</i> steht in seiner <a href="bibliothek.html">Bibliothek</a>, ebenso Labatuts <i>When We Cease to Understand the World</i> und <i>The Maniac</i>.</p>
-  </div>
-</section>
-
-<section class="abschnitt" id="an-verlage" aria-label="Für Verlage und Agenturen">
-  <p class="spalte">Verlage und Agenturen erreichen Dominik Jäkel über den <a href="#kontakt">Kontakt</a>.</p>
-</section>
-
 </main>
 
-<footer class="fuss" id="kontakt">
-  <section class="kontakt" aria-labelledby="kontakt-titel">
-    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
       <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
-  </section>
+  </div>
   <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
 <script src="daten/welt-110m.js"></script>
 <script src="daten/laender-de.js"></script>
 <script src="daten/uk-landesteile.js"></script>
 <script src="globus/kern.js"></script>
 <script src="daten/inhalt.js"></script>
-<script src="daten/buecher.js"></script>
-<script src="daten/leseliste.js"></script>
 <script src="seite.js"></script>
 <script>
 (function () {
@@ -276,455 +230,216 @@ html:not(.js) .globusseite > .globus, html:not(.js) .nochmal { display: none; }
   const F = window.FSeite, I = window.INHALT || {};
   if (!F) return;
   const { $, $$, esc } = F;
-  const ruhig = F.ruhig();
-  const warten = ms => new Promise(r => setTimeout(r, ms));
-  const knopf = (text, attr, aus) => `<button type="button" class="wort" ${attr}${aus ? ' disabled' : ''}>${text}</button>`;
-  const undListe = w => w.length < 2 ? w.join('') : w.slice(0, -1).join(', ') + ' und ' + w[w.length - 1];
 
-  // Wörter, die mit Skript etwas tun, stehen im HTML als Text (span.wird-knopf); erst hier werden sie Knöpfe
+  // ================= Inhalte =================
+  const SAT = I.satoshi || {};
+  const ST = F.szenen();                       // die zehn Szenen in der Reihenfolge des Romans, jede an ihrem Ort
+  const N = ST.length;
+  const ORTE = (SAT.orte || []).filter(o => o && o.lat != null && o.lon != null);
+  const SZENENORTE = ORTE.filter(o => ST.some(s => s.name === o.name));
+  const WEITERE = ORTE.filter(o => !SZENENORTE.includes(o));     // Temple City, die Anden: offene Kreise ohne Weg
+  const ortVon = name => ORTE.find(o => o.name === name) || null;
+  // „3. Januar 2009“ bleibt zusammen
+  const datum = t => String(t).replace(/(\d\.) (?=[A-ZÄÖÜ][a-zäöü]+ \d{4})/g, '$1' + F.NBSP);
+  // Die Notiz („Nevada“) gehört zum Ort, außer die Szene beginnt schon damit („Patagonien, 2010.“)
+  const notizBeiText = s => s.notiz && String(s.text).indexOf(s.notiz) !== 0 ? s.notiz : '';
+
+  // Wörter, die mit Skript etwas tun, stehen im HTML als Text; erst hier werden sie Knöpfe
   $$('span.wird-knopf').forEach(s => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'wort';
     Object.keys(s.dataset).forEach(k => { b.dataset[k] = s.dataset[k]; });
+    b.setAttribute('aria-pressed', 'false');
     while (s.firstChild) b.appendChild(s.firstChild);
     s.replaceWith(b);
   });
+  $$('[data-ort]').forEach(b => { if (!ortVon(b.dataset.ort)) b.replaceWith(document.createTextNode(b.textContent)); });
+  F.gleichBreit($$('#weitere [data-ort]'));
 
-  // ================= Inhalte =================
-  const SAT = I.satoshi || {};
-  const ORTE = (SAT.orte || []).filter(o => o && o.lat != null && o.lon != null);
-  const ort = name => ORTE.find(o => o.name === name);
-  // Die Szenen des Romans der Reihe nach, jede an ihrem Ort; Orte kommen mehrfach vor (London, Buenos Aires)
-  const STATIONEN = [];
-  (SAT.szenen || []).forEach(s => { const o = ort(s.ort); if (o) STATIONEN.push({ name: o.name, notiz: o.notiz || '', lat: o.lat, lon: o.lon, jahr: s.jahr, text: s.text }); });
-  const N = STATIONEN.length;
-  const SZENENORTE = [];
-  STATIONEN.forEach(s => { const o = ort(s.name); if (!SZENENORTE.includes(o)) SZENENORTE.push(o); });
-  // Schauplätze ohne Szene in der Reihe: nur beschriftet, mit ihrer Notiz
-  const WEITERE = ORTE.filter(o => !SZENENORTE.includes(o));
-  // Datum zusammenhalten: „3. Januar 2009“
-  const datum = t => String(t).replace(/(\d\.) (?=[A-ZÄÖÜ][a-zäöü]+ \d{4})/g, '$1' + F.NBSP);
-  // Die Notiz („Nevada“) steht klein beim Ort, außer die Szene beginnt schon damit („Patagonien, 2010.“)
-  const notizBeiText = s => s.notiz && s.text.indexOf(s.notiz) !== 0 ? s.notiz : '';
-
-  // Die Szenen: Jahr im Rand (wiederholt nur sichtbar, solange die Szene gezeigt wird), Ort als Wort, das den Globus dorthin führt,
-  // darunter die Szene. Ohne Skript steht derselbe Text im HTML
-  const szenenEl = $('#szenen');
-  if (szenenEl && N) szenenEl.innerHTML = STATIONEN.map((s, i) => {
-    const notiz = notizBeiText(s);
-    return `<li class="szene"><span class="jahr${i && STATIONEN[i - 1].jahr === s.jahr ? ' wieder' : ''}">${esc(s.jahr)}</span> ` +
-      `<span class="szene-ort"><button type="button" class="wort station" data-pos="${i + 1}">${esc(s.name)}</button>${notiz ? `<span class="zusatz">, ${esc(notiz)}</span>` : ''}</span> ` +
-      `<span class="szene-text">${esc(datum(s.text))}</span></li>`;
-  }).join('');
-  const SZENEN_LI = szenenEl ? $$('.szene', szenenEl) : [];
-  $$('[data-ort]').forEach(b => { if (!ort(b.dataset.ort)) b.replaceWith(document.createTextNode(b.textContent)); });
-  $$('.reihe, .figur').forEach(F.satzzeichenBinden);
+  // ================= Zeitleiste (6.8) =================
+  /* Je Jahr eine Gruppe; das Jahr nur vor dem ersten Ort, für Vorleseprogramme verborgen, denn jeder Ort nennt es in seinem
+     Namen („Kobe, 2007“). Der Knopf trägt den Index der Szene; FSeite.ablauf wählt sie und markiert die jetzige halbfett */
+  const leiste = $('#zeitleiste');
+  if (leiste && N) {
+    const gruppen = [];
+    ST.forEach((s, i) => {
+      const gr = gruppen[gruppen.length - 1];
+      if (gr && gr.jahr === s.jahr) gr.i.push(i); else gruppen.push({ jahr: s.jahr, i: [i] });
+    });
+    leiste.innerHTML = gruppen.map(gr => '<span class="gruppe">' + gr.i.map((i, j) => {
+      const s = ST[i];
+      const knopf = `<button type="button" class="wort" data-station="${i}" aria-pressed="false" aria-label="${esc(s.kurz + ', ' + s.jahr)}">${esc(s.kurz)}</button>`;
+      return `<span class="glied">${j === 0 ? `<span class="jahr" aria-hidden="true">${esc(gr.jahr)}</span> ` : ''}${knopf}${j < gr.i.length - 1 ? ',' : ''}</span>`;
+    }).join(' ') + '</span>').join(' ');
+    F.gleichBreit($$('[data-station]', leiste));
+  }
 
   // ================= Tafel =================
   const tafelEl = $('#tafel');
-  const tafelLaut = an => tafelEl.setAttribute('aria-live', an ? 'polite' : 'off');
-  // Die Szene selbst steht in der Liste; die Tafel nennt Jahr, Ort und Koordinaten (schmal mit Globusband gibt es keine Tafel)
-  // Der Überblick steht am Anfang und am Ende: früher führt von der ersten Szene, später von der letzten dorthin
-  const blaettern = p => knopf('früher', `data-pos="${p - 1}"`, p <= 0) + knopf('später', `data-pos="${p >= N ? 0 : p + 1}"`);
-  // Was im Überblick auf der Rückseite des Globus liegt (Kobe, Penang), sagt die Tafel
-  function hinten() {
-    const d3 = window.d3;
-    if (!g || !d3) return [];
-    return SZENENORTE.filter(o => d3.geoDistance([o.lon, o.lat], EBENE.blick.mitte) > Math.PI / 2 - .02).map(o => o.name);
-  }
-  // 0 ist der Überblick über den ganzen Roman, 1 bis N die Szenen
-  function inhalt(p) {
-    const s = STATIONEN[p - 1];
-    if (!s) {
-      const h = hinten();
-      return {
-        kopf: N ? 'Von ' + STATIONEN[0].name + ' bis ' + STATIONEN[N - 1].name : 'Die Schauplätze',
-        satz: SAT.eckdaten && SAT.eckdaten.zeit ? SAT.eckdaten.zeit + '.' : '',
-        text: h.length ? undListe(h) + (h.length > 1 ? ' liegen' : ' liegt') + ' auf der anderen Seite des Globus.' : '',
-        fuss: blaettern(0)
-      };
+  const ruheInhalt = () => ({ kopf: 'Die Schauplätze', satz: SAT.eckdaten && SAT.eckdaten.zeit ? SAT.eckdaten.zeit + '.' : '' });
+  // Eine Szene: Jahr, Kartenzeichen und Ort, die Koordinaten, der Text der Szene
+  const szeneInhalt = s => {
+    const notiz = notizBeiText(s);
+    return { zeichen: 'wohnort', marke: s.jahr, kopf: notiz ? s.kurz + ', ' + notiz : s.kurz, daten: F.koord(s.lat, s.lon), text: datum(s.text) };
+  };
+  // Ein weiterer Schauplatz: offener Kreis, Ort, Koordinaten
+  const ortInhalt = o => ({ zeichen: 'aufenthalt', kopf: o.notiz ? o.name + ', ' + o.notiz : o.name, daten: F.koord(o.lat, o.lon) });
+  /* Neu setzen. Die Steuerzeile bleibt dasselbe Element; hatte eines ihrer Wörter den Fokus, bekommt es ihn danach wieder
+     (oder das andere Wort, wenn es nicht mehr geht) */
+  let gedrueckt = null, alleImLauf = false;
+  tafelEl.addEventListener('click', e => {
+    gedrueckt = e.target.closest('button');
+    // Vor dem Ablauf: spielt das Steuerwort aus der Ruhe oder nach einer Wahl, zeigt die Kugel alle Orte (wie FSeite.ablauf)
+    if (gedrueckt && gedrueckt.dataset.steuer === 'wort' && a) {
+      const z = a.zustand();
+      if (z === 'ruhe' || z === 'hand') alleImLauf = true;
+      else if (z === 'ende' || z === 'bereit') alleImLauf = false;
     }
-    return { marke: s.jahr, kopf: ortKopf(s.name, s.notiz), daten: F.koord(s.lat, s.lon), fuss: blaettern(p) };
-  }
-  const ortKopf = (name, notiz) => notiz ? { html: esc(name) + '<span class="zusatz">, ' + esc(notiz) + '</span>' } : name;
-  // Ein weiterer Schauplatz: nur Name, Notiz und Koordinaten
-  const ortInhalt = o => ({ kopf: ortKopf(o.name, o.notiz), daten: F.koord(o.lat, o.lon), fuss: knopf('alle Schauplätze', 'data-pos="0"') });
-  let reserve = '';
-  // Neu setzen; hatte ein Knopf der Tafel den Fokus, bekommt ihn danach derselbe Knopf (oder der andere, wenn er nicht mehr geht)
+  }, true);
   function tafelSetzen(x) {
-    const vorher = tafelEl.contains(document.activeElement) ? document.activeElement.textContent : null;
+    // Ein Wort, das gerade gedrückt wurde und dabei leise geworden ist (später an der letzten Szene), hat den Fokus schon verloren
+    const fokus = tafelEl.contains(document.activeElement) ? document.activeElement : gedrueckt && document.activeElement === document.body ? gedrueckt : null;
+    gedrueckt = null;
     F.tafel(tafelEl, x);
-    tafelEl.style.minHeight = reserve;
-    if (vorher === null) return;
-    const knoepfe = $$('button', tafelEl);
-    const ziel = knoepfe.find(b => b.textContent === vorher && !b.disabled) || knoepfe.find(b => !b.disabled);
+    if (!fokus) return;
+    const ziel = !fokus.disabled && !fokus.hidden && tafelEl.contains(fokus) ? fokus : $$('button', tafelEl).find(b => !b.disabled && !b.hidden);
     if (ziel) ziel.focus({ preventScroll: true });
   }
-  /* Die Tafel hält die Höhe ihres längsten Inhalts, damit beim Wechsel nichts unter ihr springt und der Browser die Seite nicht
-     nachschiebt; schmal stehen früher und später dort immer unten, an derselben Stelle.
-     Breit müssen Globus und Tafel zusammen auf einen Schirm passen: der Globus bekommt die Höhe, die nach der Tafel und einer halben
-     Zeile übrig bleibt (--tafel-h; ein größerer Globus macht die Tafel schmaler, darum bis zu dreimal nachgemessen).
-     Ändert sich dadurch die Leinwand, misst der Kern sie neu (FSeite.globus beobachtet sie) */
-  function tafelHoehe() {
-    F.tafelPlatz(tafelEl, [inhalt(0)].concat(STATIONEN.map((_, i) => inhalt(i + 1)), WEITERE.map(ortInhalt)));
-    reserve = tafelEl.style.minHeight;
-  }
+  tafelSetzen(ruheInhalt());
 
   // ================= Globus =================
   const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
-  // Was der Kern zeichnet: die Liste wächst mit der Geschichte (der Kern hält dieselbe Liste)
-  const sichtbar = [];
-  const EBENE = { orte: sichtbar, laender: false, blick: { mitte: [-42, 22], k: 1 }, farben: F.SIENA_EBENE };
-  // Die weiteren Orte als offene Punkte; sie werden zuerst gezeichnet, damit kein offener Punkt einen Szenenort verdeckt
-  const alsOrt = o => ({ name: o.name, kurz: o.kurz, lat: o.lat, lon: o.lon, neben: WEITERE.includes(o), rang: WEITERE.includes(o) ? .5 : 1 });
-  // Im Überblick stehen alle Szenenorte. Weitere Orte nur breit und nur, wenn kein Szenenort daneben liegt
-  // (die Anden liegen 50 km von Bariloche); angewählt erscheint jeder
-  const imUeberblick = o => SZENENORTE.includes(o) || (F.breit() && SZENENORTE.every(s => F.entfernungKm(s, o) > 300));
-  // Auf dem Globus stehen die Orte, die die Geschichte bis zur Szene i erreicht hat; orteDazu nimmt keinen weg (für den Flug zurück)
-  function orteBis(i) { sichtbar.length = 0; orteDazu(i); }
-  function orteDazu(i) { STATIONEN.slice(0, i + 1).forEach(s => { if (!sichtbar.some(x => x.name === s.name)) sichtbar.push(alsOrt(ort(s.name))); }); }
-  function alleOrte(dazu) { sichtbar.length = 0; ORTE.filter(o => imUeberblick(o) || o === dazu).forEach(o => sichtbar.push(alsOrt(o))); }
-  // pos: gezeigte Szene (0 Überblick, -1 ein weiterer Ort, dann ortJetzt); ziel: Szene, zu der die Chronik gerade fliegt
-  let pos = 0, ziel = 0, aktivName = null, spurBis = -1, lauf = 0, ortJetzt = null;
-  // laeuft: die Chronik läuft; gelaufen: sie hat schon einmal begonnen; begonnen: der Globus zeigt mehr als den Ladezustand.
-  // nachLauf: die Chronik ist zu Ende oder angehalten; beim nächsten Scrollen folgt der Globus gleich wieder dem Lesen
-  let laeuft = false, gelaufen = false, begonnen = false, nachLauf = false;
-
-  /* Schmal haftet der Globus als kleines Band über den Szenen, wenn das Fenster hoch genug dafür ist (sonst bliebe zu wenig zum
-     Lesen) und Bewegung erlaubt ist. Die Klasse steht, bevor der Kern seine Leinwand misst */
-  const bandMoeglich = () => !F.breit() && !ruhig && window.innerHeight >= 560 && 'IntersectionObserver' in window;
-  let bandAn = false;
-  function bandSetzen(an) {
-    bandAn = !!an;
-    figur.classList.toggle('als-band', bandAn);
-    document.documentElement.classList.toggle('mit-band', bandAn);
-    if (!bandAn) figur.classList.remove('haftet');
+  const alsOrt = o => ({ name: o.name, kurz: o.kurz, lat: o.lat, lon: o.lon, neben: WEITERE.includes(o) });
+  /* Was die Kugel zeichnet; der Kern hält dieselbe Liste. Die weiteren Schauplätze stehen als offene Kreise erst ab 2,4-fach
+     (oder wenn man sie gewählt hat): im Überblick lägen sie unbeschriftet neben Black Rock Desert, New York und Bariloche.
+     Sie stehen vorn, damit kein offener Kreis einen Schauplatz verdeckt */
+  const EBENE_ORTE = SZENENORTE.map(alsOrt);
+  const NAH = 2.4;
+  const weitereJetzt = k => WEITERE.filter(o => k > NAH - .01 || o.name === ortJetzt);
+  function weitereAbgleichen(k) {
+    const soll = weitereJetzt(k).map(alsOrt);
+    const ist = EBENE_ORTE.filter(o => o.neben);
+    if (soll.length === ist.length && soll.every((o, i) => o.name === ist[i].name)) return false;
+    EBENE_ORTE.length = 0;
+    EBENE_ORTE.push(...soll, ...SZENENORTE.map(alsOrt));
+    return true;
   }
-  bandSetzen(bandMoeglich() && !!(window.d3 && window.Globus));
+  // Der Überblick am Ende des Einspielers: die Schauplätze diesseits (Kobe und Penang liegen auf der anderen Seite) im
+  // sichtbaren Teil der Leinwand; breit schneidet der Fensterrand die Kugel an, dort steht sie etwas kleiner
+  const BLICK = { mitte: [-42, 22], k: 1 };
+  let a = null, ortJetzt = null, abgleichBild = 0;
+
+  // Namen in Ruhe: was gerade auf der Kugel steht. Während eines Laufs nur die Orte bis zur jetzigen Szene
+  const einmal = liste => liste.filter((s, i) => liste.findIndex(x => x.name === s.name) === i);
+  const alsName = o => ({ name: o.name, text: o.kurz || o.name, lat: o.lat, lon: o.lon, neben: WEITERE.includes(o) });
+  function namenOrte() {
+    if (!a) return [];
+    const z = a.zustand(), j = a.jetzt(), gewaehlt = WEITERE.filter(o => o.name === ortJetzt).map(alsName);
+    if (z === 'bereit') return gewaehlt;
+    // Spielt der Weg von vorn (Einspieler, „noch einmal von vorn“), stehen nur die Orte bis zur jetzigen Szene auf der Kugel;
+    // spielt er aus der Ruhe oder nach einer Wahl weiter, stehen alle
+    if ((z === 'einspieler' || z === 'abspielen' || z === 'angehalten') && !alleImLauf) return einmal(ST.slice(0, j + 1)).map(s => alsName(ortVon(s.name))).concat(gewaehlt);
+    return SZENENORTE.map(alsName).concat(weitereJetzt(g ? g.k() : 1).map(alsName));
+  }
+  function namenAktiv() {
+    if (ortJetzt) return ortJetzt;
+    if (!a) return null;
+    const z = a.zustand(), s = ST[a.jetzt()];
+    return z === 'ruhe' || z === 'bereit' || !s ? null : s.name;
+  }
 
   const g = F.globus({
     canvas, flaeche, hinweis: $('.hinweis', figur),
-    // Wo der Globus beim Lesen mitgeht, scrollt man über ihn hinweg: dort kein Hinweis auf Strg oder ⌘
-    radHinweis: () => !(F.breit() || bandAn),
-    beimEingriff: () => eingriff(),
-    namen: {
-      // Beschriftet wird von Osten nach Westen: so bekommt New York seinen Platz, bevor der lange Name der Black Rock Desert ihn nimmt
-      orte: () => sichtbar.slice().sort((a, b) => b.lon - a.lon).map(o => ({ name: o.name, text: o.kurz || o.name, lat: o.lat, lon: o.lon, neben: o.neben })),
-      spur: () => STATIONEN.slice(0, spurBis + 1),
-      aktiv: () => aktivName
-    }
+    // Ein Klick auf einen weiteren Schauplatz zeigt ihn; die Szenenorte wählt FSeite.ablauf
+    beiOrtKlick: ort => { if (WEITERE.some(o => o.name === ort.name)) ortZeigen(ort.name); },
+    // Nach jedem Bild: stimmen die weiteren Orte nicht mehr zur Vergrößerung, im nächsten Bild neu zeichnen
+    beimZeichnen: info => {
+      if (abgleichBild || !weitereAbgleichen(info.k)) return;
+      abgleichBild = requestAnimationFrame(() => { abgleichBild = 0; if (g) { g.zeichnen(); g.namenNeu(); } });
+    },
+    namen: { orte: namenOrte, spur: () => ST, aktiv: namenAktiv }
   });
   const neuSetzen = () => { if (g) g.namenNeu(); };
 
-  // Überblick: alle Schauplätze des Überblicks diesseits (Kobe und Penang liegen auf der anderen Seite) im sichtbaren Teil der Leinwand.
-  // Breit schneidet der Fensterrand den Globus an; dort steht er etwas kleiner, damit Berlin und London nicht an der Schnittkante kleben
   function blickBerechnen() {
-    EBENE.blick.k = F.breit() ? .92 : 1;
-    const m = F.blickFuer(canvas, ORTE.filter(o => imUeberblick(o) && o.lon < 40), { lon: [-90, 10], lat: [-10, 40], schritt: 2, k: EBENE.blick.k });
-    if (m) EBENE.blick.mitte = m;
+    if (!g) return;
+    BLICK.k = F.breit() ? .92 : 1;
+    const m = F.blickFuer(canvas, SZENENORTE.filter(o => o.lon < 40), { lon: [-90, 10], lat: [-10, 40], schritt: 2, k: BLICK.k });
+    if (m) BLICK.mitte = m;
   }
+
+  /* Breit: die Tafel hält die Höhe ihres längsten Inhalts, die Steuerzeile steht unten darin, und die Kugel bekommt, was übrig
+     bleibt (--tafel-h). Einspaltig steht die Steuerzeile direkt unter der Kugel; die Tafel wächst mit dem Szenentext nach
+     unten, und es bleibt keine leere Fläche stehen */
+  function tafelHoehe() {
+    if (F.breit()) F.tafelPlatz(tafelEl, [ruheInhalt()].concat(ST.map(szeneInhalt), WEITERE.map(ortInhalt)));
+    else { F.tafelPlatz(tafelEl, []); tafelEl.style.minHeight = ''; }
+  }
+
+  // ================= Ablauf: Einspieler, Steuerzeile, Wahl =================
+  a = F.ablauf({
+    globus: g, stationen: ST, tafel: tafelEl, ortsleiste: leiste,
+    // Einspieler: die Kugel dreht nur (1,2-fach), am Ende der Überblick; Abspielen mit Szenentext endet in Penang
+    takt: Object.assign({}, F.TAKT.satoshi, { schluss: BLICK }),
+    taktAbspielen: Object.assign({}, F.TAKT.satoshiAbspielen, { schluss: null }),
+    schrittZoom: F.TAKT.satoshiAbspielen.zoom,
+    ruhe: 'ruhe', tafelImEinspieler: false,
+    beiStation(i, info) {
+      ortJetzt = null; weitereMarkieren(null);
+      // Szenentext nur nach einer Wahl oder beim Abspielen; während des Einspielers ruft FSeite hier nicht an
+      tafelSetzen(i < 0 ? ruheInhalt() : szeneInhalt(ST[i]));
+      neuSetzen();
+    }
+  });
+
+  // Ein weiterer Schauplatz, von Hand: wie ein Griff an die Kugel (ein Einspieler endet mit dem ganzen Weg, ein Abspielen hält an),
+  // dann fliegt die Kugel hin, und die Tafel zeigt ihn
+  function weitereMarkieren(name) {
+    $$('#weitere [data-ort]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ort === name)));
+  }
+  function ortZeigen(name) {
+    const o = ortVon(name);
+    if (!o || !a) return;
+    if (g && g.eingriffe) g.eingriffe.slice().forEach(f => f());
+    ortJetzt = name;
+    if (g && weitereAbgleichen(g.k())) g.zeichnen();
+    weitereMarkieren(name);
+    if (leiste) $$('[data-station]', leiste).forEach(b => b.setAttribute('aria-pressed', 'false'));
+    tafelEl.setAttribute('aria-live', 'polite');
+    tafelSetzen(ortInhalt(o));
+    if (g) { g.nurOrte(null); g.ortAnfliegen(o, o.kurz ? 6 : 3.5); }
+    neuSetzen();
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('#weitere [data-ort]');
+    if (b) ortZeigen(b.dataset.ort);
+  });
+
+  // ================= Start =================
   if (g) {
     g.sperren(true);
     tafelHoehe();
     blickBerechnen();
-    g.ebene(EBENE, { fliegen: false });
+    g.ebene({ orte: EBENE_ORTE, laender: false, blick: BLICK }, { fliegen: false });
   } else {
-    bandSetzen(false);
     figur.classList.add('ohne-globus');
     $('#ersatz').hidden = false;
+    tafelHoehe();
   }
+  // Der Einspieler beginnt, wenn die Kugel zur Hälfte im Bild ist; bei reduzierter Bewegung steht sofort der ganze Weg
+  a.einspielen();
 
-  const zoomFuer = s => s.name === 'Bariloche' ? 4 : 3;
-  // Wer lesen will, braucht Zeit: die Pause richtet sich nach der Länge der Szene. Bei reduzierter Bewegung fehlt der Flug,
-  // in dem die Tafel schon steht (bis zu zwei Sekunden); die Szene bleibt dafür länger, 1,3-mal so lang wie sonst insgesamt
-  const lesezeit = s => Math.max(2200, Math.min(5200, 600 + s.text.length * 28));
-  const pauseFuer = s => ruhig ? Math.round(1.3 * (lesezeit(s) + 2000)) : lesezeit(s);
-  function flugDauer(zielOrt) {
-    if (ruhig) return 0;
-    const p = g && g.projektion, d3 = window.d3;
-    if (!p || !d3) return 1600;
-    const r = p.rotate();
-    return Math.round(Math.min(2400, 900 + d3.geoDistance([-r[0], -r[1]], [zielOrt.lon, zielOrt.lat]) * 700));
-  }
-  // Die gezeigte Szene: Ort schwarz, Jahr schwarz im Rand
-  function stationMarkieren(i) {
-    $$('.station').forEach((b, j) => { b.classList.toggle('ist-aktiv', j === i); if (j === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
-    SZENEN_LI.forEach((li, j) => li.classList.toggle('ist-aktiv', j === i));
-  }
-  const weitereMarkieren = name => $$('[data-ort]').forEach(b => b.classList.toggle('ist-aktiv', b.dataset.ort === name));
-  // Das Wort über den Szenen: solange die Chronik läuft (oder gleich startet) „anhalten“, sonst der Anfang
-  function knopfSetzen() {
-    const el = $('#nochmal'), b = el && $('button', el);
-    if (!b) return;
-    // Ohne Globus gibt es keine Chronik; dann steht hier auch kein leerer Platz
-    el.hidden = !g || !N;
-    if (el.hidden) return;
-    el.classList.remove('still');
-    const erster = STATIONEN[0].name;
-    // Nach einer Unterbrechung durch Weiterlesen geht es von hier aus weiter
-    const weiter = unterbrochen > 0 && unterbrochen < N ? STATIONEN[unterbrochen].name + ' ' + STATIONEN[unterbrochen].jahr : '';
-    b.textContent = laeuft ? 'anhalten' : weiter ? 'weiter mit ' + weiter : gelaufen ? 'Noch einmal von ' + erster + ' an' : 'Szene für Szene, von ' + erster + ' an';
-  }
-
-  // Die Chronik: Szene für Szene, der Weg wächst mit, die Tafel folgt, kurz bevor der Globus ankommt
-  function ankommen(i) {
-    const s = STATIONEN[i];
-    orteBis(i);
-    spurBis = i; aktivName = s.name; pos = i + 1; ortJetzt = null;
-    stationMarkieren(i);
-    tafelSetzen(inhalt(i + 1));
-    neuSetzen();
-  }
-  // ab: Index der nächsten Szene, wenn die Chronik nach einer Unterbrechung weiterläuft; die gezeigte bleibt dann noch kurz stehen
-  async function chronikStarten(ab, sofort) {
-    if (!g || !N) return;
-    ab = Math.max(0, Math.min(N, ab || 0));
-    const nr = ++lauf;
-    clearTimeout(lesenUhr);
-    begonnen = true; laeuft = true; gelaufen = true; unterbrochen = -1; nachLauf = false;
-    knopfSetzen(); tafelLaut(false); weitereMarkieren(null);
-    if (ab && !sofort) {
-      await warten(Math.min(2400, pauseFuer(STATIONEN[ab - 1]) * .6));
-      if (nr !== lauf) return;
-    } else {
-      sichtbar.length = 0; spurBis = -1; aktivName = null;
-      g.routeZeigen(STATIONEN.slice(0, 1));
-      neuSetzen();
-    }
-    for (let i = ab; i < N; i++) {
-      if (nr !== lauf) return;
-      const s = STATIONEN[i], dauer = flugDauer(s);
-      ziel = i + 1;
-      let t = null;
-      if (dauer) t = setTimeout(() => { if (nr === lauf) ankommen(i); }, dauer * .55);
-      else ankommen(i);
-      const erg = await g.chronikSchritt(STATIONEN, i, { zoom: zoomFuer(s), dauer });
-      if (nr !== lauf || erg === 'abgebrochen') { clearTimeout(t); return; }
-      await warten(pauseFuer(s));
-    }
-    if (nr !== lauf) return;
-    // Zum Schluss der Überblick: die Schauplätze diesseits und der ganze Weg
-    alleOrte(); aktivName = null; spurBis = N - 1; pos = 0; ziel = 0;
-    stationMarkieren(-1); tafelSetzen(inhalt(0)); neuSetzen();
-    await g.fliegen(EBENE.blick.mitte, EBENE.blick.k);
-    if (nr !== lauf) return;
-    laeuft = false; tafelLaut(true); knopfSetzen(); neuSetzen();
-    nachLauf = true;
-  }
-  /* Wer weiterliest, während die Chronik läuft, verpasst nichts: verlässt der Globus mit seiner Tafel das Fenster, bleibt die Szene
-     stehen, zu der er gerade unterwegs ist. Kommt er zurück ins Bild, geht es mit der nächsten weiter */
-  let unterbrochen = -1;
-  function unterbrechen() {
-    if (!laeuft) return;
-    lauf++; laeuft = false;
-    if (ziel > 0) { if (ziel !== pos) ankommen(ziel - 1); unterbrochen = ziel; }
-    else { unterbrochen = -1; tafelLaut(true); }
-    knopfSetzen();
-  }
-  function fortsetzen() {
-    const ab = unterbrochen;
-    unterbrochen = -1;
-    if (laeuft || ab < 1) return;
-    if (ab >= N) { chronikStarten(N); return; }
-    chronikStarten(ab);
-  }
-  // „anhalten“: die Szene, zu der die Chronik gerade unterwegs ist, bleibt stehen, bis man weiterscrollt
-  function anhalten() {
-    zeigen(laeuft ? ziel || pos : pos);
-    nachLauf = true;
-  }
-  // Wer den Globus anfasst, hält die Chronik an; vor dem ersten Lauf bekommt er sofort den Überblick.
-  // Ein Flug, den das Lesen noch angefordert hat, entfällt; das Lesen führt erst an der nächsten Szene wieder
-  function eingriff() {
-    unterbrochen = -1; nachLauf = false;
-    clearTimeout(lesenUhr);
-    if (laeuft) { lauf++; laeuft = false; alleOrte(); tafelLaut(true); knopfSetzen(); }
-    else if (!begonnen && g) { begonnen = true; alleOrte(); g.routeZeigen(STATIONEN); spurBis = N - 1; pos = 0; tafelSetzen(inhalt(0)); tafelLaut(true); knopfSetzen(); }
-    neuSetzen();
-  }
-  /* Eine Szene (1 bis N) oder der Überblick (0), von Hand oder beim Lesen. Für jede Szene gilt dieselbe Regel: auf dem Globus stehen
-     die Orte bis zu ihr, alle nur im Überblick. Neue Orte erscheinen sofort, überzählige gehen erst nach dem Flug, damit der Weg
-     nicht zu einem Ort zurückläuft, der schon fort ist. still: ohne Ansage und ohne Flug (beim Laden); lesen: vom Scrollen gewählt,
-     ohne Ansage */
-  function zeigen(p, still, lesen) {
-    p = Math.max(0, Math.min(N, p));
-    lauf++; laeuft = false; begonnen = true; pos = p; ziel = p; unterbrochen = -1; ortJetzt = null;
-    clearTimeout(lesenUhr);
-    if (!lesen) nachLauf = false;
-    if (!lesen && !still) gewaehltUm = performance.now();
-    tafelLaut(!still && !lesen); knopfSetzen();
-    stationMarkieren(p - 1); weitereMarkieren(null);
-    tafelSetzen(inhalt(p));
-    if (!g) return;
-    const nr = lauf;
-    if (p === 0) {
-      alleOrte(); aktivName = null; spurBis = N - 1;
-      g.routeZeigen(STATIONEN);
-      if (still) { g.ebene(EBENE, { fliegen: false }); g.routeZeigen(STATIONEN); }
-      else g.fliegen(EBENE.blick.mitte, EBENE.blick.k);
-    } else {
-      const s = STATIONEN[p - 1];
-      orteDazu(p - 1); aktivName = s.name; spurBis = p - 1;
-      g.chronikSchritt(STATIONEN, p - 1, { zoom: zoomFuer(s), dauer: still ? 1 : Math.min(1600, flugDauer(s)) }).then(e => {
-        if (e !== 'fertig' || nr !== lauf) return;
-        orteBis(p - 1); g.zeichnen(); neuSetzen();
-      });
-    }
-    neuSetzen();
-  }
-  // Ein Schauplatz ohne Szene in der Reihe
-  function ortZeigen(name) {
-    const o = ort(name);
-    if (!o) return;
-    lauf++; laeuft = false; begonnen = true; pos = -1; ziel = 0; unterbrochen = -1; ortJetzt = name; nachLauf = false;
-    clearTimeout(lesenUhr);
-    gewaehltUm = performance.now();
-    tafelLaut(true); knopfSetzen();
-    stationMarkieren(-1); weitereMarkieren(name);
-    tafelSetzen(ortInhalt(o));
-    if (!g) return;
-    alleOrte(o); aktivName = o.name;
-    if (spurBis < N - 1) { g.routeZeigen(STATIONEN); spurBis = N - 1; }
-    g.ortAnfliegen(o, o.kurz ? 6 : 3.5);
-    neuSetzen();
-  }
-  // Die Tafel neu, wie sie gerade ist (nach einem Wechsel der Breite trägt sie die Szene oder nicht)
-  function tafelNeu() {
-    if (pos === -1 && ortJetzt && ort(ortJetzt)) tafelSetzen(ortInhalt(ort(ortJetzt)));
-    else tafelSetzen(inhalt(pos));
-  }
-  // Einspaltig: nach einer Wahl den Globus mit seiner Tafel ins Bild holen
-  function globusInSicht() {
-    if (F.breit() || !g) return;
-    const r = figur.getBoundingClientRect();
-    if (r.bottom < r.height * .55 || r.top > window.innerHeight - r.height * .45) window.scrollBy({ top: r.top - 12, behavior: ruhig ? 'auto' : 'smooth' });
-  }
-
-  // ================= Beim Scrollen: die Szenen führen den Globus =================
-  /* Erreicht eine Szene die Leselinie, fliegt der Globus an ihren Ort, der Weg wächst bis dorthin, und Jahr und Ort stehen in der
-     Liste schwarz; zurückscrollen führt zurück. Vor der ersten Szene steht der Überblick; die letzte (der Epilog in Penang) bleibt
-     stehen, bis der Globus mit dem Ende des Abschnitts fortrollt. Die weiteren Schauplätze bleiben Wörter, die man anwählt.
-     Breit steht der Globus neben den Szenen still, die Linie liegt bei 45 Prozent der Fensterhöhe. Schmal haftet er als Band über
-     ihnen, die Linie liegt ein knappes Drittel des Leseraums unter dem Band.
-     Wer schnell scrollt, sieht nur den Flug zur Szene, bei der er bleibt. Was man selbst wählt (ein Ort, früher und später, der Globus
-     von Hand), bleibt stehen, bis man in die nächste Szene weiterliest. Spielt die Chronik auf Wunsch, merkt sich die Seite nur, wo man
-     liest; ist sie zu Ende oder angehalten, folgt der Globus beim nächsten Scrollen gleich wieder dem Lesen. Die Tafel sagt diese
-     Wechsel nicht an. Ohne Globus, bei reduzierter Bewegung und in sehr niedrigen schmalen Fenstern folgt nichts dem Scrollen. */
-  let lesenUhr = 0, gewaehltUm = -1e9;
-  const LESELINIE = .45;
-  const scrollFuehrt = () => !!g && N > 0 && (F.breit() || bandAn) && !ruhig && !laeuft;
-  const linie = H => {
-    if (F.breit() || !bandAn) return H * LESELINIE;
-    const band = figur.offsetHeight;
-    return band + (H - band) * .3;
-  };
-  const stelleZu = i => i < 0 || i >= N ? 0 : i + 1;
-  function lesenSchritt(i, info) {
-    clearTimeout(lesenUhr);
-    // Was die eigene Wahl selbst an Scrollen auslöst (ein Wort wird ins Bild geholt), zählt nicht als Weiterlesen
-    if (!scrollFuehrt() || performance.now() - gewaehltUm < 400) return;
-    nachLauf = false;
-    const p = stelleZu(i);
-    // Beim Laden mitten in den Szenen steht die Szene sofort da
-    if (info.vorher === null) { if (p !== pos) zeigen(p, true, true); return; }
-    lesenUhr = setTimeout(() => { if (scrollFuehrt() && p !== pos) zeigen(p, false, true); }, 160);
-  }
-  /* Breit bleibt unter den Szenen so viel Raum, dass auch die letzte die Leselinie erreicht, solange Globus und Tafel noch ganz neben
-     ihr stehen, und dann noch ein Achtel Fenster, damit der Flug nach Penang ankommt, bevor der Globus fortrollt. Ohne Führung durch
-     das Scrollen braucht es den Raum nicht; schmal reicht der Abschnitt unter dem Band ohnehin */
-  const reiheEl = $('#reihe'), seiteEl = $('.globusseite');
-  function auslaufSetzen() {
-    if (!reiheEl || !seiteEl) return;
-    reiheEl.style.paddingBottom = '';
-    if (!g || ruhig || !F.breit() || !SZENEN_LI.length) return;
-    const H = window.innerHeight, y = window.scrollY;
-    const oben = parseFloat(getComputedStyle(figur).top) || 0;
-    const letzte = SZENEN_LI[SZENEN_LI.length - 1].getBoundingClientRect().top + y;
-    const ende = seiteEl.getBoundingClientRect().bottom + y;
-    const fehlt = oben + figur.offsetHeight - H * LESELINIE - (ende - letzte) + H / 8;
-    if (fehlt > 0) reiheEl.style.paddingBottom = Math.ceil(fehlt) + 'px';
-  }
-  // Schmal: die feine Linie unter dem Band erst, wenn es haftet; nach der Chronik folgt der Globus beim nächsten Scrollen dem Lesen
-  let leser = null, rollBild = 0;
-  function beimRollen() {
-    rollBild = 0;
-    if (bandAn) figur.classList.toggle('haftet', figur.getBoundingClientRect().top <= .5);
-    if (nachLauf && leser && scrollFuehrt()) {
-      nachLauf = false;
-      const p = stelleZu(leser.jetzt());
-      if (p !== pos) zeigen(p, false, true);
-    }
-  }
-  window.addEventListener('scroll', () => { if (!rollBild) rollBild = requestAnimationFrame(beimRollen); }, { passive: true });
-
-  // ================= Karteikarte =================
-  function nakamotoKarte() {
-    const fig = (SAT.figuren || []).find(x => x.name === 'Satoshi Nakamoto') || {};
-    return { signatur: 'Die Faktenlage', titel: 'Satoshi Nakamoto', unter: fig.rolle || 'Das Pseudonym', zeilen: ['Ein Whitepaper, neun Seiten, 31.' + F.NBSP + 'Oktober 2008.', 'Gut fünfhundert Forenposts.'], notiz: 'Der erklärte Wunsch, sich selbst überflüssig zu machen.' };
-  }
-  /* Breit liegt die Karte neben der Textspalte, auf Höhe des Worts, an der Kante des Globus, wenn sie dort Platz hat;
-     so verdeckt sie keinen Text. Nur auf dieser Seite: hier steht das Wort mitten im Fließtext */
-  function karteDaneben() {
-    const karte = $('#karteikarte'), t = F.karteikarte.ausloeser();
-    if (!karte || karte.hidden || !t || !F.breit()) return;
-    const spalte = t.closest('.spalte');
-    if (!spalte) return;
-    const sr = spalte.getBoundingClientRect(), r = t.getBoundingClientRect();
-    const vw = document.documentElement.clientWidth, z = F.masz('--z'), randR = Math.max(16, F.masz('--rand-r'));
-    const kante = flaeche.getBoundingClientRect().left;
-    const kb = karte.offsetWidth, kh = karte.offsetHeight;
-    let links = Math.max(sr.right + z * 1.5, kante);
-    if (links + kb > vw - randR) links = sr.right + z * 1.5;
-    if (links + kb > vw - randR) return;
-    const oben = Math.max(12, Math.min(window.innerHeight - kh - 12, r.top - z * .5));
-    karte.style.left = Math.round(links + window.scrollX) + 'px';
-    karte.style.top = Math.round(oben + window.scrollY) + 'px';
-  }
-  function karteUmschalten(t, x) {
-    if (F.karteikarte.offen() && F.karteikarte.ausloeser() === t) { F.karteikarte.schliessen(); return; }
-    if (x) { F.karteikarte.oeffnen(x, t); karteDaneben(); }
-  }
-
-  // ================= Bedienung =================
-  document.addEventListener('click', e => {
-    const t = e.target.closest('button, a');
-    if (!t || t.disabled) return;
-    const d = t.dataset;
-    if (d.pos !== undefined) { zeigen(+d.pos); if (t.classList.contains('station')) globusInSicht(); }
-    else if (d.ort) { ortZeigen(d.ort); globusInSicht(); }
-    else if (d.nochmal !== undefined) {
-      if (laeuft) anhalten();
-      else { const ab = unterbrochen; unterbrochen = -1; chronikStarten(ab > 0 ? ab : 0, true); globusInSicht(); }
-    }
-    else if (d.karte === 'nakamoto') karteUmschalten(t, nakamotoKarte());
-  });
-
-  /* Beim Laden steht der Überblick (alle Schauplätze, der ganze Weg); von da an führt das Lesen, und die Chronik läuft nur auf Wunsch.
-     Schmal bei reduzierter Bewegung (und ohne Globus) steht die erste Szene auf der Tafel, zum Blättern. */
-  if (g && (F.breit() || !ruhig)) zeigen(0, true);
-  else if (N) { stationMarkieren(0); pos = 1; tafelSetzen(inhalt(1)); }
-  knopfSetzen();
-  leser = F.leselinie(SZENEN_LI, lesenSchritt, { bereich: reiheEl, linie });
-  auslaufSetzen();
   F.schriften(2500).then(() => {
-    tafelHoehe(); tafelNeu(); auslaufSetzen();
+    tafelHoehe();
     if (!g) return;
+    blickBerechnen();
     g.zeichnen(); neuSetzen();
-    if (ruhig && N && !begonnen) zeigen(1, true);
-    // Die Chronik auf Wunsch hält an, wenn kaum noch etwas vom Globus zu sehen ist, und läuft bei der Rückkehr weiter
-    F.imBild(figur, { unterbrechen, fortsetzen });
   });
 
-  let warte = null;
+  let warte = 0;
   window.addEventListener('resize', () => {
     clearTimeout(warte);
-    warte = setTimeout(() => {
-      // Wechselt das Band (Drehen des Telefons, Fensterhöhe), misst der Kern seine Leinwand danach neu
-      if (g && bandMoeglich() !== bandAn) { bandSetzen(bandMoeglich()); window.dispatchEvent(new Event('resize')); return; }
-      if (g) { blickBerechnen(); neuSetzen(); }
-      tafelHoehe(); tafelNeu(); auslaufSetzen();
-      karteDaneben();
-    }, 140);
+    warte = setTimeout(() => { tafelHoehe(); blickBerechnen(); neuSetzen(); }, 140);
   });
 })();
 </script>

@@ -6,10 +6,19 @@
 <title>Impressum – Dominik Jäkel</title>
 <meta name="description" content="Impressum der Website von Dominik Jäkel.">
 <script>document.documentElement.classList.add('js');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
+<style>
+/* Impressum (gestaltung-website-c.md, 6.18 und 9.9): eine Spalte in der Satzbreite, gleich auf allen Breiten.
+   Die Grundformen stehen in stil.css (.recht). Hier nur, was diese Seite dazu braucht: Der Entwurfsvermerk steht als Nebentext
+   ¼ z unter dem Titel (5.2), 1 z danach beginnt der Inhalt. Artikelangaben werden nicht getrennt (.nw). Der Verweis auf den Datenschutz am Ende ist ein gewöhnlicher Satz im Grad Text, 2 z unter dem letzten Abschnitt. */
+.recht .vermerk { margin-top: var(--z-viertel); }
+.recht .schluss { margin-top: var(--z-zwei); }
+/* Finger: Verweise im Text 44 px hoch, ohne dass die Zeilen wachsen */
+@media (pointer: coarse) {
+  .recht a { padding-block: calc((2.75rem - 1.4em) / 2); }
+}
+</style>
 </head>
 <body>
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
@@ -17,7 +26,6 @@
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="nav" aria-label="Website">
-    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>
       <li><a href="ursprung.html"><i>Ursprung</i></a></li>
@@ -34,7 +42,7 @@
 <div class="abschnitt unterseite">
   <article class="recht">
     <h1 class="seitentitel">Impressum</h1>
-    <p class="vermerk leise">Entwurf, vor der Veröffentlichung zu prüfen.</p>
+    <p class="vermerk">Entwurf, vor der Veröffentlichung zu prüfen.</p>
 
     <section aria-labelledby="r-anbieter">
       <h2 class="titel" id="r-anbieter">Angaben gemäß <span class="nw">§&nbsp;5 DDG</span></h2>
@@ -46,22 +54,21 @@
       <p>Verantwortlich für journalistisch-redaktionelle Inhalte gemäß <span class="nw">§&nbsp;18 Abs.&nbsp;2 MStV</span>: Dominik Jäkel, Anschrift wie oben.</p>
     </section>
 
-    <p class="stand leise">Wie diese Website mit Daten umgeht, steht unter <a href="datenschutz.html">Datenschutz</a>.</p>
+    <p class="schluss">Wie diese Website mit Daten umgeht, steht unter <a href="datenschutz.html">Datenschutz</a>.</p>
   </article>
 </div>
 </main>
 
-<footer class="fuss" id="kontakt">
-  <section class="kontakt" aria-labelledby="kontakt-titel">
-    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
       <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html" aria-current="page">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
-  </section>
+  </div>
   <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
 </footer>
 

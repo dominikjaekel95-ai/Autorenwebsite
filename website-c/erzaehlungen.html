@@ -6,18 +6,24 @@
 <title>Erzählungen – Dominik Jäkel</title>
 <meta name="description" content="Erzählungen von Dominik Jäkel.">
 <script>document.documentElement.classList.add('js');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Erzählungen: unter dem Titel die Zeile aus dem Werkverzeichnis der Startseite, darunter die Texte wie dort im Werkverzeichnis:
-   der Titel kursiv als Verweis zur Leseseite, dahinter der Untertitel, darunter leise das Datum.
-   Die Einträge kommen aus daten/texte.js (art: 'erzaehlung') über FSeite.texte, das neueste zuerst. */
+/* Erzählungen (gestaltung-website-c.md, 6.19 und 9.7): Kopf, Titel, eine ruhige Zeile im Grad Text, Fuß. Eine Spalte in der Satzbreite.
+   Die Einträge kommen aus daten/texte.js (art: 'erzaehlung') über FSeite.texte, der neueste zuerst. Je Eintrag eine Zeile: der Titel
+   schlicht als Verweis zur Leseseite (ohne Kursive, ohne Anführungszeichen), der Untertitel und das Datum im Grad klein dahinter.
+   Einträge ¼ z auseinander; bricht ein Eintrag um, hängt die Folgezeile 1 em ein wie in einem Register.
+   Solange es keinen Eintrag gibt, steht der Satz #texte-leer im Grad Text. Ohne Skript steht er auch, mit Skript erst, wenn die Liste
+   wirklich leer ist (so blitzt er nicht auf, bevor die Liste kommt). */
 .texte { list-style: none; max-width: var(--mass); }
-.texte li + li { margin-top: var(--z); }
-.texte .text-titel { color: var(--schwarz); }
-.texte .text-datum { display: block; color: var(--grau-2); }
+.texte li { padding-left: 1em; text-indent: -1em; }
+.texte li + li { margin-top: var(--z-viertel); }
+.js .texte-leer { display: none; }
+.js .texte-leer.ist-leer { display: block; }
+/* Finger: die Titel 44 px hoch, ohne dass die Zeilen wachsen */
+@media (pointer: coarse) {
+  .texte a { padding-block: calc((2.75rem - 1.4em) / 2); }
+}
 </style>
 </head>
 <body>
@@ -26,7 +32,6 @@
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="nav" aria-label="Website">
-    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>
       <li><a href="ursprung.html"><i>Ursprung</i></a></li>
@@ -44,21 +49,20 @@
   <h1 class="seitentitel">Erzählungen</h1>
   <p class="unterzeile spalte">Viele davon habe ich auf der Werkstattbühne des Autorenforums Berlin gelesen.</p>
   <ul class="texte" id="texte" hidden></ul>
-  <p class="spalte leise" id="texte-leer" hidden>Noch steht hier keine.</p>
+  <p class="spalte texte-leer" id="texte-leer">Die ersten Erzählungen folgen.</p>
 </div>
 </main>
 
-<footer class="fuss" id="kontakt">
-  <section class="kontakt" aria-labelledby="kontakt-titel">
-    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
       <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
-  </section>
+  </div>
   <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
 </footer>
 
@@ -68,18 +72,18 @@
 (function () {
   'use strict';
   const F = window.FSeite;
-  if (!F || !F.texte) return;
-  const T = F.texte;
-
-  // Die Liste: der Titel kursiv als Verweis zur Leseseite, dahinter der Untertitel, darunter das Datum
   const liste = document.getElementById('texte'), leer = document.getElementById('texte-leer');
-  const alle = T.alle('erzaehlung');
-  if (!alle.length) { leer.hidden = false; return; }
+  const alle = F && F.texte ? F.texte.alle('erzaehlung') : [];
+  if (!alle.length) { leer.classList.add('ist-leer'); return; }
+  const T = F.texte;
+  // Je Eintrag: Titel als Verweis, Untertitel, Datum im Grad klein dahinter („Regenzeit, Juni 2023“)
   liste.innerHTML = alle.map(t => {
-    const d = T.datum(t.datum), titel = T.satz(t.titel);
-    return '<li><a class="text-titel" href="' + F.SEITEN.lesen + '#' + t.slug + '"><i>' + titel + '</i></a>'
-      + (t.untertitel ? (T.zeichenAmEnde(titel) ? ' ' : '. ') + T.punkt(T.satz(t.untertitel)) : '')
-      + (d ? ' <span class="text-datum"><time datetime="' + String(t.datum).trim() + '">' + d + '</time></span>' : '') + '</li>';
+    const titel = T.satz(t.titel), d = T.datum(t.datum);
+    const unter = t.untertitel ? T.punkt(T.satz(t.untertitel)) : '';
+    let zeile = '<a href="' + F.SEITEN.lesen + '#' + t.slug + '">' + titel + '</a>';
+    if (unter) zeile += (T.zeichenAmEnde(titel) ? ' ' : '. ') + '<span class="klein">' + unter + '</span>';
+    if (d) zeile += (unter || T.zeichenAmEnde(titel) ? ' ' : ', ') + '<span class="klein"><time datetime="' + F.esc(String(t.datum).trim()) + '">' + d + '</time></span>';
+    return '<li>' + zeile + '</li>';
   }).join('');
   liste.hidden = false;
 })();

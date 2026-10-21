@@ -6,34 +6,32 @@
 <title>Lesen – Dominik Jäkel</title>
 <meta name="description" content="Texte von Dominik Jäkel zum Lesen.">
 <script>document.documentElement.classList.add('js');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..600;1,400..600&family=Vollkorn+SC:wght@400;600&display=swap">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Leseseite für einen einzelnen Text aus daten/texte.js; welcher, steht in der Adresse: lesen.html#<slug>.
-   Gesetzt wie eine Buchseite: eine Spalte von rund 62 Zeichen im Zeilenmaß der ganzen Website (--z),
-   Absätze mit einem Geviert Einzug statt Leerzeile, der erste ohne. Der Titel steht in Siena wie auf den Seiten der Romane;
-   darunter Untertitel, Ort und Datum, die Koordinaten klein wie in der Vita. Am Ende Notiz, früher und später, die Liste. */
+/* Leseseite (gestaltung-website-c.md, 6.17 und 9.8): ein Text aus daten/texte.js; welcher, steht in der Adresse (lesen.html#<slug>).
+   Eine Spalte in der Satzbreite, gleich auf allen Breiten. Oben der Titel als h1 in Tinte, direkt darunter der Untertitel im
+   Grad Text und, ¼ z tiefer, Ort und Datum im Grad klein. Keine Koordinaten. 1 z darunter der Text: Absätze ¾ z auseinander,
+   ohne Einzug. Ein Szenenwechsel sind drei Sternchen in der Mitte, 1 z darüber und darunter. 2 z unter dem Text die Notiz im
+   Grad klein, dann früher, später und der Verweis zurück zur Liste. Alles aufrecht und in Tinte. */
 .lesen { max-width: var(--mass); }
-.lese-titel { color: var(--siena); }
-.lese-titel:focus { outline: none; }
-.lese-kopf > :last-child { margin-bottom: 0; }
-.lese-ort { color: var(--grau-2); }
-.lese-ort .koord { display: block; font-style: italic; font-size: .8125em; line-height: calc(var(--z) * .75); }
-.lese-satz { margin-top: calc(var(--z) * 2); }
-.lese-satz p + p { text-indent: 1em; }
-/* Szenenwechsel: drei Sternchen auf der Mitte der Spalte, eine Zeile Luft davor und danach */
-.lese-satz .zaesur { border: 0; height: auto; margin: 0; overflow: visible; text-align: center; color: var(--grau-3); }
-.lese-satz .zaesur::after { content: "*\2003*\2003*"; display: block; line-height: calc(var(--z) * 3); }
-.lese-fuss { margin-top: calc(var(--z) * 2); }
-.lese-notiz { font-style: italic; color: var(--grau-2); }
-.lese-weiter { margin-top: var(--z); }
-.lese-nachbarn { display: flex; flex-wrap: wrap; column-gap: 1.2em; color: var(--grau-2); }
-.lese-nachbarn a { color: var(--graphit); }
-.lese-weiter p + p { margin-top: calc(var(--z) * .25); }
-/* „Zum Inhalt“ setzt den Fokus auf den Hauptteil; ein Rahmen um die ganze Seite wäre nur Lärm */
-#inhalt:focus { outline: none; }
+.lese-kopf { margin-bottom: var(--z); }
+.lese-kopf .seitentitel { margin-bottom: 0; }
+.lese-ort { margin-top: var(--z-viertel); font-size: var(--g-klein); line-height: var(--zh-klein); }
+.lese-satz .zaesur { height: var(--z); margin: var(--z) 0; border: 0; overflow: visible; text-align: center; color: var(--tinte); }
+.lese-satz .zaesur::after { content: "*\2002\2002*\2002\2002*"; display: block; line-height: var(--z); }
+.lese-fuss { margin-top: var(--z-zwei); }
+.lese-notiz { font-size: var(--g-klein); line-height: var(--zh-klein); }
+.lese-notiz + .lese-weiter { margin-top: var(--z); }
+.lese-weiter ul { list-style: none; }
+.lese-weiter li + li { margin-top: var(--z-viertel); }
+/* Finger: die Verweise 44 px hoch, ohne dass die Zeilen wachsen (Polster an einem Wort im Satz ändert die Zeile nicht) */
+@media (pointer: coarse) {
+  .lesen a { padding-block: calc((2.75rem - 1.4em) / 2); }
+}
+/* Nach einem Wechsel des Textes trägt der Titel den Fokus für Vorleseprogramme; er ist kein Bedienelement.
+   „Zum Inhalt“ setzt den Fokus auf den Hauptteil; ein Rahmen um die ganze Seite wäre nur Lärm. */
+.lese-titel:focus, #inhalt:focus { outline: none; }
 </style>
 </head>
 <body>
@@ -42,7 +40,6 @@
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
   <nav class="nav" aria-label="Website">
-    <button type="button" class="wort nav-schalter" aria-expanded="false">Inhalt</button>
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>
       <li><a href="ursprung.html"><i>Ursprung</i></a></li>
@@ -64,17 +61,16 @@
 </div>
 </main>
 
-<footer class="fuss" id="kontakt">
-  <section class="kontakt" aria-labelledby="kontakt-titel">
-    <h2 class="titel" id="kontakt-titel">Kontakt</h2>
-    <p>Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
     <form class="post">
       <p><span id="post-satz">Eine <span class="nw">E-Mail</span>, wenn ein Buch erscheint oder eine Lesung ansteht:</span> <span class="post-eingabe"><label class="unsichtbar" for="post-adresse">E-Mail-Adresse</label><input class="post-feld" id="post-adresse" name="email" type="email" autocomplete="email" required aria-describedby="post-satz"> <button class="wort" type="submit">Eintragen</button></span></p>
       <p class="post-status" role="status"></p>
     </form>
     <p class="impressum"><a href="impressum.html">Impressum</a>: Dominik Jäkel, Stresemannstraße&nbsp;76, 10963&nbsp;Berlin<br><a href="datenschutz.html">Datenschutz</a></p>
     <p class="profile" hidden></p>
-  </section>
+  </div>
   <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.</p>
 </footer>
 
@@ -108,17 +104,15 @@
       .map(x => /^(?:\*\s*){3}$|^⁂$/.test(x) ? '<hr class="zaesur">' : '<p>' + T.satz(x) + '</p>').join('');
   }
 
-  // Ort und Datum in einer Zeile („Berlin, 14. März 2026“), die Koordinaten klein darunter
+  // Ort und Datum in einer Zeile („Sansibar, 8. November 2025“), im Grad klein. Koordinaten stehen hier nicht (6.17)
   function ortZeile(t) {
     const o = t.ort, d = T.datum(t.datum);
     const name = typeof o === 'string' ? o : o && o.name ? o.name : '';
-    const koord = o && Number.isFinite(o.lat) && Number.isFinite(o.lon) ? F.koord(o.lat, o.lon) : '';
-    const zeile = [name ? T.satz(name) : '', d ? '<time datetime="' + String(t.datum).trim() + '">' + d + '</time>' : ''].filter(Boolean).join(', ');
-    if (!zeile && !koord) return '';
-    return '<p class="lese-ort">' + zeile + (koord ? ' <span class="koord">' + koord + '</span>' : '') + '</p>';
+    const zeile = [name ? T.satz(name) : '', d ? '<time datetime="' + F.esc(String(t.datum).trim()) + '">' + d + '</time>' : ''].filter(Boolean).join(', ');
+    return zeile ? '<p class="lese-ort">' + zeile + '</p>' : '';
   }
 
-  // Die Liste, zu der der Text gehört (Erzählungen, Untertext, Länder), in der Navigation zeigen
+  // Die Liste, zu der der Text gehört (Erzählungen, Untertext, Länder), steht in der Navigation halbfett und bleibt ein Verweis
   function navMarke(seite) {
     document.querySelectorAll('.nav-liste a[aria-current="true"]').forEach(a => a.removeAttribute('aria-current'));
     const a = seite && document.querySelector('.nav-liste a[href="' + seite + '"]');
@@ -136,22 +130,21 @@
       return;
     }
     const L = T.ARTEN[t.art], reihe = alle.filter(x => x.art === t.art), i = reihe.indexOf(t);
-    const titel = x => T.ARTEN[x.art].titelKursiv ? '<i>' + T.satz(x.titel) + '</i>' : T.satz(x.titel);
-    const nachbar = (wort, x) => x ? '<span>' + wort + ': <a href="#' + x.slug + '">' + titel(x) + '</a></span>' : '';
-    const nachbarn = nachbar('Früher', reihe[i + 1]) + (reihe[i + 1] && reihe[i - 1] ? ' ' : '') + nachbar('Später', reihe[i - 1]);
+    // Titel eines Nachbarn als Listeneintrag: schlicht, ohne Kursive und ohne Anführungszeichen (3.4, 6.19)
+    const nachbar = (wort, x) => x ? '<li>' + wort + ': <a href="#' + x.slug + '">' + T.satz(x.titel) + '</a></li>' : '';
     ziel.innerHTML = '<article aria-labelledby="lese-titel">'
       + '<header class="lese-kopf">'
       + '<h1 class="seitentitel lese-titel" id="lese-titel" tabindex="-1">' + T.satz(t.titel) + '</h1>'
-      + (t.untertitel ? '<p class="unterzeile">' + T.satz(t.untertitel) + '</p>' : '')
+      + (t.untertitel ? '<p class="lese-unter">' + T.satz(t.untertitel) + '</p>' : '')
       + ortZeile(t)
       + '</header>'
-      + '<div class="lese-satz">' + satzspiegel(t) + '</div>'
+      + '<div class="lese-satz prosa">' + satzspiegel(t) + '</div>'
       + '<footer class="lese-fuss">'
       + (t.notiz ? '<p class="lese-notiz">' + T.punkt(T.satz(t.notiz)) + '</p>' : '')
-      + '<nav class="lese-weiter" aria-label="Weitere Texte">'
-      + (nachbarn ? '<p class="lese-nachbarn">' + nachbarn + '</p>' : '')
-      + '<p><a href="' + L.seite + '">' + L.alle + '</a></p>'
-      + '</nav></footer></article>';
+      + '<nav class="lese-weiter" aria-label="Weitere Texte"><ul>'
+      + nachbar('Früher', reihe[i + 1]) + nachbar('Später', reihe[i - 1])
+      + '<li><a href="' + L.seite + '">' + L.alle + '</a></li>'
+      + '</ul></nav></footer></article>';
     navMarke(L.seite);
     document.title = nurText(T.satz(t.titel)) + NAME;
     if (neu) {

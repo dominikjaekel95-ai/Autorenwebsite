@@ -1,4 +1,4 @@
-/* Bücher von Dominik Jäkel aus seinem Goodreads-Export, bereinigt von werkzeuge/daten.cjs (nicht von Hand ändern).
+/* Bücher von Dominik Jäkel aus seinem Goodreads-Export, bereinigt von werkzeuge/daten.cjs; in Version C von Hand berichtigt (Textänderung 47), nicht neu erzeugen.
    Nur die Regale gelesen, kindheit (Kindheit und Jugend), gerade (Nachttisch) und abgebrochen; was noch wartet, steht in leseliste.js.
    t Titel, u Untertitel, a Autor, r Regal, s 5 = eines der liebsten (sonst 0), j Jahr der Erstveröffentlichung, p Seiten,
    w wiedergelesen, b Bindung (p Paperback, h Hardcover, m Mass Market, e sonst), v Verlag. Ohne Notizen und Rezensionen. */
@@ -285,7 +285,7 @@ window.BUECHER = [
 {"t":"The Amber Spyglass","u":"","a":"Philip Pullman","r":"kindheit","s":0,"j":2000,"p":465,"w":0,"b":"m","v":"Laurel Leaf"},
 {"t":"Momo","u":"","a":"Michael Ende","r":"kindheit","s":0,"j":1973,"p":304,"w":0,"b":"p","v":"Thienemann"},
 {"t":"Krabat","u":"","a":"Otfried Preußler","r":"kindheit","s":0,"j":1971,"p":296,"w":0,"b":"p","v":"Thienemanns"},
-{"t":"The Little Ghost","u":"","a":"Otfried Preußler","r":"kindheit","s":0,"j":1966,"p":137,"w":0,"b":"p","v":"Thienemann Verlag"},
+{"t":"Das kleine Gespenst","u":"","a":"Otfried Preußler","r":"kindheit","s":0,"j":1966,"p":137,"w":0,"b":"p","v":"Thienemann Verlag"},
 {"t":"Emil and the Detectives","u":"","a":"Erich Kästner","r":"kindheit","s":0,"j":1929,"p":224,"w":0,"b":"p","v":""},
 {"t":"Inkheart","u":"","a":"Cornelia Funke","r":"kindheit","s":0,"j":2003,"p":563,"w":0,"b":"p","v":"Scholastic Paperbacks"},
 {"t":"Inkspell","u":"","a":"Cornelia Funke","r":"kindheit","s":0,"j":2005,"p":635,"w":0,"b":"h","v":"The Chicken House"},

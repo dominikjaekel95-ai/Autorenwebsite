@@ -45,8 +45,9 @@ if (/^https?:$/.test(location.protocol)) {
 .brett + .brett { margin-top: calc(var(--z) * .75); }
 .gruppe-platz, .stapelplatz, .schuber-platz { display: flex; align-items: flex-end; flex: none; column-gap: 1px; }
 .stapel { display: flex; flex-direction: column-reverse; align-items: flex-start; row-gap: 1px; flex: none; }
-/* Der Schuber der Trilogie: die drei Bände stehen neben ihm, wenn er offen ist; ihr Platz bleibt frei, damit nichts rückt */
-.schuber-platz.zu .band { visibility: hidden; }
+/* Der Schuber der Trilogie: die drei Bände stehen neben ihm, wenn er offen ist; ihr Platz bleibt am Ende der Gruppe frei (wie in A),
+   damit der Nachttisch nicht rückt */
+.schuber-platz.zu .band { display: none; }
 /* Die Karteikarte als Zeile unter dem Brett: die Felder von A in ihrer Folge, ohne Zeichen dazwischen, dazu „zurücklegen“ */
 .unter .zeile.als-karte { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 1em; }
 .unter .schild { font-variant-numeric: inherit; white-space: normal; }
@@ -454,7 +455,10 @@ html:not(.js) .nur-mit-skript, .ohne-buecher .nur-mit-skript { display: none; }
       b.teile.forEach(t => {
         if (t.gruppe !== g) {
           if (offen) html += '</div>';
-          html += `<div class="gruppe-platz" role="group" aria-label="${GRUPPE[t.gruppe]}"${t.abstand ? ` style="margin-left:${t.abstand}px"` : ''}>`;
+          // Die Gruppe hält ihre ganze Breite, auch für die Bände des offenen Schubers (wie in A): geschlossen steht der freie Platz
+          // am Ende der Gruppe, offen rücken die Werke dahinter nach rechts; der Nachttisch rückt nie
+          const glieder = b.teile.filter(u => u.gruppe === t.gruppe), letztes = glieder[glieder.length - 1];
+          html += `<div class="gruppe-platz" role="group" aria-label="${GRUPPE[t.gruppe]}" style="width:${letztes.x + letztes.w - t.x}px${t.abstand ? `;margin-left:${t.abstand}px` : ''}">`;
           offen = true; g = t.gruppe;
           // Der Name steht unter dem Brett, auf dem die Gruppe beginnt
           if (!bretter.some(v => v !== b && bretter.indexOf(v) < bretter.indexOf(b) && v.teile.some(u => u.gruppe === t.gruppe))) {

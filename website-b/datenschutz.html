@@ -15,9 +15,9 @@ if (/^https?:$/.test(location.protocol)) {
 </script>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Datenschutz: eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2. Wortlaut wie in Version A
-   ohne die Abschnitte zu Google Fonts und jsDelivr: B lädt Schrift und Programmbibliotheken vom eigenen Server, die beiden
-   Abschnitte wären hier falsch. Nur Anordnung.
+/* Datenschutz: eine Spalte, der Entwurfsvermerk als erster Absatz im Grad klein, Überschriften h2. Wortlaut wie in Version A.
+   B lädt Schrift und Programmbibliotheken vom Server des Hosters, nicht von Google Fonts und jsDelivr: in den beiden Abschnitten
+   dazu ist nur geändert, was für B falsch wäre (Anbieter, Schriftnamen, Übermittlung ins Ausland). Nur Anordnung.
    Der Briefkopf trägt wie in A Name und „Schriftsteller und Reisender“ (gehört wie auf den anderen Seiten nach stil.css). Die Rechte als Liste mit dem Einzug der Absätze (1 em), ohne Zeichen davor, 0,25 z zwischen den Einträgen
    und vor und nach der Liste. */
 .kopf .briefkopf { justify-self: start; }
@@ -66,6 +66,19 @@ if (/^https?:$/.test(location.protocol)) {
         <p>Diese Fassung der Website ist eine Testseite. Sie liegt auf claude.ai, einem Dienst von Anthropic; was Anthropic dabei verarbeitet, regelt die Datenschutzerklärung von Anthropic. Zum Start zieht die Website auf eine eigene Adresse um, der Hoster wird dann an dieser Stelle genannt.</p>
         <p>Ruft Ihr Browser eine Seite ab, übermittelt er dem Server des Hosters technisch notwendige Angaben: Ihre <span class="nw">IP-Adresse</span>, Datum und Uhrzeit, die aufgerufene Adresse, gegebenenfalls die Seite, von der Sie kommen, sowie Browser und Betriebssystem. Der Hoster kann diese Angaben in Protokolldateien (Server-Logfiles) speichern, um die Website auszuliefern und vor Missbrauch zu schützen. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f&nbsp;<abbr>DSGVO</abbr>; mein berechtigtes Interesse ist, die Website sicher und zuverlässig bereitzustellen.</p>
       </div>
+    </section>
+
+    <section aria-labelledby="d-schriften">
+      <h2 id="d-schriften">Schriften</h2>
+      <div class="prosa">
+        <p>Die Schriften der Website (Baskervville) lädt Ihr Browser derzeit vom Server des Hosters. Dabei erhält der Hoster Ihre <span class="nw">IP-Adresse</span> und die üblichen Angaben einer Anfrage, etwa Ihren Browser und die Adresse der Seite, welche die Schrift anfordert. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f&nbsp;<abbr>DSGVO</abbr>; mein berechtigtes Interesse ist eine einheitliche Darstellung der Schrift auf allen Geräten.</p>
+        <p>Für die endgültige Website werden die Schriften auf dem eigenen Server liegen.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="d-bibliotheken">
+      <h2 id="d-bibliotheken">Programmbibliotheken</h2>
+      <p>Die Seiten mit dem Globus laden die freien Programm&shy;bibliotheken d3 und topojson-client vom Server des Hosters. Der Hoster liefert die Dateien aus und erhält dabei Ihre <span class="nw">IP-Adresse</span> und die üblichen Angaben einer Anfrage. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f&nbsp;<abbr>DSGVO</abbr>; mein berechtigtes Interesse ist, den Globus schnell und zuverlässig anzuzeigen.</p>
     </section>
 
     <section aria-labelledby="d-email">

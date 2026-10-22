@@ -31,7 +31,8 @@ Was der Bau tut:
 
 Er baut zuerst in einen versteckten Ordner neben dem Ziel und prüft dort: keine Kommentare, jedes Skript in einer Seite hat
 seinen Hash in der CSP, keine Ereignis-Attribute (onclick=) und keine javascript:-Verweise, keine Ressource von fremden
-Servern, jeder lokale Verweis zeigt auf eine ausgelieferte Datei, jede Seite hat Icons und Vorschau-Angaben, kein Wort vom
+Servern, Verweise nach außen nur aus AUSSEN_ERLAUBT (mit rel="noopener", ohne target), jeder lokale Verweis zeigt auf eine
+ausgelieferte Datei, jede Seite hat Icons und Vorschau-Angaben, kein Wort vom
 Testsystem (auch nicht von claude.ai oder Anthropic) in den Seiten, Stilen und eigenen Skripten, vercel.json hat alle Header. Erst wenn alles stimmt, ersetzt er das Ziel. Ein abgebrochener Bau lässt
 den alten Stand stehen.
 """
@@ -68,6 +69,16 @@ SEITEN = ['index.html', 'satoshi.html', 'ursprung.html', 'erzaehlungen.html', 'u
 PFLICHT = ['vercel.json', FEHLERSEITE, 'favicon.svg', 'favicon-32.png', 'apple-touch-icon.png', 'icon-512.png', VORSCHAUBILD]
 MARKER = re.compile(r'\[\[ZU PRÜFEN[^\]]*\]\]|\[\[ZU PRÜFEN')
 TESTSYSTEM = re.compile(r'Testsystem|Testseite|Testphase|claude\.ai|Anthropic', re.I)
+# Verweise nach außen, die sein dürfen, und nur diese (Runde 5, R4; vorher nur das Autorenforum). Jeder ist ein <a href> mit
+# rel="noopener" und ohne target und lädt nichts, bevor man ihn anklickt. In Daten (daten/inhalt.js) steht ein solcher Verweis als
+# href: '…' und wird von FSeite.textMitVerweis gesetzt. Ein neuer Verweis nach außen kommt zuerst hier hinein
+AUSSEN_ERLAUBT = {
+    'https://autorenforum-berlin.de/',
+    'https://www.simon-kucher.com/de',
+    'https://www.a-e-johann.de/der-a-e-johann-preis',
+    'https://de.wikipedia.org/wiki/Byzantinischer_Fehler',
+    'https://satoshi.nakamotoinstitute.org/',
+}
 # Was die Content-Security-Policy mindestens sagen muss (script-src bekommt dazu die Hashes)
 CSP_SOLL = {
     'default-src': ["'self'"], 'script-src': ["'self'"], 'style-src': ["'self'", "'unsafe-inline'"], 'img-src': ["'self'", 'data:'],
@@ -337,6 +348,10 @@ def pruefen(neu, dateien, seiten):
             probleme.append(f'{p}: Kommentar übrig')
         if TESTSYSTEM.search(text):
             probleme.append(f'{p}: „{TESTSYSTEM.search(text).group(0)}“ in der ausgelieferten Datei')
+        if p.suffix == '.js':
+            for ref in re.findall(r'\bhref:\s*[\'"](https?://[^\'"]*)', text):
+                if ref not in AUSSEN_ERLAUBT:
+                    probleme.append(f'{p}: Verweis nach außen {ref} steht nicht in AUSSEN_ERLAUBT')
     for seite in seiten:
         text = (neu / seite).read_text(encoding='utf-8')
         hashes.update(skripte_in_seite(seite, text))
@@ -355,7 +370,13 @@ def pruefen(neu, dateien, seiten):
             for name, wert in re.findall(r'\b(href|src|srcset|action|data)="([^"]*)"', attr):
                 for ref in ([w.strip().split(' ')[0] for w in wert.split(',')] if name == 'srcset' else [wert]):
                     if re.match(r'(?:https?:)?//', ref):
-                        if art == 'a' or (art == 'link' and 'rel="canonical"' in attr):
+                        if art == 'a':
+                            if ref not in AUSSEN_ERLAUBT:
+                                probleme.append(f'{seite}: Verweis nach außen {ref} steht nicht in AUSSEN_ERLAUBT')
+                            elif not re.search(r'\brel="[^"]*\bnoopener\b', attr) or re.search(r'\btarget=', attr):
+                                probleme.append(f'{seite}: Verweis nach außen {ref} ohne rel="noopener" oder mit target')
+                            continue
+                        if art == 'link' and 'rel="canonical"' in attr:
                             continue
                         probleme.append(f'{seite}: <{art}> lädt von einem fremden Server: {ref}')
                         continue

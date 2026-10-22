@@ -494,12 +494,21 @@
       unter: (s.neben ? 'längerer Aufenthalt' : 'Wohnort') + (s.projekt ? ', ' + s.projekt : '')
     };
   }
+  const SICHERE_ADRESSE = /^https:\/\/[a-z0-9.-]+(?:\/[^\s"'<>`\\]*)?$/i;
+  const maske = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  function textMitVerweis(text, verweis) {
+    const t = String(text == null ? '' : text);
+    const wort = verweis && typeof verweis.wort === 'string' ? verweis.wort : '', href = verweis && typeof verweis.href === 'string' ? verweis.href : '';
+    const i = wort ? t.indexOf(wort) : -1;
+    if (i < 0 || !SICHERE_ADRESSE.test(href)) return t;
+    return { html: maske(t.slice(0, i)) + `<a href="${maske(href)}" rel="noopener">${maske(wort)}</a>` + maske(t.slice(i + wort.length)) };
+  }
   function szenen() {
     const S = inhalt().satoshi || {}, orte = {};
     (S.orte || []).forEach(o => { orte[o.name] = o; });
     return (S.szenen || []).map((sz, i) => {
       const o = orte[sz.ort] || {};
-      return { i, name: sz.ort, kurz: o.kurz || sz.ort, notiz: o.notiz || '', jahr: sz.jahr, text: sz.text, lat: o.lat, lon: o.lon };
+      return { i, name: sz.ort, kurz: o.kurz || sz.ort, notiz: o.notiz || '', jahr: sz.jahr, text: sz.text, verweis: sz.verweis || null, lat: o.lat, lon: o.lon };
     }).filter(s => s.lat != null);
   }
   const ursprungOrte = () => (inhalt().ursprung || []).map((o, i) => ({ i, name: o.name, lat: o.lat, lon: o.lon, band: o.band, jahr: o.jahr }));
@@ -507,7 +516,7 @@
     const I = inhalt(), orte = ursprungOrte(), band = {};
     ((I.trilogie && I.trilogie.baende) || []).forEach(b => { band[b.band] = b; });
     const o = orte[i];
-    if (!o) return { eigen: true, marke: 'I–III', kopf: (I.trilogie && I.trilogie.titel) || 'Ursprung', satz: chr('Drei Bände, um 8000, 2700 und 940 v. Chr.') };
+    if (!o) return { eigen: true, marke: 'I–III', kopf: (I.trilogie && I.trilogie.titel) || 'Ursprünge', satz: chr('Drei Bände, um 8000, 2700 und 940 v. Chr.') };
     const b = band[o.band] || {};
     const m = String((I.baende || {})[o.band] || '').match(/^(.*?v\. Chr\.)\s+(.+)$/);
     const landschaft = m ? m[1] : [b.ort, b.zeit].filter(Boolean).join(', ');
@@ -1337,7 +1346,7 @@
     schriften, schriftEinstieg, satzzeichenBinden, gleichBreit, zeichen,
     FARBEN, SIENA, SIENA_EBENE, globus, blickFuer, ueberblick,
     tafel, tafelReservieren, tafelPlatz, lesezeit, steuerzeile, ortsleiste, ablauf, TAKT,
-    stationen, stationInhalt, szenen, ursprungOrte, ursprungInhalt,
+    stationen, stationInhalt, szenen, textMitVerweis, ursprungOrte, ursprungInhalt,
     karteikarte, buch, werkKarte, werkSatz, buchzeile, texte, navigation, fuss, PROFILE, NEWSLETTER,
     leselinie, fortschritt, imBild
   };

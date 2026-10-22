@@ -336,12 +336,14 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 - ~~Der Einspieler zeigt nur Orte und Linien, nie Szenentext (Nachtrag 1, Punkt 5).~~ Seit Runde 2 (K9) zeigen Einspieler und Abspielen an jeder Station den Szenentext, seit Runde 3 in rund einer Minute für alle zehn Szenen (7.2).
 - Die Szenentexte bleiben wie in A (V36, Text-Flagge 25 ist nur ein Vorschlag). Der London-Satz (V33), der Auftakt (V34) und die drei Absätze nach der Frage (V35) bleiben wörtlich.
 - Titel in Tinte, aufrecht. Überschriften ruhig (04). Figurennamen in Kapitälchen, Rolle in Tinte.
-- Ab 75 rem eine Doppelseite unter dem Globus: links der Lesetext, rechts Eckdaten und Figuren (9.2, Standardentscheidung 19).
+- Ab 75 rem eine Doppelseite unter dem Globus: links der Lesetext, rechts Eckdaten und Figuren (9.2, Standardentscheidung 19). Seit Runde 5 beginnt der Klappentext links schon neben der Kugel, unter dem gekürzten Absatz „Wer war Satoshi Nakamoto wirklich? …“; rechts bleiben Eckdaten und Figuren unter der Kugel.
 - **Text:** „Karteikarte“ bei Satoshi Nakamoto ist Dominiks Wort aus dem Exposé und bleibt als Wort. Es öffnet keine Karte mehr (22, Standardentscheidung 20).
 
 **Grund:** V32, M3, V36, V37.
 
 ### 19. *Ursprung*
+
+**Titel seit Runde 5:** *Ursprünge* (Dominik, 22. Oktober: „Es muss Ursprünge heißen … (Überall)“), beschreibend „die Ursprungstrilogie“. Die Datei heißt weiter `ursprung.html`. Wo dieses Dokument *Ursprung* schreibt, ist das Werk gemeint.
 
 **Wahl:** Mittelweg. **Dominiks Vorgabe geht vor:** Die Trilogie entfaltet sich langsam (V23). F17 hatte „klicken statt Wiedergabe“ empfohlen. Klicken kommt dazu.
 
@@ -1049,6 +1051,8 @@ Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font"
 ### 9.2 *Satoshi* (`satoshi.html`)
 
 **Desktop ab 62,0625 rem.** Globusband wie auf der Startseite: links Kopf, `h1` „Satoshi“ (groß, aufrecht), Unterzeile (Grad Text), der Vorspann „Am 31. Oktober 2008 …“ (Grad Überschrift, Zeilenhöhe 1,25 z); die Zeitleiste darunter ist entfallen (6.8). Rechts die Kugel, angeschnitten, nicht haftend, neben Titel und Vorspann, darunter die Steuerzeile und die Tafel. Die Kugel bemisst sich an der längsten Tafel, damit auch der längste Szenentext bei 1440 × 900 ganz im Bild steht. 2 z unter dem Ende des Globusbands beginnt der Klappentext.
+
+**Runde 5** (Dominik, 22. Oktober: „Das ist sonst echt viel Space … Die Eckdaten können vielleicht trotzdem unter den Globus?!“): In der Zweispaltenlage steht 1 z unter dem Vorspann, im Grad Text, der gekürzte Absatz „Wer war Satoshi Nakamoto wirklich? … was es gekostet hat.“; unter „Die Frage hinter dem Roman“ fehlt er dann (`display: none`). Schmaler steht er dort voll wie bisher. **Ab 75 rem** beginnt der Klappentext 2 z unter diesem Absatz in der linken Spalte neben der Kugel; Eckdaten und Figuren stehen rechts, 2 z unter der Tafel. Die beiden Spalten beginnen damit nicht mehr auf einer Höhe (Begründung und Maße: `werkzeuge/aenderungsprotokoll.md`, Runde 5). Zwischen 62,0625 und 75 rem folgt der Klappentext wie bisher 2 z unter dem Globusband.
 
 **Ab 75 rem** ist der Teil darunter eine Doppelseite:
 

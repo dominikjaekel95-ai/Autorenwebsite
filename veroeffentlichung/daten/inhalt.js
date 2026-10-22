@@ -39,7 +39,7 @@ window.INHALT = {
     szenen: [
       { ort: 'Buenos Aires', jahr: '2001', text: 'Dezember 2001. Die siebzehnjährige Lana erlebt, wie die Ersparnisse ihrer Familie per Dekret verschwinden.' },
       { ort: 'London', jahr: '2007', text: 'Lana macht ein Praktikum bei Lehman Brothers und erkennt in den Bilanzen Muster, die sie beunruhigen und an Buenos Aires erinnern.' },
-      { ort: 'Black Rock Desert', jahr: '2007', text: 'Burning Man. In den Nächten des Festivals lösen Lana, Arthur und Samuel ein Problem, an dem Mathematiker seit Jahrzehnten scheitern, und schließen einen Pakt.' },
+      { ort: 'Black Rock Desert', jahr: '2007', text: 'Burning Man. In den Nächten des Festivals lösen Lana, Arthur und Samuel das Problem der byzantinischen Generäle, an dem Mathematiker seit Jahrzehnten scheitern, und schließen einen Pakt.', verweis: { wort: 'Problem der byzantinischen Generäle', href: 'https://de.wikipedia.org/wiki/Byzantinischer_Fehler' } },
       { ort: 'London', jahr: '2007', text: 'September 2007. Ein Bankrun vor einer Filiale von Northern Rock.' },
       { ort: 'Kobe', jahr: '2007', text: 'In Japan bekommt der Pakt seinen Namen: Satoshi Nakamoto.' },
       { ort: 'New York', jahr: '2008', text: 'Samuel ist CTO eines Quant-Fonds an der Wall Street, als die anderen ihn nach Berlin holen.' },
@@ -61,12 +61,12 @@ window.INHALT = {
     { name: 'Jerusalem', band: 'III', jahr: 'um 940 v. Chr.', volk: 'die Phönizier', lat: 31.78, lon: 35.22 }
   ],
   baende: {
-    I: 'Göbekli Tepe in Südostanatolien, um 8000 v. Chr. Der älteste Tempel der Menschheit, und warum er von Menschenhand begraben wurde.',
-    II: 'Uruk im Süden Mesopotamiens, um 2700 v. Chr. König Gilgamesch und der Schreiberlehrling Harran.',
-    III: 'Jerusalem zur Zeit des ersten Tempels, um 940 v. Chr. König Salomo und die phönizische Gelehrte Thyra.'
+    I: 'Göbekli Tepe in Südostanatolien, um 8000 v. Chr. Der erste Roman erzählt vom ältesten Tempel der Menschheit und davon, warum er von Menschenhand begraben wurde.',
+    II: 'Uruk im Süden Mesopotamiens, um 2700 v. Chr. Der zweite Roman erzählt von König Gilgamesch und dem Schreiberlehrling Harran.',
+    III: 'Jerusalem zur Zeit des ersten Tempels, um 940 v. Chr. Der dritte Roman erzählt von König Salomo und der phönizischen Gelehrten Thyra.'
   },
   trilogie: {
-    titel: 'Ursprung',
+    titel: 'Ursprünge',
     baende: [
       { band: 'I', titel: 'Kreise ohne Wiederkehr', ort: 'Göbekli Tepe', zeit: 'um 8000 v. Chr.', thema: 'Die Geburt der organisierten Religion und die Sesshaftwerdung der Menschheit' },
       {
@@ -89,9 +89,9 @@ window.INHALT = {
       stand: 'wird gerade abgeschlossen',
       text: 'Am 31. Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.'
     },
-    { id: 'ursprung-1', titel: 'Ursprung I', buchtitel: 'Kreise ohne Wiederkehr', art: 'Roman, Band I der Ursprungstrilogie', stand: 'in Arbeit', band: 'I' },
-    { id: 'ursprung-2', titel: 'Ursprung II', buchtitel: 'Von dem König, der niemals sterben wollte', arbeitstitel: true, art: 'Roman, Band II der Ursprungstrilogie', stand: 'in Arbeit', band: 'II' },
-    { id: 'ursprung-3', titel: 'Ursprung III', buchtitel: 'Das steinerne Wort', arbeitstitel: true, art: 'Roman, Band III der Ursprungstrilogie', stand: 'in Arbeit', band: 'III' },
+    { id: 'ursprung-1', titel: 'Ursprünge I', buchtitel: 'Kreise ohne Wiederkehr', art: 'Roman, Band I der Ursprungstrilogie', stand: 'in Arbeit', band: 'I' },
+    { id: 'ursprung-2', titel: 'Ursprünge II', buchtitel: 'Von dem König, der niemals sterben wollte', arbeitstitel: true, art: 'Roman, Band II der Ursprungstrilogie', stand: 'in Arbeit', band: 'II' },
+    { id: 'ursprung-3', titel: 'Ursprünge III', buchtitel: 'Das steinerne Wort', arbeitstitel: true, art: 'Roman, Band III der Ursprungstrilogie', stand: 'in Arbeit', band: 'III' },
     { id: 'erzaehlungen', titel: 'Erzählungen', buchtitel: 'Erzählungen', art: 'Kurzgeschichten', stand: '', text: 'Viele davon hat er auf der Werkstattbühne des Autorenforums Berlin e.\u00a0V. vorgestellt.' },
     { id: 'untertext', titel: 'Untertext', buchtitel: 'Untertext', art: 'Journal', stand: '' },
     { id: 'laender', titel: 'Länder', buchtitel: 'Länder', art: 'Länderguides', stand: 'in Arbeit' }

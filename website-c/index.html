@@ -17,7 +17,7 @@
 <style>
 /* Startseite von Version C (docs/gestaltung-website-c.md, 9.1). Oben links Kopf, der erste Satz, die Kurzvita, die Wahl der Ebene
    und ihr Text; rechts der Globus mit Tafel und Steuerzeile. Darunter „Was ich schreibe“ (Werkverzeichnis und Regalbild) und
-   „Aus meiner Bibliothek“ (das Zeitband). Grade, Farben und Abstände kommen nur aus den Token in stil.css. */
+   „Mein digitales Bücherregal“ (das Zeitband). Grade, Farben und Abstände kommen nur aus den Token in stil.css. */
 
 /* ---------- Der erste Satz (02) ----------
    IM Fell French Canon im Grad Einstieg, jedes Glied eine Zeile. Der Platz für drei Zeilen steht von Anfang an fest. */
@@ -86,7 +86,7 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
 .regal-name[hidden] { display: none; }
 html:not(.js) .regalbild { display: none; }
 
-/* ---------- Aus meiner Bibliothek: das Zeitband (6.11) ---------- */
+/* ---------- Mein digitales Bücherregal: das Zeitband (6.11) ---------- */
 .gelesen-vorwort { max-width: var(--mass); }
 .zeitband { margin-top: var(--z); }
 .zeitband-roll { position: relative; }
@@ -350,7 +350,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 </section>
 
 <section class="abschnitt" id="gelesen" aria-labelledby="gelesen-titel">
-  <h2 class="titel" id="gelesen-titel">Aus meiner Bibliothek</h2>
+  <h2 class="titel" id="gelesen-titel">Mein digitales Bücherregal</h2>
   <p class="gelesen-vorwort">Von Gilgamesch bis Labatut, geordnet nach dem Jahr, in dem ein Buch zuerst erschien. Jeder Strich ist so breit wie der Rücken des Buchs. Dunkel stehen die liebsten, halb so hoch, was ich nicht zu Ende gelesen habe. Ein kleiner Strich darüber zeigt, dass ich ein Buch wieder gelesen habe. Quer darauf liegt, was ich gerade lese.</p>
   <div class="zeitband" id="zeitband">
     <div class="zeitband-roll" id="zeitband-roll">
@@ -840,7 +840,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
   regalZeichnen(); ankerSetzen();
 
-  // ================= Aus meiner Bibliothek: das Zeitband =================
+  // ================= Mein digitales Bücherregal: das Zeitband =================
   const mitMass = b => {
     const p = b.p > 0 ? b.p : 280, h = F.hash(b.key);
     return { breite: p * 0.06 + (b.b === 'h' ? 5 : 1), hoehe: (b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185) * (0.975 + (h % 997) / 997 * 0.05) };

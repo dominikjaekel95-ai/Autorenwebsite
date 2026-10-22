@@ -113,6 +113,13 @@ html:not(.js) .regalbild { display: none; }
 .bandzeile .zeile-zeigen { visibility: hidden; }
 .bandzeile.zeigt .zeile-zeigen { visibility: visible; }
 .bandzeile.zeigt .zeile-offen { visibility: hidden; }
+/* In Ruhe (kein Buch gewählt, keins gezeigt, nichts gezogen) steht hier der Satz zum Buch am Knopf von „gelesen“, in --leise: ein
+   Zustand, noch nicht gewählt, im selben Grau wie das leise „später“ darüber. Sonst blieb auf dem Telefon unter „früher später“ ein
+   leerer Raum von bis zu 5 z (Dominik, 23. Oktober: „Hier ist halt jetzt noch ein Leerraum, wenn man noch auf kein Buch geklickt hat
+   auf dem Handy. Können wir den noch füllen? Vielleicht ganz leicht ausgegraut?“). Kein neues Wort, keine Anleitung: der echte Satz.
+   Ein Tipp darauf wählt das Buch. Verborgen mit visibility, damit nichts springt; kein Übergang */
+.bandzeile .zeile-ruhe { color: var(--leise); visibility: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bandzeile.ruht:not(.zeigt) .zeile-ruhe { visibility: visible; }
 .bandname { margin-top: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); position: sticky; left: 0; width: max-content; max-width: 100%; }
 /* Der Regler (Runde 6, S9), gebaut wie die Steuerung am Globus: unter dem Bild der Regler, darunter „früher“ und „später“, darunter
    der Satz. Breit ist der Regler die Achse des Bands selbst: dieselbe Haarlinie mit den Brüchen und den Jahreszahlen, darauf der
@@ -401,7 +408,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
         <div class="regler" id="regler" role="slider" tabindex="0" aria-label="Gelesen"><svg class="regler-spur" aria-hidden="true" focusable="false"></svg><span class="regler-knopf" aria-hidden="true"></span><span class="regler-name" aria-hidden="true" hidden></span></div>
         <p class="steuerzeile zb-schritte"><button type="button" class="wort" id="zb-frueher">früher</button><button type="button" class="wort" id="zb-spaeter">später</button></p>
       </div>
-      <p class="bandzeile" id="bandzeile"><span class="zeile-zeigen" id="zeile-zeigen" aria-hidden="true"></span><span class="zeile-offen" id="zeile-offen"></span></p>
+      <p class="bandzeile" id="bandzeile"><span class="zeile-ruhe" id="zeile-ruhe" aria-hidden="true"></span><span class="zeile-zeigen" id="zeile-zeigen" aria-hidden="true"></span><span class="zeile-offen" id="zeile-offen"></span></p>
       <p class="bandname">die wichtigsten aus Kindheit und Jugend</p>
       <div id="zb-kind-ort"></div>
       <div class="zb-regler" id="zb-regler-kind">
@@ -907,7 +914,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   // Zeitband (Dominik, 21. Oktober), nur im Regalbild darüber
   const kurz = x => F.buch.zeile(x).html;
   const satzVon = x => F.buch.satz(x);
-  const roll = $('#zeitband-roll'), bandzeile = $('#bandzeile'), zeileZeigenEl = $('#zeile-zeigen'), zeileOffenEl = $('#zeile-offen');
+  const roll = $('#zeitband-roll'), bandzeile = $('#bandzeile'), zeileZeigenEl = $('#zeile-zeigen'), zeileOffenEl = $('#zeile-offen'), zeileRuheEl = $('#zeile-ruhe');
   const ZB = { items: [], folgen: {}, aktiv: null, breite: 0, schmal: false, y0: 0, offen: null };
   const bzBand = F.buchzeile(zeileOffenEl, { beimSchliessen: () => { ZB.offen = null; markeSetzen(); } });
   const messCtx = document.createElement('canvas').getContext('2d');
@@ -1118,6 +1125,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     // Auf dem Telefon steht das Band beim Laden am rechten Ende: das Neueste
     if (schmal) roll.scrollLeft = roll.scrollWidth;
     reglerBauen();
+    ruheSetzen();
   }
 
   /* Die Buchzeile unter dem Band hält die Höhe ihres längsten Satzes, damit die Reihen darunter nicht springen. Auf dem Telefon ist
@@ -1132,7 +1140,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
   function bandzeileReservieren() {
     const breite = sichtBreite();
-    [zeileZeigenEl, zeileOffenEl].forEach(el => { el.style.maxWidth = breite + 'px'; });
+    [zeileZeigenEl, zeileOffenEl, zeileRuheEl].forEach(el => { el.style.maxWidth = breite + 'px'; });
     const z = F.masz('--z');
     const ohneTags = s => s.replace(/<[^>]*>/g, '').length;
     const alle = ZB.items.map(o => o.b).filter((b, i, a) => a.indexOf(b) === i);
@@ -1174,6 +1182,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
   function markeSetzen() {
     reglerFolgen();
+    ruheSetzen();
     const marke = document.getElementById('zb-marke');
     if (!marke) return;
     const o = bandzeile.classList.contains('zeigt') ? ZB.aktiv : ZB.offen;
@@ -1181,6 +1190,32 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const m = o.x + o.w / 2;
     marke.setAttribute('x1', m); marke.setAttribute('x2', m); marke.setAttribute('visibility', 'visible');
   }
+  /* Der Satz in Ruhe (23. Oktober): das Buch am Knopf von „gelesen“, also am Anfang das neueste, das „früher“ als erstes wählt;
+     nach dem Zurücklegen das zuletzt gewählte dieser Reihe. Er steht in einem eigenen Feld, aria-hidden und ohne Verweise (sie
+     blieben sonst fokussierbar), nicht in der Buchzeile mit aria-live: ein Vorleseprogramm sagte ihn sonst beim Laden an, und am
+     Regler sagt ohnehin sein Wert das Buch. Läuft nach jedem Wechsel mit (markeSetzen) und nach jedem Aufbau */
+  function ruheBuch() {
+    const g = reglerVon('gelesen'), liste = reiheVon(g);
+    if (!liste.length) return null;
+    return liste[g.i == null ? liste.length - 1 : Math.min(g.i, liste.length - 1)];
+  }
+  function ohneVerweise(html) {
+    const t = document.createElement('template');
+    t.innerHTML = html;
+    t.content.querySelectorAll('a').forEach(a => a.replaceWith(...a.childNodes));
+    return t.innerHTML;
+  }
+  function ruheSetzen() {
+    if (!zeileRuheEl) return;
+    const o = ruheBuch();
+    const ruht = !!o && !bzBand.offen() && !ZB.aktiv && !REGLER.some(r => r.zieht || (r.zug && r.zug.aktiv));
+    bandzeile.classList.toggle('ruht', ruht);
+    if (!o) { zeileRuheEl.innerHTML = ''; zeileRuheEl.dataset.buch = ''; return; }
+    if (zeileRuheEl.dataset.buch !== o.id) { zeileRuheEl.innerHTML = ohneVerweise(satzVon(o.b)); zeileRuheEl.dataset.buch = o.id; }
+    einpassen(zeileRuheEl, o);
+  }
+  // Ein Tipp oder Klick auf den Satz in Ruhe wählt sein Buch. Nach einem Wischen über ihn (das Band rollt) kommt kein click
+  if (zeileRuheEl) zeileRuheEl.addEventListener('click', () => { if (bandzeile.classList.contains('ruht')) waehlen(ruheBuch()); });
   // Zeigen (Maus oder Pfeiltasten): der Strich wird Tinte, darunter die kurze Angabe
   function zeigen(o) {
     if (ZB.aktiv === o) return;
@@ -1544,11 +1579,12 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     spaeterEl.addEventListener('click', () => { if (spaeterEl.getAttribute('aria-disabled') !== 'true') schritt(1); });
   }
 
-  // Rollt das Band auf dem Telefon, wandern die Zeilen im sichtbaren Teil mit
+  // Rollt das Band auf dem Telefon, wandern die Zeilen im sichtbaren Teil mit, auch der Satz in Ruhe: sonst stünde der Raum unter
+  // „früher später“ wieder leer, sobald man das Band vom neuesten Buch wegrollt
   let rollBild = 0;
   roll.addEventListener('scroll', () => {
     if (rollBild) return;
-    rollBild = requestAnimationFrame(() => { rollBild = 0; einpassen(zeileZeigenEl, ZB.aktiv); einpassen(zeileOffenEl, ZB.offen); sichtZeichnen(); });
+    rollBild = requestAnimationFrame(() => { rollBild = 0; einpassen(zeileZeigenEl, ZB.aktiv); einpassen(zeileOffenEl, ZB.offen); if (bandzeile.classList.contains('ruht')) einpassen(zeileRuheEl, ruheBuch()); sichtZeichnen(); });
   }, { passive: true });
 
   // ================= Aufbau und Größe =================

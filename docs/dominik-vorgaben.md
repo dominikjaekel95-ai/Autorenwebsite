@@ -507,6 +507,16 @@ Hier stehen nur die Themen. Einzelheiten werden nicht abgeschrieben.
 
 ---
 
+## 14. Nachträge zu Version C
+
+**V73. Unter dem Zeitband bleibt in Ruhe kein leerer Raum.**
+„Hier ist halt jetzt noch ein Leerraum, wenn man noch auf kein Buch geklickt hat auf dem Handy. Können wir den noch füllen? Vielleicht ganz leicht ausgegraut?“ (22.10., 22:31, mit einem Bildschirmfoto vom Telefon: unter „früher später“ der leere Raum bis „die wichtigsten aus Kindheit und Jugend“)
+Für den Bau: Solange kein Buch gewählt ist, steht in der Buchzeile unter „früher“ und „später“ der Satz zum Buch am Knopf von „gelesen“, in `--leise` (am Anfang das neueste, nach dem Zurücklegen das zuletzt gewählte dieser Reihe). Kein neues Wort und keine Anleitung, nur der echte Satz. Er verschwindet beim Zeigen, Ziehen und Wählen; ein Tipp darauf wählt das Buch. Gilt für alle Breiten. Gehört zu Abschnitt 2 (Startseite, V18).
+Ort in C: `website-c/index.html`, `span#zeile-ruhe` in `p#bandzeile`.
+Später geändert: nein.
+
+---
+
 ## Übersicht 1: Seine Texte und wo sie in A stehen
 
 „Von ihm“ heißt: er hat den Text geschrieben, geschickt oder ausdrücklich gewählt. Diese Stellen ändert C nur bei Tippfehlern. „Gestrichen“ heißt: er hat den Text entfernt, er darf nicht zurückkommen.

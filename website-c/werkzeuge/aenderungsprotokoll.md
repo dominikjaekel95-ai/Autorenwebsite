@@ -422,3 +422,36 @@ Geprüft als Besucher, gegen die Quelle (`python3 -m http.server` auf `website-c
    - Beim Ziehen mit dem Finger auf den zwei unteren Reglern steht die kurze Angabe zweimal: in der Buchzeile und an der Stelle des Reihennamens. Das ist gewollt, denn die Buchzeile kann aus dem Bild sein, wenn man weiter unten zieht. Es dauert nur, solange man zieht.
    - Nach einem Mausklick auf einen Regler zeigt Chromium den Fokusrahmen um den Knopf, weil das Skript den Fokus setzt. Das war schon in Runde 6 und 7 bei „gelesen“ so.
    - Rollt das Band auf dem Telefon, verschieben sich die haftenden Regler um weniger als 0,4 px (Rundung von `position: sticky`). Das war auch schon vorher so und ist nicht zu sehen.
+
+## 23. Oktober 2026: Satz in Ruhe unter dem Zeitband
+
+Dominik, mit einem Bildschirmfoto vom Telefon (Android, Chrome, rund 390 px): „Hier ist halt jetzt noch ein Leerraum, wenn man noch auf kein Buch geklickt hat auf dem Handy. Können wir den noch füllen? Vielleicht ganz leicht ausgegraut?“ Geändert ist nur `index.html` (Markup, Stil und Skript des Zeitbands), nicht `stil.css`, kein Text der Seite. Nachgezogen: `docs/dominik-vorgaben.md` V73, `docs/gestaltung-website-c.md` 6.11 und die Umsetzung unter 23.
+
+1. **Gebaut:**
+   - In Ruhe (kein Buch gewählt, keins gezeigt, nichts gezogen) steht in der Buchzeile der Satz zum Buch am Knopf von „gelesen“, in `--leise`. Am Anfang ist das das neueste Buch der Reihe, also das, das der leere Knopf meint und das „früher“ als erstes wählt (heute Caroline Wahl, *22 Bahnen*). Legt man ein gewähltes Buch zurück (zweiter Tipp, Escape), steht grau der Satz des Buchs am Knopf von „gelesen“.
+   - **Warum so:** kein neues Wort, keine Anleitung, kein Platzhalter, sondern der echte Satz. Grau ist er, weil er ein Zustand ist (noch nicht gewählt), dasselbe Grau wie das leise „später“ direkt darüber (`stil.css`: „ein Grau nur für Zustände“). Er sagt zugleich, was der leere Knopf meint.
+   - Eigenes Feld `span#zeile-ruhe` in `p#bandzeile`, `aria-hidden`, nicht fokussierbar, ohne Verweise (`<a>` entfernt, Inhalt und Kursiv bleiben). Nicht im `aria-live`-Feld `#zeile-offen`, sonst sagte ein Vorleseprogramm ihn beim Laden an; am Regler sagt ohnehin sein Wert das Buch.
+   - Sichtbar nur mit der Klasse `ruht` (und nicht `zeigt`). Beim Zeigen mit der Maus, beim Ziehen und solange ein Buch offen ist, ist er verborgen (`visibility: hidden`, nichts springt, kein Übergang).
+   - Lage wie die anderen Zeilen (`einpassen`): unter seinem Strich, auf dem Telefon im sichtbaren Teil. Beim waagrechten Rollen des Bands geht er im vorhandenen Handler mit (passiv, höchstens einmal je Bild), damit der Raum nicht wieder leer wird.
+   - Ein Tipp oder Klick auf ihn wählt sein Buch wie `waehlen`: Satz in Tinte, Knopf in Tinte, Strich hervorgehoben. Ein Wischen über ihn rollt nur das Band (danach kommt kein `click`).
+   - Eine Regel für alle Breiten. Am Desktop steht er unter dem neuesten Strich, also rechts außen. Einen Nachteil sehe ich dort nicht (Bilder `desk*-1-ruhe.png`).
+   - Skript: neu `ruheBuch`, `ohneVerweise`, `ruheSetzen` (aus `markeSetzen` nach jedem Wechsel und am Ende von `bandBauen`), ein `click` am Feld, der Rollhandler. `bandzeileReservieren` gibt ihm dieselbe Breite, die reservierte Höhe bleibt.
+2. **Maße in Ruhe**, Telefon mit Finger, Desktop mit Maus. Die Höhe zwischen der Unterkante von „früher später“ und der Oberkante von „die wichtigsten aus Kindheit und Jugend“ ist vorher und nachher gleich, der Satz steht darin:
+
+   | Breite | leer vorher | nachher: Satz (Zeilen) | frei unter dem Satz |
+   |---|---|---|---|
+   | 390 × 844 | 141,8 px | 54 px (2) | 81 px |
+   | 360 × 740 | 168,8 px | 54 px (2) | 108 px |
+   | 320 × 640 | 168,8 px | 81 px (3) | 81 px |
+   | 1280 × 800 | 92,6 px | 28,5 px (1) | 57 px |
+   | 1440 × 900 | 64,6 px | 28,5 px (1) | 29 px |
+   | 1920 × 1080 | 64,6 px | 28,5 px (1) | 29 px |
+
+   Der Abstand über dem Satz ist 6,8 px (Telefon) und 7,1 px (Desktop), wie beim gewählten Satz.
+3. **Geprüft** (`interaktion.cjs`, 0 Fehler; echte Berührung über `Input.dispatchTouchEvent`, Server `python3 -m http.server` auf `website-c/`, Port 9711):
+   - **Telefon 390, 360, 320:** In Ruhe ist der Satz grau (`rgb(107, 109, 114)`), kursiv im Titel, ohne Verweise, `aria-hidden`. `#zeile-offen` ist leer, der Knopf leer, der Satz im sichtbaren Teil. Ein Tipp auf einen Strich: Satz in Tinte, der Ruhesatz ist weg. Ein zweiter Tipp legt zurück: Der Ruhesatz ist wieder da, jetzt mit dem zurückgelegten Buch. „früher“, dann Escape: ebenso. Waagrecht gerollt (390: von 551 auf 152 px), steht der Satz im Bild, nichts ist gewählt. Ein Wischen über den Ruhesatz rollt das Band und wählt nichts. Ein Tipp auf den Ruhesatz wählt sein Buch, mit Satz, Knopf und Strich in Tinte. Beim Ziehen am Regler ist er verborgen.
+   - **Breiten 320 bis 640** (320, 340, 360, 375, 390, 414, 480, 560, 640): Alle 473 Sätze von „gelesen“ passen im Ruhefeld über „die wichtigsten …“. Der höchste ist 135 px bei 320 bis 375 px, 108 px bei 390 bis 480 px, 81 px bei 560 und 640 px, und er liegt immer 27 px über dem Namen. In Ruhe ist keine Seite waagrecht gerollt, keine Fehler.
+   - **Desktop 1280, 1440, 1920:** Mit der Maus über dem Band steht die kurze Angabe, der Ruhesatz ist weg. Verlässt die Maus das Band, ist er wieder da. Ein Klick auf ihn wählt sein Buch, Escape legt zurück. Pfeil links am Regler wählt, und der Ruhesatz ist verborgen. Keine Fehler in der Konsole, keine waagrechte Rolle.
+   - **Gegenprobe:** `scratchpad/r8/breiten.cjs` 0 Fehler von 320 bis 2560 px, `scratchpad/r8/testen.cjs` 125 von 125 Prüfungen (Ergebnis `scratchpad/ruhe/einbau/r8-testen.json`).
+   - Bilder und Skripte: `scratchpad/ruhe/einbau/` (`vorher-*.png`, `nachher-*.png` je Breite; `tel*-1-ruhe` bis `tel*-5-ruhesatz-getippt`; `desk*-1-ruhe`, `desk*-2-maus`, `desk*-3-ruhesatz-geklickt`; `messen.cjs`, `interaktion.cjs`).
+   - Nicht neu gebaut: `veroeffentlichung/` und der Bau für claude.ai. Der Server ist per PID gestoppt.

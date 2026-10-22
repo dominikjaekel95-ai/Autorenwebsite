@@ -29,6 +29,16 @@
 /* Der Vorspann aus dem Exposé im Grad Überschrift */
 .vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
 
+/* Der Absatz „Wer war Satoshi Nakamoto wirklich? …“ steht nur einmal (Dominik, 22. Oktober: „Das ist sonst echt viel Space“): in der
+   Zweispaltenlage gekürzt in der linken Spalte unter dem Vorspann, neben der Kugel, und nicht unter „Die Frage hinter dem Roman“;
+   schmaler (Tablet, Telefon) voll an seiner Stelle dort. Die andere Fassung ist display: none, auch für Vorleseprogramme. Eine
+   Grenze für beide, damit bei keiner Breite beide oder keine stehen */
+.frage-kurz { display: none; margin-top: var(--z); }
+@media (min-width: 62.0625rem) {
+  .frage-kurz { display: block; }
+  .frage .frage-voll { display: none; }
+}
+
 /* Ohne Skript: kein Globus */
 html:not(.js) .globusseite > .globus { display: none; }
 
@@ -63,6 +73,20 @@ html:not(.js) .globusseite > .globus { display: none; }
   .buch .rechts section { max-width: none; }
   .buch .rechts .eckdaten { margin-top: 0; }
 }
+/* Ab 75 rem beginnt der Klappentext in der linken Spalte neben der Kugel, 2 z unter dem gekürzten Absatz; Eckdaten und Figuren
+   bleiben rechts unter der Kugel, 2 z unter der Tafel (Dominik, 22. Oktober: „Die Eckdaten können vielleicht trotzdem unter den
+   Globus“). Sonst bliebe links neben der Kugel eine Lücke von rund 300 px (1440 × 900) bis 475 px (1920 × 1080). Kugel und rechte
+   Spalte stehen dafür außerhalb des Flusses, an Stellen aus denselben Maßen, aus denen die Kugel selbst entsteht: oben
+   z/2 − Kopf, darunter --globus und --tafel-h (Steuerzeile und Tafel mit ihrem längsten Inhalt, FSeite.tafelPlatz). Ohne Skript
+   und ohne Kugel (.ohne-globus) bleibt die Lage darüber */
+@media (min-width: 75rem) {
+  .js #inhalt:not(:has(.ohne-globus)) { position: relative; overflow-x: clip; }
+  .js #inhalt:not(:has(.ohne-globus)) .globusseite > .globus { position: absolute; top: calc(var(--z) * .5 - var(--kopf-h)); right: calc(var(--globus) * -.09); margin: 0; }
+  .js #inhalt:not(:has(.ohne-globus)) .buch .rechts {
+    position: absolute; left: var(--globuskante); width: min(24em, calc(100% - var(--globuskante) - var(--rand-r)));
+    top: calc(var(--z) * .5 - var(--kopf-h) + var(--globus) + var(--tafel-h) + var(--z-zwei));
+  }
+}
 @media (max-width: 62rem) {
   .buch { padding-right: var(--rand-l); }
 }
@@ -82,7 +106,7 @@ html:not(.js) .globusseite > .globus { display: none; }
   <nav class="nav" aria-label="Website">
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html" aria-current="page"><i>Satoshi</i></a></li>
-      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprünge</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
       <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
@@ -100,6 +124,8 @@ html:not(.js) .globusseite > .globus { display: none; }
   </div>
 
   <p class="vorspann">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.</p>
+  <!-- Nur in der Zweispaltenlage: gekürzt neben dem Globus; dann fehlt der volle Absatz unter „Die Frage hinter dem Roman“ -->
+  <p class="frage-kurz">Wer war Satoshi Nakamoto wirklich? Das letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
 
   <figure class="globus" id="globus">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
@@ -128,7 +154,7 @@ html:not(.js) .globusseite > .globus { display: none; }
       <h2 class="titel" id="eck-titel">Eckdaten</h2>
       <div class="prosa">
         <p>Debütroman. Personal erzählt, aus der Sicht Lanas und kontrapunktisch aus der Samuels. Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.</p>
-        <p><a href="vita.html">Dominik Jäkel</a>, geboren 1995 in Dortmund, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam. Er lebt in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <span class="nw">A.-E.-Johann-Preis</span>.</p>
+        <p><a href="vita.html">Dominik Jäkel</a>, geboren 1995 in Dortmund, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam. Er lebt in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>.</p>
       </div>
     </section>
 
@@ -158,10 +184,13 @@ html:not(.js) .globusseite > .globus { display: none; }
     <p>Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten <span class="nw">Bitcoin-Block</span> signiert.</p>
     <ol class="tage">
       <li><span class="jahr">2007</span> <span class="tag">14.&nbsp;September</span> <span class="was">Bankrun auf Northern Rock</span></li>
-      <li><span class="jahr">2008</span> <span class="tag">15.&nbsp;September</span> <span class="was">Lehman Brothers meldet Insolvenz an</span></li>
+      <li><span class="jahr">2008</span> <span class="tag">16.&nbsp;März</span> <span class="was">Bear Stearns bricht zusammen</span></li>
+      <li><span class="jahr"><span class="unsichtbar">2008</span></span> <span class="tag">August</span> <span class="was">Satoshi Nakamoto schreibt an Adam Back, sein erstes Lebenszeichen</span></li>
+      <li><span class="jahr"><span class="unsichtbar">2008</span></span> <span class="tag">15.&nbsp;September</span> <span class="was">Lehman Brothers meldet Insolvenz an</span></li>
       <li><span class="jahr"><span class="unsichtbar">2008</span></span> <span class="tag">31.&nbsp;Oktober</span> <span class="was">Das Whitepaper erscheint, neun Seiten</span></li>
       <li><span class="jahr">2009</span> <span class="tag">3.&nbsp;Januar</span> <span class="was">Der erste Block</span></li>
-      <li><span class="jahr">2010</span> <span class="tag">15.&nbsp;August</span> <span class="was">Ein Fehler im Code erzeugt Milliarden Bitcoins aus dem Nichts</span></li>
+      <li><span class="jahr">2010</span> <span class="tag">11.&nbsp;Juli</span> <span class="was">Ein einziger Artikel auf Slashdot macht Bitcoin schlagartig bekannt</span></li>
+      <li><span class="jahr"><span class="unsichtbar">2010</span></span> <span class="tag">15.&nbsp;August</span> <span class="was">Ein Fehler im Code erzeugt Milliarden Bitcoins aus dem Nichts</span></li>
       <li><span class="jahr"><span class="unsichtbar">2010</span></span> <span class="tag">Dezember</span> <span class="was">Die Banken sperren WikiLeaks die Konten</span></li>
     </ol>
   </section>
@@ -172,16 +201,16 @@ html:not(.js) .globusseite > .globus { display: none; }
       <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die Antworten, die im Umlauf sind, folgen zwei Bewegungen: das System reparieren&nbsp;– oder aussteigen und ein Parallelsystem bauen. Die 2020er Jahre sind das Jahrzehnt, in dem dieser Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
       <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine umfangreiche Stabilitäts&shy;kultur, jedoch nur in seltensten Fällen lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
       <p><i>Satoshi</i> ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat&nbsp;– die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.</p>
-      <p>Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
+      <p class="frage-voll">Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
     </div>
   </section>
 
   <section class="machart" id="machart" aria-labelledby="machart-titel">
     <h2 class="titel" id="machart-titel">Wie er gemacht ist</h2>
     <div class="prosa">
-      <p><i>Satoshi</i> ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand&nbsp;– Satoshi Nakamotos Mails, Forenbeiträgen, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin&nbsp;– und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.</p>
+      <p><i>Satoshi</i> ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand&nbsp;– <a href="https://satoshi.nakamotoinstitute.org/" rel="noopener">Satoshi Nakamotos Mails, Forenbeiträgen</a>, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin&nbsp;– und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.</p>
       <p>Der Roman steht in einer Erzähltradition, die ihre Wurzeln in Borges’ <i>Ficciones</i> hat und zu deren heutigen Vertretern Hernan Diaz und Benjamín Labatut gehören: Literatur in den Leerstellen des Verbürgten.</p>
-      <p><i>Ficciones</i> steht in seiner <a href="bibliothek.html">Bibliothek</a>, ebenso Labatuts <i>When We Cease to Understand the World</i> und <i>The Maniac</i>.</p>
+      <p><i>Ficciones</i> steht in der <a href="bibliothek.html">Bibliothek</a>, ebenso Labatuts <i>When We Cease to Understand the World</i> und <i>The Maniac</i> und Hernan Diaz’ <i>Trust</i>.</p>
     </div>
   </section>
 </div>
@@ -228,10 +257,10 @@ html:not(.js) .globusseite > .globus { display: none; }
   // ================= Tafel =================
   const tafelEl = $('#tafel');
   const ruheInhalt = () => ({ kopf: 'Die Schauplätze', satz: SAT.eckdaten && SAT.eckdaten.zeit ? SAT.eckdaten.zeit + '.' : '' });
-  // Eine Szene: Jahr, Kartenzeichen und Ort, die Koordinaten, der Text der Szene
+  // Eine Szene: Jahr, Kartenzeichen und Ort, die Koordinaten, der Text der Szene (als Text, mit seinem Verweis, FSeite.textMitVerweis)
   const szeneInhalt = s => {
     const notiz = notizBeiText(s);
-    return { zeichen: 'wohnort', marke: s.jahr, kopf: notiz ? s.kurz + ', ' + notiz : s.kurz, daten: F.koord(s.lat, s.lon), text: datum(s.text) };
+    return { zeichen: 'wohnort', marke: s.jahr, kopf: notiz ? s.kurz + ', ' + notiz : s.kurz, daten: F.koord(s.lat, s.lon), text: F.textMitVerweis(datum(s.text), s.verweis) };
   };
   // Ein weiterer Schauplatz: offener Kreis, Ort, Koordinaten
   const ortInhalt = o => ({ zeichen: 'aufenthalt', kopf: o.notiz ? o.name + ', ' + o.notiz : o.name, daten: F.koord(o.lat, o.lon) });

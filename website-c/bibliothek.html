@@ -143,7 +143,7 @@ html:not(.js) .wartet { display: none; }
   <nav class="nav" aria-label="Website">
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>
-      <li><a href="ursprung.html"><i>Ursprung</i></a></li>
+      <li><a href="ursprung.html"><i>Ursprünge</i></a></li>
       <li><a href="erzaehlungen.html">Erzählungen</a></li>
       <li><a href="untertext.html"><i>Untertext</i></a></li>
       <li><a href="laender.html">Länder</a></li>
@@ -494,12 +494,12 @@ html:not(.js) .wartet { display: none; }
         const auf = cw + 3 + BAENDE.length * (VB + 2);
         breiteOffen += auf;
         werke += `<div class="schuber-platz${schuberOffen ? ' offen' : ''}" style="--zu:${cw}px;--auf:${auf}px;--hc:${hc}px">`;
-        werke += `<button type="button" class="ruecken eigen dunkel schuber" style="width:${cw}px;height:${hc}px" tabindex="-1" aria-expanded="${schuberOffen}" aria-label="Ursprungstrilogie, Schuber mit drei Bänden">${titel('Ursprung I–III')}</button>`;
+        werke += `<button type="button" class="ruecken eigen dunkel schuber" style="width:${cw}px;height:${hc}px" tabindex="-1" aria-expanded="${schuberOffen}" aria-label="Ursprungstrilogie, Schuber mit drei Bänden">${titel('Ursprünge I–III')}</button>`;
         BAENDE.forEach((b, k) => {
           const innen = 3 + k * VB;
           const weg = cw + 3 + k * (VB + 2) - innen;
           const w = b.eintrag.werk;
-          werke += `<button type="button" class="ruecken eigen dunkel bandbuch${offenCls(b)}" data-id="${b.eintrag.id}" style="width:${VB}px;height:${H}px;--innen:${innen}px;--weg:${weg}px" tabindex="-1"${schuberOffen ? '' : ' aria-hidden="true"'} aria-label="${esc('Ursprung, Band ' + b.band + ': ' + (w.buchtitel || ''))}">${titel(w.titel || 'Ursprung ' + b.band)}</button>`;
+          werke += `<button type="button" class="ruecken eigen dunkel bandbuch${offenCls(b)}" data-id="${b.eintrag.id}" style="width:${VB}px;height:${H}px;--innen:${innen}px;--weg:${weg}px" tabindex="-1"${schuberOffen ? '' : ' aria-hidden="true"'} aria-label="${esc('Ursprünge, Band ' + b.band + ': ' + (w.buchtitel || ''))}">${titel(w.titel || 'Ursprünge ' + b.band)}</button>`;
         });
         werke += '</div>';
       } else {
@@ -668,7 +668,7 @@ html:not(.js) .wartet { display: none; }
     if (!tipp) return;
     const x = el.classList.contains('schuber') ? null : ALLE[+el.dataset.id];
     if (x && offenId === x.id) { tippZu(); return; }
-    tipp.innerHTML = x ? tippText(x) : '<i>Ursprung</i>, drei Bände im Schuber';
+    tipp.innerHTML = x ? tippText(x) : '<i>Ursprünge</i>, drei Bände im Schuber';
     tipp.hidden = false;
     const rr = regal.getBoundingClientRect(), r = el.getBoundingClientRect();
     const tb = tipp.offsetWidth, th = tipp.offsetHeight;

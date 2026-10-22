@@ -46,7 +46,7 @@ Vercel liefert den Ordner `../veroeffentlichung/` aus (Root Directory `veroeffen
 
 | Datei | Inhalt |
 |---|---|
-| `index.html` | Startseite: erster Satz, Kurzvita, Globus mit Tafel, „Was ich schreibe“, „Meine digitale Bibliothek“ |
+| `index.html` | Startseite: erster Satz, Kurzvita, Globus mit Tafel, „Was ich schreibe“, „Aus meiner Bibliothek“ |
 | `satoshi.html`, `ursprung.html` | die Romane, je mit Globus |
 | `erzaehlungen.html`, `untertext.html`, `lesen.html` | Texte aus `daten/texte.js` (noch leer) |
 | `laender.html` | Länderregister und Globus |

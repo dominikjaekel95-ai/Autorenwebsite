@@ -35,6 +35,7 @@
      ablauf(opts)                   Einspieler und Bedienung eines Globus (siehe dort); TAKT: die Takte aus Abschnitt 7.2
      stationen(), stationInhalt(s)  Lebensstationen aus INHALT.leben; ihre Tafel
      szenen()                       die Szenen von Satoshi mit Ort und Koordinaten
+     textMitVerweis(text, verweis)  ein Text aus den Daten mit einem sicher gesetzten Verweis ({ html }) oder der Text selbst
      ursprungOrte(), ursprungInhalt(i)   die vier Orte der Trilogie; Tafel für einen Ort (-1: die ganze Trilogie)
      buchzeile(el, o)               die Buchzeile unter einem Brett: zeigen, schliessen, umschalten (Escape schließt)
      buch.alle(), buch.satz(b, { person }), buch.zeile(b), buch.karte(b), buch.nachname(a), buch.titelKurz(t), buch.ordnung
@@ -670,13 +671,27 @@
       unter: (s.neben ? 'längerer Aufenthalt' : 'Wohnort') + (s.projekt ? ', ' + s.projekt : '')
     };
   }
-  // Die Szenen von Satoshi der Reihe nach, mit Ort und Koordinaten: { name, kurz, notiz, jahr, text, lat, lon }
+  /* Ein Verweis in einem Text aus den Daten (Runde 5: im Szenentext Black Rock Desert „Problem der byzantinischen Generäle“).
+     Der Text bleibt Text: alles wird maskiert, nur verweis.wort (sein erstes Vorkommen) wird ein Verweis auf verweis.href, mit
+     rel="noopener" und ohne target wie jeder Verweis nach außen. href muss eine https-Adresse ohne Leerzeichen, Anführungszeichen
+     und spitze Klammern sein; sonst, oder wenn das Wort fehlt, bleibt der Text ohne Verweis. Gibt { html } für FSeite.tafel
+     zurück oder den Text. Gezählt (wortzahl, Halt im Ablauf) wird weiter der Text selbst. */
+  const SICHERE_ADRESSE = /^https:\/\/[a-z0-9.-]+(?:\/[^\s"'<>`\\]*)?$/i;
+  const maske = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  function textMitVerweis(text, verweis) {
+    const t = String(text == null ? '' : text);
+    const wort = verweis && typeof verweis.wort === 'string' ? verweis.wort : '', href = verweis && typeof verweis.href === 'string' ? verweis.href : '';
+    const i = wort ? t.indexOf(wort) : -1;
+    if (i < 0 || !SICHERE_ADRESSE.test(href)) return t;
+    return { html: maske(t.slice(0, i)) + `<a href="${maske(href)}" rel="noopener">${maske(wort)}</a>` + maske(t.slice(i + wort.length)) };
+  }
+  // Die Szenen von Satoshi der Reihe nach, mit Ort und Koordinaten: { name, kurz, notiz, jahr, text, verweis, lat, lon }
   function szenen() {
     const S = inhalt().satoshi || {}, orte = {};
     (S.orte || []).forEach(o => { orte[o.name] = o; });
     return (S.szenen || []).map((sz, i) => {
       const o = orte[sz.ort] || {};
-      return { i, name: sz.ort, kurz: o.kurz || sz.ort, notiz: o.notiz || '', jahr: sz.jahr, text: sz.text, lat: o.lat, lon: o.lon };
+      return { i, name: sz.ort, kurz: o.kurz || sz.ort, notiz: o.notiz || '', jahr: sz.jahr, text: sz.text, verweis: sz.verweis || null, lat: o.lat, lon: o.lon };
     }).filter(s => s.lat != null);
   }
   // Die vier Orte der Reihe nach: Göbekli Tepe, Uruk, Tyros, Jerusalem
@@ -688,7 +703,7 @@
     const I = inhalt(), orte = ursprungOrte(), band = {};
     ((I.trilogie && I.trilogie.baende) || []).forEach(b => { band[b.band] = b; });
     const o = orte[i];
-    if (!o) return { eigen: true, marke: 'I–III', kopf: (I.trilogie && I.trilogie.titel) || 'Ursprung', satz: chr('Drei Bände, um 8000, 2700 und 940 v. Chr.') };
+    if (!o) return { eigen: true, marke: 'I–III', kopf: (I.trilogie && I.trilogie.titel) || 'Ursprünge', satz: chr('Drei Bände, um 8000, 2700 und 940 v. Chr.') };
     const b = band[o.band] || {};
     const m = String((I.baende || {})[o.band] || '').match(/^(.*?v\. Chr\.)\s+(.+)$/);
     const landschaft = m ? m[1] : [b.ort, b.zeit].filter(Boolean).join(', ');
@@ -1729,7 +1744,7 @@
     schriften, schriftEinstieg, satzzeichenBinden, gleichBreit, zeichen,
     FARBEN, SIENA, SIENA_EBENE, globus, blickFuer, ueberblick,
     tafel, tafelReservieren, tafelPlatz, lesezeit, steuerzeile, ortsleiste, ablauf, TAKT,
-    stationen, stationInhalt, szenen, ursprungOrte, ursprungInhalt,
+    stationen, stationInhalt, szenen, textMitVerweis, ursprungOrte, ursprungInhalt,
     karteikarte, buch, werkKarte, werkSatz, buchzeile, texte, navigation, fuss, PROFILE, NEWSLETTER,
     leselinie, fortschritt, imBild
   };

@@ -1120,8 +1120,11 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     reglerBauen();
   }
 
-  /* Die Buchzeile unter dem Band hält breit die Höhe ihres längsten Satzes, damit die Reihen darunter nicht springen. Auf dem Telefon
-     ist sie so breit wie der sichtbare Teil und hält drei Zeilen, so lang ist ein gewöhnlicher Satz dort */
+  /* Die Buchzeile unter dem Band hält die Höhe ihres längsten Satzes, damit die Reihen darunter nicht springen. Auf dem Telefon ist
+     sie so breit wie der sichtbare Teil und hält mindestens drei Zeilen. Seit Runde 8 liegen die Regler der zwei Reihen darunter unter
+     ihr; mit nur drei Zeilen stieß ein Satz von vier Zeilen an den Namen „die wichtigsten aus Kindheit und Jugend“ und lief einer von
+     fünf Zeilen über ihn (bei 360 px jeder sechste Satz, bei 320 px jeder dritte). Darum zählt dort wie breit der längste Satz,
+     gemessen an den längsten nach Zeichen (bei allen geprüften Breiten von 320 bis 640 px ist der höchste darunter) */
   function sichtBreite() {
     if (!ZB.schmal) return ZB.breite;
     const pl = parseFloat(getComputedStyle(roll).paddingLeft) || 0;
@@ -1131,12 +1134,11 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const breite = sichtBreite();
     [zeileZeigenEl, zeileOffenEl].forEach(el => { el.style.maxWidth = breite + 'px'; });
     const z = F.masz('--z');
-    if (ZB.schmal) { bandzeile.style.minHeight = z * 3 + 'px'; return; }
     const ohneTags = s => s.replace(/<[^>]*>/g, '').length;
     const alle = ZB.items.map(o => o.b).filter((b, i, a) => a.indexOf(b) === i);
-    const laengste = alle.map(satzVon).sort((p, q) => ohneTags(q) - ohneTags(p)).slice(0, 12);
+    const laengste = alle.map(satzVon).sort((p, q) => ohneTags(q) - ohneTags(p)).slice(0, ZB.schmal ? 24 : 12);
     const h = zeileReservieren(zeileOffenEl, laengste, Math.min(breite, ZB.breite));
-    bandzeile.style.minHeight = Math.max(h || 0, z) + 'px';
+    bandzeile.style.minHeight = Math.max(h || 0, ZB.schmal ? z * 3 : z) + 'px';
   }
 
   /* Treffer unter dem Zeiger: liegende Bücher zuerst, sonst der nächste Rücken entlang der Zeit, höchstens toleranz px daneben (Maus

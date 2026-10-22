@@ -974,12 +974,11 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const breite = sichtBreite();
     [zeileZeigenEl, zeileOffenEl].forEach(el => { el.style.maxWidth = breite + 'px'; });
     const z = F.masz('--z');
-    if (ZB.schmal) { bandzeile.style.minHeight = z * 3 + 'px'; return; }
     const ohneTags = s => s.replace(/<[^>]*>/g, '').length;
     const alle = ZB.items.map(o => o.b).filter((b, i, a) => a.indexOf(b) === i);
-    const laengste = alle.map(satzVon).sort((p, q) => ohneTags(q) - ohneTags(p)).slice(0, 12);
+    const laengste = alle.map(satzVon).sort((p, q) => ohneTags(q) - ohneTags(p)).slice(0, ZB.schmal ? 24 : 12);
     const h = zeileReservieren(zeileOffenEl, laengste, Math.min(breite, ZB.breite));
-    bandzeile.style.minHeight = Math.max(h || 0, z) + 'px';
+    bandzeile.style.minHeight = Math.max(h || 0, ZB.schmal ? z * 3 : z) + 'px';
   }
   function treffer(svg, e, toleranz) {
     const r = svg.getBoundingClientRect();

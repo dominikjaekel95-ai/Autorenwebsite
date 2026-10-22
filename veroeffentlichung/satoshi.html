@@ -165,8 +165,23 @@ html:not(.js) .globusseite > .globus { display: none; }
       var laden = document.fonts.load(SCHRIFT).then(function (l) { return !!(l && l.length); });
       return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
     }
+    function fellStand() {
+      var s = '';
+      document.fonts.forEach(function (f) { if (f.family.replace(/["']/g, '') === 'IM Fell French Canon') s = f.status; });
+      return s;
+    }
+    var fellWache = false;
     function nachSchrift() {
       if (!breit() || !document.fonts || !document.fonts.load) return;
+      if (!fellWache && document.fonts.forEach && window.requestAnimationFrame) {
+        fellWache = true;
+        (function wachen(n) {
+          var s = fellStand();
+          if (s === 'loaded' && breit()) setzen();
+          if (s === 'loaded' || s === 'error' || n > 600 || !breit()) { fellWache = false; return; }
+          requestAnimationFrame(function () { wachen(n + 1); });
+        })(0);
+      }
       document.fonts.load(SCHRIFT).catch(function () {}).then(function () { return document.fonts.ready; }).then(setzen, setzen);
     }
     var FLUG = [];

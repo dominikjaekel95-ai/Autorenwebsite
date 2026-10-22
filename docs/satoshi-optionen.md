@@ -8,14 +8,18 @@ Stand: 22. Oktober 2026. Gilt für Version C (`website-c/satoshi.html` und `webs
 >
 > „Vorher war es einfach etwas eleganter … ich weiß nicht, nur der Leerraum hat etwas gestört. Kannst du mir nochmal ein paar andere Optionen geben, wie man den Leerraum sinnvoll füllen könnte, UX-technisch?“
 
+## Meine Empfehlung
+
+Ich empfehle **B**: die Lage aus Runde 4 und dein Aufhänger groß in der IM Fell French Canon, einfliegend wie der erste Satz der Startseite. Das ist dein eigener Vorschlag und bleibt der Fassung, die du eleganter fandest, am nächsten, weil nichts Neues auf die Seite kommt. Der große Satz hält der Kugel das Gewicht, und der Raum unter ihm (bei 1440 × 900 rund 340 px) ist kaum größer als der unter dem ersten Satz der Startseite (rund 310 px), er gehört damit zum Rhythmus der ganzen Website. Den Einflug würde ich auf die Startseite und *Satoshi* beschränken, die Seite, auf der Agenturen und Verlage über einen Link im Exposé zuerst landen können, und ihn auf die rund 1 s der Startseite straffen (in B dauert er 1,3 s, weil der Aufhänger 21 statt 12 Wörter hat). Dass der Aufhänger größer ist als der Titel, halte ich für richtig: Der Titel steht weiter zuerst und in der Navigation, und der Satz ist das, was man von dieser Seite behalten soll. Zweite Wahl ist **C**, falls dich der Raum auch in B noch stört: Der gekürzte Absatz füllt die Spalte bis rund 700 px und bringt die Frage des Romans schon in den ersten Bildschirm, dafür wird es dichter, und dein Absatz steht je nach Breite in zwei Fassungen. A verlegt den Leerraum nur zwischen Titel und Aufhänger (bei 1920 × 1080 rund 600 px), D, E und F füllen ihn mit Dingen, die weiter unten besser stehen, und F bricht bei 1280 bis 1440 px die Navigation in zwei Zeilen. Auf den *Ursprüngen* würde ich die Kugel **haften lassen**. Dort gehört jeder Band zu einem Ort, und die Leselinie führt die Kugel beim Lesen von Göbekli Tepe bis Jerusalem; auf *Satoshi* hängen Klappentext und Figuren an keinem Ort, darum steht die Kugel dort zu Recht still. Ohne Haften wäre rechts ab Band II die ganze Spalte leer, also genau die Art Leerraum, die dich auf *Satoshi* stört.
+
 Unten stehen sechs Möglichkeiten (A bis F), jede mit Bildern, dazu der heutige Stand zum Vergleich. Am Ende geht es um deine Frage zu den *Ursprüngen*: Die Kugel wandert dort mit, und auch dazu gibt es Bilder von beiden Fassungen.
 
 **Was für alle Optionen gilt**
 
 - Es geht nur um die breite Ansicht mit zwei Spalten (ab rund 1000 px Fensterbreite). **Auf dem Telefon bleibt alles, wie es ist.** Das habe ich bei 390 × 844 nachgemessen: A, D, E und F sind dort Bildpunkt für Bildpunkt gleich wie heute. Bei B und C weicht der Aufhänger um Bruchteile eines Bildpunkts ab, weil er in einzelne Wörter zerlegt ist; die Zeilen brechen gleich, und er fliegt dort nicht.
 - Kein Wort ist geändert. Texte sind nur verschoben oder in der Größe verändert. Einzige Ausnahme ist C, das deinen gekürzten Absatz „Wer war Satoshi Nakamoto wirklich? …“ aus Runde 5 wieder verwendet.
-- Alle Optionen außer C gehen auf die Lage aus Runde 4 zurück: Der Klappentext beginnt unter der Kugel, links und rechts auf einer Höhe mit den Eckdaten. Der volle Absatz „Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? …“ steht dann wieder an seinem Platz unter „Die Frage hinter dem Roman“, der gekürzte oben fällt weg. Die Texte sind die von heute (Runde 5 und 6), nur die Anordnung ist die von Runde 4.
-- Die Bilder zeigen den ersten Bildschirm bei 1440 × 900, denselben Bildschirm eine Bildschirmhöhe weiter unten, und den ersten Bildschirm bei 1280 × 800 und 1920 × 1080. Die Kugel steht überall vier Sekunden nach dem Laden, mitten im Einspieler bei der ersten Szene (Buenos Aires, 2001).
+- Alle Optionen gehen auf die Lage aus Runde 4 zurück: Der Klappentext beginnt erst unter der Kugel, links, auf einer Höhe mit dem Abschnitt rechts (den Eckdaten, in E den Figuren). Außer in C steht dann auch der volle Absatz „Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? …“ wieder an seinem Platz unter „Die Frage hinter dem Roman“, und der gekürzte oben fällt weg. Die Texte sind die von heute (Runde 5 und 6), nur die Anordnung ist die von Runde 4.
+- Die Bilder zeigen den ersten Bildschirm bei 1440 × 900, dieselbe Seite eine Bildschirmhöhe weiter unten, und den ersten Bildschirm bei 1280 × 800 und 1920 × 1080. Die Kugel steht überall vier Sekunden nach dem Laden, mitten im Einspieler bei der ersten Szene (Buenos Aires, 2001).
 
 ---
 
@@ -40,7 +44,7 @@ Links stehen Titel, Aufhänger, der gekürzte Absatz und gleich danach der Klapp
 
 **Dafür.** Am nächsten an der Fassung, die du eleganter fandest. Der Leerraum wirkt gewollt, wie auf einer Titelseite, und nicht wie etwas, das fehlt. Der Aufhänger führt unmittelbar in den Klappentext. Nichts Neues kommt auf die Seite.
 
-**Dagegen.** Der Raum bleibt leer, er ist nur anders verteilt (bei 1440 × 900 rund 400 px zwischen Unterzeile und Aufhänger, bei 1920 × 1080 knapp 600 px). Titel und Aufhänger sind getrennt; wer nur oben liest, sieht den Aufhänger erst beim zweiten Blick. Bei 1280 × 800 steht der Aufhänger sehr weit unten im Bild.
+**Dagegen.** Der Raum bleibt leer, er ist nur anders verteilt (bei 1440 × 900 rund 400 px zwischen Unterzeile und Aufhänger, bei 1920 × 1080 rund 600 px). Titel und Aufhänger sind getrennt; wer nur oben liest, sieht den Aufhänger erst beim zweiten Blick. Bei 1280 × 800 steht der Aufhänger sehr weit unten im Bild. In der Entwurfsseite springt der Aufhänger beim Laden einmal um rund 160 px nach unten, sobald die Tafel ihren Text bekommt (bei 1440 × 900 gemessen); im Bau müsste die Höhe der Tafel vorher reserviert werden.
 
 **Aufwand.** Klein. Zwei Regeln im Stil der Seite, dazu die Regeln und der Absatz aus Runde 5 entfernen. Etwa eine halbe Stunde mit Prüfung.
 
@@ -51,14 +55,14 @@ Links stehen Titel, Aufhänger, der gekürzte Absatz und gleich danach der Klapp
 ![B: Einflug nach 0,56 s, der erste Satz steht, „Ihr“ kommt](optionen/satoshi-b-flug-2.jpg)
 ![B: Einflug nach 0,9 s, der letzte Satz kommt Wort für Wort](optionen/satoshi-b-flug-3.jpg)
 ![B: 1440 × 900, eine Bildschirmhöhe weiter, wie in Runde 4](optionen/satoshi-b-1440-weiter.jpg)
-![B: 1280 × 800, erster Bildschirm](optionen/satoshi-b-1280.jpg)
+![B: 1280 × 800, erster Bildschirm. Der Aufhänger steht hier in 31 px, weil die beiden kurzen Sätze sonst nicht in eine Zeile passen](optionen/satoshi-b-1280.jpg)
 ![B: 1920 × 1080, erster Bildschirm](optionen/satoshi-b-1920.jpg)
 
-**Was sich ändert.** Der Aufhänger steht wie der erste Satz der Startseite: IM Fell French Canon, 38 px, Zeilenabstand anderthalb Zeilen. Jeder der drei Sätze beginnt eine neue Zeile, der erste ist ausgeglichen umbrochen. Beim Laden fliegt er Wort für Wort von rechts ein, mit derselben Mechanik und demselben Takt wie auf der Startseite (Weg 0,2 em, je Wort 0,36 s, leichte waagrechte Unschärfe, die beim Ankommen vergeht). Er braucht rund 1,3 s und wartet höchstens 0,6 s auf seine Schrift. Bei reduzierter Bewegung steht er sofort da, Vorleseprogramme lesen ihn als einen Satz. Der Platz ist von Anfang an reserviert, nichts springt. Passen die beiden kurzen Sätze nicht in eine Zeile, wird die Schrift kleiner, aber nicht unter 28,5 px. Darunter folgt der Klappentext wie in Runde 4.
+**Was sich ändert.** Der Aufhänger steht wie der erste Satz der Startseite: IM Fell French Canon, 38 px, Zeilenabstand wie dort 42,75 px (anderthalb Zeilen des Lesetexts). Jeder der drei Sätze beginnt eine neue Zeile, der erste ist ausgeglichen umbrochen. Beim Laden fliegt er Wort für Wort von rechts ein, mit derselben Mechanik und demselben Takt wie auf der Startseite (Weg 0,2 em, je Wort 0,36 s, leichte waagrechte Unschärfe, die beim Ankommen vergeht). Er braucht rund 1,3 s und wartet höchstens 0,6 s auf seine Schrift. Bei reduzierter Bewegung steht er sofort da, Vorleseprogramme lesen ihn als einen Satz. Der Platz ist von Anfang an reserviert, nichts springt. Passen die beiden kurzen Sätze nicht in eine Zeile, wird die Schrift kleiner, aber nicht unter 28,5 px; bei 1280 × 800 sind es 31 px, so wie auf der Startseite bei dieser Breite. Darunter folgt der Klappentext wie in Runde 4. In den drei Bildern vom Einflug ist nur der Aufhänger angehalten, die Kugel steht darin noch im Überblick. Beim echten Laden beginnt ihr erster Flug noch während des Einflugs, beide Bewegungen laufen also kurz gleichzeitig, wie auf der Startseite.
 
 **Dafür.** Genau dein Vorschlag „größer und einfliegen“. Der Aufhänger wird zum Bild des ersten Bildschirms und steht auf Augenhöhe mit der Kugel. Startseite und *Satoshi* sprechen dieselbe Sprache: Auf beiden kommt der erste Satz einmal herein. Der Leerraum wird kleiner (bei 1440 × 900 endet der Aufhänger bei 556 statt 449 px).
 
-**Dagegen.** Der Leerraum ist nicht weg: Unten links bleiben bei 1440 × 900 rund 330 px frei, bei 1920 × 1080 rund 500 px. Der Aufhänger ist größer als der Titel „Satoshi“; die Rangfolge kippt, der Titel wirkt daneben fast wie eine Rubrik. Eine zweite Bewegung beim Laden, gleichzeitig mit dem Einspieler der Kugel. Der Einflug ist auf der Startseite das Erkennungszeichen; zweimal verliert er etwas davon.
+**Dagegen.** Der Leerraum ist nicht weg: Unten links bleiben bei 1440 × 900 rund 340 px frei, bei 1920 × 1080 gut 500 px. Der Aufhänger ist größer als der Titel „Satoshi“; die Rangfolge kippt, der Titel wirkt daneben fast wie eine Rubrik. Eine zweite Bewegung beim Laden, gleichzeitig mit dem Einspieler der Kugel. Der Einflug ist auf der Startseite das Erkennungszeichen; zweimal verliert er etwas davon. Er dauert hier 1,3 s, auf der Startseite 0,9 s, weil der Aufhänger 21 statt 12 Wörter hat.
 
 **Aufwand.** Mittel. Den Einflug der Startseite nicht kopieren, sondern als gemeinsame Funktion nach `seite.js` holen, dazu Stil und Vorladen der Schrift. Rund ein bis zwei Stunden mit Prüfung aller Breiten, reduzierter Bewegung und Vorleseprogramm.
 
@@ -69,14 +73,14 @@ Links stehen Titel, Aufhänger, der gekürzte Absatz und gleich danach der Klapp
 ![C: Einflug nach 0,56 s](optionen/satoshi-c-flug-2.jpg)
 ![C: Einflug nach 0,9 s](optionen/satoshi-c-flug-3.jpg)
 ![C: 1440 × 900, eine Bildschirmhöhe weiter, wie in Runde 4](optionen/satoshi-c-1440-weiter.jpg)
-![C: 1280 × 800, erster Bildschirm](optionen/satoshi-c-1280.jpg)
+![C: 1280 × 800, erster Bildschirm. Der Aufhänger steht wie in B in 31 px](optionen/satoshi-c-1280.jpg)
 ![C: 1920 × 1080, erster Bildschirm](optionen/satoshi-c-1920.jpg)
 
 **Was sich ändert.** Wie B, dazu unter dem Aufhänger dein gekürzter Absatz aus Runde 5 („Wer war Satoshi Nakamoto wirklich? …“) im Grad Text, eine Zeile Abstand. Er steht still, nur der Aufhänger fliegt. Wie heute fehlt dafür der volle Absatz unter „Die Frage hinter dem Roman“, damit er nicht doppelt steht. Der Klappentext beginnt unter der Kugel wie in Runde 4.
 
 **Dafür.** Der erste Bildschirm erzählt eine kleine Geschichte: das Ereignis (groß), dann die Frage (leise). Der Leerraum wird deutlich kleiner (bei 1440 × 900 endet die linke Spalte bei 698 px, unten links bleiben rund 200 px im Bild frei). Groß und klein nebeneinander geben eine klare Rangfolge innerhalb der linken Spalte.
 
-**Dagegen.** Die Nachteile von B (Rangfolge zum Titel, zweite Bewegung) bleiben. Der Absatz steht weiter getrennt von „Die Frage hinter dem Roman“, wo er herkommt. Bei 1920 × 1080 bleiben unten links rund 370 px frei. Bei 1280 × 800 ist die linke Spalte bis kurz vor den Rand gefüllt und wirkt dichter als die rechte.
+**Dagegen.** Die Nachteile von B (Rangfolge zum Titel, zweite Bewegung) bleiben. Der Absatz steht weiter getrennt von „Die Frage hinter dem Roman“, wo er herkommt. Bei 1920 × 1080 bleiben unten links rund 380 px frei. Bei 1280 × 800 ist die linke Spalte bis kurz vor den Rand gefüllt und wirkt dichter als die rechte.
 
 **Aufwand.** Wie B. Die Regeln für den gekürzten Absatz gibt es schon.
 
@@ -106,7 +110,7 @@ Links stehen Titel, Aufhänger, der gekürzte Absatz und gleich danach der Klapp
 
 **Dafür.** Das, was eine Agentur oder ein Verlag zuerst wissen will, steht im ersten Bildschirm: Debüt, Perspektive, Zeitraum, wer du bist, der Preis. Das entspricht dem Aufbau eines Exposés. Der Raum ist bei 1440 × 900 gut gefüllt (bis 805 px), unten bleibt ein ruhiger Rand. Es kommt nichts Neues hinzu, nur ein Abschnitt zieht um, und die Doppelseite darunter wird klarer: links der Roman, rechts die Figuren.
 
-**Dagegen.** Sachliche Angaben direkt nach dem Aufhänger nehmen ihm etwas von seiner Wirkung; die Stimmung wechselt von Erzählung zu Datenblatt. Die Vita steht damit sehr weit oben auf einer Seite, die vom Roman handeln soll. Bei 1280 × 800 rückt der Klappentext um gut 80 px nach unten, bei 1920 × 1080 bleiben unten links rund 260 px frei.
+**Dagegen.** Sachliche Angaben direkt nach dem Aufhänger nehmen ihm etwas von seiner Wirkung; die Stimmung wechselt von Erzählung zu Datenblatt. Die Vita steht damit sehr weit oben auf einer Seite, die vom Roman handeln soll. Bei 1280 × 800 rückt der Klappentext um gut 80 px nach unten, bei 1920 × 1080 bleiben unten links rund 270 px frei.
 
 **Aufwand.** Klein, wie D. Etwa eine halbe Stunde.
 
@@ -121,7 +125,7 @@ Links stehen Titel, Aufhänger, der gekürzte Absatz und gleich danach der Klapp
 
 **Dafür.** Die Kugel wird das große Bild der Seite. Der Raum unter dem Aufhänger füllt sich mit etwas Lebendigem: Während der Einspieler läuft, wechselt dort der Szenentext. Aufhänger und erste Szene („Dezember 2001. Die siebzehnjährige Lana …“) stehen untereinander und lesen sich wie ein Anfang. Die Bedienung liegt näher am Text, den man ohnehin liest.
 
-**Dagegen.** Die Tafel steht weit weg von den Orten auf der Kugel; heute liest man Ort und Szene direkt unter der Karte. Auf allen anderen Globusseiten steht die Tafel unter der Kugel, hier wäre sie die Ausnahme. Links bewegt sich etwas neben dem Text, während man den Aufhänger liest. Die Navigation bricht bei 1280 und 1440 in zwei Zeilen, weil die Kugel weiter nach links reicht. Bei 1440 × 900 liegen die Überschriften „Klappentext“ und „Eckdaten“ genau an der Bildschirmkante, bei 1920 × 1080 bleibt unter der Tafel wieder Leerraum (die Kugel ist dort höher als die linke Spalte). Die Tafel hält ihre Höhe für die längste Szene, darum steht unter kurzen Szenen ein Rest frei.
+**Dagegen.** Die Tafel steht weit weg von den Orten auf der Kugel; heute liest man Ort und Szene direkt unter der Karte. Auf allen anderen Globusseiten steht die Tafel unter der Kugel, hier wäre sie die Ausnahme. Links bewegt sich etwas neben dem Text, während man den Aufhänger liest. Die Navigation bricht bei 1280 und 1440 in zwei Zeilen (auch bei 1366, bei 1600 nicht mehr), weil die Kugel weiter nach links reicht. Die Jahreszahl der Tafel rückt bei diesen Breiten bis auf 16 px an den Fensterrand, und zwischen Text und Kugel bleiben nur rund 45 px. Bei 1440 × 900 liegen die Überschriften „Klappentext“ und „Eckdaten“ genau an der Bildschirmkante, bei 1920 × 1080 bleibt unter der Tafel wieder Leerraum (die Kugel ist dort höher als die linke Spalte). Die Tafel hält ihre Höhe für die längste Szene, darum steht unter kurzen Szenen ein Rest frei.
 
 **Aufwand.** Mittel bis groß. Steuerzeile und Tafel beim Wechsel der Breite umsetzen, Formel für die Größe der Kugel, Navigation, Hinweise der Kugel prüfen. Zwei bis drei Stunden.
 

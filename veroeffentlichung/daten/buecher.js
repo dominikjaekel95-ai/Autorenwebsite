@@ -1,5 +1,6 @@
 window.BUECHER = [
 {"t":"Trust","u":"","a":"Hernan Diaz","r":"gelesen","s":5,"j":2022,"p":402,"w":0,"b":"h","v":"Riverhead Books"},
+{"t":"Für immer die Alpen","u":"","a":"Benjamin Quaderer","r":"gelesen","s":0,"j":2020,"p":592,"w":0,"b":"h","v":"Luchterhand"},
 {"t":"The Maniac","u":"","a":"Benjamín Labatut","r":"gelesen","s":5,"j":2023,"p":368,"w":0,"b":"h","v":"Penguin Press"},
 {"t":"When We Cease to Understand the World","u":"","a":"Benjamín Labatut","r":"gelesen","s":5,"j":2020,"p":193,"w":0,"b":"e","v":"New York Review Books"},
 {"t":"Jesus’ Son","u":"","a":"Denis Johnson","r":"gelesen","s":0,"j":1992,"p":160,"w":0,"b":"m","v":"Perennial"},

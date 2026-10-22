@@ -32,8 +32,8 @@
    Startseite (Dominik, 22. Oktober: „Vielleicht könnte das auch einfach größer sein und einfliegen?“; Option B in
    docs/satoshi-optionen.md): IM Fell French Canon im Grad Einstieg, Zeilenhöhe 1,5 z, jeder Satz beginnt eine Zeile, der erste
    bricht ausgeglichen. Passen die beiden kurzen Sätze nicht in eine Zeile, setzt ihn das Skript darunter kleiner (bei 1280 px rund
-   31 px, nie unter 28,5 px). Die Wortkästen, in denen er einfliegt, sind nur hier Inline-Blöcke (sonst ließe transform sie
-   stehen); schmal bleiben sie gewöhnlicher Text und brechen wie vorher */
+   31 px, nie unter 28,5 px). Die Wortkästen, in denen er einfliegt, sind Inline-Blöcke (sonst ließe transform sie stehen); schmal
+   gibt es sie nicht, dort setzt das Skript den Vorspann als schlichten Text wie vorher */
 .vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
 @media (min-width: 62.0625rem) {
   .vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); }
@@ -131,31 +131,45 @@ html:not(.js) .globusseite > .globus { display: none; }
     var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
     var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
 
-    // Jeder Satz in Wortkästen. Getrennt wird nur an gewöhnlichen Leerzeichen: „31. Oktober“ (mit festem Leerzeichen) ist ein Wort
+    // Getrennt wird nur an gewöhnlichen Leerzeichen: „31. Oktober“ (mit festem Leerzeichen) ist ein Wort
     var LUECKE = /[ \t\r\n]+/;
-    var text = el.textContent.split(LUECKE).join(' ').trim();
-    var satz = document.createElement('span');
-    satz.className = 'einstieg-satz';
-    satz.setAttribute('aria-hidden', 'true');
-    while (el.firstChild) satz.appendChild(el.firstChild);
-    var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
-    glieder.forEach(function (g) {
-      var woerter = g.textContent.trim().split(LUECKE);
-      g.textContent = '';
-      woerter.forEach(function (w, i) {
-        if (i) g.appendChild(document.createTextNode(' '));
-        var s = document.createElement('span');
-        s.className = 'w';
-        s.textContent = w;
-        g.appendChild(s);
+    var saetze = Array.prototype.map.call(el.querySelectorAll('.glied-satz'), function (g) { return g.textContent.trim().split(LUECKE).join(' '); });
+    var glieder = [], woerter = [], gebaut = null;
+    /* Schmal steht der Vorspann als schlichter Text, Zeichen für Zeichen wie vorher, damit er dort genau so bricht und gesetzt ist.
+       Zweispaltig ist jeder Satz ein Glied (eine Zeile) aus Wortkästen; die liest kein Vorleseprogramm (aria-hidden), es liest
+       die Kopie in .unsichtbar. Neu gebaut wird beim Laden und wenn das Fenster die Grenze überschreitet */
+    function aufbauen() {
+      var b = breit();
+      if (b === gebaut) return;
+      gebaut = b;
+      glieder = []; woerter = [];
+      el.textContent = b ? '' : saetze.join(' ');
+      if (!b) return;
+      var vorlesen = document.createElement('span');
+      vorlesen.className = 'unsichtbar einstieg-vorlesen';
+      vorlesen.textContent = saetze.join(' ');
+      var satz = document.createElement('span');
+      satz.className = 'einstieg-satz';
+      satz.setAttribute('aria-hidden', 'true');
+      saetze.forEach(function (s, i) {
+        if (i) satz.appendChild(document.createTextNode(' '));
+        var g = document.createElement('span');
+        g.className = 'glied-satz';
+        s.split(' ').forEach(function (w, j) {
+          if (j) g.appendChild(document.createTextNode(' '));
+          var k = document.createElement('span');
+          k.className = 'w';
+          k.textContent = w;
+          g.appendChild(k);
+          woerter.push(k);
+        });
+        satz.appendChild(g);
+        glieder.push(g);
       });
-    });
-    var vorlesen = document.createElement('span');
-    vorlesen.className = 'unsichtbar einstieg-vorlesen';
-    vorlesen.textContent = text;
-    el.appendChild(vorlesen);
-    el.appendChild(satz);
-    var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
+      el.appendChild(vorlesen);
+      el.appendChild(satz);
+    }
+    aufbauen();
 
     /* Zweispaltig: Der erste Satz bricht frei, die beiden kurzen sollen je eine Zeile sein. Passt einer nicht in die Spalte, wird
        die Schrift kleiner, bis er passt, nicht unter 28,5 px; darunter bricht auch er. Gemessen wird die Breite des Satzes ohne
@@ -180,9 +194,11 @@ html:not(.js) .globusseite > .globus { display: none; }
       var laden = document.fonts.load(SCHRIFT).then(function (l) { return !!(l && l.length); });
       return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
     }
-    // Kommt die Schrift später oder wird das Fenster erst jetzt breit, wird der Satz noch einmal an die Spalte angepasst (ohne Flug)
+    /* Kommt die Schrift später oder wird das Fenster erst jetzt breit, wird der Satz noch einmal an die Spalte angepasst (ohne Flug),
+       sobald alle Schriften da sind; auch wenn die IM Fell ausbleibt, dann in der Vollkorn */
     function nachSchrift() {
-      if (breit() && document.fonts && document.fonts.load) document.fonts.load(SCHRIFT).then(setzen).catch(function () {});
+      if (!breit() || !document.fonts || !document.fonts.load) return;
+      document.fonts.load(SCHRIFT).catch(function () {}).then(function () { return document.fonts.ready; }).then(setzen, setzen);
     }
 
     // Je Wort ein Filter für die waagrechte Bewegungsunschärfe
@@ -253,6 +269,7 @@ html:not(.js) .globusseite > .globus { display: none; }
       warte = setTimeout(function () {
         if (window.innerWidth === breiteVorher) return;
         breiteVorher = window.innerWidth;
+        aufbauen();
         setzen();
         nachSchrift();
       }, 140);

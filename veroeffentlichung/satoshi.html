@@ -28,15 +28,19 @@ document.documentElement.classList.add('js');
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin media="(min-width: 62.0625rem)">
 <link rel="stylesheet" href="stil.css">
 <style>
 .titelei { margin-top: var(--z); }
 .vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
-.frage-kurz { display: none; margin-top: var(--z); }
 @media (min-width: 62.0625rem) {
-  .frage-kurz { display: block; }
-  .frage .frage-voll { display: none; }
+  .vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); }
+  .vorspann .glied-satz { display: block; text-wrap: balance; }
+  .vorspann .w { display: inline-block; }
 }
+.vorspann .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
+.vorspann.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 1.2s forwards; }
+@keyframes einstieg-notfall { to { opacity: 1; } }
 html:not(.js) .globusseite > .globus { display: none; }
 .buch { display: flex; flex-direction: column; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
 .buch section { max-width: var(--mass); margin-top: var(--z-zwei); }
@@ -62,14 +66,6 @@ html:not(.js) .globusseite > .globus { display: none; }
   .buch .rechts { display: block; grid-column: 2; grid-row: 1 / span 4; }
   .buch .rechts section { max-width: none; }
   .buch .rechts .eckdaten { margin-top: 0; }
-}
-@media (min-width: 75rem) {
-  .js #inhalt:not(:has(.ohne-globus)) { position: relative; overflow-x: clip; }
-  .js #inhalt:not(:has(.ohne-globus)) .globusseite > .globus { position: absolute; top: calc(var(--z) * .5 - var(--kopf-h)); right: calc(var(--globus) * -.09); margin: 0; }
-  .js #inhalt:not(:has(.ohne-globus)) .buch .rechts {
-    position: absolute; left: var(--globuskante); width: min(24em, calc(100% - var(--globuskante) - var(--rand-r)));
-    top: calc(var(--z) * .5 - var(--kopf-h) + var(--globus) + var(--tafel-h) + var(--z-zwei));
-  }
 }
 @media (max-width: 62rem) {
   .buch { padding-right: var(--rand-l); }
@@ -106,9 +102,140 @@ html:not(.js) .globusseite > .globus { display: none; }
     <p class="unterzeile">Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor, gerade entsteht die Endfassung.</p>
   </div>
 
-  <p class="vorspann">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.</p>
-  
-  <p class="frage-kurz">Wer war Satoshi Nakamoto wirklich? Das letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
+  <p class="vorspann" id="aufhaenger"><span class="glied-satz">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten.</span> <span class="glied-satz">Ihr Verfasser hat nie existiert.</span> <span class="glied-satz">Verschwinden musste er trotzdem.</span></p>
+  <script>
+  (function () {
+    'use strict';
+    var el = document.getElementById('aufhaenger');
+    if (!el || !el.querySelector('.glied-satz')) return;
+    var SCHRIFT = '38px "IM Fell French Canon"';
+    var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+    var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
+    var LUECKE = /[ \t\r\n]+/;
+    var saetze = Array.prototype.map.call(el.querySelectorAll('.glied-satz'), function (g) { return g.textContent.trim().split(LUECKE).join(' '); });
+    var glieder = [], woerter = [], gebaut = null;
+    function aufbauen() {
+      var b = breit();
+      if (b === gebaut) return;
+      gebaut = b;
+      glieder = []; woerter = [];
+      el.textContent = b ? '' : saetze.join(' ');
+      if (!b) return;
+      var vorlesen = document.createElement('span');
+      vorlesen.className = 'unsichtbar einstieg-vorlesen';
+      vorlesen.textContent = saetze.join(' ');
+      var satz = document.createElement('span');
+      satz.className = 'einstieg-satz';
+      satz.setAttribute('aria-hidden', 'true');
+      saetze.forEach(function (s, i) {
+        if (i) satz.appendChild(document.createTextNode(' '));
+        var g = document.createElement('span');
+        g.className = 'glied-satz';
+        s.split(' ').forEach(function (w, j) {
+          if (j) g.appendChild(document.createTextNode(' '));
+          var k = document.createElement('span');
+          k.className = 'w';
+          k.textContent = w;
+          g.appendChild(k);
+          woerter.push(k);
+        });
+        satz.appendChild(g);
+        glieder.push(g);
+      });
+      el.appendChild(vorlesen);
+      el.appendChild(satz);
+    }
+    aufbauen();
+    function setzen() {
+      el.style.fontSize = '';
+      var breite = breit() ? el.clientWidth : 0;
+      if (!breite) return;
+      var laengste = 0;
+      glieder.slice(1).forEach(function (g) {
+        g.style.width = 'max-content';
+        laengste = Math.max(laengste, g.getBoundingClientRect().width);
+        g.style.width = '';
+      });
+      if (laengste <= breite) return;
+      var jetzt = parseFloat(getComputedStyle(el).fontSize);
+      el.style.fontSize = Math.max(28.5, Math.floor(jetzt * breite / laengste * 10) / 10 - .2) + 'px';
+    }
+    function imFell(ms) {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var laden = document.fonts.load(SCHRIFT).then(function (l) { return !!(l && l.length); });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
+    }
+    function nachSchrift() {
+      if (!breit() || !document.fonts || !document.fonts.load) return;
+      document.fonts.load(SCHRIFT).catch(function () {}).then(function () { return document.fonts.ready; }).then(setzen, setzen);
+    }
+    var FLUG = [];
+    function filterAnlegen() {
+      if (document.getElementById('aufhaenger-filter')) return;
+      var ns = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.id = 'aufhaenger-filter';
+      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+      var html = '';
+      for (var j = 0; j < woerter.length; j++) html += '<filter id="aufhaenger-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+      svg.innerHTML = html;
+      document.body.appendChild(svg);
+      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('aufhaenger-flug-' + m).querySelector('feGaussianBlur'));
+    }
+    var VERSATZ = 28, PAUSE = 70, DAUER = 360;
+    function einfliegen() {
+      if (!woerter[0].animate) return;
+      filterAnlegen();
+      var em = parseFloat(getComputedStyle(el).fontSize) || 38;
+      var t = 0, laeufe = [];
+      glieder.forEach(function (g, gi) {
+        if (gi) t += PAUSE;
+        Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
+          if (wi) t += VERSATZ;
+          laeufe.push(w.animate([
+            { opacity: 0, transform: 'translateX(.2em)' },
+            { opacity: 1, offset: .38 },
+            { opacity: 1, transform: 'translateX(0)' }
+          ], { duration: DAUER, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+        });
+      });
+      (function schritt() {
+        var offen = false;
+        laeufe.forEach(function (a, i) {
+          var w = woerter[i], ct = a.effect.getComputedTiming();
+          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
+          offen = true;
+          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
+          var s = Math.pow(1 - ct.progress, 1.6) * .06 * em;
+          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
+          w.style.filter = s > .06 ? 'url(#aufhaenger-flug-' + i + ')' : '';
+        });
+        if (offen) requestAnimationFrame(schritt);
+      })();
+    }
+    if (breit() && !still()) {
+      el.classList.add('wartet');
+      imFell(600).then(function (da) {
+        setzen();
+        el.classList.remove('wartet');
+        if (da && breit() && !still()) einfliegen();
+      });
+    } else setzen();
+    nachSchrift();
+    var warte = 0, breiteVorher = window.innerWidth;
+    window.addEventListener('resize', function () {
+      clearTimeout(warte);
+      warte = setTimeout(function () {
+        if (window.innerWidth === breiteVorher) return;
+        breiteVorher = window.innerWidth;
+        aufbauen();
+        setzen();
+        nachSchrift();
+      }, 140);
+    });
+  })();
+</script>
 
   <figure class="globus" id="globus">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
@@ -183,7 +310,7 @@ html:not(.js) .globusseite > .globus { display: none; }
       <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die Antworten, die im Umlauf sind, folgen zwei Bewegungen: das System reparieren&nbsp;– oder aussteigen und ein Parallelsystem bauen. Die 2020er Jahre sind das Jahrzehnt, in dem dieser Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
       <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine tief verankerte Stabilitäts&shy;kultur, nur in den seltensten Fällen aber lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
       <p><i>Satoshi</i> ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat&nbsp;– die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.</p>
-      <p class="frage-voll">Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
+      <p>Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
     </div>
   </section>
 

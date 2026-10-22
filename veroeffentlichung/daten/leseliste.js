@@ -2,7 +2,6 @@ window.LESELISTE = [
   { t: 'Serotonin', a: 'Michel Houellebecq', j: 2019, p: 336 },
   { t: 'Indignation', a: 'Philip Roth', j: 2008, p: 233 },
   { t: 'Sand', a: 'Wolfgang Herrndorf', j: 2011, p: 480 },
-  { t: 'Für immer die Alpen', a: 'Benjamin Quaderer', j: 2020, p: 592 },
   { t: 'Der Widersacher', a: 'Emmanuel Carrère', j: 2000, p: 192 },
   { t: 'Limonow', a: 'Emmanuel Carrère', j: 2011, p: 480 },
   { t: 'The Passenger', a: 'Cormac McCarthy', j: 2022, p: 384 },

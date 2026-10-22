@@ -12,6 +12,7 @@
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin media="(min-width: 62.0625rem)">
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Seite des Romans Satoshi (gestaltung-website-c.md, 9.2, 18).
@@ -21,25 +22,29 @@
    früher, später und abspielen und über die Orte auf der Kugel. Beim ersten Sichtbarwerden läuft der Einspieler: Orte und Linien,
    und an jeder Station steht der Szenentext in der Tafel, rund eine Minute für alle zehn Szenen. Danach ruht die Tafel bei
    „Die Schauplätze“; eine Wahl oder das Abspielen zeigt die Szene wieder.
-   Breit steht unter dem Vorspann der gekürzte Absatz „Wer war Satoshi Nakamoto wirklich? …“ (Runde 5).
-   Darunter das Buch, 2 z unter dem Globusband: ab 75 rem als Doppelseite (links Klappentext, Bau, Frage, Machart, der Klappentext
-   beginnt schon neben der Kugel; rechts an der Kante der Kugel, 2 z unter der Tafel, Eckdaten und Figuren), darunter eine Spalte
-   in der Reihenfolge von A. */
+   Zweispaltig steht der Vorspann groß wie der erste Satz der Startseite und fliegt beim Laden einmal ein (Option B, 22. Oktober).
+   Darunter das Buch, 2 z unter dem Globusband: ab 75 rem als Doppelseite (links Klappentext, Bau, Frage, Machart; rechts an der
+   Kante der Kugel Eckdaten und Figuren), darunter eine Spalte in der Reihenfolge von A. */
 
 /* ---------- Globusband ---------- */
 .titelei { margin-top: var(--z); }
-/* Der Vorspann aus dem Exposé im Grad Überschrift */
+/* Der Vorspann aus dem Exposé. Schmal (Telefon, Tablet) im Grad Überschrift. Zweispaltig steht er wie der erste Satz der
+   Startseite (Dominik, 22. Oktober: „Vielleicht könnte das auch einfach größer sein und einfliegen?“; Option B in
+   docs/satoshi-optionen.md): IM Fell French Canon im Grad Einstieg, Zeilenhöhe 1,5 z, jeder Satz beginnt eine Zeile, der erste
+   bricht ausgeglichen. Passen die beiden kurzen Sätze nicht in eine Zeile, setzt ihn das Skript darunter kleiner (bei 1280 px rund
+   31 px, nie unter 28,5 px). Die Wortkästen, in denen er einfliegt, sind nur hier Inline-Blöcke (sonst ließe transform sie
+   stehen); schmal bleiben sie gewöhnlicher Text und brechen wie vorher */
 .vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
-
-/* Der Absatz „Wer war Satoshi Nakamoto wirklich? …“ steht nur einmal (Dominik, 22. Oktober: „Das ist sonst echt viel Space“): in der
-   Zweispaltenlage gekürzt in der linken Spalte unter dem Vorspann, neben der Kugel, und nicht unter „Die Frage hinter dem Roman“;
-   schmaler (Tablet, Telefon) voll an seiner Stelle dort. Die andere Fassung ist display: none, auch für Vorleseprogramme. Eine
-   Grenze für beide, damit bei keiner Breite beide oder keine stehen */
-.frage-kurz { display: none; margin-top: var(--z); }
 @media (min-width: 62.0625rem) {
-  .frage-kurz { display: block; }
-  .frage .frage-voll { display: none; }
+  .vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); }
+  .vorspann .glied-satz { display: block; text-wrap: balance; }
+  .vorspann .w { display: inline-block; }
 }
+/* Die Vorlesekopie zählt beim Markieren und Kopieren nicht mit */
+.vorspann .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
+/* Höchstens 600 ms wartet er auf seine Schrift. Läuft das Skript nicht weiter, steht er nach gut einer Sekunde von selbst da */
+.vorspann.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 1.2s forwards; }
+@keyframes einstieg-notfall { to { opacity: 1; } }
 
 /* Ohne Skript: kein Globus */
 html:not(.js) .globusseite > .globus { display: none; }
@@ -74,20 +79,6 @@ html:not(.js) .globusseite > .globus { display: none; }
   .buch .rechts { display: block; grid-column: 2; grid-row: 1 / span 4; }
   .buch .rechts section { max-width: none; }
   .buch .rechts .eckdaten { margin-top: 0; }
-}
-/* Ab 75 rem beginnt der Klappentext in der linken Spalte neben der Kugel, 2 z unter dem gekürzten Absatz; Eckdaten und Figuren
-   bleiben rechts unter der Kugel, 2 z unter der Tafel (Dominik, 22. Oktober: „Die Eckdaten können vielleicht trotzdem unter den
-   Globus“). Sonst bliebe links neben der Kugel eine Lücke von rund 300 px (1440 × 900) bis 475 px (1920 × 1080). Kugel und rechte
-   Spalte stehen dafür außerhalb des Flusses, an Stellen aus denselben Maßen, aus denen die Kugel selbst entsteht: oben
-   z/2 − Kopf, darunter --globus und --tafel-h (Steuerzeile und Tafel mit ihrem längsten Inhalt, FSeite.tafelPlatz). Ohne Skript
-   und ohne Kugel (.ohne-globus) bleibt die Lage darüber */
-@media (min-width: 75rem) {
-  .js #inhalt:not(:has(.ohne-globus)) { position: relative; overflow-x: clip; }
-  .js #inhalt:not(:has(.ohne-globus)) .globusseite > .globus { position: absolute; top: calc(var(--z) * .5 - var(--kopf-h)); right: calc(var(--globus) * -.09); margin: 0; }
-  .js #inhalt:not(:has(.ohne-globus)) .buch .rechts {
-    position: absolute; left: var(--globuskante); width: min(24em, calc(100% - var(--globuskante) - var(--rand-r)));
-    top: calc(var(--z) * .5 - var(--kopf-h) + var(--globus) + var(--tafel-h) + var(--z-zwei));
-  }
 }
 @media (max-width: 62rem) {
   .buch { padding-right: var(--rand-l); }
@@ -125,9 +116,149 @@ html:not(.js) .globusseite > .globus { display: none; }
     <p class="unterzeile">Roman in vierzig Kapiteln. Das Manuskript liegt vollständig vor, gerade entsteht die Endfassung.</p>
   </div>
 
-  <p class="vorspann">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten. Ihr Verfasser hat nie existiert. Verschwinden musste er trotzdem.</p>
-  <!-- Nur in der Zweispaltenlage: gekürzt neben dem Globus; dann fehlt der volle Absatz unter „Die Frage hinter dem Roman“ -->
-  <p class="frage-kurz">Wer war Satoshi Nakamoto wirklich? Das letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
+  <p class="vorspann" id="aufhaenger"><span class="glied-satz">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten.</span> <span class="glied-satz">Ihr Verfasser hat nie existiert.</span> <span class="glied-satz">Verschwinden musste er trotzdem.</span></p>
+  <script>
+  /* Zweispaltig fliegt der Vorspann bei jedem Laden einmal ein, Wort für Wort von rechts, mit der Mechanik des ersten Satzes der
+     Startseite (index.html, 02), in rund einer Sekunde. Er wartet höchstens 600 ms auf die IM Fell (wie FSeite.schriftEinstieg;
+     seite.js ist an dieser Stelle noch nicht geladen). Ist sie dann nicht da, steht er ohne Flug. Bei reduzierter Bewegung steht
+     er sofort. Auf Telefon und Tablet fliegt er nicht und bleibt, wie er war; die IM Fell wird dort nicht geladen. Die Kugel wartet
+     nie auf ihn. Vorleseprogramme lesen ihn einmal als Ganzes (die Kopie in .unsichtbar), die Wortkästen sind aria-hidden. */
+  (function () {
+    'use strict';
+    var el = document.getElementById('aufhaenger');
+    if (!el || !el.querySelector('.glied-satz')) return;
+    var SCHRIFT = '38px "IM Fell French Canon"';
+    var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+    var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
+
+    // Jeder Satz in Wortkästen. Getrennt wird nur an gewöhnlichen Leerzeichen: „31. Oktober“ (mit festem Leerzeichen) ist ein Wort
+    var LUECKE = /[ \t\r\n]+/;
+    var text = el.textContent.split(LUECKE).join(' ').trim();
+    var satz = document.createElement('span');
+    satz.className = 'einstieg-satz';
+    satz.setAttribute('aria-hidden', 'true');
+    while (el.firstChild) satz.appendChild(el.firstChild);
+    var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
+    glieder.forEach(function (g) {
+      var woerter = g.textContent.trim().split(LUECKE);
+      g.textContent = '';
+      woerter.forEach(function (w, i) {
+        if (i) g.appendChild(document.createTextNode(' '));
+        var s = document.createElement('span');
+        s.className = 'w';
+        s.textContent = w;
+        g.appendChild(s);
+      });
+    });
+    var vorlesen = document.createElement('span');
+    vorlesen.className = 'unsichtbar einstieg-vorlesen';
+    vorlesen.textContent = text;
+    el.appendChild(vorlesen);
+    el.appendChild(satz);
+    var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
+
+    /* Zweispaltig: Der erste Satz bricht frei, die beiden kurzen sollen je eine Zeile sein. Passt einer nicht in die Spalte, wird
+       die Schrift kleiner, bis er passt, nicht unter 28,5 px; darunter bricht auch er. Gemessen wird die Breite des Satzes ohne
+       Umbruch, nicht die der Wortkästen, die im Flug verschoben sind. Schmal gilt der Grad aus dem Stil */
+    function setzen() {
+      el.style.fontSize = '';
+      var breite = breit() ? el.clientWidth : 0;
+      if (!breite) return;
+      var laengste = 0;
+      glieder.slice(1).forEach(function (g) {
+        g.style.width = 'max-content';
+        laengste = Math.max(laengste, g.getBoundingClientRect().width);
+        g.style.width = '';
+      });
+      if (laengste <= breite) return;
+      var jetzt = parseFloat(getComputedStyle(el).fontSize);
+      el.style.fontSize = Math.max(28.5, Math.floor(jetzt * breite / laengste * 10) / 10 - .2) + 'px';
+    }
+
+    function imFell(ms) {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var laden = document.fonts.load(SCHRIFT).then(function (l) { return !!(l && l.length); });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
+    }
+    // Kommt die Schrift später oder wird das Fenster erst jetzt breit, wird der Satz noch einmal an die Spalte angepasst (ohne Flug)
+    function nachSchrift() {
+      if (breit() && document.fonts && document.fonts.load) document.fonts.load(SCHRIFT).then(setzen).catch(function () {});
+    }
+
+    // Je Wort ein Filter für die waagrechte Bewegungsunschärfe
+    var FLUG = [];
+    function filterAnlegen() {
+      if (document.getElementById('aufhaenger-filter')) return;
+      var ns = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.id = 'aufhaenger-filter';
+      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+      var html = '';
+      for (var j = 0; j < woerter.length; j++) html += '<filter id="aufhaenger-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+      svg.innerHTML = html;
+      document.body.appendChild(svg);
+      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('aufhaenger-flug-' + m).querySelector('feGaussianBlur'));
+    }
+
+    /* Wie auf der Startseite: Lettern, die von rechts an die Zeile geschoben werden, Weg 0,2 em, je Wort 360 ms, kein Nachfedern,
+       die waagrechte Unschärfe (höchstens 0,06 em) vergeht beim Ankommen. Versatz und Pause sind enger als dort (28 statt 40 ms je
+       Wort, 70 statt 100 ms zwischen den Sätzen), weil der Vorspann 21 statt 12 Wörter hat: 18 × 28 + 2 × 70 + 360 = 1004 ms
+       statt 1280 ms mit dem Takt der Startseite (dort 920 ms) */
+    var VERSATZ = 28, PAUSE = 70, DAUER = 360;
+    function einfliegen() {
+      if (!woerter[0].animate) return;
+      filterAnlegen();
+      var em = parseFloat(getComputedStyle(el).fontSize) || 38;
+      var t = 0, laeufe = [];
+      glieder.forEach(function (g, gi) {
+        if (gi) t += PAUSE;
+        Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
+          if (wi) t += VERSATZ;
+          laeufe.push(w.animate([
+            { opacity: 0, transform: 'translateX(.2em)' },
+            { opacity: 1, offset: .38 },
+            { opacity: 1, transform: 'translateX(0)' }
+          ], { duration: DAUER, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+        });
+      });
+      (function schritt() {
+        var offen = false;
+        laeufe.forEach(function (a, i) {
+          var w = woerter[i], ct = a.effect.getComputedTiming();
+          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
+          offen = true;
+          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
+          var s = Math.pow(1 - ct.progress, 1.6) * .06 * em;
+          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
+          w.style.filter = s > .06 ? 'url(#aufhaenger-flug-' + i + ')' : '';
+        });
+        if (offen) requestAnimationFrame(schritt);
+      })();
+    }
+
+    if (breit() && !still()) {
+      el.classList.add('wartet');
+      imFell(600).then(function (da) {
+        setzen();
+        el.classList.remove('wartet');
+        if (da && breit() && !still()) einfliegen();
+      });
+    } else setzen();
+    nachSchrift();
+
+    var warte = 0, breiteVorher = window.innerWidth;
+    window.addEventListener('resize', function () {
+      clearTimeout(warte);
+      warte = setTimeout(function () {
+        if (window.innerWidth === breiteVorher) return;
+        breiteVorher = window.innerWidth;
+        setzen();
+        nachSchrift();
+      }, 140);
+    });
+  })();
+  </script>
 
   <figure class="globus" id="globus">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
@@ -203,7 +334,7 @@ html:not(.js) .globusseite > .globus { display: none; }
       <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die Antworten, die im Umlauf sind, folgen zwei Bewegungen: das System reparieren&nbsp;– oder aussteigen und ein Parallelsystem bauen. Die 2020er Jahre sind das Jahrzehnt, in dem dieser Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
       <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine tief verankerte Stabilitäts&shy;kultur, nur in den seltensten Fällen aber lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
       <p><i>Satoshi</i> ist der Versuch des Autors, diese Lücke ein Stück weit zu schließen: ein Roman über den radikalsten Ausstieg, den unsere Epoche hervorgebracht hat&nbsp;– die Erfindung des Geldes, das ohne Vertrauen und mit bloßer Mathematik funktioniert.</p>
-      <p class="frage-voll">Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
+      <p>Doch mit welcher Konsequenz? Wer war Satoshi Nakamoto wirklich? Das vielleicht letzte große Rätsel des digitalen Zeitalters ist noch immer ungelöst. Alle suchen einen Mann. Dabei war Satoshi Nakamoto eben nie eine Person. Satoshi ist ein Versprechen&nbsp;– und dieser Roman erzählt, was es gekostet hat.</p>
     </div>
   </section>
 

@@ -324,7 +324,7 @@ Dominik: „Nur wenn man noch nicht gelesen Bücher ausgewählt hat. Oder Kinder
 3. **Geprüft** (`testen.cjs`, 76 Prüfungen, echte Berührung über `Input.dispatchTouchEvent`):
    - **Telefon, 390 × 844 und 360 × 740:**
      - Ein Tipp auf ein Buch in „Kindheit“ oder „wartet“, auch aus dem Ruhezustand: Der Knopf bleibt stehen (gleiches `translateX`) und ist leer. Wert und Name bleiben, das Band rollt nicht.
-     - „später“ bis zum Ende, dann „früher“ bis zum Anfang: „Kindheit“ 85 von 85 Büchern in 148 Tipps, das Band rollte 2-mal. „wartet“ 74 von 74 Bücher in 142 Tipps, das Band rollte 4- bzw. 6-mal. Der Strich war immer zu sehen, der Knopf hat sich nie bewegt.
+     - „später“ bis zum Ende, dann „früher“ bis zum Anfang: „Kindheit“ 85 von 85 Büchern in 148 Tipps, das Band rollte 2-mal. „wartet“ 74 von 74 Büchern in 142 Tipps, das Band rollte 4- bzw. 6-mal. Der Strich war immer zu sehen, der Knopf hat sich nie bewegt.
      - Ein Wisch auf dem Band bei offenem Kinderbuch: `scrollLeft` von 643 auf 419. Die Linie des sichtbaren Teils ging mit, von 220,5 auf 143,7, der Knopf blieb stehen.
      - Tipp auf den Regler, auf „1800“ (Schiller, *Wilhelm Tell*) und Ziehen wählen gelesene Bücher, der Knopf steht in Tinte, „später“ geht durch „gelesen“. Ein Kinderbuch danach lässt den Knopf dort stehen. Nach Escape gehen „früher“ und „später“ wieder durch „gelesen“.
    - **Desktop, 1440 × 900:**
@@ -338,3 +338,7 @@ Dominik: „Nur wenn man noch nicht gelesen Bücher ausgewählt hat. Oder Kinder
      - Der Bau für claude.ai hat 37 Dateien. `pruefen-artefakt.cjs` (`PORT=9924`, dazu 9925 für die Quelle): 40 Prüfpunkte, 0 Fehler. `testen.cjs` im Gerüst: 76 Prüfungen, 0 Fehler.
      - Beide Bauten sind gleich einem zweiten Bau. Alle Server sind per PID gestoppt.
    - Nicht nachgezogen, weil es außerhalb von `website-c/` liegt: `docs/gestaltung-website-c.md` 6.11, die Punkte „Eine Steuerung für alle drei Reihen“ und „Name die Reihe („Gelesen“ usw.)“.
+4. **Unabhängig geprüft** (eigene Skripte in `scratchpad/r7p/`: `pruef.cjs` mit 123 Prüfungen, `extra.cjs` mit 23; echte Berührung auf 390 × 844 und 360 × 740, Maus und Tastatur auf 1440 × 900):
+   - Reihenfolgen: aus der Ruhe zuerst „Kindheit“ oder „wartet“, gelesen und dann eine der Reihen darunter, „wartet“ und dann „Kindheit“, „1800“ bei offenem Kinderbuch (Schiller, *Wilhelm Tell*), Ziehen bei offenem Kinderbuch, zurück zu demselben gelesenen Buch. Der Knopf, `aria-valuenow`, `aria-valuetext` und der Name „Gelesen“ folgen nur gelesenen Büchern. Bei einem Buch der Reihen darunter steht der Knopf leer an seinem Platz.
+   - „früher“ und „später“ durch alle 85 und alle 74 Bücher, vor und zurück: Jedes Buch ist zu sehen, der Knopf bewegt sich nie, die Linie des sichtbaren Teils folgt jedem Rollen. Nach dem Schließen gehen sie wieder ab dem Knopf durch „gelesen“.
+   - `pruef.cjs` gegen den Stand davor: 50 Fehler, dann Abbruch. Gegen die Quelle, `veroeffentlichung/` hinter `server.py` und hinter `vserver.py` (neue Ausgabe von `vercel build`) und den Bau für claude.ai im Gerüst: 0 Fehler. `pruefen.cjs` je 30 Seitenaufrufe, 0 Fehler; `pruefen-artefakt.cjs` 40 Prüfpunkte, 0 Fehler. Beide Bauten sind gleich einem neuen Bau.

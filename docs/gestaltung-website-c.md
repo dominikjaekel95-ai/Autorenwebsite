@@ -96,7 +96,7 @@ Fett in der Spalte „Quelle“ heißt: Dominiks Vorgabe geht hier der Empfehlun
 **Umsetzung:**
 - Vollkorn 5.001 von Friedrich Althausen für allen Text außer dem ersten Satz. Variable Schrift, Gewichtsachse auf 400 bis 600 begrenzt. Zwei Dateien: aufrecht und kursiv.
 - Die Kapitälchen kommen aus derselben Datei (OpenType `smcp` und `c2sc`). Geprüft in dieser Nacht: Die vollständige Vollkorn aus dem Archiv von Google Fonts auf GitHub enthält sie. Nur die Teilmenge, die die Google-Fonts-API ausliefert, hat sie nicht. Die Vollkorn SC entfällt damit (beantwortet F1). Die Kursive hat keine Kapitälchen.
-- IM Fell French Canon Roman von Igino Marini nur für den ersten Satz, auf der Startseite und in der Vita.
+- IM Fell French Canon Roman von Igino Marini nur für den ersten Satz, auf der Startseite und in der Vita. Seit Option B auch für den Vorspann auf *Satoshi* in der Zweispaltenlage (9.2).
 - Fertige, im Browser geprüfte Dateien liegen in `scratchpad/lauf3/schrift-c/`: `vollkorn.woff2` (57 KB), `vollkorn-kursiv.woff2` (48 KB), `im-fell-french-canon.woff2` (45 KB), `OFL-Vollkorn.txt`, `OFL-IM-Fell-French-Canon.txt`. Sie kommen nach `schrift/`. Laden und Teilmenge: Abschnitt 8.1.
 
 **Grund:** Die Vollkorn trägt die Anmutung, die Dominik an A mag (V02), und steht auf keiner Liste (Prüfung, Rang 31). Das Kolophon nennt beide Schriften in seinem Wortlaut (V64), es bleibt damit wahr. Selbst ausliefern löst Rang 48 und den Datenschutz (E28).
@@ -336,7 +336,7 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 - ~~Der Einspieler zeigt nur Orte und Linien, nie Szenentext (Nachtrag 1, Punkt 5).~~ Seit Runde 2 (K9) zeigen Einspieler und Abspielen an jeder Station den Szenentext, seit Runde 3 in rund einer Minute für alle zehn Szenen (7.2).
 - Die Szenentexte bleiben wie in A (V36, Text-Flagge 25 ist nur ein Vorschlag). Der London-Satz (V33), der Auftakt (V34) und die drei Absätze nach der Frage (V35) bleiben wörtlich.
 - Titel in Tinte, aufrecht. Überschriften ruhig (04). Figurennamen in Kapitälchen, Rolle in Tinte.
-- Ab 75 rem eine Doppelseite unter dem Globus: links der Lesetext, rechts Eckdaten und Figuren (9.2, Standardentscheidung 19). Seit Runde 5 beginnt der Klappentext links schon neben der Kugel, unter dem gekürzten Absatz „Wer war Satoshi Nakamoto wirklich? …“; rechts bleiben Eckdaten und Figuren unter der Kugel.
+- Ab 75 rem eine Doppelseite unter dem Globus: links der Lesetext, rechts Eckdaten und Figuren (9.2, Standardentscheidung 19). Beide Spalten beginnen unter der Kugel auf einer Höhe, wie in Runde 4; die Lage aus Runde 5 mit dem Klappentext neben der Kugel ist mit Option B entfallen (9.2).
 - **Text:** „Karteikarte“ bei Satoshi Nakamoto ist Dominiks Wort aus dem Exposé und bleibt als Wort. Es öffnet keine Karte mehr (22, Standardentscheidung 20).
 
 **Grund:** V32, M3, V36, V37.
@@ -481,7 +481,7 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 |---|---|---|
 | Vollkorn, aufrecht, 400 bis 600 | `schrift/vollkorn.woff2` | aller Text, Kapitälchen, Kartenschrift, Rückenschrift |
 | Vollkorn, kursiv, 400 bis 600 | `schrift/vollkorn-kursiv.woff2` | Werktitel, fremde Wörter, Betonung |
-| IM Fell French Canon Roman | `schrift/im-fell-french-canon.woff2` | nur der erste Satz (Startseite, Vita) |
+| IM Fell French Canon Roman | `schrift/im-fell-french-canon.woff2` | der erste Satz (Startseite, Vita), zweispaltig der Vorspann auf *Satoshi* |
 
 Es gibt keine dritte Schrift. Kursive Kapitälchen gibt es nicht. Steht ein Figurenname in kursivem Text, bleibt er kursiv ohne Kapitälchen.
 
@@ -491,9 +491,9 @@ Es gibt keine dritte Schrift. Kursive Kapitälchen gibt es nicht. Steht ein Figu
 |---|---|---|---|---|
 | klein | 15,4375 px (0,8125 × Text) | 15 px | ¾ z (21,375 / 20,25 px) | Ortsleisten, Unterzeile und Koordinaten der Tafel, Bildlegende, Zeitbandachse und Bandnamen, Regalschilder, Zeichenerklärung, Fuß außer der E-Mail-Zeile, Kolophon, Vermerke, Hinweise am Globus, „Arbeitstitel“, „bis“, „seit“, „um“ an der Tafel |
 | Text | 19 px (1,1875 rem) | 18 px | 1 z (28,5 / 27 px) | Lesetext, Kurzvita, Tagline, Navigation, Kartenwahl, Werkverzeichnis, Szenentext an der Tafel, Buchzeile, Leseliste, E-Mail-Zeile, `h3` |
-| Überschrift | 23,75 px (1,25 × Text) | 22,5 px | 1,25 z (35,625 / 33,75 px) | `h2`, Name im Kopf, Ort an der Tafel, Vorspann auf *Satoshi* („Am 31. Oktober 2008 …“) |
+| Überschrift | 23,75 px (1,25 × Text) | 22,5 px | 1,25 z (35,625 / 33,75 px) | `h2`, Name im Kopf, Ort an der Tafel, Vorspann auf *Satoshi* („Am 31. Oktober 2008 …“) unter 62 rem |
 | groß | 28,5 px (1,5 × Text) | 27 px | 1,5 z (42,75 / 40,5 px) | `h1` Seitentitel, Jahr und Bandziffer an der Tafel, erster Satz der Vita |
-| Einstieg | 38 px (2 × Text), höchstens so groß, dass das längste Glied in die Spalte passt, nicht unter 28,5 px | an die Spalte angepasst, höchstens 30 px, nicht unter 20,7 px | 1,5 z | nur der erste Satz der Startseite |
+| Einstieg | 38 px (2 × Text), höchstens so groß, dass das längste Glied in die Spalte passt, nicht unter 28,5 px | an die Spalte angepasst, höchstens 30 px, nicht unter 20,7 px | 1,5 z | der erste Satz der Startseite; zweispaltig der Vorspann auf *Satoshi* (9.2) |
 
 Ausnahmen gibt es nur in Zeichnungen:
 
@@ -929,6 +929,7 @@ Knöpfe sind `<button>` ohne Rahmen, Grund und Radius. Verweise sind `<a>`. Kein
 | Was | Wo | Wie lange | Warum |
 |---|---|---|---|
 | Einflug des ersten Satzes | Startseite | 1,0 s, bei jedem Laden | V13 |
+| Einflug des Vorspanns | *Satoshi*, nur zweispaltig | 1,0 s, bei jedem Laden | Dominik, Option B (9.2) |
 | Einspieler Leben | Startseite | rund 34 s, mit der ganzen Tafel | V22, M7, Runde 4 |
 | Einspieler *Satoshi* | Startseite (Ebene), *Satoshi* | rund 59 s, mit Szenentext | M7, K9, Runde 4 |
 | Einspieler *Ursprung* | Startseite (Ebene), *Ursprung* | rund 27 s, mit der ganzen Tafel | V23, Runde 4 |
@@ -1008,7 +1009,7 @@ In `stil.css`:
 @font-face { font-family: "IM Fell French Canon"; src: url("schrift/im-fell-french-canon.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 ```
 
-Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>`, auf Startseite und Vita zusätzlich für die IM Fell. Kein Link zu Google, kein `preconnect`. `FSeite.schriften()` wartet auf `19px "Vollkorn"` und `italic 19px "Vollkorn"`, nicht mehr auf „Vollkorn SC“.
+Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>`, auf Startseite und Vita zusätzlich für die IM Fell, auf *Satoshi* mit `media="(min-width: 62.0625rem)"` nur für die Zweispaltenlage. Kein Link zu Google, kein `preconnect`. `FSeite.schriften()` wartet auf `19px "Vollkorn"` und `italic 19px "Vollkorn"`, nicht mehr auf „Vollkorn SC“.
 
 ### 8.2 Bibliotheken
 
@@ -1059,9 +1060,14 @@ Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font"
 
 ### 9.2 *Satoshi* (`satoshi.html`)
 
-**Desktop ab 62,0625 rem.** Globusband wie auf der Startseite: links Kopf, `h1` „Satoshi“ (groß, aufrecht), Unterzeile (Grad Text), der Vorspann „Am 31. Oktober 2008 …“ (Grad Überschrift, Zeilenhöhe 1,25 z); die Zeitleiste darunter ist entfallen (6.8). Rechts die Kugel, angeschnitten, nicht haftend, neben Titel und Vorspann, darunter die Steuerzeile und die Tafel. Die Kugel bemisst sich an der längsten Tafel, damit auch der längste Szenentext bei 1440 × 900 ganz im Bild steht. 2 z unter dem Ende des Globusbands beginnt der Klappentext.
+**Desktop ab 62,0625 rem.** Globusband wie auf der Startseite: links Kopf, `h1` „Satoshi“ (groß, aufrecht), Unterzeile (Grad Text), der Vorspann „Am 31. Oktober 2008 …“ wie der erste Satz der Startseite (IM Fell, Grad Einstieg, Zeilenhöhe 1,5 z, fliegt ein; Option B, unten); die Zeitleiste darunter ist entfallen (6.8). Rechts die Kugel, angeschnitten, nicht haftend, neben Titel und Vorspann, darunter die Steuerzeile und die Tafel. Die Kugel bemisst sich an der längsten Tafel, damit auch der längste Szenentext bei 1440 × 900 ganz im Bild steht. 2 z unter dem Ende des Globusbands beginnt der Klappentext.
 
-**Runde 5** (Dominik, 22. Oktober: „Das ist sonst echt viel Space … Die Eckdaten können vielleicht trotzdem unter den Globus?!“): In der Zweispaltenlage steht 1 z unter dem Vorspann, im Grad Text, der gekürzte Absatz „Wer war Satoshi Nakamoto wirklich? … was es gekostet hat.“; unter „Die Frage hinter dem Roman“ fehlt er dann (`display: none`). Schmaler steht er dort voll wie bisher. **Ab 75 rem** beginnt der Klappentext 2 z unter diesem Absatz in der linken Spalte neben der Kugel; Eckdaten und Figuren stehen rechts, 2 z unter der Tafel. Die beiden Spalten beginnen damit nicht mehr auf einer Höhe (Begründung und Maße: `werkzeuge/aenderungsprotokoll.md`, Runde 5). Zwischen 62,0625 und 75 rem folgt der Klappentext wie bisher 2 z unter dem Globusband.
+**Option B** (Dominik, 22. Oktober abends: „Nimm Option B für Satoshi“; `docs/satoshi-optionen.md`). Es gilt wieder die Lage aus Runde 4: Der Klappentext beginnt 2 z unter dem Globusband, links, auf einer Höhe mit den Eckdaten rechts. Die Lage aus Runde 5 (der gekürzte Absatz „Wer war Satoshi Nakamoto wirklich? …“ unter dem Vorspann, der Klappentext ab 75 rem schon neben der Kugel) ist entfallen; der volle Absatz „Doch mit welcher Konsequenz? …“ steht auf jeder Breite als letzter unter „Die Frage hinter dem Roman“.
+- Der Vorspann steht in der IM Fell French Canon im Grad Einstieg (38 px, Zeilenhöhe 1,5 z). Jeder der drei Sätze beginnt eine Zeile, der erste bricht ausgeglichen (`text-wrap: balance`). Passen die beiden kurzen Sätze nicht in die Spalte, wird er kleiner, bis sie passen, nicht unter 28,5 px: von 993 bis 1200 px Breite 29,3 px, bei 1280 px 31,1 px, bei 1366 px 34,7 px, ab rund 1440 px 38 px. Auf allen geprüften Breiten von 993 bis 2560 px hat er so fünf Zeilen und endet bei 556 px.
+- Beim Laden fliegt er Wort für Wort von rechts ein, mit der Mechanik des ersten Satzes der Startseite (02: Weg 0,2 em, je Wort 360 ms, waagrechte Unschärfe, die beim Ankommen vergeht). Der Takt ist enger, weil er 21 statt 12 Wörter hat: 28 statt 40 ms Versatz, 70 statt 100 ms zwischen den Sätzen, zusammen 1,0 s (mit dem Takt der Startseite wären es 1,3 s). Er wartet höchstens 600 ms auf die IM Fell, die nur für die Zweispaltenlage vorgeladen wird; ist sie dann nicht da, steht er ohne Flug. Bei reduzierter Bewegung steht er sofort. Der Platz ist von Anfang an reserviert, nichts springt. Vorleseprogramme lesen ihn als einen Satz (Vorlesekopie wie auf der Startseite, die Wortkästen sind `aria-hidden`).
+- Die Kugel wartet nicht auf ihn. Ihr Einspieler beginnt wie vorher rund 0,7 s nach dem Laden, beide Bewegungen laufen kurz gleichzeitig.
+- Unter dem Vorspann bleiben im ersten Bildschirm bei 1440 × 900 rund 340 px frei, bei 1280 × 800 rund 240 px, bei 1920 × 1080 rund 520 px.
+- Tablet und Telefon (bis 62 rem): wie vorher, Vorspann im Grad Überschrift als schlichter Text, kein Flug; die IM Fell wird dort nicht geladen.
 
 **Ab 75 rem** ist der Teil darunter eine Doppelseite:
 
@@ -1143,7 +1149,7 @@ Hier steht alles, was ich für dich entschieden habe, wo du vielleicht etwas and
 18. ***Satoshi*: Zeitleiste in der linken Spalte neben dem Globus,** Tafel unter dem Globus, Klappentext gleich nach dem Globusband. Alternative: die Zeitleiste unter dem Globus in der rechten Spalte.
 19. ***Satoshi* unten als Doppelseite,** rechts Eckdaten und Figuren. Alternative: einspaltig wie A.
 20. **„Karteikarte“ bei Satoshi Nakamoto bleibt ein Wort ohne Verweis.** Alternative: ein kurzer Satz mit den Angaben darunter.
-21. **Der Vorspann von *Satoshi* („Am 31. Oktober 2008 …“) im Überschriftengrad.** Alternative: im Textgrad.
+21. **Der Vorspann von *Satoshi* („Am 31. Oktober 2008 …“) im Überschriftengrad.** Alternative: im Textgrad. Seit Option B steht er zweispaltig im Grad Einstieg und fliegt ein (9.2); schmaler bleibt der Überschriftengrad.
 22. **Koordinaten auch an der Tafel von *Satoshi*** (wie A). Alternative: dort weglassen, an Startseite, Vita und *Ursprung* bleiben sie.
 23. **Regal: Lücken, lehnende und liegende Bücher wie A,** Bleistift und Lesezeichen werden Punkt, Strich und gestrichelte Kante. Alternative: das Regal ohne Lehnen und Lücken (B).
 24. **Rückenfarben gedämpft, Familien bleiben.** Alternative: alle Rücken in einem Ton.

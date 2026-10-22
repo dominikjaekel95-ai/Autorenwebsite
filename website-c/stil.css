@@ -53,7 +53,7 @@
   --g-text: 1.1875rem;             /* 19 px */
   --g-ueber: 1.484375rem;          /* 23,75 px */
   --g-gross: 1.78125rem;           /* 28,5 px */
-  --g-einstieg: 2.375rem;          /* 38 px, nur der erste Satz der Startseite */
+  --g-einstieg: 2.375rem;          /* 38 px, der erste Satz der Startseite und zweispaltig der Vorspann von Satoshi */
 
   /* Die Zeile und ihre Stufen */
   --z: 1.78125rem;                 /* 28,5 px */

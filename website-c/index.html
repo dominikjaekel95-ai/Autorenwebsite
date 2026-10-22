@@ -119,11 +119,13 @@ html:not(.js) .regalbild { display: none; }
    Knopf genau unter seinem Strich. Auf dem Telefon zeigt er unter dem rollenden Band das ganze Band im Kleinen; der Teil, der
    gerade zu sehen ist, ist auf der Linie kräftiger. Der Knopf ist ein kleiner Rücken: leer, solange kein Buch gewählt ist, in Tinte,
    wenn eines gewählt ist. Die Fläche reicht über die ganze Breite und bis unter die Jahreszahlen: ein Tipp irgendwo wählt das Buch
-   dort, ein Tipp auf eine Jahreszahl das erste Buch ihres Jahrs */
+   dort, ein Tipp auf eine Jahreszahl das erste Buch ihres Jahrs. Seit Runde 8 hat jede Reihe ihren Regler direkt unter sich; die
+   zwei Regler der Reihen darunter haben keine Jahreszahlen, nur die kleinen Striche an den Marken (ohne-jahre) */
 .zb-regler { position: relative; }
 /* Die Fläche reicht links und rechts 16 px über das Band hinaus, damit auch ein Tipp knapp neben dem ersten oder letzten Buch trifft */
 .regler { --regler-rand: 16px; position: relative; height: calc(var(--z) * 1.25); margin: 0 calc(var(--regler-rand) * -1); padding: 0 var(--regler-rand); cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 .regler:focus { outline: none; }
+.regler.ohne-jahre { height: calc(var(--z) * .75); }
 .regler-spur { position: absolute; left: var(--regler-rand); top: 0; display: block; overflow: visible; pointer-events: none; }
 .regler-spur .haar { stroke: var(--tinte); stroke-width: .75; }
 .regler-spur .bruch { stroke: var(--tinte); stroke-width: .9; fill: none; }
@@ -134,9 +136,10 @@ html:not(.js) .regalbild { display: none; }
 .regler-knopf.ist-gewaehlt { background: var(--tinte); }
 .regler:focus-visible .regler-knopf { outline: 1.5px solid var(--tinte); outline-offset: 3px; }
 /* Beim Ziehen mit dem Finger steht der Name über dem Knopf, wo ihn der Finger nicht verdeckt; er deckt die Jahreszahlen des Bands
-   darüber ganz zu, statt sie anzuschneiden */
+   darüber ganz zu, statt sie anzuschneiden. Unter den zwei Reihen darunter steht er an der Stelle ihres Namens (Skript) */
 .regler-name { position: absolute; left: 0; bottom: calc(100% + 10px); width: max-content; max-width: 100%; padding: 0 .3em; font-size: var(--g-klein); line-height: var(--zh-klein); background: var(--papier); pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .regler-name[hidden] { display: none; }
+.bandname.ist-verdeckt { visibility: hidden; }
 .zb-schritte { margin-top: var(--z-viertel); }
 .zb-schritte .wort[aria-disabled="true"] { color: var(--leise); text-decoration-line: none; cursor: default; }
 /* Ohne Maus sind die Jahreszahlen des Reglers unterstrichen, damit man sieht, dass man sie antippen kann */
@@ -163,13 +166,15 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   /* Der Regler rollt nicht mit: er steht im sichtbaren Teil und zeigt das ganze Band */
   .zb-regler { position: sticky; left: 0; }
 }
-/* Telefon: Regler mit Jahreszahlen 44 px hoch, mit ½ z Abstand zum Band darüber, damit er nicht wie dessen Achse aussieht */
+/* Telefon: Regler mit Jahreszahlen 44 px hoch, mit ½ z Abstand zum Band darüber, damit er nicht wie dessen Achse aussieht. Unter
+   den Reglern ohne Jahreszahlen ist die Fläche leer; der Name der nächsten Reihe rückt dafür auf ½ z heran */
 @media (max-width: 40rem) {
   .zb-regler { margin-top: var(--z-halb); }
+  .zb-regler + .bandname { margin-top: var(--z-halb); }
 }
-/* Finger (Telefon, Tablet): die Fläche des Reglers ist 44 px hoch */
+/* Finger (Telefon, Tablet): die Fläche jedes Reglers ist 44 px hoch */
 @media (max-width: 40rem), (pointer: coarse) {
-  .regler { height: 2.75rem; }
+  .regler, .regler.ohne-jahre { height: 2.75rem; }
 }
 </style>
 </head>
@@ -399,8 +404,14 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       <p class="bandzeile" id="bandzeile"><span class="zeile-zeigen" id="zeile-zeigen" aria-hidden="true"></span><span class="zeile-offen" id="zeile-offen"></span></p>
       <p class="bandname">die wichtigsten aus Kindheit und Jugend</p>
       <div id="zb-kind-ort"></div>
+      <div class="zb-regler" id="zb-regler-kind">
+        <div class="regler ohne-jahre" id="regler-kind" role="slider" tabindex="0" aria-label="Die wichtigsten aus Kindheit und Jugend"><svg class="regler-spur" aria-hidden="true" focusable="false"></svg><span class="regler-knopf" aria-hidden="true"></span><span class="regler-name" aria-hidden="true" hidden></span></div>
+      </div>
       <p class="bandname">was noch wartet</p>
       <div id="zb-warte-ort"></div>
+      <div class="zb-regler" id="zb-regler-warte">
+        <div class="regler ohne-jahre" id="regler-warte" role="slider" tabindex="0" aria-label="Was noch wartet"><svg class="regler-spur" aria-hidden="true" focusable="false"></svg><span class="regler-knopf" aria-hidden="true"></span><span class="regler-name" aria-hidden="true" hidden></span></div>
+      </div>
     </div>
   </div>
   <p class="ganze"><a href="bibliothek.html">Die ganze Bibliothek</a></p>
@@ -1085,8 +1096,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     });
     folgen.haupt.sort((a, b) => a.x - b.x); folgen.haupt.forEach((o, i) => { o.idx = i; });
     folgen.quer.sort((a, b) => a.x - b.x); folgen.quer.forEach((o, i) => { o.idx = i; });
-    // Die Reihen des Reglers: „gelesen“ mit den quer liegenden Büchern an ihrer Stelle, dazu die zwei Reihen darunter; geordnet nach
-    // der Mitte des Strichs, also nach der Zeit
+    // Die Reihen der drei Regler: „gelesen“ mit den quer liegenden Büchern an ihrer Stelle, dazu die zwei Reihen darunter; geordnet
+    // nach der Mitte des Strichs, also nach der Zeit
     const reihen = { gelesen: folgen.haupt.concat(folgen.quer), kind: folgen.kind.slice(), warte: folgen.warte.slice() };
     Object.keys(reihen).forEach(k => {
       reihen[k].forEach(o => { o.mitte = o.x + o.w / 2; });
@@ -1240,31 +1251,42 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       }
     });
   }
-  // ================= Der Regler (Runde 6, S9) =================
-  /* Unter dem Band ein Regler über die ganze Breite, darunter „früher“ und „später“, darunter der Satz zum Buch: dieselbe Ordnung
-     wie am Globus (Bild, Steuerzeile, Tafel). Der Regler gehört nur zu „gelesen“ (mit den quer liegenden Büchern an ihrer Stelle):
-     Wählt man ein Buch in einer der zwei Reihen darunter, bleibt sein Knopf, wo er war, und steht leer; sein Name und sein Wert
-     bleiben bei den gelesenen Büchern (Runde 7, Dominik: „Dann sollte nicht die Timeline bei den gelesenen Büchern parallel
-     mitlaufen“). „früher“ und „später“ gehen in der Reihe des gewählten Buchs weiter, ohne Wahl oder bei einem gelesenen Buch durch
-     „gelesen“. Breit ist der Regler die Achse des Bands, der Knopf steht genau unter seinem Strich. Auf dem Telefon zeigt er das ganze Band im
-     Kleinen; wählt man über ihn, rollt das Band so, dass der Strich genau über dem Knopf steht, wie bei einer Bildlaufleiste. Ziehen
-     zeigt die kurze Angabe (mit dem Finger auch über dem Knopf), Loslassen den Satz. Ein Tipp auf eine Jahreszahl wählt das erste Buch
-     ihres Jahrs, ein Tipp anderswo das Buch an dieser Stelle. */
-  const reglerEl = $('#regler'), reglerKasten = $('#zb-regler');
-  const knopf = reglerEl ? $('.regler-knopf', reglerEl) : null, spur = reglerEl ? $('.regler-spur', reglerEl) : null;
-  const reglerName = reglerEl ? $('.regler-name', reglerEl) : null;
+  // ================= Die Regler (Runde 6, S9; Runde 8: einer je Reihe) =================
+  /* Unter jeder Reihe ihr eigener Regler: unter „gelesen“ (mit den quer liegenden Büchern an ihrer Stelle) der mit den Jahreszahlen,
+     unter „Kindheit und Jugend“ und unter „was noch wartet“ je einer ohne Zahlen, nur mit den kleinen Strichen an den Marken (Runde 8,
+     Dominik: „Kannst du da auch noch jeweils einen einzelnen Slider darunter machen. Die Titel können aber gerne an derselben Stelle
+     eingeblendet werden“). Unter dem Regler von „gelesen“ stehen „früher“ und „später“, darunter der Satz zum Buch, für alle drei
+     Reihen an diesem einen Ort: dieselbe Ordnung wie am Globus (Bild, Steuerzeile, Tafel). Wählt man ein Buch, bewegt sich nur der
+     Regler seiner Reihe, sein Knopf steht in Tinte; die anderen Knöpfe bleiben, wo sie waren, und stehen leer (Runde 7: „Dann sollte
+     nicht die Timeline bei den gelesenen Büchern parallel mitlaufen“). „früher“ und „später“ gehen in der Reihe des gewählten Buchs
+     weiter, ohne Wahl durch „gelesen“ ab seinem Knopf. Breit liegt jeder Regler unter seiner Reihe auf der Achse des Bands, der Knopf
+     genau unter seinem Strich. Auf dem Telefon zeigt jeder seine Reihe im Kleinen, alle im selben Maß; wählt man über ihn, rollt das
+     Band so, dass der Strich genau über dem Knopf steht, wie bei einer Bildlaufleiste. Ziehen zeigt die kurze Angabe (mit dem Finger
+     auch über dem Knopf), Loslassen den Satz. Ein Tipp auf eine Jahreszahl wählt das erste Buch ihres Jahrs, ein Tipp anderswo das
+     Buch an dieser Stelle. */
   const frueherEl = $('#zb-frueher'), spaeterEl = $('#zb-spaeter');
   const KNOPF_H = 14;
-  // i: das Buch des Reglers in „gelesen“ (null: noch keins gewählt, der Knopf steht leer beim neuesten); zieht: das Buch unter dem
-  // ziehenden Finger oder der Maus; zug: der laufende Griff; marken: die gezeichneten Jahreszahlen mit ihrer Fläche
-  const R = { i: null, zieht: null, zug: null, marken: [] };
-  const reihe = () => (ZB.reihen && ZB.reihen.gelesen) || [];
-  // Die Reihe von früher und später: die des gewählten Buchs, wenn es in einer der zwei Reihen darunter liegt, sonst „gelesen“ ab dem
-  // Knopf des Reglers
+  /* Je Regler: reihe (Schlüssel in ZB.reihen); i: sein Buch in dieser Reihe (null: noch keins gewählt, der Knopf steht leer beim
+     neuesten); zieht: das Buch unter dem ziehenden Finger oder der Maus; zug: der laufende Griff; marken: die gezeichneten Jahreszahlen
+     mit ihrer Fläche (nur „gelesen“); ext: Anfang und Ende seiner Linie auf der Achse des Bands */
+  const REGLER = [['gelesen', '#regler', '#zb-regler'], ['kind', '#regler-kind', '#zb-regler-kind'], ['warte', '#regler-warte', '#zb-regler-warte']]
+    .map(([reihe, el, kasten]) => ({ reihe, el: $(el), kasten: $(kasten) })).filter(r => r.el && r.kasten)
+    .map(r => Object.assign(r, { jahre: r.reihe === 'gelesen', knopf: $('.regler-knopf', r.el), spur: $('.regler-spur', r.el), name: $('.regler-name', r.el), i: null, zieht: null, zug: null, marken: [], ext: null }));
+  // Die zwei Reihen darunter: ihr Name steht über dem Band, vor dem Regler (bandname, Ort des Bands, Regler)
+  REGLER.forEach(r => {
+    const t = !r.jahre && r.kasten.previousElementSibling && r.kasten.previousElementSibling.previousElementSibling;
+    r.titel = t && t.classList.contains('bandname') ? t : null;
+  });
+  const reglerVon = k => REGLER.find(r => r.reihe === k) || null;
+  const reiheVon = r => (r && ZB.reihen && ZB.reihen[r.reihe]) || [];
+  // Die Reihe von früher und später: die des ziehenden Reglers, sonst die des gewählten Buchs, sonst „gelesen“ ab seinem Knopf
   function schrittReihe() {
+    const zr = REGLER.find(r => r.zieht);
+    if (zr) return { liste: reiheVon(zr), i: zr.i };
     const o = ZB.offen;
-    if (!R.zieht && o && o.reihe && o.reihe !== 'gelesen' && ZB.reihen[o.reihe]) return { liste: ZB.reihen[o.reihe], i: o.ri };
-    return { liste: reihe(), i: R.i };
+    if (o && o.reihe && reglerVon(o.reihe)) return { liste: reiheVon(reglerVon(o.reihe)), i: o.ri };
+    const g = reglerVon('gelesen');
+    return { liste: reiheVon(g), i: g ? g.i : null };
   }
   // Das Buch, dessen Mitte x am nächsten liegt
   function naechstes(liste, x) {
@@ -1283,108 +1305,141 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     return i < 0 ? liste.length - 1 : i;
   }
   function reglerBauen() {
-    if (!reglerEl || !ZB.reihen) return;
+    if (!REGLER.length || !ZB.reihen) return;
     const T = ZB.schmal ? sichtBreite() : ZB.breite, s = T / ZB.breite;
-    Object.assign(R, { i: null, zieht: null, zug: null, marken: [] });
     ZB.T = T; ZB.s = s;
-    reglerKasten.style.width = T + 'px';
-    const H = reglerEl.clientHeight, y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1);
+    const y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1);
     ZB.spurY = y;
     const linie = (x1, x2, y1, y2) => `<line class="haar" x1="${x1.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y1}" y2="${y2}"/>`;
-    // Breit ist die Linie die Achse des Bands, mit den Brüchen für die ausgelassenen Jahrhunderte. Im Kleinen ist sie eine glatte
-    // Linie: so liest man sie nicht als zweite Achse des Bands darüber, und die Brüche lägen dort ohnehin dicht an dicht
-    let d = '', start = ZB.achse[0] * s;
-    (ZB.schmal ? [] : ZB.brueche).forEach(br => {
-      const m = (br.von + br.bis) / 2 * s;
-      d += linie(start, m - 5, y, y);
-      d += `<path class="bruch" d="M${(m - 4.5).toFixed(1)} ${y + 4} L${(m - 1.5).toFixed(1)} ${y - 4} M${(m + 1.5).toFixed(1)} ${y + 4} L${(m + 4.5).toFixed(1)} ${y - 4}"/>`;
-      start = m + 5;
-    });
-    d += linie(start, ZB.achse[1] * s, y, y);
-    // Die Jahreszahlen: breit wie bisher an der Achse; im Kleinen heißt die erste nur „Gilgamesch“, wenn der ganze Name an die nächste
-    // stieße, und Zahlen, die sich berühren würden, entfallen wie an der Achse
-    let belegtBis = -Infinity, jahre = '';
-    const kandidaten = ZB.schmal ? ZB.marken : ZB.anAchse;
-    kandidaten.forEach((m, k) => {
-      const x = m.tx * s;
-      let text = m.text, b = textBreite(text, ZB.fontJ);
-      if (ZB.schmal && m.jahr == null && m.kurz) {
-        const n = kandidaten[k + 1];
-        const grenze = n ? n.tx * s - textBreite(n.text, ZB.fontJ) / 2 - 12 : T;
-        if (x + b > grenze) { text = m.kurz; b = textBreite(text, ZB.fontJ); }
+    // Die Marken, die der Regler von „gelesen“ beschriftet; die Regler darunter tragen an ihnen nur den kleinen Strich
+    let beschriftet = [];
+    REGLER.forEach(r => {
+      Object.assign(r, { i: null, zieht: null, zug: null, marken: [] });
+      r.kasten.style.width = T + 'px';
+      const liste = reiheVon(r), H = r.el.clientHeight;
+      let d = '', jahre = '';
+      if (r.jahre) {
+        r.ext = ZB.achse.slice();
+        // Breit ist die Linie die Achse des Bands, mit den Brüchen für die ausgelassenen Jahrhunderte. Im Kleinen ist sie eine glatte
+        // Linie: so liest man sie nicht als zweite Achse des Bands darüber, und die Brüche lägen dort ohnehin dicht an dicht
+        let start = r.ext[0] * s;
+        (ZB.schmal ? [] : ZB.brueche).forEach(br => {
+          const m = (br.von + br.bis) / 2 * s;
+          d += linie(start, m - 5, y, y);
+          d += `<path class="bruch" d="M${(m - 4.5).toFixed(1)} ${y + 4} L${(m - 1.5).toFixed(1)} ${y - 4} M${(m + 1.5).toFixed(1)} ${y + 4} L${(m + 4.5).toFixed(1)} ${y - 4}"/>`;
+          start = m + 5;
+        });
+        d += linie(start, r.ext[1] * s, y, y);
+        // Die Jahreszahlen: breit wie bisher an der Achse; im Kleinen heißt die erste nur „Gilgamesch“, wenn der ganze Name an die
+        // nächste stieße, und Zahlen, die sich berühren würden, entfallen wie an der Achse
+        let belegtBis = -Infinity;
+        const kandidaten = ZB.schmal ? ZB.marken : ZB.anAchse;
+        kandidaten.forEach((m, k) => {
+          const x = m.tx * s;
+          let text = m.text, b = textBreite(text, ZB.fontJ);
+          if (ZB.schmal && m.jahr == null && m.kurz) {
+            const n = kandidaten[k + 1];
+            const grenze = n ? n.tx * s - textBreite(n.text, ZB.fontJ) / 2 - 12 : T;
+            if (x + b > grenze) { text = m.kurz; b = textBreite(text, ZB.fontJ); }
+          }
+          const x0 = m.anker === 'start' ? x : x - b / 2;
+          if (x0 < belegtBis + 12 || x0 + b > T + 1) return;
+          belegtBis = x0 + b;
+          r.marken.push({ m, von: x0 - 6, bis: x0 + b + 6, k: r.marken.length });
+          d += linie(m.x * s, m.x * s, y, y + 3.5);
+          jahre += `<text class="jahr" data-k="${r.marken.length - 1}" x="${x.toFixed(1)}" y="${yT}" text-anchor="${m.anker}">${esc(text)}</text>`;
+        });
+        beschriftet = r.marken.map(z => z.m);
+      } else if (liste.length) {
+        /* Die Regler der zwei Reihen darunter: eine glatte Linie vom ersten bis zum letzten Buch ihrer Reihe, ohne Jahreszahlen. Die
+           Reihen teilen die Achse mit „gelesen“, die Zahlen darüber gelten auch für sie; dreimal dieselben Zahlen untereinander wären
+           Unruhe. Die kleinen Striche an den beschrifteten Jahresmarken bleiben, damit man den Knopf an denselben Jahren liest */
+        r.ext = [Math.min(...liste.map(o => o.x)), Math.max(...liste.map(o => o.x + o.w))];
+        d += linie(r.ext[0] * s, r.ext[1] * s, y, y);
+        beschriftet.filter(m => m.jahr != null && m.x >= r.ext[0] && m.x <= r.ext[1]).forEach(m => { d += linie(m.x * s, m.x * s, y, y + 3.5); });
       }
-      const x0 = m.anker === 'start' ? x : x - b / 2;
-      if (x0 < belegtBis + 12 || x0 + b > T + 1) return;
-      belegtBis = x0 + b;
-      R.marken.push({ m, von: x0 - 6, bis: x0 + b + 6, k: R.marken.length });
-      d += linie(m.x * s, m.x * s, y, y + 3.5);
-      jahre += `<text class="jahr" data-k="${R.marken.length - 1}" x="${x.toFixed(1)}" y="${yT}" text-anchor="${m.anker}">${esc(text)}</text>`;
+      r.spur.setAttribute('width', T); r.spur.setAttribute('height', H); r.spur.setAttribute('viewBox', `0 0 ${T} ${H}`);
+      r.spur.innerHTML = `<g>${d}</g><line class="sicht" id="${r.el.id}-sicht" y1="${y}" y2="${y}" x1="0" x2="0" visibility="hidden"/>${jahre}`;
+      r.knopf.style.top = (y - KNOPF_H / 2) + 'px';
     });
-    spur.setAttribute('width', T); spur.setAttribute('height', H); spur.setAttribute('viewBox', `0 0 ${T} ${H}`);
-    spur.innerHTML = `<g>${d}</g><line class="sicht" id="regler-sicht" y1="${y}" y2="${y}" x1="0" x2="0" visibility="hidden"/>${jahre}`;
-    knopf.style.top = (y - KNOPF_H / 2) + 'px';
     reglerZeigen();
   }
-  // Knopf, Name und Wert des Reglers, früher und später, der sichtbare Teil auf der Linie
-  function reglerZeigen() {
-    const liste = reihe();
-    if (!reglerEl || !liste.length) return;
-    const ruhe = R.i == null;
-    const o = R.zieht || liste[ruhe ? liste.length - 1 : Math.min(R.i, liste.length - 1)];
+  // Knopf, Name und Wert eines Reglers
+  function einenZeigen(r) {
+    const liste = reiheVon(r);
+    if (!liste.length) return;
+    const ruhe = r.i == null;
+    const o = r.zieht || liste[ruhe ? liste.length - 1 : Math.min(r.i, liste.length - 1)];
     const x = o.mitte * ZB.s;
-    knopf.style.transform = `translateX(${x.toFixed(2)}px)`;
-    // In Tinte nur, solange sein Buch gewählt ist; ist ein Buch der Reihen darunter gewählt, steht er leer an seinem Platz
-    knopf.classList.toggle('ist-gewaehlt', !!R.zieht || (!ruhe && ZB.offen === o));
-    reglerEl.setAttribute('aria-valuemin', '1');
-    reglerEl.setAttribute('aria-valuemax', String(liste.length));
-    reglerEl.setAttribute('aria-valuenow', String(o.ri + 1));
-    reglerEl.setAttribute('aria-valuetext', F.buch.zeile(o.b).text);
-    const sr = schrittReihe(), i = sr.i == null ? sr.liste.length : sr.i;
-    frueherEl.setAttribute('aria-disabled', String(i <= 0));
-    spaeterEl.setAttribute('aria-disabled', String(i >= sr.liste.length - 1));
-    // Der Name über dem Knopf, nur solange ein Finger zieht
-    if (R.zieht && R.zug && R.zug.finger) {
-      reglerName.innerHTML = kurz(o.b);
-      reglerName.hidden = false;
-      const w = reglerName.offsetWidth;
-      const rand = parseFloat(getComputedStyle(reglerEl).paddingLeft) || 0;
-      reglerName.style.left = Math.round(rand + Math.max(0, Math.min(ZB.T - w, x - w / 2))) + 'px';
-    } else reglerName.hidden = true;
+    r.knopf.style.transform = `translateX(${x.toFixed(2)}px)`;
+    // In Tinte nur, solange sein Buch gewählt ist; ist ein Buch einer anderen Reihe gewählt, steht er leer an seinem Platz
+    r.knopf.classList.toggle('ist-gewaehlt', !!r.zieht || (!ruhe && ZB.offen === o));
+    r.el.setAttribute('aria-valuemin', '1');
+    r.el.setAttribute('aria-valuemax', String(liste.length));
+    r.el.setAttribute('aria-valuenow', String(o.ri + 1));
+    r.el.setAttribute('aria-valuetext', F.buch.zeile(o.b).text);
+    /* Der Name über dem Knopf, nur solange ein Finger zieht. Unter „gelesen“ deckt er die Jahreszahlen des Bands. Unter den zwei
+       Reihen darunter läge er sonst auf ihren Strichen und schnitte den Strich in Tinte an; er steht dort an der Stelle des Namens der
+       Reihe (gleicher Grad, gleiche Zeile), der so lange verborgen ist. Zwischen ihm und dem Knopf bleibt der Strich ganz zu sehen */
+    const zeigt = !!(r.zieht && r.zug && r.zug.finger);
+    if (zeigt) {
+      r.name.innerHTML = kurz(o.b);
+      r.name.hidden = false;
+      if (r.titel) {
+        r.name.style.top = Math.round(r.titel.getBoundingClientRect().top - r.el.getBoundingClientRect().top) + 'px';
+        r.name.style.bottom = 'auto';
+      }
+      const w = r.name.offsetWidth;
+      const rand = parseFloat(getComputedStyle(r.el).paddingLeft) || 0;
+      r.name.style.left = Math.round(rand + Math.max(0, Math.min(ZB.T - w, x - w / 2))) + 'px';
+    } else r.name.hidden = true;
+    if (r.titel) r.titel.classList.toggle('ist-verdeckt', zeigt);
+  }
+  // Alle Regler, früher und später, der sichtbare Teil auf den Linien
+  function reglerZeigen() {
+    if (!ZB.reihen) return;
+    REGLER.forEach(einenZeigen);
+    const sr = schrittReihe();
+    if (sr.liste.length && frueherEl && spaeterEl) {
+      const i = sr.i == null ? sr.liste.length : sr.i;
+      frueherEl.setAttribute('aria-disabled', String(i <= 0));
+      spaeterEl.setAttribute('aria-disabled', String(i >= sr.liste.length - 1));
+    }
     sichtZeichnen();
   }
-  // Auf dem Telefon: der Teil des Bands, der gerade zu sehen ist, als kräftigere Linie auf dem Regler
+  // Auf dem Telefon: der Teil des Bands, der gerade zu sehen ist, als kräftigere Linie auf jedem Regler, so weit seine Reihe reicht
   function sichtZeichnen() {
-    const el = document.getElementById('regler-sicht');
-    if (!el) return;
-    if (!ZB.schmal) { el.setAttribute('visibility', 'hidden'); return; }
-    const s = ZB.s, von = Math.max(ZB.achse[0], roll.scrollLeft), bis = Math.min(ZB.achse[1], roll.scrollLeft + sichtBreite());
-    el.setAttribute('x1', (von * s).toFixed(1)); el.setAttribute('x2', (bis * s).toFixed(1)); el.setAttribute('visibility', 'visible');
+    REGLER.forEach(r => {
+      const el = document.getElementById(r.el.id + '-sicht');
+      if (!el) return;
+      if (!ZB.schmal || !r.ext) { el.setAttribute('visibility', 'hidden'); return; }
+      const s = ZB.s, von = Math.max(r.ext[0], roll.scrollLeft), bis = Math.min(r.ext[1], roll.scrollLeft + sichtBreite());
+      if (bis <= von) { el.setAttribute('visibility', 'hidden'); return; }
+      el.setAttribute('x1', (von * s).toFixed(1)); el.setAttribute('x2', (bis * s).toFixed(1)); el.setAttribute('visibility', 'visible');
+    });
   }
-  // Wählt man einen gelesenen Strich im Band selbst, folgt der Regler, ohne dass das Band rollt; die Reihen darunter lassen ihn stehen
+  // Wählt man einen Strich im Band selbst, folgt der Regler seiner Reihe, ohne dass das Band rollt; die anderen bleiben stehen
   function reglerFolgen() {
-    if (!ZB.reihen || R.zieht) return;
-    if (ZB.offen && ZB.offen.reihe === 'gelesen') R.i = ZB.offen.ri;
+    if (!ZB.reihen || REGLER.some(r => r.zieht)) return;
+    const o = ZB.offen, r = o && reglerVon(o.reihe);
+    if (r) r.i = o.ri;
     reglerZeigen();
   }
-  // Auf dem Telefon rollt das Band so, dass der Strich über dem Knopf steht
+  // Auf dem Telefon rollt das Band so, dass der Strich über dem Knopf steht (alle Regler haben dasselbe Maß)
   function ausrichten(o) {
     if (!ZB.schmal || !o) return;
     roll.scrollLeft = Math.round(o.mitte / ZB.breite * (roll.scrollWidth - roll.clientWidth));
   }
-  // Ein Buch der Reihen darunter hat keinen Knopf: das Band rollt nur, wenn sein Strich nicht zu sehen ist, und dann in die Mitte
-  function insBild(o) {
-    if (!ZB.schmal || !o) return;
-    const vw = sichtBreite(), sl = roll.scrollLeft, rand = 12;
-    if (o.x < sl + rand || o.x + o.w > sl + vw - rand) roll.scrollLeft = Math.round(o.mitte - vw / 2);
-  }
-  // Ein Buch über den Regler, früher, später oder eine Jahreszahl wählen: der Satz darunter, der Strich in Tinte
+  // Ein Buch über einen Regler, früher, später oder eine Jahreszahl wählen: der Satz darunter, der Strich in Tinte
   function waehlen(o) {
     if (!o) return;
-    R.zieht = null;
+    REGLER.forEach(r => { r.zieht = null; });
     zeigen(null);
     const el = document.getElementById(o.id);
     if (!el) return;
-    if (o.reihe === 'gelesen') { R.i = o.ri; ausrichten(o); } else insBild(o);
+    const r = reglerVon(o.reihe);
+    if (r) r.i = o.ri;
+    ausrichten(o);
     bzBand.zeigen(satzVon(o.b), el, o.id);
     ZB.offen = o;
     bandzeile.classList.remove('zeigt');
@@ -1392,9 +1447,9 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     markeSetzen();
   }
   // Beim Ziehen: der Strich in Tinte und darunter die kurze Angabe, wie beim Zeigen mit der Maus
-  function ziehenZu(o) {
+  function ziehenZu(r, o) {
     if (!o) return;
-    R.zieht = o; R.i = o.ri;
+    r.zieht = o; r.i = o.ri;
     ausrichten(o);
     zeigen(o);
     reglerZeigen();
@@ -1407,63 +1462,64 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (ziel === j && ZB.offen === liste[ziel]) return;
     waehlen(liste[ziel]);
   }
-  if (reglerEl) {
-    const lage = e => { const r = reglerEl.getBoundingClientRect(); return { x: e.clientX - r.left - (parseFloat(getComputedStyle(reglerEl).paddingLeft) || 0), y: e.clientY - r.top }; };
-    const buchBei = x => naechstes(reihe(), x / ZB.s);
-    // Unter der Linie, auf der Breite einer Jahreszahl: diese Marke
-    const markeBei = p => p.y > ZB.spurY + 4 ? R.marken.find(z => p.x >= z.von && p.x <= z.bis) || null : null;
-    const ziel = p => { const z = markeBei(p), liste = reihe(); return z ? liste[abJahr(liste, z.m.jahr)] : buchBei(p.x); };
-    const gemeint = z => { $$('.jahr', spur).forEach(t => t.classList.toggle('ist-gemeint', !!z && +t.dataset.k === z.k)); };
-    reglerEl.addEventListener('pointerdown', e => {
-      if (e.button !== 0 || !reihe().length) return;
+  function reglerBedienung(r) {
+    const el = r.el;
+    const lage = e => { const q = el.getBoundingClientRect(); return { x: e.clientX - q.left - (parseFloat(getComputedStyle(el).paddingLeft) || 0), y: e.clientY - q.top }; };
+    const buchBei = x => naechstes(reiheVon(r), x / ZB.s);
+    // Unter der Linie, auf der Breite einer Jahreszahl: diese Marke (nur am Regler von „gelesen“)
+    const markeBei = p => p.y > ZB.spurY + 4 ? r.marken.find(z => p.x >= z.von && p.x <= z.bis) || null : null;
+    const ziel = p => { const z = markeBei(p), liste = reiheVon(r); return z ? liste[abJahr(liste, z.m.jahr)] : buchBei(p.x); };
+    const gemeint = z => { $$('.jahr', r.spur).forEach(t => t.classList.toggle('ist-gemeint', !!z && +t.dataset.k === z.k)); };
+    el.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || !reiheVon(r).length) return;
       const p = lage(e);
-      R.zug = { id: e.pointerId, x0: e.clientX, aktiv: false, finger: e.pointerType !== 'mouse', marke: markeBei(p) };
+      r.zug = { id: e.pointerId, x0: e.clientX, aktiv: false, finger: e.pointerType !== 'mouse', marke: markeBei(p) };
       if (e.pointerType === 'mouse') {
         // Mit der Maus beginnt das Ziehen sofort (außer auf einer Jahreszahl); der Regler bekommt den Fokus für die Pfeiltasten
         e.preventDefault();
-        reglerEl.focus({ preventScroll: true });
-        try { reglerEl.setPointerCapture(e.pointerId); } catch (_) { }
-        if (!R.zug.marke) { R.zug.aktiv = true; bzBand.schliessen(); ziehenZu(buchBei(p.x)); }
+        el.focus({ preventScroll: true });
+        try { el.setPointerCapture(e.pointerId); } catch (_) { }
+        if (!r.zug.marke) { r.zug.aktiv = true; bzBand.schliessen(); ziehenZu(r, buchBei(p.x)); }
       }
     });
     // Ein Finger zieht erst, wenn er sich waagrecht bewegt; senkrecht rollt die Seite (touch-action: pan-y), dann kommt pointercancel
-    reglerEl.addEventListener('pointermove', e => {
-      const z = R.zug;
+    el.addEventListener('pointermove', e => {
+      const z = r.zug;
       if (!z || e.pointerId !== z.id) { if (e.pointerType === 'mouse') gemeint(markeBei(lage(e))); return; }
       if (!z.aktiv) {
         if (Math.abs(e.clientX - z.x0) < 6) return;
         z.aktiv = true;
-        try { reglerEl.setPointerCapture(e.pointerId); } catch (_) { }
+        try { el.setPointerCapture(e.pointerId); } catch (_) { }
         bzBand.schliessen();
       }
-      ziehenZu(buchBei(lage(e).x));
+      ziehenZu(r, buchBei(lage(e).x));
     });
-    reglerEl.addEventListener('pointerleave', () => { if (!R.zug) gemeint(null); });
-    reglerEl.addEventListener('pointerup', e => {
-      const z = R.zug;
+    el.addEventListener('pointerleave', () => { if (!r.zug) gemeint(null); });
+    el.addEventListener('pointerup', e => {
+      const z = r.zug;
       if (!z || e.pointerId !== z.id) return;
-      const o = z.aktiv && R.zieht ? R.zieht : ziel(lage(e));
-      R.zug = null;
+      const o = z.aktiv && r.zieht ? r.zieht : ziel(lage(e));
+      r.zug = null;
       waehlen(o);
     });
-    reglerEl.addEventListener('pointercancel', e => {
-      const z = R.zug;
+    el.addEventListener('pointercancel', e => {
+      const z = r.zug;
       if (!z || e.pointerId !== z.id) return;
-      R.zug = null;
-      if (z.aktiv && R.zieht) waehlen(R.zieht);
-      else { R.zieht = null; reglerZeigen(); }
+      r.zug = null;
+      if (z.aktiv && r.zieht) waehlen(r.zieht);
+      else { r.zieht = null; reglerZeigen(); }
     });
     /* Tastatur und Vorleseprogramme (VoiceOver schickt beim Wischen nach oben und unten Pfeiltasten): links und unten früher, rechts
-       und oben später, Bild auf und ab zur nächsten und vorigen Jahresmarke, Pos1 und Ende zum ersten und letzten Buch */
-    reglerEl.addEventListener('keydown', e => {
-      const liste = reihe();
+       und oben später, Bild auf und ab zur nächsten und vorigen Jahresmarke, Pos1 und Ende zum ersten und letzten Buch der Reihe */
+    el.addEventListener('keydown', e => {
+      const liste = reiheVon(r);
       if (!liste.length) return;
-      const n = liste.length, i = R.i == null ? n : R.i;
+      const n = liste.length, i = r.i == null ? n : r.i;
       const spruenge = [0].concat(JAHRESMARKEN.map(j => abJahr(liste, j))).filter((v, k, a) => a.indexOf(v) === k).sort((a, b) => a - b);
       let ziel;
       switch (e.key) {
         case 'ArrowLeft': case 'ArrowDown': ziel = i - 1; break;
-        case 'ArrowRight': case 'ArrowUp': ziel = R.i == null ? null : i + 1; break;
+        case 'ArrowRight': case 'ArrowUp': ziel = r.i == null ? null : i + 1; break;
         case 'PageUp': ziel = spruenge.find(v => v > i); if (ziel === undefined) ziel = n - 1; break;
         case 'PageDown': ziel = spruenge.slice().reverse().find(v => v < i); if (ziel === undefined) ziel = 0; break;
         case 'Home': ziel = 0; break;
@@ -1472,13 +1528,16 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       }
       e.preventDefault();
       if (ziel == null || ziel < 0 || ziel >= n) return;
-      if (ziel === R.i && ZB.offen === liste[ziel]) return;
+      if (ziel === r.i && ZB.offen === liste[ziel]) return;
       waehlen(liste[ziel]);
     });
     // Am Regler sagt sein Wert das Buch; die Buchzeile spricht dann nicht noch einmal mit
-    reglerEl.addEventListener('focus', () => zeileOffenEl.setAttribute('aria-live', 'off'));
-    reglerEl.addEventListener('blur', () => zeileOffenEl.setAttribute('aria-live', 'polite'));
-    // Früher und später bleiben an ihrem Platz und im Fokus, auch am Ende der Reihe (dann leise, aria-disabled)
+    el.addEventListener('focus', () => zeileOffenEl.setAttribute('aria-live', 'off'));
+    el.addEventListener('blur', () => zeileOffenEl.setAttribute('aria-live', 'polite'));
+  }
+  REGLER.forEach(reglerBedienung);
+  // Früher und später bleiben an ihrem Platz und im Fokus, auch am Ende der Reihe (dann leise, aria-disabled)
+  if (frueherEl && spaeterEl) {
     frueherEl.addEventListener('click', () => { if (frueherEl.getAttribute('aria-disabled') !== 'true') schritt(-1); });
     spaeterEl.addEventListener('click', () => { if (spaeterEl.getAttribute('aria-disabled') !== 'true') schritt(1); });
   }

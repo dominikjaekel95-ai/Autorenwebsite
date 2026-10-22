@@ -3,8 +3,8 @@
   const inhalt = () => window.INHALT || {};
   const NBSP = ' ', NNBSP = ' ';
   const SEITEN = {
-    start: 'index.html', satoshi: 'satoshi.html', ursprung: 'ursprung.html', erzaehlungen: 'erzaehlungen.html', untertext: 'untertext.html',
-    laender: 'laender.html', bibliothek: 'bibliothek.html', vita: 'vita.html', lesen: 'lesen.html', impressum: 'impressum.html', datenschutz: 'datenschutz.html'
+    start: '/', satoshi: '/satoshi', ursprung: '/ursprung', erzaehlungen: '/erzaehlungen', untertext: '/untertext',
+    laender: '/laender', bibliothek: '/bibliothek', vita: '/vita', lesen: '/lesen', impressum: '/impressum', datenschutz: '/datenschutz'
   };
   const $ = (s, el) => (el || document).querySelector(s);
   const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
@@ -1284,7 +1284,16 @@
     + '<p class="post-status" role="status"></p>'
     + '</form>';
   const POST_DANKE = '';
+  const ANSCHRIFT_IM_FUSS = '';
   function fuss() {
+    if (ANSCHRIFT_IM_FUSS) {
+      const anschrift = ': ' + sauber(ANSCHRIFT_IM_FUSS).replace(/(\p{L}) (?=\d)|(\d) (?=\p{L})/gu, (m, a, b) => (a || b) + NBSP);
+      $$('.fuss .impressum > a:first-child').forEach(a => {
+        if (a.dataset.anschrift) return;
+        a.dataset.anschrift = '1';
+        a.after(anschrift);
+      });
+    }
     if (NEWSLETTER) {
       $$('.fuss .anfragen').forEach(zeile => {
         if (!zeile.parentNode.querySelector('form.post')) zeile.insertAdjacentHTML('afterend', POST_ZEILE);
@@ -1327,8 +1336,9 @@
       if (nav.dataset.bereit) return;
       nav.dataset.bereit = '1';
       if (!$('[aria-current="page"]', nav)) {
-        const datei = decodeURIComponent(location.pathname.split('/').pop() || '');
-        $$('a', nav).forEach(a => { const h = a.getAttribute('href') || ''; if (datei && h === datei) a.setAttribute('aria-current', 'page'); });
+        const ohne = s => s.replace(/^\//, '').replace(/\.html$/, '');
+        const datei = ohne(decodeURIComponent(location.pathname.split('/').pop() || ''));
+        $$('a', nav).forEach(a => { const h = ohne(a.getAttribute('href') || ''); if (datei && h === datei) a.setAttribute('aria-current', 'page'); });
       }
     });
     navZeilen();

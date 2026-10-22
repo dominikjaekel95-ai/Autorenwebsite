@@ -8,21 +8,37 @@ Aufruf (aus einem beliebigen Ordner):
   python3 website-c/werkzeuge/veroeffentlichen.py --entwurf    auch mit offenen [[ZU PRÜFEN …]]-Stellen; nennt sie alle
   … --ziel <ordner>                                             woanders hin bauen, etwa zum Ausprobieren
 
-Die Adresse der Website steht an genau einer Stelle: BASIS_URL unten. Aus ihr entstehen Canonical, Open Graph, sitemap.xml
-und robots.txt. Ändert sich die Domain, nur BASIS_URL ändern und neu bauen.
+Die Adresse der Website steht an genau einer Stelle: BASIS_URL unten. Aus ihr entstehen Canonical, Open Graph, die
+strukturierten Daten, sitemap.xml und robots.txt. Ändert sich die Domain, nur BASIS_URL ändern und neu bauen.
+
+Schalter oben im Werkzeug: TARIF (Tarif bei Vercel, 'pro' oder 'hobby'; None, solange er offen ist) wählt den Absatz zur
+Auftragsverarbeitung im Datenschutz (Runde 6, S8).
 
 Was der Bau tut:
   - Er kopiert website-c/ ohne werkzeuge/, README.md, versteckte Dateien und ohne Bilder aus bilder/, auf die nichts verweist.
     Alle Seiten behalten ihr Gerüst (<!doctype>, <html>, <head>, <body>), auch index.html.
   - Aus HTML, CSS und den eigenen Skripten (nicht aus lib/) entfernt er alle Kommentare, wie werkzeuge/artefakt.py.
+  - Adressen ohne .html (Runde 6, S6): vercel.json hat "cleanUrls": true, Vercel liefert vita.html unter /vita aus und leitet
+    /vita.html (auch /vita.html/) mit 308 dorthin weiter, ebenso /index.html auf /. Der Bau schreibt darum jeden internen
+    Verweis auf eine der elf Seiten um, „vita.html“ und „/vita.html“ auf „/vita“, „index.html“ auf „/“, Anker bleiben
+    („bibliothek.html#zeit-1“ wird „/bibliothek#zeit-1“): in href der Seiten und in den Zeichenketten der eigenen Skripte
+    (FSeite.SEITEN in seite.js). In website-c/ bleiben die .html-Verweise, der Testlink auf claude.ai braucht sie.
+  - Im Datenschutz lässt er nach TARIF eine der beiden Fassungen des Absatzes zur Auftragsverarbeitung stehen
+    (data-tarif="pro" oder "hobby") und löscht die andere und die Markierung davor; mit TARIF = None bleiben alle drei.
   - In den Kopf jeder Seite außer 404.html schreibt er Canonical, og:title (der <title>), og:description (die vorhandene
     Meta-Beschreibung), og:url, og:image (bilder/vorschau.jpg), og:locale de_DE und twitter:card summary_large_image.
+  - Strukturierte Daten (Runde 6, S5) als <script type="application/ld+json"> im Kopf, nicht ausführbar, darum ohne Hash in
+    der CSP: Person auf der Startseite und der Vita, Book auf Satoshi, BookSeries mit den drei Bänden auf Ursprünge. Alles
+    kommt aus den Seiten selbst (Kurzvita, Überschriften, Meta-Beschreibungen) oder aus den festen Angaben unten (PERSON_*),
+    nichts Erfundenes, keine Geburtsdaten, keine Anschrift; sameAs aus PROFILE in seite.js, solange es leer ist, ohne.
   - Die Skripte, die in den Seiten stehen (<script> ohne src), bleiben, wo sie sind. Für jedes trägt er den SHA-256-Hash
     seines Texts in script-src der Content-Security-Policy in vercel.json ein (in website-c/vercel.json steht nur 'self').
     So erlaubt die CSP genau diese Skripte und kein anderes, ohne 'unsafe-inline'.
   - Er schreibt sitemap.xml mit den elf Seiten und robots.txt (alles erlaubt, Verweis auf die Sitemap). lastmod ist das Datum
     des Baus, außer eine Seite (mit ihren Skripten und Stilen) ist gleich geblieben: dann bleibt das lastmod des letzten Baus.
-    Im Entwurf fehlen in der Sitemap die Seiten mit noindex (offene Stellen).
+    Seiten mit noindex fehlen in der Sitemap: im Entwurf die mit offenen Stellen, und lesen.html, solange daten/texte.js keinen
+    Text hat (Runde 6, S3). Dann trägt lesen.html auch noindex. Beides prüft der Bau jedes Mal selbst; mit dem ersten Text
+    steht lesen.html wieder in der Sitemap, ohne noindex.
   - vercel.json, 404.html, die Icons und das Vorschaubild gehen mit.
   - Steht in einer ausgelieferten Datei noch „[[ZU PRÜFEN“, baut er nicht, außer mit --entwurf. Dann nennt er jede Stelle, und
     die Seiten mit offenen Stellen bekommen <meta name="robots" content="noindex">, damit kein Entwurf in Suchmaschinen landet.
@@ -30,9 +46,9 @@ Was der Bau tut:
     (POST_DANKE) ist leer oder spricht vom Testsystem, baut er nicht.
 
 Er baut zuerst in einen versteckten Ordner neben dem Ziel und prüft dort: keine Kommentare, jedes Skript in einer Seite hat
-seinen Hash in der CSP, keine Ereignis-Attribute (onclick=) und keine javascript:-Verweise, keine Ressource von fremden
+seinen Hash in der CSP (die strukturierten Daten sind gültiges JSON mit Adressen ohne .html), keine Ereignis-Attribute (onclick=) und keine javascript:-Verweise, keine Ressource von fremden
 Servern, Verweise nach außen nur aus AUSSEN_ERLAUBT (mit rel="noopener", ohne target), jeder lokale Verweis zeigt auf eine
-ausgelieferte Datei, jede Seite hat Icons und Vorschau-Angaben, kein Wort vom
+ausgelieferte Datei und kein interner Verweis endet noch auf .html, jede Seite hat Icons und Vorschau-Angaben, kein Wort vom
 Testsystem (auch nicht von claude.ai oder Anthropic) in den Seiten, Stilen und eigenen Skripten, vercel.json hat alle Header. Erst wenn alles stimmt, ersetzt er das Ziel. Ein abgebrochener Bau lässt
 den alten Stand stehen.
 """
@@ -54,6 +70,14 @@ import artefakt  # noqa: E402  (die Bereinigung der Kommentare ist dieselbe wie 
 
 # ---------- Die eine Stelle für die Adresse ----------
 BASIS_URL = 'https://dominikjaekel.de'
+
+# ---------- Schalter: Tarif bei Vercel (Runde 6, S8) ----------
+# Vercels Data Processing Addendum nennt nach der Recherche der zweiten Sitzung nur Kunden auf Pro und Enterprise. Auf dem
+# Hobby-Tarif ist der Satz „Dafür gilt ein Vertrag zur Auftragsverarbeitung (Art. 28 DSGVO) …“ nicht haltbar. datenschutz.html hat
+# darum zwei Fassungen des Absatzes: 'pro' (mit dem Vertrag) und 'hobby' (ohne ihn). None: noch offen, dann bleiben beide und die
+# Markierung [[ZU PRÜFEN: Tarif bei Vercel, pro oder hobby]] stehen, und der Bau geht nur als Entwurf. Der Bau für claude.ai
+# (artefakt.py) folgt demselben Schalter.
+TARIF = None
 
 QUELLE = Path(__file__).resolve().parents[1]
 ZIEL = QUELLE.parent / 'veroeffentlichung'
@@ -85,6 +109,20 @@ CSP_SOLL = {
     'font-src': ["'self'"], 'connect-src': ["'self'"], 'frame-ancestors': ["'none'"], 'base-uri': ["'self'"],
     'form-action': ["'self'"], 'object-src': ["'none'"],
 }
+# Strukturierte Daten (Runde 6, S5). Was nicht aus den Seiten kommt, steht hier: Name, Beruf, Preis, Verein (höchstens das
+# Autorenforum, mit seiner Adresse aus AUSSEN_ERLAUBT). Keine Geburtsdaten, keine Anschrift, kein Verlag, kein Datum (Satoshi ist
+# noch nicht erschienen). sameAs kommt aus PROFILE in seite.js, sobald dort Instagram und LinkedIn stehen
+PERSON_NAME = 'Dominik Jäkel'
+PERSON_BERUF = 'Schriftsteller'
+PERSON_PREIS = 'A.-E.-Johann-Preis (2022)'
+PERSON_VEREIN = {'@type': 'Organization', 'name': 'Autorenforum Berlin e. V.', 'url': 'https://autorenforum-berlin.de/'}
+LD_SEITEN = {'index.html': 'Person', 'vita.html': 'Person', 'satoshi.html': 'Book', 'ursprung.html': 'BookSeries'}
+LD_VERBOTEN = {'birthDate', 'birthPlace', 'address', 'homeLocation', 'telephone', 'email', 'publisher', 'datePublished',
+               'isbn', 'gender', 'nationality'}
+# lesen.html steht nur in der Sitemap und ohne noindex, wenn daten/texte.js mindestens einen Text hat (Runde 6, S3)
+LESESEITE = 'lesen.html'
+SLUG = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
+SLUG_BELEGT = {'inhalt', 'kontakt', 'kontakt-titel', 'nav-liste', 'lesen'}   # wie BELEGT in FSeite.texte (seite.js)
 HEADER_SOLL = {
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
@@ -99,8 +137,45 @@ def fehler(text):
 artefakt.fehler = fehler
 
 
+def adresse(seite):
+    """Die Adresse einer Seite bei Vercel mit cleanUrls: index.html ist /, vita.html ist /vita."""
+    return '/' if seite == 'index.html' else '/' + seite.removesuffix('.html')
+
+
 def url_fuer(seite):
-    return BASIS_URL + ('/' if seite == 'index.html' else '/' + seite)
+    return BASIS_URL + adresse(seite)
+
+
+SEITENVERWEIS = re.compile(r'(?:\./|/)?([a-z0-9-]+\.html)(#[^"\'\s]*)?')
+
+
+def sauberer_verweis(ref):
+    """„vita.html“, „./vita.html“ oder „/vita.html“ (mit Anker) als „/vita“ (mit Anker); None, wenn ref keine der elf Seiten ist."""
+    m = SEITENVERWEIS.fullmatch(ref)
+    if not m or m.group(1) not in SEITEN:
+        return None
+    return adresse(m.group(1)) + (m.group(2) or '')
+
+
+JS_SEITE = re.compile(r'([\'"])([a-z0-9-]+\.html(?:#[^\'"\s]*)?)\1')
+
+
+def js_verweise(js):
+    """Zeichenketten in Skripten, die genau eine Seite nennen ('vita.html'), werden ihre Adresse ('/vita')."""
+    return JS_SEITE.sub(lambda m: m.group(1) + (sauberer_verweis(m.group(2)) or m.group(2)) + m.group(1), js)
+
+
+def verweise_umschreiben(p, text):
+    """Interne Verweise ohne .html (cleanUrls, Runde 6, S6): in href der Seiten und in den Zeichenketten der eigenen Skripte und
+    der Skripte in den Seiten. Anker bleiben, Verweise nach außen und auf andere Dateien bleiben unberührt."""
+    if p.parts[0] == 'lib':
+        return text
+    if p.suffix == '.js':
+        return js_verweise(text)
+    if p.suffix != '.html':
+        return text
+    text = re.sub(r'(\bhref=")([^"]*)"', lambda m: m.group(1) + (sauberer_verweis(m.group(2)) or m.group(2)) + '"', text)
+    return re.sub(r'(<script>)(.*?)(</script>)', lambda m: m.group(1) + js_verweise(m.group(2)) + m.group(3), text, flags=re.S)
 
 
 # ---------- Dateien ----------
@@ -146,8 +221,149 @@ def vorher_pruefen(dateien):
         fehler(f'BASIS_URL {BASIS_URL!r} hat nicht die Form https://name.tld (ohne Schrägstrich am Ende)')
 
 
+# ---------- Texte zum Lesen (Runde 6, S3) ----------
+def texte_zaehlen():
+    """Wie viele Texte daten/texte.js hat: die Einträge in window.TEXTE mit einem gültigen slug, ohne Kommentare gelesen (das
+    Beispiel im Kommentar zählt nicht). seite.js prüft dazu art und titel; hier zählt, ob überhaupt ein Text eingetragen ist."""
+    js = artefakt.js_ohne_kommentare((QUELLE / 'daten' / 'texte.js').read_text(encoding='utf-8'))
+    m = re.search(r'window\.TEXTE\s*=\s*\[(.*)\]\s*;?\s*$', js, re.S)
+    if not m:
+        fehler('daten/texte.js: „window.TEXTE = [ … ];“ nicht gefunden')
+    innen = m.group(1).strip()
+    slugs = [s for s in re.findall(r'\bslug\s*:\s*[\'"]([^\'"]*)[\'"]', innen) if SLUG.match(s) and s not in SLUG_BELEGT]
+    if innen and not slugs:
+        fehler('daten/texte.js: window.TEXTE hat Einträge, aber keinen mit gültigem slug (Kleinbuchstaben, Ziffern, Bindestriche)')
+    return len(slugs)
+
+
+# ---------- Datenschutz: Tarif bei Vercel (Runde 6, S8) ----------
+TARIF_ABSATZ = re.compile(r'[ \t]*<p data-tarif="(offen|pro|hobby)">.*?</p>\n', re.S)
+
+
+def tarif_waehlen(text, tarif):
+    """datenschutz.html mit der Fassung für tarif ('pro' oder 'hobby'); None lässt beide und die Markierung davor stehen."""
+    funde = [m.group(1) for m in TARIF_ABSATZ.finditer(text)]
+    if sorted(funde) != ['hobby', 'offen', 'pro']:
+        fehler(f'datenschutz.html: die Absätze data-tarif="offen", "pro" und "hobby" stehen nicht je einmal da ({funde})')
+    if tarif is None:
+        return text
+    neu = TARIF_ABSATZ.sub(lambda m: m.group(0).replace(f' data-tarif="{tarif}"', '', 1) if m.group(1) == tarif else '', text)
+    if 'data-tarif' in neu:
+        fehler('datenschutz.html: nach der Wahl des Tarifs steht noch data-tarif da')
+    return neu
+
+
+# ---------- Strukturierte Daten (Runde 6, S5) ----------
+def nur_text(teil):
+    """Text aus einem Stück HTML: ohne Tags und weiche Trennungen, Leerzeichen jeder Art als ein Leerzeichen."""
+    t = html.unescape(re.sub(r'<[^>]+>', '', teil)).replace('\u00ad', '')
+    return re.sub(r'\s+', ' ', t.replace('\u00a0', ' ').replace('\u202f', ' ')).strip()
+
+
+def stueck(text, muster, was, seite):
+    m = re.search(muster, text, re.S)
+    if not m:
+        fehler(f'{seite}: {was} nicht gefunden (für die strukturierten Daten)')
+    return m.group(1)
+
+
+def kurzvita(index_html):
+    """Die Kurzvita der Startseite (p.vita) als Beschreibung der Person: ohne „Ausführlich in der Vita.“ und ohne Geburtsjahr und
+    -ort. Aus „Er wurde 1995 in Dortmund geboren, studierte …“ wird „Dominik Jäkel studierte …“; der Rest bleibt Wort für Wort."""
+    t = nur_text(stueck(index_html, r'<p class="vita">(.*?)</p>', 'die Kurzvita (p.vita)', 'index.html'))
+    t = re.sub(r'\s*Ausführlich in der Vita\.$', '', t)
+    t, n = re.subn(r'^Er wurde \d{4} in [^,;]+ geboren, ', PERSON_NAME + ' ', t)
+    if n != 1 or re.search(r'geboren|\b1[89]\d\d\b', t):
+        fehler(f'index.html: die Kurzvita beginnt nicht mehr mit „Er wurde … geboren, “ oder nennt noch ein Geburtsjahr; '
+               f'die Beschreibung der Person (kurzvita in veroeffentlichen.py) bitte anpassen: {t[:80]!r}')
+    return t
+
+
+def profile_lesen(seite_js):
+    """Die Adressen aus PROFILE in seite.js (sameAs), nur https; leer, solange PROFILE leer ist."""
+    m = re.search(r'\bconst PROFILE = \[(.*?)\];', seite_js, re.S)
+    if not m:
+        fehler('seite.js: „const PROFILE = [ … ];“ nicht gefunden')
+    return re.findall(r'\burl\s*:\s*[\'"](https://[^\'"\s]+)[\'"]', m.group(1))
+
+
+def strukturierte_daten(texte):
+    """Je Seite aus LD_SEITEN das Objekt für <script type="application/ld+json">, aus den Seiten selbst gelesen."""
+    person_id = BASIS_URL + '/#person'
+    autor = {'@type': 'Person', '@id': person_id, 'name': PERSON_NAME, 'url': url_fuer('index.html')}
+    person = {'@context': 'https://schema.org', '@type': 'Person', '@id': person_id, 'name': PERSON_NAME, 'url': url_fuer('index.html'),
+              'jobTitle': PERSON_BERUF, 'description': kurzvita(texte[Path('index.html')]), 'award': PERSON_PREIS,
+              'affiliation': PERSON_VEREIN}
+    profile = profile_lesen(texte[Path('seite.js')])
+    if profile:
+        person['sameAs'] = profile
+    s = texte[Path('satoshi.html')]
+    buch = {'@context': 'https://schema.org', '@type': 'Book', '@id': url_fuer('satoshi.html') + '#buch',
+            'name': nur_text(stueck(s, r'<h1\b[^>]*>(.*?)</h1>', '<h1>', 'satoshi.html')), 'url': url_fuer('satoshi.html'),
+            'author': autor, 'inLanguage': 'de', 'genre': 'Roman',
+            'description': nur_text(stueck(s, r'<meta name="description" content="([^"]*)">', 'Meta-Beschreibung', 'satoshi.html'))}
+    u = texte[Path('ursprung.html')]
+    baende = []
+    for i, nr in enumerate(('i', 'ii', 'iii'), 1):
+        titel = stueck(u, rf'<h2\b[^>]*\bid="band-{nr}-titel"[^>]*>(.*?)</h2>', f'die Überschrift von Band {nr.upper()}', 'ursprung.html')
+        titel = nur_text(re.sub(r'<span class="(?:band-nr[^"]*|arbeitstitel)">.*?</span>', '', titel))
+        if not titel:
+            fehler(f'ursprung.html: Band {nr.upper()} ohne Titel')
+        baende.append({'@type': 'Book', 'name': titel, 'position': i, 'url': url_fuer('ursprung.html') + f'#band-{nr}',
+                       'author': {'@id': person_id}, 'inLanguage': 'de', 'genre': 'Roman'})
+    reihe = {'@context': 'https://schema.org', '@type': 'BookSeries', '@id': url_fuer('ursprung.html') + '#reihe',
+             'name': nur_text(stueck(u, r'<h1\b[^>]*>(.*?)</h1>', '<h1>', 'ursprung.html')), 'url': url_fuer('ursprung.html'),
+             'author': autor, 'inLanguage': 'de',
+             'description': nur_text(stueck(u, r'<meta name="description" content="([^"]*)">', 'Meta-Beschreibung', 'ursprung.html')),
+             'hasPart': baende}
+    return {'index.html': person, 'vita.html': person, 'satoshi.html': buch, 'ursprung.html': reihe}
+
+
+def ld_skript(objekt):
+    return ('<script type="application/ld+json">' + json.dumps(objekt, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
+            + '</script>')
+
+
+def ld_pruefen(seite, roh, probleme, namen):
+    """Die strukturierten Daten einer Seite: gültiges JSON, der erwartete Typ, jede Adresse ohne .html auf eine ausgelieferte
+    Seite unter BASIS_URL oder aus AUSSEN_ERLAUBT, keine verbotenen Angaben."""
+    try:
+        d = json.loads(roh)
+    except ValueError as e:
+        probleme.append(f'{seite}: strukturierte Daten sind kein gültiges JSON: {e}')
+        return
+    if d.get('@context') != 'https://schema.org' or d.get('@type') != LD_SEITEN.get(seite):
+        probleme.append(f'{seite}: strukturierte Daten mit @type {d.get("@type")!r} statt {LD_SEITEN.get(seite)!r}')
+
+    def lauf(x, weg):
+        if isinstance(x, dict):
+            for k, v in x.items():
+                if k in LD_VERBOTEN:
+                    probleme.append(f'{seite}: strukturierte Daten mit {k} ({weg})')
+                if k in ('url', '@id', 'sameAs') and v:
+                    for u in (v if isinstance(v, list) else [v]):
+                        if not isinstance(u, str):
+                            probleme.append(f'{seite}: {weg}.{k} ist kein Text')
+                        elif u.startswith(BASIS_URL + '/'):
+                            pfad = u[len(BASIS_URL):].split('#')[0]
+                            if '.html' in u or not (ziel_von('index.html', pfad) or Path('')).as_posix() in namen:
+                                probleme.append(f'{seite}: {weg}.{k} {u} ist keine Adresse einer ausgelieferten Seite (ohne .html)')
+                        elif u not in AUSSEN_ERLAUBT and not (k == 'sameAs' and u.startswith('https://')):
+                            probleme.append(f'{seite}: {weg}.{k} {u} zeigt nach außen und steht nicht in AUSSEN_ERLAUBT')
+                lauf(v, weg + '.' + k)
+        elif isinstance(x, list):
+            for i, v in enumerate(x):
+                lauf(v, f'{weg}[{i}]')
+        elif isinstance(x, str) and re.search(r'Stresemann|\b10963\b|geboren', x):
+            probleme.append(f'{seite}: strukturierte Daten nennen Anschrift oder Geburt ({weg})')
+    lauf(d, d.get('@type', '?'))
+    if seite == 'ursprung.html' and len(d.get('hasPart', [])) != 3:
+        probleme.append(f'{seite}: die Reihe hat nicht drei Bände')
+
+
 # ---------- Seiten ----------
 SKRIPT_IN_SEITE = re.compile(r'<script\b([^>]*)>(.*?)</script>', re.S | re.I)
+LD_TYP = ' type="application/ld+json"'
 
 
 def skript_hash(inhalt):
@@ -164,6 +380,8 @@ def skripte_in_seite(seite, text):
             if inhalt.strip():
                 fehler(f'{seite}: <script src> mit Inhalt')
             continue
+        if attr == LD_TYP:
+            continue   # strukturierte Daten: kein Skript, das läuft, darum kein Hash in der CSP
         if attr.strip():
             fehler(f'{seite}: <script{attr}> ohne src, aber mit Attributen; der Bau kennt nur schlichte Skripte')
         hashes.append(skript_hash(inhalt))
@@ -206,7 +424,7 @@ def attribut(text, muster, was, seite):
     return html.escape(html.unescape(m.group(1).strip()), quote=True)
 
 
-def kopf_ergaenzen(seite, text, entwurf_offen):
+def kopf_ergaenzen(seite, text, noindex, ld=None):
     titel = attribut(text, r'<title>(.*?)</title>', '<title>', seite)
     beschreibung = attribut(text, r'<meta name="description" content="([^"]*)">', 'Meta-Beschreibung', seite)
     url = url_fuer(seite)
@@ -226,10 +444,12 @@ def kopf_ergaenzen(seite, text, entwurf_offen):
         f'<meta property="og:image:alt" content="{html.escape(VORSCHAU_ALT, quote=True)}">',
         '<meta name="twitter:card" content="summary_large_image">',
     ]
-    if entwurf_offen:
+    if noindex:
         zeilen.insert(0, '<meta name="robots" content="noindex">')
-    if re.search(r'rel="canonical"|property="og:|name="twitter:', text):
-        fehler(f'{seite}: hat schon Canonical oder Open Graph; die schreibt nur der Bau (aus BASIS_URL)')
+    if ld is not None:
+        zeilen.append(ld_skript(ld))
+    if re.search(r'rel="canonical"|property="og:|name="twitter:|application/ld\+json|name="robots"', text):
+        fehler(f'{seite}: hat schon Canonical, Open Graph, robots oder strukturierte Daten; die schreibt nur der Bau (aus BASIS_URL)')
     m = re.search(r'<meta name="description" content="[^"]*">\n', text)
     return text[:m.end()] + '\n'.join(zeilen) + '\n' + text[m.end():]
 
@@ -302,14 +522,16 @@ def ziel_von(seite, ref):
     ref = html.unescape(ref).split('#')[0].split('?')[0]
     if not ref:
         return None
-    if ref.startswith('/'):
-        return Path(ref.lstrip('/')) if ref != '/' else Path('index.html')
-    return Path(os.path.normpath((Path(seite).parent / ref).as_posix()))
+    if ref == '/':
+        return Path('index.html')
+    z = Path(ref.lstrip('/')) if ref.startswith('/') else Path(os.path.normpath((Path(seite).parent / ref).as_posix()))
+    # Saubere Adresse (cleanUrls): /vita ist vita.html
+    return Path(z.as_posix() + '.html') if not z.suffix and len(z.parts) == 1 else z
 
 
 def vercel_pruefen(konfig, hashes, probleme):
-    if konfig.get('cleanUrls') is not False:
-        probleme.append('vercel.json: cleanUrls soll false sein (die Verweise enden auf .html)')
+    if konfig.get('cleanUrls') is not True:
+        probleme.append('vercel.json: cleanUrls soll true sein (die Verweise im Bau enden nicht auf .html; Runde 6, S6)')
     if konfig.get('trailingSlash') is not False:
         probleme.append('vercel.json: trailingSlash soll false sein')
     alle = {}
@@ -332,12 +554,12 @@ def vercel_pruefen(konfig, hashes, probleme):
     if fehlen:
         probleme.append(f'vercel.json: script-src ohne die Hashes {fehlen}')
     cache = {r['source']: h['value'] for r in konfig.get('headers', []) for h in r['headers'] if h['key'] == 'Cache-Control'}
-    for quelle, soll in (('/', 'must-revalidate'), ('/(.*)\\.html', 'must-revalidate'), ('/(schrift|lib|daten|bilder)/(.*)', 'max-age=86400')):
+    for quelle, soll in (('/', 'must-revalidate'), ('/([^/.]+)', 'must-revalidate'), ('/(schrift|lib|daten|bilder)/(.*)', 'max-age=86400')):
         if soll not in cache.get(quelle, '') or 'immutable' in cache.get(quelle, ''):
             probleme.append(f'vercel.json: Cache-Control für {quelle} ist „{cache.get(quelle)}“')
 
 
-def pruefen(neu, dateien, seiten):
+def pruefen(neu, dateien, seiten, noindex):
     namen = {p.as_posix() for p in dateien}
     probleme, hashes = [], set()
     for p in dateien:
@@ -352,9 +574,22 @@ def pruefen(neu, dateien, seiten):
             for ref in re.findall(r'\bhref:\s*[\'"](https?://[^\'"]*)', text):
                 if ref not in AUSSEN_ERLAUBT:
                     probleme.append(f'{p}: Verweis nach außen {ref} steht nicht in AUSSEN_ERLAUBT')
+        skripte = [text] if p.suffix == '.js' else [m.group(2) for m in SKRIPT_IN_SEITE.finditer(text) if not m.group(1).strip()]
+        for js in skripte:
+            for m in JS_SEITE.finditer(js):
+                if sauberer_verweis(m.group(2)):
+                    probleme.append(f'{p}: Zeichenkette {m.group(0)} im Skript endet auf .html (cleanUrls: {sauberer_verweis(m.group(2))})')
     for seite in seiten:
         text = (neu / seite).read_text(encoding='utf-8')
         hashes.update(skripte_in_seite(seite, text))
+        ld = [m.group(2) for m in SKRIPT_IN_SEITE.finditer(text) if m.group(1) == LD_TYP]
+        if len(ld) != (1 if seite in LD_SEITEN else 0):
+            probleme.append(f'{seite}: {len(ld)} Blöcke strukturierter Daten statt {1 if seite in LD_SEITEN else 0}')
+        for roh in ld:
+            ld_pruefen(seite, roh, probleme, namen)
+        robots = re.findall(r'<meta name="robots" content="([^"]*)">', text.split('</head>')[0])
+        if (robots == ['noindex']) != (seite in noindex or seite == FEHLERSEITE) or len(robots) > 1:
+            probleme.append(f'{seite}: robots {robots}, soll {"noindex" if seite in noindex else "keins"}')
         # Für die Prüfung der Tags zählt nur das HTML, nicht der Text der Skripte in der Seite
         text = re.sub(r'(<script\b[^>]*>).*?(</script>)', r'\1\2', text, flags=re.S | re.I)
         for m in re.finditer(r'<[a-zA-Z][^>]*\s(on[a-z]+)\s*=', text):
@@ -382,6 +617,8 @@ def pruefen(neu, dateien, seiten):
                         continue
                     if re.match(r'(mailto|tel|data):|#', ref):
                         continue
+                    if art == 'a' and sauberer_verweis(ref):
+                        probleme.append(f'{seite}: Verweis auf {ref} endet auf .html (cleanUrls: {sauberer_verweis(ref)})')
                     z = ziel_von(seite, ref)
                     if z is not None and z.as_posix() not in namen:
                         probleme.append(f'{seite}: Verweis auf {ref}, die Datei wird nicht ausgeliefert')
@@ -437,6 +674,9 @@ def main():
     dateien = dateien_sammeln()
     vorher_pruefen(dateien)
     heute = datetime.date.today().isoformat()
+    if TARIF not in (None, 'pro', 'hobby'):
+        fehler(f"TARIF ist {TARIF!r}; erlaubt sind None (noch offen), 'pro' und 'hobby'")
+    zahl_texte = texte_zaehlen()
 
     # Die Seiten und eigenen Texte ohne Kommentare, die Seiten mit Canonical und Vorschau-Angaben
     texte = {}
@@ -445,11 +685,17 @@ def main():
             neu = artefakt.bereinigen(p, (QUELLE / p).read_text(encoding='utf-8'))
             if neu is not None:
                 texte[p] = neu
+    texte[Path('datenschutz.html')] = tarif_waehlen(texte[Path('datenschutz.html')], TARIF)
+    for p in texte:
+        texte[p] = verweise_umschreiben(p, texte[p])
     seiten = [p.as_posix() for p in dateien if p.suffix == '.html']
     offen = {s for s in seiten if MARKER.search(texte[Path(s)])}
+    # noindex und nicht in der Sitemap: im Entwurf die Seiten mit offenen Stellen; lesen.html, solange es keinen Text gibt
+    noindex = (offen if entwurf else set()) | (set() if zahl_texte else {LESESEITE})
+    ld = strukturierte_daten(texte)
     for s in seiten:
         if s != FEHLERSEITE:
-            texte[Path(s)] = kopf_ergaenzen(s, texte[Path(s)], entwurf and s in offen)
+            texte[Path(s)] = kopf_ergaenzen(s, texte[Path(s)], s in noindex, ld.get(s))
 
     # vercel.json mit den Hashes der Skripte in den Seiten
     hashes = sorted({h for s in seiten for h in skripte_in_seite(s, texte[Path(s)])})
@@ -470,8 +716,10 @@ def main():
                 (neu / p).write_text(texte[p], encoding='utf-8', newline='\n')
             else:
                 shutil.copy2(QUELLE / p, neu / p)
-        eintraege = sitemap(neu, ziel, heute, offen if entwurf else set())
-        if pruefen(neu, ausgeliefert, seiten) != set(hashes):
+        eintraege = sitemap(neu, ziel, heute, noindex)
+        if [u for u, _ in eintraege] != [url_fuer(s) for s in SEITEN if s not in noindex]:
+            fehler('sitemap.xml: die Seiten passen nicht zu den Seiten ohne noindex')
+        if pruefen(neu, ausgeliefert, seiten, noindex) != set(hashes):
             fehler('Die Hashes in vercel.json passen nicht zu den Skripten in den Seiten')
 
         marker = marker_suchen(neu, ausgeliefert)
@@ -497,6 +745,10 @@ def main():
     print(f'{"Entwurf" if entwurf else "Veröffentlichung"} in {ziel}, Adresse {BASIS_URL}')
     print(f'{len(ausgeliefert)} Dateien, {groesse / 1024:.1f} KB; {len(hashes)} Skripte in den Seiten, je mit Hash in script-src')
     print('Sitemap: ' + ', '.join(f'{u.removeprefix(BASIS_URL) or "/"} {d}' for u, d in eintraege))
+    print(f'Adressen ohne .html (cleanUrls); noindex: {", ".join(sorted(noindex)) or "keine"}; '
+          f'Texte in daten/texte.js: {zahl_texte} ({LESESEITE} {"in der Sitemap" if zahl_texte else "mit noindex, nicht in der Sitemap"})')
+    print('Strukturierte Daten: ' + ', '.join(f'{s} {t}' for s, t in LD_SEITEN.items())
+          + f'; Tarif bei Vercel: {TARIF or "offen (beide Fassungen und die Markierung stehen im Datenschutz)"}')
     print('Ausgelassen: ' + ', '.join(sorted(AUSLASSEN) + [p.as_posix() + ' (nirgends verwiesen)' for p in weg]))
 
 

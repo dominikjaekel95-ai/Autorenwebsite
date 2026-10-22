@@ -45,7 +45,7 @@
      texte.alle(art), texte.satz(s), texte.datum(d), texte.punkt(s), texte.ARTEN   Texte aus daten/texte.js
      navigation()                   Navigation einrichten (läuft beim Laden von selbst)
      fuss(), PROFILE, NEWSLETTER    Newsletter-Zeile (nur mit NEWSLETTER = true) und Profile im Fuß (läuft beim Laden von selbst);
-                                    PROFILE: Liste der Profile
+                                    PROFILE: Liste der Profile; ANSCHRIFT_IM_FUSS (leer): die Anschrift hinter „Impressum“
      leselinie(elemente, beiSchritt, o)   beim Scrollen: welches Element zuletzt die Leselinie erreicht hat (vor und zurück)
      fortschritt(element, beiWert, o)     beim Scrollen: wie weit ein Element durch das Fenster gewandert ist, 0 bis 1
      imBild(element, { starten, unterbrechen, fortsetzen })   eine Chronik hält an, wenn ihr Globus aus dem Bild ist
@@ -1674,7 +1674,24 @@
     + '<p class="post-status" role="status"></p>'
     + '</form>';
   const POST_DANKE = '';
+  /* Die Anschrift im Fuß (Runde 6, S4, Dominiks Entscheidung vom 22. Oktober): Im Fuß jeder Seite stehen nur die Verweise
+     „Impressum“ und „Datenschutz“. Die Anschrift steht nur auf impressum.html, die Impressumspflicht erfüllt der Verweis.
+     Rückgängig mit einer Zeile, dieser hier:
+       const ANSCHRIFT_IM_FUSS = 'Dominik Jäkel, Stresemannstraße 76, 10963 Berlin';
+     Dann setzt fuss() hinter den Verweis „Impressum“ jedes Fußes „: “ und die Anschrift, wie bis Runde 5 (das geschützte Leerzeichen
+     zwischen Wort und Zahl setzt fuss() selbst). Ohne Skript stünde sie dann nicht da; die Pflicht erfüllt weiter der Verweis.
+     Solange der Wert leer ist, steht die Anschrift in keinem Fuß und nicht in der ausgelieferten seite.js (der Bau entfernt diesen
+     Kommentar). */
+  const ANSCHRIFT_IM_FUSS = '';
   function fuss() {
+    if (ANSCHRIFT_IM_FUSS) {
+      const anschrift = ': ' + sauber(ANSCHRIFT_IM_FUSS).replace(/(\p{L}) (?=\d)|(\d) (?=\p{L})/gu, (m, a, b) => (a || b) + NBSP);
+      $$('.fuss .impressum > a:first-child').forEach(a => {
+        if (a.dataset.anschrift) return;
+        a.dataset.anschrift = '1';
+        a.after(anschrift);
+      });
+    }
     if (NEWSLETTER) {
       $$('.fuss .anfragen').forEach(zeile => {
         if (!zeile.parentNode.querySelector('form.post')) zeile.insertAdjacentHTML('afterend', POST_ZEILE);
@@ -1724,8 +1741,10 @@
       if (nav.dataset.bereit) return;
       nav.dataset.bereit = '1';
       if (!$('[aria-current="page"]', nav)) {
-        const datei = decodeURIComponent(location.pathname.split('/').pop() || '');
-        $$('a', nav).forEach(a => { const h = a.getAttribute('href') || ''; if (datei && h === datei) a.setAttribute('aria-current', 'page'); });
+        // Mit und ohne .html (die Veröffentlichung bei Vercel hat Adressen ohne Endung: /vita statt vita.html)
+        const ohne = s => s.replace(/^\//, '').replace(/\.html$/, '');
+        const datei = ohne(decodeURIComponent(location.pathname.split('/').pop() || ''));
+        $$('a', nav).forEach(a => { const h = ohne(a.getAttribute('href') || ''); if (datei && h === datei) a.setAttribute('aria-current', 'page'); });
       }
     });
     navZeilen();

@@ -363,7 +363,7 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 **Wahl:** der Fuß von A ohne die Überschrift „Kontakt“, in Tinte.
 
 **Umsetzung** (6.2):
-- Reihenfolge wie A: E-Mail-Zeile, Newsletter-Zeile, Impressum mit Anschrift und Datenschutz, der verborgene Platz für Profile, das Kolophon.
+- Reihenfolge wie A: E-Mail-Zeile, Newsletter-Zeile, Impressum (seit Runde 6 ohne Anschrift, 6.2) und Datenschutz, der verborgene Platz für Profile, das Kolophon.
 - Wortlaut wie A, auch die Newsletter-Zeile und der Dank nach dem Eintragen.
 - E-Mail-Zeile im Grad Text, alles andere im Grad klein, alles in Tinte.
 - Der Fuß behält `id="kontakt"` und bekommt `aria-label="Kontakt"`, damit der Verweis „über den Kontakt“ auf *Satoshi* weiter trägt.
@@ -408,6 +408,7 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 - Jahreszahlen aufrecht, Grad klein, Tinte.
 - Telefon: Das Band scrollt in seinem eigenen Rahmen, bewegt sich nur unter dem Finger und steht beim Laden am rechten Ende (Standardentscheidung 27).
 - Ein Klick zeigt die Buchzeile als Satz (22).
+- Unter dem Band ein Regler, darunter „früher“ und „später“ (Runde 6, S9; Dominik: „Noch ein Pfeil oder Slider darunter?“). Breit ist der Regler die Achse des Bands, auf dem Telefon das ganze Band im Kleinen (6.11).
 - Darunter die zwei Reihen „die wichtigsten aus Kindheit und Jugend“ und „was noch wartet“ (V47), dann der Verweis auf die ganze Bibliothek (V18).
 
 **Grund:** V18. Nach dem Globus das eigenständigste Bild der Seite (Prüfung, E23).
@@ -686,7 +687,7 @@ Alles steht links. Zentriert ist nur der Szenenwechsel der Leseseite.
 
 ### 5.6 Trefferflächen
 
-Auf Touchgeräten ist jede Bedienung mindestens 44 px hoch: Navigation, früher, später, Steuerwort, Ortsleisten, Kartenwahl, Länderregister, „Eintragen“, Rücken. Wörter im Satz bekommen die Fläche über `padding-block` mit gleich großem negativem `margin-block`, damit die Zeile nicht wächst.
+Auf Touchgeräten ist jede Bedienung mindestens 44 px hoch: Navigation, früher, später, Steuerwort, Ortsleisten, Kartenwahl, Länderregister, „Eintragen“, Rücken, der Regler des Zeitbands. Wörter im Satz bekommen die Fläche über `padding-block` mit gleich großem negativem `margin-block`, damit die Zeile nicht wächst.
 
 ---
 
@@ -706,7 +707,7 @@ Von oben nach unten, alles linksbündig in der Satzbreite:
 
 1. „Anfragen zu Lesungen und zu den Romanen:“ und die E-Mail-Adresse als unterstrichener Verweis. Grad Text. Wortlaut und Adresse wie A.
 2. Die Newsletter-Zeile, Wortlaut wie A: „Eine E-Mail, wenn ein Buch erscheint oder eine Lesung ansteht:“, dahinter das Feld und „Eintragen“. Grad klein. Das Feld ist ein Strich von 1 px in Tinte, ohne Rahmen, ohne Rundung, 16 em breit. Beim Fokus wird der Strich 2 px. „Eintragen“ ist ein unterstrichenes Wort. Auf dem Telefon sind Feld und Wort 44 px hoch, im Feld mindestens 16 px Schrift. Nach dem Eintragen erscheint in der Statuszeile „Danke. Im Testsystem wird noch nichts verschickt.“ Es wird nichts verschickt und nichts geladen. Ohne Skript ist das Formular verborgen.
-3. „Impressum: Dominik Jäkel, Stresemannstraße 76, 10963 Berlin“ und in der nächsten Zeile „Datenschutz“. Grad klein. Wortlaut und Anschrift wie A.
+3. „Impressum“ und in der nächsten Zeile „Datenschutz“, zwei Verweise, Grad klein. Seit Runde 6 (S4, Dominiks Entscheidung) ohne Anschrift: Sie steht nur noch auf `impressum.html`, die Impressumspflicht erfüllt der Verweis. Bis Runde 5 stand „Impressum: Dominik Jäkel, Stresemannstraße 76, 10963 Berlin“ (wie A); zurück mit einer Zeile, `ANSCHRIFT_IM_FUSS` in `seite.js`.
 4. Der Platz für Profile (`p.profile`), verborgen, solange `FSeite.PROFILE` leer ist. Später eine Zeile im Grad klein mit Verweisen wie „Instagram“ und „LinkedIn“, 1,2 em Abstand, ohne Zeichen und ohne Symbole. Keine toten Verweise.
 5. Das Kolophon im Wortlaut von V64: „Website gesetzt aus der Vollkorn von Friedrich Althausen, der erste Satz aus der IM Fell French Canon von Igino Marini. Küsten und Grenzen nach Natural Earth.“ Grad klein, höchstens 36 em breit.
 
@@ -843,6 +844,14 @@ Zwischen den Bänden 2 z. Unter Band III der Satz zur Bibliothek (V44), die Tite
 - Darunter die Buchzeile (Höhe 1 z reserviert, Telefon 2 z), dann die Reihen „die wichtigsten aus Kindheit und Jugend“ (`--zb-kind`) und „was noch wartet“ (Kontur `--zb-warte`). Ihre Namen aufrecht, Grad klein, Tinte, 1 z darüber.
 - Darunter ¾ z, dann „Die ganze Bibliothek“ als Verweis mit dem Satz von A.
 - Telefon: Band im eigenen Rahmen, waagrecht scrollbar, beim Laden am rechten Ende. Kein Mitschieben beim senkrechten Scrollen.
+- **Regler, früher und später (Runde 6, S9).** Die Ordnung ist dieselbe wie am Globus: unter dem Band der Regler, darunter die Steuerzeile „früher“ und „später“ (Steuerwörter nach 6.20), darunter die Buchzeile.
+  - **Breit** ist der Regler die Achse des Bands selbst: dieselbe Haarlinie mit den Brüchen, dieselben Jahreszahlen an derselben Stelle, 9 px unter den Strichen (vorher 5 px). Der Knopf steht genau unter dem Strich seines Buchs. Die Fläche des Reglers ist 1¼ z hoch und reicht über die Jahreszahlen.
+  - **Auf dem Telefon** zeigt der Regler unter dem rollenden Band, ½ z darunter, das ganze Band im Kleinen. Er rollt selbst nicht mit (`position: sticky`). Die Linie hat keine Brüche, damit man sie nicht für eine zweite Achse hält. Der Teil des Bands, der gerade zu sehen ist, ist auf der Linie 1,75 px stark. Die Jahreszahlen stehen unterstrichen darunter („Gilgamesch“, 1800, 1950, 2000). Die Fläche ist 44 px hoch.
+  - **Knopf:** ein kleiner Rücken, 6 × 14 px. Leer (Papier, Kontur 0,75 px Tinte), solange kein Buch gewählt ist, und dann beim neuesten Buch. In Tinte, wenn ein Buch gewählt ist. Fokus: Rahmen 1,5 px Tinte um den Knopf.
+  - **Bedienen:** Ein Tipp oder Klick irgendwo auf den Regler wählt das Buch an dieser Stelle, einer auf eine Jahreszahl das erste Buch ihres Jahrs. Beim Ziehen steht die kurze Angabe unter dem Band und der Strich in Tinte, mit dem Finger auch über dem Knopf (Grad klein, Papier, ohne Rahmen). Beim Loslassen erscheint der Satz. Ein Finger zieht erst, wenn er sich waagrecht bewegt; senkrecht rollt die Seite (`touch-action: pan-y`). Über den Regler, früher, später und die Jahreszahlen gewählt, rollt das Band auf dem Telefon so, dass der Strich genau über dem Knopf steht, wie bei einer Bildlaufleiste. Ein Tipp auf einen Strich im Band selbst rollt nichts; der Knopf folgt.
+  - **Eine Steuerung für alle drei Reihen:** Sie gilt für die Reihe des gewählten Buchs, zuerst „gelesen“ (die quer liegenden Bücher an ihrer Stelle). Tippt man einen Strich der zwei Reihen darunter an, folgt sie dieser Reihe.
+  - **Tastatur und Vorleseprogramme:** `role="slider"`, Name die Reihe („Gelesen“ usw.), Wert die kurze Angabe des Buchs (`aria-valuetext`). Pfeile links und unten für früher, rechts und oben für später (so kommen auch die Wischgesten von VoiceOver an), Bild auf und Bild ab zur nächsten oder vorigen Jahresmarke, Pos1 und Ende. Am Regler spricht die Buchzeile nicht noch einmal (`aria-live` aus). „früher“ und „später“ werden am Ende der Reihe leise mit `aria-disabled`, nicht `disabled`, damit der Fokus bleibt.
+  - Zeigen und Klicken auf die Striche bleiben. Mit dem Finger trifft ein Tipp jetzt den nächsten Strich bis 12 px daneben (Maus weiter 4 px).
 
 ### 6.12 Regal (Bibliothek)
 
@@ -907,7 +916,7 @@ Zwischen den Bänden 2 z. Unter Band III der Satz zur Bibliothek (V44), die Tite
 | Verweis im Text | E-Mail, Werktitel im Werkverzeichnis, „Vita“, Impressum | Strich 1 px | Strich, Fokusrahmen | – | – |
 | Bedienwort im Satz | Kartenwahl, Kontinente, Orte im Text der Ebene | Strich 1 px | Strich, Fokusrahmen | halbfett, ohne Strich | – |
 | Auswahlliste | Navigation, Ortsleisten, Länderregister, Standortregister, Leseliste | ohne Strich (Touch: Strich) | Strich, Fokusrahmen | halbfett, ohne Strich | – |
-| Steuerwort | früher, später, Steuerwort, „Eintragen“ | Strich 1 px | Strich, Fokusrahmen | – | `--leise`, ohne Strich, `disabled` |
+| Steuerwort | früher, später (Globus und Zeitband), Steuerwort, „Eintragen“ | Strich 1 px | Strich, Fokusrahmen | – | `--leise`, ohne Strich, `disabled` (am Zeitband `aria-disabled`, damit der Fokus bleibt) |
 
 Knöpfe sind `<button>` ohne Rahmen, Grund und Radius. Verweise sind `<a>`. Kein Pfeil, kein „Mehr erfahren“.
 

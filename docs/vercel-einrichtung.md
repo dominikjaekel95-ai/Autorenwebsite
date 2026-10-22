@@ -32,11 +32,13 @@ Dominik hat schon ein Vercel-Konto.
    - Startseite: Der erste Satz fliegt ein, der Globus erscheint und bewegt sich.
    - Alle Seiten aus der Navigation laden, ebenso Impressum und Datenschutz im Fuß.
    - Eine falsche Adresse, etwa `/gibtesnicht`, zeigt die eigene Fehlerseite.
+   - Die Adressen enden nicht auf `.html` (`/satoshi`, `/vita`). Eine alte Adresse wie `/satoshi.html` oder `/satoshi.html#…` springt auf `/satoshi` (mit Anker), `/index.html` auf `/` (Runde 6, S6: `"cleanUrls": true` in `vercel.json`).
    - Auf dem Telefon sieht die Seite ordentlich aus. Dominik öffnet sie dafür am besten auf seinem iPhone.
 
 ## Schritt 2: Einstellungen im Projekt
 
 1. **Settings → Git → Production Branch:** `claude/laughing-sagan-4dlccv` (ist meist schon voreingestellt).
+   - Später (Runde 6, S7, nur festgehalten): Nach dem Livegang benennt Dominik den Branch in GitHub in `main` um und stellt den Production Branch hier auf `main`. Das macht er selbst; die Cloud-Sitzung pusht nur auf ihren Branch und benennt nichts um.
 2. **Settings → Git → Ignored Build Step:** „Custom“ wählen und als Befehl eintragen: `git diff --quiet "$VERCEL_GIT_PREVIOUS_SHA" HEAD -- .`
    - Der Befehl vergleicht mit dem letzten erfolgreichen Deployment, nicht nur mit dem letzten Commit. So geht kein Stand verloren, wenn ein Push mehrere Commits enthält.
    - Beim ersten Deployment ist die Variable leer, der Befehl schlägt fehl, und Vercel baut. Das ist gewollt.
@@ -62,6 +64,7 @@ Die Cloud-Sitzung schreibt den Absatz über das Hosting. Dafür braucht sie gepr
 - ob Vercel unter dem EU-US Data Privacy Framework zertifiziert ist (Eintrag auf dataprivacyframework.gov) und
   ob zusätzlich Standardvertragsklauseln gelten,
 - Link zum Auftragsverarbeitungsvertrag (Data Processing Addendum) und ob er für Hobby-Konten automatisch gilt oder abgeschlossen werden muss,
+- der Tarif des Projekts (Hobby oder Pro). Nach der Recherche nennt das Data Processing Addendum nur Pro- und Enterprise-Kunden; der Datenschutz hat darum zwei Fassungen des Absatzes zur Auftragsverarbeitung, die Cloud-Sitzung wählt mit `TARIF` in `veroeffentlichen.py` (Runde 6, S8),
 - was Vercel beim Ausliefern einer Seite speichert (Server-Logs mit IP-Adresse? wie lange?),
 - in welcher Region die Seite ausgeliefert wird. Die Function Region spielt hier keine Rolle, die Seite hat keine Functions.
 

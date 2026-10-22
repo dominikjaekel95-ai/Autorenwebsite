@@ -24,6 +24,10 @@ Was der Bau tut:
     davon hängt die Silbentrennung ab), an der Stelle des alten <body> dessen Klassen (mit-globus; ohne das Gerüst von
     claude.ai bekommt sie <html>).
   - Die übrigen Seiten liefert claude.ai unverändert aus; sie behalten ihr Gerüst.
+  - Im Datenschutz steht der Absatz zur Auftragsverarbeitung in der Fassung, die TARIF in werkzeuge/veroeffentlichen.py wählt
+    (Runde 6, S8), wie in der Veröffentlichung; solange TARIF None ist, beide Fassungen mit der Markierung davor. Die Verweise
+    behalten .html (nur die Veröffentlichung bei Vercel hat Adressen ohne Endung), strukturierte Daten, Canonical und Open
+    Graph schreibt nur die Veröffentlichung.
 
 Zum Schluss prüft der Bau, dass jede unveränderte Kopie der Quelle gleicht, dass in keiner ausgelieferten Text-Datei ein
 Kommentar übrig ist, und nennt Zahl und Größe der Dateien.
@@ -194,6 +198,15 @@ def bereinigen(p, text):
     return None
 
 
+def tarif_waehlen(text):
+    """datenschutz.html mit der Fassung des Absatzes zur Auftragsverarbeitung, die TARIF in veroeffentlichen.py wählt."""
+    sys.dont_write_bytecode = True   # kein __pycache__ in werkzeuge/
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import veroeffentlichen
+    veroeffentlichen.fehler = fehler
+    return veroeffentlichen.tarif_waehlen(text, veroeffentlichen.TARIF)
+
+
 def hauptseite_umbauen(text):
     m = re.match(r'﻿?<!doctype html>[ \t]*\n?', text, re.I)
     if not m:
@@ -312,6 +325,8 @@ def main():
         neu = bereinigen(p, (QUELLE / p).read_text(encoding='utf-8')) if p.suffix in TEXTDATEIEN else None
         if p == Path(HAUPTSEITE):
             neu = hauptseite_umbauen(neu)
+        if p == Path('datenschutz.html'):
+            neu = tarif_waehlen(neu)
         if neu is not None:
             (ziel / p).write_text(neu, encoding='utf-8', newline='\n')
             bereinigt.add(p)

@@ -1079,10 +1079,14 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   const knopf = reglerEl ? $('.regler-knopf', reglerEl) : null, spur = reglerEl ? $('.regler-spur', reglerEl) : null;
   const reglerName = reglerEl ? $('.regler-name', reglerEl) : null;
   const frueherEl = $('#zb-frueher'), spaeterEl = $('#zb-spaeter');
-  const REIHE_NAME = { gelesen: 'Gelesen', kind: 'Die wichtigsten Bücher aus Kindheit und Jugend', warte: 'Was noch wartet' };
   const KNOPF_H = 14;
-  const R = { reihe: 'gelesen', i: null, zieht: null, zug: null, marken: [] };
-  const reihe = () => (ZB.reihen && ZB.reihen[R.reihe]) || [];
+  const R = { i: null, zieht: null, zug: null, marken: [] };
+  const reihe = () => (ZB.reihen && ZB.reihen.gelesen) || [];
+  function schrittReihe() {
+    const o = ZB.offen;
+    if (!R.zieht && o && o.reihe && o.reihe !== 'gelesen' && ZB.reihen[o.reihe]) return { liste: ZB.reihen[o.reihe], i: o.ri };
+    return { liste: reihe(), i: R.i };
+  }
   function naechstes(liste, x) {
     if (!liste.length) return null;
     let lo = 0, hi = liste.length - 1;
@@ -1099,7 +1103,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   function reglerBauen() {
     if (!reglerEl || !ZB.reihen) return;
     const T = ZB.schmal ? sichtBreite() : ZB.breite, s = T / ZB.breite;
-    Object.assign(R, { reihe: 'gelesen', i: null, zieht: null, zug: null, marken: [] });
+    Object.assign(R, { i: null, zieht: null, zug: null, marken: [] });
     ZB.T = T; ZB.s = s;
     reglerKasten.style.width = T + 'px';
     const H = reglerEl.clientHeight, y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1);
@@ -1143,14 +1147,13 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const x = o.mitte * ZB.s;
     knopf.style.transform = `translateX(${x.toFixed(2)}px)`;
     knopf.classList.toggle('ist-gewaehlt', !!R.zieht || (!ruhe && ZB.offen === o));
-    reglerEl.setAttribute('aria-label', REIHE_NAME[R.reihe]);
     reglerEl.setAttribute('aria-valuemin', '1');
     reglerEl.setAttribute('aria-valuemax', String(liste.length));
     reglerEl.setAttribute('aria-valuenow', String(o.ri + 1));
     reglerEl.setAttribute('aria-valuetext', F.buch.zeile(o.b).text);
-    const i = ruhe ? liste.length : o.ri;
+    const sr = schrittReihe(), i = sr.i == null ? sr.liste.length : sr.i;
     frueherEl.setAttribute('aria-disabled', String(i <= 0));
-    spaeterEl.setAttribute('aria-disabled', String(i >= liste.length - 1));
+    spaeterEl.setAttribute('aria-disabled', String(i >= sr.liste.length - 1));
     if (R.zieht && R.zug && R.zug.finger) {
       reglerName.innerHTML = kurz(o.b);
       reglerName.hidden = false;
@@ -1169,12 +1172,17 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
   function reglerFolgen() {
     if (!ZB.reihen || R.zieht) return;
-    if (ZB.offen && ZB.offen.reihe) { R.reihe = ZB.offen.reihe; R.i = ZB.offen.ri; }
+    if (ZB.offen && ZB.offen.reihe === 'gelesen') R.i = ZB.offen.ri;
     reglerZeigen();
   }
   function ausrichten(o) {
     if (!ZB.schmal || !o) return;
     roll.scrollLeft = Math.round(o.mitte / ZB.breite * (roll.scrollWidth - roll.clientWidth));
+  }
+  function insBild(o) {
+    if (!ZB.schmal || !o) return;
+    const vw = sichtBreite(), sl = roll.scrollLeft, rand = 12;
+    if (o.x < sl + rand || o.x + o.w > sl + vw - rand) roll.scrollLeft = Math.round(o.mitte - vw / 2);
   }
   function waehlen(o) {
     if (!o) return;
@@ -1182,8 +1190,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     zeigen(null);
     const el = document.getElementById(o.id);
     if (!el) return;
-    R.reihe = o.reihe; R.i = o.ri;
-    ausrichten(o);
+    if (o.reihe === 'gelesen') { R.i = o.ri; ausrichten(o); } else insBild(o);
     bzBand.zeigen(satzVon(o.b), el, o.id);
     ZB.offen = o;
     bandzeile.classList.remove('zeigt');
@@ -1192,17 +1199,17 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
   function ziehenZu(o) {
     if (!o) return;
-    R.zieht = o; R.reihe = o.reihe; R.i = o.ri;
+    R.zieht = o; R.i = o.ri;
     ausrichten(o);
     zeigen(o);
     reglerZeigen();
   }
   function schritt(d) {
-    const liste = reihe();
+    const { liste, i: j } = schrittReihe();
     if (!liste.length) return;
-    const i = R.i == null ? liste.length : R.i;
+    const i = j == null ? liste.length : j;
     const ziel = Math.max(0, Math.min(liste.length - 1, i + d));
-    if (ziel === R.i && ZB.offen === liste[ziel]) return;
+    if (ziel === j && ZB.offen === liste[ziel]) return;
     waehlen(liste[ziel]);
   }
   if (reglerEl) {

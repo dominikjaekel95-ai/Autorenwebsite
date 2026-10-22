@@ -1242,9 +1242,11 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
   // ================= Der Regler (Runde 6, S9) =================
   /* Unter dem Band ein Regler über die ganze Breite, darunter „früher“ und „später“, darunter der Satz zum Buch: dieselbe Ordnung
-     wie am Globus (Bild, Steuerzeile, Tafel). Der Regler gilt für die Reihe des Buchs, das gerade gewählt ist: zuerst „gelesen“ (mit
-     den quer liegenden Büchern an ihrer Stelle); tippt man einen Strich in einer der zwei Reihen darunter an, folgt er dieser Reihe.
-     Breit ist der Regler die Achse des Bands, der Knopf steht genau unter seinem Strich. Auf dem Telefon zeigt er das ganze Band im
+     wie am Globus (Bild, Steuerzeile, Tafel). Der Regler gehört nur zu „gelesen“ (mit den quer liegenden Büchern an ihrer Stelle):
+     Wählt man ein Buch in einer der zwei Reihen darunter, bleibt sein Knopf, wo er war, und steht leer; sein Name und sein Wert
+     bleiben bei den gelesenen Büchern (Runde 7, Dominik: „Dann sollte nicht die Timeline bei den gelesenen Büchern parallel
+     mitlaufen“). „früher“ und „später“ gehen in der Reihe des gewählten Buchs weiter, ohne Wahl oder bei einem gelesenen Buch durch
+     „gelesen“. Breit ist der Regler die Achse des Bands, der Knopf steht genau unter seinem Strich. Auf dem Telefon zeigt er das ganze Band im
      Kleinen; wählt man über ihn, rollt das Band so, dass der Strich genau über dem Knopf steht, wie bei einer Bildlaufleiste. Ziehen
      zeigt die kurze Angabe (mit dem Finger auch über dem Knopf), Loslassen den Satz. Ein Tipp auf eine Jahreszahl wählt das erste Buch
      ihres Jahrs, ein Tipp anderswo das Buch an dieser Stelle. */
@@ -1252,12 +1254,18 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   const knopf = reglerEl ? $('.regler-knopf', reglerEl) : null, spur = reglerEl ? $('.regler-spur', reglerEl) : null;
   const reglerName = reglerEl ? $('.regler-name', reglerEl) : null;
   const frueherEl = $('#zb-frueher'), spaeterEl = $('#zb-spaeter');
-  const REIHE_NAME = { gelesen: 'Gelesen', kind: 'Die wichtigsten Bücher aus Kindheit und Jugend', warte: 'Was noch wartet' };
   const KNOPF_H = 14;
-  // reihe: die Reihe des Reglers; i: das Buch darin (null: noch keins gewählt, der Knopf steht leer beim neuesten); zieht: das Buch
-  // unter dem ziehenden Finger oder der Maus; zug: der laufende Griff; marken: die gezeichneten Jahreszahlen mit ihrer Fläche
-  const R = { reihe: 'gelesen', i: null, zieht: null, zug: null, marken: [] };
-  const reihe = () => (ZB.reihen && ZB.reihen[R.reihe]) || [];
+  // i: das Buch des Reglers in „gelesen“ (null: noch keins gewählt, der Knopf steht leer beim neuesten); zieht: das Buch unter dem
+  // ziehenden Finger oder der Maus; zug: der laufende Griff; marken: die gezeichneten Jahreszahlen mit ihrer Fläche
+  const R = { i: null, zieht: null, zug: null, marken: [] };
+  const reihe = () => (ZB.reihen && ZB.reihen.gelesen) || [];
+  // Die Reihe von früher und später: die des gewählten Buchs, wenn es in einer der zwei Reihen darunter liegt, sonst „gelesen“ ab dem
+  // Knopf des Reglers
+  function schrittReihe() {
+    const o = ZB.offen;
+    if (!R.zieht && o && o.reihe && o.reihe !== 'gelesen' && ZB.reihen[o.reihe]) return { liste: ZB.reihen[o.reihe], i: o.ri };
+    return { liste: reihe(), i: R.i };
+  }
   // Das Buch, dessen Mitte x am nächsten liegt
   function naechstes(liste, x) {
     if (!liste.length) return null;
@@ -1277,7 +1285,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   function reglerBauen() {
     if (!reglerEl || !ZB.reihen) return;
     const T = ZB.schmal ? sichtBreite() : ZB.breite, s = T / ZB.breite;
-    Object.assign(R, { reihe: 'gelesen', i: null, zieht: null, zug: null, marken: [] });
+    Object.assign(R, { i: null, zieht: null, zug: null, marken: [] });
     ZB.T = T; ZB.s = s;
     reglerKasten.style.width = T + 'px';
     const H = reglerEl.clientHeight, y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1);
@@ -1325,15 +1333,15 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const o = R.zieht || liste[ruhe ? liste.length - 1 : Math.min(R.i, liste.length - 1)];
     const x = o.mitte * ZB.s;
     knopf.style.transform = `translateX(${x.toFixed(2)}px)`;
+    // In Tinte nur, solange sein Buch gewählt ist; ist ein Buch der Reihen darunter gewählt, steht er leer an seinem Platz
     knopf.classList.toggle('ist-gewaehlt', !!R.zieht || (!ruhe && ZB.offen === o));
-    reglerEl.setAttribute('aria-label', REIHE_NAME[R.reihe]);
     reglerEl.setAttribute('aria-valuemin', '1');
     reglerEl.setAttribute('aria-valuemax', String(liste.length));
     reglerEl.setAttribute('aria-valuenow', String(o.ri + 1));
     reglerEl.setAttribute('aria-valuetext', F.buch.zeile(o.b).text);
-    const i = ruhe ? liste.length : o.ri;
+    const sr = schrittReihe(), i = sr.i == null ? sr.liste.length : sr.i;
     frueherEl.setAttribute('aria-disabled', String(i <= 0));
-    spaeterEl.setAttribute('aria-disabled', String(i >= liste.length - 1));
+    spaeterEl.setAttribute('aria-disabled', String(i >= sr.liste.length - 1));
     // Der Name über dem Knopf, nur solange ein Finger zieht
     if (R.zieht && R.zug && R.zug.finger) {
       reglerName.innerHTML = kurz(o.b);
@@ -1352,16 +1360,22 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const s = ZB.s, von = Math.max(ZB.achse[0], roll.scrollLeft), bis = Math.min(ZB.achse[1], roll.scrollLeft + sichtBreite());
     el.setAttribute('x1', (von * s).toFixed(1)); el.setAttribute('x2', (bis * s).toFixed(1)); el.setAttribute('visibility', 'visible');
   }
-  // Wählt man einen Strich im Band selbst, folgt der Regler, ohne dass das Band rollt
+  // Wählt man einen gelesenen Strich im Band selbst, folgt der Regler, ohne dass das Band rollt; die Reihen darunter lassen ihn stehen
   function reglerFolgen() {
     if (!ZB.reihen || R.zieht) return;
-    if (ZB.offen && ZB.offen.reihe) { R.reihe = ZB.offen.reihe; R.i = ZB.offen.ri; }
+    if (ZB.offen && ZB.offen.reihe === 'gelesen') R.i = ZB.offen.ri;
     reglerZeigen();
   }
   // Auf dem Telefon rollt das Band so, dass der Strich über dem Knopf steht
   function ausrichten(o) {
     if (!ZB.schmal || !o) return;
     roll.scrollLeft = Math.round(o.mitte / ZB.breite * (roll.scrollWidth - roll.clientWidth));
+  }
+  // Ein Buch der Reihen darunter hat keinen Knopf: das Band rollt nur, wenn sein Strich nicht zu sehen ist, und dann in die Mitte
+  function insBild(o) {
+    if (!ZB.schmal || !o) return;
+    const vw = sichtBreite(), sl = roll.scrollLeft, rand = 12;
+    if (o.x < sl + rand || o.x + o.w > sl + vw - rand) roll.scrollLeft = Math.round(o.mitte - vw / 2);
   }
   // Ein Buch über den Regler, früher, später oder eine Jahreszahl wählen: der Satz darunter, der Strich in Tinte
   function waehlen(o) {
@@ -1370,8 +1384,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     zeigen(null);
     const el = document.getElementById(o.id);
     if (!el) return;
-    R.reihe = o.reihe; R.i = o.ri;
-    ausrichten(o);
+    if (o.reihe === 'gelesen') { R.i = o.ri; ausrichten(o); } else insBild(o);
     bzBand.zeigen(satzVon(o.b), el, o.id);
     ZB.offen = o;
     bandzeile.classList.remove('zeigt');
@@ -1381,17 +1394,17 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   // Beim Ziehen: der Strich in Tinte und darunter die kurze Angabe, wie beim Zeigen mit der Maus
   function ziehenZu(o) {
     if (!o) return;
-    R.zieht = o; R.reihe = o.reihe; R.i = o.ri;
+    R.zieht = o; R.i = o.ri;
     ausrichten(o);
     zeigen(o);
     reglerZeigen();
   }
   function schritt(d) {
-    const liste = reihe();
+    const { liste, i: j } = schrittReihe();
     if (!liste.length) return;
-    const i = R.i == null ? liste.length : R.i;
+    const i = j == null ? liste.length : j;
     const ziel = Math.max(0, Math.min(liste.length - 1, i + d));
-    if (ziel === R.i && ZB.offen === liste[ziel]) return;
+    if (ziel === j && ZB.offen === liste[ziel]) return;
     waehlen(liste[ziel]);
   }
   if (reglerEl) {

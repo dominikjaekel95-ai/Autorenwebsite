@@ -28,18 +28,21 @@ document.documentElement.classList.add('js');
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin media="(min-width: 62.0625rem)">
+<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
 .titelei { margin-top: var(--z); }
-.vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
-@media (min-width: 62.0625rem) {
-  .vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); }
-  .vorspann .glied-satz { display: block; text-wrap: balance; }
-  .vorspann .w { display: inline-block; }
+.vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); hyphens: manual; -webkit-hyphens: manual; }
+.vorspann .glied-satz { display: block; text-wrap: balance; }
+.vorspann .w { display: inline-block; }
+.vorspann .w.fliegt { position: relative; }
+.vorspann .w .unscharf { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0; filter: url(#aufhaenger-flug); pointer-events: none; -webkit-user-select: none; user-select: none; }
+@media (max-width: 62rem) {
+  .vorspann { min-width: 0; overflow-wrap: break-word; line-height: calc(var(--z) * 1.25); }
+  .vorspann.gesetzt .glied-satz + .glied-satz { white-space: nowrap; }
 }
 .vorspann .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
-.vorspann.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 1.2s forwards; }
+.vorspann.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 2s forwards; }
 @keyframes einstieg-notfall { to { opacity: 1; } }
 html:not(.js) .globusseite > .globus { display: none; }
 .blaetterbuch .flaeche-deckel, .blaetterbuch .schnitt, .blaetterbuch .vignette { display: none; }
@@ -188,16 +191,11 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
     var LUECKE = /[ \t\r\n]+/;
     var saetze = Array.prototype.map.call(el.querySelectorAll('.glied-satz'), function (g) { return g.textContent.trim().split(LUECKE).join(' '); });
-    var glieder = [], woerter = [], gebaut = null;
+    var glieder = [], woerter = [];
     var stehtJetzt = function () {};
     el.steht = new Promise(function (r) { stehtJetzt = r; });
-    function aufbauen() {
-      var b = breit();
-      if (b === gebaut) return;
-      gebaut = b;
-      glieder = []; woerter = [];
-      el.textContent = b ? '' : saetze.join(' ');
-      if (!b) return;
+    (function aufbauen() {
+      el.textContent = '';
       var vorlesen = document.createElement('span');
       vorlesen.className = 'unsichtbar einstieg-vorlesen';
       vorlesen.textContent = saetze.join(' ');
@@ -221,26 +219,64 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
       });
       el.appendChild(vorlesen);
       el.appendChild(satz);
-    }
-    aufbauen();
-    function setzen() {
-      el.style.fontSize = '';
-      var breite = breit() ? el.clientWidth : 0;
-      if (!breite) return;
-      var laengste = 0;
+    })();
+    function laengste() {
+      var l = 0;
       glieder.slice(1).forEach(function (g) {
         g.style.width = 'max-content';
-        laengste = Math.max(laengste, g.getBoundingClientRect().width);
+        l = Math.max(l, g.getBoundingClientRect().width);
         g.style.width = '';
       });
-      if (laengste <= breite) return;
-      var jetzt = parseFloat(getComputedStyle(el).fontSize);
-      el.style.fontSize = Math.max(28.5, Math.floor(jetzt * breite / laengste * 10) / 10 - .2) + 'px';
+      return l;
     }
+    function setzen() {
+      el.style.fontSize = '';
+      if (breit()) breitSetzen(); else schmalSetzen();
+      masse = mass();
+    }
+    function breitSetzen() {
+      el.classList.remove('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var lang = laengste();
+      if (lang <= breite) return;
+      var jetzt = parseFloat(getComputedStyle(el).fontSize);
+      el.style.fontSize = Math.max(28.5, Math.floor(jetzt * breite / lang * 10) / 10 - .2) + 'px';
+    }
+    function schmalSetzen() {
+      el.classList.add('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var stufen = [
+        { ziel: Math.min(breite * .97, breite - 6), boden: 20.7 },
+        { ziel: breite - 6, boden: 19 },
+        { ziel: breite - 2, boden: 19 }
+      ];
+      var gesetzt = parseFloat(getComputedStyle(el).fontSize);
+      for (var st = 0; st < stufen.length; st++) {
+        var ziel = stufen[st].ziel, boden = stufen[st].boden;
+        for (var n = 0; n <= 3; n++) {
+          var lang = laengste();
+          if (lang <= ziel) return;
+          if (n === 3 || gesetzt <= boden) break;
+          var kleiner = Math.floor(gesetzt * ziel / lang * 10) / 10;
+          if (kleiner >= gesetzt) kleiner = Math.round((gesetzt - .1) * 10) / 10;
+          if (kleiner < boden) kleiner = boden;
+          el.style.fontSize = kleiner + 'px';
+          gesetzt = kleiner;
+        }
+      }
+      el.classList.remove('gesetzt');
+      el.style.fontSize = '20.7px';
+    }
+    var masse = '';
+    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
     function imFell(ms) {
       if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var ab = performance.now();
       var laden = document.fonts.load(SCHRIFT).then(function (l) { return !!(l && l.length); });
-      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; })
+        .then(function (da) { return da && performance.now() - ab <= ms + 100; });
     }
     function fellStand() {
       var s = '';
@@ -249,70 +285,74 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     }
     var fellWache = false;
     function nachSchrift() {
-      if (!breit() || !document.fonts || !document.fonts.load) return;
+      if (!document.fonts || !document.fonts.load) return;
       if (!fellWache && document.fonts.forEach && window.requestAnimationFrame) {
         fellWache = true;
         (function wachen(n) {
           var s = fellStand();
-          if (s === 'loaded' && breit()) setzen();
-          if (s === 'loaded' || s === 'error' || n > 600 || !breit()) { fellWache = false; return; }
+          if (s === 'loaded') setzen();
+          if (s === 'loaded' || s === 'error' || n > 600) { fellWache = false; return; }
           requestAnimationFrame(function () { wachen(n + 1); });
         })(0);
       }
       document.fonts.load(SCHRIFT).catch(function () {}).then(function () { return document.fonts.ready; }).then(setzen, setzen);
     }
-    var FLUG = [];
-    function filterAnlegen() {
-      if (document.getElementById('aufhaenger-filter')) return;
-      var ns = 'http://www.w3.org/2000/svg';
-      var svg = document.createElementNS(ns, 'svg');
-      svg.id = 'aufhaenger-filter';
-      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
-      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-      var html = '';
-      for (var j = 0; j < woerter.length; j++) html += '<filter id="aufhaenger-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
-      svg.innerHTML = html;
-      document.body.appendChild(svg);
-      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('aufhaenger-flug-' + m).querySelector('feGaussianBlur'));
+    function filterAnlegen(em) {
+      var svg = document.getElementById('aufhaenger-filter');
+      if (!svg) {
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.id = 'aufhaenger-filter';
+        svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+        svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+        svg.innerHTML = '<filter id="aufhaenger-flug" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+        document.body.appendChild(svg);
+      }
+      svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', (.06 * em).toFixed(2) + ' 0');
     }
     var VERSATZ = 28, PAUSE = 70, DAUER = 360;
+    var UNSCHARF = [1, .8, .55, .25, .06, 0], SCHARF = [0, .3, .6, .9, 1, 1], STELLEN = [0, .1, .25, .5, .75, 1];
     function einfliegen() {
       if (!woerter[0].animate) { stehtJetzt(); return; }
-      filterAnlegen();
       var em = parseFloat(getComputedStyle(el).fontSize) || 38;
+      filterAnlegen(em);
       var t = 0, laeufe = [];
       glieder.forEach(function (g, gi) {
         if (gi) t += PAUSE;
         Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
           if (wi) t += VERSATZ;
+          var zeit = { duration: DAUER, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' };
+          var wort = w.textContent;
+          w.textContent = '';
+          var scharf = document.createElement('span'), unscharf = document.createElement('span');
+          scharf.className = 'scharf'; scharf.textContent = wort;
+          unscharf.className = 'unscharf'; unscharf.textContent = wort;
+          w.appendChild(scharf); w.appendChild(unscharf);
+          w.classList.add('fliegt');
           laeufe.push(w.animate([
             { opacity: 0, transform: 'translateX(.2em)' },
             { opacity: 1, offset: .38 },
             { opacity: 1, transform: 'translateX(0)' }
-          ], { duration: DAUER, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+          ], zeit));
+          laeufe.push(unscharf.animate(UNSCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
+          laeufe.push(scharf.animate(SCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
         });
       });
-      Promise.all(laeufe.map(function (a) { return a.finished; })).then(stehtJetzt, stehtJetzt);
-      (function schritt() {
-        var offen = false;
-        laeufe.forEach(function (a, i) {
-          var w = woerter[i], ct = a.effect.getComputedTiming();
-          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
-          offen = true;
-          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
-          var s = Math.pow(1 - ct.progress, 1.6) * .06 * em;
-          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
-          w.style.filter = s > .06 ? 'url(#aufhaenger-flug-' + i + ')' : '';
-        });
-        if (offen) requestAnimationFrame(schritt);
-      })();
+      var fertig = function () {
+        woerter.forEach(function (w) { if (w.classList.contains('fliegt')) { w.textContent = w.firstChild ? w.firstChild.textContent : w.textContent; w.classList.remove('fliegt'); } });
+        if (!breit()) setzen();
+        stehtJetzt();
+      };
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(fertig, fertig);
     }
-    if (breit() && !still()) {
+    if (!still()) {
       el.classList.add('wartet');
-      imFell(600).then(function (da) {
+      if (!breit()) setzen();
+      imFell(1200).then(function (da) {
         setzen();
+        var satz = el.querySelector('.einstieg-satz');
+        var schonDa = !!satz && el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
         el.classList.remove('wartet');
-        if (da && breit() && !still()) einfliegen(); else stehtJetzt();
+        if (da && !schonDa && !still()) einfliegen(); else stehtJetzt();
       });
     } else { setzen(); stehtJetzt(); }
     nachSchrift();
@@ -322,11 +362,23 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
       warte = setTimeout(function () {
         if (window.innerWidth === breiteVorher) return;
         breiteVorher = window.innerWidth;
-        aufbauen();
         setzen();
         nachSchrift();
       }, 140);
     });
+    if (window.ResizeObserver) {
+      var beobachter = new ResizeObserver(function () {
+        if (mass() === masse) return;
+        setzen();
+        beobachter.disconnect();
+        requestAnimationFrame(beobachten);
+      });
+      var beobachten = function () {
+        beobachter.observe(el);
+        woerter.forEach(function (w) { beobachter.observe(w); });
+      };
+      beobachten();
+    }
   })();
 </script>
 

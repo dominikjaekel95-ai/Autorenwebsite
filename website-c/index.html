@@ -31,6 +31,9 @@
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
 .einstieg-satz .w { display: inline-block; }
+/* Während des Flugs liegt über jedem Wort eine unscharfe Kopie, die in das scharfe Wort überblendet (Skript unten, einfliegen) */
+.einstieg-satz .w.fliegt { position: relative; }
+.einstieg-satz .w .unscharf { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0; filter: url(#einstieg-flug); pointer-events: none; -webkit-user-select: none; user-select: none; }
 /* Die Vorlesekopie zählt beim Markieren und Kopieren nicht mit */
 .einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
 /* Höchstens 1200 ms wartet der Satz auf seine Schrift. Läuft das Skript nicht weiter, steht er nach 2 s von selbst da */
@@ -96,7 +99,8 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
    top: die Kugel steht ruhend ½ z unter dem Fensterrand, so rückt beim Anfangen nichts. Der Block ist breit nie höher als das
    Fenster (--globus nimmt nur, was 1 z und --tafel-h übrig lassen), außer die Untergrenze von 24 rem greift (Fenster unter rund
    650 px Höhe): dann steht er so, dass Steuerzeile und Tafel ½ z über dem unteren Rand ganz zu sehen bleiben und oben die Kugel
-   angeschnitten ist, statt unten die Tafel.
+   angeschnitten ist, statt unten die Tafel. Für top zählt der Block so hoch, wie er mit dem längsten Steuerwort wird
+   (--globus-hoch, Skript unten): bricht die Steuerzeile in einem niedrigen Fenster an der letzten Station um, springt so nichts.
    Abstand zum Band: das Band hat 1 z über sich (zur Legende); der Globus trägt 2 z Rand unten, den das Kleben mit einrechnet, so
    hält die Tafel 3 z über dem Band.
    Breite: Werkverzeichnis, Überschrift und Legende behalten ihre Satzbreite (--mass), soweit sie bis 1,5 em vor die Tafel reicht
@@ -115,7 +119,7 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
     }
     .js .globusseite { grid-column: 1 / -1; grid-row: 1 / 10; grid-template-columns: subgrid; grid-template-rows: subgrid; }
     .js .globusseite::before { content: ""; grid-column: 1; grid-row: 1 / 7; height: max(0px, calc(var(--z-halb) - var(--kopf-h) + var(--globus-block, var(--globus) + var(--tafel-h)))); pointer-events: none; }
-    .js .globusseite > .globus { grid-row: 1 / -1; position: sticky; top: min(var(--z-halb), calc(100svh - var(--globus-block, var(--globus) + var(--tafel-h)) - var(--z-halb))); margin-bottom: calc(var(--z-drei) - var(--z)); }
+    .js .globusseite > .globus { grid-row: 1 / -1; position: sticky; top: min(var(--z-halb), calc(100svh - var(--globus-hoch, var(--globus-block, var(--globus) + var(--tafel-h))) - var(--z-halb))); margin-bottom: calc(var(--z-drei) - var(--z)); }
     .js #schreiben { grid-column: 2; grid-row: 7; padding: var(--z-drei) 0 0; width: var(--neben-globus); }
     .js #gelesen { grid-column: 1 / -1; grid-row: 8 / 12; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; padding: var(--z-drei) 0 0; }
     .js #gelesen > .titel { grid-column: 2; grid-row: 1; width: var(--neben-globus); }
@@ -429,68 +433,82 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       bild = window.requestAnimationFrame ? window.requestAnimationFrame(los) : setTimeout(los, 16);
     }
 
+    /* Die Frist gilt nach der Uhr: Ist die Seite länger blockiert (Aufbau der Kugel auf einem langsamen Telefon) und kommt die
+       Schrift in dieser Zeit, gewann sonst die zuerst eingereihte Zusage, und der Satz flog erst nach 3 bis 3,6 s ein, statt nach
+       1,2 s ohne Flug zu stehen */
     function imFell(ms) {
       if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var ab = performance.now();
       var laden = document.fonts.load('38px "IM Fell French Canon"').then(function (l) { return !!(l && l.length); });
-      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; })
+        .then(function (da) { return da && performance.now() - ab <= ms + 100; });
     }
 
-    // Je Wort ein Filter für die waagrechte Bewegungsunschärfe
-    var FLUG = [];
-    function filterAnlegen() {
-      if (document.getElementById('einstieg-filter')) return;
-      var ns = 'http://www.w3.org/2000/svg';
-      var svg = document.createElementNS(ns, 'svg');
-      svg.id = 'einstieg-filter';
-      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
-      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-      var html = '';
-      for (var j = 0; j < woerter.length; j++) html += '<filter id="einstieg-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
-      svg.innerHTML = html;
-      document.body.appendChild(svg);
-      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('einstieg-flug-' + m).querySelector('feGaussianBlur'));
+    // Ein Filter für die waagrechte Bewegungsunschärfe, höchstens 0,06 em
+    function filterAnlegen(em) {
+      var svg = document.getElementById('einstieg-filter');
+      if (!svg) {
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.id = 'einstieg-filter';
+        svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+        svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+        svg.innerHTML = '<filter id="einstieg-flug" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+        document.body.appendChild(svg);
+      }
+      svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', (.06 * em).toFixed(2) + ' 0');
     }
 
     /* Wie Lettern, die von rechts an die Zeile geschoben werden: Weg 0,2 em, je Wort 360 ms, 40 ms Versatz, 100 ms Pause zwischen
-       den Gliedern, kein Nachfedern. Die waagrechte Unschärfe (höchstens 0,06 em) vergeht beim Ankommen. */
+       den Gliedern, kein Nachfedern. Die waagrechte Unschärfe (höchstens 0,06 em) vergeht beim Ankommen.
+       Die Unschärfe: Während des Flugs liegt über jedem Wort eine unscharfe Kopie (ein fester Filter), die mit dem Ankommen in das
+       scharfe Wort überblendet; die Verläufe (UNSCHARF, SCHARF, über dem Fortschritt des Worts) sind an Bildern gegen die
+       Unschärfe von vorher ((1 − Fortschritt)^1,6 · 0,06 em) abgestimmt, das scharfe Wort kommt früher. Das sind wie der Flug selbst
+       Animationen der Deckkraft, die der Browser ohne den Hauptfaden weiterführt. Bis zum 23. Oktober stellte ein Skript die
+       Unschärfe in jedem Bild neu ein; baute die Seite in dieser Zeit die Kugel auf (eine lange Aufgabe, auf einem langsamen
+       Telefon bis 2 s), blieb ein Wort so lange verwischt stehen, während die anderen längst scharf waren. Nach dem Flug ist die
+       Kopie wieder weg, das Wort steht wie vorher. */
+    var UNSCHARF = [1, .8, .55, .25, .06, 0], SCHARF = [0, .3, .6, .9, 1, 1], STELLEN = [0, .1, .25, .5, .75, 1];
     function einfliegen() {
       if (!woerter[0].animate) return;
-      filterAnlegen();
       var em = parseFloat(getComputedStyle(el).fontSize) || 38;
+      filterAnlegen(em);
       var t = 0, laeufe = [];
       glieder.forEach(function (g, gi) {
         if (gi) t += 100;
         Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
           if (wi) t += 40;
+          var zeit = { duration: 360, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' };
+          var wort = w.textContent;
+          w.textContent = '';
+          var scharf = document.createElement('span'), unscharf = document.createElement('span');
+          scharf.className = 'scharf'; scharf.textContent = wort;
+          unscharf.className = 'unscharf'; unscharf.textContent = wort;
+          w.appendChild(scharf); w.appendChild(unscharf);
+          w.classList.add('fliegt');
           laeufe.push(w.animate([
             { opacity: 0, transform: 'translateX(.2em)' },
             { opacity: 1, offset: .38 },
             { opacity: 1, transform: 'translateX(0)' }
-          ], { duration: 360, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+          ], zeit));
+          laeufe.push(unscharf.animate(UNSCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
+          laeufe.push(scharf.animate(SCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
         });
       });
-      (function schritt() {
-        var offen = false;
-        laeufe.forEach(function (a, i) {
-          var w = woerter[i], ct = a.effect.getComputedTiming();
-          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
-          offen = true;
-          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
-          var s = Math.pow(1 - ct.progress, 1.6) * .06 * em;
-          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
-          w.style.filter = s > .06 ? 'url(#einstieg-flug-' + i + ')' : '';
-        });
-        if (offen) requestAnimationFrame(schritt);
-        else setzen();   // nach dem Flug noch einmal nachgemessen; steht der Satz richtig, ändert sich nichts
-      })();
+      var fertig = function () {
+        woerter.forEach(function (w) { if (w.classList.contains('fliegt')) { w.textContent = w.firstChild ? w.firstChild.textContent : w.textContent; w.classList.remove('fliegt'); } });
+        setzen();   // nach dem Flug noch einmal nachgemessen; steht der Satz richtig, ändert sich nichts
+      };
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(fertig, fertig);
     }
 
     setzen();
     if (!still()) el.classList.add('wartet');
     imFell(1200).then(function (da) {
       setzen();
+      // Hat der Notbehelf im Stil den Satz schon gezeigt (das Skript stand länger als 2 s), fliegt er nicht mehr: sonst verschwände er
+      var schonDa = el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
       el.classList.remove('wartet');
-      if (da && !still()) einfliegen();
+      if (da && !schonDa && !still()) einfliegen();
     });
     // Kommt eine Schrift später, wird der Satz noch einmal an die Spalte angepasst (ohne Flug); ebenso nach dem Laden der Seite
     if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
@@ -1136,10 +1154,42 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   mqBreit.addEventListener('change', regalOrt);
   /* Die Höhe des Globusblocks (Kugel, Steuerzeile, Tafel) für den Platzhalter neben ihm und das Mitwandern (CSS oben, „der Globus
      wandert mit bis zum Bücherregal“); der Beobachter meldet vor dem Zeichnen, so steht beim Laden alles, wo es bisher stand */
-  if ('ResizeObserver' in window) new ResizeObserver(e => {
-    const k = e[e.length - 1], h = k.borderBoxSize && k.borderBoxSize[0] ? k.borderBoxSize[0].blockSize : k.target.getBoundingClientRect().height;
-    $('.globusseite').style.setProperty('--globus-block', h + 'px');
-  }).observe($('#globus'));
+  /* Für das Kleben (top) zählt der Block so hoch, wie er mit dem längsten Steuerwort wird (--globus-hoch). In einem niedrigen
+     Fenster ist die Kugel klein (rund 384 bis 480 px), dann bricht die Steuerzeile an der letzten Station um („früher später“ /
+     „noch einmal von vorn“, eine Zeile mehr), der Block wird 35,6 px höher, und Kugel und Steuerzeile sprangen hoch, während der
+     Globus klebte. Gemessen wird an einer unsichtbaren Kopie der Zeile, die gleich wieder weg ist; die Zeile selbst bleibt, wie sie
+     ist. Der Platzhalter für das Laden nimmt weiter die wirkliche Höhe (--globus-block), so steht beim Laden alles wie bisher. */
+  const STEUER_LANG = 'noch einmal von vorn';   // das längste Steuerwort (FSeite.ablauf: anhalten, abspielen, noch einmal von vorn)
+  let blockH = 0;
+  function steuerMehr() {
+    const sz = $('#globus .steuerzeile');
+    if (!sz || ruhig || !mqBreit.matches || !sz.clientWidth) return 0;   // bei reduzierter Bewegung gibt es kein Steuerwort
+    const kopie = sz.cloneNode(true);
+    kopie.removeAttribute('hidden'); kopie.removeAttribute('id');
+    kopie.setAttribute('aria-hidden', 'true'); kopie.inert = true;
+    kopie.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;width:' + sz.getBoundingClientRect().width + 'px';
+    const wort = $('[data-steuer="wort"]', kopie);
+    if (wort) { wort.hidden = false; wort.textContent = STEUER_LANG; }
+    sz.parentNode.appendChild(kopie);
+    const mehr = Math.max(0, kopie.getBoundingClientRect().height - sz.getBoundingClientRect().height);
+    kopie.remove();
+    return mehr;
+  }
+  function blockSetzen() {
+    if (!blockH) return;
+    const seite = $('.globusseite');
+    seite.style.setProperty('--globus-block', blockH + 'px');
+    seite.style.setProperty('--globus-hoch', (blockH + steuerMehr()) + 'px');
+  }
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(e => {
+      const k = e[e.length - 1];
+      blockH = k.borderBoxSize && k.borderBoxSize[0] ? k.borderBoxSize[0].blockSize : k.target.getBoundingClientRect().height;
+      blockSetzen();
+    }).observe($('#globus'));
+    // Die Breite der Wörter hängt an der Schrift: noch einmal, wenn sie da ist
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(blockSetzen).catch(() => {});
+  }
   regalOrt();
 
   // ================= Mein digitales Bücherregal: das Zeitband =================

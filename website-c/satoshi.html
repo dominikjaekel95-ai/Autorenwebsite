@@ -34,7 +34,7 @@
 .titelei { margin-top: var(--z); }
 /* Der Vorspann aus dem Exposé, auf allen Breiten wie der erste Satz der Startseite (Dominik, 22. Oktober: „Vielleicht könnte das
    auch einfach größer sein und einfliegen?“; Option B in docs/satoshi-optionen.md): IM Fell French Canon im Grad Einstieg,
-   Zeilenhöhe 1,5 z, jeder Satz beginnt eine Zeile, der erste bricht ausgeglichen. Zweispaltig setzt ihn das Skript darunter
+   Zeilenhöhe 1,5 z (schmal 1,25 z, wie dort), jeder Satz beginnt eine Zeile, der erste bricht ausgeglichen. Zweispaltig setzt ihn das Skript darunter
    kleiner, wenn die beiden kurzen Sätze nicht in eine Zeile passen (bei 1280 px rund 31 px, nie unter 28,5 px). Auf Telefon und
    Tablet stand er bis zum 23. Oktober als schlichter Text im Grad Überschrift in der Vollkorn; jetzt auch dort in der IM Fell und
    mit Einflug (Dominik, 23. Oktober: „Beim Handy. Hatten wir uns entschieden, dass die Buchstaben nicht einfliegen. Finde das
@@ -44,10 +44,14 @@
 .vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); hyphens: manual; -webkit-hyphens: manual; }
 .vorspann .glied-satz { display: block; text-wrap: balance; }
 .vorspann .w { display: inline-block; }
+/* Während des Flugs liegt über jedem Wort eine unscharfe Kopie, die in das scharfe Wort überblendet (Skript unten, einfliegen) */
+.vorspann .w.fliegt { position: relative; }
+.vorspann .w .unscharf { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0; filter: url(#aufhaenger-flug); pointer-events: none; -webkit-user-select: none; user-select: none; }
 /* Schmal: die kurzen Sätze eine Zeile, sobald das Skript den Grad angepasst hat. Letzte Sicherung, falls es das nicht kann: ein zu
    langes Wort bricht eher, als über den Rand zu laufen (wie .einstieg auf der Startseite). Den Flug berührt das nicht */
 @media (max-width: 62rem) {
-  .vorspann { min-width: 0; overflow-wrap: break-word; }
+  /* Zeilenhöhe 1,25 z wie der erste Satz der Startseite auf Telefon und Tablet (dort --einstieg-zh); zweispaltig 1,5 z wie dort */
+  .vorspann { min-width: 0; overflow-wrap: break-word; line-height: calc(var(--z) * 1.25); }
   .vorspann.gesetzt .glied-satz + .glied-satz { white-space: nowrap; }
 }
 /* Die Vorlesekopie zählt beim Markieren und Kopieren nicht mit */
@@ -395,10 +399,15 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     var masse = '';
     function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
 
+    /* Die Frist gilt nach der Uhr, wie auf der Startseite: Ist die Seite länger blockiert und kommt die Schrift in dieser Zeit,
+       gewann sonst die zuerst eingereihte Zusage, und der Vorspann flog erst nach rund 3 s ein (und verschwand dafür kurz, wenn der
+       Notbehelf ihn schon gezeigt hatte), statt nach 1,2 s ohne Flug zu stehen */
     function imFell(ms) {
       if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var ab = performance.now();
       var laden = document.fonts.load(SCHRIFT).then(function (l) { return !!(l && l.length); });
-      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; })
+        .then(function (da) { return da && performance.now() - ab <= ms + 100; });
     }
     /* Kommt die Schrift später oder ändert sich die Breite, wird der Satz noch einmal an die Spalte angepasst (ohne Flug), sobald
        alle Schriften da sind; auch wenn die IM Fell ausbleibt, dann in der Vollkorn. Vorher schon im ersten Bild, in dem die
@@ -425,58 +434,61 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
       document.fonts.load(SCHRIFT).catch(function () {}).then(function () { return document.fonts.ready; }).then(setzen, setzen);
     }
 
-    // Je Wort ein Filter für die waagrechte Bewegungsunschärfe
-    var FLUG = [];
-    function filterAnlegen() {
-      if (document.getElementById('aufhaenger-filter')) return;
-      var ns = 'http://www.w3.org/2000/svg';
-      var svg = document.createElementNS(ns, 'svg');
-      svg.id = 'aufhaenger-filter';
-      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
-      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-      var html = '';
-      for (var j = 0; j < woerter.length; j++) html += '<filter id="aufhaenger-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
-      svg.innerHTML = html;
-      document.body.appendChild(svg);
-      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('aufhaenger-flug-' + m).querySelector('feGaussianBlur'));
+    // Ein Filter für die waagrechte Bewegungsunschärfe, höchstens 0,06 em
+    function filterAnlegen(em) {
+      var svg = document.getElementById('aufhaenger-filter');
+      if (!svg) {
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.id = 'aufhaenger-filter';
+        svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+        svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+        svg.innerHTML = '<filter id="aufhaenger-flug" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+        document.body.appendChild(svg);
+      }
+      svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', (.06 * em).toFixed(2) + ' 0');
     }
 
     /* Wie auf der Startseite: Lettern, die von rechts an die Zeile geschoben werden, Weg 0,2 em, je Wort 360 ms, kein Nachfedern,
        die waagrechte Unschärfe (höchstens 0,06 em) vergeht beim Ankommen. Versatz und Pause sind enger als dort (28 statt 40 ms je
        Wort, 70 statt 100 ms zwischen den Sätzen), weil der Vorspann 21 statt 12 Wörter hat: 18 × 28 + 2 × 70 + 360 = 1004 ms
-       statt 1280 ms mit dem Takt der Startseite (dort 920 ms) */
+       statt 1280 ms mit dem Takt der Startseite (dort 920 ms).
+       Die Unschärfe wie dort: eine unscharfe Kopie über jedem Wort, die in das scharfe Wort überblendet, Animationen der Deckkraft,
+       die ohne den Hauptfaden weiterlaufen. Bis zum 23. Oktober stellte ein Skript sie in jedem Bild neu ein; baute die Seite in
+       dieser Zeit die Kugel auf, blieb ein Wort verwischt stehen (auf dem Telefon „Geld“ rund 0,6 s) */
     var VERSATZ = 28, PAUSE = 70, DAUER = 360;
+    var UNSCHARF = [1, .8, .55, .25, .06, 0], SCHARF = [0, .3, .6, .9, 1, 1], STELLEN = [0, .1, .25, .5, .75, 1];
     function einfliegen() {
       if (!woerter[0].animate) { stehtJetzt(); return; }
-      filterAnlegen();
       var em = parseFloat(getComputedStyle(el).fontSize) || 38;
+      filterAnlegen(em);
       var t = 0, laeufe = [];
       glieder.forEach(function (g, gi) {
         if (gi) t += PAUSE;
         Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
           if (wi) t += VERSATZ;
+          var zeit = { duration: DAUER, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' };
+          var wort = w.textContent;
+          w.textContent = '';
+          var scharf = document.createElement('span'), unscharf = document.createElement('span');
+          scharf.className = 'scharf'; scharf.textContent = wort;
+          unscharf.className = 'unscharf'; unscharf.textContent = wort;
+          w.appendChild(scharf); w.appendChild(unscharf);
+          w.classList.add('fliegt');
           laeufe.push(w.animate([
             { opacity: 0, transform: 'translateX(.2em)' },
             { opacity: 1, offset: .38 },
             { opacity: 1, transform: 'translateX(0)' }
-          ], { duration: DAUER, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+          ], zeit));
+          laeufe.push(unscharf.animate(UNSCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
+          laeufe.push(scharf.animate(SCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
         });
       });
-      Promise.all(laeufe.map(function (a) { return a.finished; })).then(stehtJetzt, stehtJetzt);
-      (function schritt() {
-        var offen = false;
-        laeufe.forEach(function (a, i) {
-          var w = woerter[i], ct = a.effect.getComputedTiming();
-          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
-          offen = true;
-          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
-          var s = Math.pow(1 - ct.progress, 1.6) * .06 * em;
-          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
-          w.style.filter = s > .06 ? 'url(#aufhaenger-flug-' + i + ')' : '';
-        });
-        if (offen) requestAnimationFrame(schritt);
-        else if (!breit()) setzen();   // schmal nach dem Flug noch einmal nachgemessen; steht er richtig, ändert sich nichts
-      })();
+      var fertig = function () {
+        woerter.forEach(function (w) { if (w.classList.contains('fliegt')) { w.textContent = w.firstChild ? w.firstChild.textContent : w.textContent; w.classList.remove('fliegt'); } });
+        if (!breit()) setzen();   // schmal nach dem Flug noch einmal nachgemessen; steht er richtig, ändert sich nichts
+        stehtJetzt();
+      };
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(fertig, fertig);
     }
 
     if (!still()) {
@@ -484,8 +496,11 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
       if (!breit()) setzen();   // schmal schon vor der Schrift an die Spalte angepasst, so steht der reservierte Platz gleich richtig
       imFell(1200).then(function (da) {
         setzen();
+        // Hat der Notbehelf im Stil den Vorspann schon gezeigt (das Skript stand länger als 2 s), fliegt er nicht mehr
+        var satz = el.querySelector('.einstieg-satz');
+        var schonDa = !!satz && el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
         el.classList.remove('wartet');
-        if (da && !still()) einfliegen(); else stehtJetzt();
+        if (da && !schonDa && !still()) einfliegen(); else stehtJetzt();
       });
     } else { setzen(); stehtJetzt(); }
     nachSchrift();

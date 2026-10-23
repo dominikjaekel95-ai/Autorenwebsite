@@ -37,8 +37,10 @@ document.documentElement.classList.add('js');
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
 .einstieg-satz .w { display: inline-block; }
+.einstieg-satz .w.fliegt { position: relative; }
+.einstieg-satz .w .unscharf { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0; filter: url(#einstieg-flug); pointer-events: none; -webkit-user-select: none; user-select: none; }
 .einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
-.einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 1.2s forwards; }
+.einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 2s forwards; }
 @keyframes einstieg-notfall { to { opacity: 1; } }
 .globusseite > .vita { margin-top: var(--z-dreiviertel); }
 .ebenen, .kontinente { display: flex; flex-wrap: wrap; column-gap: .85em; }
@@ -55,6 +57,25 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
 @media (min-width: 62.0625rem) {
   .globusseite > .regalbild { margin-top: calc(var(--z-zwei) - var(--zh-klein)); }
   .schreiben-raster:not(:has(> .regalbild)) { grid-template-columns: minmax(0, var(--mass)); }
+}
+@property --neben-globus { syntax: '<length>'; inherits: true; initial-value: 0px; }
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 62.0625rem) {
+    .js main {
+      --neben-globus: min(var(--mass), max(var(--spalte), calc(var(--globuskante) - var(--rand-l) - clamp(0px, var(--globuskante) - var(--rand-l) - var(--spalte) - 1.5em, 5.2em) - 1.5em)));
+      display: grid; grid-template-columns: var(--rand-l) minmax(0, var(--spalte)) minmax(0, 1fr);
+      grid-template-rows: auto auto auto auto auto 1fr auto auto auto auto auto;
+    }
+    .js .globusseite { grid-column: 1 / -1; grid-row: 1 / 10; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+    .js .globusseite::before { content: ""; grid-column: 1; grid-row: 1 / 7; height: max(0px, calc(var(--z-halb) - var(--kopf-h) + var(--globus-block, var(--globus) + var(--tafel-h)))); pointer-events: none; }
+    .js .globusseite > .globus { grid-row: 1 / -1; position: sticky; top: min(var(--z-halb), calc(100svh - var(--globus-hoch, var(--globus-block, var(--globus) + var(--tafel-h))) - var(--z-halb))); margin-bottom: calc(var(--z-drei) - var(--z)); }
+    .js #schreiben { grid-column: 2; grid-row: 7; padding: var(--z-drei) 0 0; width: var(--neben-globus); }
+    .js #gelesen { grid-column: 1 / -1; grid-row: 8 / 12; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; padding: var(--z-drei) 0 0; }
+    .js #gelesen > .titel { grid-column: 2; grid-row: 1; width: var(--neben-globus); }
+    .js #gelesen > .gelesen-vorwort { grid-column: 2; grid-row: 2; width: var(--neben-globus); max-width: none; }
+    .js #gelesen > .zeitband { grid-column: 2 / -1; grid-row: 3; margin-right: var(--rand-r); }
+    .js #gelesen > .ganze { grid-column: 2 / -1; grid-row: 4; margin-right: var(--rand-r); }
+  }
 }
 .schreiben-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); align-items: start; }
 .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 1; }
@@ -281,60 +302,63 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     }
     function imFell(ms) {
       if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var ab = performance.now();
       var laden = document.fonts.load('38px "IM Fell French Canon"').then(function (l) { return !!(l && l.length); });
-      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; })
+        .then(function (da) { return da && performance.now() - ab <= ms + 100; });
     }
-    var FLUG = [];
-    function filterAnlegen() {
-      if (document.getElementById('einstieg-filter')) return;
-      var ns = 'http://www.w3.org/2000/svg';
-      var svg = document.createElementNS(ns, 'svg');
-      svg.id = 'einstieg-filter';
-      svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
-      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-      var html = '';
-      for (var j = 0; j < woerter.length; j++) html += '<filter id="einstieg-flug-' + j + '" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
-      svg.innerHTML = html;
-      document.body.appendChild(svg);
-      for (var m = 0; m < woerter.length; m++) FLUG.push(document.getElementById('einstieg-flug-' + m).querySelector('feGaussianBlur'));
+    function filterAnlegen(em) {
+      var svg = document.getElementById('einstieg-filter');
+      if (!svg) {
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.id = 'einstieg-filter';
+        svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+        svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+        svg.innerHTML = '<filter id="einstieg-flug" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
+        document.body.appendChild(svg);
+      }
+      svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', (.06 * em).toFixed(2) + ' 0');
     }
+    var UNSCHARF = [1, .8, .55, .25, .06, 0], SCHARF = [0, .3, .6, .9, 1, 1], STELLEN = [0, .1, .25, .5, .75, 1];
     function einfliegen() {
       if (!woerter[0].animate) return;
-      filterAnlegen();
       var em = parseFloat(getComputedStyle(el).fontSize) || 38;
+      filterAnlegen(em);
       var t = 0, laeufe = [];
       glieder.forEach(function (g, gi) {
         if (gi) t += 100;
         Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
           if (wi) t += 40;
+          var zeit = { duration: 360, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' };
+          var wort = w.textContent;
+          w.textContent = '';
+          var scharf = document.createElement('span'), unscharf = document.createElement('span');
+          scharf.className = 'scharf'; scharf.textContent = wort;
+          unscharf.className = 'unscharf'; unscharf.textContent = wort;
+          w.appendChild(scharf); w.appendChild(unscharf);
+          w.classList.add('fliegt');
           laeufe.push(w.animate([
             { opacity: 0, transform: 'translateX(.2em)' },
             { opacity: 1, offset: .38 },
             { opacity: 1, transform: 'translateX(0)' }
-          ], { duration: 360, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+          ], zeit));
+          laeufe.push(unscharf.animate(UNSCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
+          laeufe.push(scharf.animate(SCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
         });
       });
-      (function schritt() {
-        var offen = false;
-        laeufe.forEach(function (a, i) {
-          var w = woerter[i], ct = a.effect.getComputedTiming();
-          if (ct.progress === null || a.currentTime === null) { w.style.filter = ''; return; }
-          offen = true;
-          if (a.currentTime < ct.delay) { w.style.filter = ''; return; }
-          var s = Math.pow(1 - ct.progress, 1.6) * .06 * em;
-          FLUG[i].setAttribute('stdDeviation', s.toFixed(2) + ' 0');
-          w.style.filter = s > .06 ? 'url(#einstieg-flug-' + i + ')' : '';
-        });
-        if (offen) requestAnimationFrame(schritt);
-        else setzen();
-      })();
+      var fertig = function () {
+        woerter.forEach(function (w) { if (w.classList.contains('fliegt')) { w.textContent = w.firstChild ? w.firstChild.textContent : w.textContent; w.classList.remove('fliegt'); } });
+        setzen();
+      };
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(fertig, fertig);
     }
-    if (still()) setzen();
-    else el.classList.add('wartet');
-    imFell(600).then(function (da) {
+    setzen();
+    if (!still()) el.classList.add('wartet');
+    imFell(1200).then(function (da) {
       setzen();
+      var schonDa = el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
       el.classList.remove('wartet');
-      if (da && !still()) einfliegen();
+      if (da && !schonDa && !still()) einfliegen();
     });
     if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(nachsetzen).catch(function () {});
@@ -862,6 +886,36 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     regalZeichnen(); ankerSetzen();
   }
   mqBreit.addEventListener('change', regalOrt);
+  const STEUER_LANG = 'noch einmal von vorn';
+  let blockH = 0;
+  function steuerMehr() {
+    const sz = $('#globus .steuerzeile');
+    if (!sz || ruhig || !mqBreit.matches || !sz.clientWidth) return 0;
+    const kopie = sz.cloneNode(true);
+    kopie.removeAttribute('hidden'); kopie.removeAttribute('id');
+    kopie.setAttribute('aria-hidden', 'true'); kopie.inert = true;
+    kopie.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;width:' + sz.getBoundingClientRect().width + 'px';
+    const wort = $('[data-steuer="wort"]', kopie);
+    if (wort) { wort.hidden = false; wort.textContent = STEUER_LANG; }
+    sz.parentNode.appendChild(kopie);
+    const mehr = Math.max(0, kopie.getBoundingClientRect().height - sz.getBoundingClientRect().height);
+    kopie.remove();
+    return mehr;
+  }
+  function blockSetzen() {
+    if (!blockH) return;
+    const seite = $('.globusseite');
+    seite.style.setProperty('--globus-block', blockH + 'px');
+    seite.style.setProperty('--globus-hoch', (blockH + steuerMehr()) + 'px');
+  }
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(e => {
+      const k = e[e.length - 1];
+      blockH = k.borderBoxSize && k.borderBoxSize[0] ? k.borderBoxSize[0].blockSize : k.target.getBoundingClientRect().height;
+      blockSetzen();
+    }).observe($('#globus'));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(blockSetzen).catch(() => {});
+  }
   regalOrt();
   const mitMass = b => {
     const p = b.p > 0 ? b.p : 280, h = F.hash(b.key);

@@ -102,6 +102,8 @@ html:not(.js) .regalbild { display: none; }
 .bandzeile .zeile-zeigen { visibility: hidden; }
 .bandzeile.zeigt .zeile-zeigen { visibility: visible; }
 .bandzeile.zeigt .zeile-offen { visibility: hidden; }
+.bandzeile .zeile-ruhe { color: var(--leise); visibility: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bandzeile.ruht:not(.zeigt) .zeile-ruhe { visibility: visible; }
 .bandname { margin-top: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); position: sticky; left: 0; width: max-content; max-width: 100%; }
 .zb-regler { position: relative; }
 .regler { --regler-rand: 16px; position: relative; height: calc(var(--z) * 1.25); margin: 0 calc(var(--regler-rand) * -1); padding: 0 var(--regler-rand); cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -352,7 +354,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
         <div class="regler" id="regler" role="slider" tabindex="0" aria-label="Gelesen"><svg class="regler-spur" aria-hidden="true" focusable="false"></svg><span class="regler-knopf" aria-hidden="true"></span><span class="regler-name" aria-hidden="true" hidden></span></div>
         <p class="steuerzeile zb-schritte"><button type="button" class="wort" id="zb-frueher">früher</button><button type="button" class="wort" id="zb-spaeter">später</button></p>
       </div>
-      <p class="bandzeile" id="bandzeile"><span class="zeile-zeigen" id="zeile-zeigen" aria-hidden="true"></span><span class="zeile-offen" id="zeile-offen"></span></p>
+      <p class="bandzeile" id="bandzeile"><span class="zeile-ruhe" id="zeile-ruhe" aria-hidden="true"></span><span class="zeile-zeigen" id="zeile-zeigen" aria-hidden="true"></span><span class="zeile-offen" id="zeile-offen"></span></p>
       <p class="bandname">die wichtigsten aus Kindheit und Jugend</p>
       <div id="zb-kind-ort"></div>
       <div class="zb-regler" id="zb-regler-kind">
@@ -772,7 +774,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   const WARTE = BUECHER.filter(b => b.r === 'leseliste' && b.j != null).sort(ordnung);
   const kurz = x => F.buch.zeile(x).html;
   const satzVon = x => F.buch.satz(x);
-  const roll = $('#zeitband-roll'), bandzeile = $('#bandzeile'), zeileZeigenEl = $('#zeile-zeigen'), zeileOffenEl = $('#zeile-offen');
+  const roll = $('#zeitband-roll'), bandzeile = $('#bandzeile'), zeileZeigenEl = $('#zeile-zeigen'), zeileOffenEl = $('#zeile-offen'), zeileRuheEl = $('#zeile-ruhe');
   const ZB = { items: [], folgen: {}, aktiv: null, breite: 0, schmal: false, y0: 0, offen: null };
   const bzBand = F.buchzeile(zeileOffenEl, { beimSchliessen: () => { ZB.offen = null; markeSetzen(); } });
   const messCtx = document.createElement('canvas').getContext('2d');
@@ -962,8 +964,9 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     bandzeile.classList.remove('zeigt');
     ['zb-haupt', 'zb-kind', 'zb-warte'].forEach(id => bandBedienung(document.getElementById(id)));
     bandzeileReservieren();
-    if (schmal) roll.scrollLeft = roll.scrollWidth;
+    if (schmal) roll.scrollLeft = 0;
     reglerBauen();
+    ruheSetzen();
   }
   function sichtBreite() {
     if (!ZB.schmal) return ZB.breite;
@@ -972,7 +975,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
   function bandzeileReservieren() {
     const breite = sichtBreite();
-    [zeileZeigenEl, zeileOffenEl].forEach(el => { el.style.maxWidth = breite + 'px'; });
+    [zeileZeigenEl, zeileOffenEl, zeileRuheEl].forEach(el => { el.style.maxWidth = breite + 'px'; });
     const z = F.masz('--z');
     const ohneTags = s => s.replace(/<[^>]*>/g, '').length;
     const alle = ZB.items.map(o => o.b).filter((b, i, a) => a.indexOf(b) === i);
@@ -1010,12 +1013,40 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
   function markeSetzen() {
     reglerFolgen();
+    ruheSetzen();
     const marke = document.getElementById('zb-marke');
     if (!marke) return;
     const o = bandzeile.classList.contains('zeigt') ? ZB.aktiv : ZB.offen;
     if (!o || o.folge !== 'haupt') { marke.setAttribute('visibility', 'hidden'); return; }
     const m = o.x + o.w / 2;
     marke.setAttribute('x1', m); marke.setAttribute('x2', m); marke.setAttribute('visibility', 'visible');
+  }
+  function ruheBuch() {
+    const g = reglerVon('gelesen'), liste = reiheVon(g);
+    if (!liste.length) return null;
+    return liste[g.i == null ? 0 : Math.min(g.i, liste.length - 1)];
+  }
+  function ohneVerweise(html) {
+    const t = document.createElement('template');
+    t.innerHTML = html;
+    t.content.querySelectorAll('a').forEach(a => a.replaceWith(...a.childNodes));
+    return t.innerHTML;
+  }
+  function ruheSetzen() {
+    if (!zeileRuheEl) return;
+    const o = ZB.schmal ? ruheBuch() : null;
+    const ruht = !!o && !bzBand.offen() && !bandzeile.classList.contains('zeigt') && !REGLER.some(r => r.zieht || (r.zug && r.zug.aktiv));
+    bandzeile.classList.toggle('ruht', ruht);
+    if (!o) { if (zeileRuheEl.dataset.buch) { zeileRuheEl.innerHTML = ''; zeileRuheEl.dataset.buch = ''; } return; }
+    if (!ruht) return;
+    if (zeileRuheEl.dataset.buch !== o.id) { zeileRuheEl.innerHTML = ohneVerweise(satzVon(o.b)); zeileRuheEl.dataset.buch = o.id; }
+    einpassen(zeileRuheEl, o);
+  }
+  if (zeileRuheEl) zeileRuheEl.addEventListener('click', () => { if (bandzeile.classList.contains('ruht')) waehlen(ruheBuch()); });
+  const nachSchriften = () => { if (ZB.items.length) bandzeileReservieren(); ruheSetzen(); };
+  if (document.fonts) {
+    document.fonts.addEventListener('loadingdone', nachSchriften);
+    document.fonts.ready.then(nachSchriften);
   }
   function zeigen(o) {
     if (ZB.aktiv === o) return;
@@ -1055,7 +1086,12 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     svg.addEventListener('focus', () => {
       if (ZB.aktiv && document.getElementById(ZB.aktiv.id) && document.getElementById(ZB.aktiv.id).ownerSVGElement === svg) return;
       const f = svg.id === 'zb-kind' ? ZB.folgen.kind : svg.id === 'zb-warte' ? ZB.folgen.warte : ZB.folgen.haupt;
-      if (f.length && svg.matches(':focus-visible')) zeigen(f[f.length - 1]);
+      if (!f.length || !svg.matches(':focus-visible')) return;
+      zeigen(f[0]);
+      if (ZB.schmal) {
+        const vw = sichtBreite();
+        if (f[0].x < roll.scrollLeft || f[0].x > roll.scrollLeft + vw - 40) roll.scrollLeft = f[0].x - vw / 2;
+      }
     });
     svg.addEventListener('blur', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('.zb')) zeigen(null); });
     svg.addEventListener('keydown', e => {
@@ -1171,9 +1207,9 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const liste = reiheVon(r);
     if (!liste.length) return;
     const ruhe = r.i == null;
-    const o = r.zieht || liste[ruhe ? liste.length - 1 : Math.min(r.i, liste.length - 1)];
+    const o = r.zieht || liste[ruhe ? 0 : Math.min(r.i, liste.length - 1)];
     const x = o.mitte * ZB.s;
-    r.knopf.style.transform = `translateX(${x.toFixed(2)}px)`;
+    r.knopf.style.left = `calc(var(--regler-rand) + ${x.toFixed(2)}px)`;
     r.knopf.classList.toggle('ist-gewaehlt', !!r.zieht || (!ruhe && ZB.offen === o));
     r.el.setAttribute('aria-valuemin', '1');
     r.el.setAttribute('aria-valuemax', String(liste.length));
@@ -1198,7 +1234,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     REGLER.forEach(einenZeigen);
     const sr = schrittReihe();
     if (sr.liste.length && frueherEl && spaeterEl) {
-      const i = sr.i == null ? sr.liste.length : sr.i;
+      const i = sr.i == null ? -1 : sr.i;
       frueherEl.setAttribute('aria-disabled', String(i <= 0));
       spaeterEl.setAttribute('aria-disabled', String(i >= sr.liste.length - 1));
     }
@@ -1249,7 +1285,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   function schritt(d) {
     const { liste, i: j } = schrittReihe();
     if (!liste.length) return;
-    const i = j == null ? liste.length : j;
+    if (j == null && d < 0) return;
+    const i = j == null ? -1 : j;
     const ziel = Math.max(0, Math.min(liste.length - 1, i + d));
     if (ziel === j && ZB.offen === liste[ziel]) return;
     waehlen(liste[ziel]);
@@ -1301,13 +1338,13 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     el.addEventListener('keydown', e => {
       const liste = reiheVon(r);
       if (!liste.length) return;
-      const n = liste.length, i = r.i == null ? n : r.i;
+      const n = liste.length, i = r.i == null ? -1 : r.i, knopf = Math.max(0, i);
       const spruenge = [0].concat(JAHRESMARKEN.map(j => abJahr(liste, j))).filter((v, k, a) => a.indexOf(v) === k).sort((a, b) => a - b);
       let ziel;
       switch (e.key) {
-        case 'ArrowLeft': case 'ArrowDown': ziel = i - 1; break;
-        case 'ArrowRight': case 'ArrowUp': ziel = r.i == null ? null : i + 1; break;
-        case 'PageUp': ziel = spruenge.find(v => v > i); if (ziel === undefined) ziel = n - 1; break;
+        case 'ArrowLeft': case 'ArrowDown': ziel = r.i == null ? null : i - 1; break;
+        case 'ArrowRight': case 'ArrowUp': ziel = i + 1; break;
+        case 'PageUp': ziel = spruenge.find(v => v > knopf); if (ziel === undefined) ziel = n - 1; break;
         case 'PageDown': ziel = spruenge.slice().reverse().find(v => v < i); if (ziel === undefined) ziel = 0; break;
         case 'Home': ziel = 0; break;
         case 'End': ziel = n - 1; break;
@@ -1329,7 +1366,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   let rollBild = 0;
   roll.addEventListener('scroll', () => {
     if (rollBild) return;
-    rollBild = requestAnimationFrame(() => { rollBild = 0; einpassen(zeileZeigenEl, ZB.aktiv); einpassen(zeileOffenEl, ZB.offen); sichtZeichnen(); });
+    rollBild = requestAnimationFrame(() => { rollBild = 0; einpassen(zeileZeigenEl, ZB.aktiv); einpassen(zeileOffenEl, ZB.offen); if (bandzeile.classList.contains('ruht')) einpassen(zeileRuheEl, ruheBuch()); sichtZeichnen(); });
   }, { passive: true });
   bandBauen();
   F.schriften(3000).then(() => { regalZeichnen(); bandBauen(); ankerSetzen(); zielAnfahren(); });

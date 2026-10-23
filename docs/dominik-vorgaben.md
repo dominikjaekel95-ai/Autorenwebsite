@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 21. Oktober 2026, nach Dominiks Auftrag für Version C.
+Stand: 23. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -141,6 +141,12 @@ Später geändert: nein.
 „Nach eigener Zählung 67 rausnehmen.“ (20.10., 03:53)
 Für den Bau: Die Zahl 67 steht nirgends. Gezeigt werden die 65 Länder und Gebiete auf dem Globus (V27).
 Später geändert: nein.
+
+**V73. Unter dem Zeitband bleibt auf dem Telefon in Ruhe kein leerer Raum; die Ruhe beginnt bei Gilgamesch.**
+„Hier ist halt jetzt noch ein Leerraum, wenn man noch auf kein Buch geklickt hat auf dem Handy. Können wir den noch füllen? Vielleicht ganz leicht ausgegraut?“ (22.10., 22:31, mit einem Bildschirmfoto vom Telefon: unter „früher später“ der leere Raum bis „die wichtigsten aus Kindheit und Jugend“). Claude baute den grauen Satz zum neuesten Buch ein, auf allen Breiten. In Claudes Bericht („beim Laden also das neueste“) schrieb er dazu: „mach mal das älteste. Also Gilgamesch. Sonst ist alles gut 😉 Will nur nicht bei Caroline Wahl oder einem anderen Buch anfangen, was ich dann noch in der Bib habe“ (22.10., 22:58). Gleich danach: „Davon abgesehen ist das glaube ich auch nur ein mobiles Problem. Sonst geht das“ (22.10., 22:59)
+Für den Bau: Nur auf dem Telefon (das rollende Band, bis 40 rem) steht in Ruhe in der Buchzeile unter „früher“ und „später“ der Satz zum Buch am Knopf von „gelesen“, in `--leise`. Kein neues Wort und keine Anleitung, nur der echte Satz. Beim Laden ist das Gilgamesch: Alle drei Knöpfe stehen in Ruhe leer beim ältesten Buch ihrer Reihe, auf allen Breiten; „später“ wählt dann das älteste Buch, „früher“ ist leise. Das Band auf dem Telefon steht beim Laden weiter am rechten Ende (Standardentscheidung 27); Claudes Versuch, es nach links zu Gilgamesch zu stellen, ist zurückgenommen, weil die zwei Reihen darunter dann leer im Bild waren und Dominik nur das Buch in Ruhe ändern wollte. Nach dem Zurücklegen zeigt der Satz das Buch, an dem der Knopf dann steht. Er verschwindet beim Zeigen, Ziehen und Wählen; ein Tipp darauf wählt das Buch. Tablet und Desktop: in Ruhe nichts in der Buchzeile, wie vorher.
+Ort in C: `website-c/index.html`, `span#zeile-ruhe` in `p#bandzeile` (`ruheBuch`, `ruheSetzen`), der Knopf in `einenZeigen`, die Jahreszahlen des Reglers in `reglerBauen`.
+Später geändert: ja. Der erste Einbau (grau der Satz zum neuesten Buch, Caroline Wahl, *22 Bahnen*, auf allen Breiten) gilt nicht mehr.
 
 ---
 
@@ -504,16 +510,6 @@ Hier stehen nur die Themen. Einzelheiten werden nicht abgeschrieben.
 - **Chinesisch** als Sprachkenntnis. Claude hat am 20.10. um 03:35 gefragt, wie gut er es spricht. Ohne Antwort bleibt es weg.
 - **Neue persönliche Fakten** über ihn (V70).
 - **Superlative** und Vergleiche mit anderen Menschen (V07).
-
----
-
-## 14. Nachträge zu Version C
-
-**V73. Unter dem Zeitband bleibt in Ruhe kein leerer Raum.**
-„Hier ist halt jetzt noch ein Leerraum, wenn man noch auf kein Buch geklickt hat auf dem Handy. Können wir den noch füllen? Vielleicht ganz leicht ausgegraut?“ (22.10., 22:31, mit einem Bildschirmfoto vom Telefon: unter „früher später“ der leere Raum bis „die wichtigsten aus Kindheit und Jugend“)
-Für den Bau: Solange kein Buch gewählt ist, steht in der Buchzeile unter „früher“ und „später“ der Satz zum Buch am Knopf von „gelesen“, in `--leise` (am Anfang das neueste, nach dem Zurücklegen das zuletzt gewählte dieser Reihe). Kein neues Wort und keine Anleitung, nur der echte Satz. Er verschwindet beim Zeigen, Ziehen und Wählen; ein Tipp darauf wählt das Buch. Gilt für alle Breiten. Gehört zu Abschnitt 2 (Startseite, V18).
-Ort in C: `website-c/index.html`, `span#zeile-ruhe` in `p#bandzeile`.
-Später geändert: nein.
 
 ---
 

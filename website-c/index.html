@@ -1123,11 +1123,11 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     bandzeile.classList.remove('zeigt');
     ['zb-haupt', 'zb-kind', 'zb-warte'].forEach(id => bandBedienung(document.getElementById(id)));
     bandzeileReservieren();
-    /* Auf dem Telefon steht das Band beim Laden am linken Ende, bei Gilgamesch (23. Oktober; bis dahin am rechten, beim Neuesten,
-       Standardentscheidung 27). Dort stehen in Ruhe die leeren Knöpfe, dort beginnt die kräftige Linie des sichtbaren Teils auf dem
-       Regler, und darunter steht grau der Satz zu Gilgamesch: alles meint dieselbe Stelle, und man liest das Band wie die Legende
-       darüber, „Von Gilgamesch bis Labatut“ (Dominik: „mach mal das älteste. Also Gilgamesch.“) */
-    if (schmal) roll.scrollLeft = 0;
+    /* Auf dem Telefon steht das Band beim Laden am rechten Ende: das Neueste (Standardentscheidung 27). Am 23. Oktober kurz am
+       linken Ende bei Gilgamesch, passend zur Ruhe beim ältesten; dort waren die zwei Reihen darunter beim Laden leer im Bild (bei
+       390 px 0 von 85 und 0 von 73 Strichen, rechts 68 und 44), und Dominik hatte nur das Buch in Ruhe ändern wollen („Sonst ist
+       alles gut“). Knopf und grauer Satz stehen trotzdem zusammen im Bild: der Regler zeigt das ganze Band im Kleinen */
+    if (schmal) roll.scrollLeft = roll.scrollWidth;
     reglerBauen();
     ruheSetzen();
   }
@@ -1231,10 +1231,13 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   // Ein Tipp oder Klick auf den Satz in Ruhe wählt sein Buch. Nach einem Wischen über ihn (das Band rollt) kommt kein click
   if (zeileRuheEl) zeileRuheEl.addEventListener('click', () => { if (bandzeile.classList.contains('ruht')) waehlen(ruheBuch()); });
   /* Kommen die Schriften erst nach der Frist von F.schriften (3 s), bricht der Satz in Ruhe in der Vollkorn anders um und ist anders
-     breit als in der Ersatzschrift, mit der er gesetzt wurde; er steht beim Laden schon da und ist darum der erste, der falsch läge */
+     breit als in der Ersatzschrift, mit der er gesetzt wurde; er steht beim Laden schon da und ist darum der erste, der falsch läge.
+     Ebenso die reservierte Höhe: in der Ersatzschrift gemessen, war sie bei 360 px 108 statt 135 px, und der längste Satz stieß an
+     den Namen der Reihe darunter */
+  const nachSchriften = () => { if (ZB.items.length) bandzeileReservieren(); ruheSetzen(); };
   if (document.fonts) {
-    document.fonts.addEventListener('loadingdone', () => ruheSetzen());
-    document.fonts.ready.then(() => ruheSetzen());
+    document.fonts.addEventListener('loadingdone', nachSchriften);
+    document.fonts.ready.then(nachSchriften);
   }
   // Zeigen (Maus oder Pfeiltasten): der Strich wird Tinte, darunter die kurze Angabe
   function zeigen(o) {
@@ -1280,7 +1283,15 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     svg.addEventListener('focus', () => {
       if (ZB.aktiv && document.getElementById(ZB.aktiv.id) && document.getElementById(ZB.aktiv.id).ownerSVGElement === svg) return;
       const f = svg.id === 'zb-kind' ? ZB.folgen.kind : svg.id === 'zb-warte' ? ZB.folgen.warte : ZB.folgen.haupt;
-      if (f.length && svg.matches(':focus-visible')) zeigen(f[f.length - 1]);
+      /* Mit der Tastatur zuerst das älteste Buch der Reihe, wie der Knopf in Ruhe (23. Oktober; vorher das neueste). Auf dem
+         Telefon rollt das Band zu ihm, wenn es nicht im Bild ist, wie bei den Pfeiltasten: sonst nannte die Zeile ein Buch, das man
+         nicht sieht (die Reihen „Kindheit“ und „wartet“ beginnen rechts vom Anfang des Bands) */
+      if (!f.length || !svg.matches(':focus-visible')) return;
+      zeigen(f[0]);
+      if (ZB.schmal) {
+        const vw = sichtBreite();
+        if (f[0].x < roll.scrollLeft || f[0].x > roll.scrollLeft + vw - 40) roll.scrollLeft = f[0].x - vw / 2;
+      }
     });
     svg.addEventListener('blur', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('.zb')) zeigen(null); });
     svg.addEventListener('keydown', e => {
@@ -1366,7 +1377,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (!REGLER.length || !ZB.reihen) return;
     const T = ZB.schmal ? sichtBreite() : ZB.breite, s = T / ZB.breite;
     ZB.T = T; ZB.s = s;
-    const y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1);
+    // Die Jahreszahlen 2 px unter der Höhe von 1,1 Grad: der Knopf steht in Ruhe über „Gilgamesch“ und berührte sonst sein G
+    const y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1) + 2;
     ZB.spurY = y;
     const linie = (x1, x2, y1, y2) => `<line class="haar" x1="${x1.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y1}" y2="${y2}"/>`;
     // Die Marken, die der Regler von „gelesen“ beschriftet; die Regler darunter tragen an ihnen nur den kleinen Strich
@@ -1609,7 +1621,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   }
 
   // Rollt das Band auf dem Telefon, wandern die Zeilen im sichtbaren Teil mit, auch der Satz in Ruhe: sonst stünde der Raum unter
-  // „früher später“ wieder leer, sobald man das Band von seinem Buch wegrollt (beim Laden Gilgamesch am linken Ende)
+  // „früher später“ wieder leer, sobald man das Band von seinem Buch wegrollt (beim Laden steht Gilgamesch nicht im Bild)
   let rollBild = 0;
   roll.addEventListener('scroll', () => {
     if (rollBild) return;

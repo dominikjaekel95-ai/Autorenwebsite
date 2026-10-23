@@ -1060,6 +1060,9 @@ Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font"
 
 **Telefon.** Kopf mit offener Navigation, erster Satz, Kurzvita, Kartenwahl, Text der Ebene, Kugel in voller Breite, Tafel. Der Einspieler beginnt, wenn die Kugel zur Hälfte im Bild ist. Dann „Was ich schreibe“ mit dem Regalbild über dem Verzeichnis (A), „Was ich gelesen habe“ mit dem Zeitband im eigenen Rahmen, dann der Fuß.
 
+**Seit 23. Oktober (V75, Testfassung „7 und 6“), geht dem oben Gesagten vor:** Ab 62,0625 rem steht das Regalbild (eigene Werke und Nachttisch) links 2 z unter der Kurzvita neben der Kugel des Lebens (`regalOrt` setzt es an der Grenze um), „Was ich schreibe“ hat nur Überschrift und Werkverzeichnis in der Satzbreite; die Kartenwahl und der Text der Ebene entfallen auf allen Breiten. Unter 62 rem steht das Regalbild über dem Verzeichnis, mit dem Nachttisch daneben, nur kleiner (bei 390 px 333 px breit; Titel unter 9 px entfallen, ein Tipp bis 10 px neben ein Buch trifft das nächste, zwischen den Stapeln mindestens 14 px Luft).
+**Unterschrift des Regalbilds** „Meine Projekte und was auf dem Nachttisch liegt“ (Dominiks Wortlaut), `figcaption` im Grad klein, in Tinte, wandert mit dem Bild: am Desktop ¼ z unter dem Brett, darunter die Buchzeile (so springt sie beim Klick nicht); auf dem Telefon zwischen „Was ich schreibe“ (1½ z darüber, mit der Maus 2 z) und dem Bild (¼ z bis zum höchsten Rücken, mit der Maus ¾ z für den Namen beim Zeigen und ¼ z Luft), also näher am Bild als an der Überschrift; unter 23 em ausgeglichen auf zwei Zeilen.
+
 **Erster Bildschirm bei 1440 × 900:** fünf Grade (Einstieg, groß, Überschrift, Text, klein), rund 7 unterstrichene Wörter, kein Grau außer einem leisen „später“ am Ende des Einspielers.
 
 ### 9.2 *Satoshi* (`satoshi.html`)
@@ -1090,6 +1093,8 @@ Beide Spalten beginnen auf einer Höhe. Die Kapiteltage stehen als Register in d
 **Telefon.** `h1`, Unterzeile, Vorspann, Kugel, Tafel, dann direkt der Klappentext und die übrigen Abschnitte in der Reihenfolge von A. Die Tafel hält vom Laden an die Höhe der längsten Szene, auch in Ruhe, damit der Klappentext nie springt.
 
 Figuren: `h3` mit dem Namen in Kapitälchen, Komma, die Rolle im Grad Text, darunter ¼ z der Text. Zwischen Figuren ¾ z.
+
+**Offen (V76): das Inhaltsverzeichnis als Buch.** Fünf Varianten zum Ausprobieren (https://claude.ai/artifact/AKzeEDR9G7EskUYjsJ1afc, `docs/satoshi-buch.md`); eingebaut wird nach Dominiks Wahl.
 
 ### 9.3 *Ursprung* (`ursprung.html`)
 

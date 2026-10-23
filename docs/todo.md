@@ -4,7 +4,8 @@ Stand: 23. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es
 
 ## Entscheidungen, die offen sind
 
-- [ ] **Dominik:** Weiße Fläche am Desktop: „7 und 6“ oder „7 und 1“ (Testfassungen: https://claude.ai/artifact/93qkfHP2cNbTVKNXeptcKt und https://claude.ai/artifact/CE7tBzutqvhu4a64aEJmFs, Begründung in `docs/weissraum.md`). Danach baut Claude die Wahl in `website-c/` ein.
+- [x] **Dominik:** Weiße Fläche am Desktop, Startseite: entschieden für „7 und 6“ (23. Oktober, V75; https://claude.ai/artifact/93qkfHP2cNbTVKNXeptcKt), mit der Unterschrift „Meine Projekte und was auf dem Nachttisch liegt“ und auf dem Telefon dem ganzen Regal. Eingebaut in `website-c/index.html` (Änderungsprotokoll, 23. Oktober).
+- [ ] **Dominik:** *Satoshi*: das Inhaltsverzeichnis als Buch (V76). Fünf Varianten zum Ausprobieren: https://claude.ai/artifact/AKzeEDR9G7EskUYjsJ1afc (Begründung und Empfehlung: https://claude.ai/artifact/NiUCVfu3Xt98sgH982QaBQ, `docs/satoshi-buch.md`; empfohlen Variante 4, zweite Wahl Variante 2). Danach baut Claude die Wahl in `website-c/satoshi.html` ein. Offen dabei: Auf dem Telefon ist das Verzeichnis während des Einspielers am Globus verdeckt; soll es dort immer direkt unter der Tafel stehen?
 - [ ] **Dominik:** Abstände und Gliederung der Startseite unterhalb des ersten Bildschirms (`docs/startseite-rhythmus.md`, Empfehlung: Variante 1 mit Legende und Fuß aus Variante 2), passend zur Wahl oben.
 
 ## Vor dem Livegang

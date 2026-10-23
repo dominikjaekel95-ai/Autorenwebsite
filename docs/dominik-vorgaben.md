@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 23. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 und V74.
+Stand: 23. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V76.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -148,6 +148,12 @@ Für den Bau: Nur auf dem Telefon (das rollende Band, bis 40 rem) steht in Ruhe 
 Ort in C: `website-c/index.html`, `span#zeile-ruhe` in `p#bandzeile` (`ruheBuch`, `ruheSetzen`), der Knopf in `einenZeigen`, die Jahreszahlen des Reglers in `reglerBauen`.
 Später geändert: ja. Der erste Einbau (grau der Satz zum neuesten Buch, Caroline Wahl, *22 Bahnen*, auf allen Breiten) gilt nicht mehr.
 
+**V75. Startseite wie die Testfassung „7 und 6“: das Regal mit dem Nachttisch neben der Kugel, mit einer kurzen Unterschrift; auf dem Telefon das ganze Regal, nur kleiner.**
+Zur Wahl standen zwei Testfassungen gegen die weiße Fläche am Desktop („7 und 6“ und „7 und 1“, `docs/weissraum.md`). Dominik: „Ich will auf der Startseite diese Option haben: https://claude.ai/artifact/93qkfHP2cNbTVKNXeptcKt [die Testfassung „7 und 6“] / Nur zwischen „Was ich schreibe“ und dem graphischen Element soll ein kurzer Untertitel. Damit das Element eindeutig zuordenbar ist.“ Davor, zum Wortlaut: „Eine kurze Beschreibung reicht. Meine Projekte und was auf dem Nachttisch liegt (sowas in die Richtung!) --> Aber Vorsicht, weil dann nochmal „Was ich schreibe“ direkt darunter ist, daher das sollte sich nicht doppeln.“ (beide 23.10., gegen 12:30). Dazu, mit zwei Bildschirmfotos vom Telefon: „Zwei Sachen noch. Zu mobil. Zur Startseite. Passt das Element mit dem was auf dem Nachttisch liegt da auch hin. Also dass es dann einfach kleiner ist. Woran ich arbeite, neben dem was auf dem Nachttisch liegt. Es sieht einfach visuell etwas besser aus. […]“ (23.10.)
+Für den Bau: Ab 62,0625 rem steht das Regalbild (die eigenen Werke und der Nachttisch) links unter der Kurzvita neben der Kugel des Lebens; „Was ich schreibe“ behält Überschrift und Werkverzeichnis. Die Wahl der Ebene (Leben, Reisen, *Satoshi*, *Ursprünge*) entfällt auf allen Breiten, auch auf dem Telefon. Unter 62 rem steht das Regalbild in „Was ich schreibe“ über dem Werkverzeichnis, jetzt auch dort mit dem Nachttisch daneben, nur kleiner; Titel, die auf den schmalen Rücken unter 9 px fielen, entfallen, die Buchzeile nennt sie nach dem Tipp. Die Unterschrift heißt „Meine Projekte und was auf dem Nachttisch liegt“ (sein Wortlaut, nicht ändern), im Grad klein, in Tinte, als Bildunterschrift des Regals: auf dem Telefon zwischen der Überschrift „Was ich schreibe“ und dem Regal, am Desktop direkt unter dem Brett (dort folgt „Was ich schreibe“ erst darunter). Das Regal steht genau einmal auf der Seite.
+Ort in C: `website-c/index.html`, `figure#regalbild` mit `figcaption.regal-unterschrift`, `regalOrt` und `regalZeichnen`.
+Später geändert: nein.
+
 ---
 
 ## 3. Globus und Karten
@@ -254,6 +260,12 @@ Später geändert: nein.
 Anlass war eine Einschätzung zum Urheberrecht, die Dominik in den Chat kopierte: Geschützt ist nicht nur der Wortlaut, sondern das Gefüge aus Figuren, Handlungsgang und erfundenen Ereignissen; ein Roman, der es nachbaut, wäre eine unfreie Bearbeitung. Das Risiko sei klein, und ein Schnappschuss im Internet Archive gebe einen neutralen Zeitstempel. Dominik: „Können wir das nochmal berücksichtigen. Bei Kreise finde ich es nichtiger. Bei Satoshi gebe ich schon ganz schön viele Infos ...“ Claude legte drei Stufen vor (A so lassen und Zeitstempel, B die zweite Schicht kürzen, C deutlich kürzen) und empfahl A. Dominik: „Wir machen wohl A hiervon. Setz das mal auf unsere Todo Liste“ (23.10., 12:06).
 Für den Bau: Klappentext, Figuren, „Gebaut wie ein Protokoll“ und die Szenen der Tafel bleiben unverändert. *Kreise ohne Wiederkehr* nennt ohnehin nur Ort, Zeit und die Frage, warum der Tempel begraben wurde. Nach dem Livegang macht Dominik die Schnappschüsse selbst (`docs/todo.md`, Punkt „Nach dem Livegang“).
 Ort in C: `website-c/satoshi.html`, `website-c/daten/inhalt.js` (Szenen der Tafel).
+Später geändert: nein.
+
+**V76. Auf *Satoshi* unter dem Globus ein aufklappbares Buch als Inhaltsverzeichnis, mit Sprüngen zu den Abschnitten der Seite (zum Ausprobieren).**
+Mit den zwei Bildschirmfotos vom Telefon zu V75 (auf *Satoshi* unter dem Globus, unter „Die Schauplätze / Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.“, eine große weiße Fläche bis „Klappentext“): „2) bei Satoshi können wir dann unter dem Globus das Navigierelement, also das aufklappbare Buch, gerne auch ausprobieren“ (23.10.). Auf die Rückfrage, was das Buch sein soll: „Also das Buch soll einfach ein Inhaltsverzeichnis. Sprungmarker sein. Ist das jetzt klar genug? Haha / Also ... Man springt von dort wie in einem Inhaltsverzeichnis zu den einzelnen Elementen der Satoshi seite“ (23.10.).
+Für den Bau: Das Buch ist das Inhaltsverzeichnis der Seite, seine Einträge sind genau die sechs Überschriften (Klappentext, Eckdaten, Gebaut wie ein Protokoll, Die Figuren, Die Frage hinter dem Roman, Wie er gemacht ist), jeder springt zu seinem Abschnitt; keine Auszüge. Am Desktop in der weißen Fläche unter dem Aufhänger, auf dem Telefon unter dem Globus; der Aufhänger wieder in der Größe von Option B. Fünf Varianten von leise bis deutlich stehen zum Ausprobieren auf https://claude.ai/artifact/AKzeEDR9G7EskUYjsJ1afc (Begründung `docs/satoshi-buch.md`, https://claude.ai/artifact/NiUCVfu3Xt98sgH982QaBQ); die echte Seite ist bis zu Dominiks Wahl unverändert. V37 und V74 gelten weiter.
+Ort in C: noch keiner (`website-c/satoshi.html` unverändert); die Varianten liegen als `satoshi-v1.html` bis `satoshi-v5.html` im Testbau.
 Später geändert: nein.
 
 ---

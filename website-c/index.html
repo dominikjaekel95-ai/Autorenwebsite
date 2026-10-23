@@ -15,9 +15,11 @@
 <link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Startseite von Version C (docs/gestaltung-website-c.md, 9.1). Oben links Kopf, der erste Satz, die Kurzvita, die Wahl der Ebene
-   und ihr Text; rechts der Globus mit Tafel und Steuerzeile. Darunter „Was ich schreibe“ (Werkverzeichnis und Regalbild) und
-   „Mein digitales Bücherregal“ (das Zeitband). Grade, Farben und Abstände kommen nur aus den Token in stil.css. */
+/* Startseite von Version C (docs/gestaltung-website-c.md, 9.1). Oben links Kopf, der erste Satz, die Kurzvita und darunter das
+   Regalbild mit seiner Unterschrift; rechts der Globus des Lebens mit Tafel und Steuerzeile (Dominik, 23. Oktober: „Ich will auf
+   der Startseite diese Option haben“, die Testfassung „7 und 6“). Darunter „Was ich schreibe“ (das Werkverzeichnis; schmal steht
+   das Regalbild hier, über dem Verzeichnis) und „Mein digitales Bücherregal“ (das Zeitband). Grade, Farben und Abstände kommen
+   nur aus den Token in stil.css. */
 
 /* ---------- Der erste Satz (02) ----------
    IM Fell French Canon im Grad Einstieg, jedes Glied eine Zeile. Der Platz für drei Zeilen steht von Anfang an fest. */
@@ -48,6 +50,21 @@ html:not(.js) .einstieg .glied-satz { display: block; }
 .ebenentext .band { padding-left: 1.9em; text-indent: -1.9em; }
 .ebenentext .band-nr { display: inline-block; width: 1.4em; margin-right: .25em; text-align: right; text-indent: 0; font-variant-numeric: lining-nums; }
 html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
+/* Variante „Bücher oben“, mit L-weg, von Dominik gewählt (23. Oktober, Testfassung „7 und 6“; V75): die Startseite zeigt auf dem
+   Globus nur noch das Leben, dasselbe wie die Kurzvita daneben. Reisen, Satoshi und Ursprünge stehen auf ihren eigenen Seiten mit
+   eigenem Globus (laender.html, satoshi.html, ursprung.html). Die Wahl der Ebene entfällt auf allen Breiten, auch auf dem Telefon,
+   wo sie über der Kugel stand. Hier nur ausgeblendet; Markup, Abläufe und Reservierung der Tafel liegen noch (Aufräumliste).
+   Sonst fiele der Text einer Ebene breit zwischen Kurzvita und Regalbild */
+.globusseite > .ebenen, .globusseite > .ebenentext { display: none !important; }
+/* Breit steht das Regalbild nicht in „Was ich schreibe“, sondern in der Textspalte neben der Kugel, 2 z unter der Kurzvita (das
+   Skript setzt es an der Grenze um, regalOrt). Dort gelten Spalte und Satzbreite der Globusseite: Breite gleich --spalte. Im ersten
+   Bildschirm stehen so links der Satz, die Vita, die eigenen Bücher und der Nachttisch, rechts die Kugel des Lebens; was sonst unter der Kurzvita leer
+   blieb, tragen die Bücher. „Was ich schreibe“ behält Überschrift und Werkverzeichnis, einspaltig in der Satzbreite.
+   Die Bücher stehen 2 z unter der Kurzvita; die kleine Zeile für den Namen beim Zeigen liegt in diesem Abstand, nicht zusätzlich */
+@media (min-width: 62.0625rem) {
+  .globusseite > .regalbild { margin-top: calc(var(--z-zwei) - var(--zh-klein)); }
+  .schreiben-raster:not(:has(> .regalbild)) { grid-template-columns: minmax(0, var(--mass)); }
+}
 
 /* ---------- Was ich schreibe: Werkverzeichnis und Regalbild (6.10, 17) ---------- */
 .schreiben-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); align-items: start; }
@@ -58,9 +75,37 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
 .eintrag + .eintrag { margin-top: var(--z-viertel); }
 .eintrag { scroll-margin-top: var(--z); }
 
-.regalbild { position: relative; }
+/* Die Unterschrift des Regalbilds (Dominik, 23. Oktober: „Nur zwischen ‚Was ich schreibe‘ und dem graphischen Element soll ein kurzer
+   Untertitel. Damit das Element eindeutig zuordenbar ist.“ Wortlaut „Meine Projekte und was auf dem Nachttisch liegt“, von ihm).
+   Gesetzt wie eine Bildunterschrift: im Grad klein, in Tinte, ohne Kursive, ohne Strich. Sie gehört zum Bild und wandert mit ihm.
+   Schmal steht sie zwischen der Überschrift „Was ich schreibe“ und dem Bild, näher am Bild (unten, bei der Fläche).
+   Breit steht das Bild neben der Kugel, und „Was ich schreibe“ folgt erst darunter: dann steht sie ¼ z unter dem Brett, wie eine
+   Bildunterschrift, und die Buchzeile (der Satz nach dem Klick) folgt unter ihr. So rückt beim Klick nichts an der Unterschrift,
+   und die Buchzeile, die mit einem langen Satz wächst, verschiebt nur, was unter ihr steht. Unter 23 em (360 px) bricht sie in
+   zwei ausgeglichene Zeilen */
+.regalbild { position: relative; display: flex; flex-direction: column; }
+.regal-unterschrift { order: 0; margin-top: var(--z-halb); font-size: var(--g-klein); line-height: var(--zh-klein); color: var(--tinte); text-wrap: balance; }
+.regalbild > .regalbild-flaeche, .regalbild > .brett { order: 1; }
+.regalbild > #regal-zeile { order: 3; }
+@media (min-width: 62.0625rem) {
+  .regal-unterschrift { order: 2; margin-top: var(--z-viertel); }
+}
+
 /* Über dem höchsten Rücken bleibt eine kleine Zeile frei: dort steht beim Zeigen der Name */
 .regalbild-flaeche { position: relative; margin-top: var(--zh-klein); }
+/* Schmal rückt die Unterschrift von der Überschrift ab (1½ z statt 1 z, ½ z davon gibt .titel) und an das Bild heran, ungefähr
+   im Verhältnis 2 : 1, damit sie sich zum Bild liest und nicht als Untertitel zu „Was ich schreibe“ (Prüfung vom 23. Oktober).
+   Ohne Maus erscheint der Name beim Zeigen nie: dort bleibt über den Rücken nur ¼ z. Mit Maus (Tablet quer, schmales Fenster)
+   steht der Name in der kleinen Zeile über den Rücken; dann bekommt die Unterschrift 2 z über sich und ¼ z Luft zum Namen, damit
+   er sich nicht wie ihre zweite Zeile liest */
+@media (max-width: 62rem) {
+  .regal-unterschrift { margin-top: var(--z); }
+  .regalbild-flaeche { margin-top: var(--z-viertel); }
+}
+@media (max-width: 62rem) and (hover: hover) {
+  .regal-unterschrift { margin-top: calc(var(--z) * 1.5); }
+  .regalbild-flaeche { margin-top: calc(var(--zh-klein) + var(--z-viertel)); }
+}
 .stueck {
   position: absolute; bottom: 0; display: block; margin: 0; padding: 0; border: .75px solid var(--tinte); border-radius: 0;
   background: var(--papier); color: var(--tinte); font: inherit; cursor: pointer; overflow: hidden;
@@ -159,10 +204,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 
 @media (max-width: 62rem) {
   .einstieg { --einstieg-zh: calc(var(--z) * 1.25); }
-  /* Einspaltig: die Wahl der Ebene steht direkt über der Kugel, der Text der Ebene unter der Tafel. So bleibt die Kugel an ihrem
-     Platz, wenn man die Ebene wechselt (der Text der Ebenen ist verschieden lang), und die Wahl gehört sichtbar zum Globus */
+  /* Einspaltig folgt die Kugel direkt auf die Kurzvita, mit 1 z Abstand aus stil.css (ohne Wahl der Ebene darüber) */
   .globusseite > .ebenentext { order: 1; margin-top: var(--z); }
-  .globusseite > .globus { margin-top: var(--z-halb); }
   .schreiben-raster { grid-template-columns: minmax(0, var(--mass)); }
   .schreiben-raster .regalbild { grid-column: 1; grid-row: 1; margin: 0; }
   .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 2; margin-top: var(--z); }
@@ -376,12 +419,15 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 <section class="abschnitt" id="schreiben" aria-labelledby="schreiben-titel">
   <h2 class="titel" id="schreiben-titel">Was ich schreibe</h2>
   <div class="schreiben-raster">
-    <div class="regalbild" id="regalbild">
+    <!-- Das Regalbild mit seiner Unterschrift (Dominiks Wortlaut). Breit setzt das Skript es neben die Kugel (regalOrt), die Unterschrift
+         wandert mit; schmal steht sie über dem Bild, breit unter dem Brett (CSS) -->
+    <figure class="regalbild" id="regalbild">
+      <figcaption class="regal-unterschrift">Meine Projekte und was auf dem Nachttisch liegt</figcaption>
       <div class="regalbild-flaeche" id="regalbild-flaeche" role="group" aria-label="Eigene Bücher und der Stapel vom Nachttisch"></div>
       <div class="brett"></div>
       <p class="regal-name" id="regal-name" aria-hidden="true" hidden></p>
       <p id="regal-zeile"></p>
-    </div>
+    </figure>
 
     <!-- Werkverzeichnis: je Werk ein Eintrag, der Titel führt zur Seite des Werks -->
     <div class="verzeichnis">
@@ -741,9 +787,12 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   const NACHTTISCH = BUECHER.filter(b => b.r === 'gerade');
   // Die Farbe eines liegenden Buchs: dieselbe Verlagsfamilie wie in der Bibliothek (FSeite.buch.farbe)
   const farbe = b => (F.buch && typeof F.buch.farbe === 'function' ? F.buch.farbe(b) : null);
-  /* Auf dem Telefon stehen nur die eigenen Werke auf dem Brett: mit dem Nachttisch daneben wären die Rücken so schmal, dass kein Titel
-     mehr darauf passt und kein Buch sich treffen ließe. Der Nachttisch steht in der Bibliothek, und im Zeitband liegt er quer */
-  const nurEigene = () => window.matchMedia('(max-width: 40rem)').matches;
+  /* Auf jeder Breite stehen die eigenen Werke und daneben der Nachttisch, auf dem Telefon nur kleiner (Dominik, 23. Oktober: „Passt
+     das Element mit dem was auf dem Nachttisch liegt da auch hin. Also dass es dann einfach kleiner ist. Woran ich arbeite, neben dem
+     was auf dem Nachttisch liegt. Es sieht einfach visuell etwas besser aus.“). Bis dahin standen schmal nur die eigenen Werke da.
+     Schmal werden die Rücken so dünn, dass die Titel darauf unter 9 px fielen: dann bleiben sie leer, wie bisher bei jedem zu
+     schmalen Rücken, und den Titel nennt die Buchzeile nach dem Tipp. Damit sich die dünnen Bücher mit dem Finger treffen lassen,
+     wählt ein Tipp knapp daneben das nächste (unten, beim Klick) */
   function werkName(id) {
     const w = (I.werke || []).find(x => x.id === id);
     if (!w) return '';
@@ -754,27 +803,28 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const platz = regalFlaeche.parentElement.clientWidth;
     if (!platz) return;
     bzRegal.schliessen();
-    const allein = nurEigene();
-    const liegend = allein ? [] : NACHTTISCH.map(b => ({ b, breite: b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185, dicke: (b.p || 250) * .06 + (b.b === 'h' ? 5 : 1) }));
+    const liegend = NACHTTISCH.map(b => ({ b, breite: b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185, dicke: (b.p || 250) * .06 + (b.b === 'h' ? 5 : 1) }));
     const stapel = [[], []], hoch = [0, 0];
     liegend.slice().sort((p, q) => q.dicke - p.dicke).forEach(s => { const i = hoch[0] <= hoch[1] ? 0 : 1; stapel[i].push(s); hoch[i] += s.dicke; });
     if (hoch[1] > hoch[0]) { stapel.reverse(); hoch.reverse(); }
     // Bündig: das größte zuunterst, ohne Versatz
     stapel.forEach(st => st.sort((p, q) => q.breite - p.breite || q.dicke - p.dicke));
-    // Länder lehnt am Stapel des Nachttischs; steht er nicht daneben, steht es gerade
+    // Länder lehnt am Stapel des Nachttischs
     let x = 0, lehne = null;
-    EIGEN.forEach(e => { x += e.vor; e.x = x; e.neigt = !!e.lehnt && !allein; if (e.neigt) lehne = { rechts: x + e.d, h: e.h, rad: e.lehnt * Math.PI / 180 }; x += e.d; });
+    EIGEN.forEach(e => { x += e.vor; e.x = x; e.neigt = !!e.lehnt; if (e.neigt) lehne = { rechts: x + e.d, h: e.h, rad: e.lehnt * Math.PI / 180 }; x += e.d; });
     const breiteVon = st => st.length ? Math.max(...st.map(s => s.breite)) : 0;
-    let x1 = 0, x2 = 0, gesamt = x + 1;
-    if (!allein) {
-      // Wo das lehnende Buch den Stapel berührt: mit der oberen Ecke oder, ist der Stapel niedriger, an dessen Kante
-      const kontakt = lehne.h * Math.cos(lehne.rad);
-      x1 = !stapel[0].length ? lehne.rechts + 20 : hoch[0] >= kontakt ? lehne.rechts + lehne.h * Math.sin(lehne.rad) + .6 : lehne.rechts + hoch[0] * Math.tan(lehne.rad) + .6;
-      // Zwischen den Stapeln so viel Luft, dass ein herausgezogenes Buch (12 px) nicht an den zweiten stößt
-      x2 = x1 + breiteVon(stapel[0]) + 24;
-      gesamt = x2 + breiteVon(stapel[1]) + 3;
-    }
-    const m = Math.min(.86, (platz - 2) / gesamt);           // Pixel je Millimeter
+    // Wo das lehnende Buch den Stapel berührt: mit der oberen Ecke oder, ist der Stapel niedriger, an dessen Kante
+    const kontakt = lehne.h * Math.cos(lehne.rad);
+    const x1 = !stapel[0].length ? lehne.rechts + 20 : hoch[0] >= kontakt ? lehne.rechts + lehne.h * Math.sin(lehne.rad) + .6 : lehne.rechts + hoch[0] * Math.tan(lehne.rad) + .6;
+    /* Zwischen den Stapeln so viel Luft, dass ein herausgezogenes Buch (12 px) nicht an den zweiten stößt: 24 mm, und wo das Bild so
+       klein wird, dass 24 mm keine 14 px mehr sind (Telefon), 14 px; die übrigen Maße rücken dafür etwas zusammen */
+    /* Rechts am Ende genauso: ein herausgezogenes Buch des rechten Stapels rückt 12 px (--zug) nach rechts, also bleiben dort 3 mm,
+       mindestens aber 13 px; sonst ragte es auf dem Telefon 8 px über das Brett in den Rand (Prüfung vom 23. Oktober, Musil). Weil
+       die Pixelmaße nicht mit dem Maßstab wachsen, wird er dreimal nachgerechnet; das genügt auf 0,1 px */
+    const LUFT = 24, LUFT_PX = 14, RECHTS = 3, RECHTS_PX = 13, ohneLuft = x1 + breiteVon(stapel[0]) + breiteVon(stapel[1]);
+    let m = Math.min(.86, (platz - 2) / (ohneLuft + LUFT + RECHTS));   // Pixel je Millimeter
+    for (let k = 0; k < 3; k++) m = Math.min(.86, (platz - 2 - Math.max(LUFT * m, LUFT_PX) - Math.max(RECHTS * m, RECHTS_PX)) / ohneLuft);
+    const x2 = x1 + breiteVon(stapel[0]) + Math.max(LUFT, LUFT_PX / m), gesamt = x2 + breiteVon(stapel[1]) + Math.max(RECHTS, RECHTS_PX / m);
     const px = v => (v * m).toFixed(1) + 'px';
     // Rückenschrift 9 bis 13 px aus der Breite des Rückens; darunter bleibt der Rücken leer
     const schriftEigen = Math.min(13, m * 12.5), schriftLiegend = Math.min(13, m * 11.5);
@@ -879,14 +929,26 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   regalFlaeche.addEventListener('pointerout', e => { const b = e.target.closest('.stueck'); if (b && !b.contains(e.relatedTarget) && document.activeElement !== b) regalNameZeigen(null); });
   regalFlaeche.addEventListener('focusin', e => { const b = e.target.closest('.stueck'); if (b && b.matches(':focus-visible')) regalNameZeigen(b); });
   regalFlaeche.addEventListener('focusout', () => regalNameZeigen(null));
+  /* Ein Tipp knapp neben ein Buch (bis 10 px) wählt das nächste: auf dem Telefon sind manche Rücken und liegende Bücher nur 5 bis 8 px
+     stark. Mit der Maus gilt nur das Buch selbst */
+  function naechstesStueck(e) {
+    if (e.pointerType === 'mouse') return null;
+    let best = null, abstand = 10;
+    $$('.stueck', regalFlaeche).forEach(x => {
+      const r = x.getBoundingClientRect();
+      const d = Math.hypot(Math.max(r.left - e.clientX, 0, e.clientX - r.right), Math.max(r.top - e.clientY, 0, e.clientY - r.bottom));
+      if (d <= abstand) { best = x; abstand = d; }
+    });
+    return best;
+  }
   regalFlaeche.addEventListener('click', e => {
-    const b = e.target.closest('.stueck');
+    const b = e.target.closest('.stueck') || naechstesStueck(e);
     if (!b) return;
     $$('.stueck', regalFlaeche).forEach(x => { x.tabIndex = x === b ? 0 : -1; });
     bzRegal.umschalten(b, regalSatz(b), b);
   });
 
-  // Breit: wer über einen Anker zu einem Eintrag kommt, landet mit der Überschrift des Abschnitts oben und sieht daneben das Regalbild
+  // Breit: wer über einen Anker zu einem Eintrag kommt, landet mit der Überschrift des Abschnitts oben (das Regalbild steht dann oben neben der Kugel)
   function ankerSetzen() {
     const titel = $('#schreiben-titel'), z = F.masz('--z');
     $$('.verzeichnis .eintrag').forEach(e => {
@@ -899,7 +961,19 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const el = RUECKEN[anker()] && document.getElementById(anker());
     if (el && !angefasst) el.scrollIntoView({ block: 'start' });
   }
-  regalZeichnen(); ankerSetzen();
+  regalZeichnen();
+  /* Breit wandert das Regalbild in die Textspalte der Globusseite, vor die Kugel; schmal steht es wieder an seinem Platz über dem
+     Werkverzeichnis. regalZeichnen misst die Breite seines neuen Elternteils, schließt die Buchzeile und baut die Rücken neu */
+  const regalBild = $('#regalbild'), regalHeim = regalBild.parentElement, mqBreit = window.matchMedia('(min-width: 62.0625rem)');
+  function regalOrt() {
+    const seite = $('.globusseite');
+    if (mqBreit.matches) { if (regalBild.parentElement !== seite) seite.insertBefore(regalBild, $('#globus')); }
+    else if (regalBild.parentElement !== regalHeim) regalHeim.insertBefore(regalBild, regalHeim.firstChild);
+    regalNameZeigen(null);
+    regalZeichnen(); ankerSetzen();
+  }
+  mqBreit.addEventListener('change', regalOrt);
+  regalOrt();
 
   // ================= Mein digitales Bücherregal: das Zeitband =================
   const mitMass = b => {

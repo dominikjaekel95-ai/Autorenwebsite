@@ -12,7 +12,7 @@
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin media="(min-width: 62.0625rem)">
+<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Seite des Romans Satoshi (gestaltung-website-c.md, 9.2, 18).
@@ -22,7 +22,8 @@
    früher, später und abspielen und über die Orte auf der Kugel. Beim ersten Sichtbarwerden läuft der Einspieler: Orte und Linien,
    und an jeder Station steht der Szenentext in der Tafel, rund eine Minute für alle zehn Szenen. Danach ruht die Tafel bei
    „Die Schauplätze“; eine Wahl oder das Abspielen zeigt die Szene wieder.
-   Zweispaltig steht der Vorspann groß wie der erste Satz der Startseite und fliegt beim Laden einmal ein (Option B, 22. Oktober).
+   Der Vorspann steht groß wie der erste Satz der Startseite und fliegt beim Laden einmal ein (Option B, 22. Oktober; seit dem
+   23. Oktober auch auf Telefon und Tablet, V79).
    Unter dem Vorspann steht das Inhaltsverzeichnis der Seite als kleines Buch zum Umblättern, je Seite ein Eintrag mit seiner
    Vignette; es erscheint langsam, wenn der Vorspann steht (V76, V77). Auf Telefon und Tablet steht unter der Tafel stattdessen
    das kleine Buch aus Variante 4: zu, in Tinte; ein Tipp schlägt es auf, innen alle sechs Einträge (Dominik, 23. Oktober).
@@ -31,22 +32,28 @@
 
 /* ---------- Globusband ---------- */
 .titelei { margin-top: var(--z); }
-/* Der Vorspann aus dem Exposé. Schmal (Telefon, Tablet) im Grad Überschrift. Zweispaltig steht er wie der erste Satz der
-   Startseite (Dominik, 22. Oktober: „Vielleicht könnte das auch einfach größer sein und einfliegen?“; Option B in
-   docs/satoshi-optionen.md): IM Fell French Canon im Grad Einstieg, Zeilenhöhe 1,5 z, jeder Satz beginnt eine Zeile, der erste
-   bricht ausgeglichen. Passen die beiden kurzen Sätze nicht in eine Zeile, setzt ihn das Skript darunter kleiner (bei 1280 px rund
-   31 px, nie unter 28,5 px). Die Wortkästen, in denen er einfliegt, sind Inline-Blöcke (sonst ließe transform sie stehen); schmal
-   gibt es sie nicht, dort setzt das Skript den Vorspann als schlichten Text wie vorher */
-.vorspann { font-size: var(--g-ueber); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; }
-@media (min-width: 62.0625rem) {
-  .vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); }
-  .vorspann .glied-satz { display: block; text-wrap: balance; }
-  .vorspann .w { display: inline-block; }
+/* Der Vorspann aus dem Exposé, auf allen Breiten wie der erste Satz der Startseite (Dominik, 22. Oktober: „Vielleicht könnte das
+   auch einfach größer sein und einfliegen?“; Option B in docs/satoshi-optionen.md): IM Fell French Canon im Grad Einstieg,
+   Zeilenhöhe 1,5 z, jeder Satz beginnt eine Zeile, der erste bricht ausgeglichen. Zweispaltig setzt ihn das Skript darunter
+   kleiner, wenn die beiden kurzen Sätze nicht in eine Zeile passen (bei 1280 px rund 31 px, nie unter 28,5 px). Auf Telefon und
+   Tablet stand er bis zum 23. Oktober als schlichter Text im Grad Überschrift in der Vollkorn; jetzt auch dort in der IM Fell und
+   mit Einflug (Dominik, 23. Oktober: „Beim Handy. Hatten wir uns entschieden, dass die Buchstaben nicht einfliegen. Finde das
+   schon ganz schick eigentlich?“; V79). Schmal im Grad des ersten Satzes der Startseite auf dem Telefon (--g-einstieg, 20,7 bis
+   30 px), die beiden kurzen Sätze je eine Zeile (.gesetzt), angepasst an die Spalte wie dort (Skript). Die Wortkästen, in denen
+   er einfliegt, sind Inline-Blöcke (sonst ließe transform sie stehen) */
+.vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); hyphens: manual; -webkit-hyphens: manual; }
+.vorspann .glied-satz { display: block; text-wrap: balance; }
+.vorspann .w { display: inline-block; }
+/* Schmal: die kurzen Sätze eine Zeile, sobald das Skript den Grad angepasst hat. Letzte Sicherung, falls es das nicht kann: ein zu
+   langes Wort bricht eher, als über den Rand zu laufen (wie .einstieg auf der Startseite). Den Flug berührt das nicht */
+@media (max-width: 62rem) {
+  .vorspann { min-width: 0; overflow-wrap: break-word; }
+  .vorspann.gesetzt .glied-satz + .glied-satz { white-space: nowrap; }
 }
 /* Die Vorlesekopie zählt beim Markieren und Kopieren nicht mit */
 .vorspann .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
-/* Höchstens 600 ms wartet er auf seine Schrift. Läuft das Skript nicht weiter, steht er nach gut einer Sekunde von selbst da */
-.vorspann.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 1.2s forwards; }
+/* Höchstens 1200 ms wartet er auf seine Schrift. Läuft das Skript nicht weiter, steht er nach 2 s von selbst da */
+.vorspann.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 2s forwards; }
 @keyframes einstieg-notfall { to { opacity: 1; } }
 
 /* Ohne Skript: kein Globus */
@@ -267,11 +274,13 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
 
   <p class="vorspann" id="aufhaenger"><span class="glied-satz">Am 31.&nbsp;Oktober 2008 erschienen neun Seiten, die das Geld neu erfinden sollten.</span> <span class="glied-satz">Ihr Verfasser hat nie existiert.</span> <span class="glied-satz">Verschwinden musste er trotzdem.</span></p>
   <script>
-  /* Zweispaltig fliegt der Vorspann bei jedem Laden einmal ein, Wort für Wort von rechts, mit der Mechanik des ersten Satzes der
-     Startseite (index.html, 02), in rund einer Sekunde. Er wartet höchstens 600 ms auf die IM Fell (wie FSeite.schriftEinstieg;
-     seite.js ist an dieser Stelle noch nicht geladen). Ist sie dann nicht da, steht er ohne Flug. Bei reduzierter Bewegung steht
-     er sofort. Auf Telefon und Tablet fliegt er nicht und bleibt, wie er war; die IM Fell wird dort nicht geladen. Die Kugel wartet
-     nie auf ihn. Vorleseprogramme lesen ihn einmal als Ganzes (die Kopie in .unsichtbar), die Wortkästen sind aria-hidden. */
+  /* Der Vorspann fliegt bei jedem Laden einmal ein, Wort für Wort von rechts, mit der Mechanik des ersten Satzes der Startseite
+     (index.html, 02), in rund einer Sekunde; seit dem 23. Oktober auf allen Breiten, auch auf Telefon und Tablet (Dominik: „Beim
+     Handy. Hatten wir uns entschieden, dass die Buchstaben nicht einfliegen. Finde das schon ganz schick eigentlich?“; V79). Er
+     wartet höchstens 1200 ms auf die IM Fell (vorher 600 ms; auf dem Telefon im Mobilnetz kam sie oft später, dann stand er ohne
+     Flug). So lange ist er unsichtbar, sein Platz ist reserviert. Ist sie dann nicht da, steht er ohne Flug und wird an die Schrift
+     angepasst, wenn sie kommt. Bei reduzierter Bewegung steht er sofort. Die Kugel wartet nie auf ihn. Vorleseprogramme lesen ihn
+     einmal als Ganzes (die Kopie in .unsichtbar), die Wortkästen sind aria-hidden. */
   (function () {
     'use strict';
     var el = document.getElementById('aufhaenger');
@@ -283,20 +292,14 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     // Getrennt wird nur an gewöhnlichen Leerzeichen: „31. Oktober“ (mit festem Leerzeichen) ist ein Wort
     var LUECKE = /[ \t\r\n]+/;
     var saetze = Array.prototype.map.call(el.querySelectorAll('.glied-satz'), function (g) { return g.textContent.trim().split(LUECKE).join(' '); });
-    var glieder = [], woerter = [], gebaut = null;
+    var glieder = [], woerter = [];
     // Wann der Vorspann steht, nach dem Flug oder gleich: dann wartet das Inhaltsbuch noch kurz und erscheint (Skript dort)
     var stehtJetzt = function () {};
     el.steht = new Promise(function (r) { stehtJetzt = r; });
-    /* Schmal steht der Vorspann als schlichter Text, Zeichen für Zeichen wie vorher, damit er dort genau so bricht und gesetzt ist.
-       Zweispaltig ist jeder Satz ein Glied (eine Zeile) aus Wortkästen; die liest kein Vorleseprogramm (aria-hidden), es liest
-       die Kopie in .unsichtbar. Neu gebaut wird beim Laden und wenn das Fenster die Grenze überschreitet */
-    function aufbauen() {
-      var b = breit();
-      if (b === gebaut) return;
-      gebaut = b;
-      glieder = []; woerter = [];
-      el.textContent = b ? '' : saetze.join(' ');
-      if (!b) return;
+    /* Jeder Satz ist ein Glied (eine Zeile) aus Wortkästen; die liest kein Vorleseprogramm (aria-hidden), es liest die Kopie in
+       .unsichtbar. Auf allen Breiten derselbe Bau (bis zum 23. Oktober stand er schmal als schlichter Text) */
+    (function aufbauen() {
+      el.textContent = '';
       var vorlesen = document.createElement('span');
       vorlesen.className = 'unsichtbar einstieg-vorlesen';
       vorlesen.textContent = saetze.join(' ');
@@ -320,34 +323,85 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
       });
       el.appendChild(vorlesen);
       el.appendChild(satz);
-    }
-    aufbauen();
+    })();
 
-    /* Zweispaltig: Der erste Satz bricht frei, die beiden kurzen sollen je eine Zeile sein. Passt einer nicht in die Spalte, wird
-       die Schrift kleiner, bis er passt, nicht unter 28,5 px; darunter bricht auch er. Gemessen wird die Breite des Satzes ohne
-       Umbruch, nicht die der Wortkästen, die im Flug verschoben sind. Schmal gilt der Grad aus dem Stil */
-    function setzen() {
-      el.style.fontSize = '';
-      var breite = breit() ? el.clientWidth : 0;
-      if (!breite) return;
-      var laengste = 0;
+    // Breite der beiden kurzen Sätze ohne Umbruch, nicht die der Wortkästen, die im Flug verschoben sind
+    function laengste() {
+      var l = 0;
       glieder.slice(1).forEach(function (g) {
         g.style.width = 'max-content';
-        laengste = Math.max(laengste, g.getBoundingClientRect().width);
+        l = Math.max(l, g.getBoundingClientRect().width);
         g.style.width = '';
       });
-      if (laengste <= breite) return;
-      var jetzt = parseFloat(getComputedStyle(el).fontSize);
-      el.style.fontSize = Math.max(28.5, Math.floor(jetzt * breite / laengste * 10) / 10 - .2) + 'px';
+      return l;
     }
+    /* Zweispaltig: Der erste Satz bricht frei, die beiden kurzen sollen je eine Zeile sein. Passt einer nicht in die Spalte, wird
+       die Schrift kleiner, bis er passt, nicht unter 28,5 px; darunter bricht auch er. Schmal: wie der erste Satz der Startseite
+       (dort anpassen(), Dominik: „Bei mir auf dem eigenen Handy ist der Punkt von eigenes abgeschnitten.“) */
+    function setzen() {
+      el.style.fontSize = '';
+      if (breit()) breitSetzen(); else schmalSetzen();
+      masse = mass();
+    }
+    function breitSetzen() {
+      el.classList.remove('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var lang = laengste();
+      if (lang <= breite) return;
+      var jetzt = parseFloat(getComputedStyle(el).fontSize);
+      el.style.fontSize = Math.max(28.5, Math.floor(jetzt * breite / lang * 10) / 10 - .2) + 'px';
+    }
+    /* Schmal stehen die beiden kurzen Sätze je auf einer Zeile (.gesetzt), der erste bricht ausgeglichen. Ausgang ist der Grad des
+       ersten Satzes der Startseite auf dem Telefon (--g-einstieg). Passt der längere der beiden nicht mit Luft in die Spalte, wird
+       die Schrift kleiner, in Stufen, jede mit bis zu drei Durchgängen, nach jedem wird nachgemessen (gerechnet von der gesetzten
+       Größe, nicht von der, die das Gerät daraus macht):
+       - erst 97 % der Spalte, mindestens 6 px Luft, bis 20,7 px (der kleinste Grad des ersten Satzes der Startseite);
+       - reicht das nicht, mit 6 px Luft weiter bis 19 px. Anders als auf der Startseite (dort zuerst nur 2 px Luft bei 20,7 px):
+         „Verschwinden musste er trotzdem.“ ist eine Spur länger als „und abends unter seinem eigenen.“, so wird es bei 360 px
+         20,6 statt 20,7 px mit 6 px Luft, „minimal kleiner die Schrift“ (Dominik) statt einem Punkt dicht an der Kante;
+       - reicht auch das nicht (ein Gerät, das die Schrift größer zeichnet), bei 19 px mit 2 px Luft.
+       Passt es auch so nicht (320 px, oder ein Gerät, das die Schrift viel größer zeichnet), bricht jeder Satz ausgeglichen, in
+       20,7 px. Nicht im Ausgangsgrad wie der erste Satz der Startseite: der Vorspann hat 21 statt 12 Wörter, bei 320 px stünde er
+       dort in acht Zeilen (sieben in 20,7 px) und füllte den ersten Bildschirm. Über den Rand läuft er nie. Gesetzt wird noch einmal, wenn eine Schrift ankommt, nach dem Flug und wenn die Spalte oder ein
+       Wort breiter oder schmaler wird (unten) */
+    function schmalSetzen() {
+      el.classList.add('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var stufen = [
+        { ziel: Math.min(breite * .97, breite - 6), boden: 20.7 },
+        { ziel: breite - 6, boden: 19 },
+        { ziel: breite - 2, boden: 19 }
+      ];
+      var gesetzt = parseFloat(getComputedStyle(el).fontSize);
+      for (var st = 0; st < stufen.length; st++) {
+        var ziel = stufen[st].ziel, boden = stufen[st].boden;
+        for (var n = 0; n <= 3; n++) {
+          var lang = laengste();
+          if (lang <= ziel) return;
+          if (n === 3 || gesetzt <= boden) break;
+          var kleiner = Math.floor(gesetzt * ziel / lang * 10) / 10;
+          if (kleiner >= gesetzt) kleiner = Math.round((gesetzt - .1) * 10) / 10;
+          if (kleiner < boden) kleiner = boden;
+          el.style.fontSize = kleiner + 'px';
+          gesetzt = kleiner;
+        }
+      }
+      el.classList.remove('gesetzt');
+      el.style.fontSize = '20.7px';
+    }
+    // Was beim letzten Setzen galt: Breite der Spalte und Breite jedes Worts. Ändert sich eins davon, wird neu gesetzt (unten)
+    var masse = '';
+    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
 
     function imFell(ms) {
       if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
       var laden = document.fonts.load(SCHRIFT).then(function (l) { return !!(l && l.length); });
       return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; });
     }
-    /* Kommt die Schrift später oder wird das Fenster erst jetzt breit, wird der Satz noch einmal an die Spalte angepasst (ohne Flug),
-       sobald alle Schriften da sind; auch wenn die IM Fell ausbleibt, dann in der Vollkorn. Vorher schon im ersten Bild, in dem die
+    /* Kommt die Schrift später oder ändert sich die Breite, wird der Satz noch einmal an die Spalte angepasst (ohne Flug), sobald
+       alle Schriften da sind; auch wenn die IM Fell ausbleibt, dann in der Vollkorn. Vorher schon im ersten Bild, in dem die
        IM Fell geladen ist: Bis dahin sieht jedes Bild vor dem Malen nach. Die Zusage von fonts.load kommt oft erst Bilder später, und
        so lange stünde der Vorspann bei reduzierter Bewegung in der Größe, die mit der Ersatzschrift gemessen ist (bei 1366 px mit
        einer Zeile mehr), und spränge dann */
@@ -358,13 +412,13 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     }
     var fellWache = false;
     function nachSchrift() {
-      if (!breit() || !document.fonts || !document.fonts.load) return;
+      if (!document.fonts || !document.fonts.load) return;
       if (!fellWache && document.fonts.forEach && window.requestAnimationFrame) {
         fellWache = true;
         (function wachen(n) {
           var s = fellStand();
-          if (s === 'loaded' && breit()) setzen();
-          if (s === 'loaded' || s === 'error' || n > 600 || !breit()) { fellWache = false; return; }
+          if (s === 'loaded') setzen();
+          if (s === 'loaded' || s === 'error' || n > 600) { fellWache = false; return; }
           requestAnimationFrame(function () { wachen(n + 1); });
         })(0);
       }
@@ -421,15 +475,17 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
           w.style.filter = s > .06 ? 'url(#aufhaenger-flug-' + i + ')' : '';
         });
         if (offen) requestAnimationFrame(schritt);
+        else if (!breit()) setzen();   // schmal nach dem Flug noch einmal nachgemessen; steht er richtig, ändert sich nichts
       })();
     }
 
-    if (breit() && !still()) {
+    if (!still()) {
       el.classList.add('wartet');
-      imFell(600).then(function (da) {
+      if (!breit()) setzen();   // schmal schon vor der Schrift an die Spalte angepasst, so steht der reservierte Platz gleich richtig
+      imFell(1200).then(function (da) {
         setzen();
         el.classList.remove('wartet');
-        if (da && breit() && !still()) einfliegen(); else stehtJetzt();
+        if (da && !still()) einfliegen(); else stehtJetzt();
       });
     } else { setzen(); stehtJetzt(); }
     nachSchrift();
@@ -440,11 +496,28 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
       warte = setTimeout(function () {
         if (window.innerWidth === breiteVorher) return;
         breiteVorher = window.innerWidth;
-        aufbauen();
         setzen();
         nachSchrift();
       }, 140);
     });
+    /* Neu gesetzt wird außerdem, wenn die Spalte breiter oder schmaler wird, auch wenn das Fenster gleich breit bleibt (etwa wenn
+       eine App ihr Fenster erst nach dem Laden einpasst, oder für einen Augenblick über die Grenze und zurück), und wenn ein Wort
+       breiter oder schmaler wird, weil eine Schrift angekommen ist; nach dem Umbruch und vor dem nächsten Bild, wie auf der
+       Startseite. Was setzen() selbst ändert, steht danach in masse; nach einem Setzen schaut er erst im nächsten Bild wieder hin
+       (sonst meldet der Browser eine Schleife) */
+    if (window.ResizeObserver) {
+      var beobachter = new ResizeObserver(function () {
+        if (mass() === masse) return;
+        setzen();
+        beobachter.disconnect();
+        requestAnimationFrame(beobachten);
+      });
+      var beobachten = function () {
+        beobachter.observe(el);
+        woerter.forEach(function (w) { beobachter.observe(w); });
+      };
+      beobachten();
+    }
   })();
   </script>
 
@@ -588,8 +661,8 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
   </script>
   <script>
   /* Erscheinen (Dominik: „Dass kurz der Fokus auf der Tagline ist und erst dann erscheint das Buch“). Erst steht der Blick auf dem
-     Vorspann: Das Buch wartet, bis er eingeflogen ist (#aufhaenger.steht, rund 1,1 s nach dem Laden; ohne Flug sofort, höchstens
-     3 s), dann noch 0,8 s. Danach blendet es in 1,4 s ein und rückt dabei 8 px von rechts an seinen Platz, in der Sprache des
+     Vorspann: Das Buch wartet, bis er eingeflogen ist (#aufhaenger.steht, rund 1,1 s nach dem Laden,
+     bei langsamer Schrift bis 2,2 s, auf allen Breiten; ohne Flug sofort, höchstens 3 s), dann noch 0,8 s. Danach blendet es in 1,4 s ein und rückt dabei 8 px von rechts an seinen Platz, in der Sprache des
      Vorspanns (dessen Wörter 0,2 em von rechts kommen), ohne Federn. Breit erscheint das Buch zum Umblättern dann, auch in einem
      niedrigen Fenster; auf Telefon und Tablet erscheint das kleine Buch unter der Kugel (es steht weiter unten in der Quelle und
      trägt .wartet schon im HTML) erst, wenn man es zum ersten Mal erreicht. Wechselt das Fenster über die Grenze, erscheint das

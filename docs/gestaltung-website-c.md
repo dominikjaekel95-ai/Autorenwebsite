@@ -96,7 +96,7 @@ Fett in der Spalte „Quelle“ heißt: Dominiks Vorgabe geht hier der Empfehlun
 **Umsetzung:**
 - Vollkorn 5.001 von Friedrich Althausen für allen Text außer dem ersten Satz. Variable Schrift, Gewichtsachse auf 400 bis 600 begrenzt. Zwei Dateien: aufrecht und kursiv.
 - Die Kapitälchen kommen aus derselben Datei (OpenType `smcp` und `c2sc`). Geprüft in dieser Nacht: Die vollständige Vollkorn aus dem Archiv von Google Fonts auf GitHub enthält sie. Nur die Teilmenge, die die Google-Fonts-API ausliefert, hat sie nicht. Die Vollkorn SC entfällt damit (beantwortet F1). Die Kursive hat keine Kapitälchen.
-- IM Fell French Canon Roman von Igino Marini nur für den ersten Satz, auf der Startseite und in der Vita. Seit Option B auch für den Vorspann auf *Satoshi* in der Zweispaltenlage (9.2).
+- IM Fell French Canon Roman von Igino Marini nur für den ersten Satz, auf der Startseite und in der Vita. Seit Option B auch für den Vorspann auf *Satoshi* in der Zweispaltenlage, seit dem 23. Oktober auf allen Breiten (9.2, V79).
 - Fertige, im Browser geprüfte Dateien liegen in `scratchpad/lauf3/schrift-c/`: `vollkorn.woff2` (57 KB), `vollkorn-kursiv.woff2` (48 KB), `im-fell-french-canon.woff2` (45 KB), `OFL-Vollkorn.txt`, `OFL-IM-Fell-French-Canon.txt`. Sie kommen nach `schrift/`. Laden und Teilmenge: Abschnitt 8.1.
 
 **Grund:** Die Vollkorn trägt die Anmutung, die Dominik an A mag (V02), und steht auf keiner Liste (Prüfung, Rang 31). Das Kolophon nennt beide Schriften in seinem Wortlaut (V64), es bleibt damit wahr. Selbst ausliefern löst Rang 48 und den Datenschutz (E28).
@@ -109,7 +109,7 @@ Fett in der Spalte „Quelle“ heißt: Dominiks Vorgabe geht hier der Empfehlun
 - Wortlaut unverändert, drei Glieder, jedes Glied eine Zeile: „Dominik Jäkel schreibt tagsüber / unter fremden Namen / und abends unter seinem eigenen.“
 - IM Fell French Canon, Grad Einstieg: 38 px, Zeilenhöhe 1,5 z (42,75 px), Tinte. Das längste Glied ist in dieser Größe 557 px breit. Ist die Spalte schmaler, wird die Schrift kleiner, bis das Glied passt, am Desktop nicht unter 28,5 px, am Telefon nicht unter 20,7 px. Darunter bricht der Satz frei (die Logik `setzen()` aus A bleibt).
 - Einflug Wort für Wort von rechts wie in A, aber kürzer: Weg 0,2 em (A: 0,3 em), je Wort 360 ms (A: 640 ms), 40 ms Versatz (A: 80 ms), 100 ms Pause zwischen den Gliedern (A: 230 ms), waagrechte Unschärfe höchstens 0,06 em, die beim Ankommen vergeht. Easing `cubic-bezier(.22, .7, .28, 1)`, kein Nachfedern. Gesamtdauer rund 1,0 s (A: 1,8 s).
-- Der Flug beginnt, sobald die IM Fell geladen ist. Sie wird vorgeladen. Gewartet wird höchstens 600 ms (A: 2,5 s). Ist sie dann nicht da, steht der Satz ohne Flug. Der Platz für drei Zeilen ist von Anfang an reserviert, nichts springt.
+- Der Flug beginnt, sobald die IM Fell geladen ist. Sie wird vorgeladen. Gewartet wird höchstens 1200 ms (A: 2,5 s; bis zum 23. Oktober 600 ms, V79: auf dem Telefon im Mobilnetz kam sie oft später, dann flog nichts). So lange ist der Satz unsichtbar und schon an die Spalte angepasst (in der Ersatzschrift Vollkorn). Ist sie dann nicht da, steht der Satz ohne Flug und wird angepasst, wenn sie kommt. Der Platz für drei Zeilen ist von Anfang an reserviert, nichts springt. Läuft das Skript nicht weiter, steht der Satz nach 2 s von selbst da.
 - Der Globus wartet nie auf den Satz (11).
 - Bei jedem Laden der Startseite. Bei reduzierter Bewegung steht der Satz sofort.
 - Vorleseprogramme lesen den Satz einmal als Ganzes (die Vorlesekopie aus A bleibt).
@@ -482,7 +482,7 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 |---|---|---|
 | Vollkorn, aufrecht, 400 bis 600 | `schrift/vollkorn.woff2` | aller Text, Kapitälchen, Kartenschrift, Rückenschrift |
 | Vollkorn, kursiv, 400 bis 600 | `schrift/vollkorn-kursiv.woff2` | Werktitel, fremde Wörter, Betonung |
-| IM Fell French Canon Roman | `schrift/im-fell-french-canon.woff2` | der erste Satz (Startseite, Vita), zweispaltig der Vorspann auf *Satoshi* |
+| IM Fell French Canon Roman | `schrift/im-fell-french-canon.woff2` | der erste Satz (Startseite, Vita), der Vorspann auf *Satoshi* |
 
 Es gibt keine dritte Schrift. Kursive Kapitälchen gibt es nicht. Steht ein Figurenname in kursivem Text, bleibt er kursiv ohne Kapitälchen.
 
@@ -933,7 +933,7 @@ Knöpfe sind `<button>` ohne Rahmen, Grund und Radius. Verweise sind `<a>`. Kein
 | Was | Wo | Wie lange | Warum |
 |---|---|---|---|
 | Einflug des ersten Satzes | Startseite | 1,0 s, bei jedem Laden | V13 |
-| Einflug des Vorspanns | *Satoshi*, nur zweispaltig | 1,0 s, bei jedem Laden | Dominik, Option B (9.2) |
+| Einflug des Vorspanns | *Satoshi*, auf allen Breiten (bis zum 23. Oktober nur zweispaltig) | 1,0 s, bei jedem Laden | Dominik, Option B (9.2), V79 |
 | Erscheinen des Inhaltsbuchs | *Satoshi* | 0,8 s nach dem Vorspann, dann 1,4 s, 8 px; auf dem Telefon beim ersten Hineinrollen | V77 (9.2) |
 | Umblättern des Inhaltsbuchs | *Satoshi* | 480 ms je Blatt, 90 ms Versatz | V77 (9.2) |
 | Einspieler Leben | Startseite | rund 34 s, mit der ganzen Tafel | V22, M7, Runde 4 |
@@ -987,7 +987,7 @@ Easing der Flüge bis Runde 3: `d3.easeCubicInOut`. Kein Nachfedern, keine Träg
 
 Bei `prefers-reduced-motion: reduce`:
 
-- Der erste Satz steht sofort.
+- Der erste Satz und der Vorspann von *Satoshi* stehen sofort. Das gilt auch für ein Telefon mit „Animationen entfernen“ (Android, Bedienungshilfen): Chrome auf Android meldet dann `prefers-reduced-motion: reduce`. Ob das Fenster der Claude-App (eine WebView) die Einstellung weitergibt, ist in Chromium hier nicht zu prüfen; gibt sie sie weiter, fliegt dort nichts, und das ist richtig so (V79).
 - Kein Einspieler. Der ganze Weg steht, die Tafel zeigt den Endzustand.
 - Flüge werden Sprünge (Dauer 0).
 - Das Steuerwort entfällt. Früher, später und Klicks bleiben.
@@ -1065,6 +1065,8 @@ Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font"
 **Seit 23. Oktober (V75, Testfassung „7 und 6“), geht dem oben Gesagten vor:** Ab 62,0625 rem steht das Regalbild (eigene Werke und Nachttisch) links 2 z unter der Kurzvita neben der Kugel des Lebens (`regalOrt` setzt es an der Grenze um), „Was ich schreibe“ hat nur Überschrift und Werkverzeichnis in der Satzbreite; die Kartenwahl und der Text der Ebene entfallen auf allen Breiten. Unter 62 rem steht das Regalbild über dem Verzeichnis, mit dem Nachttisch daneben, nur kleiner (bei 390 px 333 px breit; Titel unter 9 px entfallen, ein Tipp bis 10 px neben ein Buch trifft das nächste, zwischen den Stapeln mindestens 14 px Luft). Telefon (unter 40 rem): Unter 40 rem (Telefon) stehen die eigenen Werke wieder in der ursprünglichen Größe mit lesbaren Titeln auf den Rücken (0,86 px je mm, Titel 10,8 px), daneben vom Nachttisch nur der rechte Stapel (Camus, Aristotle, Kafka, Bolaño, Musil), in derselben Größe; nur wenn er bei sehr schmalen Schirmen nicht daneben passt, wird allein der Stapel kleiner (bei 320 px 56 %), nie die Rücken. Seine Titel nehmen den Grad der Rücken. Zwischen 40 und 62 rem beide Stapel wie am Desktop.
 **Unterschrift des Regalbilds** „Meine Projekte und was auf dem Nachttisch liegt“ (Dominiks Wortlaut), `figcaption` im Grad klein, in Tinte, wandert mit dem Bild: am Desktop ¼ z unter dem Brett, darunter die Buchzeile (so springt sie beim Klick nicht); auf dem Telefon zwischen „Was ich schreibe“ (1½ z darüber, mit der Maus 2 z) und dem Bild (¼ z bis zum höchsten Rücken, mit der Maus ¾ z für den Namen beim Zeigen und ¼ z Luft), also näher am Bild als an der Überschrift; unter 23 em ausgeglichen auf zwei Zeilen.
 
+**Seit 23. Oktober (V78):** ab 62,0625 rem bleibt der Block aus Kugel, Steuerzeile und Tafel beim Rollen stehen (sticky), neben „Was ich schreibe“, der Überschrift „Mein digitales Bücherregal“ und der Legende, und hält 3 z über dem Zeitband, das über die ganze Breite frei bleibt (bei 1440 × 900 rund 656 px Weg); die Abschnitte bleiben im Quelltext getrennt, nur `main` ist ein gemeinsames Raster mit Unterrastern.
+
 **Erster Bildschirm bei 1440 × 900:** fünf Grade (Einstieg, groß, Überschrift, Text, klein), rund 7 unterstrichene Wörter, kein Grau außer einem leisen „später“ am Ende des Einspielers.
 
 ### 9.2 *Satoshi* (`satoshi.html`)
@@ -1073,10 +1075,10 @@ Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font"
 
 **Option B** (Dominik, 22. Oktober abends: „Nimm Option B für Satoshi“; `docs/satoshi-optionen.md`). Es gilt wieder die Lage aus Runde 4: Der Klappentext beginnt 2 z unter dem Globusband, links, auf einer Höhe mit den Eckdaten rechts. Die Lage aus Runde 5 (der gekürzte Absatz „Wer war Satoshi Nakamoto wirklich? …“ unter dem Vorspann, der Klappentext ab 75 rem schon neben der Kugel) ist entfallen; der volle Absatz „Doch mit welcher Konsequenz? …“ steht auf jeder Breite als letzter unter „Die Frage hinter dem Roman“.
 - Der Vorspann steht in der IM Fell French Canon im Grad Einstieg (38 px, Zeilenhöhe 1,5 z). Jeder der drei Sätze beginnt eine Zeile, der erste bricht ausgeglichen (`text-wrap: balance`). Passen die beiden kurzen Sätze nicht in die Spalte, wird er kleiner, bis sie passen, nicht unter 28,5 px: von 993 bis 1200 px Breite 29,3 px, bei 1280 px 31,1 px, bei 1366 px 34,7 px, ab rund 1440 px 38 px. Auf allen geprüften Breiten von 993 bis 2560 px hat er so fünf Zeilen und endet bei 556 px.
-- Beim Laden fliegt er Wort für Wort von rechts ein, mit der Mechanik des ersten Satzes der Startseite (02: Weg 0,2 em, je Wort 360 ms, waagrechte Unschärfe, die beim Ankommen vergeht). Der Takt ist enger, weil er 21 statt 12 Wörter hat: 28 statt 40 ms Versatz, 70 statt 100 ms zwischen den Sätzen, zusammen 1,0 s (mit dem Takt der Startseite wären es 1,3 s). Er wartet höchstens 600 ms auf die IM Fell, die nur für die Zweispaltenlage vorgeladen wird; ist sie dann nicht da, steht er ohne Flug. Bei reduzierter Bewegung steht er sofort. Der Platz ist von Anfang an reserviert, nichts springt. Vorleseprogramme lesen ihn als einen Satz (Vorlesekopie wie auf der Startseite, die Wortkästen sind `aria-hidden`).
+- Beim Laden fliegt er Wort für Wort von rechts ein, mit der Mechanik des ersten Satzes der Startseite (02: Weg 0,2 em, je Wort 360 ms, waagrechte Unschärfe, die beim Ankommen vergeht). Der Takt ist enger, weil er 21 statt 12 Wörter hat: 28 statt 40 ms Versatz, 70 statt 100 ms zwischen den Sätzen, zusammen 1,0 s (mit dem Takt der Startseite wären es 1,3 s). Er wartet höchstens 1200 ms auf die IM Fell (bis zum 23. Oktober 600 ms), die auf allen Breiten vorgeladen wird; ist sie dann nicht da, steht er ohne Flug und wird angepasst, wenn sie kommt. Bei reduzierter Bewegung steht er sofort. Der Platz ist von Anfang an reserviert, nichts springt. Vorleseprogramme lesen ihn als einen Satz (Vorlesekopie wie auf der Startseite, die Wortkästen sind `aria-hidden`).
 - Die Kugel wartet nicht auf ihn. Ihr Einspieler beginnt wie vorher rund 0,7 s nach dem Laden, beide Bewegungen laufen kurz gleichzeitig.
 - Unter dem Vorspann bleiben im ersten Bildschirm bei 1440 × 900 rund 340 px frei, bei 1280 × 800 rund 240 px, bei 1920 × 1080 rund 520 px.
-- Tablet und Telefon (bis 62 rem): wie vorher, Vorspann im Grad Überschrift als schlichter Text, kein Flug; die IM Fell wird dort nicht geladen.
+- ~~Tablet und Telefon (bis 62 rem): wie vorher, Vorspann im Grad Überschrift als schlichter Text, kein Flug; die IM Fell wird dort nicht geladen.~~ **Seit dem 23. Oktober (V79)** auch auf Tablet und Telefon in der IM Fell, Zeilenhöhe 1,5 z, mit demselben Einflug (21 Wörter, 1,0 s). Ausgang ist der Grad des ersten Satzes der Startseite auf dem Telefon (`--g-einstieg`, 20,7 bis 30 px). Die beiden kurzen Sätze stehen je auf einer Zeile, der erste bricht ausgeglichen; passt der längere („Verschwinden musste er trotzdem.“) nicht mit Luft in die Spalte, wird die Schrift kleiner, mit der Anpassung der Startseite (97 % der Spalte, mindestens 6 px Luft, bis 20,7 px; dann mit 6 px Luft bis 19 px; dann 2 px Luft; Nachmessen, bis zu drei Durchgänge je Stufe). Passt es so nicht, bricht jeder Satz ausgeglichen in 20,7 px. Grade: 320 px 20,7 (der dritte Satz bricht ausgeglichen, 6 Zeilen), 360 px 20,5, 390 px 21,9, 393 px 22,1, 430 px 24,2 (je 5 Zeilen), Tablet 768 px und quer 844 px 30 px (4 Zeilen); hinter dem letzten Wort bleiben mindestens 7 px (360 px) bis 12,5 px (430 px). Die Kugel steht damit auf dem Telefon bis zu 40,5 px tiefer als vorher (360 px gleich, 390 bis 430 px 33,75 px, also 592,5 statt 558,75 px, 320 px 40,5 px), auf dem Tablet und quer 60,75 px. Das kleine Inhaltsbuch unter der Kugel bleibt; es erscheint wie breit erst, wenn der Vorspann eingeflogen ist und dazu 0,8 s vergangen sind, und wenn man es erreicht. Ohne Skript steht der Vorspann auch schmal in der IM Fell, ausgeglichen gebrochen.
 
 **Ab 75 rem** ist der Teil darunter eine Doppelseite:
 

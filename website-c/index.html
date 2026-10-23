@@ -114,12 +114,13 @@ html:not(.js) .regalbild { display: none; }
 .bandzeile.zeigt .zeile-zeigen { visibility: visible; }
 .bandzeile.zeigt .zeile-offen { visibility: hidden; }
 /* Auf dem Telefon steht hier in Ruhe (kein Buch gewählt, keins gezeigt, nichts gezogen) der Satz zum Buch am Knopf von „gelesen“,
-   in --leise: ein Zustand, noch nicht gewählt, im selben Grau wie das leise „früher“ darüber. Sonst blieb unter „früher später“ ein
+   im Grau der blassen Striche des Bands (--zb-strich), nur ein Hauch, deutlich leiser als das leise „früher“ darüber (Dominik, 23.
+   Oktober: „Es muss noch deutlich grauer sein. Also viel blasser“; zuerst stand er in --leise). Sonst blieb unter „früher später“ ein
    leerer Raum von bis zu 5 z (Dominik, 23. Oktober: „Hier ist halt jetzt noch ein Leerraum, wenn man noch auf kein Buch geklickt hat
    auf dem Handy. Können wir den noch füllen? Vielleicht ganz leicht ausgegraut?“). Kein neues Wort, keine Anleitung: der echte Satz,
    beim Laden der zu Gilgamesch. Breiter bleibt die Zeile in Ruhe leer wie zuvor („ist das glaube ich auch nur ein mobiles Problem“;
    Skript). Ein Tipp darauf wählt das Buch. Verborgen mit visibility, damit nichts springt; kein Übergang */
-.bandzeile .zeile-ruhe { color: var(--leise); visibility: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bandzeile .zeile-ruhe { color: var(--zb-strich); visibility: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .bandzeile.ruht:not(.zeigt) .zeile-ruhe { visibility: visible; }
 .bandname { margin-top: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); position: sticky; left: 0; width: max-content; max-width: 100%; }
 /* Der Regler (Runde 6, S9), gebaut wie die Steuerung am Globus: unter dem Bild der Regler, darunter „früher“ und „später“, darunter

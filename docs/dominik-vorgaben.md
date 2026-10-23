@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 23. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73.
+Stand: 23. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 und V74.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -248,6 +248,12 @@ Später geändert: nein.
 Claude hat am 19.10. um 20:26 angekündigt, den Absatz zum Ende aus dem Klappentext wegzulassen. Dominik hat nicht widersprochen. Am 21.10. um 00:00 schrieb er über die Szenen: „es sind ja auch keine richtigen Spoiler, aber schon etwas“.
 Für den Bau: Der Klappentext endet ohne den Absatz über das Ende des Pakts. Die Szenen zu Bariloche und Penang bleiben so knapp wie in A.
 Ort in A: `satoshi.html`, Abschnitt `h2#klapp-titel`, fünf Absätze.
+Später geändert: nein.
+
+**V74. Die Handlung auf der Seite von *Satoshi* bleibt so ausführlich, wie sie ist; nach dem Livegang ein Zeitstempel im Internet Archive.**
+Anlass war eine Einschätzung zum Urheberrecht, die Dominik in den Chat kopierte: Geschützt ist nicht nur der Wortlaut, sondern das Gefüge aus Figuren, Handlungsgang und erfundenen Ereignissen; ein Roman, der es nachbaut, wäre eine unfreie Bearbeitung. Das Risiko sei klein, und ein Schnappschuss im Internet Archive gebe einen neutralen Zeitstempel. Dominik: „Können wir das nochmal berücksichtigen. Bei Kreise finde ich es nichtiger. Bei Satoshi gebe ich schon ganz schön viele Infos ...“ Claude legte drei Stufen vor (A so lassen und Zeitstempel, B die zweite Schicht kürzen, C deutlich kürzen) und empfahl A. Dominik: „Wir machen wohl A hiervon. Setz das mal auf unsere Todo Liste“ (23.10., 12:06).
+Für den Bau: Klappentext, Figuren, „Gebaut wie ein Protokoll“ und die Szenen der Tafel bleiben unverändert. *Kreise ohne Wiederkehr* nennt ohnehin nur Ort, Zeit und die Frage, warum der Tempel begraben wurde. Nach dem Livegang macht Dominik die Schnappschüsse selbst (`docs/todo.md`, Punkt „Nach dem Livegang“).
+Ort in C: `website-c/satoshi.html`, `website-c/daten/inhalt.js` (Szenen der Tafel).
 Später geändert: nein.
 
 ---

@@ -1378,7 +1378,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const T = ZB.schmal ? sichtBreite() : ZB.breite, s = T / ZB.breite;
     ZB.T = T; ZB.s = s;
     // Die Jahreszahlen 2 px unter der Höhe von 1,1 Grad: der Knopf steht in Ruhe über „Gilgamesch“ und berührte sonst sein G
-    const y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1) + 2;
+    const y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1) + 3;
     ZB.spurY = y;
     const linie = (x1, x2, y1, y2) => `<line class="haar" x1="${x1.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y1}" y2="${y2}"/>`;
     // Die Marken, die der Regler von „gelesen“ beschriftet; die Regler darunter tragen an ihnen nur den kleinen Strich

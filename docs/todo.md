@@ -6,6 +6,7 @@ Stand: 23. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es
 
 - [x] **Dominik:** Weiße Fläche am Desktop, Startseite: entschieden für „7 und 6“ (23. Oktober, V75; https://claude.ai/artifact/93qkfHP2cNbTVKNXeptcKt), mit der Unterschrift „Meine Projekte und was auf dem Nachttisch liegt“ und auf dem Telefon dem ganzen Regal. Eingebaut in `website-c/index.html` (Änderungsprotokoll, 23. Oktober).
 - [x] **Dominik:** *Satoshi*: das Inhaltsverzeichnis als Buch (V76): entschieden für Variante 5, das Buch zum Umblättern, mit einem Zeichen unter jedem Kapitel und langsamem Erscheinen nach dem Aufhänger (23. Oktober, V77). Eingebaut in `website-c/satoshi.html` (Änderungsprotokoll, 23. Oktober); auf dem Telefon steht das Buch jetzt immer sichtbar unter der Tafel.
+- [ ] **Dominik:** Einblenden beim Laden (`docs/einblenden.md`, Entscheidungsseite https://claude.ai/artifact/WJvDcw5tPNERyLNcv1NMyv): Empfehlung Variante 2 „Globus zuletzt“ (Testlink https://claude.ai/artifact/YNHCYoruZSVqHntS3BRSgQ), Gegenrede Variante 1; alle fünf zum Gegentesten unter https://claude.ai/artifact/LdXQjJubBA6uogxtngZ9un. Dazu die Frage, ob das Inhaltsbuch auf *Satoshi* in 0,5 und 1,0 s statt 0,8 und 1,4 s erscheinen darf (V77). Erst nach der Wahl kommt etwas in die echte Seite.
 - [ ] **Dominik:** Abstände und Gliederung der Startseite unterhalb des ersten Bildschirms (`docs/startseite-rhythmus.md`, Empfehlung: Variante 1 mit Legende und Fuß aus Variante 2), passend zur Wahl oben.
 
 ## Vor dem Livegang

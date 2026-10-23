@@ -307,7 +307,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
        nicht unter 28,5 px, sonst nicht unter 20,7 px. Reicht auch das nicht, bricht der Satz frei; über den Rand läuft er nie.
        Dominik am 23. Oktober, mit einem Bildschirmfoto: „Bei mir auf dem eigenen Handy ist der Punkt von eigenes abgeschnitten.“
        Auf seinem Telefon stand der Satz rund 10 % größer, als die Anpassung ihn in Chromium setzt. Darum:
-       - Luft: das längste Glied nimmt höchstens 97 % der Spalte ein, mindestens 6 px bleiben frei (am kleinsten Grad nur die 6 px);
+       - Luft: das längste Glied nimmt höchstens 97 % der Spalte ein, mindestens 6 px bleiben frei (Stufen in anpassen());
        - nach dem Setzen wird nachgemessen und, wenn nötig, noch einmal verkleinert (bis zu drei Durchgänge). Nicht jedes Telefon
          vergrößert Schrift im Verhältnis (Schriftgröße des Systems, Textzoom einer App), und gerechnet wird von der Größe, die
          gesetzt wurde, nicht von der, die das Gerät daraus macht;
@@ -331,25 +331,35 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       el.classList.add('gesetzt');
       var breite = el.clientWidth;
       if (!breite) return;
-      var ziel = Math.min(breite * .97, breite - 6), unten = breit() ? 28.5 : 20.7;
+      var unten = breit() ? 28.5 : 20.7;
+      /* Drei Stufen, jede mit bis zu drei Durchgängen: erst 97 % der Spalte (mindestens 6 px Luft) bis zum kleinsten Grad; reicht
+         das nicht, dort nur 2 px Luft (der Punkt steht dann noch in der Spalte, rechts bleibt der Rand der Seite); reicht auch das
+         nicht, bis zu einem harten Boden (19 px, am Desktop 26,2 px) weiter verkleinern. So wird es auf einem Telefon, das die
+         Schrift größer zeichnet, „minimal kleiner die Schrift“ (Dominik) statt vier Zeilen in voller Größe. */
+      var stufen = [
+        { ziel: Math.min(breite * .97, breite - 6), boden: unten },
+        { ziel: breite - 2, boden: unten },
+        { ziel: breite - 2, boden: Math.round(unten * .92 * 10) / 10 }
+      ];
       var gesetzt = parseFloat(getComputedStyle(el).fontSize);
-      for (var n = 0; n <= 3; n++) {
-        var lang = laengstes();
-        if (lang <= ziel) return;
-        if (n === 3) break;
-        var kleiner = Math.floor(gesetzt * ziel / lang * 10) / 10;
-        if (kleiner >= gesetzt) kleiner = Math.round((gesetzt - .1) * 10) / 10;
-        // Reichen die 97 % erst unter dem kleinsten Grad, gilt dort nur noch die Luft von 6 px (bei 360 px drei Zeilen statt freiem Bruch)
-        if (kleiner < unten) {
-          if (gesetzt <= unten) break;
-          kleiner = unten;
-          ziel = breite - 6;
+      for (var st = 0; st < stufen.length; st++) {
+        var ziel = stufen[st].ziel, boden = stufen[st].boden;
+        for (var n = 0; n <= 3; n++) {
+          var lang = laengstes();
+          if (lang <= ziel) return;
+          if (n === 3 || gesetzt <= boden) break;
+          var kleiner = Math.floor(gesetzt * ziel / lang * 10) / 10;
+          if (kleiner >= gesetzt) kleiner = Math.round((gesetzt - .1) * 10) / 10;
+          if (kleiner < boden) kleiner = boden;
+          el.style.fontSize = kleiner + 'px';
+          gesetzt = kleiner;
         }
-        el.style.fontSize = kleiner + 'px';
-        gesetzt = kleiner;
       }
-      el.style.fontSize = '';
+      /* Passt es auch so nicht, bricht der Satz frei, in der Ausgangsgröße, wenn er so in die Spalte passt (wie bisher bei
+         320 px); sonst im kleinsten Grad, damit nie ein Wort über den Rand läuft. */
       el.classList.remove('gesetzt');
+      el.style.fontSize = '';
+      if (laengstes() > breite) el.style.fontSize = unten + 'px';   // laengstes() misst die Glieder, der Flug verschiebt nur die Wörter
     }
     // Ein zweites Setzen wartet aufs nächste Bild; mehrere Anlässe zugleich setzen einmal
     var bild = 0;

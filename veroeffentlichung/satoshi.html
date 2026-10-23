@@ -84,6 +84,37 @@ html.js .blaetterbuch [data-schnitt="1"] .rechts i, html.js .blaetterbuch [data-
 html.js .blaetterbuch [data-schnitt="2"] .schnitt i:first-child { display: block; }
 @media (prefers-reduced-motion: reduce) { html.js .blaetterbuch .recto, html.js .blaetterbuch .verso { transition: none; } }
 html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
+.klappbuch { display: none; }
+@media (max-width: 62rem) {
+  html.js .globusseite > .blaetterbuch { display: none; }
+  html.js .klappbuch {
+    display: block; position: relative; width: calc(var(--s-b) * 2);
+    --s-h: calc(var(--z) * 6); --s-b: calc(var(--z) * 5.25); --pad-x: var(--z-viertel); --pad-o: var(--z-halb);
+  }
+}
+html.js .klappbuch .buchobjekt { position: relative; width: calc(var(--s-b) * 2); height: var(--s-h); perspective: 1600px; font-size: var(--g-klein); line-height: var(--zh-klein); hyphens: manual; -webkit-hyphens: manual; -webkit-tap-highlight-color: transparent; }
+html.js .klappbuch .deckel, html.js .klappbuch .seite { position: absolute; top: 0; left: var(--s-b); width: var(--s-b); height: 100%; box-sizing: border-box; }
+html.js .klappbuch .seite, html.js .klappbuch .innen { background: var(--papier); padding: var(--pad-o) var(--pad-x) 0; }
+html.js .klappbuch .seite { box-shadow: inset 0 0 0 1px var(--karte-kueste); }
+html.js .klappbuch .innen { box-shadow: inset 1px 0 0 var(--karte-kueste), inset 0 1px 0 var(--karte-kueste), inset 0 -1px 0 var(--karte-kueste); }
+html.js .klappbuch .deckel { z-index: 2; transform-origin: left center; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 420ms cubic-bezier(.45, 0, .25, 1); }
+html.js .klappbuch .deckel > .aussen, html.js .klappbuch .deckel > .innen { position: absolute; inset: 0; box-sizing: border-box; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+html.js .klappbuch .aussen { background: var(--tinte); color: var(--papier); padding: var(--pad-o) var(--pad-x); }
+html.js .klappbuch .innen { transform: rotateY(180deg); cursor: pointer; }
+html.js .klappbuch.offen .deckel { transform: rotateY(-180deg); }
+html.js .klappbuch .eintrag { display: block; }
+html.js .klappbuch .eintrag + .eintrag { margin-top: var(--z); }
+html.js .klappbuch .eintrag a { position: relative; display: block; width: fit-content; max-width: 100%; text-wrap: balance; }
+html.js .klappbuch .eintrag a::after { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--z-halb) * -1); bottom: calc(var(--z-halb) * -1); }
+html.js .klappbuch .aufschlagen {
+  position: absolute; z-index: 3; top: 0; left: var(--s-b); width: var(--s-b); height: var(--s-h);
+  appearance: none; -webkit-appearance: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+html.js .klappbuch.offen .aufschlagen { display: none; }
+html.js .klappbuch.dreht .seite, html.js .klappbuch.dreht .innen { pointer-events: none; }
+html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); }
+@media (prefers-reduced-motion: reduce) { html.js .klappbuch .deckel { transition: none; } }
 .buch { display: flex; flex-direction: column; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
 .buch section { max-width: var(--mass); margin-top: var(--z-zwei); }
 .buch .rechts { display: contents; }
@@ -406,39 +437,58 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
   <script>
   (function () {
     'use strict';
-    var buch = document.getElementById('inhaltsbuch');
-    if (!buch || !buch.animate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var gross = document.getElementById('inhaltsbuch');
+    if (!gross) return;
+    var schmal = window.matchMedia ? window.matchMedia('(max-width: 62rem)') : { matches: false };
+    var kleinHolen = function (f) {
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { f(document.getElementById('inhaltsbuch-klein')); });
+      else f(document.getElementById('inhaltsbuch-klein'));
+    };
+    if (!gross.animate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      kleinHolen(function (k) { if (k) k.classList.remove('wartet'); });
+      return;
+    }
     var PAUSE = 800, DAUER = 1400, WEG = 8;
-    var frei = false, gesehen = false, fertig = false, laeufe = [];
-    var schmal = function () { return window.matchMedia('(max-width: 62rem)').matches; };
-    buch.classList.add('wartet');
-    function erscheinen() {
-      if (fertig || !frei || !(gesehen || !schmal())) return;
-      fertig = true;
-      buch.classList.remove('wartet');
-      laeufe = [
-        buch.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DAUER, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
-        buch.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: DAUER, easing: 'cubic-bezier(.22, .7, .28, 1)' })
+    var frei = false, buecher = [];
+    function erscheinen(b) {
+      if (b.fertig || !frei || !b.dran(b)) return;
+      b.fertig = true;
+      b.el.classList.remove('wartet');
+      b.laeufe = [
+        b.el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DAUER, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
+        b.el.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: DAUER, easing: 'cubic-bezier(.22, .7, .28, 1)' })
       ];
     }
-    function sofort() {
-      fertig = true;
-      buch.classList.remove('wartet');
-      laeufe.forEach(function (a) { a.finish(); });
+    function anmelden(el, dran, beobachten) {
+      if (!el) return;
+      var b = { el: el, dran: dran, fertig: false, gesehen: false, laeufe: [] };
+      buecher.push(b);
+      el.classList.add('wartet');
+      el.addEventListener('focusin', function () {
+        b.fertig = true;
+        el.classList.remove('wartet');
+        b.laeufe.forEach(function (a) { a.finish(); });
+      });
+      if (beobachten) {
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (e) {
+            if (!e.some(function (x) { return x.isIntersecting; })) return;
+            b.gesehen = true; io.disconnect(); erscheinen(b);
+          }, { rootMargin: '0px 0px -10% 0px' });
+          io.observe(el);
+        } else b.gesehen = true;
+      }
+      erscheinen(b);
     }
-    buch.addEventListener('focusin', sofort);
+    anmelden(gross, function () { return !schmal.matches; }, false);
+    kleinHolen(function (k) { anmelden(k, function (b) { return b.gesehen; }, true); });
+    var alle = function () { buecher.forEach(erscheinen); };
+    if (schmal.addEventListener) schmal.addEventListener('change', alle); else if (schmal.addListener) schmal.addListener(alle);
     var auf = document.getElementById('aufhaenger');
     var steht = auf && auf.steht ? auf.steht : Promise.resolve();
     Promise.race([steht, new Promise(function (r) { setTimeout(r, 3000); })]).then(function () {
-      setTimeout(function () { frei = true; erscheinen(); }, PAUSE);
+      setTimeout(function () { frei = true; alle(); }, PAUSE);
     });
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (e) {
-        if (!e.some(function (x) { return x.isIntersecting; })) return;
-        gesehen = true; io.disconnect(); erscheinen();
-      }, { rootMargin: '0px 0px -10% 0px' });
-      io.observe(buch);
-    } else gesehen = true;
   })();
 </script>
 
@@ -448,21 +498,67 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Schauplätze stehen auf der Tafel, mit ihren Koordinaten.</p>
     <div class="tafel" id="tafel" aria-live="off"></div>
   </figure>
+  
+  <nav class="inhaltsbuch klappbuch wartet" id="inhaltsbuch-klein" aria-label="Auf dieser Seite"><button class="aufschlagen" type="button" aria-expanded="false" aria-controls="klappbuch-liste" aria-label="Satoshi, Inhalt aufschlagen"></button><div class="buchobjekt wahlliste" id="klappbuch-liste" role="list" inert><div class="deckel" role="none"><div class="aussen" aria-hidden="true"><span>Satoshi</span></div><div class="innen" role="none"><span class="eintrag" role="listitem"><a href="#klappentext">Klappentext</a></span><span class="eintrag" role="listitem"><a href="#eckdaten">Eckdaten</a></span><span class="eintrag" role="listitem"><a href="#bau">Gebaut wie ein Protokoll</a></span></div></div><div class="seite" role="none"><span class="eintrag" role="listitem"><a href="#figuren">Die Figuren</a></span><span class="eintrag" role="listitem"><a href="#frage">Die Frage hinter dem Roman</a></span><span class="eintrag" role="listitem"><a href="#machart">Wie er gemacht ist</a></span></div></div></nav>
   <script>
   (function () {
     'use strict';
-    var buch = document.getElementById('inhaltsbuch'), kugel = document.getElementById('globus');
-    if (!buch || !kugel || !window.matchMedia) return;
-    var schmal = window.matchMedia('(max-width: 62rem)');
-    function ort() {
-      var dahinter = schmal.matches;
-      if (dahinter ? kugel.nextElementSibling === buch : buch.compareDocumentPosition(kugel) & Node.DOCUMENT_POSITION_FOLLOWING) return;
-      var fokus = buch.contains(document.activeElement) ? document.activeElement : null;
-      kugel.parentNode.insertBefore(buch, dahinter ? kugel.nextSibling : kugel);
-      if (fokus) fokus.focus({ preventScroll: true });
+    var buch = document.getElementById('inhaltsbuch-klein'), gross = document.getElementById('inhaltsbuch');
+    var knopf = buch && buch.querySelector('.aufschlagen');
+    var obj = buch && buch.querySelector('.buchobjekt');
+    var deckel = obj && obj.querySelector('.deckel');
+    if (!knopf || !deckel) return;
+    var erster = obj.querySelector('a');
+    var offen = function () { return buch.classList.contains('offen'); };
+    var drehUhr = 0;
+    function gedreht() { clearTimeout(drehUhr); buch.classList.remove('dreht'); }
+    deckel.addEventListener('transitionend', function (e) { if (e.target === deckel) gedreht(); });
+    function auf(an, fokus, still) {
+      if (still) deckel.style.transitionDuration = '0ms';
+      gedreht();
+      var dauer = an && !still ? parseFloat(getComputedStyle(deckel).transitionDuration) * 1000 || 0 : 0;
+      if (dauer) { buch.classList.add('dreht'); drehUhr = setTimeout(gedreht, dauer + 80); }
+      buch.classList.toggle('offen', an);
+      knopf.setAttribute('aria-expanded', an ? 'true' : 'false');
+      if (an) obj.removeAttribute('inert'); else obj.setAttribute('inert', '');
+      if (still) { getComputedStyle(deckel).transform; deckel.style.transitionDuration = ''; }
+      if (fokus) (an ? erster : knopf).focus({ preventScroll: true });
     }
-    ort();
-    if (schmal.addEventListener) schmal.addEventListener('change', ort); else if (schmal.addListener) schmal.addListener(ort);
+    knopf.addEventListener('click', function () { auf(true, true); });
+    var warDrin = false;
+    obj.addEventListener('pointerdown', function () { warDrin = obj.contains(document.activeElement); }, true);
+    obj.querySelector('.innen').addEventListener('click', function (e) {
+      if (e.target.closest('a') || !offen()) return;
+      auf(false, warDrin || obj.contains(document.activeElement));
+      warDrin = false;
+    });
+    obj.addEventListener('focusin', function () { if (!offen()) auf(true, false, true); });
+    buch.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      var ziel = a && document.getElementById(a.getAttribute('href').slice(1));
+      var titel = ziel && ziel.querySelector('.titel[tabindex="-1"]');
+      if (titel) requestAnimationFrame(function () { titel.focus({ preventScroll: true }); });
+    });
+    if (!gross || !window.matchMedia) return;
+    var schmal = window.matchMedia('(max-width: 62rem)'), zuletzt = null;
+    document.addEventListener('focusin', function (e) {
+      zuletzt = buch.contains(e.target) || gross.contains(e.target) ? e.target : null;
+    });
+    document.addEventListener('focusout', function (e) {
+      if (e.target === zuletzt && e.target.getClientRects().length) zuletzt = null;
+    });
+    var gleich = function (wo, el) {
+      var h = el && el.getAttribute && el.getAttribute('href');
+      return (h && wo.querySelector('a[href="' + h + '"]')) || wo.querySelector('a');
+    };
+    function wechsel() {
+      var a = document.activeElement;
+      if (!a || a === document.body || a === document.documentElement) a = zuletzt;
+      if (!a) return;
+      if (schmal.matches && gross.contains(a)) { auf(true, false, true); gleich(obj, a).focus({ preventScroll: true }); }
+      else if (!schmal.matches && buch.contains(a)) gleich(gross, a).focus({ preventScroll: true });
+    }
+    if (schmal.addEventListener) schmal.addEventListener('change', wechsel); else if (schmal.addListener) schmal.addListener(wechsel);
   })();
 </script>
 </section>

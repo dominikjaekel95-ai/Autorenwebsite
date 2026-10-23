@@ -32,6 +32,7 @@ document.documentElement.classList.add('js');
 <link rel="stylesheet" href="stil.css">
 <style>
 .einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 3); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
+.globusseite > .einstieg { max-width: min(100%, var(--mass)); min-width: 0; overflow-wrap: break-word; }
 .einstieg.gesetzt .glied-satz, .einstieg .paar { white-space: nowrap; }
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
@@ -231,18 +232,52 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     el.appendChild(vorlesen);
     el.appendChild(satz);
     var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
+    function laengstes() {
+      var links = el.getBoundingClientRect().left + el.clientLeft + (parseFloat(getComputedStyle(el).paddingLeft) || 0);
+      var rechts = links;
+      glieder.forEach(function (g) { rechts = Math.max(rechts, g.getBoundingClientRect().right); });
+      return rechts - links;
+    }
+    var masse = '';
+    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
     function setzen() {
+      anpassen();
+      masse = mass();
+    }
+    function anpassen() {
       el.style.fontSize = '';
       el.classList.add('gesetzt');
       var breite = el.clientWidth;
       if (!breite) return;
-      var laengste = 0;
-      glieder.forEach(function (g) { laengste = Math.max(laengste, g.getBoundingClientRect().width); });
-      if (laengste <= breite) return;
-      var jetzt = parseFloat(getComputedStyle(el).fontSize);
-      var kleiner = Math.floor(jetzt * breite / laengste * 10) / 10 - .2;
-      if (kleiner >= (breit() ? 28.5 : 20.7)) el.style.fontSize = kleiner + 'px';
-      else el.classList.remove('gesetzt');
+      var unten = breit() ? 28.5 : 20.7;
+      var stufen = [
+        { ziel: Math.min(breite * .97, breite - 6), boden: unten },
+        { ziel: breite - 2, boden: unten },
+        { ziel: breite - 2, boden: Math.round(unten * .92 * 10) / 10 }
+      ];
+      var gesetzt = parseFloat(getComputedStyle(el).fontSize);
+      for (var st = 0; st < stufen.length; st++) {
+        var ziel = stufen[st].ziel, boden = stufen[st].boden;
+        for (var n = 0; n <= 3; n++) {
+          var lang = laengstes();
+          if (lang <= ziel) return;
+          if (n === 3 || gesetzt <= boden) break;
+          var kleiner = Math.floor(gesetzt * ziel / lang * 10) / 10;
+          if (kleiner >= gesetzt) kleiner = Math.round((gesetzt - .1) * 10) / 10;
+          if (kleiner < boden) kleiner = boden;
+          el.style.fontSize = kleiner + 'px';
+          gesetzt = kleiner;
+        }
+      }
+      el.classList.remove('gesetzt');
+      el.style.fontSize = '';
+      if (laengstes() > breite) el.style.fontSize = unten + 'px';
+    }
+    var bild = 0;
+    function nachsetzen() {
+      if (bild) return;
+      var los = function () { bild = 0; setzen(); };
+      bild = window.requestAnimationFrame ? window.requestAnimationFrame(los) : setTimeout(los, 16);
     }
     function imFell(ms) {
       if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
@@ -291,6 +326,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
           w.style.filter = s > .06 ? 'url(#einstieg-flug-' + i + ')' : '';
         });
         if (offen) requestAnimationFrame(schritt);
+        else setzen();
       })();
     }
     if (still()) setzen();
@@ -301,15 +337,28 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       if (da && !still()) einfliegen();
     });
     if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
-    var warte = 0, breiteVorher = window.innerWidth;
-    window.addEventListener('resize', function () {
-      clearTimeout(warte);
-      warte = setTimeout(function () {
-        if (window.innerWidth === breiteVorher) return;
-        breiteVorher = window.innerWidth;
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(nachsetzen).catch(function () {});
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', nachsetzen);
+    window.addEventListener('load', nachsetzen);
+    if (window.ResizeObserver) {
+      var beobachter = new ResizeObserver(function () {
+        if (mass() === masse) return;
         setzen();
-      }, 140);
-    });
+        beobachter.disconnect();
+        requestAnimationFrame(beobachten);
+      });
+      var beobachten = function () {
+        beobachter.observe(el);
+        woerter.forEach(function (w) { beobachter.observe(w); });
+      };
+      beobachten();
+    } else {
+      var warte = 0;
+      window.addEventListener('resize', function () {
+        clearTimeout(warte);
+        warte = setTimeout(function () { if (mass() !== masse) setzen(); }, 140);
+      });
+    }
   })();
 </script>
   <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="/vita">Vita</a>.</p>

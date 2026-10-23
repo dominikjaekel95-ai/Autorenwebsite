@@ -641,6 +641,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   const WERK_GERADE = ['erzaehlungen', 'laender'];
   const NACHTTISCH = BUECHER.filter(b => b.r === 'gerade');
   const farbe = b => (F.buch && typeof F.buch.farbe === 'function' ? F.buch.farbe(b) : null);
+  const einStapel = () => window.matchMedia('(max-width: 40rem)').matches;
   function werkName(id) {
     const w = (I.werke || []).find(x => x.id === id);
     if (!w) return '';
@@ -651,22 +652,37 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const platz = regalFlaeche.parentElement.clientWidth;
     if (!platz) return;
     bzRegal.schliessen();
+    const allein = einStapel();
     const liegend = NACHTTISCH.map(b => ({ b, breite: b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185, dicke: (b.p || 250) * .06 + (b.b === 'h' ? 5 : 1) }));
     const stapel = [[], []], hoch = [0, 0];
     liegend.slice().sort((p, q) => q.dicke - p.dicke).forEach(s => { const i = hoch[0] <= hoch[1] ? 0 : 1; stapel[i].push(s); hoch[i] += s.dicke; });
     if (hoch[1] > hoch[0]) { stapel.reverse(); hoch.reverse(); }
+    if (allein) { stapel.shift(); hoch.shift(); }
     stapel.forEach(st => st.sort((p, q) => q.breite - p.breite || q.dicke - p.dicke));
     let x = 0, lehne = null;
     EIGEN.forEach(e => { x += e.vor; e.x = x; e.neigt = !!e.lehnt; if (e.neigt) lehne = { rechts: x + e.d, h: e.h, rad: e.lehnt * Math.PI / 180 }; x += e.d; });
     const breiteVon = st => st.length ? Math.max(...st.map(s => s.breite)) : 0;
     const kontakt = lehne.h * Math.cos(lehne.rad);
-    const x1 = !stapel[0].length ? lehne.rechts + 20 : hoch[0] >= kontakt ? lehne.rechts + lehne.h * Math.sin(lehne.rad) + .6 : lehne.rechts + hoch[0] * Math.tan(lehne.rad) + .6;
-    const LUFT = 24, LUFT_PX = 14, RECHTS = 3, RECHTS_PX = 13, ohneLuft = x1 + breiteVon(stapel[0]) + breiteVon(stapel[1]);
-    let m = Math.min(.86, (platz - 2) / (ohneLuft + LUFT + RECHTS));
-    for (let k = 0; k < 3; k++) m = Math.min(.86, (platz - 2 - Math.max(LUFT * m, LUFT_PX) - Math.max(RECHTS * m, RECHTS_PX)) / ohneLuft);
-    const x2 = x1 + breiteVon(stapel[0]) + Math.max(LUFT, LUFT_PX / m), gesamt = x2 + breiteVon(stapel[1]) + Math.max(RECHTS, RECHTS_PX / m);
-    const px = v => (v * m).toFixed(1) + 'px';
-    const schriftEigen = Math.min(13, m * 12.5), schriftLiegend = Math.min(13, m * 11.5);
+    const LUFT = 24, LUFT_PX = 14, RECHTS = 3, RECHTS_PX = 13;
+    let m, ms, sx, breitePx;
+    if (allein) {
+      m = Math.min(.86, (platz - 2) / (x + 1));
+      const vorn = lehne.rechts * m + .6 * m, frei = platz - 2 - RECHTS_PX - vorn, br = breiteVon(stapel[0]);
+      ms = Math.min(m, frei / (br + hoch[0] * Math.tan(lehne.rad)));
+      if (hoch[0] * ms >= kontakt * m) ms = Math.min(m, (frei - lehne.h * m * Math.sin(lehne.rad)) / br);
+      const x1 = hoch[0] * ms >= kontakt * m ? vorn + lehne.h * m * Math.sin(lehne.rad) : vorn + hoch[0] * ms * Math.tan(lehne.rad);
+      sx = [x1];
+      breitePx = x1 + br * ms + Math.max(RECHTS * ms, RECHTS_PX);
+    } else {
+      const x1 = !stapel[0].length ? lehne.rechts + 20 : hoch[0] >= kontakt ? lehne.rechts + lehne.h * Math.sin(lehne.rad) + .6 : lehne.rechts + hoch[0] * Math.tan(lehne.rad) + .6;
+      const ohneLuft = x1 + breiteVon(stapel[0]) + breiteVon(stapel[1]);
+      m = Math.min(.86, (platz - 2) / (ohneLuft + LUFT + RECHTS));
+      for (let k = 0; k < 3; k++) m = Math.min(.86, (platz - 2 - Math.max(LUFT * m, LUFT_PX) - Math.max(RECHTS * m, RECHTS_PX)) / ohneLuft);
+      const x2 = x1 + breiteVon(stapel[0]) + Math.max(LUFT, LUFT_PX / m), gesamt = x2 + breiteVon(stapel[1]) + Math.max(RECHTS, RECHTS_PX / m);
+      ms = m; sx = [x1 * m, x2 * m]; breitePx = gesamt * m;
+    }
+    const px = v => (v * m).toFixed(1) + 'px', pxs = v => (v * ms).toFixed(1) + 'px';
+    const schriftEigen = Math.min(13, m * 12.5), schriftLiegend = Math.min(13, (allein ? m : ms) * 11.5);
     let html = '';
     const KONTUR = .75;
     let schub = 0;
@@ -676,18 +692,18 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       const text = schriftEigen >= 9 ? `<span style="font-size:${schriftEigen.toFixed(1)}px">${esc(e.t)}</span>` : '';
       html += `<button type="button" class="stueck eigen dunkel" data-werk="${e.id}" aria-label="${esc(e.t)}" style="left:${links.toFixed(2)}px;width:${px(e.d)};height:${px(e.h)}${e.neigt ? `;--neig:${e.lehnt}deg` : ''}">${text}</button>`;
     });
-    [x1, x2].forEach((sx, k) => {
+    sx.forEach((links, k) => {
       let y = 0;
       stapel[k].forEach((s, n) => {
         const b = s.b, i = BUECHER.indexOf(b), f = farbe(b);
-        const text = schriftLiegend >= 9 && s.dicke * m >= schriftLiegend + 4 ? `<span style="font-size:${schriftLiegend.toFixed(1)}px">${esc(b.nn || b.autor)}<span class="leer">&ensp;</span>${esc(F.buch.titelKurz(b.t))}</span>` : '';
+        const text = schriftLiegend >= 9 && s.dicke * ms >= schriftLiegend + 4 ? `<span style="font-size:${schriftLiegend.toFixed(1)}px">${esc(b.nn || b.autor)}<span class="leer">&ensp;</span>${esc(F.buch.titelKurz(b.t))}</span>` : '';
         const ton = f ? `;background:${f.grund};color:${f.tinte}` : '';
-        html += `<button type="button" class="stueck liegt${f && f.dunkel ? ' dunkel' : ''}" data-buch="${i}" aria-label="${esc(b.autor + ', ' + b.t)}" style="left:${px(sx)};bottom:${(y * m - n * KONTUR).toFixed(2)}px;width:${px(s.breite)};height:${px(s.dicke)}${ton}">${text}</button>`;
+        html += `<button type="button" class="stueck liegt${f && f.dunkel ? ' dunkel' : ''}" data-buch="${i}" aria-label="${esc(b.autor + ', ' + b.t)}" style="left:${links.toFixed(1)}px;bottom:${(y * ms - n * KONTUR).toFixed(2)}px;width:${pxs(s.breite)};height:${pxs(s.dicke)}${ton}">${text}</button>`;
         y += s.dicke;
       });
     });
-    regalFlaeche.style.height = Math.ceil(Math.max(hoch[0], hoch[1], 222) * m + 2) + 'px';
-    regalFlaeche.style.width = Math.ceil(gesamt * m) + 'px';
+    regalFlaeche.style.height = Math.ceil((allein ? Math.max(hoch[0] * ms, 222 * m) : Math.max(hoch[0], hoch[1], 222) * m) + 2) + 'px';
+    regalFlaeche.style.width = Math.ceil(breitePx) + 'px';
     regalFlaeche.innerHTML = html;
     $$('.stueck.liegt > span', regalFlaeche).forEach(sp => {
       if (sp.scrollWidth <= sp.clientWidth) return;

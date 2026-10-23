@@ -5,11 +5,12 @@ Stand: 23. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es
 ## Entscheidungen, die offen sind
 
 - [x] **Dominik:** Weiße Fläche am Desktop, Startseite: entschieden für „7 und 6“ (23. Oktober, V75; https://claude.ai/artifact/93qkfHP2cNbTVKNXeptcKt), mit der Unterschrift „Meine Projekte und was auf dem Nachttisch liegt“ und auf dem Telefon dem ganzen Regal. Eingebaut in `website-c/index.html` (Änderungsprotokoll, 23. Oktober).
-- [ ] **Dominik:** *Satoshi*: das Inhaltsverzeichnis als Buch (V76). Fünf Varianten zum Ausprobieren: https://claude.ai/artifact/AKzeEDR9G7EskUYjsJ1afc (Begründung und Empfehlung: https://claude.ai/artifact/NiUCVfu3Xt98sgH982QaBQ, `docs/satoshi-buch.md`; empfohlen Variante 4, zweite Wahl Variante 2). Danach baut Claude die Wahl in `website-c/satoshi.html` ein. Offen dabei: Auf dem Telefon ist das Verzeichnis während des Einspielers am Globus verdeckt; soll es dort immer direkt unter der Tafel stehen?
+- [x] **Dominik:** *Satoshi*: das Inhaltsverzeichnis als Buch (V76): entschieden für Variante 5, das Buch zum Umblättern, mit einem Zeichen unter jedem Kapitel und langsamem Erscheinen nach dem Aufhänger (23. Oktober, V77). Eingebaut in `website-c/satoshi.html` (Änderungsprotokoll, 23. Oktober); auf dem Telefon steht das Buch jetzt immer sichtbar unter der Tafel.
 - [ ] **Dominik:** Abstände und Gliederung der Startseite unterhalb des ersten Bildschirms (`docs/startseite-rhythmus.md`, Empfehlung: Variante 1 mit Legende und Fuß aus Variante 2), passend zur Wahl oben.
 
 ## Vor dem Livegang
 
+- [ ] **Dominik:** *Satoshi* auf einem iPhone (Safari): das Buch umblättern (Tipp rechts und links, Wischen) und alle sechs Einträge antippen, einmal mit und einmal ohne „Bewegung reduzieren“ (Einstellungen › Bedienungshilfen › Bewegung). Geprüft ist das bisher nur in Chrome; zu achten ist auf ein Flackern beim Umschlagen, auf Text, der durch ein Blatt scheint, und darauf, dass jeder Tipp auf einen Eintrag zum richtigen Abschnitt springt.
 - [ ] **Dominik:** Domain dominikjaekel.de prüfen und kaufen, mit Vercel verbinden (`docs/vercel-einrichtung.md`, Schritte 1 bis 3).
 - [ ] **Dominik:** Angaben zu Vercel für die Datenschutzerklärung aus der anderen Sitzung (Schritt 4: Anschrift, Data Privacy Framework, Standardvertragsklauseln, Auftragsverarbeitungsvertrag, Server-Logs).
 - [ ] **Dominik:** Tarif Pro oder Hobby. Empfehlung: Pro, weil der Auftragsverarbeitungsvertrag nur Pro und Enterprise nennt.

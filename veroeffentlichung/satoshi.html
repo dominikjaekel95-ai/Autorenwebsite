@@ -42,6 +42,48 @@ document.documentElement.classList.add('js');
 .vorspann.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 1.2s forwards; }
 @keyframes einstieg-notfall { to { opacity: 1; } }
 html:not(.js) .globusseite > .globus { display: none; }
+.blaetterbuch .flaeche-deckel, .blaetterbuch .schnitt, .blaetterbuch .vignette { display: none; }
+.blaetterbuch .inhalt { list-style: none; font-size: var(--g-text); line-height: var(--z); hyphens: manual; -webkit-hyphens: manual; }
+.blaetterbuch .inhalt li { padding-left: 1em; text-indent: -1em; }
+@media (min-width: 62.0625rem) { .globusseite > .inhaltsbuch { grid-row: 3; margin-top: var(--z-zwei); } }
+@media (min-width: 62.0625rem) and (max-height: 56.1875rem) { .globusseite > .inhaltsbuch { margin-top: var(--z); } }
+@media (max-width: 62rem) { .globusseite > .inhaltsbuch { margin-top: var(--z); } }
+html.js .blaetterbuch { --s-h: calc(var(--z) * 6); --s-b: calc(var(--z) * 5); --pad-x: var(--z-viertel); --pad-o: var(--z-halb); --b-g: var(--g-klein); --b-zh: var(--zh-klein); --vig: calc(var(--z) * 2); }
+@media (min-width: 62.0625rem) and (max-height: 49.9375rem) { html.js .blaetterbuch { --s-h: calc(var(--z) * 5.75); --vig: calc(var(--z) * 1.75); } }
+@media (min-width: 62.0625rem) and (min-height: 50rem) { html.js .blaetterbuch { --s-h: calc(var(--z) * 6.5); } }
+@media (min-width: 62.0625rem) and (min-height: 56.25rem) { html.js .blaetterbuch { --s-h: calc(var(--z) * 9); --s-b: calc(var(--z) * 6.75); --pad-x: var(--z-halb); --pad-o: var(--z); --b-g: var(--g-text); --b-zh: var(--z); --vig: calc(var(--z) * 2.5); } }
+@media (max-width: 62rem) { html.js .blaetterbuch { --s-b: calc(var(--z) * 5.25); } }
+html.js .blaetterbuch .buchobjekt { position: relative; width: calc(var(--s-b) * 2); height: var(--s-h); perspective: 1600px; touch-action: pan-y pinch-zoom; font-size: var(--b-g); line-height: var(--b-zh); -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+html.js .blaetterbuch .inhalt { font-size: inherit; line-height: inherit; }
+html.js .blaetterbuch .flaeche-deckel { display: block; }
+html.js .blaetterbuch .recto, html.js .blaetterbuch .verso {
+  position: absolute; top: 0; width: var(--s-b); height: 100%; box-sizing: border-box; padding: var(--pad-o) var(--pad-x) 0;
+  text-indent: 0; background: var(--papier); box-shadow: inset 0 0 0 1px var(--karte-kueste);
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  transition: transform 480ms cubic-bezier(.45, 0, .25, 1); text-wrap: balance; cursor: pointer;
+}
+html.js .blaetterbuch .recto { left: var(--s-b); transform-origin: left center; transform: rotateY(var(--w, 0deg)); }
+html.js .blaetterbuch .verso { left: 0; transform-origin: right center; transform: rotateY(calc(var(--w, 0deg) + 180deg)); }
+html.js .blaetterbuch .verso { box-shadow: inset 1px 0 0 var(--karte-kueste), inset 0 1px 0 var(--karte-kueste), inset 0 -1px 0 var(--karte-kueste); }
+html.js .blaetterbuch .gewendet { --w: -180deg; }
+html.js .blaetterbuch .flaeche-deckel { background: var(--tinte); color: var(--papier); box-shadow: none; }
+html.js .blaetterbuch .fest, html.js .blaetterbuch[data-stand="1"] .verso[data-blatt="0"] { cursor: default; }
+html.js .blaetterbuch[data-stand="0"] .flaeche-deckel:hover { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); }
+html.js .blaetterbuch .inhalt a { display: block; width: fit-content; max-width: 100%; cursor: pointer; }
+html.js .blaetterbuch .eintrag { display: block; min-height: var(--titel-h, 0); }
+html.js .blaetterbuch .vignette { display: block; width: var(--vig); height: var(--vig); margin-top: var(--z-halb); overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: butt; stroke-linejoin: miter; }
+html.js .blaetterbuch .vignette * { vector-effect: non-scaling-stroke; }
+html.js .blaetterbuch .vignette .voll { fill: currentColor; stroke: none; }
+html.js .blaetterbuch .vignette .grund { fill: var(--papier); }
+html.js .blaetterbuch .vignette .perl { stroke-dasharray: 1 2.2; }
+html.js .blaetterbuch .schnitt { display: flex; position: absolute; top: 0; height: 100%; width: 4px; box-sizing: border-box; gap: 1px; pointer-events: none; }
+html.js .blaetterbuch .schnitt.links { left: -4px; flex-direction: row-reverse; padding-right: 1px; }
+html.js .blaetterbuch .schnitt.rechts { right: -4px; padding-left: 1px; }
+html.js .blaetterbuch .schnitt i { display: none; width: 1px; flex: none; background: var(--karte-kueste); }
+html.js .blaetterbuch [data-schnitt="1"] .rechts i, html.js .blaetterbuch [data-schnitt="3"] .links i,
+html.js .blaetterbuch [data-schnitt="2"] .schnitt i:first-child { display: block; }
+@media (prefers-reduced-motion: reduce) { html.js .blaetterbuch .recto, html.js .blaetterbuch .verso { transition: none; } }
+html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
 .buch { display: flex; flex-direction: column; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
 .buch section { max-width: var(--mass); margin-top: var(--z-zwei); }
 .buch .rechts { display: contents; }
@@ -51,6 +93,8 @@ html:not(.js) .globusseite > .globus { display: none; }
 .buch .figuren { order: 4; }
 .buch .frage { order: 5; }
 .buch .machart { order: 6; }
+.buch section { scroll-margin-top: var(--z); }
+.buch .titel[tabindex="-1"]:focus { outline: none; }
 .tage { list-style: none; margin-top: var(--z-dreiviertel); }
 .tage li { display: grid; grid-template-columns: 3em 7.5em minmax(0, 1fr); }
 .tage li + li { margin-top: var(--z-viertel); }
@@ -114,6 +158,8 @@ html:not(.js) .globusseite > .globus { display: none; }
     var LUECKE = /[ \t\r\n]+/;
     var saetze = Array.prototype.map.call(el.querySelectorAll('.glied-satz'), function (g) { return g.textContent.trim().split(LUECKE).join(' '); });
     var glieder = [], woerter = [], gebaut = null;
+    var stehtJetzt = function () {};
+    el.steht = new Promise(function (r) { stehtJetzt = r; });
     function aufbauen() {
       var b = breit();
       if (b === gebaut) return;
@@ -200,7 +246,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     }
     var VERSATZ = 28, PAUSE = 70, DAUER = 360;
     function einfliegen() {
-      if (!woerter[0].animate) return;
+      if (!woerter[0].animate) { stehtJetzt(); return; }
       filterAnlegen();
       var em = parseFloat(getComputedStyle(el).fontSize) || 38;
       var t = 0, laeufe = [];
@@ -215,6 +261,7 @@ html:not(.js) .globusseite > .globus { display: none; }
           ], { duration: DAUER, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
         });
       });
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(stehtJetzt, stehtJetzt);
       (function schritt() {
         var offen = false;
         laeufe.forEach(function (a, i) {
@@ -234,9 +281,9 @@ html:not(.js) .globusseite > .globus { display: none; }
       imFell(600).then(function (da) {
         setzen();
         el.classList.remove('wartet');
-        if (da && breit() && !still()) einfliegen();
+        if (da && breit() && !still()) einfliegen(); else stehtJetzt();
       });
-    } else setzen();
+    } else { setzen(); stehtJetzt(); }
     nachSchrift();
     var warte = 0, breiteVorher = window.innerWidth;
     window.addEventListener('resize', function () {
@@ -252,18 +299,178 @@ html:not(.js) .globusseite > .globus { display: none; }
   })();
 </script>
 
+  
+  <nav class="inhaltsbuch blaetterbuch" id="inhaltsbuch" aria-label="Auf dieser Seite" data-stand="1">
+    <div class="buchobjekt" data-schnitt="1">
+      <div class="flaeche-deckel recto gewendet" data-blatt="0" aria-hidden="true"><span>Satoshi</span></div>
+      <ol class="inhalt wahlliste" role="list">
+        <li class="verso gewendet" data-blatt="0"><a href="#klappentext"><span class="eintrag">Klappentext</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><path d="M22.5 8.5H46.5V47.5H22.5Z"/><path d="M22.5 8.5L10.5 11.5V44.5L22.5 47.5"/><path class="perl" d="M14 19.5H19.5M14 23.5H19.5M14 27.5H19.5M14 31.5H17.5"/><path d="M28.5 18.5H40.5M31 22.5H38"/></svg></a></li>
+        <li class="recto" data-blatt="1"><a href="#eckdaten"><span class="eintrag">Eckdaten</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><path d="M4.5 30.5H51.5M4.5 24.5V36.5M51.5 24.5V36.5"/><path d="M8.5 30.5V33M12.5 30.5V33M16.5 30.5V33M20.5 30.5V33M24.5 30.5V33M32.5 30.5V33M36.5 30.5V33M40.5 30.5V33M44.5 30.5V33M48.5 30.5V33"/><path class="voll" d="M28.5 28H40.5V30.5H28.5Z"/></svg></a></li>
+        <li class="verso" data-blatt="1"><a href="#bau"><span class="eintrag">Gebaut wie ein Protokoll</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><path d="M3.5 18.5H15.5V37.5H3.5ZM22 18.5H34V37.5H22ZM40.5 18.5H52.5V37.5H40.5Z"/><path d="M3.5 23.5H15.5M22 23.5H34M40.5 23.5H52.5"/><path d="M15.5 21H22M34 21H40.5"/><path class="perl" d="M6 28.5H13M6 32H11M24.5 28.5H31.5M24.5 32H29.5M43 28.5H50M43 32H48"/></svg></a></li>
+        <li class="recto" data-blatt="2"><a href="#figuren"><span class="eintrag">Die Figuren</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><circle cx="28" cy="20" r="10.5"/><circle cx="20.6" cy="33" r="10.5"/><circle cx="35.4" cy="33" r="10.5"/><circle class="voll" cx="28" cy="28.6" r="1.7"/></svg></a></li>
+        <li class="verso" data-blatt="2"><a href="#frage"><span class="eintrag">Die Frage hinter dem Roman</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><defs><clipPath id="vignette-frage-l"><path d="M0 0H28.5L27 14.5L30 19L26.5 23.5L27.5 30.5L25 33.5L28.5 40L27 56H0Z"/></clipPath><clipPath id="vignette-frage-r"><path d="M56 0H28.5L27 14.5L30 19L26.5 23.5L27.5 30.5L25 33.5L28.5 40L27 56H56Z"/></clipPath></defs><g transform="rotate(-4 28 46) translate(-1.5 0)"><g clip-path="url(#vignette-frage-l)"><circle cx="28" cy="28" r="17"/><circle class="perl" cx="28" cy="28" r="14.2"/></g><path d="M28.6 11L27 14.5L30 19L26.5 23.5L27.5 30.5L25 33.5L28.5 40L27.4 45"/></g><g transform="rotate(3 28 46) translate(1.5 0)"><g clip-path="url(#vignette-frage-r)"><circle cx="28" cy="28" r="17"/><circle class="perl" cx="28" cy="28" r="14.2"/></g><path d="M28.6 11L27 14.5L30 19L26.5 23.5L27.5 30.5L25 33.5L28.5 40L27.4 45"/></g></svg></a></li>
+        <li class="recto fest"><a href="#machart"><span class="eintrag">Wie er gemacht ist</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><path d="M13.5 5.5H42.5V50.5H13.5Z"/><path class="perl" d="M18 12.5H38M18 16.5H38M18 20.5H34M18 38.5H38M18 42.5H38M18 46.5H30"/><g transform="rotate(-4 28 29)"><path class="grund" d="M7.5 24.5H48.5V33.5H7.5Z"/><path d="M12 29H40"/></g></svg></a></li>
+      </ol>
+      <span class="schnitt links" aria-hidden="true"><i></i><i></i></span><span class="schnitt rechts" aria-hidden="true"><i></i><i></i></span>
+    </div>
+  </nav>
+  <script>
+  (function () {
+    'use strict';
+    var buch = document.getElementById('inhaltsbuch');
+    var obj = buch && buch.querySelector('.buchobjekt');
+    if (!obj) return;
+    var flaechen = Array.prototype.slice.call(obj.querySelectorAll('.recto, .verso'));
+    var lis = Array.prototype.slice.call(obj.querySelectorAll('.inhalt li'));
+    var eintraege = Array.prototype.slice.call(obj.querySelectorAll('.eintrag'));
+    var ruhig = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+    var stand = +buch.dataset.stand || 0, DAUER = 480, FOLGE = 90, schnittWarte = 0;
+    var doppelVon = function (i) { return (i >> 1) + 1; };
+    var blatt = function (f) { return f.dataset.blatt === undefined ? null : +f.dataset.blatt; };
+    flaechen.forEach(function (f) {
+      var k = blatt(f);
+      f.style.zIndex = k === null ? 1 : (f.classList.contains('recto') ? 10 - k : 10 + k);
+    });
+    function sichtbar() {
+      flaechen.forEach(function (f) {
+        var k = blatt(f), oben;
+        if (f.classList.contains('verso')) oben = k === stand - 1;
+        else oben = k === null ? stand === 3 : k === stand;
+        f.style.pointerEvents = oben ? '' : 'none';
+      });
+    }
+    function setzen(neu, fokus, ohneDrehung) {
+      neu = Math.max(0, Math.min(3, neu));
+      if (neu === stand) return;
+      var alt = stand, still = ohneDrehung || ruhig();
+      stand = neu; buch.dataset.stand = neu;
+      flaechen.forEach(function (f) {
+        var k = blatt(f);
+        if (k === null) return;
+        f.classList.toggle('gewendet', stand > k);
+        f.style.transitionDuration = still ? '0ms' : '';
+        f.style.transitionDelay = still ? '0ms' : Math.abs(neu > alt ? k - alt : alt - 1 - k) * FOLGE + 'ms';
+      });
+      sichtbar();
+      clearTimeout(schnittWarte);
+      var schnitt = function () { obj.dataset.schnitt = stand; };
+      if (still) schnitt(); else schnittWarte = setTimeout(schnitt, DAUER + (Math.abs(neu - alt) - 1) * FOLGE);
+      if (fokus && stand > 0) lis[(stand - 1) * 2].querySelector('a').focus({ preventScroll: true });
+    }
+    sichtbar();
+    function titelRaum() {
+      obj.style.removeProperty('--titel-h');
+      var h = 0;
+      eintraege.forEach(function (e) { h = Math.max(h, e.offsetHeight); });
+      if (h) obj.style.setProperty('--titel-h', h + 'px');
+    }
+    titelRaum();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(titelRaum);
+    var warte = 0;
+    window.addEventListener('resize', function () { clearTimeout(warte); warte = setTimeout(titelRaum, 120); });
+    var wisch = null, gewischt = -1e9;
+    obj.addEventListener('click', function (e) {
+      if (performance.now() - gewischt < 150) { e.preventDefault(); e.stopPropagation(); return; }
+      if (e.target.closest('a')) return;
+      var r = obj.getBoundingClientRect(), vor = e.clientX >= r.left + r.width / 2;
+      if (vor || stand !== 1) setzen(stand + (vor ? 1 : -1));
+    }, true);
+    obj.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      wisch = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    });
+    window.addEventListener('pointerup', function (e) {
+      if (!wisch || e.pointerId !== wisch.id) return;
+      var dx = e.clientX - wisch.x, dy = e.clientY - wisch.y;
+      wisch = null;
+      if (Math.abs(dx) > 32 && Math.abs(dx) > Math.abs(dy)) { gewischt = performance.now(); setzen(stand + (dx < 0 ? 1 : -1)); }
+    });
+    window.addEventListener('pointercancel', function () { wisch = null; });
+    obj.addEventListener('focusin', function (e) {
+      var i = lis.indexOf(e.target.closest('li'));
+      if (i >= 0) setzen(doppelVon(i), false, true);
+    });
+    obj.addEventListener('keydown', function (e) {
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); setzen(stand + 1, true); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); setzen(Math.max(1, stand - 1), true); }
+    });
+    buch.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      var ziel = a && document.getElementById(a.getAttribute('href').slice(1));
+      var titel = ziel && ziel.querySelector('.titel[tabindex="-1"]');
+      if (titel) requestAnimationFrame(function () { titel.focus({ preventScroll: true }); });
+    });
+  })();
+</script>
+  <script>
+  (function () {
+    'use strict';
+    var buch = document.getElementById('inhaltsbuch');
+    if (!buch || !buch.animate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var PAUSE = 800, DAUER = 1400, WEG = 8;
+    var frei = false, gesehen = false, fertig = false, laeufe = [];
+    var schmal = function () { return window.matchMedia('(max-width: 62rem)').matches; };
+    buch.classList.add('wartet');
+    function erscheinen() {
+      if (fertig || !frei || !(gesehen || !schmal())) return;
+      fertig = true;
+      buch.classList.remove('wartet');
+      laeufe = [
+        buch.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DAUER, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
+        buch.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: DAUER, easing: 'cubic-bezier(.22, .7, .28, 1)' })
+      ];
+    }
+    function sofort() {
+      fertig = true;
+      buch.classList.remove('wartet');
+      laeufe.forEach(function (a) { a.finish(); });
+    }
+    buch.addEventListener('focusin', sofort);
+    var auf = document.getElementById('aufhaenger');
+    var steht = auf && auf.steht ? auf.steht : Promise.resolve();
+    Promise.race([steht, new Promise(function (r) { setTimeout(r, 3000); })]).then(function () {
+      setTimeout(function () { frei = true; erscheinen(); }, PAUSE);
+    });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (e) {
+        if (!e.some(function (x) { return x.isIntersecting; })) return;
+        gesehen = true; io.disconnect(); erscheinen();
+      }, { rootMargin: '0px 0px -10% 0px' });
+      io.observe(buch);
+    } else gesehen = true;
+  })();
+</script>
+
   <figure class="globus" id="globus">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <p class="hinweis" hidden></p>
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Schauplätze stehen auf der Tafel, mit ihren Koordinaten.</p>
     <div class="tafel" id="tafel" aria-live="off"></div>
   </figure>
+  <script>
+  (function () {
+    'use strict';
+    var buch = document.getElementById('inhaltsbuch'), kugel = document.getElementById('globus');
+    if (!buch || !kugel || !window.matchMedia) return;
+    var schmal = window.matchMedia('(max-width: 62rem)');
+    function ort() {
+      var dahinter = schmal.matches;
+      if (dahinter ? kugel.nextElementSibling === buch : buch.compareDocumentPosition(kugel) & Node.DOCUMENT_POSITION_FOLLOWING) return;
+      var fokus = buch.contains(document.activeElement) ? document.activeElement : null;
+      kugel.parentNode.insertBefore(buch, dahinter ? kugel.nextSibling : kugel);
+      if (fokus) fokus.focus({ preventScroll: true });
+    }
+    ort();
+    if (schmal.addEventListener) schmal.addEventListener('change', ort); else if (schmal.addListener) schmal.addListener(ort);
+  })();
+</script>
 </section>
 
 
 <div class="buch" id="buch">
   <section class="klapp" id="klappentext" aria-labelledby="klapp-titel">
-    <h2 class="titel" id="klapp-titel">Klappentext</h2>
+    <h2 class="titel" id="klapp-titel" tabindex="-1">Klappentext</h2>
     <div class="prosa">
       <p><i>Satoshi</i> erzählt die Gründungslegende von Bitcoin als Liebesgeschichte dreier Menschen, die einander nicht vertrauen können&nbsp;– und die deshalb Geld bauen, das ohne Vertrauen funktioniert.</p>
       <p>Jeder von ihnen baut an der Maschine, um etwas nicht tun zu müssen. Lana, die Ökonomin, deren Familie der argentinische Staat 2001 über Nacht enteignet hat, muss sich nicht entscheiden&nbsp;– zwischen zwei Männern, zwei Kontinenten und zwei Leben&nbsp;–, solange die Arbeit am Projekt sie davon abhält. Arthur, ein Kryptograph, der beim Zusammenbruch der UdSSR heimatlos wurde, muss nichts fühlen, solange er im Code versinkt. Samuel, ein Quant an der Wall Street, dessen Vater an der Finanzkrise zerbricht, muss niemandem mehr vertrauen, solange er nur die Mathematik kontrolliert.</p>
@@ -275,7 +482,7 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   <div class="rechts">
     <section class="eckdaten" id="eckdaten" aria-labelledby="eck-titel">
-      <h2 class="titel" id="eck-titel">Eckdaten</h2>
+      <h2 class="titel" id="eck-titel" tabindex="-1">Eckdaten</h2>
       <div class="prosa">
         <p>Debütroman. Personal erzählt, aus der Sicht Lanas und kontrapunktisch aus der Samuels. Prolog 2001, Kernhandlung 2007 bis 2010, Epilog 2013.</p>
         <p><a href="/vita">Dominik Jäkel</a>, geboren 1995 in Dortmund, studierte Liberal Arts &amp; Sciences in Freiburg und IT-Systems Engineering am Hasso-Plattner-Institut in Potsdam. Er lebt in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>.</p>
@@ -283,7 +490,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     </section>
 
     <section class="figuren" id="figuren" aria-labelledby="figuren-titel">
-      <h2 class="titel" id="figuren-titel">Die Figuren</h2>
+      <h2 class="titel" id="figuren-titel" tabindex="-1">Die Figuren</h2>
       <article class="figur">
         <h3><span class="stichwort">Satoshi Nakamoto</span>, das&nbsp;Pseudonym</h3>
         <p>Das berühmteste Phantom der Gegenwart. Die Faktenlage passt auf eine Karteikarte: ein Whitepaper, gut fünfhundert Forenposts, der erklärte Wunsch, sich selbst überflüssig zu machen. Dieser Roman gibt dem Pseudonym, was ihm bisher fehlte: eine Stimme&nbsp;– und drei Gesichter.</p>
@@ -304,7 +511,7 @@ html:not(.js) .globusseite > .globus { display: none; }
   </div>
 
   <section class="bau" id="bau" aria-labelledby="bau-titel">
-    <h2 class="titel" id="bau-titel">Gebaut wie ein Protokoll</h2>
+    <h2 class="titel" id="bau-titel" tabindex="-1">Gebaut wie ein Protokoll</h2>
     <p>Vierzig Kapitel, jedes ein Schlüsseltag im Leben der drei, geschnitten mit den Tagen, an denen die alte Welt fiel. Dazwischen die Momente, die in keiner offiziellen Chronik stehen: ein Spiegelkabinett in der Wüste von Nevada, in dem über Nacht eine Idee entsteht; ein Schwangerschaftstest, während zwei Männer im Nebenraum auf Börsenkurse starren; ein Rechner in einem Internetcafé in Buenos Aires, der zwischen zwei Stromausfällen den ersten <span class="nw">Bitcoin-Block</span> signiert.</p>
     <ol class="tage">
       <li><span class="jahr">2007</span> <span class="tag">14.&nbsp;September</span> <span class="was">Bankrun auf Northern Rock</span></li>
@@ -320,7 +527,7 @@ html:not(.js) .globusseite > .globus { display: none; }
   </section>
 
   <section class="frage" id="frage" aria-labelledby="frage-titel">
-    <h2 class="titel" id="frage-titel">Die Frage hinter dem Roman</h2>
+    <h2 class="titel" id="frage-titel" tabindex="-1">Die Frage hinter dem Roman</h2>
     <div class="prosa">
       <p>Was machen Menschen, wenn die Versprechen unserer Zeit brechen? Nicht ein einzelner Skandal, sondern der flächendeckende Vertrauensentzug&nbsp;– gegenüber Institutionen, Währungen, Verträgen, Nachrichten. Die Antworten, die im Umlauf sind, folgen zwei Bewegungen: das System reparieren&nbsp;– oder aussteigen und ein Parallelsystem bauen. Die 2020er Jahre sind das Jahrzehnt, in dem dieser Ausstieg zum ersten Mal massentauglich wurde&nbsp;– bis hin zum Ausstieg aus dem Geldsystem.</p>
       <p>Deutschland ist dabei ein Sonderfall. Kaum ein Land hat so tiefe Geldbrüche erlebt&nbsp;– 1923, 1948, für den Osten 1990&nbsp;– und kaum eines hat sie so gründlich institutionalisiert: Aus der Erfahrung der Inflation wurden eine Behörde und eine tief verankerte Stabilitäts&shy;kultur, nur in den seltensten Fällen aber lebendiges Erzählwissen. Die letzten großen deutschen Romane über Inflation und zerbrechendes Geld&nbsp;– Falladas <i>Wolf unter Wölfen</i>, Remarques <i>Schwarzer Obelisk</i>&nbsp;– sind über siebzig Jahre alt. Jetzt, da die Vertrauens&shy;kurve auch hier zu knicken beginnt, fehlt der institutionen&shy;treuesten Gesellschaft Europas auf einmal die emotionale Grammatik für einen Zustand, für den sie Ämter oder Gesetze hat&nbsp;– aber keine eigenen Geschichten und Narrative mehr.</p>
@@ -330,7 +537,7 @@ html:not(.js) .globusseite > .globus { display: none; }
   </section>
 
   <section class="machart" id="machart" aria-labelledby="machart-titel">
-    <h2 class="titel" id="machart-titel">Wie er gemacht ist</h2>
+    <h2 class="titel" id="machart-titel" tabindex="-1">Wie er gemacht ist</h2>
     <div class="prosa">
       <p><i>Satoshi</i> ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand&nbsp;– <a href="https://satoshi.nakamotoinstitute.org/" rel="noopener">Satoshi Nakamotos Mails, Forenbeiträgen</a>, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin&nbsp;– und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.</p>
       <p>Der Roman steht in einer Erzähltradition, die ihre Wurzeln in Borges’ <i>Ficciones</i> hat und zu deren heutigen Vertretern Hernan Diaz und Benjamín Labatut gehören: Literatur in den Leerstellen des Verbürgten.</p>

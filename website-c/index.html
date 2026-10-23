@@ -787,12 +787,17 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   const NACHTTISCH = BUECHER.filter(b => b.r === 'gerade');
   // Die Farbe eines liegenden Buchs: dieselbe Verlagsfamilie wie in der Bibliothek (FSeite.buch.farbe)
   const farbe = b => (F.buch && typeof F.buch.farbe === 'function' ? F.buch.farbe(b) : null);
-  /* Auf jeder Breite stehen die eigenen Werke und daneben der Nachttisch, auf dem Telefon nur kleiner (Dominik, 23. Oktober: „Passt
-     das Element mit dem was auf dem Nachttisch liegt da auch hin. Also dass es dann einfach kleiner ist. Woran ich arbeite, neben dem
-     was auf dem Nachttisch liegt. Es sieht einfach visuell etwas besser aus.“). Bis dahin standen schmal nur die eigenen Werke da.
-     Schmal werden die Rücken so dünn, dass die Titel darauf unter 9 px fielen: dann bleiben sie leer, wie bisher bei jedem zu
-     schmalen Rücken, und den Titel nennt die Buchzeile nach dem Tipp. Damit sich die dünnen Bücher mit dem Finger treffen lassen,
-     wählt ein Tipp knapp daneben das nächste (unten, beim Klick) */
+  /* Auf dem Telefon (bis 40 rem, wo bis heute früh nur die eigenen Werke standen) stehen die eigenen Werke wieder in ihrer
+     ursprünglichen Größe mit den Titeln auf den Rücken, und vom Nachttisch kommt nur der rechte Stapel mit (Dominik, 23. Oktober:
+     „Hier ist etwas schade, wenn die Bücher die Beschriftung verlieren mobil. Ich würde das anders machen. Also das ursprüngliche
+     zurück. Und auf dem Nachttisch dann nur einen Stapel. Eher den rechten. Also das ist dann halbiert ... Nur um visuell etwas
+     Abwechslung zu haben.“). Davor standen dort beide Stapel, und das ganze Regal wurde so klein, dass die Titel entfielen (Dominik,
+     zuvor am selben Tag: „Passt das Element mit dem was auf dem Nachttisch liegt da auch hin. Also dass es dann einfach kleiner
+     ist.“). Breiter stehen beide Stapel wie bisher. Der Stapel steht im Maßstab der Rücken, solange er daneben Platz hat; wo nicht
+     (Fenster unter rund 410 px), wird nur er kleiner, nie die Rücken: bei 390 px auf 90 %, bei 360 px auf 76 %, bei 320 px auf 56 %.
+     Sein dünnstes Buch (Camus) ist dann 7 bis 11 px stark: damit es sich mit dem Finger treffen lässt, wählt ein Tipp knapp daneben
+     das nächste Buch (unten, beim Klick) */
+  const einStapel = () => window.matchMedia('(max-width: 40rem)').matches;
   function werkName(id) {
     const w = (I.werke || []).find(x => x.id === id);
     if (!w) return '';
@@ -803,10 +808,13 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const platz = regalFlaeche.parentElement.clientWidth;
     if (!platz) return;
     bzRegal.schliessen();
+    const allein = einStapel();
     const liegend = NACHTTISCH.map(b => ({ b, breite: b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185, dicke: (b.p || 250) * .06 + (b.b === 'h' ? 5 : 1) }));
     const stapel = [[], []], hoch = [0, 0];
     liegend.slice().sort((p, q) => q.dicke - p.dicke).forEach(s => { const i = hoch[0] <= hoch[1] ? 0 : 1; stapel[i].push(s); hoch[i] += s.dicke; });
     if (hoch[1] > hoch[0]) { stapel.reverse(); hoch.reverse(); }
+    // Auf dem Telefon nur der rechte Stapel; an ihm lehnt dann Länder
+    if (allein) { stapel.shift(); hoch.shift(); }
     // Bündig: das größte zuunterst, ohne Versatz
     stapel.forEach(st => st.sort((p, q) => q.breite - p.breite || q.dicke - p.dicke));
     // Länder lehnt am Stapel des Nachttischs
@@ -815,19 +823,40 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const breiteVon = st => st.length ? Math.max(...st.map(s => s.breite)) : 0;
     // Wo das lehnende Buch den Stapel berührt: mit der oberen Ecke oder, ist der Stapel niedriger, an dessen Kante
     const kontakt = lehne.h * Math.cos(lehne.rad);
-    const x1 = !stapel[0].length ? lehne.rechts + 20 : hoch[0] >= kontakt ? lehne.rechts + lehne.h * Math.sin(lehne.rad) + .6 : lehne.rechts + hoch[0] * Math.tan(lehne.rad) + .6;
-    /* Zwischen den Stapeln so viel Luft, dass ein herausgezogenes Buch (12 px) nicht an den zweiten stößt: 24 mm, und wo das Bild so
-       klein wird, dass 24 mm keine 14 px mehr sind (Telefon), 14 px; die übrigen Maße rücken dafür etwas zusammen */
-    /* Rechts am Ende genauso: ein herausgezogenes Buch des rechten Stapels rückt 12 px (--zug) nach rechts, also bleiben dort 3 mm,
-       mindestens aber 13 px; sonst ragte es auf dem Telefon 8 px über das Brett in den Rand (Prüfung vom 23. Oktober, Musil). Weil
-       die Pixelmaße nicht mit dem Maßstab wachsen, wird er dreimal nachgerechnet; das genügt auf 0,1 px */
-    const LUFT = 24, LUFT_PX = 14, RECHTS = 3, RECHTS_PX = 13, ohneLuft = x1 + breiteVon(stapel[0]) + breiteVon(stapel[1]);
-    let m = Math.min(.86, (platz - 2) / (ohneLuft + LUFT + RECHTS));   // Pixel je Millimeter
-    for (let k = 0; k < 3; k++) m = Math.min(.86, (platz - 2 - Math.max(LUFT * m, LUFT_PX) - Math.max(RECHTS * m, RECHTS_PX)) / ohneLuft);
-    const x2 = x1 + breiteVon(stapel[0]) + Math.max(LUFT, LUFT_PX / m), gesamt = x2 + breiteVon(stapel[1]) + Math.max(RECHTS, RECHTS_PX / m);
-    const px = v => (v * m).toFixed(1) + 'px';
-    // Rückenschrift 9 bis 13 px aus der Breite des Rückens; darunter bleibt der Rücken leer
-    const schriftEigen = Math.min(13, m * 12.5), schriftLiegend = Math.min(13, m * 11.5);
+    /* m: Pixel je Millimeter der eigenen Werke, ms: der Stapel. sx: wo die Stapel links beginnen, breitePx: das ganze Bild, beides in Pixeln */
+    const LUFT = 24, LUFT_PX = 14, RECHTS = 3, RECHTS_PX = 13;
+    let m, ms, sx, breitePx;
+    if (allein) {
+      /* Die eigenen Werke wie ursprünglich: höchstens 0,86 px je mm, und weil sie nur 187 mm breit sind, auf dem Telefon immer genau
+         das (Rücken 176 px hoch, Titel 10,8 px). Der Stapel daneben im selben Maßstab, solange er mit den 13 px rechts für das
+         herausgezogene Buch Platz hat, sonst so klein, dass er passt */
+      m = Math.min(.86, (platz - 2) / (x + 1));
+      const vorn = lehne.rechts * m + .6 * m, frei = platz - 2 - RECHTS_PX - vorn, br = breiteVon(stapel[0]);
+      ms = Math.min(m, frei / (br + hoch[0] * Math.tan(lehne.rad)));
+      // Reicht der Stapel über die Berührung hinaus, lehnt Länder mit der oberen Ecke an ihm
+      if (hoch[0] * ms >= kontakt * m) ms = Math.min(m, (frei - lehne.h * m * Math.sin(lehne.rad)) / br);
+      const x1 = hoch[0] * ms >= kontakt * m ? vorn + lehne.h * m * Math.sin(lehne.rad) : vorn + hoch[0] * ms * Math.tan(lehne.rad);
+      sx = [x1];
+      breitePx = x1 + br * ms + Math.max(RECHTS * ms, RECHTS_PX);
+    } else {
+      const x1 = !stapel[0].length ? lehne.rechts + 20 : hoch[0] >= kontakt ? lehne.rechts + lehne.h * Math.sin(lehne.rad) + .6 : lehne.rechts + hoch[0] * Math.tan(lehne.rad) + .6;
+      /* Zwischen den Stapeln so viel Luft, dass ein herausgezogenes Buch (12 px) nicht an den zweiten stößt: 24 mm, und wo das Bild so
+         klein wird, dass 24 mm keine 14 px mehr sind, 14 px; die übrigen Maße rücken dafür etwas zusammen */
+      /* Rechts am Ende genauso: ein herausgezogenes Buch des rechten Stapels rückt 12 px (--zug) nach rechts, also bleiben dort 3 mm,
+         mindestens aber 13 px; sonst ragte es 8 px über das Brett in den Rand (Prüfung vom 23. Oktober, Musil). Weil die Pixelmaße
+         nicht mit dem Maßstab wachsen, wird er dreimal nachgerechnet; das genügt auf 0,1 px */
+      const ohneLuft = x1 + breiteVon(stapel[0]) + breiteVon(stapel[1]);
+      m = Math.min(.86, (platz - 2) / (ohneLuft + LUFT + RECHTS));
+      for (let k = 0; k < 3; k++) m = Math.min(.86, (platz - 2 - Math.max(LUFT * m, LUFT_PX) - Math.max(RECHTS * m, RECHTS_PX)) / ohneLuft);
+      const x2 = x1 + breiteVon(stapel[0]) + Math.max(LUFT, LUFT_PX / m), gesamt = x2 + breiteVon(stapel[1]) + Math.max(RECHTS, RECHTS_PX / m);
+      ms = m; sx = [x1 * m, x2 * m]; breitePx = gesamt * m;
+    }
+    const px = v => (v * m).toFixed(1) + 'px', pxs = v => (v * ms).toFixed(1) + 'px';
+    /* Rückenschrift 9 bis 13 px aus der Breite des Rückens; darunter bleibt der Rücken leer. Auf dem Telefon kommt auch die Schrift
+       des Stapels aus dem Maßstab der Rücken, nicht aus seinem kleineren: sonst fiele sie bei 320 bis 390 px unter 9 px, und gerade
+       dort verlören die Bücher wieder die Beschriftung („schade wenn die Bücher die Beschriftung verlieren mobil“). Ob sie in ein Buch
+       passt, entscheidet weiter dessen Stärke und unten die Kürzung */
+    const schriftEigen = Math.min(13, m * 12.5), schriftLiegend = Math.min(13, (allein ? m : ms) * 11.5);
     let html = '';
     // Rücken, die sich berühren, teilen sich ihre Kontur (sonst stünde dort eine doppelte Linie)
     const KONTUR = .75;
@@ -838,18 +867,18 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       const text = schriftEigen >= 9 ? `<span style="font-size:${schriftEigen.toFixed(1)}px">${esc(e.t)}</span>` : '';
       html += `<button type="button" class="stueck eigen dunkel" data-werk="${e.id}" aria-label="${esc(e.t)}" style="left:${links.toFixed(2)}px;width:${px(e.d)};height:${px(e.h)}${e.neigt ? `;--neig:${e.lehnt}deg` : ''}">${text}</button>`;
     });
-    [x1, x2].forEach((sx, k) => {
+    sx.forEach((links, k) => {
       let y = 0;
       stapel[k].forEach((s, n) => {
         const b = s.b, i = BUECHER.indexOf(b), f = farbe(b);
-        const text = schriftLiegend >= 9 && s.dicke * m >= schriftLiegend + 4 ? `<span style="font-size:${schriftLiegend.toFixed(1)}px">${esc(b.nn || b.autor)}<span class="leer">&ensp;</span>${esc(F.buch.titelKurz(b.t))}</span>` : '';
+        const text = schriftLiegend >= 9 && s.dicke * ms >= schriftLiegend + 4 ? `<span style="font-size:${schriftLiegend.toFixed(1)}px">${esc(b.nn || b.autor)}<span class="leer">&ensp;</span>${esc(F.buch.titelKurz(b.t))}</span>` : '';
         const ton = f ? `;background:${f.grund};color:${f.tinte}` : '';
-        html += `<button type="button" class="stueck liegt${f && f.dunkel ? ' dunkel' : ''}" data-buch="${i}" aria-label="${esc(b.autor + ', ' + b.t)}" style="left:${px(sx)};bottom:${(y * m - n * KONTUR).toFixed(2)}px;width:${px(s.breite)};height:${px(s.dicke)}${ton}">${text}</button>`;
+        html += `<button type="button" class="stueck liegt${f && f.dunkel ? ' dunkel' : ''}" data-buch="${i}" aria-label="${esc(b.autor + ', ' + b.t)}" style="left:${links.toFixed(1)}px;bottom:${(y * ms - n * KONTUR).toFixed(2)}px;width:${pxs(s.breite)};height:${pxs(s.dicke)}${ton}">${text}</button>`;
         y += s.dicke;
       });
     });
-    regalFlaeche.style.height = Math.ceil(Math.max(hoch[0], hoch[1], 222) * m + 2) + 'px';
-    regalFlaeche.style.width = Math.ceil(gesamt * m) + 'px';
+    regalFlaeche.style.height = Math.ceil((allein ? Math.max(hoch[0] * ms, 222 * m) : Math.max(hoch[0], hoch[1], 222) * m) + 2) + 'px';
+    regalFlaeche.style.width = Math.ceil(breitePx) + 'px';
     regalFlaeche.innerHTML = html;
     // Auf dem Rücken steht nur, was mit Rand hineinpasst: erst Name und Titel, sonst der Name, sonst nichts
     $$('.stueck.liegt > span', regalFlaeche).forEach(sp => {
@@ -929,8 +958,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   regalFlaeche.addEventListener('pointerout', e => { const b = e.target.closest('.stueck'); if (b && !b.contains(e.relatedTarget) && document.activeElement !== b) regalNameZeigen(null); });
   regalFlaeche.addEventListener('focusin', e => { const b = e.target.closest('.stueck'); if (b && b.matches(':focus-visible')) regalNameZeigen(b); });
   regalFlaeche.addEventListener('focusout', () => regalNameZeigen(null));
-  /* Ein Tipp knapp neben ein Buch (bis 10 px) wählt das nächste: auf dem Telefon sind manche Rücken und liegende Bücher nur 5 bis 8 px
-     stark. Mit der Maus gilt nur das Buch selbst */
+  /* Ein Tipp knapp neben ein Buch (bis 10 px) wählt das nächste: auf dem Telefon sind die dünnsten liegenden Bücher nur 7 bis 12 px
+     stark, das dünnste Werk (Untertext) 14 px. Mit der Maus gilt nur das Buch selbst */
   function naechstesStueck(e) {
     if (e.pointerType === 'mouse') return null;
     let best = null, abstand = 10;

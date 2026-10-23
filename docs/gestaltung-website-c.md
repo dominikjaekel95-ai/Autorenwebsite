@@ -934,6 +934,8 @@ Knöpfe sind `<button>` ohne Rahmen, Grund und Radius. Verweise sind `<a>`. Kein
 |---|---|---|---|
 | Einflug des ersten Satzes | Startseite | 1,0 s, bei jedem Laden | V13 |
 | Einflug des Vorspanns | *Satoshi*, nur zweispaltig | 1,0 s, bei jedem Laden | Dominik, Option B (9.2) |
+| Erscheinen des Inhaltsbuchs | *Satoshi* | 0,8 s nach dem Vorspann, dann 1,4 s, 8 px; auf dem Telefon beim ersten Hineinrollen | V77 (9.2) |
+| Umblättern des Inhaltsbuchs | *Satoshi* | 480 ms je Blatt, 90 ms Versatz | V77 (9.2) |
 | Einspieler Leben | Startseite | rund 34 s, mit der ganzen Tafel | V22, M7, Runde 4 |
 | Einspieler *Satoshi* | Startseite (Ebene), *Satoshi* | rund 59 s, mit Szenentext | M7, K9, Runde 4 |
 | Einspieler *Ursprung* | Startseite (Ebene), *Ursprung* | rund 27 s, mit der ganzen Tafel | V23, Runde 4 |
@@ -1090,11 +1092,20 @@ Beide Spalten beginnen auf einer Höhe. Die Kapiteltage stehen als Register in d
 
 **Zwischen 62 und 75 rem** eine Spalte in der Reihenfolge von A: Klappentext, Eckdaten, Gebaut wie ein Protokoll, Die Figuren, Die Frage hinter dem Roman, Wie er gemacht ist.
 
-**Telefon.** `h1`, Unterzeile, Vorspann, Kugel, Tafel, dann direkt der Klappentext und die übrigen Abschnitte in der Reihenfolge von A. Die Tafel hält vom Laden an die Höhe der längsten Szene, auch in Ruhe, damit der Klappentext nie springt.
+**Telefon.** `h1`, Unterzeile, Vorspann, Kugel, Tafel, das Inhaltsbuch (unten), dann der Klappentext und die übrigen Abschnitte in der Reihenfolge von A. Die Tafel hält vom Laden an die Höhe der längsten Szene, auch in Ruhe, damit das Buch und der Klappentext nie springen.
 
 Figuren: `h3` mit dem Namen in Kapitälchen, Komma, die Rolle im Grad Text, darunter ¼ z der Text. Zwischen Figuren ¾ z.
 
-**Offen (V76): das Inhaltsverzeichnis als Buch.** Fünf Varianten zum Ausprobieren (https://claude.ai/artifact/AKzeEDR9G7EskUYjsJ1afc, `docs/satoshi-buch.md`); eingebaut wird nach Dominiks Wahl.
+**Das Inhaltsverzeichnis als Buch** (V76, V77; Dominik wählte von fünf Varianten in `docs/satoshi-buch.md` die fünfte, „aber unter jedem Kapitel noch ein Symbol, dass das Kapitel darstellt“). `nav#inhaltsbuch`, „Auf dieser Seite“.
+- Der *Satoshi*-Band aus dem Regal: Deckel in Tinte mit dem Titel in Papier, Seiten in Papier mit einem Rand von 1 px im Grau der Küsten. Jede Seite trägt genau einen Eintrag im Wortlaut einer Überschrift, oben links, darunter seine Vignette. Drei Doppelseiten: Klappentext | Eckdaten, Gebaut wie ein Protokoll | Die Figuren, Die Frage hinter dem Roman | Wie er gemacht ist. Beim Laden liegt es aufgeschlagen bei der ersten; zuklappen geht nur mit Wischen nach rechts (ein Klick links neben „Klappentext“ tut nichts, damit ein knapp verfehltes Wort das Buch nicht schließt). Am Falz steht nur eine Linie (die linke Seite hat dort keinen Rand). Am äußeren Schnitt zeigen 0 bis 2 Striche die Blätter, die noch auf jeder Seite liegen.
+- Umblättern: Klick oder Tipp auf die rechte Hälfte vor, links zurück, Wischen, Pfeiltasten. Auf dem Buch rollt die Seite senkrecht und lässt sich mit zwei Fingern zoomen (`touch-action: pan-y pinch-zoom`). Jedes Blatt dreht sich steif um den Falz, 480 ms, ohne Wölbung und Schatten. Der Tabulator schlägt das Buch beim Eintrag auf, ohne Drehung; er schließt es nie.
+- Ein Eintrag (Wort und Vignette) ist ein gewöhnlicher Anker. Nach dem Sprung steht die Überschrift 1 z unter dem oberen Rand, der Fokus liegt auf ihr, ohne Rahmen.
+- Format (Höhe × Breite einer Seite): unter 50 rem Fensterhöhe 5,75 × 5 z, bis 56,25 rem 6,5 × 5 z, darüber 9 × 6,75 z im Lesegrad, Telefon 6 × 5,25 z; sonst im Grad klein. Kein Eintrag hat mehr als zwei Zeilen.
+- Vignetten: eigene Zeichen in der Art einer Vignette im gedruckten Buch, nicht eines Piktogramms: Linie in Tinte, 1,1 px wie die Kartenzeichen, stumpfe Enden und spitze Ecken, geschriebener Text gepunktet wie die Zeichen für Auszüge im Regal, ohne Füllung bis auf zwei kleine Flächen; alle im selben Feld, 2 z hoch (unter 50 rem Fensterhöhe 1¾ z, Format L 2½ z), auf allen Seiten auf einer Höhe. Klappentext ein Schutzumschlag mit aufgeschlagener, beschriebener Klappe; Eckdaten die Zeitleiste des Romans als Maßstabsleiste (ein Strich je Jahr, Prolog 2001 und Epilog 2013 als Enden, 2007 bis 2010 als schmale Fläche); Gebaut wie ein Protokoll drei Blöcke einer Kette; Die Figuren drei Kreise, die sich überschneiden, im gemeinsamen Feld ein Punkt, das Pseudonym; Die Frage hinter dem Roman eine Münze mit Perlkreis, unregelmäßig in zwei Hälften gebrochen; Wie er gemacht ist ein Blatt, auf das schräg ein Streifen eines anderen geklebt ist (die Montage).
+- Ort: am Desktop in der weißen Fläche unter dem Vorspann, bündig mit ihm, 2 z darunter (bis 56,25 rem Fensterhöhe 1 z); der Klappentext steht wie vorher. Auf dem Telefon fest 1 z unter der Tafel, deren Höhe die längste Szene hält: immer zu sehen, auch im Einspieler und nach einer Wahl. Bei 390 px bleiben in Ruhe 218 px zwischen „Die Schauplätze“ mit seiner Zeile und dem Buch; die Seite wird um 189 px länger.
+- Erscheinen: Das Buch wartet, bis der Vorspann eingeflogen ist, dann 0,8 s, und blendet in 1,4 s ein, dabei 8 px von rechts; auch in einem niedrigen Fenster, wo es unter der Kante liegt; auf dem Telefon erst, wenn es zum ersten Mal ins Bild kommt. Sein Platz ist reserviert. Mit der Tastatur, bei reduzierter Bewegung und ohne Skript steht es gleich da.
+- Folge: In der Quelle steht es zwischen Vorspann und Kugel, so kommt der Tabulator nach der Navigation ins Verzeichnis. Schmal hängt das Skript es hinter die Kugel, damit Tastatur und Vorleseprogramm der sichtbaren Folge folgen.
+- Ohne Skript: die sechs Überschriften als Liste im Lesegrad unter dem Vorspann, ohne Vignetten.
 
 ### 9.3 *Ursprung* (`ursprung.html`)
 

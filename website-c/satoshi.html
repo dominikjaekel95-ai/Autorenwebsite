@@ -23,8 +23,9 @@
    und an jeder Station steht der Szenentext in der Tafel, rund eine Minute für alle zehn Szenen. Danach ruht die Tafel bei
    „Die Schauplätze“; eine Wahl oder das Abspielen zeigt die Szene wieder.
    Zweispaltig steht der Vorspann groß wie der erste Satz der Startseite und fliegt beim Laden einmal ein (Option B, 22. Oktober).
-   Unter dem Vorspann (breit) und unter der Tafel (schmal) steht das Inhaltsverzeichnis der Seite als kleines Buch zum Umblättern,
-   je Seite ein Eintrag mit seiner Vignette; es erscheint langsam, wenn der Vorspann steht (V76, V77).
+   Unter dem Vorspann steht das Inhaltsverzeichnis der Seite als kleines Buch zum Umblättern, je Seite ein Eintrag mit seiner
+   Vignette; es erscheint langsam, wenn der Vorspann steht (V76, V77). Auf Telefon und Tablet steht unter der Tafel stattdessen
+   das kleine Buch aus Variante 4: zu, in Tinte; ein Tipp schlägt es auf, innen alle sechs Einträge (Dominik, 23. Oktober).
    Darunter das Buch der Abschnitte (.buch), 2 z unter dem Globusband: ab 75 rem als Doppelseite (links Klappentext, Bau, Frage, Machart; rechts an der
    Kante der Kugel Eckdaten und Figuren), darunter eine Spalte in der Reihenfolge von A. */
 
@@ -67,9 +68,10 @@ html:not(.js) .globusseite > .globus { display: none; }
    Seiten nicht. Ohne Skript eine Inhaltsseite: die sechs Überschriften untereinander im Lesegrad, ohne Zeichen.
    Ort. Breit in der weißen Fläche unter dem Vorspann; in der Quelle steht es darum zwischen Vorspann und Kugel, so kommt die
    Tabulatortaste nach dem Vorspann ins Verzeichnis und nicht erst nach 13 Schritten über Kugel und Steuerzeile. Schmal (bis 62 rem)
-   steht es unter der Tafel: das Skript hinter der Kugel hängt es dort auch in der Quelle hinter sie, damit Tastatur und
-   Vorleseprogramm dieselbe Folge gehen, die man sieht. Die Tafel hält wie bisher die Höhe ihrer längsten Szene; das Buch steht fest
-   1 z darunter und ist immer zu sehen und zu erreichen, auch im Einspieler und nach einer Wahl. So springt nichts */
+   gibt es dieses Buch nicht; dort steht unter der Tafel das kleine Buch aus Variante 4 (nächster Abschnitt), in der Quelle hinter
+   der Kugel, damit Tastatur und Vorleseprogramm dieselbe Folge gehen, die man sieht. Die Tafel hält wie bisher die Höhe ihrer
+   längsten Szene; das Buch steht fest 1 z darunter und ist immer zu sehen und zu erreichen, auch im Einspieler und nach einer
+   Wahl. So springt nichts */
 .blaetterbuch .flaeche-deckel, .blaetterbuch .schnitt, .blaetterbuch .vignette { display: none; }
 .blaetterbuch .inhalt { list-style: none; font-size: var(--g-text); line-height: var(--z); hyphens: manual; -webkit-hyphens: manual; }
 .blaetterbuch .inhalt li { padding-left: 1em; text-indent: -1em; }
@@ -134,6 +136,63 @@ html.js .blaetterbuch [data-schnitt="2"] .schnitt i:first-child { display: block
 /* Erscheinen (Skript beim Buch): bis dahin unsichtbar, sein Platz ist reserviert, und die Maus greift ins Leere. Die Tastatur
    erreicht es (opacity, nicht visibility); kommt sie hinein, steht es sofort da */
 html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
+
+/* ---------- Schmal: das kleine Buch, das sich öffnet (Variante 4) ----------
+   Dominik, 23. Oktober, über das Telefon: „Mir gefällt gerade auch nicht, dass das Buch auf dem Handy schon aufgeklappt ist. Also
+   ich mochte schon, dass es schwarz war und dann klickt man drauf ... Bzw. um ehrlich zu sein: Auf dem Handy sind die Symbole
+   vielleicht unnötig. Und auf dem Handy ist Version 4 besser?“
+   Bis 62 rem (Telefon, Tablet hochkant) steht darum statt des Buchs zum Umblättern das aus Variante 4, an seinem Platz unter der
+   Tafel. Beim Laden ist es zu: der Deckel in Tinte, der Titel aufrecht in Papier, auf der rechten Hälfte seiner Fläche, die linke
+   bleibt weiß. Ein Tipp auf den Deckel (oder Eingabe, Leertaste) schlägt ihn auf: er dreht sich einmal um den Falz nach links,
+   420 ms, ohne Federn; bei reduzierter Bewegung steht er sofort offen. Aufgeschlagen stehen alle sechs Einträge zugleich auf der
+   Doppelseite, ohne Vignetten: auf der Innenseite des Deckels Klappentext, Eckdaten, Gebaut wie ein Protokoll, auf der ersten
+   Seite die drei übrigen. Ein Tipp auf die freie Innenseite des Deckels schlägt ihn wieder zu; über die Tastatur wird nie
+   zugeklappt. Kein Blättern, kein Wischen.
+   Format wie das Buch zum Umblättern auf dem Telefon, 6 × 5,25 z, zu und offen gleich groß: es hält denselben Platz wie bisher,
+   und beim Aufschlagen springt nichts. Die Einträge stehen im Grad klein, ½ z unter der Kante, untereinander 1 z Luft wie in
+   Variante 4 (dort ½ z; so bleibt unten wie oben ½ z frei); jeder nimmt den Finger auch in der halben Luft über und unter sich,
+   ein einzeiliger auf 47 px Höhe (mindestens 44 px). Ränder im Grau der Küsten, am Falz eine Linie, wie beim Buch zum Umblättern.
+   Der Deckel ist für Vorleseprogramme ein Knopf, der über dem geschlossenen Deckel liegt (der gezeichnete Deckel ist aria-hidden);
+   solange das Buch zu ist, ist das Verzeichnis inert, offen tritt der Knopf ab und der Fokus geht auf Klappentext. Eine Liste über
+   zwei Flächen: role=list am Buch, die Flächen role=none, die Einträge in Lesefolge.
+   Breit gibt es dieses Buch nicht, ohne Skript auch nicht: dort steht auf jeder Breite die Liste. */
+.klappbuch { display: none; }
+@media (max-width: 62rem) {
+  html.js .globusseite > .blaetterbuch { display: none; }
+  html.js .klappbuch {
+    display: block; position: relative; width: calc(var(--s-b) * 2);
+    --s-h: calc(var(--z) * 6); --s-b: calc(var(--z) * 5.25); --pad-x: var(--z-viertel); --pad-o: var(--z-halb);
+  }
+}
+html.js .klappbuch .buchobjekt { position: relative; width: calc(var(--s-b) * 2); height: var(--s-h); perspective: 1600px; font-size: var(--g-klein); line-height: var(--zh-klein); hyphens: manual; -webkit-hyphens: manual; -webkit-tap-highlight-color: transparent; }
+html.js .klappbuch .deckel, html.js .klappbuch .seite { position: absolute; top: 0; left: var(--s-b); width: var(--s-b); height: 100%; box-sizing: border-box; }
+html.js .klappbuch .seite, html.js .klappbuch .innen { background: var(--papier); padding: var(--pad-o) var(--pad-x) 0; }
+html.js .klappbuch .seite { box-shadow: inset 0 0 0 1px var(--karte-kueste); }
+/* Offen liegt die Innenseite links; den Falz zeichnet die Seite rechts (sonst läge er doppelt) */
+html.js .klappbuch .innen { box-shadow: inset 1px 0 0 var(--karte-kueste), inset 0 1px 0 var(--karte-kueste), inset 0 -1px 0 var(--karte-kueste); }
+html.js .klappbuch .deckel { z-index: 2; transform-origin: left center; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 420ms cubic-bezier(.45, 0, .25, 1); }
+html.js .klappbuch .deckel > .aussen, html.js .klappbuch .deckel > .innen { position: absolute; inset: 0; box-sizing: border-box; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+html.js .klappbuch .aussen { background: var(--tinte); color: var(--papier); padding: var(--pad-o) var(--pad-x); }
+html.js .klappbuch .innen { transform: rotateY(180deg); cursor: pointer; }
+html.js .klappbuch.offen .deckel { transform: rotateY(-180deg); }
+html.js .klappbuch .eintrag { display: block; }
+html.js .klappbuch .eintrag + .eintrag { margin-top: var(--z); }
+html.js .klappbuch .eintrag a { position: relative; display: block; width: fit-content; max-width: 100%; text-wrap: balance; }
+/* Die Trefferfläche reicht je ½ z über und unter das Wort, so breit wie es; die Flächen zweier Einträge stoßen aneinander */
+html.js .klappbuch .eintrag a::after { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--z-halb) * -1); bottom: calc(var(--z-halb) * -1); }
+/* Der Knopf liegt genau über dem geschlossenen Deckel; offen ist er weg */
+html.js .klappbuch .aufschlagen {
+  position: absolute; z-index: 3; top: 0; left: var(--s-b); width: var(--s-b); height: var(--s-h);
+  appearance: none; -webkit-appearance: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+html.js .klappbuch.offen .aufschlagen { display: none; }
+/* Solange der Deckel aufgeht, nehmen die Seiten keinen Tipp an: der Knopf ist schon weg, und ein zweiter Tipp auf den Deckel
+   träfe sonst einen Eintrag darunter und spränge fort */
+html.js .klappbuch.dreht .seite, html.js .klappbuch.dreht .innen { pointer-events: none; }
+/* Zeigen auf den geschlossenen Deckel: die Kontur der dunklen Rücken (.stueck.dunkel:hover auf der Startseite) */
+html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); }
+@media (prefers-reduced-motion: reduce) { html.js .klappbuch .deckel { transition: none; } }
 
 /* ---------- Das Buch ---------- */
 .buch { display: flex; flex-direction: column; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
@@ -531,47 +590,68 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
   /* Erscheinen (Dominik: „Dass kurz der Fokus auf der Tagline ist und erst dann erscheint das Buch“). Erst steht der Blick auf dem
      Vorspann: Das Buch wartet, bis er eingeflogen ist (#aufhaenger.steht, rund 1,1 s nach dem Laden; ohne Flug sofort, höchstens
      3 s), dann noch 0,8 s. Danach blendet es in 1,4 s ein und rückt dabei 8 px von rechts an seinen Platz, in der Sprache des
-     Vorspanns (dessen Wörter 0,2 em von rechts kommen), ohne Federn. Breit erscheint es dann, auch in einem niedrigen Fenster, auf
-     dem Telefon, wo es unter der Kugel steht, erst, wenn man es zum ersten Mal erreicht. Sein Platz ist von Anfang an reserviert, nichts
-     springt. Kommt die Tastatur hinein, bevor es erschienen ist, steht es sofort da. Bei reduzierter Bewegung und ohne Skript
-     steht es gleich da */
+     Vorspanns (dessen Wörter 0,2 em von rechts kommen), ohne Federn. Breit erscheint das Buch zum Umblättern dann, auch in einem
+     niedrigen Fenster; auf Telefon und Tablet erscheint das kleine Buch unter der Kugel (es steht weiter unten in der Quelle und
+     trägt .wartet schon im HTML) erst, wenn man es zum ersten Mal erreicht. Wechselt das Fenster über die Grenze, erscheint das
+     Buch der neuen Breite nach denselben Regeln. Ihr Platz ist von Anfang an reserviert, nichts springt. Kommt die Tastatur hinein,
+     bevor es erschienen ist, steht es sofort da. Bei reduzierter Bewegung und ohne Skript steht es gleich da */
   (function () {
     'use strict';
-    var buch = document.getElementById('inhaltsbuch');
-    if (!buch || !buch.animate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var gross = document.getElementById('inhaltsbuch');
+    if (!gross) return;
+    var schmal = window.matchMedia ? window.matchMedia('(max-width: 62rem)') : { matches: false };
+    var kleinHolen = function (f) {
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { f(document.getElementById('inhaltsbuch-klein')); });
+      else f(document.getElementById('inhaltsbuch-klein'));
+    };
+    if (!gross.animate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      kleinHolen(function (k) { if (k) k.classList.remove('wartet'); });
+      return;
+    }
     var PAUSE = 800, DAUER = 1400, WEG = 8;
-    var frei = false, gesehen = false, fertig = false, laeufe = [];
-    // Breit erscheint es nach der Pause, auch wenn es in einem niedrigen Fenster noch unter der Kante liegt: beim Rollen steht es
-    // dann schon da. Nur auf dem Telefon, unter der Kugel, wartet es aufs erste Hineinrollen
-    var schmal = function () { return window.matchMedia('(max-width: 62rem)').matches; };
-    buch.classList.add('wartet');
-    function erscheinen() {
-      if (fertig || !frei || !(gesehen || !schmal())) return;
-      fertig = true;
-      buch.classList.remove('wartet');
-      laeufe = [
-        buch.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DAUER, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
-        buch.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: DAUER, easing: 'cubic-bezier(.22, .7, .28, 1)' })
+    var frei = false, buecher = [];
+    // Breit erscheint das große Buch nach der Pause, auch wenn es in einem niedrigen Fenster noch unter der Kante liegt: beim
+    // Rollen steht es dann schon da. Das kleine unter der Kugel wartet aufs erste Hineinrollen (solange es nicht angezeigt wird,
+    // schneidet es nie das Fenster)
+    function erscheinen(b) {
+      if (b.fertig || !frei || !b.dran(b)) return;
+      b.fertig = true;
+      b.el.classList.remove('wartet');
+      b.laeufe = [
+        b.el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DAUER, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
+        b.el.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: DAUER, easing: 'cubic-bezier(.22, .7, .28, 1)' })
       ];
     }
-    function sofort() {
-      fertig = true;
-      buch.classList.remove('wartet');
-      laeufe.forEach(function (a) { a.finish(); });
+    function anmelden(el, dran, beobachten) {
+      if (!el) return;
+      var b = { el: el, dran: dran, fertig: false, gesehen: false, laeufe: [] };
+      buecher.push(b);
+      el.classList.add('wartet');
+      el.addEventListener('focusin', function () {
+        b.fertig = true;
+        el.classList.remove('wartet');
+        b.laeufe.forEach(function (a) { a.finish(); });
+      });
+      if (beobachten) {
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (e) {
+            if (!e.some(function (x) { return x.isIntersecting; })) return;
+            b.gesehen = true; io.disconnect(); erscheinen(b);
+          }, { rootMargin: '0px 0px -10% 0px' });
+          io.observe(el);
+        } else b.gesehen = true;
+      }
+      erscheinen(b);
     }
-    buch.addEventListener('focusin', sofort);
+    anmelden(gross, function () { return !schmal.matches; }, false);
+    kleinHolen(function (k) { anmelden(k, function (b) { return b.gesehen; }, true); });
+    var alle = function () { buecher.forEach(erscheinen); };
+    if (schmal.addEventListener) schmal.addEventListener('change', alle); else if (schmal.addListener) schmal.addListener(alle);
     var auf = document.getElementById('aufhaenger');
     var steht = auf && auf.steht ? auf.steht : Promise.resolve();
     Promise.race([steht, new Promise(function (r) { setTimeout(r, 3000); })]).then(function () {
-      setTimeout(function () { frei = true; erscheinen(); }, PAUSE);
+      setTimeout(function () { frei = true; alle(); }, PAUSE);
     });
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (e) {
-        if (!e.some(function (x) { return x.isIntersecting; })) return;
-        gesehen = true; io.disconnect(); erscheinen();
-      }, { rootMargin: '0px 0px -10% 0px' });
-      io.observe(buch);
-    } else gesehen = true;
   })();
   </script>
 
@@ -581,27 +661,84 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Schauplätze stehen auf der Tafel, mit ihren Koordinaten.</p>
     <div class="tafel" id="tafel" aria-live="off"></div>
   </figure>
+  <!-- Schmal: das kleine Buch aus Variante 4, hinter der Kugel (Stil oben). Breit und ohne Skript wird es nicht angezeigt -->
+  <nav class="inhaltsbuch klappbuch wartet" id="inhaltsbuch-klein" aria-label="Auf dieser Seite"><button class="aufschlagen" type="button" aria-expanded="false" aria-controls="klappbuch-liste" aria-label="Satoshi, Inhalt aufschlagen"></button><div class="buchobjekt wahlliste" id="klappbuch-liste" role="list" inert><div class="deckel" role="none"><div class="aussen" aria-hidden="true"><span>Satoshi</span></div><div class="innen" role="none"><span class="eintrag" role="listitem"><a href="#klappentext">Klappentext</a></span><span class="eintrag" role="listitem"><a href="#eckdaten">Eckdaten</a></span><span class="eintrag" role="listitem"><a href="#bau">Gebaut wie ein Protokoll</a></span></div></div><div class="seite" role="none"><span class="eintrag" role="listitem"><a href="#figuren">Die Figuren</a></span><span class="eintrag" role="listitem"><a href="#frage">Die Frage hinter dem Roman</a></span><span class="eintrag" role="listitem"><a href="#machart">Wie er gemacht ist</a></span></div></div></nav>
   <script>
-  /* Ort des Inhaltsbuchs in der Quelle. Breit steht es unter dem Vorspann, links neben der Kugel, und in der Quelle davor (wie
-     im HTML): Die Tabulatortaste geht Vorspann, Buch, Kugel, Steuerzeile. Schmal (bis 62 rem) steht es unter der Tafel; damit
-     auch dort Tastatur und Vorleseprogramm der Folge folgen, die man sieht (Kugel, Steuerzeile, Tafel, Buch, Klappentext), hängt
-     dieses Skript es hinter die Kugel. Eine Umstellung allein im Stil (order) hätte die Tabulatortaste vom Vorspann erst nach unten
-     ins Buch, dann zurück zur Kugel geschickt. Es läuft vor dem ersten Bild und wieder, wenn das Fenster die Grenze überschreitet;
-     ein Fokus im Buch bleibt dabei erhalten. Ohne Skript gibt es keine Kugel, und die Liste steht auf jeder Breite unter dem Vorspann */
+  /* Das kleine Buch (Variante 4, nur schmal). Beim Laden ist es zu, das Verzeichnis inert. Ein Tipp auf den Deckel, Eingabe oder
+     Leertaste schlägt es auf; der Fokus geht dabei auf Klappentext (nach einem Tipp ohne Rahmen, :focus-visible), damit die
+     nächste Tabulatortaste und ein Vorleseprogramm im Verzeichnis weitergehen. Ein Tipp auf die freie Innenseite des Deckels
+     schlägt es zu; lag der Fokus im Verzeichnis, geht er zurück auf den Deckel. Über die Tastatur wird nie zugeklappt. Es klappt
+     nie von selbst auf, beim Neuladen ist es zu. Die Bewegung ist ein CSS-Übergang, bei reduzierter Bewegung 0 s.
+     Ein Eintrag ist ein gewöhnlicher Anker; danach liegt der Fokus auf der Überschrift des Abschnitts (wie beim großen Buch).
+     Wechselt das Fenster über die Grenze, während der Fokus in einem der beiden Bücher liegt, geht er auf denselben Eintrag im
+     anderen (vom Deckel auf Klappentext): das kleine steht dann ohne Drehung offen, das große schlägt sich dort auf. Sonst behält
+     jedes Buch seinen Stand */
   (function () {
     'use strict';
-    var buch = document.getElementById('inhaltsbuch'), kugel = document.getElementById('globus');
-    if (!buch || !kugel || !window.matchMedia) return;
-    var schmal = window.matchMedia('(max-width: 62rem)');
-    function ort() {
-      var dahinter = schmal.matches;
-      if (dahinter ? kugel.nextElementSibling === buch : buch.compareDocumentPosition(kugel) & Node.DOCUMENT_POSITION_FOLLOWING) return;
-      var fokus = buch.contains(document.activeElement) ? document.activeElement : null;
-      kugel.parentNode.insertBefore(buch, dahinter ? kugel.nextSibling : kugel);
-      if (fokus) fokus.focus({ preventScroll: true });
+    var buch = document.getElementById('inhaltsbuch-klein'), gross = document.getElementById('inhaltsbuch');
+    var knopf = buch && buch.querySelector('.aufschlagen');
+    var obj = buch && buch.querySelector('.buchobjekt');
+    var deckel = obj && obj.querySelector('.deckel');
+    if (!knopf || !deckel) return;
+    var erster = obj.querySelector('a');
+    var offen = function () { return buch.classList.contains('offen'); };
+    // Während der Drehung beim Aufschlagen trägt das Buch .dreht (bis transitionend, zur Sicherheit nach der Dauer und 80 ms)
+    var drehUhr = 0;
+    function gedreht() { clearTimeout(drehUhr); buch.classList.remove('dreht'); }
+    deckel.addEventListener('transitionend', function (e) { if (e.target === deckel) gedreht(); });
+    function auf(an, fokus, still) {
+      if (still) deckel.style.transitionDuration = '0ms';
+      gedreht();
+      var dauer = an && !still ? parseFloat(getComputedStyle(deckel).transitionDuration) * 1000 || 0 : 0;
+      if (dauer) { buch.classList.add('dreht'); drehUhr = setTimeout(gedreht, dauer + 80); }
+      buch.classList.toggle('offen', an);
+      knopf.setAttribute('aria-expanded', an ? 'true' : 'false');
+      if (an) obj.removeAttribute('inert'); else obj.setAttribute('inert', '');
+      if (still) { getComputedStyle(deckel).transform; deckel.style.transitionDuration = ''; }
+      if (fokus) (an ? erster : knopf).focus({ preventScroll: true });
     }
-    ort();
-    if (schmal.addEventListener) schmal.addEventListener('change', ort); else if (schmal.addListener) schmal.addListener(ort);
+    knopf.addEventListener('click', function () { auf(true, true); });
+    // Ein Druck auf die freie Fläche nimmt den Fokus schon vor dem Klick weg: ob er im Verzeichnis lag, zählt vom Druck an
+    var warDrin = false;
+    obj.addEventListener('pointerdown', function () { warDrin = obj.contains(document.activeElement); }, true);
+    obj.querySelector('.innen').addEventListener('click', function (e) {
+      if (e.target.closest('a') || !offen()) return;
+      auf(false, warDrin || obj.contains(document.activeElement));
+      warDrin = false;
+    });
+    // Falls der Fokus doch hineinkommt (ohne inert, beim Wechsel über die Grenze): offen, ohne Drehung
+    obj.addEventListener('focusin', function () { if (!offen()) auf(true, false, true); });
+
+    // Sprung: Fokus auf die Überschrift, im nächsten Bild, ohne zu rollen
+    buch.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]');
+      var ziel = a && document.getElementById(a.getAttribute('href').slice(1));
+      var titel = ziel && ziel.querySelector('.titel[tabindex="-1"]');
+      if (titel) requestAnimationFrame(function () { titel.focus({ preventScroll: true }); });
+    });
+
+    // Über die Grenze. Das Buch, das verschwindet, kann den Fokus schon verloren haben: darum zählt auch der letzte Fokus in ihm
+    if (!gross || !window.matchMedia) return;
+    var schmal = window.matchMedia('(max-width: 62rem)'), zuletzt = null;
+    document.addEventListener('focusin', function (e) {
+      zuletzt = buch.contains(e.target) || gross.contains(e.target) ? e.target : null;
+    });
+    // Geht der Fokus weg, während das Buch noch zu sehen ist, war es Absicht; verliert ihn das Buch, weil es verschwindet, bleibt er gemerkt
+    document.addEventListener('focusout', function (e) {
+      if (e.target === zuletzt && e.target.getClientRects().length) zuletzt = null;
+    });
+    var gleich = function (wo, el) {
+      var h = el && el.getAttribute && el.getAttribute('href');
+      return (h && wo.querySelector('a[href="' + h + '"]')) || wo.querySelector('a');
+    };
+    function wechsel() {
+      var a = document.activeElement;
+      if (!a || a === document.body || a === document.documentElement) a = zuletzt;
+      if (!a) return;
+      if (schmal.matches && gross.contains(a)) { auf(true, false, true); gleich(obj, a).focus({ preventScroll: true }); }
+      else if (!schmal.matches && buch.contains(a)) gleich(gross, a).focus({ preventScroll: true });
+    }
+    if (schmal.addEventListener) schmal.addEventListener('change', wechsel); else if (schmal.addListener) schmal.addListener(wechsel);
   })();
   </script>
 </section>

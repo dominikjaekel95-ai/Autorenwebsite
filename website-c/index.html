@@ -24,6 +24,9 @@
 /* ---------- Der erste Satz (02) ----------
    IM Fell French Canon im Grad Einstieg, jedes Glied eine Zeile. Der Platz für drei Zeilen steht von Anfang an fest. */
 .einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 3); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
+/* Letzte Sicherung, falls das Skript den Satz nicht anpassen kann: nie breiter als die Spalte, ein zu langes Wort bricht eher, als
+   über den Rand zu laufen (Dominik: „der Punkt von eigenes abgeschnitten“). Den Flug berührt das nicht, er verschiebt nur. */
+.globusseite > .einstieg { max-width: min(100%, var(--mass)); min-width: 0; overflow-wrap: break-word; }
 .einstieg.gesetzt .glied-satz, .einstieg .paar { white-space: nowrap; }
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
@@ -300,20 +303,60 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     el.appendChild(satz);
     var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
 
-    /* Jedes Glied eine Zeile. Passt das längste nicht in die Spalte, wird die Schrift kleiner, bis es passt, am Desktop nicht unter
-       28,5 px, sonst nicht unter 20,7 px. Reicht auch das nicht, bricht der Satz frei. */
+    /* Jedes Glied eine Zeile. Passt das längste nicht mit Luft in die Spalte, wird die Schrift kleiner, bis es passt, am Desktop
+       nicht unter 28,5 px, sonst nicht unter 20,7 px. Reicht auch das nicht, bricht der Satz frei; über den Rand läuft er nie.
+       Dominik am 23. Oktober, mit einem Bildschirmfoto: „Bei mir auf dem eigenen Handy ist der Punkt von eigenes abgeschnitten.“
+       Auf seinem Telefon stand der Satz rund 10 % größer, als die Anpassung ihn in Chromium setzt. Darum:
+       - Luft: das längste Glied nimmt höchstens 97 % der Spalte ein, mindestens 6 px bleiben frei (am kleinsten Grad nur die 6 px);
+       - nach dem Setzen wird nachgemessen und, wenn nötig, noch einmal verkleinert (bis zu drei Durchgänge). Nicht jedes Telefon
+         vergrößert Schrift im Verhältnis (Schriftgröße des Systems, Textzoom einer App), und gerechnet wird von der Größe, die
+         gesetzt wurde, nicht von der, die das Gerät daraus macht;
+       - gesetzt wird noch einmal, wenn eine Schrift ankommt, nach dem Laden, nach dem Flug und wenn die Spalte breiter oder
+         schmaler wird (unten). Der Punkt bleibt; er gehört zum Satz. */
+    function laengstes() {
+      var links = el.getBoundingClientRect().left + el.clientLeft + (parseFloat(getComputedStyle(el).paddingLeft) || 0);
+      var rechts = links;
+      glieder.forEach(function (g) { rechts = Math.max(rechts, g.getBoundingClientRect().right); });
+      return rechts - links;
+    }
+    // Was beim letzten Setzen galt: Breite der Spalte und Breite jedes Worts. Ändert sich eins davon, wird neu gesetzt (unten)
+    var masse = '';
+    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
     function setzen() {
+      anpassen();
+      masse = mass();
+    }
+    function anpassen() {
       el.style.fontSize = '';
       el.classList.add('gesetzt');
       var breite = el.clientWidth;
       if (!breite) return;
-      var laengste = 0;
-      glieder.forEach(function (g) { laengste = Math.max(laengste, g.getBoundingClientRect().width); });
-      if (laengste <= breite) return;
-      var jetzt = parseFloat(getComputedStyle(el).fontSize);
-      var kleiner = Math.floor(jetzt * breite / laengste * 10) / 10 - .2;
-      if (kleiner >= (breit() ? 28.5 : 20.7)) el.style.fontSize = kleiner + 'px';
-      else el.classList.remove('gesetzt');
+      var ziel = Math.min(breite * .97, breite - 6), unten = breit() ? 28.5 : 20.7;
+      var gesetzt = parseFloat(getComputedStyle(el).fontSize);
+      for (var n = 0; n <= 3; n++) {
+        var lang = laengstes();
+        if (lang <= ziel) return;
+        if (n === 3) break;
+        var kleiner = Math.floor(gesetzt * ziel / lang * 10) / 10;
+        if (kleiner >= gesetzt) kleiner = Math.round((gesetzt - .1) * 10) / 10;
+        // Reichen die 97 % erst unter dem kleinsten Grad, gilt dort nur noch die Luft von 6 px (bei 360 px drei Zeilen statt freiem Bruch)
+        if (kleiner < unten) {
+          if (gesetzt <= unten) break;
+          kleiner = unten;
+          ziel = breite - 6;
+        }
+        el.style.fontSize = kleiner + 'px';
+        gesetzt = kleiner;
+      }
+      el.style.fontSize = '';
+      el.classList.remove('gesetzt');
+    }
+    // Ein zweites Setzen wartet aufs nächste Bild; mehrere Anlässe zugleich setzen einmal
+    var bild = 0;
+    function nachsetzen() {
+      if (bild) return;
+      var los = function () { bild = 0; setzen(); };
+      bild = window.requestAnimationFrame ? window.requestAnimationFrame(los) : setTimeout(los, 16);
     }
 
     function imFell(ms) {
@@ -368,6 +411,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
           w.style.filter = s > .06 ? 'url(#einstieg-flug-' + i + ')' : '';
         });
         if (offen) requestAnimationFrame(schritt);
+        else setzen();   // nach dem Flug noch einmal nachgemessen; steht der Satz richtig, ändert sich nichts
       })();
     }
 
@@ -378,18 +422,36 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       el.classList.remove('wartet');
       if (da && !still()) einfliegen();
     });
-    // Kommt die Schrift später, wird der Satz noch einmal an die Spalte angepasst (ohne Flug)
+    // Kommt eine Schrift später, wird der Satz noch einmal an die Spalte angepasst (ohne Flug); ebenso nach dem Laden der Seite
     if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(nachsetzen).catch(function () {});
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', nachsetzen);
+    window.addEventListener('load', nachsetzen);
 
-    var warte = 0, breiteVorher = window.innerWidth;
-    window.addEventListener('resize', function () {
-      clearTimeout(warte);
-      warte = setTimeout(function () {
-        if (window.innerWidth === breiteVorher) return;
-        breiteVorher = window.innerWidth;
+    /* Wird die Spalte breiter oder schmaler, wird neu gesetzt, auch wenn das Fenster gleich breit bleibt (etwa wenn eine App ihr
+       Fenster erst nach dem Laden einpasst); ebenso, wenn ein Wort breiter oder schmaler wird, weil eine Schrift angekommen ist.
+       Das geschieht nach dem Umbruch und vor dem nächsten Bild, man sieht den Satz also nie über den Rand laufen. Die Höhe zählt
+       nicht, und was setzen() selbst ändert, steht danach in masse: so setzt der Beobachter sich nicht immer wieder selbst. Nach
+       einem Setzen schaut er erst im nächsten Bild wieder hin (sonst meldet der Browser eine Schleife). */
+    if (window.ResizeObserver) {
+      var beobachter = new ResizeObserver(function () {
+        if (mass() === masse) return;
         setzen();
-      }, 140);
-    });
+        beobachter.disconnect();
+        requestAnimationFrame(beobachten);
+      });
+      var beobachten = function () {
+        beobachter.observe(el);
+        woerter.forEach(function (w) { beobachter.observe(w); });
+      };
+      beobachten();
+    } else {
+      var warte = 0;
+      window.addEventListener('resize', function () {
+        clearTimeout(warte);
+        warte = setTimeout(function () { if (mass() !== masse) setzen(); }, 140);
+      });
+    }
   })();
   </script>
   <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>

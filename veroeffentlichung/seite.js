@@ -1536,7 +1536,6 @@
       const liste = $('.nav-liste', nav);
       if (!liste) return;
       nav.classList.remove('zweizeilig');
-      if (!breit() || !nav.closest('.mit-globus')) return;
       const zeile = parseFloat(getComputedStyle(liste).lineHeight) || 28;
       if (liste.getBoundingClientRect().height > zeile * 1.5) nav.classList.add('zweizeilig');
     });

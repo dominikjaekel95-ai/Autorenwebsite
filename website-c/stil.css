@@ -170,12 +170,15 @@ a.name:hover, a.name:focus-visible { text-decoration-line: underline; }
 .nav-liste a[aria-current="true"] { font-weight: 600; }
 .nav-liste a[aria-current="true"]:hover { text-decoration-line: underline; }
 /* Breit, neben dem Globus: die Navigation darf über die Textspalte hinaus bis kurz vor den Globus laufen;
-   bricht sie doch, dann nach „Untertext“ (FSeite setzt .zweizeilig) statt vor einem einzelnen Wort */
+   bricht sie doch, dann nach „Länder“ (FSeite setzt .zweizeilig) statt vor einem einzelnen Wort. Seit dem 24. Oktober hat sie
+   fünf Einträge: Erzählungen und Untertext stehen erst wieder im Menü, wenn es Texte gibt (Dominik); kommen sie zurück, hier
+   wieder nth-child(n+5) (Bruch nach „Untertext“) */
 @media (min-width: 62.0625rem) {
   .mit-globus .nav { width: max-content; max-width: calc(var(--globuskante) - var(--rand-l) - 1.5em); }
-  .nav.zweizeilig .nav-liste li:nth-child(n+5) { order: 2; }
-  .nav.zweizeilig .nav-liste::before { content: ""; flex-basis: 100%; order: 1; height: 0; }
 }
+/* Auch auf dem Telefon: Bricht die Navigation, dann nach „Länder“ (drei und zwei), nicht vor „Vita“ allein */
+.nav.zweizeilig .nav-liste li:nth-child(n+4) { order: 2; }
+.nav.zweizeilig .nav-liste::before { content: ""; flex-basis: 100%; order: 1; height: 0; }
 
 /* ---------- Abschnitte, Spalten, Überschriften (3.6, 5.2) ---------- */
 .abschnitt { padding: var(--z-drei) var(--rand-r) 0 var(--rand-l); }

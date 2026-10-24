@@ -115,9 +115,9 @@ a.name:hover, a.name:focus-visible { text-decoration-line: underline; }
 .nav-liste a[aria-current="true"]:hover { text-decoration-line: underline; }
 @media (min-width: 62.0625rem) {
   .mit-globus .nav { width: max-content; max-width: calc(var(--globuskante) - var(--rand-l) - 1.5em); }
-  .nav.zweizeilig .nav-liste li:nth-child(n+5) { order: 2; }
-  .nav.zweizeilig .nav-liste::before { content: ""; flex-basis: 100%; order: 1; height: 0; }
 }
+.nav.zweizeilig .nav-liste li:nth-child(n+4) { order: 2; }
+.nav.zweizeilig .nav-liste::before { content: ""; flex-basis: 100%; order: 1; height: 0; }
 .abschnitt { padding: var(--z-drei) var(--rand-r) 0 var(--rand-l); }
 .spalte { max-width: var(--mass); }
 .spalte > p + p, .prosa > p + p, .absatz + .absatz { margin-top: var(--z-dreiviertel); }

@@ -2023,14 +2023,13 @@
 
   // ---------- Navigation (6.1) ----------
   /* Markiert die jetzige Seite (falls die Seite es nicht selbst tut). Die Navigation steht auf allen Breiten offen, ohne Schalter.
-     Breit neben dem Globus läuft sie bis kurz vor ihn; passt sie dort nicht in eine Zeile, bricht sie nach „Untertext“
-     (.zweizeilig) statt vor einem einzelnen Wort. */
+     Breit neben dem Globus läuft sie bis kurz vor ihn. Passt sie nicht in eine Zeile, auf jeder Breite, bricht sie nach „Länder“
+     (.zweizeilig, Regel in stil.css) statt vor einem einzelnen Wort. */
   function navZeilen() {
     $$('.nav').forEach(nav => {
       const liste = $('.nav-liste', nav);
       if (!liste) return;
       nav.classList.remove('zweizeilig');
-      if (!breit() || !nav.closest('.mit-globus')) return;
       const zeile = parseFloat(getComputedStyle(liste).lineHeight) || 28;
       if (liste.getBoundingClientRect().height > zeile * 1.5) nav.classList.add('zweizeilig');
     });

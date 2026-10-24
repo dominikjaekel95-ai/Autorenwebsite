@@ -1,5 +1,7 @@
 # Livegang heute: Anleitung für die zweite Claude-Sitzung
 
+**Stand 24. Oktober 2026, abends: Die Seite ist live unter https://dominikjaekel.de** (Rückmeldung der Vercel-Sitzung). Gekauft bei INWX: dominikjaekel.de, dominikjaekel.com und dominikjäkel.de (zusammen 29,31 € im Jahr), www, .com und Umlaut-Domain leiten mit 308 weiter. Offen sind nur noch: die Parkplatz-Einträge bei INWX löschen, Auto-Verlängerung und Whois-Datenschutz prüfen, die iPhone-Prüfung und Schritt 9 (Search Console, Bing, Internet Archive). Siehe `docs/todo.md`.
+
 Stand: 24. Oktober 2026. Diese Anleitung ersetzt `docs/vercel-einrichtung.md`.
 
 Sie ist für eine Claude-Sitzung auf Dominiks Computer (Claude-Desktop-App oder `claude remote-control`). Diese Sitzung hilft Dominik im Browser bei Vercel und bei den Domains. Den Code der Website schreibt eine andere Sitzung in der Cloud. Diese Sitzung hier ändert keine Dateien im Repository.

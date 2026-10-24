@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 24. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V83.
+Stand: 24. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V84.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -506,6 +506,12 @@ Später geändert: nein.
 „Ich muss dann schauen, was ich veröffentliche, vermutlich bald auch immer mehr von den Kurzgeschichten.“ (19.10., 02:24). „Ergänzt wird es dann wohl noch durch den Blog und durch 2–3 Kurzgeschichten, die ich noch hochladen werde.“ (20.10., 04:24). Auf Claudes Frage: „Untertext erstmal leer.“ (20.10., 04:37). „Kurzgeschichten und Essays kommen dann noch … Aber machen wir später.“ (20.10., 14:42)
 Für den Bau: Die Seiten *Erzählungen* und *Untertext* bleiben mit ihrer Leseseite. Es stehen keine erfundenen Beispieltexte darin. Ein neuer Text ist ein Eintrag in `daten/texte.js`.
 **Konflikt** mit Frage 25 („Erzählungen und *Untertext* erst ab dem ersten Text in die Navigation“): Seine Vorgabe gilt. Er hat die Struktur mit beiden Seiten freigegeben, „Länder bleibt drin“ entschieden und Texte angekündigt. Das Argument des Vergleichsdokuments (eine leere Seite verspricht etwas) lässt sich mit einer ruhigen, ehrlichen Zeile auf der leeren Seite lösen.
+Später geändert: ja, durch V84 (bis zum ersten Text nicht im Menü und nicht in der Suche).
+
+**V84. Erzählungen und Untertext bis zum ersten Text aus der Suche und aus dem Menü.**
+„Erzählungen und Untertext bis zum ersten Text rausnehmen.“ und „Nimm sie auch aus dem Menü raus. Wir fügen es dann hinzu, sobald wir fertig sind. Bei den Büchern kannst du sie ja noch drinlassen“ (24.10.).
+Für den Bau: Beide Seiten tragen `noindex` und fehlen in der Sitemap, solange `daten/texte.js` keinen Text ihrer Art hat (`LISTENSEITEN` in `veroeffentlichen.py`; mit dem ersten Text stehen sie beim nächsten Bau von selbst wieder darin). Im Menü aller Seiten fehlen beide Einträge; das Menü hat fünf Einträge und bricht, wenn es nicht in eine Zeile passt, nach „Länder“ (drei und zwei), auch auf dem Telefon. Auf der Startseite bleiben sie bei den Büchern („Was ich schreibe“, Regal); die Seiten selbst bleiben erreichbar und sagen „Die ersten … folgen.“ Kommt der erste Text, fügt Claude die Menüpunkte in allen Seiten wieder ein (vor „Länder“) und setzt in `stil.css` den Bruch wieder auf nth-child(n+5).
+Ort in C: das Menü `ul.nav-liste` in allen Seiten; `stil.css` (`.nav.zweizeilig`); `seite.js` (`navZeilen`); `website-c/werkzeuge/veroeffentlichen.py` (`LISTENSEITEN`).
 Später geändert: nein.
 
 ---

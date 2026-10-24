@@ -36,6 +36,6 @@ Stand: 24. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es
 ## Später
 
 - [ ] **Dominik:** Newsletter: Wortlaut, Anbieter (V68); bis dahin ausgeblendet.
-- [ ] **Dominik:** Adressen für Instagram und LinkedIn (V69).
+- [ ] **Dominik:** Adressen für Instagram und LinkedIn (V69). Empfehlung (24. Oktober): auf Instagram `dominikjaekel` wie die Domain, sonst `dominik.jaekel`; die andere Schreibweise mit reservieren. Danach trägt Claude die Adressen in `PROFILE` in `website-c/seite.js` ein (Fuß aller Seiten und `sameAs` in den strukturierten Daten) und baut neu.
 - [ ] **Dominik:** Die ersten Kurzgeschichten für *Erzählungen*.
 - [ ] Die übrigen offenen Fragen stehen in `docs/dominik-vorgaben.md`, Übersicht 3.

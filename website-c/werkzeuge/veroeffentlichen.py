@@ -37,8 +37,9 @@ Was der Bau tut:
   - Er schreibt sitemap.xml mit den elf Seiten und robots.txt (alles erlaubt, Verweis auf die Sitemap). lastmod ist das Datum
     des Baus, außer eine Seite (mit ihren Skripten und Stilen) ist gleich geblieben: dann bleibt das lastmod des letzten Baus.
     Seiten mit noindex fehlen in der Sitemap: im Entwurf die mit offenen Stellen, und lesen.html, solange daten/texte.js keinen
-    Text hat (Runde 6, S3). Dann trägt lesen.html auch noindex. Beides prüft der Bau jedes Mal selbst; mit dem ersten Text
-    steht lesen.html wieder in der Sitemap, ohne noindex.
+    Text hat (Runde 6, S3). Dann trägt lesen.html auch noindex. Ebenso erzaehlungen.html und untertext.html, solange es keinen
+    Text ihrer Art gibt (Dominik, 24. Oktober: „Erzählungen und Untertext bis zum ersten Text rausnehmen“). Das prüft der Bau
+    jedes Mal selbst; mit dem ersten Text stehen die Seiten wieder in der Sitemap, ohne noindex.
   - vercel.json, 404.html, die Icons und das Vorschaubild gehen mit.
   - Steht in einer ausgelieferten Datei noch „[[ZU PRÜFEN“, baut er nicht, außer mit --entwurf. Dann nennt er jede Stelle, und
     die Seiten mit offenen Stellen bekommen <meta name="robots" content="noindex">, damit kein Entwurf in Suchmaschinen landet.
@@ -128,6 +129,9 @@ LD_VERBOTEN = {'birthDate', 'birthPlace', 'address', 'homeLocation', 'telephone'
                'isbn', 'gender', 'nationality'}
 # lesen.html steht nur in der Sitemap und ohne noindex, wenn daten/texte.js mindestens einen Text hat (Runde 6, S3)
 LESESEITE = 'lesen.html'
+# erzaehlungen.html und untertext.html ebenso, solange es keinen Text ihrer Art gibt (Dominik, 24. Oktober: „Erzählungen und
+# Untertext bis zum ersten Text rausnehmen“); die Seiten bleiben in der Navigation und sagen „Die ersten … folgen.“
+LISTENSEITEN = {'erzaehlungen.html': 'erzaehlung', 'untertext.html': 'untertext'}
 SLUG = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
 SLUG_BELEGT = {'inhalt', 'kontakt', 'kontakt-titel', 'nav-liste', 'lesen'}   # wie BELEGT in FSeite.texte (seite.js)
 HEADER_SOLL = {
@@ -240,7 +244,42 @@ def texte_zaehlen():
     slugs = [s for s in re.findall(r'\bslug\s*:\s*[\'"]([^\'"]*)[\'"]', innen) if SLUG.match(s) and s not in SLUG_BELEGT]
     if innen and not slugs:
         fehler('daten/texte.js: window.TEXTE hat Einträge, aber keinen mit gültigem slug (Kleinbuchstaben, Ziffern, Bindestriche)')
-    return len(slugs)
+    return len(slugs), texte_arten(innen)
+
+
+def eintraege(innen):
+    """Die Einträge der Liste window.TEXTE als Quelltext, je ein { … } auf oberster Ebene (Zeichenketten übersprungen)."""
+    teile, tiefe, anfang, zeichen, i = [], 0, 0, None, 0
+    while i < len(innen):
+        c = innen[i]
+        if zeichen:
+            if c == '\\':
+                i += 1
+            elif c == zeichen:
+                zeichen = None
+        elif c in '\'"`':
+            zeichen = c
+        elif c == '{':
+            if tiefe == 0:
+                anfang = i
+            tiefe += 1
+        elif c == '}':
+            tiefe -= 1
+            if tiefe == 0:
+                teile.append(innen[anfang:i + 1])
+        i += 1
+    return teile
+
+
+def texte_arten(innen):
+    """Die Arten ('erzaehlung', 'untertext', 'laenderguide'), von denen es mindestens einen Text mit gültigem slug gibt."""
+    arten = set()
+    for e in eintraege(innen):
+        slug = re.search(r'(?:^|[{,\s])slug\s*:\s*[\'"]([^\'"]*)[\'"]', e)
+        art = re.search(r'(?:^|[{,\s])art\s*:\s*[\'"]([^\'"]*)[\'"]', e)
+        if slug and art and SLUG.match(slug.group(1)) and slug.group(1) not in SLUG_BELEGT:
+            arten.add(art.group(1))
+    return arten
 
 
 # ---------- Datenschutz: Tarif bei Vercel (Runde 6, S8) ----------
@@ -683,7 +722,7 @@ def main():
     heute = datetime.date.today().isoformat()
     if TARIF not in (None, 'pro', 'hobby'):
         fehler(f"TARIF ist {TARIF!r}; erlaubt sind None (noch offen), 'pro' und 'hobby'")
-    zahl_texte = texte_zaehlen()
+    zahl_texte, arten = texte_zaehlen()
 
     # Die Seiten und eigenen Texte ohne Kommentare, die Seiten mit Canonical und Vorschau-Angaben
     texte = {}
@@ -697,8 +736,10 @@ def main():
         texte[p] = verweise_umschreiben(p, texte[p])
     seiten = [p.as_posix() for p in dateien if p.suffix == '.html']
     offen = {s for s in seiten if MARKER.search(texte[Path(s)])}
-    # noindex und nicht in der Sitemap: im Entwurf die Seiten mit offenen Stellen; lesen.html, solange es keinen Text gibt
-    noindex = (offen if entwurf else set()) | (set() if zahl_texte else {LESESEITE})
+    # noindex und nicht in der Sitemap: im Entwurf die Seiten mit offenen Stellen; lesen.html, solange es keinen Text gibt;
+    # erzaehlungen.html und untertext.html, solange es keinen Text ihrer Art gibt
+    noindex = ((offen if entwurf else set()) | (set() if zahl_texte else {LESESEITE})
+               | {s for s, art in LISTENSEITEN.items() if art not in arten})
     ld = strukturierte_daten(texte)
     for s in seiten:
         if s != FEHLERSEITE:
@@ -753,7 +794,8 @@ def main():
     print(f'{len(ausgeliefert)} Dateien, {groesse / 1024:.1f} KB; {len(hashes)} Skripte in den Seiten, je mit Hash in script-src')
     print('Sitemap: ' + ', '.join(f'{u.removeprefix(BASIS_URL) or "/"} {d}' for u, d in eintraege))
     print(f'Adressen ohne .html (cleanUrls); noindex: {", ".join(sorted(noindex)) or "keine"}; '
-          f'Texte in daten/texte.js: {zahl_texte} ({LESESEITE} {"in der Sitemap" if zahl_texte else "mit noindex, nicht in der Sitemap"})')
+          f'Texte in daten/texte.js: {zahl_texte} ({LESESEITE} {"in der Sitemap" if zahl_texte else "mit noindex, nicht in der Sitemap"}'
+          + ''.join(f'; {s} {"in der Sitemap" if art in arten else "ohne Text ihrer Art: noindex"}' for s, art in LISTENSEITEN.items()) + ')')
     print('Strukturierte Daten: ' + ', '.join(f'{s} {t}' for s, t in LD_SEITEN.items())
           + f'; Tarif bei Vercel: {TARIF or "offen (beide Fassungen und die Markierung stehen im Datenschutz)"}')
     print('Ausgelassen: ' + ', '.join(sorted(AUSLASSEN) + [p.as_posix() + ' (nirgends verwiesen)' for p in weg]))

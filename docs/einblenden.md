@@ -4,6 +4,96 @@ Stand 23. Oktober 2026. Anlass ist Dominiks Eindruck, dass das Auge am Desktop a
 
 **Kurz gesagt.** Der externe Gestalter bestätigt Dominiks Eindruck: Heute fallen in die erste Lesesekunde drei Dinge zugleich, der einfliegende Satz, das Hineinplatzen von Globus, Regal und Tafel, und auf *Satoshi* schon der Beginn der Globusbewegung. Wann der Globus hineinplatzt, entscheidet heute der Zufall der Rechnerlast (zwischen 0,6 und 1,2 Sekunden), nicht die Gestaltung. Gute Redaktions- und Buchseiten lassen den Text sofort stehen und zeigen große Karten still; wenn sich eine Karte bewegt, dann später oder erst, wenn der Leser etwas tut. Empfohlen und als Testlink gebaut ist Variante 2 „Globus zuletzt“: Erst steht der Satz allein, dann kommt leise das Regal oder das Buch, der Globus als Letztes, und er beginnt sich eine Sekunde danach zu bewegen. Es bewegt sich nie mehr als eine Sache zugleich, und jede Handlung des Lesers lässt sofort alles erscheinen. Die stärkste Gegenrede spricht für Variante 1: Alles bleibt sofort da, nur die Bewegung wartet; das ist die Praxis der Redaktionen und die kürzeste Wartezeit. Darin gehen die Urteile auseinander: Gestalter und Prüfer aus Dominiks Sicht setzen Variante 2 an die Spitze, der Prüfer für Nutzbarkeit Variante 1, weil man bei Variante 2 auf jeder Seite rund 3 Sekunden auf den Globus wartet. Variante 2 berührt das KI-Merkmal „inszenierter Ladeauftritt“ (Rang 25 in `ki-merkmale.md`) stärker als Variante 1; vertretbar ist das nur, weil es bei zwei leisen Stufen bleibt, nur über die Deckkraft, ohne Gleiten.
 
+## Das Tempo (24. Oktober)
+
+Dominik hat Variante 2 angenommen und dann gefragt:
+
+> „Zu Globus zuletzt. Ich bin bei dir. Aber ist es nicht etwas zu schnell? Das alles einfliegt und erscheint? Also können wir nicht noch etwas warten? Was ist die ideale Zeit zum Einfliegen? Und zum Erscheinen?“
+>
+> Kurz danach: „Ich meine nur, dass es dann noch etwas mehr künstlerische Eleganz bekommt, wenn es langsamer geschieht“
+
+**Die Antwort.** Ja, bisher ist es zu schnell. Der Satz der Startseite huscht in 0,9 Sekunden herein, jedes Wort ist nach 44 Millisekunden ganz da. Regal und Globus erscheinen, bevor man den Satz zu Ende gelesen hat; auf *Satoshi* fliegt sogar die Kugel schon los. Elegant wird es durch langsame Gesten, nicht durch langes Warten.
+
+- **Einfliegen:** Jedes Wort wird in 0,42 Sekunden satt und gleitet dabei 0,8 Sekunden an seinen Platz. Von Wort zu Wort vergehen 75 Millisekunden (*Satoshi* 55), zwischen zwei Zeilen oder Sätzen 0,22 Sekunden. So baut sich der Satz Zeile für Zeile auf, wie Verse. Der Satz der Startseite steht nach 2 Sekunden still, der Aufhänger von *Satoshi* nach 2,5 Sekunden; lesen kann man beide schon knapp eine halbe Sekunde früher. Die Unschärfe fällt weg. Langsamer sollte es nicht werden: Dann zerfällt der Satz in einzelne Wörter, die man mitzählt, und wirkt vorgeführt.
+- **Erscheinen:** Das Regal in 1,2 Sekunden, Buch und Globus in 1,4 Sekunden. Nur über die Deckkraft und mit weichem Anfang; das Buch behält seinen kleinen Weg von rechts. Unter einer halben Sekunde ploppt es auf. Ab etwa 2 Sekunden steht der Globus lange halb durchsichtig da, als lade er noch.
+- **Warten:** Wichtiger als die Dauer ist der Zeitpunkt. Nach dem Satz bleibt gut eine Sekunde Stille. Das Regal ist zur Hälfte da, wenn man den Satz gelesen hat, nach gut 3 Sekunden. Der Globus beginnt, wenn das Regal fast steht, und steht nach 5 Sekunden. Die Kugel bewegt sich nach 6,6 Sekunden, wenn man sie 1,6 Sekunden still gesehen hat. Auf *Satoshi* kommt das Buch zum Ende des ersten Satzes, und die Kugel bewegt sich nach 7,1 Sekunden, wenn der ganze Aufhänger gelesen ist.
+- **Seiten ohne Einflug** (*Ursprünge*, *Satoshi* auf dem Telefon): Der Globus beginnt 1,8 Sekunden nach dem ersten Bild und steht nach gut 3 Sekunden.
+- **Grenze nach oben:** Am Desktop steht nach gut 5 Sekunden alles (*Satoshi* 5,5). Länger wirkt die leere rechte Hälfte wie „lädt noch“, und auch die Richtlinien ziehen dort die Grenze.
+
+**Woher die Zahlen kommen.** Verlage, Literaturhäuser und Typografie-Studios hat der Proxy gesperrt; ihre Werte fehlen. „Quelltext“ heißt selbst gelesen, „nur Suche“ heißt aus einer Suchzusammenfassung.
+
+- Lesen: Erwachsene lesen still rund 240 bis 260 Wörter in der Minute ([Brysbaert 2019](https://doi.org/10.1016/j.jml.2019.104047), nur Suche). Für Deutsch ist mit 230 gerechnet, abgeleitet aus Messungen beim lauten Lesen (Hahn u. a. 2006, Altpeter u. a. 2015, nur Suche). Dann ist der Satz der Startseite (12 Wörter) in 3,1 Sekunden gelesen, der Aufhänger von *Satoshi* (22 Wörter) in 5,7 Sekunden.
+- Langsames Einblenden zieht den Blick kaum vom Lesen ab (Simons u. a. 2000, McCrickard u. a. 2003, NotiFade 2023; nur Suche). Der Beginn einer Bewegung zieht ihn sehr wohl, am stärksten rechts neben Text (Abrams und Christ 2003, Simola u. a. 2011; nur Suche). Darum erscheint alles still und langsam, und die Kugel bewegt sich erst nach dem Satz.
+- Zeitlupe lässt etwas edler wirken, in 12 Versuchen mit über 27 000 Teilnehmern; der Eindruck bricht bei Unschärfe und Stocken ein ([Jung und Dubois 2023](https://knowledge.insead.edu/marketing/how-slow-motion-video-ads-make-products-more-luxurious), nur Suche). Zeitlupe kann aber auch gemacht wirken, weil das Gezeigte dann absichtsvoll erscheint (Yin, Jia und Zheng 2021, nur Suche). Dort liegt die Grenze zum KI-Merkmal „inszenierter Ladeauftritt“ (Rang 25).
+- Je größer die Fläche, desto länger die Blende ([Material 3](https://github.com/androidx/androidx/blob/androidx-main/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/MotionTokens.kt), Quelltext). IBM Carbon unterscheidet schnelle Bewegung für die Arbeit von ausdrucksvoller Bewegung für bedeutende Momente, etwa das Öffnen einer neuen Seite (Quelltext).
+- Kunstvolle Seiten blenden Zeilen in 0,6 bis 1 Sekunde ein und öffnen Bilder in 1,1 bis 1,6 Sekunden (Auswertung von 99 Awwwards-Seiten, nicht nachgeprüft). [antfu.me](https://github.com/antfu/antfu.me/blob/main/pages/posts/sliding-enter-animation.md) nimmt 1 Sekunde je Block und nennt das „elegant“ (Quelltext).
+- Nach rund 1 Sekunde Leere wandert der Blick, Laden soll unter 5 Sekunden bleiben ([RAIL](https://web.dev/articles/rail), Quelltext). Was länger als 5 Sekunden von selbst läuft, braucht „anhalten“ ([WCAG 2.2.2](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide), Quelltext); der Globus hat das.
+
+**Die vier Fassungen.** Gebaut sind drei Tempi, dazu zum Vergleich Variante 2, wie sie am 23. Oktober gebaut wurde („bisher“). Der Code ist in den drei Tempi gleich, nur die Zahlen unterscheiden sich. Bei „Von Wort zu Wort“ und „Atem im Satz“ gilt die erste Zahl für die Startseite, die zweite für *Satoshi*.
+
+| | bisher | T1 „ruhig“ | T2 „gelassen“ | T3 „langsam“ |
+|---|---|---|---|---|
+| Wort satt / gleitet | 0,04 / 0,36 s | 0,3 / 0,6 s | 0,42 / 0,8 s | 0,56 / 1,0 s |
+| Von Wort zu Wort | 40 / 28 ms | 55 / 40 ms | 75 / 55 ms | 100 / 72 ms |
+| Atem im Satz | 0,1 / 0,07 s | 0,15 s | 0,22 s | 0,3 s |
+| Unschärfe | ja | nein | nein | nein |
+| Stille nach dem Satz | 0,4 s | 0,8 s | 0,8 s; Regal oder Buch halb da, wenn der Satz gelesen ist | 1,2 s; erst nach dem Lesen |
+| Regal erscheint in | 0,4 s | 0,9 s | 1,2 s | 1,6 s |
+| Buch erscheint in | 1,0 s | 1,1 s | 1,4 s | 1,8 s |
+| Globus erscheint in | 0,7 s | 1,1 s | 1,4 s | 2,0 s |
+| Stille vor Bewegung | 1,0 s | 1,3 s | 1,6 s | 2,4 s |
+
+Zeitpunkte in Sekunden ab dem Aufruf, Median aus fünf Läufen. Desktop 1440 × 900, Telefon 393 Pixel breit. Bei 230 Wörtern in der Minute ist der Satz der Startseite bei 3,3 Sekunden gelesen, auf *Satoshi* der erste Satz des Aufhängers bei 3,6 und der ganze Aufhänger bei 5,9 Sekunden, auf *Ursprünge* Titel und Unterzeile bei 2,7 Sekunden.
+
+| | bisher | T1 „ruhig“ | T2 „gelassen“ | T3 „langsam“ |
+|---|---|---|---|---|
+| **Startseite** | | | | |
+| Satz still | 1,05 | 1,48 | 1,99 | 2,58 |
+| Regal | 1,75–2,15 | 2,05–2,95 | 2,74–3,94 | 3,38–4,97 |
+| Globus | 2,48–3,18 | 2,69–3,79 | 3,59–4,99 | 4,51–6,51 |
+| Bewegung | 4,60 | 5,07 | 6,57 | 8,90 |
+| Telefon: Globus | 1,49–2,19 | 2,06–2,96 | 2,74–3,94 | 3,41–5,01 |
+| Telefon: Bewegung | 3,46 | 4,25 | 5,54 | 7,41 |
+| ***Satoshi*** | | | | |
+| Aufhänger still | 1,16 | 1,88 | 2,48 | 3,04 |
+| Buch | 1,69–2,69 | 2,45–3,55 | 3,10–4,50 | 3,85–5,65 |
+| Globus | 3,01–3,71 | 3,21–4,31 | 4,08–5,49 | 5,11–7,11 |
+| Bewegung | 4,73 | 5,61 | 7,08 | 9,50 |
+| Telefon: Globus | 1,73–2,43 | 2,08–2,98 | 2,07–3,27 (3,29–4,49) | 3,94–5,54 |
+| Telefon: Bewegung | 3,45 | 4,27 | 4,87 (6,08) | 7,93 |
+| ***Ursprünge*** | | | | |
+| Globus | 1,52–2,22 | 1,90–3,00 | 1,94–3,34 (2,15–3,56) | 2,70–4,70 |
+| Bewegung | 3,28 | 4,29 | 4,94 (5,15) | 7,09 |
+| Telefon: Globus | 1,51–2,21 | 1,90–2,80 | 1,91–3,11 (2,23–3,44) | 2,69–4,29 |
+| Telefon: Bewegung | 3,28 | 4,09 | 4,70 (5,02) | 6,69 |
+
+T2 auf *Satoshi* am Telefon und auf *Ursprünge* ist feinjustiert gemessen (siehe unten); in Klammern die Werte vor der Feinjustierung. Alle übrigen Werte von T2 hat die Feinjustierung nicht verändert (nachgemessen). Auf schwachen Geräten (Rechenleistung auf ein Viertel gedrosselt) beginnt die Bewegung der Startseite in T2 nach 7,1 bis 7,8 Sekunden, bisher erst nach 8,1 bis 8,8 Sekunden: Die Pausen hängen jetzt an festen Zeitpunkten und warten nicht mehr, bis das Skript fertig ist.
+
+**Was die Prüfer sagen.** Drei unabhängige Prüfer haben alle vier Fassungen selbst geladen, Bild für Bild angesehen und gemessen. Noten von 1 bis 10.
+
+| Platz | Prüfer aus Dominiks Sicht | Externer Gestalter | Prüfer Nutzbarkeit |
+|---|---|---|---|
+| 1 | T2 „gelassen“ (8) | T2 „gelassen“ (8) | T1 „ruhig“ (8) |
+| 2 | T1 „ruhig“ (6) | T1 „ruhig“ (6,5) | T2 „gelassen“ (7) |
+| 3 | T3 „langsam“ (5) | T3 „langsam“ (5) | bisher (5) |
+| 4 | bisher (4) | bisher (4,5) | T3 „langsam“ (3) |
+
+- Einig sind sich alle drei beim Einflug von T2: so, nicht langsamer. T3 kippt: Bei 100 Millisekunden von Wort zu Wort werden die Wörter zählbar, der Globus steht 2 Sekunden halb durchsichtig da, und die Kugel bewegt sich erst nach 9 Sekunden. Bisher ist der Einflug ein Wischen, und das erste Wort „Dominik“ bleibt bis zu einer Sekunde verwischt stehen, weil die Unschärfe einfriert, solange die Seite rechnet.
+- Uneinig sind sie beim Warten. Der Gestalter und der Prüfer aus Dominiks Sicht nehmen T2, weil nur dort der Satz seine Lesezeit bekommt und sich die Kugel erst danach bewegt. Der Prüfer für Nutzbarkeit nimmt T1, weil bei T2 erst nach gut 5 Sekunden alles steht und die rechte Hälfte bis 4 Sekunden leer wirkt; er rät zu den Gesten von T2 mit kürzeren Pausen.
+- Einig sind sich alle drei über die Schwachstelle von T2: Auf Seiten ohne Einflug kam der Globus zu spät, am deutlichsten auf *Satoshi* am Telefon nach 3,3 Sekunden, sonst überall nach 2 bis 3 Sekunden. Dort wartete die Folge auf das Lesen von Titel und Unterzeile.
+
+**Feinjustiert.** Wo nichts einfliegt, wartet die Folge nicht mehr auf das Lesen. Der Globus beginnt dort 1,8 Sekunden nach dem ersten Bild. Vorgeschlagen waren „höchstens 2,7 Sekunden“, 1,6 Sekunden und „knapp 2 Sekunden“; 1,8 liegt dazwischen und ergibt sich aus den Zahlen, die schon da sind: erstes Bild, 1 Sekunde für den Text, 0,8 Sekunden Stille. Das betrifft *Ursprünge* und *Satoshi* auf dem Telefon; die Startseite und *Satoshi* am Desktop bleiben, wie sie waren. Nicht übernommen ist, worin die Prüfer uneins waren: das Regal in 1,4 statt 1,2 Sekunden (Dominiks Sicht), der Globus in 1,7 statt 1,4 Sekunden (Gestalter), kürzere Pausen und kein Warten auf das Lesen (Nutzbarkeit).
+
+**Empfehlung.** T2 „gelassen“ mit dieser Feinjustierung. Wirkt es beim zehnten Laden lang, zuerst die Stille vor der Bewegung von 1,6 auf 1,2 Sekunden kürzen; das schlagen der Prüfer aus Dominiks Sicht und der Prüfer für Nutzbarkeit beide vor. Soll noch mehr gewartet werden, beginnen Regal und Buch erst, wenn der Satz gelesen ist, statt dann schon halb da zu sein; die Kugel bewegt sich dann nach gut 7 Sekunden. Wirkt T2 insgesamt zu lang, ist T1 der Rückfall. T3 ist nur die Gegenprobe, um zu spüren, wo es kippt. Das Buch auf *Satoshi* erscheint in T2 wieder in 1,4 Sekunden wie in V77; Punkt 6 unten entfällt damit. Die offenen Punkte 1 bis 5 unter „Was vor einer Übernahme von Variante 2 noch zu tun wäre“ sind in allen drei Tempi schon gebaut: Der erste Klick bedient die Kugel, die Pausen hängen an festen Zeitpunkten, weitere Seiten desselben Besuchs zeigen eine kürzere Folge, nach der Zurück-Taste steht alles sofort, Länder ist ausgenommen, und die Vorausrechnung für den Schluss des Einspielers liegt in der Blende des Globus. Dort warten Klicks auf der Startseite noch bis zu einer knappen Sekunde; der Prüfer für Nutzbarkeit rät, die Rechnung zu stückeln.
+
+**Einstellbar.** Das Tempo ist ein einstellbarer Wert, kein Umbau. Alle Zeiten der Folge stehen an einer Stelle, in `FOLGE` in `seite.js`. Dauer, Abstand und Atem des Einflugs stehen in `index.html` und `satoshi.html`, die Dauer des Buchs in `satoshi.html`. Ein anderes Tempo heißt: andere Zahlen eintragen.
+
+**Gegentesten.** [Vergleichsseite der Tempi](https://claude.ai/artifact/PvLz9bNgYi75444Yhf6R9d), mit allen vier Fassungen, je Startseite, *Satoshi* und *Ursprünge*. Am besten am Desktop öffnen und jede Seite von dort aus aufrufen oder neu laden. Wer innerhalb einer Fassung weiterklickt, sieht ab der zweiten Seite eine kürzere Folge; nach der Zurück-Taste steht alles sofort.
+
+**Ursprünge.** Hier ist nur bewertet, wann Text und Globus erscheinen, nicht das Heranfliegen an Göbekli Tepe; das prüft ein eigener Lauf. Fällt das Heranfliegen weg, bleiben die Zeiten des Erscheinens gleich, nur die Bewegung entfällt.
+
+**Vor einer Übernahme.** Die Fassungen beruhen auf dem Stand vor dem letzten Bau von Version C (Commit c81b474). Dort fliegt der Aufhänger von *Satoshi* auch auf dem Telefon ein, und die Startseite wartet länger auf die Schrift des Satzes. Nach der Übernahme sind die Zeiten neu zu messen.
+
 ## Begriffe
 
 - **Einflug:** Der große erste Satz der Startseite und der Aufhänger von *Satoshi* erscheinen Wort für Wort, leicht unscharf, und werden scharf.

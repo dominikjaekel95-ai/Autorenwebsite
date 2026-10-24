@@ -26,7 +26,10 @@
    23. Oktober auch auf Telefon und Tablet, V79).
    Unter dem Vorspann steht das Inhaltsverzeichnis der Seite als kleines Buch zum Umblättern, je Seite ein Eintrag mit seiner
    Vignette; es erscheint langsam, wenn der Vorspann steht (V76, V77). Auf Telefon und Tablet steht unter der Tafel stattdessen
-   das kleine Buch aus Variante 4: zu, in Tinte; ein Tipp schlägt es auf, innen alle sechs Einträge (Dominik, 23. Oktober).
+   ein schmaler Band in Tinte, halb so breit wie die Spalte, 2 z unter dem Text der Tafel, „Klappentext“ neben seinem Fuß; ein Tipp
+   schlägt ihn zur Doppelseite mit allen sechs Einträgen auf (Variante 2; Dominik, 24. Oktober: „Nimm mal 2 bei Satoshi. Und füll
+   Mal etwas den Whitespace noch auf. … Finde der schmale Band ist besser / dezenter“ und „Also ich finde das spacing beim
+   schmalen band kann nochmal besser proportioniert sein“).
    Darunter das Buch der Abschnitte (.buch), 2 z unter dem Globusband: ab 75 rem als Doppelseite (links Klappentext, Bau, Frage, Machart; rechts an der
    Kante der Kugel Eckdaten und Figuren), darunter eine Spalte in der Reihenfolge von A. */
 
@@ -79,10 +82,10 @@ html:not(.js) .globusseite > .globus { display: none; }
    Seiten nicht. Ohne Skript eine Inhaltsseite: die sechs Überschriften untereinander im Lesegrad, ohne Zeichen.
    Ort. Breit in der weißen Fläche unter dem Vorspann; in der Quelle steht es darum zwischen Vorspann und Kugel, so kommt die
    Tabulatortaste nach dem Vorspann ins Verzeichnis und nicht erst nach 13 Schritten über Kugel und Steuerzeile. Schmal (bis 62 rem)
-   gibt es dieses Buch nicht; dort steht unter der Tafel das kleine Buch aus Variante 4 (nächster Abschnitt), in der Quelle hinter
-   der Kugel, damit Tastatur und Vorleseprogramm dieselbe Folge gehen, die man sieht. Die Tafel hält wie bisher die Höhe ihrer
-   längsten Szene; das Buch steht fest 1 z darunter und ist immer zu sehen und zu erreichen, auch im Einspieler und nach einer
-   Wahl. So springt nichts */
+   gibt es dieses Buch nicht; dort steht unter der Tafel der schmale Band (nächster Abschnitt), in der Quelle hinter der Kugel,
+   damit Tastatur und Vorleseprogramm dieselbe Folge gehen, die man sieht. Die Tafel hält wie bisher die Höhe ihrer längsten
+   Szene; der Band hat seinen Platz darunter und ist immer zu sehen und zu erreichen, auch im Einspieler und nach einer Wahl,
+   und rückt an den Text der Tafel heran (--hoch, Skript bei der Kugel) */
 .blaetterbuch .flaeche-deckel, .blaetterbuch .schnitt, .blaetterbuch .vignette { display: none; }
 .blaetterbuch .inhalt { list-style: none; font-size: var(--g-text); line-height: var(--z); hyphens: manual; -webkit-hyphens: manual; }
 .blaetterbuch .inhalt li { padding-left: 1em; text-indent: -1em; }
@@ -119,7 +122,7 @@ html.js .blaetterbuch .flaeche-deckel { background: var(--tinte); color: var(--p
 /* Die letzte Seite liegt fest; ein Klick auf sie blättert nicht weiter. Ebenso die linke Seite bei Klappentext: wer das Wort knapp
    verfehlt, soll das Buch nicht zuklappen (Wischen nach rechts schlägt es zu) */
 html.js .blaetterbuch .fest, html.js .blaetterbuch[data-stand="1"] .verso[data-blatt="0"] { cursor: default; }
-/* Zeigen auf den geschlossenen Deckel: die Kontur der dunklen Rücken (.stueck.dunkel:hover auf der Startseite), wie Variante 4 */
+/* Zeigen auf den geschlossenen Deckel: die Kontur der dunklen Rücken (.stueck.dunkel:hover auf der Startseite), wie beim schmalen Band */
 html.js .blaetterbuch[data-stand="0"] .flaeche-deckel:hover { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); }
 /* Ein Eintrag ist ein Verweis aus Wort und Vignette: beide springen, und der Finger trifft eine Fläche von mindestens 44 px (auf
    dem Telefon rund 60 bis 128 × 109 px). Was daneben und darunter frei bleibt, blättert */
@@ -148,62 +151,135 @@ html.js .blaetterbuch [data-schnitt="2"] .schnitt i:first-child { display: block
    erreicht es (opacity, nicht visibility); kommt sie hinein, steht es sofort da */
 html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
 
-/* ---------- Schmal: das kleine Buch, das sich öffnet (Variante 4) ----------
-   Dominik, 23. Oktober, über das Telefon: „Mir gefällt gerade auch nicht, dass das Buch auf dem Handy schon aufgeklappt ist. Also
-   ich mochte schon, dass es schwarz war und dann klickt man drauf ... Bzw. um ehrlich zu sein: Auf dem Handy sind die Symbole
-   vielleicht unnötig. Und auf dem Handy ist Version 4 besser?“
-   Bis 62 rem (Telefon, Tablet hochkant) steht darum statt des Buchs zum Umblättern das aus Variante 4, an seinem Platz unter der
-   Tafel. Beim Laden ist es zu: der Deckel in Tinte, der Titel aufrecht in Papier, auf der rechten Hälfte seiner Fläche, die linke
-   bleibt weiß. Ein Tipp auf den Deckel (oder Eingabe, Leertaste) schlägt ihn auf: er dreht sich einmal um den Falz nach links,
-   420 ms, ohne Federn; bei reduzierter Bewegung steht er sofort offen. Aufgeschlagen stehen alle sechs Einträge zugleich auf der
-   Doppelseite, ohne Vignetten: auf der Innenseite des Deckels Klappentext, Eckdaten, Gebaut wie ein Protokoll, auf der ersten
-   Seite die drei übrigen. Ein Tipp auf die freie Innenseite des Deckels schlägt ihn wieder zu; über die Tastatur wird nie
-   zugeklappt. Kein Blättern, kein Wischen.
-   Format wie das Buch zum Umblättern auf dem Telefon, 6 × 5,25 z, zu und offen gleich groß: es hält denselben Platz wie bisher,
-   und beim Aufschlagen springt nichts. Die Einträge stehen im Grad klein, ½ z unter der Kante, untereinander 1 z Luft wie in
-   Variante 4 (dort ½ z; so bleibt unten wie oben ½ z frei); jeder nimmt den Finger auch in der halben Luft über und unter sich,
-   ein einzeiliger auf 47 px Höhe (mindestens 44 px). Ränder im Grau der Küsten, am Falz eine Linie, wie beim Buch zum Umblättern.
-   Der Deckel ist für Vorleseprogramme ein Knopf, der über dem geschlossenen Deckel liegt (der gezeichnete Deckel ist aria-hidden);
-   solange das Buch zu ist, ist das Verzeichnis inert, offen tritt der Knopf ab und der Fokus geht auf Klappentext. Eine Liste über
-   zwei Flächen: role=list am Buch, die Flächen role=none, die Einträge in Lesefolge.
+/* ---------- Schmal: der schmale Band und die Doppelseite ----------
+   Dominik, 24. Oktober, zu den fünf Varianten für das Telefon: „Nimm mal 2 bei Satoshi. Und füll Mal etwas den Whitespace noch
+   auf. Bitte nochmal prüfen. Finde der schmale Band ist besser / dezenter“; dazu: „Also ich finde das spacing beim schmalen band
+   kann nochmal besser proportioniert sein. Darauf bitte auch nochmal prüfen“. Gebaut ist Variante 2 (die Doppelseite) mit
+   „Klappentext“ neben dem Fuß des Bands (Weg A, das Initial), dazu, was die drei Urteile daran verbessert haben.
+   Bis 62 rem (Telefon, Tablet hochkant) steht unter der Tafel ein schmaler Band in Tinte, bündig an der Textkante, halb so breit
+   wie die Spalte (aufgeschlagen liegt die Doppelseite genau über der ganzen Spalte), höchstens 8 z (Tablet) und nie höher als 55 %
+   des Fensters (quer), im Format des Satoshi-Bands aus dem Regal (135 × 205 mm: Höhe = Breite × 1,5185). Auf dem Deckel steht nur
+   der Titel in IM Fell in Papier, 0,165 der Breite groß, mittig rechts der Rille, die Mitte seiner Zeile im goldenen Schnitt der
+   Höhe (38,2 % von oben), darunter ein kurzer Strich; dazu die Rille am Gelenk, 1 px, 7 % der Breite vom Rücken. Kein Rahmen,
+   kein Schatten.
+   Maß der Abstände. Der Band ist der Anfang des Buchs: er steht 2 z unter der letzten Zeile der Tafel, so weit wie ein Abschnitt
+   vom nächsten (nicht unter ihrer Reserve für die längste Szene; Skript bei der Kugel, --hoch). Die Überschrift „Klappentext“
+   steht rechts neben seinem Fuß, ¾ z daneben, ihre Grundlinie auf seiner Unterkante, und der Absatz beginnt darunter über die
+   ganze Spalte, so weit unter der Unterkante wie sonst unter der Grundlinie einer Überschrift (rund 1 z): Band und Überschrift sind
+   der Kopf des ersten Abschnitts, das Weiß über der Überschrift der Vorschlag eines Kapitelanfangs. Blieben rechts von ihr weniger
+   als ½ z, rückt sie auf ½ z an den Band; reicht auch das nicht für ¼ z (320 px, 360 px mit großer Schrift), wird der Band so viel
+   schmaler, dass sie mit ¾ z Luft und ½ z Rand daneben steht, höchstens bis 4 z und nur, solange aufgeschlagen kein Eintrag
+   dreizeilig bricht und keiner kleiner wird als im Grad klein (dann liegt die Doppelseite nicht ganz über der Spalte). Erst wenn
+   auch das nicht geht (320 px mit größerer Schrift), steht sie wie jede Überschrift 2 z unter ihm. So gilt innerhalb der Kugel ¼
+   bis ½ z, von der Kugel zum Buch 2 z, im Abschnitt ¾ bis 1 z, auf jeder Breite gleich, weil z auf dem Telefon fest ist. Beides
+   misst und setzt das Skript beim Band (html.initial, --initial-luft, --initial-mb, --band-b); das Buch der Abschnitte rückt immer
+   mit dem Band (--nach).
+   Ein Tipp auf den Band (oder Eingabe, Leertaste): in 600 ms gleitet er um eine Seitenbreite nach rechts, während der Deckel sich
+   um den Falz nach links dreht, ohne Federn; dann liegt die Doppelseite über der ganzen Spalte, links Klappentext, Eckdaten,
+   Gebaut wie ein Protokoll, rechts die drei übrigen. Die rechte Seite dreht sich nicht, ihre Einträge stehen von Anfang an: der
+   Deckel gibt Schrift frei, kein leeres Blatt. Die der linken kommen, wenn der Deckel fast liegt (280 ms nach 420 ms), sie stehen
+   auf keiner drehenden Fläche. Die Überschrift blendet neben dem Band aus (150 ms) und an ihrem gewohnten Platz 2 z unter der
+   Doppelseite mit den Einträgen wieder ein; der Absatz gleitet dorthin nur senkrecht (Skript). Bis die Schrift steht, nimmt das
+   Buch keinen Tipp an, beim Zuschlagen bis der Deckel liegt. Ein Tipp auf die freie linke Seite schlägt es zu, über die Tastatur
+   wird nie zugeschlagen. Bei reduzierter Bewegung steht alles sofort.
+   Die Doppelseite ist kein Kasten (in Variante 2 sah sie mit grauer Kontur und Falzlinie aus wie eine zweispaltige Tabelle): links
+   nur die Kante des Deckels, in der Mitte der Falz, der oben und unten ausläuft, rechts zwei Striche als Block der Seiten, alles
+   im Grau der Zeitleiste. Satzspiegel: außen und am Bund ½ z, oben ein Drittel des freien Raums der volleren Seite, unten zwei
+   Drittel (Skript). Zu und offen ist das Buch gleich groß; reichte das Format nicht, wüchse es zu und offen gleich hoch.
+   Die Einträge im Lesegrad, solange keiner mehr als zwei Zeilen hat, sonst 10 % kleiner (mittel), sonst im Grad klein, zur Not mit
+   ¼ z Rand (knapp) und bis 5 % kleiner (Skript); reicht auch das nicht (quer mit großer Schrift, wo die Höhe des Fensters den Band
+   schmal macht), wird er in Schritten von ¼ z breiter, höchstens bis zur halben Spalte, und dann eben höher als 55 % des Fensters.
+   So bricht nie „Die Frage / hinter / dem Roman“, und wer die Schrift größer gestellt hat, bekommt die Einträge so gut wie nie
+   kleiner als ohne (bei 360 px und +10 % 17,8 statt 16,5 px; ohne 18 px).
+   Untereinander ¾ z Luft, mehr, wo der Finger sonst keine 44 px hätte; auf einer hohen Seite (Tablet, großes Telefon) in Schritten
+   von ¼ z bis 1½ z, etwa so viel wie über dem ersten Eintrag, sonst stünden die Einträge oben gedrängt über zwei Fünfteln leerer
+   Seite (Skript). Jeder nimmt den Finger über die halbe Luft darüber und darunter,
+   so liegt zwischen zwei Einträgen keine Stelle, die das Buch zuschlägt; nach außen bis zum Rand der Seite, zum Falz hin nur bis
+   zum Bund (sonst träfe ein Tipp links am Rand eines Eintrags der rechten Seite den der linken).
+   Der Band ist für Vorleseprogramme ein Knopf, der über ihm liegt (der gezeichnete Deckel ist aria-hidden); solange das Buch zu ist,
+   ist das Verzeichnis inert, offen tritt der Knopf ab und der Fokus geht auf Klappentext. Eine Liste über zwei Flächen: role=list
+   am Buch, die Flächen role=none, die Einträge in Lesefolge. Die Überschrift bleibt in ihrem Abschnitt, nur ihre Lage ändert sich.
    Breit gibt es dieses Buch nicht, ohne Skript auch nicht: dort steht auf jeder Breite die Liste. */
 .klappbuch { display: none; }
 @media (max-width: 62rem) {
   html.js .globusseite > .blaetterbuch { display: none; }
+  /* Breite des Bands, am Wurzelelement, damit die Überschrift daneben sie kennt */
+  html.js { --band-b: min(calc((var(--vb, 100vw) - 2 * var(--rand-l)) / 2), calc(var(--z) * 8), calc(55vh / 1.5185)); }
+  @supports (height: 1svh) { html.js { --band-b: min(calc((var(--vb, 100vw) - 2 * var(--rand-l)) / 2), calc(var(--z) * 8), calc(55svh / 1.5185)); } }
   html.js .klappbuch {
-    display: block; position: relative; width: calc(var(--s-b) * 2);
-    --s-h: calc(var(--z) * 6); --s-b: calc(var(--z) * 5.25); --pad-x: var(--z-viertel); --pad-o: var(--z-halb);
+    display: block; position: relative; z-index: 1; width: var(--s-b);
+    --s-b: var(--band-b); --s-h: calc(var(--s-b) * 1.5185); --bund: var(--z-halb); --aussen: var(--z-halb); --luecke: var(--z);
+    font-size: var(--g-klein); line-height: var(--zh-klein);
+    /* translate, nicht transform: das Erscheinen animiert transform */
+    translate: 0 var(--hoch, 0px); transition: translate 600ms cubic-bezier(.22, .7, .28, 1);
   }
+  @supports (height: 1lh) { html.js .klappbuch { --luecke: max(var(--z-dreiviertel), calc(2.75rem - 1lh)); } }
+  /* 2 z unter der Reserve der Tafel; das Skript rückt ihn an ihren Text (--hoch) */
+  html.js .globusseite > .klappbuch { margin-top: var(--z-zwei); }
+  html.js .klappbuch.lesegrad { font-size: var(--g-text); line-height: var(--zh-text); }
+  html.js .klappbuch.mittel { font-size: calc(var(--g-text) * .9); line-height: calc(var(--zh-text) * .9); }
+  html.js .klappbuch.knapp { --bund: var(--z-viertel); --aussen: var(--z-viertel); }
+  html.js .klappbuch.eng { font-size: var(--eng-grad); }
+  /* Zu liegt das Buchobjekt um eine Seitenbreite nach links, der Deckel bündig an der Textkante; die linke Seite ist dann leer */
+  html.js .klappbuch .buchobjekt {
+    position: relative; display: grid; grid-template-columns: var(--s-b) var(--s-b); width: calc(var(--s-b) * 2); min-height: var(--s-h);
+    perspective: 1600px; hyphens: manual; -webkit-hyphens: manual; -webkit-tap-highlight-color: transparent;
+    transform: translateX(calc(var(--s-b) * -1)); transition: transform 600ms cubic-bezier(.45, 0, .25, 1);
+  }
+  html.js .klappbuch.offen .buchobjekt { transform: none; }
+  /* Deckel und rechte Seite in derselben Zelle: der längste Inhalt bestimmt die Höhe beider, mindestens das Format */
+  html.js .klappbuch .deckel, html.js .klappbuch .seite { position: relative; grid-column: 2; grid-row: 1; min-width: 0; box-sizing: border-box; min-height: var(--s-h); }
+  html.js .klappbuch .deckel { z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr); transform-origin: left center; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 600ms cubic-bezier(.45, 0, .25, 1); }
+  html.js .klappbuch.offen .deckel { transform: rotateY(-180deg); }
+  html.js .klappbuch .deckel > .aussen, html.js .klappbuch .deckel > .innen { position: relative; grid-area: 1 / 1; min-width: 0; box-sizing: border-box; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  html.js .klappbuch .aussen { background: var(--tinte); color: var(--papier); }
+  html.js .klappbuch .aussen::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(var(--s-b) * .07); width: 1px; background: #414244; background: color-mix(in srgb, var(--papier) 16%, var(--tinte)); }
+  html.js .klappbuch .aussen span { position: absolute; left: calc(var(--s-b) * .07 + 1px); right: 0; top: calc(38.2% - .6em); text-align: center; font-family: var(--anzeige); font-size: calc(var(--s-b) * .165); line-height: 1.2; letter-spacing: .01em; }
+  html.js .klappbuch .aussen span::after { content: ""; display: block; width: 1.4em; height: 1px; margin: .45em auto 0; background: currentColor; opacity: .7; }
+  /* Offen liegt die Innenseite des Deckels links (ihr eigener rechter Rand ist dann der Bund), die Seite rechts */
+  html.js .klappbuch .seite, html.js .klappbuch .innen { background: var(--papier); }
+  html.js .klappbuch .innen { transform: rotateY(180deg); cursor: pointer; padding: var(--oben, var(--z)) var(--bund) var(--z-halb) var(--aussen); box-shadow: inset 1px 0 0 var(--zb-strich); }
+  html.js .klappbuch .seite { padding: var(--oben, var(--z)) var(--aussen) var(--z-halb) var(--bund); }
+  /* Falz und Block der Seiten sind nur gezeichnet, sie nehmen keinen Tipp */
+  html.js .klappbuch .seite::before, html.js .klappbuch .seite::after { content: ""; position: absolute; top: 0; bottom: 0; pointer-events: none; }
+  html.js .klappbuch .seite::before { left: 0; width: 1px; background: linear-gradient(to bottom, transparent, var(--zb-strich) 16%, var(--zb-strich) 84%, transparent); }
+  html.js .klappbuch .seite::after { right: 0; width: 3px; background: linear-gradient(to right, var(--zb-strich) 0 1px, transparent 1px 2px, var(--zb-strich) 2px 3px); }
+  html.js .klappbuch .eintrag { display: block; }
+  html.js .klappbuch .eintrag + .eintrag { margin-top: var(--luecke); }
+  html.js .klappbuch .innen .eintrag { opacity: 0; transition: opacity 120ms cubic-bezier(.4, 0, .3, 1); }
+  html.js .klappbuch.offen .innen .eintrag { opacity: 1; transition: opacity 280ms cubic-bezier(.4, 0, .3, 1) 420ms; }
+  html.js .klappbuch .eintrag a { position: relative; display: block; width: fit-content; max-width: 100%; text-wrap: balance; text-decoration-line: none; }
+  html.js .klappbuch .eintrag a:focus-visible { text-decoration-line: underline; }
+  @media (hover: hover) { html.js .klappbuch .eintrag a:hover { text-decoration-line: underline; } }
+  /* Trefferfläche: die Zeilen und je die halbe Luft darüber und darunter (mindestens 44 px), nach außen bis zum Rand der Seite,
+     zum Falz hin nur bis zum Bund */
+  html.js .klappbuch .eintrag a::after { content: ""; position: absolute; top: calc(var(--luecke) / -2); bottom: calc(var(--luecke) / -2); }
+  html.js .klappbuch .innen .eintrag a::after { left: calc(var(--aussen) * -1); right: calc(var(--bund) * -1); }
+  html.js .klappbuch .seite .eintrag a::after { left: calc(var(--bund) * -1); right: calc(var(--aussen) * -1); }
+  /* Der Knopf liegt genau über dem geschlossenen Band; offen ist er weg */
+  html.js .klappbuch .aufschlagen {
+    position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: var(--s-b);
+    appearance: none; -webkit-appearance: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  html.js .klappbuch.offen .aufschlagen { display: none; }
+  /* Solange der Deckel sich dreht und bis die Schrift steht, nimmt das Buch keinen Tipp an: ein zweiter Tipp träfe sonst einen
+     Eintrag, den man noch nicht sieht, oder schlüge es gleich wieder auf */
+  html.js .klappbuch.dreht .seite, html.js .klappbuch.dreht .innen, html.js .klappbuch.dreht .aufschlagen { pointer-events: none; }
+  /* Zeigen auf den geschlossenen Band, nur mit Maus (nach einem Tipp bliebe :hover hängen): die Kontur der dunklen Rücken */
+  @media (hover: hover) { html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); } }
+  /* Ohne Bewegung (Fokus von der Tastatur, Wechsel über die Grenze) */
+  html.js .klappbuch.still .buchobjekt, html.js .klappbuch.still .deckel, html.js .klappbuch.still .eintrag, html.js .klappbuch.still.offen .innen .eintrag { transition: none; }
+  /* Das Initial: die Überschrift neben dem Fuß des Bands. Der Abstand des Buchs der Abschnitte nach oben (--nach, --initial-mb)
+     setzen die Skripte; ein Rand am Buch, nicht unter dem Band, damit ihn das Raster des Globusbands nicht kappt */
+  html.js.initial #klapp-titel { padding-left: calc(var(--band-b) + var(--initial-luft, var(--z-dreiviertel))); }
+  html.js .buch { margin-top: var(--nach, 0px); transition: margin-top 600ms cubic-bezier(.22, .7, .28, 1); }
+  html.js.initial .buch { margin-top: calc(var(--initial-mb, 0px) + var(--nach, 0px)); }
+  html.js .klappbuch.ohne-gleiten, html.js .buch.ohne-gleiten { transition: none; }
 }
-html.js .klappbuch .buchobjekt { position: relative; width: calc(var(--s-b) * 2); height: var(--s-h); perspective: 1600px; font-size: var(--g-klein); line-height: var(--zh-klein); hyphens: manual; -webkit-hyphens: manual; -webkit-tap-highlight-color: transparent; }
-html.js .klappbuch .deckel, html.js .klappbuch .seite { position: absolute; top: 0; left: var(--s-b); width: var(--s-b); height: 100%; box-sizing: border-box; }
-html.js .klappbuch .seite, html.js .klappbuch .innen { background: var(--papier); padding: var(--pad-o) var(--pad-x) 0; }
-html.js .klappbuch .seite { box-shadow: inset 0 0 0 1px var(--karte-kueste); }
-/* Offen liegt die Innenseite links; den Falz zeichnet die Seite rechts (sonst läge er doppelt) */
-html.js .klappbuch .innen { box-shadow: inset 1px 0 0 var(--karte-kueste), inset 0 1px 0 var(--karte-kueste), inset 0 -1px 0 var(--karte-kueste); }
-html.js .klappbuch .deckel { z-index: 2; transform-origin: left center; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 420ms cubic-bezier(.45, 0, .25, 1); }
-html.js .klappbuch .deckel > .aussen, html.js .klappbuch .deckel > .innen { position: absolute; inset: 0; box-sizing: border-box; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-html.js .klappbuch .aussen { background: var(--tinte); color: var(--papier); padding: var(--pad-o) var(--pad-x); }
-html.js .klappbuch .innen { transform: rotateY(180deg); cursor: pointer; }
-html.js .klappbuch.offen .deckel { transform: rotateY(-180deg); }
-html.js .klappbuch .eintrag { display: block; }
-html.js .klappbuch .eintrag + .eintrag { margin-top: var(--z); }
-html.js .klappbuch .eintrag a { position: relative; display: block; width: fit-content; max-width: 100%; text-wrap: balance; }
-/* Die Trefferfläche reicht je ½ z über und unter das Wort, so breit wie es; die Flächen zweier Einträge stoßen aneinander */
-html.js .klappbuch .eintrag a::after { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--z-halb) * -1); bottom: calc(var(--z-halb) * -1); }
-/* Der Knopf liegt genau über dem geschlossenen Deckel; offen ist er weg */
-html.js .klappbuch .aufschlagen {
-  position: absolute; z-index: 3; top: 0; left: var(--s-b); width: var(--s-b); height: var(--s-h);
-  appearance: none; -webkit-appearance: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent;
-  cursor: pointer; -webkit-tap-highlight-color: transparent;
+@media (max-width: 62rem) and (prefers-reduced-motion: reduce) {
+  html.js .klappbuch, html.js .klappbuch .buchobjekt, html.js .klappbuch .deckel, html.js .klappbuch .eintrag, html.js .klappbuch.offen .innen .eintrag, html.js .buch { transition: none; }
 }
-html.js .klappbuch.offen .aufschlagen { display: none; }
-/* Solange der Deckel aufgeht, nehmen die Seiten keinen Tipp an: der Knopf ist schon weg, und ein zweiter Tipp auf den Deckel
-   träfe sonst einen Eintrag darunter und spränge fort */
-html.js .klappbuch.dreht .seite, html.js .klappbuch.dreht .innen { pointer-events: none; }
-/* Zeigen auf den geschlossenen Deckel: die Kontur der dunklen Rücken (.stueck.dunkel:hover auf der Startseite) */
-html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); }
-@media (prefers-reduced-motion: reduce) { html.js .klappbuch .deckel { transition: none; } }
 
 /* ---------- Das Buch ---------- */
 .buch { display: flex; flex-direction: column; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
@@ -676,13 +752,19 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
   </script>
   <script>
   /* Erscheinen (Dominik: „Dass kurz der Fokus auf der Tagline ist und erst dann erscheint das Buch“). Erst steht der Blick auf dem
-     Vorspann: Das Buch wartet, bis er eingeflogen ist (#aufhaenger.steht, rund 1,1 s nach dem Laden,
-     bei langsamer Schrift bis 2,2 s, auf allen Breiten; ohne Flug sofort, höchstens 3 s), dann noch 0,8 s. Danach blendet es in 1,4 s ein und rückt dabei 8 px von rechts an seinen Platz, in der Sprache des
-     Vorspanns (dessen Wörter 0,2 em von rechts kommen), ohne Federn. Breit erscheint das Buch zum Umblättern dann, auch in einem
-     niedrigen Fenster; auf Telefon und Tablet erscheint das kleine Buch unter der Kugel (es steht weiter unten in der Quelle und
-     trägt .wartet schon im HTML) erst, wenn man es zum ersten Mal erreicht. Wechselt das Fenster über die Grenze, erscheint das
-     Buch der neuen Breite nach denselben Regeln. Ihr Platz ist von Anfang an reserviert, nichts springt. Kommt die Tastatur hinein,
-     bevor es erschienen ist, steht es sofort da. Bei reduzierter Bewegung und ohne Skript steht es gleich da */
+     Vorspann: Das Buch wartet, bis er eingeflogen ist (#aufhaenger.steht, rund 1,1 s nach dem Laden, bei langsamer Schrift bis
+     2,2 s, auf allen Breiten; ohne Flug sofort, höchstens 3 s), dann noch 0,8 s. Danach blendet es in 1,4 s ein und rückt dabei
+     8 px von rechts an seinen Platz, in der Sprache des Vorspanns (dessen Wörter 0,2 em von rechts kommen), ohne Federn. Breit
+     erscheint das Buch zum Umblättern dann, auch in einem niedrigen Fenster. Auf Telefon und Tablet erscheint der schmale Band unter
+     der Kugel (er steht weiter unten in der Quelle und trägt .wartet schon im HTML) erst, wenn ein Viertel von ihm im Bild ist, und
+     schneller, in 700 ms (in Variante 2 stand der Band beim Hineinrollen lange halb grau da). Ist der Vorspann schon aus dem Bild
+     gerollt, gibt es keinen Einflug, dem er die Schau stehlen könnte: dann wartet er nicht und erscheint in 200 ms (sonst stand
+     „Klappentext“ nach schnellem Rollen bis zu 1,5 s neben leerem Platz), sobald irgendein Teil von ihm im Bild ist (wer von unten
+     heraufrollt, sieht zuerst seinen Fuß und die Überschrift daneben), und nur mit der IM Fell seines Titels, auf die er dann
+     höchstens 1,2 s wartet wie der Vorspann (sonst stand er bei langsamer Schrift kurz in der Ersatzschrift da). Wechselt das
+     Fenster über die Grenze, erscheint das Buch der neuen Breite nach denselben Regeln. Ihr Platz ist von Anfang an reserviert,
+     nichts springt. Kommt die Tastatur hinein, bevor es erschienen ist, steht es sofort da; ein Tipp auf den Band lässt sein
+     Erscheinen gleich enden (Skript beim Band). Bei reduzierter Bewegung und ohne Skript steht es gleich da */
   (function () {
     'use strict';
     var gross = document.getElementById('inhaltsbuch');
@@ -696,23 +778,33 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
       kleinHolen(function (k) { if (k) k.classList.remove('wartet'); });
       return;
     }
-    var PAUSE = 800, DAUER = 1400, WEG = 8;
-    var frei = false, buecher = [];
+    var PAUSE = 800, DAUER = 1400, WEG = 8, SOFORT = 200, FRIST = 1200;
+    var frei = false, vorspannWeg = false, buecher = [];
     // Breit erscheint das große Buch nach der Pause, auch wenn es in einem niedrigen Fenster noch unter der Kante liegt: beim
     // Rollen steht es dann schon da. Das kleine unter der Kugel wartet aufs erste Hineinrollen (solange es nicht angezeigt wird,
     // schneidet es nie das Fenster)
     function erscheinen(b) {
-      if (b.fertig || !frei || !b.dran(b)) return;
+      var ohnePause = b.klein && vorspannWeg && !frei;
+      if (b.fertig || b.schriftWartet || !(frei || ohnePause) || !b.dran(b)) return;
+      if (ohnePause && !b.schriftDa && document.fonts && document.fonts.load) {
+        b.schriftWartet = true;
+        var weiter = function () { b.schriftWartet = false; b.schriftDa = true; erscheinen(b); };
+        Promise.race([document.fonts.load('1em "IM Fell French Canon"'), new Promise(function (r) { setTimeout(r, FRIST); })]).then(weiter, weiter);
+        return;
+      }
       b.fertig = true;
       b.el.classList.remove('wartet');
+      var dauer = ohnePause ? SOFORT : b.dauer;
       b.laeufe = [
-        b.el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DAUER, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
-        b.el.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: DAUER, easing: 'cubic-bezier(.22, .7, .28, 1)' })
+        b.el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: dauer, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
+        b.el.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: dauer, easing: 'cubic-bezier(.22, .7, .28, 1)' })
       ];
+      b.laeufe.forEach(function (x) { x.id = 'erscheinen'; });
     }
-    function anmelden(el, dran, beobachten) {
+    // dauer: wie lange es einblendet; beobachten: ab welchem Anteil im Bild es als gesehen gilt (sonst erscheint es ohne Blick)
+    function anmelden(el, dran, beobachten, dauer) {
       if (!el) return;
-      var b = { el: el, dran: dran, fertig: false, gesehen: false, laeufe: [] };
+      var b = { el: el, dran: dran, fertig: false, gesehen: false, laeufe: [], dauer: dauer || DAUER, klein: !!beobachten };
       buecher.push(b);
       el.classList.add('wartet');
       el.addEventListener('focusin', function () {
@@ -723,16 +815,21 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
       if (beobachten) {
         if ('IntersectionObserver' in window) {
           var io = new IntersectionObserver(function (e) {
-            if (!e.some(function (x) { return x.isIntersecting; })) return;
-            b.gesehen = true; io.disconnect(); erscheinen(b);
-          }, { rootMargin: '0px 0px -10% 0px' });
+            var x = e[e.length - 1];
+            b.imBild = x.isIntersecting;
+            // Die erste Meldung kommt auch, wenn erst ein Streifen im Bild ist: der Anteil zählt
+            if (x.isIntersecting && x.intersectionRatio >= beobachten - .01) b.gesehen = true;
+            erscheinen(b);
+            if (b.fertig) io.disconnect();
+          }, { threshold: [0, beobachten] });
           io.observe(el);
         } else b.gesehen = true;
       }
       erscheinen(b);
     }
     anmelden(gross, function () { return !schmal.matches; }, false);
-    kleinHolen(function (k) { anmelden(k, function (b) { return b.gesehen; }, true); });
+    // Der Band: ein Viertel im Bild, oder irgendein Teil, wenn der Vorspann schon über dem Bild liegt
+    kleinHolen(function (k) { anmelden(k, function (b) { return b.gesehen || (vorspannWeg && !!b.imBild); }, .25, 700); });
     var alle = function () { buecher.forEach(erscheinen); };
     if (schmal.addEventListener) schmal.addEventListener('change', alle); else if (schmal.addListener) schmal.addListener(alle);
     var auf = document.getElementById('aufhaenger');
@@ -740,6 +837,15 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     Promise.race([steht, new Promise(function (r) { setTimeout(r, 3000); })]).then(function () {
       setTimeout(function () { frei = true; alle(); }, PAUSE);
     });
+    // Der Vorspann ganz über dem Bild: der schmale Band wartet nicht mehr
+    if (auf && 'IntersectionObserver' in window) {
+      var weg = new IntersectionObserver(function (e) {
+        var x = e[e.length - 1];
+        if (x.isIntersecting || x.boundingClientRect.bottom > 0) return;
+        vorspannWeg = true; weg.disconnect(); alle();
+      });
+      weg.observe(auf);
+    }
   })();
   </script>
 
@@ -749,17 +855,32 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Schauplätze stehen auf der Tafel, mit ihren Koordinaten.</p>
     <div class="tafel" id="tafel" aria-live="off"></div>
   </figure>
-  <!-- Schmal: das kleine Buch aus Variante 4, hinter der Kugel (Stil oben). Breit und ohne Skript wird es nicht angezeigt -->
+  <!-- Schmal: der schmale Band mit der Doppelseite, hinter der Kugel (Stil oben). Breit und ohne Skript wird er nicht angezeigt -->
   <nav class="inhaltsbuch klappbuch wartet" id="inhaltsbuch-klein" aria-label="Auf dieser Seite"><button class="aufschlagen" type="button" aria-expanded="false" aria-controls="klappbuch-liste" aria-label="Satoshi, Inhalt aufschlagen"></button><div class="buchobjekt wahlliste" id="klappbuch-liste" role="list" inert><div class="deckel" role="none"><div class="aussen" aria-hidden="true"><span>Satoshi</span></div><div class="innen" role="none"><span class="eintrag" role="listitem"><a href="#klappentext">Klappentext</a></span><span class="eintrag" role="listitem"><a href="#eckdaten">Eckdaten</a></span><span class="eintrag" role="listitem"><a href="#bau">Gebaut wie ein Protokoll</a></span></div></div><div class="seite" role="none"><span class="eintrag" role="listitem"><a href="#figuren">Die Figuren</a></span><span class="eintrag" role="listitem"><a href="#frage">Die Frage hinter dem Roman</a></span><span class="eintrag" role="listitem"><a href="#machart">Wie er gemacht ist</a></span></div></div></nav>
   <script>
-  /* Das kleine Buch (Variante 4, nur schmal). Beim Laden ist es zu, das Verzeichnis inert. Ein Tipp auf den Deckel, Eingabe oder
-     Leertaste schlägt es auf; der Fokus geht dabei auf Klappentext (nach einem Tipp ohne Rahmen, :focus-visible), damit die
-     nächste Tabulatortaste und ein Vorleseprogramm im Verzeichnis weitergehen. Ein Tipp auf die freie Innenseite des Deckels
-     schlägt es zu; lag der Fokus im Verzeichnis, geht er zurück auf den Deckel. Über die Tastatur wird nie zugeklappt. Es klappt
-     nie von selbst auf, beim Neuladen ist es zu. Die Bewegung ist ein CSS-Übergang, bei reduzierter Bewegung 0 s.
+  /* Der schmale Band (nur schmal). Beim Laden ist er zu, das Verzeichnis inert. Ein Tipp auf den Band, Eingabe oder Leertaste
+     schlägt ihn auf; der Fokus geht dabei auf Klappentext (nach einem Tipp ohne Rahmen, :focus-visible), damit die nächste
+     Tabulatortaste und ein Vorleseprogramm im Verzeichnis weitergehen. Ein Tipp auf die freie linke Seite schlägt ihn zu; lag der
+     Fokus im Verzeichnis, geht er zurück auf den Band. Über die Tastatur wird nie zugeschlagen. Er öffnet nie von selbst, beim
+     Neuladen ist er zu. Die Drehung ist ein CSS-Übergang; bis die Schrift der Einträge steht (700 ms, beim Zuschlagen bis der Deckel
+     liegt), trägt das Buch .dreht und nimmt keinen Tipp an. Bei reduzierter Bewegung und über die Tastatur steht alles sofort.
+     Das Initial: Passt „Klappentext“ neben den Band (¾ z Luft und rechts mindestens ½ z frei, sonst ½ z Luft und mindestens ¼ z
+     frei), gemessen an der gesetzten Überschrift, steht sie dort, ihre Grundlinie auf seiner Unterkante (html.initial). Den Abstand
+     misst das Skript im Fluss, ohne translate und transform: Grundlinie in der Überschrift (eine Probe ohne Höhe auf der Grundlinie)
+     und Lücke vom Buch zur Überschrift; daraus der Rand des Buchs der Abschnitte nach oben (--initial-mb). So stimmt er, wo der Band
+     auch steht, und auch mitten in einer Bewegung.
+     Beim Aufschlagen weicht die Überschrift an ihren gewohnten Platz unter der Doppelseite, beim Zuschlagen kehrt sie zurück. Sie
+     wandert nicht quer über die Seite: sie blendet an der alten Stelle aus (150 ms, der Band schiebt sich dann schon über sie), die
+     neue Lage gilt ab da, der Absatz gleitet aus der alten senkrecht dorthin (transform, bis die Drehung endet), und die Überschrift
+     blendet an der neuen Stelle ein, wenn die Schrift der Einträge kommt.
+     Den Grad der Einträge wählt das Skript am gesetzten Text (Lesegrad, mittel, klein, knapp, bis 5 % enger), dazu die Breite des
+     Bands (breiter, wo sonst ein Eintrag dreizeilig bräche; schmaler, wo erst so die Überschrift neben ihn passt), die Luft
+     zwischen den Einträgen und den Rand oben. Gemessen wird, wenn das Dokument steht, wenn die Schriften da sind, wenn alles
+     geladen ist, wenn sich das Fenster ändert, wenn die Spalte oder die Überschrift ihre Größe ändert (ResizeObserver, im nächsten
+     Bild) und beim Wechsel über die Grenze.
      Ein Eintrag ist ein gewöhnlicher Anker; danach liegt der Fokus auf der Überschrift des Abschnitts (wie beim großen Buch).
      Wechselt das Fenster über die Grenze, während der Fokus in einem der beiden Bücher liegt, geht er auf denselben Eintrag im
-     anderen (vom Deckel auf Klappentext): das kleine steht dann ohne Drehung offen, das große schlägt sich dort auf. Sonst behält
+     anderen (vom Band auf Klappentext): das kleine steht dann ohne Drehung offen, das große schlägt sich dort auf. Sonst behält
      jedes Buch seinen Stand */
   (function () {
     'use strict';
@@ -768,28 +889,203 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     var obj = buch && buch.querySelector('.buchobjekt');
     var deckel = obj && obj.querySelector('.deckel');
     if (!knopf || !deckel) return;
+    var innen = obj.querySelector('.innen'), seite = obj.querySelector('.seite');
     var erster = obj.querySelector('a');
+    var links = Array.prototype.slice.call(obj.querySelectorAll('.eintrag a'));
+    var wurzel = document.documentElement;
+    var schmal = window.matchMedia ? window.matchMedia('(max-width: 62rem)') : { matches: false };
+    var ruhig = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
     var offen = function () { return buch.classList.contains('offen'); };
-    // Während der Drehung beim Aufschlagen trägt das Buch .dreht (bis transitionend, zur Sicherheit nach der Dauer und 80 ms)
-    var drehUhr = 0;
+    var DAUER = 600, SCHRIFT = 700, WEICHT = 150, KURVE = 'cubic-bezier(.3, 0, .25, 1)';
+    // Überschrift, Absatz und das Buch der Abschnitte stehen weiter unten in der Quelle
+    var titel = null, prosa = null, abschnitte = null;
+    function holen() {
+      titel = document.getElementById('klapp-titel');
+      prosa = document.querySelector('#klappentext .prosa');
+      abschnitte = document.getElementById('buch');
+      return !!(titel && prosa && abschnitte);
+    }
+    // 1 z: der Abstand des Bands zur Reserve der Tafel im Fluss ist 2 z
+    var zMass = function () { return parseFloat(getComputedStyle(buch).marginTop) / 2 || 27; };
+
+    /* Grad der Einträge. Lesegrad, solange keiner mehr als zwei Zeilen hat; sonst mittel (10 % kleiner), sonst klein; bricht dann
+       noch einer dreizeilig, mit schmalem Rand (knapp), dann in Schritten von 1 % bis 5 % kleiner. Gemessen an offsetHeight (die
+       linke Seite ist gedreht) */
+    var zeilen = function (a) { return Math.round(a.offsetHeight / (parseFloat(getComputedStyle(a).lineHeight) || 1)); };
+    var passt = function () { return links.every(function (a) { return zeilen(a) <= 2; }); };
+    function gradWaehlen() {
+      buch.classList.remove('mittel', 'knapp', 'eng'); buch.classList.add('lesegrad'); buch.style.removeProperty('--eng-grad');
+      var stufe = 'lesegrad';
+      if (!passt()) { buch.classList.replace('lesegrad', 'mittel'); stufe = 'mittel'; }
+      if (!passt()) { buch.classList.remove('mittel'); stufe = 'klein'; }
+      if (!passt()) { buch.classList.add('knapp'); stufe = 'knapp'; }
+      if (!passt()) {
+        var g = parseFloat(getComputedStyle(buch).fontSize), f = 1;
+        buch.style.setProperty('--eng-grad', g + 'px'); buch.classList.add('eng');
+        while (!passt() && f > .955) { f -= .01; buch.style.setProperty('--eng-grad', (g * f).toFixed(2) + 'px'); }
+        stufe = passt() ? 'eng ' + f.toFixed(2) : 'dreizeilig';
+      }
+      buch.dataset.stufe = stufe;
+    }
+    /* Satzspiegel. Die Luft zwischen den Einträgen: aus dem Stil (¾ z, mehr für 44 px), auf einer hohen Seite mehr, so dass etwa so
+       viel zwischen den Einträgen steht wie über dem ersten (frei = Höhe − Zeilen der volleren Seite; zwei Lücken und oben ein
+       Drittel des Rests, also ein Fünftel), auf ¼ z abgerundet, höchstens 1½ z. Oben ein Drittel des freien Raums der volleren
+       Seite, auf ¼ z gerundet, mindestens ¾ z; unten der Rest */
+    function satzspiegel() {
+      var z = zMass();
+      buch.style.removeProperty('--luecke');
+      buch.style.setProperty('--oben', z * .75 + 'px');
+      var sh = parseFloat(getComputedStyle(obj).minHeight) || 0;
+      var zeilenHoehe = function (s) { var h = 0; s.querySelectorAll('.eintrag').forEach(function (e) { h += e.offsetHeight; }); return h; };
+      var grund = parseFloat(getComputedStyle(seite.querySelectorAll('.eintrag')[1]).marginTop) || z * .75;
+      var mehr = Math.min(z * 1.5, Math.floor((sh - Math.max(zeilenHoehe(innen), zeilenHoehe(seite))) / 5 / (z / 4)) * (z / 4));
+      if (mehr > grund + .5) buch.style.setProperty('--luecke', mehr + 'px');
+      var hoehe = function (s) { var e = s.querySelectorAll('.eintrag'), l = e[e.length - 1]; return l.offsetTop + l.offsetHeight - e[0].offsetTop; };
+      var c = Math.max(hoehe(innen), hoehe(seite));
+      buch.style.setProperty('--oben', Math.max(z * .75, Math.round((sh - c) / 3 / (z / 4)) * (z / 4)) + 'px');
+    }
+
+    /* Das Initial: passt die Überschrift neben den Band? ¾ z Luft, wenn rechts von ihr dann noch ½ z frei bleibt; sonst ½ z Luft,
+       wenn noch ¼ z frei bleibt; sonst steht sie unter dem Band (Lage „fenster“) */
+    var lage = '', lageOffen = false;
+    function breiteTitel() { var r = document.createRange(); r.selectNodeContents(titel); return r.getBoundingClientRect().width; }
+    // Breiten ohne Rundung auf ganze Pixel (clientWidth gäbe bei 360 px 310 statt 309,6, und vom Rand blieben 6,4 statt 6,75 px)
+    var bandBreite = function () { return parseFloat(getComputedStyle(buch).width) || 0; };
+    var spalteBreite = function () { return titel.parentNode.getBoundingClientRect().width; };
+    function titelZeile() { titel.style.whiteSpace = 'nowrap'; var w = breiteTitel(); titel.style.whiteSpace = ''; return w; }
+    function initialPruefen() {
+      var z = zMass();
+      var tw = titelZeile();
+      var rest = spalteBreite() - bandBreite() - tw;
+      var luft = rest - z * .75 >= z * .5 ? z * .75 : rest - z * .5 >= z * .25 ? z * .5 : -1;
+      lage = luft < 0 ? 'fenster' : 'initial';
+      buch.dataset.lage = lage;
+      abschnitte.style.setProperty('--initial-luft', Math.max(0, luft) + 'px');
+    }
+    /* Breite des Bands (--band-b am Wurzelelement; ohne gilt die aus dem Stil: die halbe Spalte, höchstens 8 z, quer höchstens 55 %
+       des Fensters hoch). Bricht dort ein Eintrag auch im engsten Grad dreizeilig (quer mit großer Schrift), wird der Band in
+       Schritten von ¼ z breiter, bis keiner mehr als zwei Zeilen hat, höchstens bis zur halben Spalte. Passt „Klappentext“ nicht
+       neben ihn, wird er so viel schmaler, dass die Überschrift mit ¾ z Luft und ½ z Rand daneben steht (sonst ½ z und ¼ z), nie
+       schmaler als 4 z und nur, solange die Einträge im Grad klein (oder größer) auf zwei Zeilen passen; sonst bleibt er, wie er
+       war, und die Überschrift steht unter ihm */
+    function breiteWaehlen() {
+      wurzel.style.removeProperty('--band-b');
+      var z = zMass(), spalte = spalteBreite(), b = bandBreite(), frei = b;
+      var stellen = function (x) { b = x; if (x === frei) wurzel.style.removeProperty('--band-b'); else wurzel.style.setProperty('--band-b', x.toFixed(2) + 'px'); gradWaehlen(); };
+      gradWaehlen();
+      while (buch.dataset.stufe === 'dreizeilig' && b < spalte / 2 - .5) stellen(Math.min(spalte / 2, b + z / 4));
+      initialPruefen();
+      if (lage !== 'fenster' || b !== frei) return;
+      var tw = titelZeile();
+      var gut = function () { return /^(lesegrad|mittel|klein|knapp)$/.test(buch.dataset.stufe); };
+      var ziele = [spalte - tw - z * 1.25, spalte - tw - z * .75];
+      for (var i = 0; i < ziele.length; i++) {
+        var x = Math.floor(ziele[i] * 4) / 4;
+        if (x < z * 4 || x >= frei) continue;
+        stellen(x);
+        if (gut()) { initialPruefen(); if (lage === 'initial') return; }
+      }
+      stellen(frei);
+      initialPruefen();
+    }
+
+    /* Lücke vom Buch im Fluss zur Überschrift, ohne den Rand, den das Skript setzt. Gemessen an den Kästen, das translate des Bands
+       (auch mitten im Gleiten) herausgerechnet; gleitet gerade der Absatz (transform), dann an offsetTop, auf ganze Pixel */
+    var oben = function (el) { var t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
+    function luecke() {
+      if (abschnitte.getAnimations && abschnitte.getAnimations().length) return oben(titel) - (oben(buch) + buch.offsetHeight);
+      var tr = (getComputedStyle(buch).translate || '').split(' ');
+      var dy = tr.length > 1 ? parseFloat(tr[1]) || 0 : 0;
+      return titel.getBoundingClientRect().top - (buch.getBoundingClientRect().bottom - dy);
+    }
+    // Setzt html.initial (zu und passend) und den Rand des Buchs der Abschnitte
+    function initialStellen() {
+      var an = lage === 'initial' && !lageOffen && schmal.matches;
+      wurzel.classList.toggle('initial', an);
+      if (!an) return;
+      var probe = document.createElement('span');
+      probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+      titel.appendChild(probe);
+      var grund = probe.getBoundingClientRect().top - titel.getBoundingClientRect().top;
+      probe.remove();
+      var rand = parseFloat(getComputedStyle(abschnitte).marginTop) || 0;
+      abschnitte.style.setProperty('--initial-mb', -Math.round((luecke() - rand + grund) * 100) / 100 + 'px');
+    }
+    // Neue Lage ohne Gleiten des Rands
+    function lageStellen() {
+      abschnitte.classList.add('ohne-gleiten');
+      initialStellen();
+      abschnitte.getBoundingClientRect(); abschnitte.classList.remove('ohne-gleiten');
+    }
+
+    // Während der Drehung trägt das Buch .dreht (beim Aufschlagen bis die Schrift steht, zur Sicherheit 40 ms länger)
+    var drehUhr = 0, lageUhr = 0, laeufe = [];
+    var masse = '';
+    function mass() { return abschnitte ? abschnitte.clientWidth + ':' + titel.offsetHeight + ':' + breiteTitel().toFixed(1) : ''; }
+    function setzen() {
+      if (!holen()) return;
+      if (!schmal.matches || !buch.getClientRects().length) {
+        // Breit: was von einer Drehung noch läuft, endet hier (sonst blendete die Überschrift dort noch aus und ein, und das Buch der
+        // Abschnitte glitte); cancel, nicht finish, damit das Ausblenden der Überschrift nicht stehen bleibt
+        clearTimeout(lageUhr); laeufe.forEach(function (x) { x.cancel(); }); laeufe = []; lageOffen = offen();
+        wurzel.classList.remove('initial'); wurzel.style.removeProperty('--band-b');
+        return;
+      }
+      breiteWaehlen();
+      satzspiegel();
+      lageStellen();
+      masse = mass();
+      // Das Skript bei der Kugel stellt Band und Text neu
+      if (buch.lageNeu) buch.lageNeu();
+    }
+
     function gedreht() { clearTimeout(drehUhr); buch.classList.remove('dreht'); }
-    deckel.addEventListener('transitionend', function (e) { if (e.target === deckel) gedreht(); });
     function auf(an, fokus, still) {
-      if (still) deckel.style.transitionDuration = '0ms';
-      gedreht();
-      var dauer = an && !still ? parseFloat(getComputedStyle(deckel).transitionDuration) * 1000 || 0 : 0;
-      if (dauer) { buch.classList.add('dreht'); drehUhr = setTimeout(gedreht, dauer + 80); }
+      still = !!still || ruhig();
+      gedreht(); clearTimeout(lageUhr);
+      laeufe.forEach(function (x) { x.cancel(); }); laeufe = [];
+      // Erscheint der Band noch, steht er sofort da: unter einer halb durchsichtigen Fläche dreht sich nichts räumlich
+      if (buch.getAnimations) buch.getAnimations().forEach(function (x) { if (x.id === 'erscheinen') x.finish(); });
+      var mitText = holen() && schmal.matches && !!buch.getClientRects().length && lage === 'initial';
+      if (still) buch.classList.add('still');
       buch.classList.toggle('offen', an);
       knopf.setAttribute('aria-expanded', an ? 'true' : 'false');
       if (an) obj.removeAttribute('inert'); else obj.setAttribute('inert', '');
-      if (still) { getComputedStyle(deckel).transform; deckel.style.transitionDuration = ''; }
+      var fertig = function () { if (!an && buch.lageNeu) buch.lageNeu(); };
+      if (still || !mitText || !titel.animate) {
+        lageOffen = an;
+        if (mitText) lageStellen();
+      }
+      if (still) { getComputedStyle(deckel).transform; getComputedStyle(obj).transform; buch.classList.remove('still'); fertig(); }
+      else {
+        buch.classList.add('dreht'); drehUhr = setTimeout(function () { gedreht(); fertig(); }, (an ? SCHRIFT : DAUER) + 40);
+        if (mitText && titel.animate) {
+          // Die Überschrift blendet an ihrem Platz aus; dann gilt die neue Lage, der Absatz gleitet senkrecht aus der alten dorthin,
+          // und die Überschrift blendet an der neuen Stelle mit den Einträgen ein (bis 700 ms)
+          var aus = titel.animate([{ opacity: 1 }, { opacity: 0 }], { duration: WEICHT, easing: 'linear', fill: 'forwards' });
+          laeufe.push(aus);
+          lageUhr = setTimeout(function () {
+            var p0 = prosa.getBoundingClientRect().top;
+            lageOffen = an;
+            lageStellen();
+            var dy = p0 - prosa.getBoundingClientRect().top;
+            if (Math.abs(dy) > .5) laeufe.push(abschnitte.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: DAUER - WEICHT, easing: KURVE }));
+            laeufe.push(titel.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, delay: SCHRIFT - 280 - WEICHT, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }));
+            aus.cancel();
+          }, WEICHT);
+        }
+      }
       if (fokus) (an ? erster : knopf).focus({ preventScroll: true });
     }
-    knopf.addEventListener('click', function () { auf(true, true); });
+    // Über die Tastatur (Eingabe, Leertaste: detail 0) steht das Buch sofort offen: der Fokus geht gleich auf Klappentext, und der
+    // stünde sonst bis 700 ms unsichtbar
+    knopf.addEventListener('click', function (e) { auf(true, true, e.detail === 0); });
+    // Wann der Band zuletzt berührt wurde: so lange weicht er nicht nach oben aus (Skript bei der Kugel)
+    buch.addEventListener('pointerdown', function () { buch.beruehrt = performance.now(); }, true);
     // Ein Druck auf die freie Fläche nimmt den Fokus schon vor dem Klick weg: ob er im Verzeichnis lag, zählt vom Druck an
     var warDrin = false;
     obj.addEventListener('pointerdown', function () { warDrin = obj.contains(document.activeElement); }, true);
-    obj.querySelector('.innen').addEventListener('click', function (e) {
+    innen.addEventListener('click', function (e) {
       if (e.target.closest('a') || !offen()) return;
       auf(false, warDrin || obj.contains(document.activeElement));
       warDrin = false;
@@ -797,17 +1093,42 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     // Falls der Fokus doch hineinkommt (ohne inert, beim Wechsel über die Grenze): offen, ohne Drehung
     obj.addEventListener('focusin', function () { if (!offen()) auf(true, false, true); });
 
+    // Messen: wenn das Dokument steht, wenn die Schriften da sind, wenn alles geladen ist (dann steht --vb), wenn Spalte oder
+    // Überschrift sich ändern
+    var bald = function (f) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', f); else f(); };
+    bald(function () {
+      setzen();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(setzen, function () {});
+      if (document.readyState !== 'complete') window.addEventListener('load', setzen);
+      if (window.ResizeObserver && holen()) {
+        // Im Rückruf nur vormerken, gesetzt wird im nächsten Bild: setzen() ändert die Höhe der Seite, und der Beobachter von
+        // seite.js auf dem Wurzelelement bekäme das im selben Durchgang nicht mehr („ResizeObserver loop completed with undelivered
+        // notifications“). Eine neue Fensterbreite setzt schon das Ereignis resize, im selben Bild
+        var roBild = 0;
+        var beobachter = new ResizeObserver(function () {
+          cancelAnimationFrame(roBild);
+          roBild = requestAnimationFrame(function () { if (mass() !== masse) setzen(); });
+        });
+        beobachter.observe(abschnitte); beobachter.observe(titel);
+        window.addEventListener('resize', function () { if (mass() !== masse) setzen(); });
+      } else {
+        var warte = 0;
+        window.addEventListener('resize', function () { clearTimeout(warte); warte = setTimeout(setzen, 120); });
+      }
+    });
+
     // Sprung: Fokus auf die Überschrift, im nächsten Bild, ohne zu rollen
     buch.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a[href^="#"]');
       var ziel = a && document.getElementById(a.getAttribute('href').slice(1));
-      var titel = ziel && ziel.querySelector('.titel[tabindex="-1"]');
-      if (titel) requestAnimationFrame(function () { titel.focus({ preventScroll: true }); });
+      var t = ziel && ziel.querySelector('.titel[tabindex="-1"]');
+      if (t) requestAnimationFrame(function () { t.focus({ preventScroll: true }); });
     });
 
     // Über die Grenze. Das Buch, das verschwindet, kann den Fokus schon verloren haben: darum zählt auch der letzte Fokus in ihm
+    if (schmal.addEventListener) schmal.addEventListener('change', setzen); else if (schmal.addListener) schmal.addListener(setzen);
     if (!gross || !window.matchMedia) return;
-    var schmal = window.matchMedia('(max-width: 62rem)'), zuletzt = null;
+    var zuletzt = null;
     document.addEventListener('focusin', function (e) {
       zuletzt = buch.contains(e.target) || gross.contains(e.target) ? e.target : null;
     });
@@ -1000,13 +1321,79 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
   }
 
   /* Die Steuerzeile steht über der Tafel, direkt unter der Kugel, und springt nie. Die Tafel hält vom Laden an die Höhe ihres
-     längsten Inhalts (der längsten Szene), auch auf dem Telefon und auch in Ruhe: so springt der Klappentext darunter weder beim
-     Durchklicken noch zu Beginn oder am Ende eines Ablaufs (vorher wuchs sie einspaltig beim Start um 163 px und schrumpfte am Ende
-     wieder). Breit bemisst sich die Kugel an dieser Höhe (--tafel-h), damit auch der längste Szenentext ganz im ersten Bildschirm
-     steht; vorher an einer mittellangen Szene, und bei 1440 × 900 war die dritte Zeile der längsten abgeschnitten */
+     längsten Inhalts (der längsten Szene), auch auf dem Telefon und auch in Ruhe: breit springt so der Klappentext darunter weder
+     beim Durchklicken noch zu Beginn oder am Ende eines Ablaufs (vorher wuchs sie einspaltig beim Start um 163 px und schrumpfte am
+     Ende wieder); schmal rücken der Band und mit ihm der Klappentext an den Text der Tafel heran (unten). Breit bemisst sich die
+     Kugel an dieser Höhe (--tafel-h), damit auch der längste Szenentext ganz im ersten Bildschirm steht; vorher an einer
+     mittellangen Szene, und bei 1440 × 900 war die dritte Zeile der längsten abgeschnitten */
   function tafelHoehe() {
     F.tafelPlatz(tafelEl, [ruheInhalt()].concat(ST.map(szeneInhalt), WEITERE.map(ortInhalt)));
+    buchLage('tafel');
   }
+
+  /* Der schmale Band folgt dem Text der Tafel (nur schmal; breit ist er nicht da). Sein Platz im Fluss liegt 2 z unter der Reserve
+     der Tafel (der Höhe ihres längsten Inhalts); mit translate (--hoch) rückt er an die Unterkante des Texts, der gerade auf ihr
+     steht, plus 2 z. Das Buch der Abschnitte rückt immer um dasselbe Maß mit (--nach, ein Rand): der Abstand vom Band zum
+     Klappentext bleibt in jedem Augenblick gleich, ob die Überschrift neben ihm steht oder darunter, und nie bleibt eine weiße
+     Lücke zurück.
+     Hinunter (der neue Text ist länger) springen Band und Buch im selben Bild, in dem der Text kommt, wie Text, den eine längere
+     Zeile darüber schiebt; gleitend deckte der Band den neuen Text eine Weile zu. Hinauf gleiten sie im Bild (600 ms, ohne Federn),
+     außer Sicht springen sie; auch im Einspieler und beim Abspielen, im Takt der Stationen (früher hielt der Ablauf den Band unten
+     fest, und über ihm wuchs ein weißes Feld bis 13 z, eine halbe Minute lang). Hinauf geht es im Bild nicht, solange das Buch offen
+     ist und bis 1 s nach einer Berührung des Bands (er wiche sonst dem Finger aus); dann nach dem Zuschlagen, und sobald er außer
+     Sicht ist. Liegt der Band über dem Bild oder die Tafel, deren Text sich ändert, wird der Bildlauf um dasselbe Maß nachgeführt:
+     was man liest, bleibt stehen, und wer unter der Tafel liest, sieht nichts rücken. Ändert sich die Reserve der Tafel (Schrift,
+     Breite), werden Band und Text so nachgeführt, dass sie im Bild bleiben, wo sie waren; nach einer neuen Breite stehen sie gleich
+     an ihrem Platz */
+  const buchKlein = document.getElementById('inhaltsbuch-klein'), buchEl = document.getElementById('buch');
+  let hochJetzt = 0, zielJetzt = 0, reserveVorher = -1, breiteVorher = -1, buchGesetzt = false, rollBald = 0, halteUhr = 0;
+  function buchStellen(hoch, gleiten, tafelWeg) {
+    if (hoch === hochJetzt) return;
+    // Band oder Tafel ganz über dem Bild: der Bildlauf wird um dasselbe Maß nachgeführt (hat der Browser das schon getan, ist nichts
+    // mehr zu tun)
+    const darueber = !gleiten && !!buchEl && (tafelWeg || buchKlein.getBoundingClientRect().bottom < 0);
+    const vorher = darueber ? buchEl.getBoundingClientRect().top : 0;
+    if (!gleiten) { buchKlein.classList.add('ohne-gleiten'); if (buchEl) buchEl.classList.add('ohne-gleiten'); }
+    buchKlein.style.setProperty('--hoch', hoch + 'px');
+    if (buchEl) buchEl.style.setProperty('--nach', hoch + 'px');
+    hochJetzt = hoch;
+    if (!gleiten) { buchKlein.getBoundingClientRect(); buchKlein.classList.remove('ohne-gleiten'); if (buchEl) buchEl.classList.remove('ohne-gleiten'); }
+    if (darueber) { const d = buchEl.getBoundingClientRect().top - vorher; if (Math.abs(d) > .5) scrollBy(0, d); }
+  }
+  // Darf der Band im Bild hinauf? Offen nicht, nach einer Berührung erst, wenn die Sekunde um ist
+  function festgehalten() {
+    if (buchKlein.classList.contains('offen')) return true;
+    const rest = 1000 - (performance.now() - (buchKlein.beruehrt || -1e9));
+    if (rest <= 0) return false;
+    clearTimeout(halteUhr); halteUhr = setTimeout(() => buchLage('frei'), rest + 20);
+    return true;
+  }
+  function buchLage(anlass) {
+    if (!buchKlein || !tafelEl || !buchKlein.getClientRects().length) { buchGesetzt = false; return; }
+    const tr = tafelEl.getBoundingClientRect();
+    let unten = tr.top;
+    tafelEl.querySelectorAll('.tafel-marke, .tafel-inhalt > *').forEach(e => { unten = Math.max(unten, e.getBoundingClientRect().bottom); });
+    const ziel = Math.round(-Math.max(0, tr.bottom - unten) * 10) / 10;
+    zielJetzt = ziel;
+    // Neue Reserve (Schrift, Breite): Band und Text bleiben, wo sie waren
+    if (buchGesetzt && Math.abs(tr.height - reserveVorher) > .5) buchStellen(Math.round((hochJetzt - (tr.height - reserveVorher)) * 10) / 10, false);
+    reserveVorher = tr.height;
+    const neu = !buchGesetzt || innerWidth !== breiteVorher;
+    buchGesetzt = true; breiteVorher = innerWidth;
+    if (ziel === hochJetzt) return;
+    const br = buchKlein.getBoundingClientRect();
+    const unterDemBild = br.top + Math.min(0, ziel - hochJetzt) > innerHeight, darueber = br.bottom < 0, tafelWeg = tr.bottom < 0;
+    if (neu || ziel > hochJetzt || unterDemBild || darueber || tafelWeg) { buchStellen(ziel, false, tafelWeg); return; }
+    if (anlass === 'rollen' || festgehalten()) return;
+    buchStellen(ziel, true);
+  }
+  // Was beim Rollen nachzuholen ist: nur außer Sicht
+  window.addEventListener('scroll', () => {
+    if (rollBald || !buchKlein || zielJetzt === hochJetzt) return;
+    rollBald = requestAnimationFrame(() => { rollBald = 0; buchLage('rollen'); });
+  }, { passive: true });
+  // Wenn das Skript beim Band neu gemessen hat oder das Buch zugeschlagen ist
+  if (buchKlein) buchKlein.lageNeu = () => buchLage('lage');
 
   // ================= Ablauf: Einspieler, Steuerzeile, Wahl =================
   a = F.ablauf({
@@ -1018,8 +1405,10 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     ruhe: 'ruhe',
     beiStation(i) {
       ortJetzt = null;
-      // An jeder Station der Szenentext, auch im Einspieler; danach ruht die Tafel bei „Die Schauplätze“
+      // An jeder Station der Szenentext, auch im Einspieler; danach ruht die Tafel bei „Die Schauplätze“. Der Band folgt im selben
+      // Bild (oben)
       tafelSetzen(i < 0 ? ruheInhalt() : szeneInhalt(ST[i]));
+      if (a) buchLage('tafel');
       neuSetzen();
     }
   });
@@ -1034,6 +1423,7 @@ html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 
     tafelEl.setAttribute('aria-live', 'polite');
     tafelSetzen(ortInhalt(o));
     if (g) { g.nurOrte(null); g.ortAnfliegen(o, o.kurz ? 6 : 3.5); }
+    buchLage('tafel');
     neuSetzen();
   }
 

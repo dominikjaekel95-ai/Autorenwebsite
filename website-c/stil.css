@@ -298,6 +298,20 @@ html:not(.js) .post { display: none; }
 .globusseite > .globus .steuer + .tafel { margin-top: var(--z-halb); }
 /* Eine Tafel ohne Marke (Länder): ihr Inhalt steht an der Kante der Kugel */
 .globusseite > .globus .tafel.ohne-marke { margin-left: 0; }
+/* Bis das Seitenskript läuft (Startseite rund 0,7 s, wenn die Karten geladen sind), sind Steuerzeile und Tafel noch nicht da. Ihr
+   Platz steht vom ersten Bild an fest, sonst schöbe die Tafel beim Erscheinen alles unter dem Globus nach unten (gemessen: Startseite
+   bei 1280 × 800 „Was ich schreibe“ um 267 px, Satoshi die Überschrift darunter um 16 px). Breit gehören zur Tafel --tafel-h: Steuerzeile,
+   Tafel und ¾ z Abstand; die leere Tafel hat schon ¼ z über sich (ohne Steuerzeile, Länder: ¾ z weniger). Rechnet die Seite --tafel-h
+   neu, wächst oder schrumpft die Kugel um dasselbe Maß, solange die Fensterhöhe sie bestimmt: die Summe bleibt, nichts springt.
+   Dominik, 23. Oktober: „es geht nur darum, dass das Einblenden durchdacht ist“ */
+@media (min-width: 62.0625rem) {
+  .globusseite > .globus > .tafel:empty { min-height: calc(var(--tafel-h) - var(--z) * .25); }
+  .globusseite > .globus > .tafel.ohne-marke:empty { min-height: calc(var(--tafel-h) - var(--z) * .75); }
+  /* Die leere Figur (Leinwand ohne Kugel, leere Tafel) wird beim Rechnen von --tafel-h etwas schmaler oder breiter, bevor die Kugel
+     ihr erstes Bild hat; zu sehen ist dabei nichts. Damit das auch nicht als Verschiebung zählt, ist sie bis dahin verborgen
+     (bedienen lässt sie sich vorher ohnehin nicht; mit der Tafel, auch mit dem Ersatztext, ist sie sofort da) */
+  .globusseite > .globus:has(> .tafel:empty) { visibility: hidden; }
+}
 
 /* ---------- Tafel (6.4) ----------
    Links die Marke (Jahr oder Bandziffer, Grad groß; „bis“, „seit“, „um“ klein darüber), rechts Kopf (Kartenzeichen und Ort,
@@ -351,6 +365,18 @@ html:not(.js) .post { display: none; }
 /* Herausziehen eines Rückens und Schuber: die einzigen Übergänge (7.3). Seiten setzen die Klasse an ihre Rücken */
 .zug { transition: transform var(--zug-dauer) ease-out; }
 .zug.ist-offen { transform: translateY(var(--zug)); }
+
+/* Einblenden in Folge (7.1, Variante „Globus zuletzt“): erst der Text, dann das Nebenbild (Regal, Inhaltsbuch; data-folge="1"),
+   der Globus mit Tafel und Steuerzeile zuletzt (data-folge="2"). Dominik, 23. Oktober: „Der Fokus ist in den ersten Sekunden immer
+   auf dem Text. Und dann erst kommen die zusätzlichen Elemente.“ Den Ablauf führt FSeite.folge; .da trägt, was stehen darf.
+   Verborgen ist nur das Bild, über die Deckkraft: kein visibility, kein display, kein aria-hidden. Vorleseprogramme lesen alles ab
+   dem ersten Bild, Tab erreicht alles, und ein Fokus darin zeigt es sofort. .folge setzt der Kopf der Seite nur, wenn Bewegung
+   erlaubt und der Tab sichtbar ist; ohne Skript und bei reduzierter Bewegung wird nichts verborgen. Läuft das Seitenskript nicht
+   (Fehler, fehlende Datei), steht alles nach 7 s von selbst da (Tempo T2 „gelassen“). Unsichtbar ist es trotzdem bedienbar: der
+   erste Klick auf die noch unsichtbare Kugel bedient schon die Kugel (FSeite.folge zeigt dann alles) */
+.folge [data-folge]:not(.da) { opacity: 0; animation: folge-notfall 0s linear 7s forwards; }
+.folge [data-folge]:focus-within { opacity: 1 !important; }
+@keyframes folge-notfall { to { opacity: 1; } }
 
 /* ---------- Karteikarte (nur noch für den Übergang; C zeigt die Buchzeile) ---------- */
 .karte {

@@ -7,11 +7,16 @@
 <meta name="description" content="Ursprünge ist eine Trilogie von Dominik Jäkel über die Anfänge der Zivilisation. Sie spielt am Göbekli Tepe um 8000 v. Chr., in Uruk um 2700 v. Chr. und in Jerusalem um 940 v. Chr.">
 <meta name="theme-color" content="#FFFEFC">
 <script>document.documentElement.classList.add('js');</script>
+<!-- Einblenden in Folge (FSeite.folge): Text zuerst, der Globus zuletzt. Schon hier gesetzt, damit vor dem ersten Bild nichts aufblitzt;
+     ohne Skript, im verborgenen Tab und bei reduzierter Bewegung wird nichts verborgen. Nach der Zurück- oder Vor-Taste (.zurueck)
+     steht alles sofort -->
+<script>(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/vollkorn-kursiv.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Seite der Ursprungstrilogie (gestaltung-website-c.md, 9.3, 6.9, 19).
@@ -45,9 +50,11 @@
 /* Ohne Skript: kein Globus; Orte und Bände stehen als Text */
 html:not(.js) .globusseite > .globus { display: none; }
 /* Die Kugel steht beim Laden schon nah über Göbekli Tepe. Bis die feine Karte steht, bleibt ihre Fläche leer (die grobe Karte wäre
-   3,3-fach vergrößert zu sehen und würde vor den Augen scharf), dann blendet sie in 0,7 s ein (Dauer und Kurve wie das Einblenden
-   des Globus in der Fassung „Globus zuletzt“). Die Tafel steht schon vorher. Mit der Tastatur auf der Kugel ist sie gleich da
-   (siehe kugelZeigen) */
+   3,3-fach vergrößert zu sehen und würde vor den Augen scharf). Mit dem Einblenden in Folge (FSeite.folge, Tempo T2 „gelassen“)
+   wartet die ganze Figur darauf und blendet dann mit Tafel und Steuerzeile in einem Zug ein, frühestens 1,8 s nach dem ersten
+   Bild; die Fläche hat dann keine eigene Blende. Ohne Folge (reduzierte Bewegung, Zurück-Taste) und wenn die feine Karte erst
+   nach der Figur kommt, blendet die Fläche selbst in 0,7 s ein; die Tafel steht dann schon. Mit der Tastatur auf der Kugel ist sie
+   gleich da (siehe kugelZeigen) */
 .globus.wartet > .flaeche { opacity: 0; pointer-events: none; }
 /* Nur das Erscheinen geht weich; das Verbergen beim Start sofort, bevor etwas gezeichnet ist */
 .globus.kommt > .flaeche { transition: opacity .7s cubic-bezier(.4, 0, .3, 1); }
@@ -90,7 +97,7 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   <p class="einleitung">Drei Romane über die Geburt der organisierten Religion am Göbekli Tepe, der Literatur in Uruk und der Heiligen Schrift in Jerusalem. In Taiwan begann Dominik Jäkels Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Trilogie.</p>
 
-  <figure class="globus" id="globus">
+  <figure class="globus" id="globus" data-folge="2">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen der Trilogie; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <p class="hinweis" hidden></p>
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text und auf der Tafel, mit ihren Koordinaten.</p>
@@ -203,7 +210,13 @@ html:not(.js) .globusseite > .globus { display: none; }
      sonst (langsames Netz) die grobe. Auch sofort, wenn die Kugel mit der Tastatur den Fokus bekommt. Bei reduzierter Bewegung steht
      der Überblick gleich da, wie bisher */
   let wartet = !ruhig;
-  const kugelZeigen = () => { if (!wartet) return; wartet = false; figur.classList.add('kommt'); figur.classList.remove('wartet'); };
+  // Ist die Figur noch von der Folge verborgen (html.folge, ohne .da), steht die Fläche gleich, und die Folge blendet alles in einem Zug ein
+  const kugelZeigen = () => {
+    if (!wartet) return;
+    wartet = false;
+    if (!document.documentElement.classList.contains('folge') || figur.classList.contains('da')) figur.classList.add('kommt');
+    figur.classList.remove('wartet');
+  };
   if (wartet) { figur.classList.add('wartet'); canvas.addEventListener('focus', kugelZeigen); }
   const g = F.globus({
     canvas, flaeche, hinweis: $('.hinweis', figur),
@@ -404,7 +417,15 @@ html:not(.js) .globusseite > .globus { display: none; }
     $('#ersatz').hidden = false;
     tafelHoehe();
   }
-  // Der Einspieler beginnt, wenn die Kugel zur Hälfte im Bild ist; bei reduzierter Bewegung steht sofort der ganze Weg
+  /* Der Einspieler beginnt, wenn die Kugel zur Hälfte im Bild ist; bei reduzierter Bewegung steht sofort der ganze Weg.
+     Einblenden in Folge (FSeite.folge; Dominik, 23. Oktober: „Der Fokus ist in den ersten Sekunden immer auf dem Text. Und dann erst
+     kommen die zusätzlichen Elemente.“; Tempo T2 „gelassen“): die Seite hat keinen Einflug und kein Nebenbild, also gehört die erste
+     Sekunde nach dem ersten Bild dem Text; der Globus mit der Tafel „I Göbekli Tepe“ nimmt den Platz des Nebenbilds in der Folge
+     ein, ohne Lesebindung bei erstem Bild + 1,8 s (FOLGE.lesenOhneFlug; nur mit ihr rechnet der Lesemoment mit Titel und
+     Unterzeile), und erst, wenn die feine Karte steht (bereit: die Fläche wartet nicht mehr, kugelZeigen; höchstens 2,5 s länger).
+     Danach beginnt der Einspieler zur Bewegung der Folge, mit dem Halt an Göbekli Tepe. Wer vorher klickt, tippt, eine Taste
+     drückt oder rollt, sieht sofort alles (auch die Leselinie führt die Kugel dann sofort) */
+  F.folge({ text: F.textmoment(null), lesen: () => F.woerter($('#werk-titel'), $('#werk-titel + .unterzeile')), kugel: () => g, bereit: () => !wartet });
   namenAb = true;
   a.einspielen();
   // Bis dahin steht Göbekli Tepe schon da, mit Punkt, Ring und Namen (einspielen hat die Orte geleert)

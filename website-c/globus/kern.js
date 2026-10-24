@@ -155,7 +155,7 @@
     let fein = null, feinDa = null;
     const feinBereit = new Promise(r => { feinDa = r; });
     function feinLaden() {
-      if (fein || feinLaden.laeuft) return;
+      if (fein || feinLaden.laeuft || feinLaden.fehlt) return;
       feinLaden.laeuft = true;
       const fertig = () => {
         if (!window.WELT_50M) return;
@@ -169,6 +169,9 @@
       const s = document.createElement('script');
       s.src = o.daten50 || 'daten/welt-50m.js';
       s.onload = fertig;
+      // Kommt die feine Karte nicht (Netz weg, Datei fehlt), bleibt es bei der groben: kein Ablauf wartet mehr auf sie (feinWarten),
+      // kein Halt wird für sie verlängert, und sie wird nicht bei jedem Zoom noch einmal geholt
+      s.onerror = () => { feinLaden.laeuft = false; feinLaden.fehlt = true; feinDa(); };
       document.head.appendChild(s);
     }
     const FLUESSE = (window.FLUESSE || []).map(f => ({ type: 'MultiLineString', coordinates: f.linien }));

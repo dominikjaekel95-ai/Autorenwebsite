@@ -7,12 +7,17 @@
 <meta name="description" content="Dominik Jäkel, Schriftsteller und Reisender, lebt in Berlin. Sein Debütroman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
 <meta name="theme-color" content="#FFFEFC">
 <script>document.documentElement.classList.add('js');</script>
+<!-- Einblenden in Folge (FSeite.folge): Text zuerst, der Globus zuletzt. Schon hier gesetzt, damit vor dem ersten Bild nichts aufblitzt;
+     ohne Skript, im verborgenen Tab und bei reduzierter Bewegung wird nichts verborgen. Nach der Zurück- oder Vor-Taste (.zurueck)
+     steht alles sofort, ohne Einflug -->
+<script>(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Die kursive Vollkorn wird hier nicht vorgeladen (auf den übrigen Seiten schon): sie teilte sich die Leitung mit der IM Fell, auf die der erste Satz höchstens 1200 ms wartet (V79); im langsamen Netz kam die IM Fell so rund 0,15 s später -->
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Startseite von Version C (docs/gestaltung-website-c.md, 9.1). Oben links Kopf, der erste Satz, die Kurzvita und darunter das
@@ -31,9 +36,6 @@
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
 .einstieg-satz .w { display: inline-block; }
-/* Während des Flugs liegt über jedem Wort eine unscharfe Kopie, die in das scharfe Wort überblendet (Skript unten, einfliegen) */
-.einstieg-satz .w.fliegt { position: relative; }
-.einstieg-satz .w .unscharf { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0; filter: url(#einstieg-flug); pointer-events: none; -webkit-user-select: none; user-select: none; }
 /* Die Vorlesekopie zählt beim Markieren und Kopieren nicht mit */
 .einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
 /* Höchstens 1200 ms wartet der Satz auf seine Schrift. Läuft das Skript nicht weiter, steht er nach 2 s von selbst da */
@@ -69,6 +71,16 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
    Die Bücher stehen 2 z unter der Kurzvita; die kleine Zeile für den Namen beim Zeigen liegt in diesem Abstand, nicht zusätzlich */
 @media (min-width: 62.0625rem) {
   .globusseite > .regalbild { margin-top: calc(var(--z-zwei) - var(--zh-klein)); }
+  /* Bis die Rücken stehen, hält die leere Fläche ihre Höhe, damit die Unterschrift und alles darunter nicht springen. Die Höhe aus
+     regalZeichnen: 222 mm (das lehnende Buch Länder, höher als beide Stapel) mal m plus 2 px, aufgerundet; m (Pixel je mm) ist
+     (Breite − 15 px) / 640, höchstens 0,86. Gemessen 148 px bei 1024, 158 bei 1280, 192 bei 1440, 193 ab 1600 px Fensterbreite.
+     Die Breite kommt aus der Fläche selbst (cqw). Ändern sich Bücher auf dem Nachttisch oder die eigenen Werke, neu messen */
+  .globusseite > .regalbild { container-type: inline-size; }
+  .globusseite > .regalbild > .regalbild-flaeche:empty { min-height: min(193px, calc((100cqw - 15px) * .346875 + 2.5px)); min-height: min(193px, round(up, calc((100cqw - 15px) * .346875 + 2px), 1px)); }
+  /* Bis dahin ist das Bild samt Unterschrift verborgen: es erscheint mit seinen Rücken auf einmal, an seinem Platz, wie Kugel und
+     Tafel daneben. Kommt die Vollkorn erst nach dem ersten Bild, setzt sich die Kurzvita darüber neu (in der Ersatzschrift oft eine
+     Zeile länger); die Unterschrift rückte dann mit, so bleibt sie unberührt */
+  .globusseite > .regalbild:has(> .regalbild-flaeche:empty) { visibility: hidden; }
   .schreiben-raster:not(:has(> .regalbild)) { grid-template-columns: minmax(0, var(--mass)); }
 }
 /* ---------- Breit wandert der Globus mit, bis kurz vor das Zeitband ----------
@@ -193,6 +205,10 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
 .regal-name { position: absolute; left: 0; top: 0; width: max-content; max-width: 100%; font-size: var(--g-klein); line-height: var(--zh-klein); background: var(--papier); pointer-events: none; }
 .regal-name[hidden] { display: none; }
 html:not(.js) .regalbild { display: none; }
+/* Erscheinen (Einblenden in Folge, stil.css): solange das Regal noch nicht zu sehen ist, greift die Maus ins Leere, wie beim Buch auf
+   Satoshi (ein Klick auf eine leere Stelle soll keinen Rücken herausziehen; anders als bei der Kugel). Spätestens nach 7 s greift sie
+   wieder (Skript am Bild), wie das Sicherheitsnetz in stil.css */
+html.folge #regalbild[data-folge]:not(.da) { pointer-events: none; }
 
 /* ---------- Mein digitales Bücherregal: das Zeitband (6.11) ---------- */
 .gelesen-vorwort { max-width: var(--mass); }
@@ -315,13 +331,15 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 <section class="globusseite" aria-label="Vita und Globus">
   <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt tagsüber</span> <span class="glied-satz">unter fremden Namen</span> <span class="glied-satz">und abends unter seinem eigenen.</span></p>
   <script>
-  /* Der erste Satz fliegt bei jedem Laden einmal ein, Wort für Wort von rechts, in rund einer Sekunde (02). Er wartet höchstens
+  /* Der erste Satz fliegt bei jedem Laden einmal ein, Wort für Wort von rechts, in rund 2 s (02; Tempo T2 „gelassen“). Er wartet höchstens
      1200 ms auf die IM Fell (bis zum 23. Oktober 600 ms, wie FSeite.schriftEinstieg; seite.js ist an dieser Stelle noch nicht
      geladen). Auf dem Telefon im Mobilnetz und im Fenster der Claude-App kam sie oft später, dann stand der Satz ohne Flug (Dominik,
      23. Oktober: „Beim Handy. Hatten wir uns entschieden, dass die Buchstaben nicht einfliegen. Finde das schon ganz schick
      eigentlich?“; V79). So lange ist er unsichtbar und schon an die Spalte angepasst (in der Ersatzschrift), sein Platz ist
      reserviert, nichts darunter rückt. Ist sie dann nicht da, steht der Satz ohne Flug und wird angepasst, wenn sie kommt. Bei
-     reduzierter Bewegung steht er sofort. Der Globus wartet nie auf ihn.
+     reduzierter Bewegung und nach der Zurück-Taste steht er sofort. Regal und Globus richten sich nach ihm (el.flug meldet Beginn
+     und Textmoment, sobald er fliegt; el.steht erfüllt sich nach dem Flug; FSeite.folge unten beim Einspieler des Lebens); er
+     selbst wartet auf nichts.
      Vorleseprogramme lesen den Satz einmal als Ganzes (die Kopie in .unsichtbar), die Wortkästen sind aria-hidden. */
   (function () {
     'use strict';
@@ -329,6 +347,12 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (!el || !el.querySelector('.glied-satz')) return;
     var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
     var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
+    // Wann der Satz steht: nach dem Flug (true) oder gleich, ohne Flug (false). el.flug: { beginn, tm, ende } in ms ab dem Aufruf,
+    // sobald der Flug läuft, ohne Flug null. Danach richten sich Regal und Globus (FSeite.folge)
+    var stehtJetzt = function () {}, flugJetzt = function () {};
+    el.steht = new Promise(function (r) { stehtJetzt = r; });
+    el.flug = new Promise(function (r) { flugJetzt = r; });
+    var zurueck = document.documentElement.classList.contains('zurueck');
 
     var text = el.textContent.replace(/\s+/g, ' ').trim();
     var satz = document.createElement('span');
@@ -444,71 +468,48 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
         .then(function (da) { return da && performance.now() - ab <= ms + 100; });
     }
 
-    // Ein Filter für die waagrechte Bewegungsunschärfe, höchstens 0,06 em
-    function filterAnlegen(em) {
-      var svg = document.getElementById('einstieg-filter');
-      if (!svg) {
-        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.id = 'einstieg-filter';
-        svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
-        svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-        svg.innerHTML = '<filter id="einstieg-flug" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
-        document.body.appendChild(svg);
-      }
-      svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', (.06 * em).toFixed(2) + ' 0');
-    }
-
-    /* Wie Lettern, die von rechts an die Zeile geschoben werden: Weg 0,2 em, je Wort 360 ms, 40 ms Versatz, 100 ms Pause zwischen
-       den Gliedern, kein Nachfedern. Die waagrechte Unschärfe (höchstens 0,06 em) vergeht beim Ankommen.
-       Die Unschärfe: Während des Flugs liegt über jedem Wort eine unscharfe Kopie (ein fester Filter), die mit dem Ankommen in das
-       scharfe Wort überblendet; die Verläufe (UNSCHARF, SCHARF, über dem Fortschritt des Worts) sind an Bildern gegen die
-       Unschärfe von vorher ((1 − Fortschritt)^1,6 · 0,06 em) abgestimmt, das scharfe Wort kommt früher. Das sind wie der Flug selbst
-       Animationen der Deckkraft, die der Browser ohne den Hauptfaden weiterführt. Bis zum 23. Oktober stellte ein Skript die
-       Unschärfe in jedem Bild neu ein; baute die Seite in dieser Zeit die Kugel auf (eine lange Aufgabe, auf einem langsamen
-       Telefon bis 2 s), blieb ein Wort so lange verwischt stehen, während die anderen längst scharf waren. Nach dem Flug ist die
-       Kopie wieder weg, das Wort steht wie vorher. */
-    var UNSCHARF = [1, .8, .55, .25, .06, 0], SCHARF = [0, .3, .6, .9, 1, 1], STELLEN = [0, .1, .25, .5, .75, 1];
+    /* Wie Lettern, die von rechts an die Zeile geschoben werden (Tempo T2 „gelassen“): je Wort ein Weg von 0,2 em in WEG ms, in der
+       Kurve (.22,.7,.28,1), und getrennt davon die Deckkraft in DECKKRAFT ms (ease), so dass man jedes Wort satt werden sieht;
+       VERSATZ ms von Wort zu Wort, ATEM ms zwischen den Gliedern, kein Nachfedern, keine Unschärfe (bis zum 24. Oktober lag über
+       jedem Wort eine unscharfe Kopie, die ins scharfe überblendete; im Tempo „gelassen“, das Dominik am 24. Oktober gewählt hat,
+       entfällt sie). Ganz: 9 × VERSATZ + 2 × ATEM + WEG, rund 1,9 s. Textmoment: das letzte Wort steht zu 95 % (Beginn +
+       max(DECKKRAFT, 0,6 × WEG)). Beides sind Animationen von Deckkraft und Verschiebung, die der Browser ohne den Hauptfaden
+       weiterführt: baut die Seite in dieser Zeit die Kugel auf, stockt nichts */
+    var WEG = 800, DECKKRAFT = 420, VERSATZ = 75, ATEM = 220;
     function einfliegen() {
-      if (!woerter[0].animate) return;
-      var em = parseFloat(getComputedStyle(el).fontSize) || 38;
-      filterAnlegen(em);
+      if (!woerter[0].animate) { flugJetzt(null); stehtJetzt(false); return; }
       var t = 0, laeufe = [];
       glieder.forEach(function (g, gi) {
-        if (gi) t += 100;
+        if (gi) t += ATEM;
         Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
-          if (wi) t += 40;
-          var zeit = { duration: 360, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' };
-          var wort = w.textContent;
-          w.textContent = '';
-          var scharf = document.createElement('span'), unscharf = document.createElement('span');
-          scharf.className = 'scharf'; scharf.textContent = wort;
-          unscharf.className = 'unscharf'; unscharf.textContent = wort;
-          w.appendChild(scharf); w.appendChild(unscharf);
-          w.classList.add('fliegt');
-          laeufe.push(w.animate([
-            { opacity: 0, transform: 'translateX(.2em)' },
-            { opacity: 1, offset: .38 },
-            { opacity: 1, transform: 'translateX(0)' }
-          ], zeit));
-          laeufe.push(unscharf.animate(UNSCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
-          laeufe.push(scharf.animate(SCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
+          if (wi) t += VERSATZ;
+          laeufe.push(w.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DECKKRAFT, delay: t, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'backwards' }));
+          laeufe.push(w.animate([{ transform: 'translateX(.2em)' }, { transform: 'translateX(0)' }], { duration: WEG, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
         });
       });
-      var fertig = function () {
-        woerter.forEach(function (w) { if (w.classList.contains('fliegt')) { w.textContent = w.firstChild ? w.firstChild.textContent : w.textContent; w.classList.remove('fliegt'); } });
-        setzen();   // nach dem Flug noch einmal nachgemessen; steht der Satz richtig, ändert sich nichts
+      var letztes = t, gemeldet = false;
+      var melden = function () {
+        if (gemeldet) return;
+        gemeldet = true;
+        var b = laeufe[0].startTime;
+        if (b == null || !isFinite(b)) b = performance.now();
+        flugJetzt({ beginn: b, tm: b + letztes + Math.max(DECKKRAFT, .6 * WEG), ende: b + letztes + Math.max(DECKKRAFT, WEG) });
       };
-      Promise.all(laeufe.map(function (a) { return a.finished; })).then(fertig, fertig);
+      if (laeufe[0].ready) laeufe[0].ready.then(melden, melden); else melden();
+      setTimeout(melden, 1000);
+      // Nach dem Flug noch einmal nachgemessen; steht der Satz richtig, ändert sich nichts
+      var gestanden = function () { setzen(); stehtJetzt(true); };
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(gestanden, gestanden);
     }
 
     setzen();
-    if (!still()) el.classList.add('wartet');
+    if (!still() && !zurueck) el.classList.add('wartet');
     imFell(1200).then(function (da) {
       setzen();
       // Hat der Notbehelf im Stil den Satz schon gezeigt (das Skript stand länger als 2 s), fliegt er nicht mehr: sonst verschwände er
       var schonDa = el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
       el.classList.remove('wartet');
-      if (da && !schonDa && !still()) einfliegen();
+      if (da && !schonDa && !still() && !zurueck) einfliegen(); else { flugJetzt(null); stehtJetzt(false); }
     });
     // Kommt eine Schrift später, wird der Satz noch einmal an die Spalte angepasst (ohne Flug); ebenso nach dem Laden der Seite
     if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
@@ -557,7 +558,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     <div data-text="ursprung" hidden id="ursprung-text"></div>
   </div>
 
-  <figure class="globus" id="globus">
+  <figure class="globus" id="globus" data-folge="2">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Orten aus dem Text; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <div class="tipp" hidden></div>
     <p class="hinweis" hidden></p>
@@ -571,13 +572,21 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   <div class="schreiben-raster">
     <!-- Das Regalbild mit seiner Unterschrift (Dominiks Wortlaut). Breit setzt das Skript es neben die Kugel (regalOrt), die Unterschrift
          wandert mit; schmal steht sie über dem Bild, breit unter dem Brett (CSS) -->
-    <figure class="regalbild" id="regalbild">
+    <figure class="regalbild" id="regalbild" data-folge="1">
       <figcaption class="regal-unterschrift">Meine Projekte und was auf dem Nachttisch liegt</figcaption>
       <div class="regalbild-flaeche" id="regalbild-flaeche" role="group" aria-label="Eigene Bücher und der Stapel vom Nachttisch"></div>
       <div class="brett"></div>
       <p class="regal-name" id="regal-name" aria-hidden="true" hidden></p>
-      <p id="regal-zeile"></p>
+      <p id="regal-zeile" class="buchzeile"></p>
     </figure>
+    <script>
+    /* Breit steht das Regalbild schon vor dem ersten Bild an seinem Ort neben der Kugel (sonst setzte regalOrt es erst um, wenn das
+       Seitenskript läuft, rund 0,7 s nach dem Laden, und „Was ich schreibe“ spränge darunter weg). regalOrt bleibt für den Wechsel
+       über die Grenze, wenn das Fenster breiter oder schmaler wird */
+    if (window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches) document.querySelector('.globusseite').insertBefore(document.getElementById('regalbild'), document.getElementById('globus'));
+    // Spätestens nach 7 s nimmt das Regal Klicks an, auch wenn das Seitenskript fehlt (Stil oben, Erscheinen)
+    if (document.documentElement.classList.contains('folge')) setTimeout(function () { document.getElementById('regalbild').classList.add('da'); }, 7000);
+    </script>
 
     <!-- Werkverzeichnis: je Werk ein Eintrag, der Titel führt zur Seite des Werks -->
     <div class="verzeichnis">
@@ -915,7 +924,15 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     reisenZuletzt = null; reisenTafel();
   });
 
-  // Der Einspieler des Lebens beginnt, sobald die Kugel zur Hälfte zu sehen ist (FSeite.ablauf); er wartet nicht auf den ersten Satz
+  /* Einblenden in Folge (FSeite.folge, Tempo T2 „gelassen“; Dominik, 23. Oktober: „Der Fokus ist in den ersten Sekunden immer auf dem
+     Text. Und dann erst kommen die zusätzlichen Elemente.“ „… dass der Globus immer als letztes Element kommen muss.“): erst der
+     erste Satz, dann das Regalbild, der Globus mit Tafel und Steuerzeile, zuletzt der Einspieler des Lebens (er beginnt außerdem
+     erst, wenn die Kugel zur Hälfte zu sehen ist, FSeite.ablauf). Der Lesemoment rechnet mit den Wörtern des Satzes. Auf dem
+     Telefon liegt das Regal unter dem ersten Bildschirm und steht gleich; der Globus nimmt seinen Platz in der Folge ein. Wer
+     vorher klickt, tippt, eine Taste drückt, rollt oder den Fokus hineinsetzt, sieht sofort alles. Geblendet wird die ganze Figur
+     des Globus, das Element, das breit klebt und mitwandert (CSS oben): nur ihre Deckkraft, ihr Platz, ihre Höhe (--globus-block)
+     und das Kleben bleiben unberührt */
+  F.folge({ text: F.textmoment($('#einstieg')), lesen: () => F.woerter($('#einstieg .einstieg-vorlesen') || $('#einstieg')), kugel: () => g });
   A.leben.einspielen();
   tafelHoehe();
   F.schriften(2500).then(() => { tafelHoehe(); if (g) { blickBerechnen(); g.zeichnen(); } namenNeu(); });
@@ -1143,7 +1160,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   regalZeichnen();
   /* Breit wandert das Regalbild in die Textspalte der Globusseite, vor die Kugel; schmal steht es wieder an seinem Platz über dem
      Werkverzeichnis. regalZeichnen misst die Breite seines neuen Elternteils, schließt die Buchzeile und baut die Rücken neu */
-  const regalBild = $('#regalbild'), regalHeim = regalBild.parentElement, mqBreit = window.matchMedia('(min-width: 62.0625rem)');
+  // Sein Platz schmal ist das Raster von „Was ich schreibe“; breit steht es beim Laden schon neben der Kugel (Skript am Bild)
+  const regalBild = $('#regalbild'), regalHeim = $('#schreiben .schreiben-raster'), mqBreit = window.matchMedia('(min-width: 62.0625rem)');
   function regalOrt() {
     const seite = $('.globusseite');
     if (mqBreit.matches) { if (regalBild.parentElement !== seite) seite.insertBefore(regalBild, $('#globus')); }

@@ -49,6 +49,12 @@
      leselinie(elemente, beiSchritt, o)   beim Scrollen: welches Element zuletzt die Leselinie erreicht hat (vor und zurück)
      fortschritt(element, beiWert, o)     beim Scrollen: wie weit ein Element durch das Fenster gewandert ist, 0 bis 1
      imBild(element, { starten, unterbrechen, fortsetzen })   eine Chronik hält an, wenn ihr Globus aus dem Bild ist
+     folge({ text, lesen, kugel, bereit, eigen })   Einblenden in Folge: Text, Nebenbild (data-folge="1"), Globus zuletzt (data-folge="2"),
+                                    an feste Zeitpunkte gebunden (Tempo T2 „gelassen“)
+     globusSteht, bewegungFrei      Promise: der Globus ist eingeblendet; ab dann darf ein Einspieler beginnen (wer handelt, für den
+                                    ist beides sofort erfüllt; ohne Folge sofort); stille: die Blende des Globus läuft (Zeit für Rechnungen)
+     erstesBild(), textmoment(el)   Promise: das erste Bild der Seite (ms); { f0, tm, flog }: Beginn des Lesens und Textmoment
+     woerter(el, …), AUFRUF, folgePlan   Wörter zählen; 'voll' | 'kurz' | 'zurueck'; die Planzeiten der Folge
 */
 (function () {
   'use strict';
@@ -174,6 +180,282 @@
     const laden = document.fonts.load('38px "IM Fell French Canon"').then(l => !!(l && l.length));
     return Promise.race([laden, warten(ms == null ? 600 : ms).then(() => false)]).catch(() => false);
   }
+  /* ---------- Einblenden in Folge: erst der Text, dann das Nebenbild, der Globus zuletzt ----------
+     Dominik, 23. Oktober: „Der Fokus ist in den ersten Sekunden immer auf dem Text. Und dann erst kommen die zusätzlichen Elemente.“
+     „Ich glaube sogar vom Bauchgefühl, dass der Globus immer als letztes Element kommen muss.“ (Variante „Globus zuletzt“)
+     24. Oktober: „Ich meine nur, dass es dann noch etwas mehr künstlerische Eleganz bekommt, wenn es langsamer geschieht.“
+     Tempo T2 „gelassen“ (FOLGE unten; Einflug in index.html und satoshi.html, das Buch in satoshi.html).
+     Die Regel für alle Seiten mit Globus (Länder ist ausgenommen, dort ist der Globus der Inhalt):
+     - Text wartet nie. Was als Text im HTML steht, steht mit dem ersten Bild; der erste Satz fliegt ein (index.html, satoshi.html).
+     - Geordnet wird nur, was die Seite ohnehin erst nach dem ersten Bild zeichnet: das Nebenbild (Regal der Startseite, Inhaltsbuch
+       auf Satoshi; data-folge="1") und den Globus mit Tafel und Steuerzeile (data-folge="2").
+     - Alle Zeitpunkte werden gerechnet, sobald der Textmoment feststeht, und an die Uhr ab dem Aufruf gebunden (performance.now()):
+       Textmoment TM: das letzte Wort des Einflugs steht zu 95 % (el.flug meldet ihn, sobald der Flug läuft); ohne Einflug das erste
+       Bild plus 1,0 s. Lesemoment LM: der Beginn des Lesens (Einflug, sonst erstes Bild) plus die Wörter des ersten Satzes bei
+       FOLGE.wpm Wörtern je Minute (folge({ lesen })).
+       Nebenbild ab max(TM + ruhe, LM − lesen × Dauer) (lesen null: ohne Lesebindung), in seiner Dauer. Die Lesebindung gilt nur,
+       wenn der erste Satz einfliegt (FOLGE.lesenOhneFlug false; Feinjustierung nach den drei Urteilen zum Tempo, 24. Oktober): ohne
+       Einflug (Ursprünge; sonst nur, wenn die IM Fell zu spät kommt) beginnt die Folge bei TM + ruhe, also erstes Bild + 1,8 s. Der
+       Globus, wenn das Nebenbild zu FOLGE.einsatz seiner Dauer gelaufen ist (dann ist es zu rund 90 % da). Gibt es im ersten
+       Bildschirm kein Nebenbild (Telefon, Ursprünge), nimmt der Globus dessen Zeitpunkt, auf dem Telefon auch die Dauer des
+       Nebenbilds.
+       Die Bewegung (Einspieler) beginnt FOLGE.nachGlobus nach dem geplanten Ende des Globus.
+     - Jede Stufe beginnt zu ihrer Planzeit oder, ist sie dann noch nicht bereit (leeres Regal, Kugel noch nicht gezeichnet, auf
+       Ursprünge die feine Karte noch nicht da: folge({ bereit })), sobald sie bereit ist; die nächste hält ihre Planzeit, beginnt aber frühestens FOLGE.abstand nach der vorigen, so bleibt der Globus
+       der Letzte. Die Bewegung beginnt beim späteren von Planzeit und wirklichem Ende des Globus plus FOLGE.nachGlobusMin. So wartet
+       ein langsames Gerät nicht noch zusätzlich, bis die Pausen nach seinem Skript abgelaufen sind.
+     - Nur Deckkraft, ohne Weg, ohne Maßstab, ohne Unschärfe, in der Kurve des Inhaltsbuchs. Das Buch auf Satoshi bringt seine eigene
+       Bewegung mit (8 px von rechts, V77; eigen(el, dauer)) und seine Dauer (el.folgeDauer). Platz und Höhe ändern sich dabei nie:
+       der Globus, der auf der Startseite breit klebt und mitwandert (position: sticky, --globus-block), klebt und wandert auch
+       während seiner Blende und unsichtbar genau so.
+     - Was beim Aufruf unter dem ersten Bildschirm liegt oder gar nicht angezeigt wird, steht sofort.
+     - Wer handelt, wartet nie: Zeiger, Taste, Rad, Finger, Rollen der Seite oder ein Fokus in einem der Elemente lassen alles stehen
+       und geben auch die Bewegung frei. Laufende Blenden enden dann in FOLGE.handeln ms, was noch nicht kam, erscheint in dieser
+       Zeit, nichts springt. Die Elemente sind auch unsichtbar bedienbar: der erste Klick auf die Kugel bedient schon die Kugel.
+     - Weitere Seiten desselben Besuchs (ein Verweis von einer Seite dieses Ordners, kein Browserspeicher): die Kurzform
+       (FOLGE.kurz): Einflug wie immer, Ruhe 0,4 s, Blenden × 0,7, Ruhe vor der Bewegung 0,8 s. Neu laden: die ganze Folge.
+       Zurück- oder Vor-Taste: alles steht sofort, kein Einflug, die Kugel bewegt sich FOLGE.zurueckKugel nach ihrem ersten Bild.
+     - Verborgen ist nur das Bild (stil.css, .folge): Vorleseprogramme lesen alles ab dem ersten Bild, Tab erreicht alles.
+     - .folge setzt der Kopf der Seite nur bei erlaubter Bewegung und sichtbarem Tab. Sonst (auch ohne Skript) steht alles, sobald es
+       fertig ist; bei reduzierter Bewegung gibt es auch keinen Einspieler, sondern gleich den ganzen Weg.
+     - Sicherheitsnetz: spätestens 1 s nach dem geplanten Ende des Globus, mindestens aber 5 s nach dem Aufruf, steht alles (ohne
+       Skript nach 7 s, stil.css).
+     - Sobald die Blende des Globus läuft (FSeite.stille), rechnet der Ablauf den Überblick für den Schluss des Einspielers voraus
+       (sonst kostete er auf der Startseite beim Start der Bewegung rund 0,4 s). Die Blenden laufen im Compositor und stocken dabei
+       nicht (geprüft: 700 ms Blockade mitten in der Blende). Nicht schon nach dem Textmoment: auf einem langsamen Gerät (4-fach
+       gedrosselt rund 1,6 s) hielte die Rechnung dort das Regal auf, das erst gebaut wird.
+     FSeite.bewegungFrei (FSeite.ablauf wartet darauf) erfüllt sich zur Bewegung; ohne Folge sofort. FSeite.folgePlan: die Planzeiten. */
+  const FOLGE = {
+    tempo: 'T2 „gelassen“',
+    ruhe: 800,          // nach dem Textmoment mindestens bis zum Nebenbild (ohne Nebenbild im ersten Bildschirm: bis zum Globus)
+    lesen: .39,        // Lesebindung: Anteil der Dauer, zu dem das erste Bild der Folge beim Lesemoment da ist (null: keine)
+    lesenOhneFlug: false, // Lesebindung auch, wenn nichts einfliegt (true); false: dort beginnt die Folge bei TM + ruhe (erstes Bild + 1,8 s)
+    wpm: 230,            // Lesetempo für den Lesemoment, Wörter je Minute
+    nebenbild: 1200,    // Regal: Dauer des Einblendens (das Buch auf Satoshi gibt seine eigene: el.folgeDauer)
+    globus: 1400,       // Globus mit Tafel und Steuerzeile: Dauer des Einblendens
+    globusSchmal: 1200, // auf dem Telefon (unter 640 px), wenn er den Platz des Nebenbilds einnimmt
+    einsatz: .7,         // der Globus beginnt, wenn das Nebenbild zu diesem Anteil seiner Dauer gelaufen ist
+    abstand: 400,        // … frühestens so lange nach dem Beginn der vorigen Stufe
+    nachGlobus: 1600,   // Ruhe nach dem geplanten Ende des Globus, dann die Bewegung
+    nachGlobusMin: 800,  // … und mindestens so lange nach seinem wirklichen Ende
+    kurve: 'cubic-bezier(.4, 0, .3, 1)',
+    handeln: 250,        // wer handelt: so schnell enden die Blenden
+    kurz: { ruhe: 400, faktor: .7, nachGlobus: 800 },   // weitere Seiten desselben Besuchs
+    zurueckKugel: 800,   // Zurück-Taste: die Bewegung so lange nach dem ersten Bild der Kugel
+    textHoechstens: 3000, bereitHoechstens: 2500, netzMin: 5000, netzNach: 1000
+  };
+  let gehandelt = false, gehandeltJetzt = () => {};
+  const gehandeltP = new Promise(r => { gehandeltJetzt = r; });
+  const HANDELN = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+  function handelt() {
+    if (gehandelt) return;
+    gehandelt = true;
+    gehandeltJetzt();
+    HANDELN.forEach(t => window.removeEventListener(t, handelt, true));
+    window.removeEventListener('scroll', gerollt);
+  }
+  // Nur das Rollen der Seite zählt, nicht ein Band, das die Seite selbst an sein Ende rollt (Zeitband auf dem Telefon)
+  function gerollt(e) { if ((e.target === document || e.target === document.documentElement) && window.scrollY > 0) handelt(); }
+  HANDELN.forEach(t => window.addEventListener(t, handelt, { capture: true, passive: true }));
+  window.addEventListener('scroll', gerollt, { passive: true });
+  let bewegungFreiP = Promise.resolve();
+  const bewegungSetzen = p => { bewegungFreiP = gehandelt ? Promise.resolve() : Promise.race([Promise.resolve(p).catch(() => {}), gehandeltP]); };
+  // Warten bis zu einem Zeitpunkt der Uhr ab dem Aufruf (performance.now())
+  const warteBis = t => warten(Math.max(0, t - performance.now()));
+  /* Wie die Seite aufgerufen wurde, ohne Browserspeicher: 'zurueck' (Zurück- oder Vor-Taste; der Kopf der Seite setzt dann .zurueck),
+     'kurz' (über einen Verweis von einer Seite desselben Ordners, also eine weitere Seite desselben Besuchs) oder 'voll' (neu
+     geladen, von außen, direkt aufgerufen) */
+  function aufrufArt() {
+    let typ = '';
+    try { const n = performance.getEntriesByType('navigation')[0]; typ = n ? n.type : ''; } catch (e) { /* ohne Navigationszeiten */ }
+    if (typ === 'back_forward' || document.documentElement.classList.contains('zurueck')) return 'zurueck';
+    if (typ === 'reload' || !document.referrer) return 'voll';
+    try {
+      const r = new URL(document.referrer, location.href), ordner = p => p.replace(/[^/]*$/, '');
+      if (r.origin === location.origin && ordner(r.pathname) === ordner(location.pathname)) return 'kurz';
+    } catch (e) { /* kein gültiger Verweis */ }
+    return 'voll';
+  }
+  const AUFRUF = aufrufArt();
+  // Wörter in Elementen (für den Lesemoment); auch an festen Leerzeichen getrennt: „31. Oktober“ sind zwei Wörter
+  const woerter = (...els) => els.filter(Boolean).reduce((n, e) => { const t = e.textContent.trim(); return n + (t ? t.split(/\s+/).length : 0); }, 0);
+  /* Das erste Bild der Seite in ms ab dem Laden (first-contentful-paint). Ohne Paint-Zeiten: das übernächste Bild nach diesem Aufruf.
+     Malt die Seite nicht (verborgener Tab), gilt nach 3 s die Zeit von dann */
+  let erstesBildP = null;
+  function erstesBild() {
+    if (erstesBildP) return erstesBildP;
+    erstesBildP = new Promise(r => {
+      const ersatz = () => requestAnimationFrame(() => requestAnimationFrame(() => r(performance.now())));
+      try {
+        const da = performance.getEntriesByName ? performance.getEntriesByName('first-contentful-paint')[0] : null;
+        if (da) return r(da.startTime);
+        if (!window.PerformanceObserver || !(PerformanceObserver.supportedEntryTypes || []).includes('paint')) return ersatz();
+        const po = new PerformanceObserver(l => {
+          const e = l.getEntries().find(x => x.name === 'first-contentful-paint');
+          if (e) { po.disconnect(); r(e.startTime); }
+        });
+        po.observe({ type: 'paint', buffered: true });
+      } catch (e) { ersatz(); }
+      setTimeout(() => r(performance.now()), 3000);
+    });
+    return erstesBildP;
+  }
+  /* Der Textmoment einer Seite, gerechnet, nicht abgewartet: Promise { f0, tm, flog } in ms ab dem Aufruf. Fliegt ihr erster Satz
+     ein (el.flug erfüllt sich mit { beginn, tm }, sobald der Flug läuft), ist f0 sein Beginn und tm der Moment, in dem sein letztes
+     Wort zu 95 % steht. Sonst ist f0 das erste Bild und tm eine Sekunde danach (kein Einflug: IM Fell zu spät, reduzierte Bewegung,
+     Zurück-Taste, Seite ohne Satz) */
+  function textmoment(el) {
+    const flug = el && el.flug && typeof el.flug.then === 'function' ? el.flug.catch(() => null) : Promise.resolve(null);
+    return Promise.all([flug, erstesBild()]).then(([f, bild]) => f && f.tm != null ? { f0: f.beginn, tm: f.tm, flog: true } : { f0: bild, tm: bild + 1000, flog: false });
+  }
+  // Wann die Kugel ihr erstes Bild hatte (höchstens 3 s warten; ohne Kugel sofort)
+  const kugelBild = kugel => new Promise(r => {
+    const t0 = performance.now();
+    (function sehen() {
+      const g = kugel();
+      if (!g) return r(performance.now());
+      if (g.erstesBild) return r(g.erstesBild);
+      if (performance.now() - t0 > 3000) return r(performance.now());
+      requestAnimationFrame(sehen);
+    })();
+  });
+  // Eine laufende Animation in ms zu Ende bringen (0: sofort)
+  function beschleunigen(a, ms) {
+    try {
+      if (a.playState === 'finished') return;
+      const rest = a.effect.getComputedTiming().endTime - (a.currentTime || 0);
+      if (!ms || !(rest > 0)) { a.finish(); return; }
+      if (rest > ms) { if (a.updatePlaybackRate) a.updatePlaybackRate(rest / ms); else a.playbackRate = rest / ms; }
+    } catch (e) { try { a.finish(); } catch (e2) { /* schon fertig */ } }
+  }
+  /* FSeite.folge({ text, lesen, kugel, bereit, eigen }): führt die Folge (oben). text: Promise des Textmoments (FSeite.textmoment);
+     lesen: Wörter des ersten Satzes (Zahl oder (plan) => Zahl; plan.flog: der Satz flog ein); kugel: () => die Globus-Maschine (der
+     Globus erscheint erst, wenn sie ihr erstes Bild hat, höchstens 2,5 s; ohne Kugel, mit dem Ersatztext, sofort); bereit: () =>
+     true, wenn die Seite den Globus zeigen mag (Ursprünge: erst mit der feinen Karte, V81), sonst nichts; eigen(el, dauer):
+     eigene Animationen für ein Element (Satoshis Buch) oder nichts. Gibt FSeite.globusSteht zurück. Einmal je Seite */
+  let globusStehtJetzt = () => {}, folgeLaeuft = false, stilleJetzt = () => {}, folgePlan = null;
+  const globusStehtP = new Promise(r => { globusStehtJetzt = r; });
+  const stilleP = new Promise(r => { stilleJetzt = r; });
+  function folge(o) {
+    o = o || {};
+    if (folgeLaeuft) return globusStehtP;
+    folgeLaeuft = true;
+    const alle = $$('[data-folge]'), laeufe = [];
+    const zeigen = el => el.classList.add('da');
+    const kugel = () => typeof o.kugel === 'function' ? o.kugel() : null;
+    if (!document.documentElement.classList.contains('folge') || !alle.length) {
+      alle.forEach(zeigen);
+      globusStehtJetzt(); stilleJetzt();
+      if (AUFRUF === 'zurueck' && !ruhig()) bewegungSetzen(kugelBild(kugel).then(t => warteBis(t + FOLGE.zurueckKugel)));
+      return globusStehtP;
+    }
+    const kurz = AUFRUF === 'kurz', K = FOLGE.kurz, faktor = kurz ? K.faktor : 1;
+    let fertig = false, planBewegung = 0;
+    const fokus = e => { if (e.target && e.target.closest && e.target.closest('[data-folge]')) handelt(); };
+    // Alles steht: nach dem Ablauf (sanft = 0) oder, beim ersten Griff des Lesers und nach dem Sicherheitsnetz, in FOLGE.handeln ms
+    function ende(sanft) {
+      if (fertig) return;
+      fertig = true;
+      alle.forEach(el => {
+        if (el.classList.contains('da')) return;
+        // Schon zu sehen (das Notnetz in stil.css hat es nach 7 s gezeigt, die Zeitgeber kamen später): ohne Blende, sonst blitzte es
+        const sichtbar = getComputedStyle(el).opacity === '1';
+        zeigen(el);
+        if (sanft && el.animate && !sichtbar) laeufe.push(el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: sanft, easing: 'ease-out', fill: 'backwards' }));
+      });
+      laeufe.forEach(a => beschleunigen(a, sanft));
+      document.removeEventListener('focusin', fokus, true);
+      globusStehtJetzt(); stilleJetzt();
+    }
+    /* Zurück-Cache: Wer die Seite während der Folge verlässt (Zurück-Taste, Wischgeste, Adresszeile), findet sie bei der Rückkehr
+       fertig vor, wie nach der Zurück-Taste sonst auch. pagehide kommt, bevor der Browser die Seite einfriert; ihre Zeitgeber laufen
+       erst nach der Rückkehr weiter und hätten die Blenden dann von vorn begonnen (Regal, Buch und Globus blitzten auf). Die Bewegung
+       beginnt dann FOLGE.zurueckKugel nach der Rückkehr, nicht zur alten Planzeit. */
+    let frei = () => {}, weg = false;
+    const freiP = new Promise(r => { frei = r; });
+    window.addEventListener('pagehide', () => {
+      ende(0);
+      weg = true;
+      window.addEventListener('pageshow', () => warten(FOLGE.zurueckKugel).then(frei), { once: true });
+    }, { once: true });
+    globusStehtP.then(() => warteBis(Math.max(planBewegung, performance.now() + (kurz ? K.nachGlobus : FOLGE.nachGlobusMin))))
+      .then(() => { if (!weg) frei(); });
+    bewegungSetzen(freiP);
+    // Unter dem ersten Bildschirm oder nicht angezeigt (das große Buch auf dem Telefon): steht gleich
+    alle.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (!el.getClientRects().length || (!r.width && !r.height) || r.top >= window.innerHeight || r.bottom <= 0) zeigen(el);
+    });
+    if (gehandelt || window.scrollY > 0) { ende(0); stilleJetzt(); return globusStehtP; }
+    gehandeltP.then(() => ende(FOLGE.handeln));
+    document.addEventListener('focusin', fokus, true);
+    let netz = setTimeout(() => ende(FOLGE.handeln), Math.max(0, FOLGE.netzMin - performance.now()));
+
+    const stufe = n => alle.filter(el => el.dataset.folge === String(n) && !el.classList.contains('da'));
+    // Bereit ist ein Element, wenn es etwas zu zeigen hat: nicht mehr verborgen (leeres Regal, leere Tafel) und, beim Globus, die
+    // Kugel gezeichnet. Höchstens 2,5 s
+    const bereit = (el, auch) => new Promise(r => {
+      const t0 = performance.now();
+      (function pruefen() {
+        if (fertig || performance.now() - t0 > FOLGE.bereitHoechstens) return r();
+        if (getComputedStyle(el).visibility !== 'hidden' && (!auch || auch())) return r();
+        requestAnimationFrame(pruefen);
+      })();
+    });
+    const kugelDa = () => {
+      const ersatz = $('#ersatz');
+      if (ersatz && !ersatz.hidden) return true;
+      const g = kugel();
+      if (g && !g.erstesBild) return false;
+      return typeof o.bereit !== 'function' || !g || !!o.bereit();
+    };
+    function einblenden(el, dauer) {
+      if (fertig || el.classList.contains('da')) return Promise.resolve();
+      zeigen(el);
+      let a = typeof o.eigen === 'function' ? o.eigen(el, dauer) : null;
+      if (!a) a = el.animate ? [el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: dauer, easing: FOLGE.kurve, fill: 'backwards' })] : [];
+      a = [].concat(a).filter(Boolean);
+      laeufe.push(...a);
+      return a.length ? Promise.race([Promise.all(a.map(x => x.finished)), warten(dauer + 1000)]).catch(() => {}) : Promise.resolve();
+    }
+    const dauerVon = el => (el.folgeDauer || FOLGE.nebenbild) * faktor;
+    const text = Promise.race([Promise.resolve(o.text).catch(() => null), warten(FOLGE.textHoechstens).then(() => null)]);
+    text.then(plan => {
+      const jetzt = performance.now();
+      const f0 = plan && plan.f0 != null ? plan.f0 : jetzt, tm = plan && plan.tm != null ? plan.tm : jetzt;
+      if (fertig) return;
+      const eins = stufe(1);
+      const d1 = eins.length ? Math.max(...eins.map(dauerVon)) : 0;
+      const d2 = (eins.length || !schmal() ? FOLGE.globus : FOLGE.globusSchmal) * faktor;
+      const n = typeof o.lesen === 'function' ? o.lesen(plan || {}) : o.lesen;
+      const lm = n ? f0 + n * 60000 / FOLGE.wpm : null;
+      let p1 = tm + (kurz ? K.ruhe : FOLGE.ruhe);
+      if (!kurz && FOLGE.lesen != null && lm != null && (FOLGE.lesenOhneFlug || (plan && plan.flog))) p1 = Math.max(p1, lm - FOLGE.lesen * (eins.length ? d1 : d2));
+      const p2 = eins.length ? p1 + FOLGE.einsatz * d1 : p1;
+      planBewegung = p2 + d2 + (kurz ? K.nachGlobus : FOLGE.nachGlobus);
+      const netzBei = Math.max(FOLGE.netzMin, p2 + d2 + FOLGE.netzNach);
+      clearTimeout(netz);
+      netz = setTimeout(() => ende(FOLGE.handeln), Math.max(0, netzBei - performance.now()));
+      folgePlan = { tempo: FOLGE.tempo, aufruf: AUFRUF, f0, tm, lm, nebenbild: eins.length ? [p1, p1 + d1] : null, globus: [p2, p2 + d2], bewegung: planBewegung, netz: netzBei };
+      let s1 = -Infinity;
+      const erst = eins.length
+        ? warteBis(p1).then(() => Promise.all(eins.map(el => bereit(el)))).then(() => { if (fertig) return; s1 = performance.now(); eins.forEach(el => einblenden(el, d1)); })
+        : Promise.resolve();
+      return erst
+        .then(() => warteBis(Math.max(p2, s1 + FOLGE.abstand)))
+        .then(() => Promise.all(stufe(2).map(el => bereit(el, kugelDa))))
+        .then(() => {
+          if (fertig) return null;
+          const z = stufe(2), vor = laeufe.length;
+          const alle2 = Promise.all(z.map(el => einblenden(el, d2)));
+          // Läuft die Blende (im Compositor), ist der Hauptfaden frei für die Vorausrechnung des Ablaufs
+          Promise.all(laeufe.slice(vor).map(a => a.ready)).then(() => setTimeout(stilleJetzt, 50), stilleJetzt);
+          return alle2;
+        });
+    }).then(() => ende(0), () => ende(0));
+    return globusStehtP;
+  }
+
   // Knöpfe sind Inline-Blöcke: das folgende Satzzeichen wird an das Wort gebunden, sonst rutscht es allein in die nächste Zeile
   function satzzeichenBinden(wurzel) {
     $$('button.wort, a', wurzel).forEach(b => {
@@ -797,6 +1079,17 @@
     let zustand = 'bereit', art = null, jetzt = -1, weiterAb = 0, orteModus = 'bis';
     let gespielt = false, aktiv = o.aktiv !== false, lauf = 0, systemPause = false, wartetAufSicht = false, startUhr = 0;
     let anteil = 1;
+    /* Der Überblick für den Schluss des Einspielers (ohne takt.schluss) kostet auf der Startseite rund 0,4 s. Er wird vorab gerechnet,
+       sobald die Blende des Globus läuft (FSeite.stille, FSeite.folge), und gilt, solange Orte und Leinwand dieselben sind */
+    let vorab = null;
+    const vorabSchluessel = () => {
+      const r = g.canvas.getBoundingClientRect();
+      return liste().map(s => s.name).join('|') + '#' + g.canvas.clientWidth + '#' + Math.round(r.left) + '#' + document.documentElement.clientWidth;
+    };
+    function vorrechnen() {
+      if (!g || !g.canvas || takt.schluss !== undefined || !liste().length) return;
+      vorab = { s: vorabSchluessel(), m: ueberblick(g.canvas, liste(), takt.schlussK || 1, takt.schlussBereich) };
+    }
 
     const laeuft = () => zustand === 'einspieler' || zustand === 'abspielen';
     function steuerZeigen() {
@@ -852,10 +1145,11 @@
       clearTimeout(startUhr);
       art = neuArt; zustand = neuArt; orteModus = modus; systemPause = false; gespielt = true;
       steuerZeigen();
-      const t = Object.assign({}, neuArt === 'abspielen' && o.taktAbspielen ? o.taktAbspielen : takt);
+      const quelle = neuArt === 'abspielen' && o.taktAbspielen ? o.taktAbspielen : takt;
+      const t = Object.assign({}, quelle);
       // halt: 'lesen' hält, bis man die Tafel der Station gelesen hat (der Kern fragt, wenn sie schon gesetzt ist), grundhalt dazu
       if (t.halt === 'lesen') { const plus = t.grundhalt || 0; t.halt = () => lesezeit(tafelEl, plus); }
-      if (t.schluss === undefined) t.schluss = g.canvas ? ueberblick(g.canvas, st, t.schlussK || 1, t.schlussBereich) : undefined;
+      if (t.schluss === undefined) t.schluss = !g.canvas ? undefined : quelle === takt && vorab && vorab.s === vorabSchluessel() ? vorab.m : ueberblick(g.canvas, st, t.schlussK || 1, t.schlussBereich);
       const ende = st[endeBei()];
       t.ab = ab; t.orte = modus;
       t.endeAktiv = o.ruhe === 'ruhe' && neuArt === 'einspieler' ? null : ende ? ende.name : null;
@@ -964,13 +1258,16 @@
       clearTimeout(startUhr);
       const nr = lauf, gilt = () => aktiv && nr === lauf && zustand === 'einspieler';
       /* Erst wenn die Schriften da sind (höchstens 2,5 s): was die Seite dann neu setzt (Tafel, Überblick, Namen), kostet bis zu
-         0,1 s und fiele sonst in den ersten Flug (Runde 4) */
+         0,1 s und fiele sonst in den ersten Flug (Runde 4). Und erst, wenn die Bewegung frei ist (FSeite.bewegungFrei: zur geplanten
+         Bewegung der Folge, FSeite.folge; sofort für den, der handelt). Mindestens 600 ms nach dem ersten Bild der
+         Kugel, wie bisher. Die Tafel meldet ihre erste Station schon vorher (einspielen): sie ist bis dahin unsichtbar */
       const los = () => {
         if (!gilt()) return;
         const warte = Math.max(0, 600 - (performance.now() - (g.erstesBild || 0)));
         startUhr = setTimeout(() => { if (gilt()) spielen('einspieler', 0, 'bis'); }, warte);
       };
-      (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, warten(2500)]) : Promise.resolve()).then(los, los);
+      const schriftenDa = document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, warten(2500)]).catch(() => {}) : Promise.resolve();
+      Promise.all([schriftenDa, bewegungFreiP]).then(los, los);
     }
     function einspielen() {
       if (gespielt || !aktiv) return;
@@ -985,6 +1282,8 @@
       g.routeZeigen(st, -1);
       // Die Tafel zeigt schon vor dem Einspieler seine erste Station, wie er sie zeigen wird (keine Ruhetafel, die gleich wechselt)
       melden(0, 'einspieler');
+      // Vorausrechnung, sobald die Blende des Globus läuft; nicht mehr, wenn der Einspieler schon vorbei ist (ein Griff an die Kugel)
+      (folgeLaeuft ? stilleP : Promise.resolve()).then(() => setTimeout(() => { if (aktiv && !vorab && (zustand === 'einspieler' || zustand === 'bereit')) vorrechnen(); }, 0));
       if (!imBildGenug()) { wartetAufSicht = true; steuerZeigen(); return; }
       einspielenJetzt();
     }
@@ -1767,6 +2066,12 @@
     tafel, tafelReservieren, tafelPlatz, lesezeit, steuerzeile, ortsleiste, ablauf, TAKT,
     stationen, stationInhalt, szenen, textMitVerweis, ursprungOrte, ursprungInhalt,
     karteikarte, buch, werkKarte, werkSatz, buchzeile, texte, navigation, fuss, PROFILE, NEWSLETTER,
-    leselinie, fortschritt, imBild
+    leselinie, fortschritt, imBild, erstesBild, textmoment, folge, woerter, AUFRUF
   };
+  // bewegungFrei: ein Promise, das FSeite.folge setzt (oder die Seite selbst); wer handelt, für den ist es sofort erfüllt.
+  // globusSteht: erfüllt, wenn der Globus eingeblendet ist (oder sofort steht). Beides oben, „Einblenden in Folge“
+  Object.defineProperty(window.FSeite, 'bewegungFrei', { get: () => bewegungFreiP, set: bewegungSetzen, enumerable: true });
+  Object.defineProperty(window.FSeite, 'globusSteht', { get: () => globusStehtP, enumerable: true });
+  Object.defineProperty(window.FSeite, 'stille', { get: () => stilleP, enumerable: true });
+  Object.defineProperty(window.FSeite, 'folgePlan', { get: () => folgePlan, enumerable: true });
 })();

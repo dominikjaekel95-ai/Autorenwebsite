@@ -12,6 +12,7 @@
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/vollkorn-kursiv.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
 /* Bibliothek (gestaltung-website-c.md 6.12 bis 6.14, 9.4). Oben Titel, ein Satz und die Zeichenerklärung in der Satzbreite.
@@ -24,9 +25,15 @@
 /* ---------- Vorspann ---------- */
 .vorspann .zeichenerklaerung { margin-top: var(--z-dreiviertel); }
 html:not(.js) .zeichenerklaerung { display: none; }
+/* Bis das Skript die Zeichen setzt, halten sie ihren Platz frei (9 px breit wie FSeite.zeichen); sonst rückte die Erklärung dann nach rechts */
+html.js .zeichenerklaerung li:not(:has(> .zeichen))::before { content: ""; flex: none; width: 9px; }
 
 /* ---------- Regal ---------- */
 .regal { position: relative; padding-top: var(--z-zwei); }
+/* Bis das Skript das Regal gebaut hat, hält das leere Fach eine Bildschirmhöhe frei: „Was noch wartet“ und der Fuß stehen schon im
+   ersten Bild unter dem ersten Bildschirm und springen nicht aus dem Bild, wenn das Regal kommt (am Desktop sonst CLS bis 0,28).
+   Als Außenabstand, nicht als Höhe: ein leerer Kasten, der mit dem Standortregister nach unten rückt, zählte sonst selbst als Sprung */
+html.js #faecher:empty { margin-bottom: 100vh; }
 .reihe { position: relative; }
 .buecher { display: flex; align-items: flex-end; height: var(--h); min-width: 0; }
 .gruppe { display: flex; align-items: flex-end; flex: none; }
@@ -714,7 +721,9 @@ html:not(.js) .wartet { display: none; }
     platz.classList.toggle('offen', schuberOffen);
     t.setAttribute('aria-expanded', String(schuberOffen));
     $$('.bandbuch', platz).forEach(b => { b.tabIndex = -1; if (schuberOffen) b.removeAttribute('aria-hidden'); else b.setAttribute('aria-hidden', 'true'); });
-    if (!schuberOffen && offenId != null && ALLE[offenId] && ALLE[offenId].band && aktiv) aktiv.schliessen();
+    // Auf: ein anderer herausgezogener Rücken geht mit seiner Zeile zurück (offen ist immer höchstens eins, wie bei buchAuf);
+    // zu: war ein Band daraus offen, schließt seine Zeile
+    if (aktiv && (schuberOffen || (offenId != null && ALLE[offenId] && ALLE[offenId].band))) aktiv.schliessen();
     gruppeZeigen(t);
   }
   regal.addEventListener('click', e => {

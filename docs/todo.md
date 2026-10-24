@@ -1,24 +1,25 @@
 # To-do-Liste
 
-Stand: 23. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es tut, steht dabei: **Dominik** (Anmelden, Bezahlen, Entscheiden, alles im Browser) oder **Claude** (Code im Repository).
+Stand: 24. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es tut, steht dabei: **Dominik** (Anmelden, Bezahlen, Entscheiden, alles im Browser) oder **Claude** (Code im Repository).
 
 ## Entscheidungen, die offen sind
 
 - [x] **Dominik:** Weiße Fläche am Desktop, Startseite: entschieden für „7 und 6“ (23. Oktober, V75; https://claude.ai/artifact/93qkfHP2cNbTVKNXeptcKt), mit der Unterschrift „Meine Projekte und was auf dem Nachttisch liegt“ und auf dem Telefon dem ganzen Regal. Eingebaut in `website-c/index.html` (Änderungsprotokoll, 23. Oktober).
 - [x] **Dominik:** *Satoshi*: das Inhaltsverzeichnis als Buch (V76): entschieden für Variante 5, das Buch zum Umblättern, mit einem Zeichen unter jedem Kapitel und langsamem Erscheinen nach dem Aufhänger (23. Oktober, V77). Eingebaut in `website-c/satoshi.html` (Änderungsprotokoll, 23. Oktober); auf dem Telefon steht das Buch jetzt immer sichtbar unter der Tafel.
-- [ ] **Dominik:** Einblenden beim Laden (`docs/einblenden.md`, Entscheidungsseite https://claude.ai/artifact/WJvDcw5tPNERyLNcv1NMyv): Empfehlung Variante 2 „Globus zuletzt“ (Testlink https://claude.ai/artifact/YNHCYoruZSVqHntS3BRSgQ), Gegenrede Variante 1; alle fünf zum Gegentesten unter https://claude.ai/artifact/LdXQjJubBA6uogxtngZ9un. Dazu die Frage, ob das Inhaltsbuch auf *Satoshi* in 0,5 und 1,0 s statt 0,8 und 1,4 s erscheinen darf (V77). Erst nach der Wahl kommt etwas in die echte Seite.
+- [x] **Dominik:** Einblenden beim Laden (`docs/einblenden.md`, Entscheidungsseite https://claude.ai/artifact/WJvDcw5tPNERyLNcv1NMyv): entschieden für Variante 2 „Globus zuletzt“ im Tempo „gelassen“ (24. Oktober: „Nimm gelassen und bau es ein.“, dazu „Und Globus muss mitwandern bei Gelassen“; V83). Eingebaut auf Startseite, *Satoshi* und *Ursprünge*, Länder ausgenommen; das Buch erscheint wieder in 1,4 s (die Frage nach 0,5 und 1,0 s entfiel). Mit eingebaut: *Satoshi* am Desktop das Buch ohne Symbole, zu, ein Klick schlägt es auf (V82). Änderungsprotokoll, 24. Oktober. Was er dazu noch entscheiden kann, steht in `docs/dominik-vorgaben.md`, Übersicht 3, Punkt 17.
 - [ ] **Dominik:** Abstände und Gliederung der Startseite unterhalb des ersten Bildschirms (`docs/startseite-rhythmus.md`, Empfehlung: Variante 1 mit Legende und Fuß aus Variante 2), passend zur Wahl oben.
 
 ## Vor dem Livegang
 
-- [ ] **Dominik:** *Satoshi* auf einem iPhone (Safari), das neue Telefonbuch (V80): unter der Tafel den schmalen Band antippen, er schlägt sich zur Doppelseite auf; dann alle sechs Einträge antippen (Klappentext, Eckdaten, Gebaut wie ein Protokoll, Die Figuren, Die Frage hinter dem Roman, Wie er gemacht ist), dazwischen mit einem Tipp auf die freie linke Seite zuschlagen. Einmal mit und einmal ohne „Bewegung reduzieren“ (Einstellungen › Bedienungshilfen › Bewegung). Geprüft ist das bisher nur in Chrome (Chromium); zu achten ist auf ein Flackern beim Umschlagen des Deckels, auf Text, der durch den Deckel scheint, darauf, dass „Klappentext“ neben dem Fuß des Bands steht und beim Aufschlagen ohne Sprung unter die Doppelseite wechselt, dass über dem Band nie eine große weiße Lücke bleibt (auch während die Kugel ihre Stationen abspielt) und dass jeder Tipp auf einen Eintrag zum richtigen Abschnitt springt. Am Desktop (Buch zum Umblättern) wie bisher.
-- [ ] **Dominik:** Domain dominikjaekel.de prüfen und kaufen, mit Vercel verbinden (`docs/vercel-einrichtung.md`, Schritte 1 bis 3).
-- [ ] **Dominik:** Angaben zu Vercel für die Datenschutzerklärung aus der anderen Sitzung (Schritt 4: Anschrift, Data Privacy Framework, Standardvertragsklauseln, Auftragsverarbeitungsvertrag, Server-Logs).
-- [ ] **Dominik:** Tarif Pro oder Hobby. Empfehlung: Pro, weil der Auftragsverarbeitungsvertrag nur Pro und Enterprise nennt.
-- [ ] **Dominik:** Impressum und Datenschutz freigeben.
-- [ ] **Dominik:** Stimmen die 65 Länder?
-- [ ] **Dominik:** Darf Simon-Kucher in der Vita genannt werden?
-- [ ] **Claude:** Danach die endgültige Fassung bauen: `TARIF` setzen, die Markierungen „ZU PRÜFEN“ füllen, `veroeffentlichen.py` ohne `--entwurf`, beide Prüfprogramme.
+- [ ] **Dominik:** *Satoshi* auf einem iPhone (Safari), das neue Telefonbuch (V80): unter der Tafel den schmalen Band antippen, er schlägt sich zur Doppelseite auf; dann alle sechs Einträge antippen (Klappentext, Eckdaten, Gebaut wie ein Protokoll, Die Figuren, Die Frage hinter dem Roman, Wie er gemacht ist), dazwischen mit einem Tipp auf die freie linke Seite zuschlagen. Einmal mit und einmal ohne „Bewegung reduzieren“ (Einstellungen › Bedienungshilfen › Bewegung). Geprüft ist das bisher nur in Chrome (Chromium); zu achten ist auf ein Flackern beim Umschlagen des Deckels, auf Text, der durch den Deckel scheint, darauf, dass „Klappentext“ neben dem Fuß des Bands steht und beim Aufschlagen ohne Sprung unter die Doppelseite wechselt, dass über dem Band nie eine große weiße Lücke bleibt (auch während die Kugel ihre Stationen abspielt) und dass jeder Tipp auf einen Eintrag zum richtigen Abschnitt springt. Seit V82 ist es am Desktop derselbe Band: am Mac in Safari *Satoshi* öffnen, den Band unter dem Aufhänger anklicken, er schlägt sich auf; alle sechs Einträge anklicken, dazwischen mit einem Klick auf die freie linke Seite zuschlagen; einmal mit Tab und Eingabe; achten auf dieselben Punkte und darauf, dass die offene Doppelseite nie über der Kugel liegt.
+- [ ] **Dominik:** Domains: nur dominikjaekel.de und dominikjaekel.com (Dominik, 24.10.); prüfen, kaufen, mit Vercel verbinden (`docs/livegang-auftrag.md`, Schritte 3, 5 und 6).
+- [x] **Dominik:** Angaben zu Vercel für die Datenschutzerklärung: Zwischenmeldung 2 der Vercel-Sitzung vom 24.10.2026, live gelesen: Anschrift, Privacy Policy, keine feste Log-Frist, DPF aktiv, DPA nur Pro/Enterprise. Eingetragen in `website-c/datenschutz.html` (Änderungsprotokoll, 24. Oktober, Code-Review Punkt 8).
+- [x] **Dominik:** Tarif Pro oder Hobby: Hobby (24. Oktober). `TARIF = 'hobby'` in `website-c/werkzeuge/veroeffentlichen.py`, im Datenschutz die Fassung ohne Vertrag zur Auftragsverarbeitung.
+- [ ] **Dominik:** Bei Vercel keine Log Drains, kein Observability Plus und keine Analytics einschalten (die Datenschutzerklärung sagt: kein Tracking, Logs nur zum Betrieb).
+- [x] **Dominik:** Impressum und Datenschutz freigeben: freigegeben (24. Oktober); die beiden Vermerke sind gelöscht.
+- [x] **Dominik:** Stimmen die 65 Länder? Ja, sie bleiben (24. Oktober).
+- [x] **Dominik:** Darf Simon-Kucher in der Vita genannt werden? Ja (24. Oktober), nur dort (V56).
+- [x] **Claude:** Danach die endgültige Fassung bauen: `TARIF` setzen, die Markierungen „ZU PRÜFEN“ füllen, `veroeffentlichen.py` ohne `--entwurf`, beide Prüfprogramme. Gebaut und geprüft am 24. Oktober (keine offene Stelle, beide Prüfprogramme ohne Fehler); online, sobald der Stand gepusht und von Vercel gebaut ist.
 
 ## Nach dem Livegang
 
@@ -28,7 +29,9 @@ Stand: 23. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es
   - https://web.archive.org/save/https://dominikjaekel.de/
 
   Danach unter https://web.archive.org/web/*/dominikjaekel.de/* nachsehen, ob die Schnappschüsse da sind. Wiederholen, wenn sich die Texte zur Handlung auf *Satoshi* oder *Ursprünge* deutlich ändern.
-- [ ] **Dominik:** Den Branch in GitHub in `main` umbenennen und in Vercel den Production Branch auf `main` stellen (`docs/vercel-einrichtung.md`, Schritt 2).
+- [ ] **Dominik:** Den Branch in GitHub in `main` umbenennen und in Vercel den Production Branch auf `main` stellen (`docs/livegang-auftrag.md`, Schritt 9.4).
+- [ ] **Dominik und Claude:** Bei Google auf Platz 1 für „Satoshi Nakamoto Roman“ und „Göbekli Tepe Roman“ (Dominik, 24. Oktober: „Ich würde gerne auf eins landen, wenn man satoshi nakamoto Roman eingibt. Analog auch zu Göbekli Tepe Roman (Dazu können wir dann später nochmal eine Unterseite anfertigen, muss nicht jetzt sein, schreib das mal in die TODOs)“): später je eine Unterseite, Titel/Beschreibung/strukturierte Daten, Links von außen, Search Console beobachten; zusätzliche Domains bringen dafür kaum etwas.
+- [ ] **Dominik:** Hobby gilt nur für nicht kommerzielle Nutzung: sobald die Seite ein Buch zum Kauf bewirbt, auf Pro wechseln und den Absatz im Datenschutz mit `TARIF = 'pro'` neu bauen (**Claude**).
 
 ## Später
 

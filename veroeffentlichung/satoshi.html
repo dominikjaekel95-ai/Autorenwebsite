@@ -23,20 +23,23 @@
 <script>
 document.documentElement.classList.add('js');
 </script>
+
+<script>
+(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);
+</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
+
 <link rel="stylesheet" href="stil.css">
 <style>
 .titelei { margin-top: var(--z); }
 .vorspann { font-family: var(--anzeige); font-size: var(--g-einstieg); line-height: var(--zh-gross); hyphens: manual; -webkit-hyphens: manual; }
 .vorspann .glied-satz { display: block; text-wrap: balance; }
 .vorspann .w { display: inline-block; }
-.vorspann .w.fliegt { position: relative; }
-.vorspann .w .unscharf { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0; filter: url(#aufhaenger-flug); pointer-events: none; -webkit-user-select: none; user-select: none; }
 @media (max-width: 62rem) {
   .vorspann { min-width: 0; overflow-wrap: break-word; line-height: calc(var(--z) * 1.25); }
   .vorspann.gesetzt .glied-satz + .glied-satz { white-space: nowrap; }
@@ -45,111 +48,87 @@ document.documentElement.classList.add('js');
 .vorspann.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 2s forwards; }
 @keyframes einstieg-notfall { to { opacity: 1; } }
 html:not(.js) .globusseite > .globus { display: none; }
-.blaetterbuch .flaeche-deckel, .blaetterbuch .schnitt, .blaetterbuch .vignette { display: none; }
-.blaetterbuch .inhalt { list-style: none; font-size: var(--g-text); line-height: var(--z); hyphens: manual; -webkit-hyphens: manual; }
-.blaetterbuch .inhalt li { padding-left: 1em; text-indent: -1em; }
-@media (min-width: 62.0625rem) { .globusseite > .inhaltsbuch { grid-row: 3; margin-top: var(--z-zwei); } }
-@media (min-width: 62.0625rem) and (max-height: 56.1875rem) { .globusseite > .inhaltsbuch { margin-top: var(--z); } }
-@media (max-width: 62rem) { .globusseite > .inhaltsbuch { margin-top: var(--z); } }
-html.js .blaetterbuch { --s-h: calc(var(--z) * 6); --s-b: calc(var(--z) * 5); --pad-x: var(--z-viertel); --pad-o: var(--z-halb); --b-g: var(--g-klein); --b-zh: var(--zh-klein); --vig: calc(var(--z) * 2); }
-@media (min-width: 62.0625rem) and (max-height: 49.9375rem) { html.js .blaetterbuch { --s-h: calc(var(--z) * 5.75); --vig: calc(var(--z) * 1.75); } }
-@media (min-width: 62.0625rem) and (min-height: 50rem) { html.js .blaetterbuch { --s-h: calc(var(--z) * 6.5); } }
-@media (min-width: 62.0625rem) and (min-height: 56.25rem) { html.js .blaetterbuch { --s-h: calc(var(--z) * 9); --s-b: calc(var(--z) * 6.75); --pad-x: var(--z-halb); --pad-o: var(--z); --b-g: var(--g-text); --b-zh: var(--z); --vig: calc(var(--z) * 2.5); } }
-@media (max-width: 62rem) { html.js .blaetterbuch { --s-b: calc(var(--z) * 5.25); } }
-html.js .blaetterbuch .buchobjekt { position: relative; width: calc(var(--s-b) * 2); height: var(--s-h); perspective: 1600px; touch-action: pan-y pinch-zoom; font-size: var(--b-g); line-height: var(--b-zh); -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
-html.js .blaetterbuch .inhalt { font-size: inherit; line-height: inherit; }
-html.js .blaetterbuch .flaeche-deckel { display: block; }
-html.js .blaetterbuch .recto, html.js .blaetterbuch .verso {
-  position: absolute; top: 0; width: var(--s-b); height: 100%; box-sizing: border-box; padding: var(--pad-o) var(--pad-x) 0;
-  text-indent: 0; background: var(--papier); box-shadow: inset 0 0 0 1px var(--karte-kueste);
-  backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  transition: transform 480ms cubic-bezier(.45, 0, .25, 1); text-wrap: balance; cursor: pointer;
+#inhaltsbuch-klein { display: none; }
+html:not(.js) .klappbuch .aufschlagen, html:not(.js) .klappbuch .aussen { display: none; }
+html:not(.js) .klappbuch .buchobjekt { font-size: var(--g-text); line-height: var(--z); hyphens: manual; -webkit-hyphens: manual; }
+html:not(.js) .klappbuch .eintrag { display: block; padding-left: 1em; text-indent: -1em; }
+@media (min-width: 62.0625rem) { .globusseite > #inhaltsbuch { grid-row: 3; margin-top: var(--z-zwei); } }
+@media (min-width: 62.0625rem) and (max-height: 56.1875rem) { .globusseite > #inhaltsbuch { margin-top: var(--z); } }
+@media (max-width: 62rem) { .globusseite > #inhaltsbuch { margin-top: var(--z); } }
+html.js .klappbuch {
+  position: relative; z-index: 1; width: var(--s-b);
+  --s-b: var(--band-b); --s-h: calc(var(--s-b) * 1.5185); --bund: var(--z-halb); --aussen: var(--z-halb); --luecke: var(--z);
+  font-size: var(--g-klein); line-height: var(--zh-klein);
 }
-html.js .blaetterbuch .recto { left: var(--s-b); transform-origin: left center; transform: rotateY(var(--w, 0deg)); }
-html.js .blaetterbuch .verso { left: 0; transform-origin: right center; transform: rotateY(calc(var(--w, 0deg) + 180deg)); }
-html.js .blaetterbuch .verso { box-shadow: inset 1px 0 0 var(--karte-kueste), inset 0 1px 0 var(--karte-kueste), inset 0 -1px 0 var(--karte-kueste); }
-html.js .blaetterbuch .gewendet { --w: -180deg; }
-html.js .blaetterbuch .flaeche-deckel { background: var(--tinte); color: var(--papier); box-shadow: none; }
-html.js .blaetterbuch .fest, html.js .blaetterbuch[data-stand="1"] .verso[data-blatt="0"] { cursor: default; }
-html.js .blaetterbuch[data-stand="0"] .flaeche-deckel:hover { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); }
-html.js .blaetterbuch .inhalt a { display: block; width: fit-content; max-width: 100%; cursor: pointer; }
-html.js .blaetterbuch .eintrag { display: block; min-height: var(--titel-h, 0); }
-html.js .blaetterbuch .vignette { display: block; width: var(--vig); height: var(--vig); margin-top: var(--z-halb); overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: butt; stroke-linejoin: miter; }
-html.js .blaetterbuch .vignette * { vector-effect: non-scaling-stroke; }
-html.js .blaetterbuch .vignette .voll { fill: currentColor; stroke: none; }
-html.js .blaetterbuch .vignette .grund { fill: var(--papier); }
-html.js .blaetterbuch .vignette .perl { stroke-dasharray: 1 2.2; }
-html.js .blaetterbuch .schnitt { display: flex; position: absolute; top: 0; height: 100%; width: 4px; box-sizing: border-box; gap: 1px; pointer-events: none; }
-html.js .blaetterbuch .schnitt.links { left: -4px; flex-direction: row-reverse; padding-right: 1px; }
-html.js .blaetterbuch .schnitt.rechts { right: -4px; padding-left: 1px; }
-html.js .blaetterbuch .schnitt i { display: none; width: 1px; flex: none; background: var(--karte-kueste); }
-html.js .blaetterbuch [data-schnitt="1"] .rechts i, html.js .blaetterbuch [data-schnitt="3"] .links i,
-html.js .blaetterbuch [data-schnitt="2"] .schnitt i:first-child { display: block; }
-@media (prefers-reduced-motion: reduce) { html.js .blaetterbuch .recto, html.js .blaetterbuch .verso { transition: none; } }
-html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
-.klappbuch { display: none; }
+@supports (height: 1lh) { html.js .klappbuch { --luecke: max(var(--z-dreiviertel), calc(2.75rem - 1lh)); } }
+html.js .klappbuch.lesegrad { font-size: var(--g-text); line-height: var(--zh-text); }
+html.js .klappbuch.mittel { font-size: calc(var(--g-text) * .9); line-height: calc(var(--zh-text) * .9); }
+html.js .klappbuch.knapp { --bund: var(--z-viertel); --aussen: var(--z-viertel); }
+html.js .klappbuch.eng { font-size: var(--eng-grad); }
+html.js .klappbuch .buchobjekt {
+  position: relative; display: grid; grid-template-columns: var(--s-b) var(--s-b); width: calc(var(--s-b) * 2); min-height: var(--s-h);
+  perspective: 1600px; hyphens: manual; -webkit-hyphens: manual; -webkit-tap-highlight-color: transparent;
+  transform: translateX(calc(var(--s-b) * -1)); transition: transform 600ms cubic-bezier(.45, 0, .25, 1);
+}
+html.js .klappbuch.offen .buchobjekt { transform: none; }
+html.js .klappbuch .deckel, html.js .klappbuch .seite { position: relative; grid-column: 2; grid-row: 1; min-width: 0; box-sizing: border-box; min-height: var(--s-h); }
+html.js .klappbuch .deckel { z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr); transform-origin: left center; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 600ms cubic-bezier(.45, 0, .25, 1); }
+html.js .klappbuch.offen .deckel { transform: rotateY(-180deg); }
+html.js .klappbuch .deckel > .aussen, html.js .klappbuch .deckel > .innen { position: relative; grid-area: 1 / 1; min-width: 0; box-sizing: border-box; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+html.js .klappbuch .aussen { background: var(--tinte); color: var(--papier); }
+html.js .klappbuch .aussen::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(var(--s-b) * .07); width: 1px; background: #414244; background: color-mix(in srgb, var(--papier) 16%, var(--tinte)); }
+html.js .klappbuch .aussen span { position: absolute; left: calc(var(--s-b) * .07 + 1px); right: 0; top: calc(38.2% - .6em); text-align: center; font-family: var(--anzeige); font-size: calc(var(--s-b) * .165); line-height: 1.2; letter-spacing: .01em; }
+html.js .klappbuch .aussen span::after { content: ""; display: block; width: 1.4em; height: 1px; margin: .45em auto 0; background: currentColor; opacity: .7; }
+html.js .klappbuch .seite, html.js .klappbuch .innen { background: var(--papier); }
+html.js .klappbuch .innen { transform: rotateY(180deg); cursor: pointer; padding: var(--oben, var(--z)) var(--bund) var(--z-halb) var(--aussen); box-shadow: inset 1px 0 0 var(--zb-strich); }
+html.js .klappbuch .seite { padding: var(--oben, var(--z)) var(--aussen) var(--z-halb) var(--bund); }
+html.js .klappbuch .seite::before, html.js .klappbuch .seite::after { content: ""; position: absolute; top: 0; bottom: 0; pointer-events: none; }
+html.js .klappbuch .seite::before { left: 0; width: 1px; background: linear-gradient(to bottom, transparent, var(--zb-strich) 16%, var(--zb-strich) 84%, transparent); }
+html.js .klappbuch .seite::after { right: 0; width: 3px; background: linear-gradient(to right, var(--zb-strich) 0 1px, transparent 1px 2px, var(--zb-strich) 2px 3px); }
+html.js .klappbuch .eintrag { display: block; }
+html.js .klappbuch .eintrag + .eintrag { margin-top: var(--luecke); }
+html.js .klappbuch .innen .eintrag { opacity: 0; transition: opacity 120ms cubic-bezier(.4, 0, .3, 1); }
+html.js .klappbuch.offen .innen .eintrag { opacity: 1; transition: opacity 280ms cubic-bezier(.4, 0, .3, 1) 420ms; }
+html.js .klappbuch .eintrag a { position: relative; display: block; width: fit-content; max-width: 100%; text-wrap: balance; text-decoration-line: none; }
+html.js .klappbuch .eintrag a:focus-visible { text-decoration-line: underline; }
+@media (hover: hover) { html.js .klappbuch .eintrag a:hover { text-decoration-line: underline; } }
+html.js .klappbuch .eintrag a::after { content: ""; position: absolute; top: calc(var(--luecke) / -2); bottom: calc(var(--luecke) / -2); }
+html.js .klappbuch .innen .eintrag a::after { left: calc(var(--aussen) * -1); right: calc(var(--bund) * -1); }
+html.js .klappbuch .seite .eintrag a::after { left: calc(var(--bund) * -1); right: calc(var(--aussen) * -1); }
+html.js .klappbuch .aufschlagen {
+  position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: var(--s-b);
+  appearance: none; -webkit-appearance: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+html.js .klappbuch.offen .aufschlagen { display: none; }
+html.js .klappbuch.dreht .seite, html.js .klappbuch.dreht .innen, html.js .klappbuch.dreht .aufschlagen { pointer-events: none; }
+@media (hover: hover) { html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); } }
+html.js .klappbuch.still .buchobjekt, html.js .klappbuch.still .deckel, html.js .klappbuch.still .eintrag, html.js .klappbuch.still.offen .innen .eintrag { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  html.js .klappbuch .buchobjekt, html.js .klappbuch .deckel, html.js .klappbuch .eintrag, html.js .klappbuch.offen .innen .eintrag { transition: none; }
+}
+html.folge .klappbuch[data-folge]:not(.da) { pointer-events: none; }
+@media (min-width: 62.0625rem) {
+  html.js #inhaltsbuch { --band-b: calc(var(--z) * 4.5); }
+  html.js .klappbuch.offen.liegt .deckel { transform: translateX(-100%); transform-style: flat; -webkit-transform-style: flat; transition: none; }
+  html.js .klappbuch.offen.liegt .innen { transform: none; }
+  html.js .klappbuch.offen.liegt .aussen { visibility: hidden; }
+}
+@media (min-width: 62.0625rem) and (min-height: 56.25rem) { html.js #inhaltsbuch { --band-b: calc(var(--z) * 5); } }
 @media (max-width: 62rem) {
-  html.js .globusseite > .blaetterbuch { display: none; }
+  html.js #inhaltsbuch-klein { display: block; }
+  html.js .globusseite > #inhaltsbuch { display: none; }
   html.js { --band-b: min(calc((var(--vb, 100vw) - 2 * var(--rand-l)) / 2), calc(var(--z) * 8), calc(55vh / 1.5185)); }
   @supports (height: 1svh) { html.js { --band-b: min(calc((var(--vb, 100vw) - 2 * var(--rand-l)) / 2), calc(var(--z) * 8), calc(55svh / 1.5185)); } }
-  html.js .klappbuch {
-    display: block; position: relative; z-index: 1; width: var(--s-b);
-    --s-b: var(--band-b); --s-h: calc(var(--s-b) * 1.5185); --bund: var(--z-halb); --aussen: var(--z-halb); --luecke: var(--z);
-    font-size: var(--g-klein); line-height: var(--zh-klein);
-    translate: 0 var(--hoch, 0px); transition: translate 600ms cubic-bezier(.22, .7, .28, 1);
-  }
-  @supports (height: 1lh) { html.js .klappbuch { --luecke: max(var(--z-dreiviertel), calc(2.75rem - 1lh)); } }
-  html.js .globusseite > .klappbuch { margin-top: var(--z-zwei); }
-  html.js .klappbuch.lesegrad { font-size: var(--g-text); line-height: var(--zh-text); }
-  html.js .klappbuch.mittel { font-size: calc(var(--g-text) * .9); line-height: calc(var(--zh-text) * .9); }
-  html.js .klappbuch.knapp { --bund: var(--z-viertel); --aussen: var(--z-viertel); }
-  html.js .klappbuch.eng { font-size: var(--eng-grad); }
-  html.js .klappbuch .buchobjekt {
-    position: relative; display: grid; grid-template-columns: var(--s-b) var(--s-b); width: calc(var(--s-b) * 2); min-height: var(--s-h);
-    perspective: 1600px; hyphens: manual; -webkit-hyphens: manual; -webkit-tap-highlight-color: transparent;
-    transform: translateX(calc(var(--s-b) * -1)); transition: transform 600ms cubic-bezier(.45, 0, .25, 1);
-  }
-  html.js .klappbuch.offen .buchobjekt { transform: none; }
-  html.js .klappbuch .deckel, html.js .klappbuch .seite { position: relative; grid-column: 2; grid-row: 1; min-width: 0; box-sizing: border-box; min-height: var(--s-h); }
-  html.js .klappbuch .deckel { z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr); transform-origin: left center; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 600ms cubic-bezier(.45, 0, .25, 1); }
-  html.js .klappbuch.offen .deckel { transform: rotateY(-180deg); }
-  html.js .klappbuch .deckel > .aussen, html.js .klappbuch .deckel > .innen { position: relative; grid-area: 1 / 1; min-width: 0; box-sizing: border-box; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  html.js .klappbuch .aussen { background: var(--tinte); color: var(--papier); }
-  html.js .klappbuch .aussen::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(var(--s-b) * .07); width: 1px; background: #414244; background: color-mix(in srgb, var(--papier) 16%, var(--tinte)); }
-  html.js .klappbuch .aussen span { position: absolute; left: calc(var(--s-b) * .07 + 1px); right: 0; top: calc(38.2% - .6em); text-align: center; font-family: var(--anzeige); font-size: calc(var(--s-b) * .165); line-height: 1.2; letter-spacing: .01em; }
-  html.js .klappbuch .aussen span::after { content: ""; display: block; width: 1.4em; height: 1px; margin: .45em auto 0; background: currentColor; opacity: .7; }
-  html.js .klappbuch .seite, html.js .klappbuch .innen { background: var(--papier); }
-  html.js .klappbuch .innen { transform: rotateY(180deg); cursor: pointer; padding: var(--oben, var(--z)) var(--bund) var(--z-halb) var(--aussen); box-shadow: inset 1px 0 0 var(--zb-strich); }
-  html.js .klappbuch .seite { padding: var(--oben, var(--z)) var(--aussen) var(--z-halb) var(--bund); }
-  html.js .klappbuch .seite::before, html.js .klappbuch .seite::after { content: ""; position: absolute; top: 0; bottom: 0; pointer-events: none; }
-  html.js .klappbuch .seite::before { left: 0; width: 1px; background: linear-gradient(to bottom, transparent, var(--zb-strich) 16%, var(--zb-strich) 84%, transparent); }
-  html.js .klappbuch .seite::after { right: 0; width: 3px; background: linear-gradient(to right, var(--zb-strich) 0 1px, transparent 1px 2px, var(--zb-strich) 2px 3px); }
-  html.js .klappbuch .eintrag { display: block; }
-  html.js .klappbuch .eintrag + .eintrag { margin-top: var(--luecke); }
-  html.js .klappbuch .innen .eintrag { opacity: 0; transition: opacity 120ms cubic-bezier(.4, 0, .3, 1); }
-  html.js .klappbuch.offen .innen .eintrag { opacity: 1; transition: opacity 280ms cubic-bezier(.4, 0, .3, 1) 420ms; }
-  html.js .klappbuch .eintrag a { position: relative; display: block; width: fit-content; max-width: 100%; text-wrap: balance; text-decoration-line: none; }
-  html.js .klappbuch .eintrag a:focus-visible { text-decoration-line: underline; }
-  @media (hover: hover) { html.js .klappbuch .eintrag a:hover { text-decoration-line: underline; } }
-  html.js .klappbuch .eintrag a::after { content: ""; position: absolute; top: calc(var(--luecke) / -2); bottom: calc(var(--luecke) / -2); }
-  html.js .klappbuch .innen .eintrag a::after { left: calc(var(--aussen) * -1); right: calc(var(--bund) * -1); }
-  html.js .klappbuch .seite .eintrag a::after { left: calc(var(--bund) * -1); right: calc(var(--aussen) * -1); }
-  html.js .klappbuch .aufschlagen {
-    position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: var(--s-b);
-    appearance: none; -webkit-appearance: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent;
-    cursor: pointer; -webkit-tap-highlight-color: transparent;
-  }
-  html.js .klappbuch.offen .aufschlagen { display: none; }
-  html.js .klappbuch.dreht .seite, html.js .klappbuch.dreht .innen, html.js .klappbuch.dreht .aufschlagen { pointer-events: none; }
-  @media (hover: hover) { html.js .klappbuch .aufschlagen:hover + .buchobjekt .aussen { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); } }
-  html.js .klappbuch.still .buchobjekt, html.js .klappbuch.still .deckel, html.js .klappbuch.still .eintrag, html.js .klappbuch.still.offen .innen .eintrag { transition: none; }
+  html.js .klappbuch { translate: 0 var(--hoch, 0px); transition: translate 600ms cubic-bezier(.22, .7, .28, 1); }
+  html.js .globusseite > #inhaltsbuch-klein { margin-top: var(--z-zwei); }
   html.js.initial #klapp-titel { padding-left: calc(var(--band-b) + var(--initial-luft, var(--z-dreiviertel))); }
   html.js .buch { margin-top: var(--nach, 0px); transition: margin-top 600ms cubic-bezier(.22, .7, .28, 1); }
   html.js.initial .buch { margin-top: calc(var(--initial-mb, 0px) + var(--nach, 0px)); }
   html.js .klappbuch.ohne-gleiten, html.js .buch.ohne-gleiten { transition: none; }
 }
 @media (max-width: 62rem) and (prefers-reduced-motion: reduce) {
-  html.js .klappbuch, html.js .klappbuch .buchobjekt, html.js .klappbuch .deckel, html.js .klappbuch .eintrag, html.js .klappbuch.offen .innen .eintrag, html.js .buch { transition: none; }
+  html.js .klappbuch, html.js .buch { transition: none; }
 }
 .buch { display: flex; flex-direction: column; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
 .buch section { max-width: var(--mass); margin-top: var(--z-zwei); }
@@ -225,8 +204,10 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
     var LUECKE = /[ \t\r\n]+/;
     var saetze = Array.prototype.map.call(el.querySelectorAll('.glied-satz'), function (g) { return g.textContent.trim().split(LUECKE).join(' '); });
     var glieder = [], woerter = [];
-    var stehtJetzt = function () {};
+    var stehtJetzt = function () {}, flugJetzt = function () {};
     el.steht = new Promise(function (r) { stehtJetzt = r; });
+    el.flug = new Promise(function (r) { flugJetzt = r; });
+    var zurueck = document.documentElement.classList.contains('zurueck');
     (function aufbauen() {
       el.textContent = '';
       var vorlesen = document.createElement('span');
@@ -330,54 +311,35 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
       }
       document.fonts.load(SCHRIFT).catch(function () {}).then(function () { return document.fonts.ready; }).then(setzen, setzen);
     }
-    function filterAnlegen(em) {
-      var svg = document.getElementById('aufhaenger-filter');
-      if (!svg) {
-        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.id = 'aufhaenger-filter';
-        svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
-        svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-        svg.innerHTML = '<filter id="aufhaenger-flug" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
-        document.body.appendChild(svg);
-      }
-      svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', (.06 * em).toFixed(2) + ' 0');
-    }
-    var VERSATZ = 28, PAUSE = 70, DAUER = 360;
-    var UNSCHARF = [1, .8, .55, .25, .06, 0], SCHARF = [0, .3, .6, .9, 1, 1], STELLEN = [0, .1, .25, .5, .75, 1];
+    var WEG = 800, DECKKRAFT = 420, VERSATZ = 55, ATEM = 220;
     function einfliegen() {
-      if (!woerter[0].animate) { stehtJetzt(); return; }
-      var em = parseFloat(getComputedStyle(el).fontSize) || 38;
-      filterAnlegen(em);
+      if (!woerter[0].animate) { flugJetzt(null); stehtJetzt(); return; }
       var t = 0, laeufe = [];
       glieder.forEach(function (g, gi) {
-        if (gi) t += PAUSE;
+        if (gi) t += ATEM;
         Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
           if (wi) t += VERSATZ;
-          var zeit = { duration: DAUER, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' };
-          var wort = w.textContent;
-          w.textContent = '';
-          var scharf = document.createElement('span'), unscharf = document.createElement('span');
-          scharf.className = 'scharf'; scharf.textContent = wort;
-          unscharf.className = 'unscharf'; unscharf.textContent = wort;
-          w.appendChild(scharf); w.appendChild(unscharf);
-          w.classList.add('fliegt');
-          laeufe.push(w.animate([
-            { opacity: 0, transform: 'translateX(.2em)' },
-            { opacity: 1, offset: .38 },
-            { opacity: 1, transform: 'translateX(0)' }
-          ], zeit));
-          laeufe.push(unscharf.animate(UNSCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
-          laeufe.push(scharf.animate(SCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
+          laeufe.push(w.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DECKKRAFT, delay: t, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'backwards' }));
+          laeufe.push(w.animate([{ transform: 'translateX(.2em)' }, { transform: 'translateX(0)' }], { duration: WEG, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
         });
       });
-      var fertig = function () {
-        woerter.forEach(function (w) { if (w.classList.contains('fliegt')) { w.textContent = w.firstChild ? w.firstChild.textContent : w.textContent; w.classList.remove('fliegt'); } });
+      var letztes = t, gemeldet = false;
+      var melden = function () {
+        if (gemeldet) return;
+        gemeldet = true;
+        var b = laeufe[0].startTime;
+        if (b == null || !isFinite(b)) b = performance.now();
+        flugJetzt({ beginn: b, tm: b + letztes + Math.max(DECKKRAFT, .6 * WEG), ende: b + letztes + Math.max(DECKKRAFT, WEG) });
+      };
+      if (laeufe[0].ready) laeufe[0].ready.then(melden, melden); else melden();
+      setTimeout(melden, 1000);
+      var gestanden = function () {
         if (!breit()) setzen();
         stehtJetzt();
       };
-      Promise.all(laeufe.map(function (a) { return a.finished; })).then(fertig, fertig);
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(gestanden, gestanden);
     }
-    if (!still()) {
+    if (!still() && !zurueck) {
       el.classList.add('wartet');
       if (!breit()) setzen();
       imFell(1200).then(function (da) {
@@ -385,9 +347,9 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
         var satz = el.querySelector('.einstieg-satz');
         var schonDa = !!satz && el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
         el.classList.remove('wartet');
-        if (da && !schonDa && !still()) einfliegen(); else stehtJetzt();
+        if (da && !schonDa && !still()) einfliegen(); else { flugJetzt(null); stehtJetzt(); }
       });
-    } else { setzen(); stehtJetzt(); }
+    } else { setzen(); flugJetzt(null); stehtJetzt(); }
     nachSchrift();
     var warte = 0, breiteVorher = window.innerWidth;
     window.addEventListener('resize', function () {
@@ -416,396 +378,269 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
 </script>
 
   
-  <nav class="inhaltsbuch blaetterbuch" id="inhaltsbuch" aria-label="Auf dieser Seite" data-stand="1">
-    <div class="buchobjekt" data-schnitt="1">
-      <div class="flaeche-deckel recto gewendet" data-blatt="0" aria-hidden="true"><span>Satoshi</span></div>
-      <ol class="inhalt wahlliste" role="list">
-        <li class="verso gewendet" data-blatt="0"><a href="#klappentext"><span class="eintrag">Klappentext</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><path d="M22.5 8.5H46.5V47.5H22.5Z"/><path d="M22.5 8.5L10.5 11.5V44.5L22.5 47.5"/><path class="perl" d="M14 19.5H19.5M14 23.5H19.5M14 27.5H19.5M14 31.5H17.5"/><path d="M28.5 18.5H40.5M31 22.5H38"/></svg></a></li>
-        <li class="recto" data-blatt="1"><a href="#eckdaten"><span class="eintrag">Eckdaten</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><path d="M4.5 30.5H51.5M4.5 24.5V36.5M51.5 24.5V36.5"/><path d="M8.5 30.5V33M12.5 30.5V33M16.5 30.5V33M20.5 30.5V33M24.5 30.5V33M32.5 30.5V33M36.5 30.5V33M40.5 30.5V33M44.5 30.5V33M48.5 30.5V33"/><path class="voll" d="M28.5 28H40.5V30.5H28.5Z"/></svg></a></li>
-        <li class="verso" data-blatt="1"><a href="#bau"><span class="eintrag">Gebaut wie ein Protokoll</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><path d="M3.5 18.5H15.5V37.5H3.5ZM22 18.5H34V37.5H22ZM40.5 18.5H52.5V37.5H40.5Z"/><path d="M3.5 23.5H15.5M22 23.5H34M40.5 23.5H52.5"/><path d="M15.5 21H22M34 21H40.5"/><path class="perl" d="M6 28.5H13M6 32H11M24.5 28.5H31.5M24.5 32H29.5M43 28.5H50M43 32H48"/></svg></a></li>
-        <li class="recto" data-blatt="2"><a href="#figuren"><span class="eintrag">Die Figuren</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><circle cx="28" cy="20" r="10.5"/><circle cx="20.6" cy="33" r="10.5"/><circle cx="35.4" cy="33" r="10.5"/><circle class="voll" cx="28" cy="28.6" r="1.7"/></svg></a></li>
-        <li class="verso" data-blatt="2"><a href="#frage"><span class="eintrag">Die Frage hinter dem Roman</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><defs><clipPath id="vignette-frage-l"><path d="M0 0H28.5L27 14.5L30 19L26.5 23.5L27.5 30.5L25 33.5L28.5 40L27 56H0Z"/></clipPath><clipPath id="vignette-frage-r"><path d="M56 0H28.5L27 14.5L30 19L26.5 23.5L27.5 30.5L25 33.5L28.5 40L27 56H56Z"/></clipPath></defs><g transform="rotate(-4 28 46) translate(-1.5 0)"><g clip-path="url(#vignette-frage-l)"><circle cx="28" cy="28" r="17"/><circle class="perl" cx="28" cy="28" r="14.2"/></g><path d="M28.6 11L27 14.5L30 19L26.5 23.5L27.5 30.5L25 33.5L28.5 40L27.4 45"/></g><g transform="rotate(3 28 46) translate(1.5 0)"><g clip-path="url(#vignette-frage-r)"><circle cx="28" cy="28" r="17"/><circle class="perl" cx="28" cy="28" r="14.2"/></g><path d="M28.6 11L27 14.5L30 19L26.5 23.5L27.5 30.5L25 33.5L28.5 40L27.4 45"/></g></svg></a></li>
-        <li class="recto fest"><a href="#machart"><span class="eintrag">Wie er gemacht ist</span><svg class="vignette" viewBox="0 0 56 56" aria-hidden="true" focusable="false"><path d="M13.5 5.5H42.5V50.5H13.5Z"/><path class="perl" d="M18 12.5H38M18 16.5H38M18 20.5H34M18 38.5H38M18 42.5H38M18 46.5H30"/><g transform="rotate(-4 28 29)"><path class="grund" d="M7.5 24.5H48.5V33.5H7.5Z"/><path d="M12 29H40"/></g></svg></a></li>
-      </ol>
-      <span class="schnitt links" aria-hidden="true"><i></i><i></i></span><span class="schnitt rechts" aria-hidden="true"><i></i><i></i></span>
-    </div>
-  </nav>
-  <script>
-  (function () {
-    'use strict';
-    var buch = document.getElementById('inhaltsbuch');
-    var obj = buch && buch.querySelector('.buchobjekt');
-    if (!obj) return;
-    var flaechen = Array.prototype.slice.call(obj.querySelectorAll('.recto, .verso'));
-    var lis = Array.prototype.slice.call(obj.querySelectorAll('.inhalt li'));
-    var eintraege = Array.prototype.slice.call(obj.querySelectorAll('.eintrag'));
-    var ruhig = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
-    var stand = +buch.dataset.stand || 0, DAUER = 480, FOLGE = 90, schnittWarte = 0;
-    var doppelVon = function (i) { return (i >> 1) + 1; };
-    var blatt = function (f) { return f.dataset.blatt === undefined ? null : +f.dataset.blatt; };
-    flaechen.forEach(function (f) {
-      var k = blatt(f);
-      f.style.zIndex = k === null ? 1 : (f.classList.contains('recto') ? 10 - k : 10 + k);
-    });
-    function sichtbar() {
-      flaechen.forEach(function (f) {
-        var k = blatt(f), oben;
-        if (f.classList.contains('verso')) oben = k === stand - 1;
-        else oben = k === null ? stand === 3 : k === stand;
-        f.style.pointerEvents = oben ? '' : 'none';
-      });
-    }
-    function setzen(neu, fokus, ohneDrehung) {
-      neu = Math.max(0, Math.min(3, neu));
-      if (neu === stand) return;
-      var alt = stand, still = ohneDrehung || ruhig();
-      stand = neu; buch.dataset.stand = neu;
-      flaechen.forEach(function (f) {
-        var k = blatt(f);
-        if (k === null) return;
-        f.classList.toggle('gewendet', stand > k);
-        f.style.transitionDuration = still ? '0ms' : '';
-        f.style.transitionDelay = still ? '0ms' : Math.abs(neu > alt ? k - alt : alt - 1 - k) * FOLGE + 'ms';
-      });
-      sichtbar();
-      clearTimeout(schnittWarte);
-      var schnitt = function () { obj.dataset.schnitt = stand; };
-      if (still) schnitt(); else schnittWarte = setTimeout(schnitt, DAUER + (Math.abs(neu - alt) - 1) * FOLGE);
-      if (fokus && stand > 0) lis[(stand - 1) * 2].querySelector('a').focus({ preventScroll: true });
-    }
-    sichtbar();
-    function titelRaum() {
-      obj.style.removeProperty('--titel-h');
-      var h = 0;
-      eintraege.forEach(function (e) { h = Math.max(h, e.offsetHeight); });
-      if (h) obj.style.setProperty('--titel-h', h + 'px');
-    }
-    titelRaum();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(titelRaum);
-    var warte = 0;
-    window.addEventListener('resize', function () { clearTimeout(warte); warte = setTimeout(titelRaum, 120); });
-    var wisch = null, gewischt = -1e9;
-    obj.addEventListener('click', function (e) {
-      if (performance.now() - gewischt < 150) { e.preventDefault(); e.stopPropagation(); return; }
-      if (e.target.closest('a')) return;
-      var r = obj.getBoundingClientRect(), vor = e.clientX >= r.left + r.width / 2;
-      if (vor || stand !== 1) setzen(stand + (vor ? 1 : -1));
-    }, true);
-    obj.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      wisch = { x: e.clientX, y: e.clientY, id: e.pointerId };
-    });
-    window.addEventListener('pointerup', function (e) {
-      if (!wisch || e.pointerId !== wisch.id) return;
-      var dx = e.clientX - wisch.x, dy = e.clientY - wisch.y;
-      wisch = null;
-      if (Math.abs(dx) > 32 && Math.abs(dx) > Math.abs(dy)) { gewischt = performance.now(); setzen(stand + (dx < 0 ? 1 : -1)); }
-    });
-    window.addEventListener('pointercancel', function () { wisch = null; });
-    obj.addEventListener('focusin', function (e) {
-      var i = lis.indexOf(e.target.closest('li'));
-      if (i >= 0) setzen(doppelVon(i), false, true);
-    });
-    obj.addEventListener('keydown', function (e) {
-      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-      if (e.key === 'ArrowRight') { e.preventDefault(); setzen(stand + 1, true); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); setzen(Math.max(1, stand - 1), true); }
-    });
-    buch.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('a[href^="#"]');
-      var ziel = a && document.getElementById(a.getAttribute('href').slice(1));
-      var titel = ziel && ziel.querySelector('.titel[tabindex="-1"]');
-      if (titel) requestAnimationFrame(function () { titel.focus({ preventScroll: true }); });
-    });
-  })();
-</script>
+  <nav class="inhaltsbuch klappbuch" id="inhaltsbuch" aria-label="Auf dieser Seite" data-folge="1"><button class="aufschlagen" type="button" aria-expanded="false" aria-controls="inhaltsbuch-liste" aria-label="Satoshi, Inhalt aufschlagen"></button><div class="buchobjekt wahlliste" id="inhaltsbuch-liste" role="list"><div class="deckel" role="none"><div class="aussen" aria-hidden="true"><span>Satoshi</span></div><div class="innen" role="none"><span class="eintrag" role="listitem"><a href="#klappentext">Klappentext</a></span><span class="eintrag" role="listitem"><a href="#eckdaten">Eckdaten</a></span><span class="eintrag" role="listitem"><a href="#bau">Gebaut wie ein Protokoll</a></span></div></div><div class="seite" role="none"><span class="eintrag" role="listitem"><a href="#figuren">Die Figuren</a></span><span class="eintrag" role="listitem"><a href="#frage">Die Frage hinter dem Roman</a></span><span class="eintrag" role="listitem"><a href="#machart">Wie er gemacht ist</a></span></div></div></nav>
   <script>
   (function () {
     'use strict';
     var gross = document.getElementById('inhaltsbuch');
     if (!gross) return;
-    var schmal = window.matchMedia ? window.matchMedia('(max-width: 62rem)') : { matches: false };
-    var kleinHolen = function (f) {
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { f(document.getElementById('inhaltsbuch-klein')); });
-      else f(document.getElementById('inhaltsbuch-klein'));
-    };
-    if (!gross.animate || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
-      kleinHolen(function (k) { if (k) k.classList.remove('wartet'); });
-      return;
-    }
-    var PAUSE = 800, DAUER = 1400, WEG = 8, SOFORT = 200, FRIST = 1200;
-    var frei = false, vorspannWeg = false, buecher = [];
-    function erscheinen(b) {
-      var ohnePause = b.klein && vorspannWeg && !frei;
-      if (b.fertig || b.schriftWartet || !(frei || ohnePause) || !b.dran(b)) return;
-      if (ohnePause && !b.schriftDa && document.fonts && document.fonts.load) {
-        b.schriftWartet = true;
-        var weiter = function () { b.schriftWartet = false; b.schriftDa = true; erscheinen(b); };
-        Promise.race([document.fonts.load('1em "IM Fell French Canon"'), new Promise(function (r) { setTimeout(r, FRIST); })]).then(weiter, weiter);
-        return;
-      }
-      b.fertig = true;
-      b.el.classList.remove('wartet');
-      var dauer = ohnePause ? SOFORT : b.dauer;
-      b.laeufe = [
-        b.el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: dauer, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
-        b.el.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: dauer, easing: 'cubic-bezier(.22, .7, .28, 1)' })
+    var DAUER = 1400, WEG = 8;
+    gross.folgeDauer = DAUER;
+    gross.einblenden = function (dauer) {
+      if (!gross.animate) return null;
+      var d = dauer || DAUER;
+      var a = [
+        gross.animate([{ opacity: 0 }, { opacity: 1 }], { duration: d, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }),
+        gross.animate([{ transform: 'translateX(' + WEG + 'px)' }, { transform: 'none' }], { duration: d, easing: 'cubic-bezier(.22, .7, .28, 1)' })
       ];
-      b.laeufe.forEach(function (x) { x.id = 'erscheinen'; });
-    }
-    function anmelden(el, dran, beobachten, dauer) {
-      if (!el) return;
-      var b = { el: el, dran: dran, fertig: false, gesehen: false, laeufe: [], dauer: dauer || DAUER, klein: !!beobachten };
-      buecher.push(b);
-      el.classList.add('wartet');
-      el.addEventListener('focusin', function () {
-        b.fertig = true;
-        el.classList.remove('wartet');
-        b.laeufe.forEach(function (a) { a.finish(); });
-      });
-      if (beobachten) {
-        if ('IntersectionObserver' in window) {
-          var io = new IntersectionObserver(function (e) {
-            var x = e[e.length - 1];
-            b.imBild = x.isIntersecting;
-            if (x.isIntersecting && x.intersectionRatio >= beobachten - .01) b.gesehen = true;
-            erscheinen(b);
-            if (b.fertig) io.disconnect();
-          }, { threshold: [0, beobachten] });
-          io.observe(el);
-        } else b.gesehen = true;
-      }
-      erscheinen(b);
-    }
-    anmelden(gross, function () { return !schmal.matches; }, false);
-    kleinHolen(function (k) { anmelden(k, function (b) { return b.gesehen || (vorspannWeg && !!b.imBild); }, .25, 700); });
-    var alle = function () { buecher.forEach(erscheinen); };
-    if (schmal.addEventListener) schmal.addEventListener('change', alle); else if (schmal.addListener) schmal.addListener(alle);
-    var auf = document.getElementById('aufhaenger');
-    var steht = auf && auf.steht ? auf.steht : Promise.resolve();
-    Promise.race([steht, new Promise(function (r) { setTimeout(r, 3000); })]).then(function () {
-      setTimeout(function () { frei = true; alle(); }, PAUSE);
-    });
-    if (auf && 'IntersectionObserver' in window) {
-      var weg = new IntersectionObserver(function (e) {
-        var x = e[e.length - 1];
-        if (x.isIntersecting || x.boundingClientRect.bottom > 0) return;
-        vorspannWeg = true; weg.disconnect(); alle();
-      });
-      weg.observe(auf);
+      a.forEach(function (x) { x.id = 'erscheinen'; });
+      return a;
+    };
+    if (document.documentElement.classList.contains('folge')) {
+      setTimeout(function () {
+        [gross, document.getElementById('inhaltsbuch-klein')].forEach(function (b) { if (b) b.classList.add('da'); });
+      }, 7000);
     }
   })();
 </script>
 
-  <figure class="globus" id="globus">
+  <figure class="globus" id="globus" data-folge="2">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen des Romans; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <p class="hinweis" hidden></p>
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Schauplätze stehen auf der Tafel, mit ihren Koordinaten.</p>
     <div class="tafel" id="tafel" aria-live="off"></div>
   </figure>
   
-  <nav class="inhaltsbuch klappbuch wartet" id="inhaltsbuch-klein" aria-label="Auf dieser Seite"><button class="aufschlagen" type="button" aria-expanded="false" aria-controls="klappbuch-liste" aria-label="Satoshi, Inhalt aufschlagen"></button><div class="buchobjekt wahlliste" id="klappbuch-liste" role="list" inert><div class="deckel" role="none"><div class="aussen" aria-hidden="true"><span>Satoshi</span></div><div class="innen" role="none"><span class="eintrag" role="listitem"><a href="#klappentext">Klappentext</a></span><span class="eintrag" role="listitem"><a href="#eckdaten">Eckdaten</a></span><span class="eintrag" role="listitem"><a href="#bau">Gebaut wie ein Protokoll</a></span></div></div><div class="seite" role="none"><span class="eintrag" role="listitem"><a href="#figuren">Die Figuren</a></span><span class="eintrag" role="listitem"><a href="#frage">Die Frage hinter dem Roman</a></span><span class="eintrag" role="listitem"><a href="#machart">Wie er gemacht ist</a></span></div></div></nav>
+  <nav class="inhaltsbuch klappbuch" id="inhaltsbuch-klein" aria-label="Auf dieser Seite" data-folge="2"><button class="aufschlagen" type="button" aria-expanded="false" aria-controls="klappbuch-liste" aria-label="Satoshi, Inhalt aufschlagen"></button><div class="buchobjekt wahlliste" id="klappbuch-liste" role="list" inert><div class="deckel" role="none"><div class="aussen" aria-hidden="true"><span>Satoshi</span></div><div class="innen" role="none"><span class="eintrag" role="listitem"><a href="#klappentext">Klappentext</a></span><span class="eintrag" role="listitem"><a href="#eckdaten">Eckdaten</a></span><span class="eintrag" role="listitem"><a href="#bau">Gebaut wie ein Protokoll</a></span></div></div><div class="seite" role="none"><span class="eintrag" role="listitem"><a href="#figuren">Die Figuren</a></span><span class="eintrag" role="listitem"><a href="#frage">Die Frage hinter dem Roman</a></span><span class="eintrag" role="listitem"><a href="#machart">Wie er gemacht ist</a></span></div></div></nav>
   <script>
   (function () {
     'use strict';
-    var buch = document.getElementById('inhaltsbuch-klein'), gross = document.getElementById('inhaltsbuch');
-    var knopf = buch && buch.querySelector('.aufschlagen');
-    var obj = buch && buch.querySelector('.buchobjekt');
-    var deckel = obj && obj.querySelector('.deckel');
-    if (!knopf || !deckel) return;
-    var innen = obj.querySelector('.innen'), seite = obj.querySelector('.seite');
-    var erster = obj.querySelector('a');
-    var links = Array.prototype.slice.call(obj.querySelectorAll('.eintrag a'));
     var wurzel = document.documentElement;
     var schmal = window.matchMedia ? window.matchMedia('(max-width: 62rem)') : { matches: false };
+    var beiWechsel = function (f) { if (schmal.addEventListener) schmal.addEventListener('change', f); else if (schmal.addListener) schmal.addListener(f); };
     var ruhig = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
-    var offen = function () { return buch.classList.contains('offen'); };
     var DAUER = 600, SCHRIFT = 700, WEICHT = 150, KURVE = 'cubic-bezier(.3, 0, .25, 1)';
-    var titel = null, prosa = null, abschnitte = null;
-    function holen() {
-      titel = document.getElementById('klapp-titel');
-      prosa = document.querySelector('#klappentext .prosa');
-      abschnitte = document.getElementById('buch');
-      return !!(titel && prosa && abschnitte);
-    }
-    var zMass = function () { return parseFloat(getComputedStyle(buch).marginTop) / 2 || 27; };
-    var zeilen = function (a) { return Math.round(a.offsetHeight / (parseFloat(getComputedStyle(a).lineHeight) || 1)); };
-    var passt = function () { return links.every(function (a) { return zeilen(a) <= 2; }); };
-    function gradWaehlen() {
-      buch.classList.remove('mittel', 'knapp', 'eng'); buch.classList.add('lesegrad'); buch.style.removeProperty('--eng-grad');
-      var stufe = 'lesegrad';
-      if (!passt()) { buch.classList.replace('lesegrad', 'mittel'); stufe = 'mittel'; }
-      if (!passt()) { buch.classList.remove('mittel'); stufe = 'klein'; }
-      if (!passt()) { buch.classList.add('knapp'); stufe = 'knapp'; }
-      if (!passt()) {
-        var g = parseFloat(getComputedStyle(buch).fontSize), f = 1;
-        buch.style.setProperty('--eng-grad', g + 'px'); buch.classList.add('eng');
-        while (!passt() && f > .955) { f -= .01; buch.style.setProperty('--eng-grad', (g * f).toFixed(2) + 'px'); }
-        stufe = passt() ? 'eng ' + f.toFixed(2) : 'dreizeilig';
+    function einrichten(buch, klein) {
+      var knopf = buch && buch.querySelector('.aufschlagen');
+      var obj = buch && buch.querySelector('.buchobjekt');
+      var deckel = obj && obj.querySelector('.deckel');
+      if (!knopf || !deckel) return null;
+      var innen = obj.querySelector('.innen'), seite = obj.querySelector('.seite');
+      var erster = obj.querySelector('a');
+      var links = Array.prototype.slice.call(obj.querySelectorAll('.eintrag a'));
+      var offen = function () { return buch.classList.contains('offen'); };
+      var da = function () { return schmal.matches === klein && !!buch.getClientRects().length; };
+      var traeger = klein ? wurzel : buch;
+      obj.setAttribute('inert', '');
+      var spalte = null, titel = null, prosa = null, abschnitte = null;
+      function holen() {
+        if (!klein) { spalte = document.getElementById('aufhaenger'); return !!spalte; }
+        titel = document.getElementById('klapp-titel');
+        prosa = document.querySelector('#klappentext .prosa');
+        abschnitte = document.getElementById('buch');
+        spalte = titel && titel.parentNode;
+        return !!(titel && prosa && abschnitte);
       }
-      buch.dataset.stufe = stufe;
-    }
-    function satzspiegel() {
-      var z = zMass();
-      buch.style.removeProperty('--luecke');
-      buch.style.setProperty('--oben', z * .75 + 'px');
-      var sh = parseFloat(getComputedStyle(obj).minHeight) || 0;
-      var zeilenHoehe = function (s) { var h = 0; s.querySelectorAll('.eintrag').forEach(function (e) { h += e.offsetHeight; }); return h; };
-      var grund = parseFloat(getComputedStyle(seite.querySelectorAll('.eintrag')[1]).marginTop) || z * .75;
-      var mehr = Math.min(z * 1.5, Math.floor((sh - Math.max(zeilenHoehe(innen), zeilenHoehe(seite))) / 5 / (z / 4)) * (z / 4));
-      if (mehr > grund + .5) buch.style.setProperty('--luecke', mehr + 'px');
-      var hoehe = function (s) { var e = s.querySelectorAll('.eintrag'), l = e[e.length - 1]; return l.offsetTop + l.offsetHeight - e[0].offsetTop; };
-      var c = Math.max(hoehe(innen), hoehe(seite));
-      buch.style.setProperty('--oben', Math.max(z * .75, Math.round((sh - c) / 3 / (z / 4)) * (z / 4)) + 'px');
-    }
-    var lage = '', lageOffen = false;
-    function breiteTitel() { var r = document.createRange(); r.selectNodeContents(titel); return r.getBoundingClientRect().width; }
-    var bandBreite = function () { return parseFloat(getComputedStyle(buch).width) || 0; };
-    var spalteBreite = function () { return titel.parentNode.getBoundingClientRect().width; };
-    function titelZeile() { titel.style.whiteSpace = 'nowrap'; var w = breiteTitel(); titel.style.whiteSpace = ''; return w; }
-    function initialPruefen() {
-      var z = zMass();
-      var tw = titelZeile();
-      var rest = spalteBreite() - bandBreite() - tw;
-      var luft = rest - z * .75 >= z * .5 ? z * .75 : rest - z * .5 >= z * .25 ? z * .5 : -1;
-      lage = luft < 0 ? 'fenster' : 'initial';
-      buch.dataset.lage = lage;
-      abschnitte.style.setProperty('--initial-luft', Math.max(0, luft) + 'px');
-    }
-    function breiteWaehlen() {
-      wurzel.style.removeProperty('--band-b');
-      var z = zMass(), spalte = spalteBreite(), b = bandBreite(), frei = b;
-      var stellen = function (x) { b = x; if (x === frei) wurzel.style.removeProperty('--band-b'); else wurzel.style.setProperty('--band-b', x.toFixed(2) + 'px'); gradWaehlen(); };
-      gradWaehlen();
-      while (buch.dataset.stufe === 'dreizeilig' && b < spalte / 2 - .5) stellen(Math.min(spalte / 2, b + z / 4));
-      initialPruefen();
-      if (lage !== 'fenster' || b !== frei) return;
-      var tw = titelZeile();
-      var gut = function () { return /^(lesegrad|mittel|klein|knapp)$/.test(buch.dataset.stufe); };
-      var ziele = [spalte - tw - z * 1.25, spalte - tw - z * .75];
-      for (var i = 0; i < ziele.length; i++) {
-        var x = Math.floor(ziele[i] * 4) / 4;
-        if (x < z * 4 || x >= frei) continue;
-        stellen(x);
-        if (gut()) { initialPruefen(); if (lage === 'initial') return; }
+      function zMass() {
+        var p = document.createElement('i');
+        p.style.cssText = 'position:absolute;margin-top:var(--z)';
+        buch.appendChild(p);
+        var z = parseFloat(getComputedStyle(p).marginTop);
+        buch.removeChild(p);
+        return z || 27;
       }
-      stellen(frei);
-      initialPruefen();
-    }
-    var oben = function (el) { var t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
-    function luecke() {
-      if (abschnitte.getAnimations && abschnitte.getAnimations().length) return oben(titel) - (oben(buch) + buch.offsetHeight);
-      var tr = (getComputedStyle(buch).translate || '').split(' ');
-      var dy = tr.length > 1 ? parseFloat(tr[1]) || 0 : 0;
-      return titel.getBoundingClientRect().top - (buch.getBoundingClientRect().bottom - dy);
-    }
-    function initialStellen() {
-      var an = lage === 'initial' && !lageOffen && schmal.matches;
-      wurzel.classList.toggle('initial', an);
-      if (!an) return;
-      var probe = document.createElement('span');
-      probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
-      titel.appendChild(probe);
-      var grund = probe.getBoundingClientRect().top - titel.getBoundingClientRect().top;
-      probe.remove();
-      var rand = parseFloat(getComputedStyle(abschnitte).marginTop) || 0;
-      abschnitte.style.setProperty('--initial-mb', -Math.round((luecke() - rand + grund) * 100) / 100 + 'px');
-    }
-    function lageStellen() {
-      abschnitte.classList.add('ohne-gleiten');
-      initialStellen();
-      abschnitte.getBoundingClientRect(); abschnitte.classList.remove('ohne-gleiten');
-    }
-    var drehUhr = 0, lageUhr = 0, laeufe = [];
-    var masse = '';
-    function mass() { return abschnitte ? abschnitte.clientWidth + ':' + titel.offsetHeight + ':' + breiteTitel().toFixed(1) : ''; }
-    function setzen() {
-      if (!holen()) return;
-      if (!schmal.matches || !buch.getClientRects().length) {
-        clearTimeout(lageUhr); laeufe.forEach(function (x) { x.cancel(); }); laeufe = []; lageOffen = offen();
-        wurzel.classList.remove('initial'); wurzel.style.removeProperty('--band-b');
-        return;
-      }
-      breiteWaehlen();
-      satzspiegel();
-      lageStellen();
-      masse = mass();
-      if (buch.lageNeu) buch.lageNeu();
-    }
-    function gedreht() { clearTimeout(drehUhr); buch.classList.remove('dreht'); }
-    function auf(an, fokus, still) {
-      still = !!still || ruhig();
-      gedreht(); clearTimeout(lageUhr);
-      laeufe.forEach(function (x) { x.cancel(); }); laeufe = [];
-      if (buch.getAnimations) buch.getAnimations().forEach(function (x) { if (x.id === 'erscheinen') x.finish(); });
-      var mitText = holen() && schmal.matches && !!buch.getClientRects().length && lage === 'initial';
-      if (still) buch.classList.add('still');
-      buch.classList.toggle('offen', an);
-      knopf.setAttribute('aria-expanded', an ? 'true' : 'false');
-      if (an) obj.removeAttribute('inert'); else obj.setAttribute('inert', '');
-      var fertig = function () { if (!an && buch.lageNeu) buch.lageNeu(); };
-      if (still || !mitText || !titel.animate) {
-        lageOffen = an;
-        if (mitText) lageStellen();
-      }
-      if (still) { getComputedStyle(deckel).transform; getComputedStyle(obj).transform; buch.classList.remove('still'); fertig(); }
-      else {
-        buch.classList.add('dreht'); drehUhr = setTimeout(function () { gedreht(); fertig(); }, (an ? SCHRIFT : DAUER) + 40);
-        if (mitText && titel.animate) {
-          var aus = titel.animate([{ opacity: 1 }, { opacity: 0 }], { duration: WEICHT, easing: 'linear', fill: 'forwards' });
-          laeufe.push(aus);
-          lageUhr = setTimeout(function () {
-            var p0 = prosa.getBoundingClientRect().top;
-            lageOffen = an;
-            lageStellen();
-            var dy = p0 - prosa.getBoundingClientRect().top;
-            if (Math.abs(dy) > .5) laeufe.push(abschnitte.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: DAUER - WEICHT, easing: KURVE }));
-            laeufe.push(titel.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, delay: SCHRIFT - 280 - WEICHT, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }));
-            aus.cancel();
-          }, WEICHT);
+      var zeilen = function (a) { return Math.round(a.offsetHeight / (parseFloat(getComputedStyle(a).lineHeight) || 1)); };
+      var passt = function () { return links.every(function (a) { return zeilen(a) <= 2; }); };
+      function gradWaehlen() {
+        buch.classList.remove('mittel', 'knapp', 'eng'); buch.classList.add('lesegrad'); buch.style.removeProperty('--eng-grad');
+        var stufe = 'lesegrad';
+        if (!passt()) { buch.classList.replace('lesegrad', 'mittel'); stufe = 'mittel'; }
+        if (!passt()) { buch.classList.remove('mittel'); stufe = 'klein'; }
+        if (!passt()) { buch.classList.add('knapp'); stufe = 'knapp'; }
+        if (!passt()) {
+          var g = parseFloat(getComputedStyle(buch).fontSize), f = 1;
+          buch.style.setProperty('--eng-grad', g + 'px'); buch.classList.add('eng');
+          while (!passt() && f > .955) { f -= .01; buch.style.setProperty('--eng-grad', (g * f).toFixed(2) + 'px'); }
+          stufe = passt() ? 'eng ' + f.toFixed(2) : 'dreizeilig';
         }
+        buch.dataset.stufe = stufe;
       }
-      if (fokus) (an ? erster : knopf).focus({ preventScroll: true });
+      function satzspiegel() {
+        var z = zMass();
+        buch.style.removeProperty('--luecke');
+        buch.style.setProperty('--oben', z * .75 + 'px');
+        var sh = parseFloat(getComputedStyle(obj).minHeight) || 0;
+        var zeilenHoehe = function (s) { var h = 0; s.querySelectorAll('.eintrag').forEach(function (e) { h += e.offsetHeight; }); return h; };
+        var grund = parseFloat(getComputedStyle(seite.querySelectorAll('.eintrag')[1]).marginTop) || z * .75;
+        var mehr = Math.min(z * 1.5, Math.floor((sh - Math.max(zeilenHoehe(innen), zeilenHoehe(seite))) / 5 / (z / 4)) * (z / 4));
+        if (mehr > grund + .5) buch.style.setProperty('--luecke', mehr + 'px');
+        var hoehe = function (s) { var e = s.querySelectorAll('.eintrag'), l = e[e.length - 1]; return l.offsetTop + l.offsetHeight - e[0].offsetTop; };
+        var c = Math.max(hoehe(innen), hoehe(seite));
+        buch.style.setProperty('--oben', Math.max(z * .75, Math.round((sh - c) / 3 / (z / 4)) * (z / 4)) + 'px');
+      }
+      var lage = '', lageOffen = false;
+      function breiteTitel() { var r = document.createRange(); r.selectNodeContents(titel); return r.getBoundingClientRect().width; }
+      var bandBreite = function () { return parseFloat(getComputedStyle(buch).width) || 0; };
+      var spalteBreite = function () { return spalte.getBoundingClientRect().width; };
+      function titelZeile() { titel.style.whiteSpace = 'nowrap'; var w = breiteTitel(); titel.style.whiteSpace = ''; return w; }
+      function initialPruefen() {
+        var z = zMass();
+        var tw = titelZeile();
+        var rest = spalteBreite() - bandBreite() - tw;
+        var luft = rest - z * .75 >= z * .5 ? z * .75 : rest - z * .5 >= z * .25 ? z * .5 : -1;
+        lage = luft < 0 ? 'fenster' : 'initial';
+        buch.dataset.lage = lage;
+        abschnitte.style.setProperty('--initial-luft', Math.max(0, luft) + 'px');
+      }
+      function breiteWaehlen() {
+        traeger.style.removeProperty('--band-b');
+        var z = zMass(), sp = spalteBreite(), b = bandBreite(), frei = b;
+        var stellen = function (x) { b = x; if (x === frei) traeger.style.removeProperty('--band-b'); else traeger.style.setProperty('--band-b', x.toFixed(2) + 'px'); gradWaehlen(); };
+        gradWaehlen();
+        while (buch.dataset.stufe === 'dreizeilig' && b < sp / 2 - .5) stellen(Math.min(sp / 2, b + z / 4));
+        if (!klein) return;
+        initialPruefen();
+        if (lage !== 'fenster' || b !== frei) return;
+        var tw = titelZeile();
+        var gut = function () { return /^(lesegrad|mittel|klein|knapp)$/.test(buch.dataset.stufe); };
+        var ziele = [sp - tw - z * 1.25, sp - tw - z * .75];
+        for (var i = 0; i < ziele.length; i++) {
+          var x = Math.floor(ziele[i] * 4) / 4;
+          if (x < z * 4 || x >= frei) continue;
+          stellen(x);
+          if (gut()) { initialPruefen(); if (lage === 'initial') return; }
+        }
+        stellen(frei);
+        initialPruefen();
+      }
+      var oben = function (el) { var t = 0; while (el) { t += el.offsetTop; el = el.offsetParent; } return t; };
+      function luecke() {
+        if (abschnitte.getAnimations && abschnitte.getAnimations().length) return oben(titel) - (oben(buch) + buch.offsetHeight);
+        var tr = (getComputedStyle(buch).translate || '').split(' ');
+        var dy = tr.length > 1 ? parseFloat(tr[1]) || 0 : 0;
+        return titel.getBoundingClientRect().top - (buch.getBoundingClientRect().bottom - dy);
+      }
+      function initialStellen() {
+        var an = lage === 'initial' && !lageOffen && schmal.matches;
+        wurzel.classList.toggle('initial', an);
+        if (!an) return;
+        var probe = document.createElement('span');
+        probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+        titel.appendChild(probe);
+        var grund = probe.getBoundingClientRect().top - titel.getBoundingClientRect().top;
+        probe.remove();
+        var rand = parseFloat(getComputedStyle(abschnitte).marginTop) || 0;
+        abschnitte.style.setProperty('--initial-mb', -Math.round((luecke() - rand + grund) * 100) / 100 + 'px');
+      }
+      function lageStellen() {
+        abschnitte.classList.add('ohne-gleiten');
+        initialStellen();
+        abschnitte.getBoundingClientRect(); abschnitte.classList.remove('ohne-gleiten');
+      }
+      var drehUhr = 0, lageUhr = 0, laeufe = [];
+      var masse = '';
+      function mass() {
+        if (klein) return abschnitte ? abschnitte.clientWidth + ':' + titel.offsetHeight + ':' + breiteTitel().toFixed(1) : '';
+        return spalte ? spalte.clientWidth + ':' + innerHeight : '';
+      }
+      function setzen() {
+        if (!holen()) return;
+        if (!da()) {
+          clearTimeout(lageUhr); laeufe.forEach(function (x) { x.cancel(); }); laeufe = []; lageOffen = offen();
+          if (klein) wurzel.classList.remove('initial');
+          traeger.style.removeProperty('--band-b');
+          return;
+        }
+        breiteWaehlen();
+        satzspiegel();
+        if (klein) lageStellen();
+        masse = mass();
+        if (buch.lageNeu) buch.lageNeu();
+      }
+      function gedreht() { clearTimeout(drehUhr); buch.classList.remove('dreht'); }
+      function liegt(an) {
+        if (an) { buch.classList.add('liegt'); return; }
+        if (!buch.classList.contains('liegt')) return;
+        buch.classList.add('still'); buch.classList.remove('liegt');
+        getComputedStyle(deckel).transform; buch.classList.remove('still');
+      }
+      function auf(an, fokus, still) {
+        still = !!still || ruhig();
+        gedreht(); clearTimeout(lageUhr); liegt(false);
+        laeufe.forEach(function (x) { x.cancel(); }); laeufe = [];
+        if (buch.getAnimations) buch.getAnimations().forEach(function (x) { if (x.id === 'erscheinen' || (!x.transitionProperty && !x.animationName)) x.finish(); });
+        var mitText = klein && holen() && da() && lage === 'initial';
+        if (still) buch.classList.add('still');
+        buch.classList.toggle('offen', an);
+        knopf.setAttribute('aria-expanded', an ? 'true' : 'false');
+        if (an) obj.removeAttribute('inert'); else obj.setAttribute('inert', '');
+        var fertig = function () { if (!an && buch.lageNeu) buch.lageNeu(); };
+        if (still || !mitText || !titel.animate) {
+          lageOffen = an;
+          if (mitText) lageStellen();
+        }
+        if (still) { getComputedStyle(deckel).transform; getComputedStyle(obj).transform; buch.classList.remove('still'); if (an) liegt(true); fertig(); }
+        else {
+          buch.classList.add('dreht'); drehUhr = setTimeout(function () { gedreht(); if (an) liegt(true); fertig(); }, (an ? SCHRIFT : DAUER) + 40);
+          if (mitText && titel.animate) {
+            var aus = titel.animate([{ opacity: 1 }, { opacity: 0 }], { duration: WEICHT, easing: 'linear', fill: 'forwards' });
+            laeufe.push(aus);
+            lageUhr = setTimeout(function () {
+              var p0 = prosa.getBoundingClientRect().top;
+              lageOffen = an;
+              lageStellen();
+              var dy = p0 - prosa.getBoundingClientRect().top;
+              if (Math.abs(dy) > .5) laeufe.push(abschnitte.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: DAUER - WEICHT, easing: KURVE }));
+              laeufe.push(titel.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, delay: SCHRIFT - 280 - WEICHT, easing: 'cubic-bezier(.4, 0, .3, 1)', fill: 'backwards' }));
+              aus.cancel();
+            }, WEICHT);
+          }
+        }
+        if (fokus) (an ? erster : knopf).focus({ preventScroll: true });
+      }
+      knopf.addEventListener('click', function (e) { auf(true, true, e.detail === 0); });
+      if (klein) buch.addEventListener('pointerdown', function () { buch.beruehrt = performance.now(); }, true);
+      var warDrin = false;
+      obj.addEventListener('pointerdown', function () { warDrin = obj.contains(document.activeElement); }, true);
+      innen.addEventListener('click', function (e) {
+        if (e.target.closest('a') || !offen()) return;
+        auf(false, warDrin || obj.contains(document.activeElement));
+        warDrin = false;
+      });
+      obj.addEventListener('focusin', function () { if (!offen()) auf(true, false, true); });
+      var bald = function (f) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', f); else f(); };
+      bald(function () {
+        setzen();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(setzen, function () {});
+        if (document.readyState !== 'complete') window.addEventListener('load', setzen);
+        if (window.ResizeObserver && holen()) {
+          var roBild = 0;
+          var beobachter = new ResizeObserver(function () {
+            cancelAnimationFrame(roBild);
+            roBild = requestAnimationFrame(function () { if (mass() !== masse) setzen(); });
+          });
+          if (klein) { beobachter.observe(abschnitte); beobachter.observe(titel); } else beobachter.observe(spalte);
+          window.addEventListener('resize', function () { if (mass() !== masse) setzen(); });
+        } else {
+          var warte = 0;
+          window.addEventListener('resize', function () { clearTimeout(warte); warte = setTimeout(setzen, 120); });
+        }
+      });
+      buch.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[href^="#"]');
+        var ziel = a && document.getElementById(a.getAttribute('href').slice(1));
+        var t = ziel && ziel.querySelector('.titel[tabindex="-1"]');
+        if (t) requestAnimationFrame(function () { t.focus({ preventScroll: true }); });
+      });
+      beiWechsel(setzen);
+      return { buch: buch, knopf: knopf, obj: obj, offen: offen, da: da, auf: auf };
     }
-    knopf.addEventListener('click', function (e) { auf(true, true, e.detail === 0); });
-    buch.addEventListener('pointerdown', function () { buch.beruehrt = performance.now(); }, true);
-    var warDrin = false;
-    obj.addEventListener('pointerdown', function () { warDrin = obj.contains(document.activeElement); }, true);
-    innen.addEventListener('click', function (e) {
-      if (e.target.closest('a') || !offen()) return;
-      auf(false, warDrin || obj.contains(document.activeElement));
-      warDrin = false;
-    });
-    obj.addEventListener('focusin', function () { if (!offen()) auf(true, false, true); });
-    var bald = function (f) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', f); else f(); };
-    bald(function () {
-      setzen();
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(setzen, function () {});
-      if (document.readyState !== 'complete') window.addEventListener('load', setzen);
-      if (window.ResizeObserver && holen()) {
-        var roBild = 0;
-        var beobachter = new ResizeObserver(function () {
-          cancelAnimationFrame(roBild);
-          roBild = requestAnimationFrame(function () { if (mass() !== masse) setzen(); });
-        });
-        beobachter.observe(abschnitte); beobachter.observe(titel);
-        window.addEventListener('resize', function () { if (mass() !== masse) setzen(); });
-      } else {
-        var warte = 0;
-        window.addEventListener('resize', function () { clearTimeout(warte); warte = setTimeout(setzen, 120); });
-      }
-    });
-    buch.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('a[href^="#"]');
-      var ziel = a && document.getElementById(a.getAttribute('href').slice(1));
-      var t = ziel && ziel.querySelector('.titel[tabindex="-1"]');
-      if (t) requestAnimationFrame(function () { t.focus({ preventScroll: true }); });
-    });
-    if (schmal.addEventListener) schmal.addEventListener('change', setzen); else if (schmal.addListener) schmal.addListener(setzen);
-    if (!gross || !window.matchMedia) return;
+    var klein = einrichten(document.getElementById('inhaltsbuch-klein'), true);
+    var gross = einrichten(document.getElementById('inhaltsbuch'), false);
+    if (!klein || !gross || !window.matchMedia) return;
     var zuletzt = null;
     document.addEventListener('focusin', function (e) {
-      zuletzt = buch.contains(e.target) || gross.contains(e.target) ? e.target : null;
+      zuletzt = klein.buch.contains(e.target) || gross.buch.contains(e.target) ? e.target : null;
     });
     document.addEventListener('focusout', function (e) {
       if (e.target === zuletzt && e.target.getClientRects().length) zuletzt = null;
@@ -814,14 +649,16 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
       var h = el && el.getAttribute && el.getAttribute('href');
       return (h && wo.querySelector('a[href="' + h + '"]')) || wo.querySelector('a');
     };
-    function wechsel() {
+    beiWechsel(function () {
       var a = document.activeElement;
       if (!a || a === document.body || a === document.documentElement) a = zuletzt;
-      if (!a) return;
-      if (schmal.matches && gross.contains(a)) { auf(true, false, true); gleich(obj, a).focus({ preventScroll: true }); }
-      else if (!schmal.matches && buch.contains(a)) gleich(gross, a).focus({ preventScroll: true });
-    }
-    if (schmal.addEventListener) schmal.addEventListener('change', wechsel); else if (schmal.addListener) schmal.addListener(wechsel);
+      var von = a && (klein.buch.contains(a) ? klein : gross.buch.contains(a) ? gross : null);
+      var nach = von === klein ? gross : klein;
+      if (!von || !nach.da()) return;
+      if (a === von.knopf && !nach.offen()) { nach.knopf.focus({ preventScroll: true }); return; }
+      if (!nach.offen()) nach.auf(true, false, true);
+      gleich(nach.obj, a).focus({ preventScroll: true });
+    });
   })();
 </script>
 </section>
@@ -1052,6 +889,13 @@ html.js .inhaltsbuch.wartet { opacity: 0; pointer-events: none; }
     $('#ersatz').hidden = false;
     tafelHoehe();
   }
+  const inhaltsbuch = document.getElementById('inhaltsbuch');
+  F.folge({
+    text: F.textmoment($('#aufhaenger')),
+    lesen: plan => plan.flog ? F.woerter($('#aufhaenger .glied-satz')) : F.woerter($('#buch-titel'), $('#buch-titel + .unterzeile')),
+    kugel: () => g,
+    eigen: (el, dauer) => el === inhaltsbuch && inhaltsbuch.einblenden ? inhaltsbuch.einblenden(dauer) : null
+  });
   a.einspielen();
   F.schriften(2500).then(() => {
     tafelHoehe();

@@ -97,6 +97,206 @@
     const laden = document.fonts.load('38px "IM Fell French Canon"').then(l => !!(l && l.length));
     return Promise.race([laden, warten(ms == null ? 600 : ms).then(() => false)]).catch(() => false);
   }
+  const FOLGE = {
+    tempo: 'T2 „gelassen“',
+    ruhe: 800,
+    lesen: .39,
+    lesenOhneFlug: false,
+    wpm: 230,
+    nebenbild: 1200,
+    globus: 1400,
+    globusSchmal: 1200,
+    einsatz: .7,
+    abstand: 400,
+    nachGlobus: 1600,
+    nachGlobusMin: 800,
+    kurve: 'cubic-bezier(.4, 0, .3, 1)',
+    handeln: 250,
+    kurz: { ruhe: 400, faktor: .7, nachGlobus: 800 },
+    zurueckKugel: 800,
+    textHoechstens: 3000, bereitHoechstens: 2500, netzMin: 5000, netzNach: 1000
+  };
+  let gehandelt = false, gehandeltJetzt = () => {};
+  const gehandeltP = new Promise(r => { gehandeltJetzt = r; });
+  const HANDELN = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+  function handelt() {
+    if (gehandelt) return;
+    gehandelt = true;
+    gehandeltJetzt();
+    HANDELN.forEach(t => window.removeEventListener(t, handelt, true));
+    window.removeEventListener('scroll', gerollt);
+  }
+  function gerollt(e) { if ((e.target === document || e.target === document.documentElement) && window.scrollY > 0) handelt(); }
+  HANDELN.forEach(t => window.addEventListener(t, handelt, { capture: true, passive: true }));
+  window.addEventListener('scroll', gerollt, { passive: true });
+  let bewegungFreiP = Promise.resolve();
+  const bewegungSetzen = p => { bewegungFreiP = gehandelt ? Promise.resolve() : Promise.race([Promise.resolve(p).catch(() => {}), gehandeltP]); };
+  const warteBis = t => warten(Math.max(0, t - performance.now()));
+  function aufrufArt() {
+    let typ = '';
+    try { const n = performance.getEntriesByType('navigation')[0]; typ = n ? n.type : ''; } catch (e) {  }
+    if (typ === 'back_forward' || document.documentElement.classList.contains('zurueck')) return 'zurueck';
+    if (typ === 'reload' || !document.referrer) return 'voll';
+    try {
+      const r = new URL(document.referrer, location.href), ordner = p => p.replace(/[^/]*$/, '');
+      if (r.origin === location.origin && ordner(r.pathname) === ordner(location.pathname)) return 'kurz';
+    } catch (e) {  }
+    return 'voll';
+  }
+  const AUFRUF = aufrufArt();
+  const woerter = (...els) => els.filter(Boolean).reduce((n, e) => { const t = e.textContent.trim(); return n + (t ? t.split(/\s+/).length : 0); }, 0);
+  let erstesBildP = null;
+  function erstesBild() {
+    if (erstesBildP) return erstesBildP;
+    erstesBildP = new Promise(r => {
+      const ersatz = () => requestAnimationFrame(() => requestAnimationFrame(() => r(performance.now())));
+      try {
+        const da = performance.getEntriesByName ? performance.getEntriesByName('first-contentful-paint')[0] : null;
+        if (da) return r(da.startTime);
+        if (!window.PerformanceObserver || !(PerformanceObserver.supportedEntryTypes || []).includes('paint')) return ersatz();
+        const po = new PerformanceObserver(l => {
+          const e = l.getEntries().find(x => x.name === 'first-contentful-paint');
+          if (e) { po.disconnect(); r(e.startTime); }
+        });
+        po.observe({ type: 'paint', buffered: true });
+      } catch (e) { ersatz(); }
+      setTimeout(() => r(performance.now()), 3000);
+    });
+    return erstesBildP;
+  }
+  function textmoment(el) {
+    const flug = el && el.flug && typeof el.flug.then === 'function' ? el.flug.catch(() => null) : Promise.resolve(null);
+    return Promise.all([flug, erstesBild()]).then(([f, bild]) => f && f.tm != null ? { f0: f.beginn, tm: f.tm, flog: true } : { f0: bild, tm: bild + 1000, flog: false });
+  }
+  const kugelBild = kugel => new Promise(r => {
+    const t0 = performance.now();
+    (function sehen() {
+      const g = kugel();
+      if (!g) return r(performance.now());
+      if (g.erstesBild) return r(g.erstesBild);
+      if (performance.now() - t0 > 3000) return r(performance.now());
+      requestAnimationFrame(sehen);
+    })();
+  });
+  function beschleunigen(a, ms) {
+    try {
+      if (a.playState === 'finished') return;
+      const rest = a.effect.getComputedTiming().endTime - (a.currentTime || 0);
+      if (!ms || !(rest > 0)) { a.finish(); return; }
+      if (rest > ms) { if (a.updatePlaybackRate) a.updatePlaybackRate(rest / ms); else a.playbackRate = rest / ms; }
+    } catch (e) { try { a.finish(); } catch (e2) {  } }
+  }
+  let globusStehtJetzt = () => {}, folgeLaeuft = false, stilleJetzt = () => {}, folgePlan = null;
+  const globusStehtP = new Promise(r => { globusStehtJetzt = r; });
+  const stilleP = new Promise(r => { stilleJetzt = r; });
+  function folge(o) {
+    o = o || {};
+    if (folgeLaeuft) return globusStehtP;
+    folgeLaeuft = true;
+    const alle = $$('[data-folge]'), laeufe = [];
+    const zeigen = el => el.classList.add('da');
+    const kugel = () => typeof o.kugel === 'function' ? o.kugel() : null;
+    if (!document.documentElement.classList.contains('folge') || !alle.length) {
+      alle.forEach(zeigen);
+      globusStehtJetzt(); stilleJetzt();
+      if (AUFRUF === 'zurueck' && !ruhig()) bewegungSetzen(kugelBild(kugel).then(t => warteBis(t + FOLGE.zurueckKugel)));
+      return globusStehtP;
+    }
+    const kurz = AUFRUF === 'kurz', K = FOLGE.kurz, faktor = kurz ? K.faktor : 1;
+    let fertig = false, planBewegung = 0;
+    const fokus = e => { if (e.target && e.target.closest && e.target.closest('[data-folge]')) handelt(); };
+    function ende(sanft) {
+      if (fertig) return;
+      fertig = true;
+      alle.forEach(el => {
+        if (el.classList.contains('da')) return;
+        const sichtbar = getComputedStyle(el).opacity === '1';
+        zeigen(el);
+        if (sanft && el.animate && !sichtbar) laeufe.push(el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: sanft, easing: 'ease-out', fill: 'backwards' }));
+      });
+      laeufe.forEach(a => beschleunigen(a, sanft));
+      document.removeEventListener('focusin', fokus, true);
+      globusStehtJetzt(); stilleJetzt();
+    }
+    let frei = () => {}, weg = false;
+    const freiP = new Promise(r => { frei = r; });
+    window.addEventListener('pagehide', () => {
+      ende(0);
+      weg = true;
+      window.addEventListener('pageshow', () => warten(FOLGE.zurueckKugel).then(frei), { once: true });
+    }, { once: true });
+    globusStehtP.then(() => warteBis(Math.max(planBewegung, performance.now() + (kurz ? K.nachGlobus : FOLGE.nachGlobusMin))))
+      .then(() => { if (!weg) frei(); });
+    bewegungSetzen(freiP);
+    alle.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (!el.getClientRects().length || (!r.width && !r.height) || r.top >= window.innerHeight || r.bottom <= 0) zeigen(el);
+    });
+    if (gehandelt || window.scrollY > 0) { ende(0); stilleJetzt(); return globusStehtP; }
+    gehandeltP.then(() => ende(FOLGE.handeln));
+    document.addEventListener('focusin', fokus, true);
+    let netz = setTimeout(() => ende(FOLGE.handeln), Math.max(0, FOLGE.netzMin - performance.now()));
+    const stufe = n => alle.filter(el => el.dataset.folge === String(n) && !el.classList.contains('da'));
+    const bereit = (el, auch) => new Promise(r => {
+      const t0 = performance.now();
+      (function pruefen() {
+        if (fertig || performance.now() - t0 > FOLGE.bereitHoechstens) return r();
+        if (getComputedStyle(el).visibility !== 'hidden' && (!auch || auch())) return r();
+        requestAnimationFrame(pruefen);
+      })();
+    });
+    const kugelDa = () => {
+      const ersatz = $('#ersatz');
+      if (ersatz && !ersatz.hidden) return true;
+      const g = kugel();
+      if (g && !g.erstesBild) return false;
+      return typeof o.bereit !== 'function' || !g || !!o.bereit();
+    };
+    function einblenden(el, dauer) {
+      if (fertig || el.classList.contains('da')) return Promise.resolve();
+      zeigen(el);
+      let a = typeof o.eigen === 'function' ? o.eigen(el, dauer) : null;
+      if (!a) a = el.animate ? [el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: dauer, easing: FOLGE.kurve, fill: 'backwards' })] : [];
+      a = [].concat(a).filter(Boolean);
+      laeufe.push(...a);
+      return a.length ? Promise.race([Promise.all(a.map(x => x.finished)), warten(dauer + 1000)]).catch(() => {}) : Promise.resolve();
+    }
+    const dauerVon = el => (el.folgeDauer || FOLGE.nebenbild) * faktor;
+    const text = Promise.race([Promise.resolve(o.text).catch(() => null), warten(FOLGE.textHoechstens).then(() => null)]);
+    text.then(plan => {
+      const jetzt = performance.now();
+      const f0 = plan && plan.f0 != null ? plan.f0 : jetzt, tm = plan && plan.tm != null ? plan.tm : jetzt;
+      if (fertig) return;
+      const eins = stufe(1);
+      const d1 = eins.length ? Math.max(...eins.map(dauerVon)) : 0;
+      const d2 = (eins.length || !schmal() ? FOLGE.globus : FOLGE.globusSchmal) * faktor;
+      const n = typeof o.lesen === 'function' ? o.lesen(plan || {}) : o.lesen;
+      const lm = n ? f0 + n * 60000 / FOLGE.wpm : null;
+      let p1 = tm + (kurz ? K.ruhe : FOLGE.ruhe);
+      if (!kurz && FOLGE.lesen != null && lm != null && (FOLGE.lesenOhneFlug || (plan && plan.flog))) p1 = Math.max(p1, lm - FOLGE.lesen * (eins.length ? d1 : d2));
+      const p2 = eins.length ? p1 + FOLGE.einsatz * d1 : p1;
+      planBewegung = p2 + d2 + (kurz ? K.nachGlobus : FOLGE.nachGlobus);
+      const netzBei = Math.max(FOLGE.netzMin, p2 + d2 + FOLGE.netzNach);
+      clearTimeout(netz);
+      netz = setTimeout(() => ende(FOLGE.handeln), Math.max(0, netzBei - performance.now()));
+      folgePlan = { tempo: FOLGE.tempo, aufruf: AUFRUF, f0, tm, lm, nebenbild: eins.length ? [p1, p1 + d1] : null, globus: [p2, p2 + d2], bewegung: planBewegung, netz: netzBei };
+      let s1 = -Infinity;
+      const erst = eins.length
+        ? warteBis(p1).then(() => Promise.all(eins.map(el => bereit(el)))).then(() => { if (fertig) return; s1 = performance.now(); eins.forEach(el => einblenden(el, d1)); })
+        : Promise.resolve();
+      return erst
+        .then(() => warteBis(Math.max(p2, s1 + FOLGE.abstand)))
+        .then(() => Promise.all(stufe(2).map(el => bereit(el, kugelDa))))
+        .then(() => {
+          if (fertig) return null;
+          const z = stufe(2), vor = laeufe.length;
+          const alle2 = Promise.all(z.map(el => einblenden(el, d2)));
+          Promise.all(laeufe.slice(vor).map(a => a.ready)).then(() => setTimeout(stilleJetzt, 50), stilleJetzt);
+          return alle2;
+        });
+    }).then(() => ende(0), () => ende(0));
+    return globusStehtP;
+  }
   function satzzeichenBinden(wurzel) {
     $$('button.wort, a', wurzel).forEach(b => {
       const n = b.nextSibling;
@@ -551,6 +751,15 @@
     let zustand = 'bereit', art = null, jetzt = -1, weiterAb = 0, orteModus = 'bis';
     let gespielt = false, aktiv = o.aktiv !== false, lauf = 0, systemPause = false, wartetAufSicht = false, startUhr = 0;
     let anteil = 1;
+    let vorab = null;
+    const vorabSchluessel = () => {
+      const r = g.canvas.getBoundingClientRect();
+      return liste().map(s => s.name).join('|') + '#' + g.canvas.clientWidth + '#' + Math.round(r.left) + '#' + document.documentElement.clientWidth;
+    };
+    function vorrechnen() {
+      if (!g || !g.canvas || takt.schluss !== undefined || !liste().length) return;
+      vorab = { s: vorabSchluessel(), m: ueberblick(g.canvas, liste(), takt.schlussK || 1, takt.schlussBereich) };
+    }
     const laeuft = () => zustand === 'einspieler' || zustand === 'abspielen';
     function steuerZeigen() {
       if (!sz || !aktiv) return;
@@ -603,9 +812,10 @@
       clearTimeout(startUhr);
       art = neuArt; zustand = neuArt; orteModus = modus; systemPause = false; gespielt = true;
       steuerZeigen();
-      const t = Object.assign({}, neuArt === 'abspielen' && o.taktAbspielen ? o.taktAbspielen : takt);
+      const quelle = neuArt === 'abspielen' && o.taktAbspielen ? o.taktAbspielen : takt;
+      const t = Object.assign({}, quelle);
       if (t.halt === 'lesen') { const plus = t.grundhalt || 0; t.halt = () => lesezeit(tafelEl, plus); }
-      if (t.schluss === undefined) t.schluss = g.canvas ? ueberblick(g.canvas, st, t.schlussK || 1, t.schlussBereich) : undefined;
+      if (t.schluss === undefined) t.schluss = !g.canvas ? undefined : quelle === takt && vorab && vorab.s === vorabSchluessel() ? vorab.m : ueberblick(g.canvas, st, t.schlussK || 1, t.schlussBereich);
       const ende = st[endeBei()];
       t.ab = ab; t.orte = modus;
       t.endeAktiv = o.ruhe === 'ruhe' && neuArt === 'einspieler' ? null : ende ? ende.name : null;
@@ -709,7 +919,8 @@
         const warte = Math.max(0, 600 - (performance.now() - (g.erstesBild || 0)));
         startUhr = setTimeout(() => { if (gilt()) spielen('einspieler', 0, 'bis'); }, warte);
       };
-      (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, warten(2500)]) : Promise.resolve()).then(los, los);
+      const schriftenDa = document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, warten(2500)]).catch(() => {}) : Promise.resolve();
+      Promise.all([schriftenDa, bewegungFreiP]).then(los, los);
     }
     function einspielen() {
       if (gespielt || !aktiv) return;
@@ -723,6 +934,7 @@
       g.nurOrte([]);
       g.routeZeigen(st, -1);
       melden(0, 'einspieler');
+      (folgeLaeuft ? stilleP : Promise.resolve()).then(() => setTimeout(() => { if (aktiv && !vorab && (zustand === 'einspieler' || zustand === 'bereit')) vorrechnen(); }, 0));
       if (!imBildGenug()) { wartetAufSicht = true; steuerZeigen(); return; }
       einspielenJetzt();
     }
@@ -1358,6 +1570,10 @@
     tafel, tafelReservieren, tafelPlatz, lesezeit, steuerzeile, ortsleiste, ablauf, TAKT,
     stationen, stationInhalt, szenen, textMitVerweis, ursprungOrte, ursprungInhalt,
     karteikarte, buch, werkKarte, werkSatz, buchzeile, texte, navigation, fuss, PROFILE, NEWSLETTER,
-    leselinie, fortschritt, imBild
+    leselinie, fortschritt, imBild, erstesBild, textmoment, folge, woerter, AUFRUF
   };
+  Object.defineProperty(window.FSeite, 'bewegungFrei', { get: () => bewegungFreiP, set: bewegungSetzen, enumerable: true });
+  Object.defineProperty(window.FSeite, 'globusSteht', { get: () => globusStehtP, enumerable: true });
+  Object.defineProperty(window.FSeite, 'stille', { get: () => stilleP, enumerable: true });
+  Object.defineProperty(window.FSeite, 'folgePlan', { get: () => folgePlan, enumerable: true });
 })();

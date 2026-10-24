@@ -27,11 +27,14 @@ document.documentElement.classList.add('js');
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/vollkorn-kursiv.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
 .vorspann .zeichenerklaerung { margin-top: var(--z-dreiviertel); }
 html:not(.js) .zeichenerklaerung { display: none; }
+html.js .zeichenerklaerung li:not(:has(> .zeichen))::before { content: ""; flex: none; width: 9px; }
 .regal { position: relative; padding-top: var(--z-zwei); }
+html.js #faecher:empty { margin-bottom: 100vh; }
 .reihe { position: relative; }
 .buecher { display: flex; align-items: flex-end; height: var(--h); min-width: 0; }
 .gruppe { display: flex; align-items: flex-end; flex: none; }
@@ -622,7 +625,7 @@ html:not(.js) .wartet { display: none; }
     platz.classList.toggle('offen', schuberOffen);
     t.setAttribute('aria-expanded', String(schuberOffen));
     $$('.bandbuch', platz).forEach(b => { b.tabIndex = -1; if (schuberOffen) b.removeAttribute('aria-hidden'); else b.setAttribute('aria-hidden', 'true'); });
-    if (!schuberOffen && offenId != null && ALLE[offenId] && ALLE[offenId].band && aktiv) aktiv.schliessen();
+    if (aktiv && (schuberOffen || (offenId != null && ALLE[offenId] && ALLE[offenId].band))) aktiv.schliessen();
     gruppeZeigen(t);
   }
   regal.addEventListener('click', e => {

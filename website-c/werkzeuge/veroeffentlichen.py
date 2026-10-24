@@ -77,7 +77,10 @@ BASIS_URL = 'https://dominikjaekel.de'
 # darum zwei Fassungen des Absatzes: 'pro' (mit dem Vertrag) und 'hobby' (ohne ihn). None: noch offen, dann bleiben beide und die
 # Markierung [[ZU PRÜFEN: Tarif bei Vercel, pro oder hobby]] stehen, und der Bau geht nur als Entwurf. Der Bau für claude.ai
 # (artefakt.py) folgt demselben Schalter.
-TARIF = None
+# 24. Oktober 2026: Hobby. Dominik: „Vercel Hobby“; die Zwischenmeldung 2 der Vercel-Sitzung (live gelesen) bestätigt: „Tarif ist
+# und bleibt Hobby“, das DPA gilt nur für Pro und Enterprise. Bewirbt die Seite später ein Buch zum Kauf, ist Pro nötig: dann
+# TARIF = 'pro' und neu bauen (docs/todo.md).
+TARIF = 'hobby'
 
 QUELLE = Path(__file__).resolve().parents[1]
 ZIEL = QUELLE.parent / 'veroeffentlichung'
@@ -102,6 +105,10 @@ AUSSEN_ERLAUBT = {
     'https://www.a-e-johann.de/der-a-e-johann-preis',
     'https://de.wikipedia.org/wiki/Byzantinischer_Fehler',
     'https://satoshi.nakamotoinstitute.org/',
+    # Datenschutz, Hosting: die Datenschutzerklärung von Vercel und das Data Processing Addendum (nur in der Fassung für Pro)
+    # (Zwischenmeldung 2 der Vercel-Sitzung, 24.10.2026)
+    'https://vercel.com/legal/privacy-policy',
+    'https://vercel.com/legal/dpa',
 }
 # Was die Content-Security-Policy mindestens sagen muss (script-src bekommt dazu die Hashes)
 CSP_SOLL = {

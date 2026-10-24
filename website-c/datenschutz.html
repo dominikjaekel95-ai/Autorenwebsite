@@ -46,7 +46,6 @@
 <div class="abschnitt unterseite">
   <article class="recht">
     <h1 class="seitentitel">Datenschutz</h1>
-    <p class="vermerk">[[ZU PRÜFEN: Datenschutzerklärung von Dominik freigegeben? Dann diese Zeile löschen]]</p>
 
     <p class="vorab">Diese Website selbst setzt keine Cookies, speichert nichts in Ihrem Browser und verwendet keine Analyse- oder Trackingdienste. Ein Kontaktformular gibt es nicht. Personenbezogene Daten, vor allem Ihre <span class="nw">IP-Adresse</span>, fallen nur an, weil Ihr Browser Seiten, Schriften und zwei Programmbibliotheken vom Server der Website lädt, und wenn Sie mir eine <span class="nw">E-Mail</span> schreiben. Von fremden Servern lädt die Website nichts.</p>
 
@@ -58,17 +57,19 @@
 
     <section aria-labelledby="d-hosting">
       <h2 class="titel" id="d-hosting">Hosting und Server-Logfiles</h2>
-      <p>Die Website liegt bei Vercel Inc., [[ZU PRÜFEN: Anschrift von Vercel]], einem Anbieter mit Sitz in den USA. Vercel liefert die Seiten an Ihren Browser aus, mit allem, was zu ihnen gehört: Schriften, Bilder und Programm&shy;bibliotheken. Mehr dazu steht in der Datenschutzerklärung von Vercel [[ZU PRÜFEN: Link zur Datenschutzerklärung von Vercel]].</p>
-      <p>Ruft Ihr Browser eine Seite ab, übermittelt er dem Server technisch notwendige Angaben: Ihre <span class="nw">IP-Adresse</span>, Datum und Uhrzeit, die aufgerufene Adresse, gegebenenfalls die Seite, von der Sie kommen, sowie Browser und Betriebssystem. Vercel speichert diese Angaben in Protokolldateien (Server-Logfiles), um die Website auszuliefern und vor Missbrauch zu schützen. Gelöscht werden sie nach [[ZU PRÜFEN: Speicherdauer der Server-Logfiles bei Vercel]]. Rechtsgrundlage ist <span class="nw">Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO</span>. Mein berechtigtes Interesse ist, die Website sicher und zuverlässig bereitzustellen.</p>
+      <p>Die Website liegt bei Vercel Inc., <span class="nw">440 N Barranca Avenue #4133</span>, <span class="nw">Covina, CA&nbsp;91723</span>, USA. Vercel liefert die Seiten an Ihren Browser aus, mit allem, was zu ihnen gehört: Schriften, Bilder und Programm&shy;bibliotheken. Mehr dazu steht in der <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Datenschutz&shy;erklärung von Vercel</a>.</p>
+      <p>Ruft Ihr Browser eine Seite ab, übermittelt er dem Server technisch notwendige Angaben: Ihre <span class="nw">IP-Adresse</span>, Datum und Uhrzeit, die aufgerufene Adresse, gegebenenfalls die Seite, von der Sie kommen, sowie Browser und Betriebssystem. Vercel speichert diese Angaben in Protokolldateien (Server-Logfiles), um die Website auszuliefern und vor Missbrauch zu schützen. Aufbewahrt werden sie nur so lange, wie es für den Betrieb und den Schutz vor Missbrauch erforderlich ist; eine feste Frist nennt Vercel in seiner Datenschutz&shy;erklärung nicht. Rechtsgrundlage ist <span class="nw">Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO</span>. Mein berechtigtes Interesse ist, die Website sicher und zuverlässig bereitzustellen.</p>
       <!-- Zwei vorbereitete Fassungen für den Absatz zur Auftragsverarbeitung (Runde 6, S8). Vercels Data Processing Addendum nennt nach
            der Recherche der zweiten Sitzung nur Kunden auf Pro und Enterprise; auf Hobby ist ein Vertrag nach Art. 28 nicht haltbar.
+           Bestätigt in der Zwischenmeldung 2 der Vercel-Sitzung (24.10.2026, live gelesen): DPA §1 nur Enterprise und Pro; der Tarif
+           ist Hobby (TARIF = 'hobby'). Wechselt Dominik auf Pro, gilt die Fassung „pro“ mit dem Verweis auf das DPA.
            veroeffentlichen.py wählt mit TARIF = 'pro' oder 'hobby' eine Fassung (ohne das Attribut) und löscht die andere und die
            Markierung davor. Mit TARIF = None bleiben alle drei stehen; dann baut es nur als Entwurf. Der Bau für claude.ai
            (artefakt.py) folgt demselben Schalter -->
       <p data-tarif="offen">[[ZU PRÜFEN: Tarif bei Vercel, pro oder hobby]]</p>
-      <p data-tarif="pro">Vercel verarbeitet diese Daten in meinem Auftrag. Dafür gilt ein Vertrag zur Auftrags&shy;verarbeitung <span class="nw">(Art.&nbsp;28 DSGVO)</span>, das Data Processing Addendum von Vercel [[ZU PRÜFEN: Link zum Data Processing Addendum und ob es für Dominiks Konto gilt]].</p>
+      <p data-tarif="pro">Vercel verarbeitet diese Daten in meinem Auftrag. Dafür gilt ein Vertrag zur Auftrags&shy;verarbeitung <span class="nw">(Art.&nbsp;28 DSGVO)</span>, das <a href="https://vercel.com/legal/dpa" rel="noopener">Data Processing Addendum</a> von Vercel.</p>
       <p data-tarif="hobby">Vercel verarbeitet die Server-Logfiles als Anbieter des Dienstes nach seiner eigenen Datenschutz&shy;erklärung. Einen Vertrag zur Auftrags&shy;verarbeitung <span class="nw">(Art.&nbsp;28 DSGVO)</span> habe ich mit Vercel nicht geschlossen.</p>
-      <p>Weil Vercel seinen Sitz in den USA hat, können Ihre Daten dorthin übermittelt werden. Grundlage dafür ist der Angemessenheits&shy;beschluss der Europäischen Kommission zum <span class="nw">EU-US</span> Data Privacy Framework <span class="nw">(Art.&nbsp;45 DSGVO)</span>, unter dem Vercel zertifiziert ist [[ZU PRÜFEN: Zertifizierung von Vercel im Data Privacy Framework]]. Zusätzlich gelten die Standard&shy;vertragsklauseln der Europäischen Kommission <span class="nw">(Art.&nbsp;46 Abs.&nbsp;2 lit.&nbsp;c DSGVO)</span> [[ZU PRÜFEN: Gelten zusätzlich Standardvertragsklauseln?]].</p>
+      <p>Weil Vercel seinen Sitz in den USA hat, können Ihre Daten dorthin übermittelt werden. Grundlage dafür ist der Angemessenheits&shy;beschluss der Europäischen Kommission zum <span class="nw">EU-US</span> Data Privacy Framework <span class="nw">(Art.&nbsp;45 DSGVO)</span>, unter dem Vercel zertifiziert ist.</p>
     </section>
 
     <section aria-labelledby="d-schriften">

@@ -23,12 +23,17 @@
 <script>
 document.documentElement.classList.add('js');
 </script>
+
+<script>
+(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);
+</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
+
 <link rel="stylesheet" href="stil.css">
 <style>
 .einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 3); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
@@ -37,8 +42,6 @@ document.documentElement.classList.add('js');
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
 .einstieg-satz .w { display: inline-block; }
-.einstieg-satz .w.fliegt { position: relative; }
-.einstieg-satz .w .unscharf { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0; filter: url(#einstieg-flug); pointer-events: none; -webkit-user-select: none; user-select: none; }
 .einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
 .einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 2s forwards; }
 @keyframes einstieg-notfall { to { opacity: 1; } }
@@ -56,6 +59,9 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
 .globusseite > .ebenen, .globusseite > .ebenentext { display: none !important; }
 @media (min-width: 62.0625rem) {
   .globusseite > .regalbild { margin-top: calc(var(--z-zwei) - var(--zh-klein)); }
+  .globusseite > .regalbild { container-type: inline-size; }
+  .globusseite > .regalbild > .regalbild-flaeche:empty { min-height: min(193px, calc((100cqw - 15px) * .346875 + 2.5px)); min-height: min(193px, round(up, calc((100cqw - 15px) * .346875 + 2px), 1px)); }
+  .globusseite > .regalbild:has(> .regalbild-flaeche:empty) { visibility: hidden; }
   .schreiben-raster:not(:has(> .regalbild)) { grid-template-columns: minmax(0, var(--mass)); }
 }
 @property --neben-globus { syntax: '<length>'; inherits: true; initial-value: 0px; }
@@ -118,6 +124,7 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
 .regal-name { position: absolute; left: 0; top: 0; width: max-content; max-width: 100%; font-size: var(--g-klein); line-height: var(--zh-klein); background: var(--papier); pointer-events: none; }
 .regal-name[hidden] { display: none; }
 html:not(.js) .regalbild { display: none; }
+html.folge #regalbild[data-folge]:not(.da) { pointer-events: none; }
 .gelesen-vorwort { max-width: var(--mass); }
 .zeitband { margin-top: var(--z); }
 .zeitband-roll { position: relative; }
@@ -218,6 +225,10 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (!el || !el.querySelector('.glied-satz')) return;
     var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
     var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
+    var stehtJetzt = function () {}, flugJetzt = function () {};
+    el.steht = new Promise(function (r) { stehtJetzt = r; });
+    el.flug = new Promise(function (r) { flugJetzt = r; });
+    var zurueck = document.documentElement.classList.contains('zurueck');
     var text = el.textContent.replace(/\s+/g, ' ').trim();
     var satz = document.createElement('span');
     satz.className = 'einstieg-satz';
@@ -307,58 +318,38 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; })
         .then(function (da) { return da && performance.now() - ab <= ms + 100; });
     }
-    function filterAnlegen(em) {
-      var svg = document.getElementById('einstieg-filter');
-      if (!svg) {
-        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.id = 'einstieg-filter';
-        svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
-        svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-        svg.innerHTML = '<filter id="einstieg-flug" x="-25%" y="-10%" width="150%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="0 0"/></filter>';
-        document.body.appendChild(svg);
-      }
-      svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', (.06 * em).toFixed(2) + ' 0');
-    }
-    var UNSCHARF = [1, .8, .55, .25, .06, 0], SCHARF = [0, .3, .6, .9, 1, 1], STELLEN = [0, .1, .25, .5, .75, 1];
+    var WEG = 800, DECKKRAFT = 420, VERSATZ = 75, ATEM = 220;
     function einfliegen() {
-      if (!woerter[0].animate) return;
-      var em = parseFloat(getComputedStyle(el).fontSize) || 38;
-      filterAnlegen(em);
+      if (!woerter[0].animate) { flugJetzt(null); stehtJetzt(false); return; }
       var t = 0, laeufe = [];
       glieder.forEach(function (g, gi) {
-        if (gi) t += 100;
+        if (gi) t += ATEM;
         Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
-          if (wi) t += 40;
-          var zeit = { duration: 360, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' };
-          var wort = w.textContent;
-          w.textContent = '';
-          var scharf = document.createElement('span'), unscharf = document.createElement('span');
-          scharf.className = 'scharf'; scharf.textContent = wort;
-          unscharf.className = 'unscharf'; unscharf.textContent = wort;
-          w.appendChild(scharf); w.appendChild(unscharf);
-          w.classList.add('fliegt');
-          laeufe.push(w.animate([
-            { opacity: 0, transform: 'translateX(.2em)' },
-            { opacity: 1, offset: .38 },
-            { opacity: 1, transform: 'translateX(0)' }
-          ], zeit));
-          laeufe.push(unscharf.animate(UNSCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
-          laeufe.push(scharf.animate(SCHARF.map(function (o, k) { return { opacity: o, offset: STELLEN[k] }; }), zeit));
+          if (wi) t += VERSATZ;
+          laeufe.push(w.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DECKKRAFT, delay: t, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'backwards' }));
+          laeufe.push(w.animate([{ transform: 'translateX(.2em)' }, { transform: 'translateX(0)' }], { duration: WEG, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
         });
       });
-      var fertig = function () {
-        woerter.forEach(function (w) { if (w.classList.contains('fliegt')) { w.textContent = w.firstChild ? w.firstChild.textContent : w.textContent; w.classList.remove('fliegt'); } });
-        setzen();
+      var letztes = t, gemeldet = false;
+      var melden = function () {
+        if (gemeldet) return;
+        gemeldet = true;
+        var b = laeufe[0].startTime;
+        if (b == null || !isFinite(b)) b = performance.now();
+        flugJetzt({ beginn: b, tm: b + letztes + Math.max(DECKKRAFT, .6 * WEG), ende: b + letztes + Math.max(DECKKRAFT, WEG) });
       };
-      Promise.all(laeufe.map(function (a) { return a.finished; })).then(fertig, fertig);
+      if (laeufe[0].ready) laeufe[0].ready.then(melden, melden); else melden();
+      setTimeout(melden, 1000);
+      var gestanden = function () { setzen(); stehtJetzt(true); };
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(gestanden, gestanden);
     }
     setzen();
-    if (!still()) el.classList.add('wartet');
+    if (!still() && !zurueck) el.classList.add('wartet');
     imFell(1200).then(function (da) {
       setzen();
       var schonDa = el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
       el.classList.remove('wartet');
-      if (da && !schonDa && !still()) einfliegen();
+      if (da && !schonDa && !still() && !zurueck) einfliegen(); else { flugJetzt(null); stehtJetzt(false); }
     });
     if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(nachsetzen).catch(function () {});
@@ -399,7 +390,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     <div data-text="ursprung" hidden id="ursprung-text"></div>
   </div>
 
-  <figure class="globus" id="globus">
+  <figure class="globus" id="globus" data-folge="2">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Orten aus dem Text; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <div class="tipp" hidden></div>
     <p class="hinweis" hidden></p>
@@ -412,13 +403,17 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   <h2 class="titel" id="schreiben-titel">Was ich schreibe</h2>
   <div class="schreiben-raster">
     
-    <figure class="regalbild" id="regalbild">
+    <figure class="regalbild" id="regalbild" data-folge="1">
       <figcaption class="regal-unterschrift">Meine Projekte und was auf dem Nachttisch liegt</figcaption>
       <div class="regalbild-flaeche" id="regalbild-flaeche" role="group" aria-label="Eigene Bücher und der Stapel vom Nachttisch"></div>
       <div class="brett"></div>
       <p class="regal-name" id="regal-name" aria-hidden="true" hidden></p>
-      <p id="regal-zeile"></p>
+      <p id="regal-zeile" class="buchzeile"></p>
     </figure>
+    <script>
+    if (window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches) document.querySelector('.globusseite').insertBefore(document.getElementById('regalbild'), document.getElementById('globus'));
+    if (document.documentElement.classList.contains('folge')) setTimeout(function () { document.getElementById('regalbild').classList.add('da'); }, 7000);
+</script>
 
     
     <div class="verzeichnis">
@@ -696,6 +691,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     g.auswahl(land.iso);
     reisenZuletzt = null; reisenTafel();
   });
+  F.folge({ text: F.textmoment($('#einstieg')), lesen: () => F.woerter($('#einstieg .einstieg-vorlesen') || $('#einstieg')), kugel: () => g });
   A.leben.einspielen();
   tafelHoehe();
   F.schriften(2500).then(() => { tafelHoehe(); if (g) { blickBerechnen(); g.zeichnen(); } namenNeu(); });
@@ -877,7 +873,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (el && !angefasst) el.scrollIntoView({ block: 'start' });
   }
   regalZeichnen();
-  const regalBild = $('#regalbild'), regalHeim = regalBild.parentElement, mqBreit = window.matchMedia('(min-width: 62.0625rem)');
+  const regalBild = $('#regalbild'), regalHeim = $('#schreiben .schreiben-raster'), mqBreit = window.matchMedia('(min-width: 62.0625rem)');
   function regalOrt() {
     const seite = $('.globusseite');
     if (mqBreit.matches) { if (regalBild.parentElement !== seite) seite.insertBefore(regalBild, $('#globus')); }

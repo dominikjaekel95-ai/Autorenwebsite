@@ -13,10 +13,11 @@ Die Angaben stammen aus einer Recherche der Cloud-Sitzung vom 24. Oktober 2026. 
 - **Was online geht:** der Ordner `veroeffentlichung/` im Repository. Die Cloud-Sitzung erzeugt ihn aus `website-c/`, mit `vercel.json` (saubere Adressen ohne `.html`, Sicherheitsangaben), Fehlerseite, robots.txt und Sitemap.
   - Der Ordner ist heute noch ein Entwurf: Impressum und Datenschutz enthalten Platzhalter der Form `[[ZU PRÜFEN …]]` und sind für Suchmaschinen gesperrt (`noindex`, im Repo nachgesehen). Sichtbar sind sie trotzdem, sobald die Domain verbunden ist. Deshalb Schritt 7 früh erledigen.
   - Die endgültige Fassung baut die Cloud-Sitzung, sobald sie die Angaben aus Schritt 7 und Dominiks Freigaben hat.
+  - **Stand 24. Oktober, abends:** Die endgültige Fassung ist gebaut (Schritt 7 erledigt): keine Platzhalter mehr, Impressum und Datenschutz ohne `noindex`. Online ist sie, sobald die Cloud-Sitzung sie gepusht und Vercel sie gebaut hat.
 - **Adresse:** `https://dominikjaekel.de`, ohne www. Sie steht im Code schon als Basisadresse (`BASIS_URL` in `website-c/werkzeuge/veroeffentlichen.py`). Daraus entstehen die Angaben für Suchmaschinen, das Vorschaubild, Sitemap und robots.txt.
 - **Tarif:** Vercel Hobby, entschieden. Hobby ist laut Vercel nur für nicht kommerzielle, private Nutzung erlaubt (Fair Use Guidelines, nur Suche). Als kommerziell zählt zum Beispiel, ein Produkt zum Kauf zu bewerben. Heute bewirbt die Seite nichts zum Kauf, sie hat keine Kauf-, Spenden- oder Affiliate-Links (im Repo nachgesehen). Eine Autorenseite bleibt trotzdem ein Grenzfall (Einschätzung). Bewirbt die Seite später ein Buch zum Kauf, ist Pro nötig.
 - **Ziel:** die Seite heute unter `https://dominikjaekel.de` live.
-- **Schon entschieden (Dominik, 24. Oktober):** Tarif Hobby; Impressum und Datenschutz freigegeben; die 65 Länder bleiben; Simon-Kucher bleibt in der Vita. Neu als Ziel für später (steht in `docs/todo.md`): bei Google auf Platz 1 für „Satoshi Nakamoto Roman“ und „Göbekli Tepe Roman“, mit eigenen Unterseiten; dafür zählen die Seiten selbst, nicht zusätzliche Domains.
+- **Schon entschieden (Dominik, 24. Oktober):** Tarif Hobby; Impressum und Datenschutz freigegeben; die 65 Länder bleiben; Simon-Kucher bleibt in der Vita. **Domains: nur `dominikjaekel.de` und `dominikjaekel.com` kaufen** („Okay, dann nur dominikjaekel.de und .com kaufen“); keine Umlaut- und keine Bindestrich-Domains, keine Satoshi-Domains. Neu als Ziel für später (steht in `docs/todo.md`): bei Google auf Platz 1 für „Satoshi Nakamoto Roman“ und „Göbekli Tepe Roman“, mit eigenen Unterseiten; dafür zählen die Seiten selbst, nicht zusätzliche Domains.
 
 ## Regeln für diese Sitzung
 
@@ -33,8 +34,8 @@ Die Angaben stammen aus einer Recherche der Cloud-Sitzung vom 24. Oktober 2026. 
 1. Schritt 0: Stand erheben.
 2. Schritt 3, erster Teil: Prüfskript laufen lassen. Es dauert eine Minute.
 3. Schritte 1 und 2: Projekt in Vercel anlegen oder prüfen.
-4. **Schritt 7 vorziehen:** die Angaben für die Datenschutzerklärung sammeln und als **Zwischenmeldung 2 (Datenschutz)** an Dominik geben. Dann kann die Cloud-Sitzung die endgültige Fassung bauen, während die Domains noch eingerichtet werden.
-5. Schritte 3 bis 5: Dominik entscheidet und kauft. Danach **Zwischenmeldung 1 (Domains)** an die Cloud-Sitzung.
+4. **Schritt 7 vorziehen:** die Angaben für die Datenschutzerklärung sammeln und als **Zwischenmeldung 2 (Datenschutz)** an Dominik geben. Dann kann die Cloud-Sitzung die endgültige Fassung bauen, während die Domains noch eingerichtet werden. **Erledigt (24. Oktober):** Zwischenmeldung 2 ist eingetragen, die endgültige Fassung gebaut.
+5. Schritte 3 bis 5: Dominik kauft, und zwar nur `dominikjaekel.de` und `dominikjaekel.com` (entschieden am 24. Oktober). Danach **Zwischenmeldung 1 (Domains)** an die Cloud-Sitzung.
 6. Schritt 6: Domains verbinden. Während Vercel auf DNS und Zertifikate wartet, Schritt 7 abschließen, falls noch offen.
 7. Schritt 8, die Prüfliste: einmal nach dem Verbinden, einmal mit der endgültigen Fassung.
 8. Schritt 9 nach dem Livegang, Schritt 10 zum Schluss.
@@ -90,7 +91,9 @@ Nur, wenn es in Schritt 0 noch kein Projekt gab. Sonst die Werte unten mit dem b
 
 ### Welche Domains?
 
-Dominiks Frage war, ob man eine weglassen kann. **Ja.** Pflicht ist nur `dominikjaekel.de`. Empfohlen sind dazu `dominikjaekel.com` und, wenn verfügbar, `dominikjäkel.de`. Beide Schreibweisen mit Bindestrich, `dominik-jaekel.de` und `dominik-jaekel.com`, können weg.
+Dominiks Frage war, ob man eine weglassen kann. **Ja.** Pflicht ist nur `dominikjaekel.de`. Empfohlen waren dazu `dominikjaekel.com` und, wenn verfügbar, `dominikjäkel.de`. Beide Schreibweisen mit Bindestrich, `dominik-jaekel.de` und `dominik-jaekel.com`, können weg.
+
+**Entschieden (Dominik, 24. Oktober): „Okay, dann nur dominikjaekel.de und .com kaufen.“** Gekauft werden genau `dominikjaekel.de` und `dominikjaekel.com`. Nicht gekauft werden die Umlaut-Domains (`dominikjäkel.de`, `dominikjäkel.com`), die Domains mit Bindestrich (`dominik-jaekel.de`, `dominik-jaekel.com`), `dominikjakel.de` und die Satoshi-Domains. Die Tabelle unten bleibt als Begründung stehen.
 
 Zur Erklärung: Eine **Domain** ist der Name der Seite im Internet. Man kauft sie für ein Jahr bei einem **Registrar** (Domain-Händler) und verlängert sie jährlich. `www.dominikjaekel.de` ist kein eigener Kauf, sondern eine Unteradresse von `dominikjaekel.de`.
 
@@ -99,12 +102,12 @@ Zur Erklärung: Eine **Domain** ist der Name der Seite im Internet. Man kauft si
 | `dominikjaekel.de` | Hauptadresse. Steht schon als Basisadresse im Code und passt zum deutschen Publikum. | **kaufen** |
 | `www.dominikjaekel.de` | Unteradresse, kein eigener Kauf | in Vercel anlegen, leitet weiter |
 | `dominikjaekel.com` | Schutz. Viele tippen aus Gewohnheit .com, auch Leser im Ausland. | **kaufen** |
-| `dominikjäkel.de` (intern `xn--dominikjkel-s8a.de`) | So, wie der Name geschrieben wird. Preis wie eine .de-Domain, etwa 5 € im Jahr (geschätzt). Nur als Weiterleitung, nie als Hauptadresse oder für E-Mail: Laut Strato-FAQ kommt manche Software mit Umlaut-Domains schlecht zurecht (nur Suche). | **kaufen**, wenn der Registrar sie anbietet |
-| `dominik-jaekel.de` | Bindestriche tippt kaum jemand (Einschätzung). Etwa 5 € im Jahr. | kann weg |
+| `dominikjäkel.de` (intern `xn--dominikjkel-s8a.de`) | So, wie der Name geschrieben wird. Preis wie eine .de-Domain, etwa 5 € im Jahr (geschätzt). Nur als Weiterleitung, nie als Hauptadresse oder für E-Mail: Laut Strato-FAQ kommt manche Software mit Umlaut-Domains schlecht zurecht (nur Suche). | ~~kaufen, wenn der Registrar sie anbietet~~ **nicht kaufen** (Dominik, 24.10.) |
+| `dominik-jaekel.de` | Bindestriche tippt kaum jemand (Einschätzung). Etwa 5 € im Jahr. | **nicht kaufen** |
 | `dominik-jaekel.com` | bringt praktisch keinen Schutz | weglassen |
 | `dominikjäkel.com` | bringt praktisch keinen Schutz; nicht jeder Registrar verkauft Umlaut-Domains (Cloudflare zum Beispiel nicht, gelesen) | weglassen |
 | `dominikjakel.de` | ohne Umlaut und ohne „e“; so könnten Leser ohne deutsche Tastatur tippen. Nur eine Idee, nicht belegt. | nur auf Wunsch |
-| `satoshinakamoto.de`, `satoshi-nakamoto.de` | siehe Schritt 4 | **Entscheidung Dominik**, Empfehlung: nicht kaufen |
+| `satoshinakamoto.de`, `satoshi-nakamoto.de` | siehe Schritt 4 | **nicht kaufen** (Dominik, 24.10.) |
 
 `xn--dominikjkel-s8a.de` ist die **Punycode**-Schreibweise von `dominikjäkel.de`: die Form ohne Umlaut, die das Internet intern nutzt. Die Cloud-Sitzung hat sie mit Python berechnet und nachgerechnet. Browser zeigen den Umlaut an.
 
@@ -122,7 +125,7 @@ Deshalb prüft diese Sitzung selbst, mit dem Skript unten. Es kauft nichts und m
 - **Windows:** `sh` gibt es dort nicht von Haus aus. Dann die Domains einzeln in der Domainsuche des Registrars prüfen.
 - Endgültig ist erst die Anzeige beim Registrar im Bestellvorgang.
 
-Das Skript als Datei speichern, etwa `domain-check.sh`, und mit `sh domain-check.sh` starten.
+Das Skript als Datei speichern, etwa `domain-check.sh`, und mit `sh domain-check.sh` starten. Für den Kauf zählen nur die Zeilen `dominikjaekel.de` und `dominikjaekel.com`; die übrigen fragt das Skript nur zur Auskunft ab.
 
 ```sh
 #!/bin/sh
@@ -174,6 +177,8 @@ Das Ergebnis Dominik als Tabelle zeigen, mit Datum und Uhrzeit der Abfrage.
 
 Dominik hat gefragt, ob man `satoshi-nakamoto.de` und `satoshinakamoto.de` mitkaufen und auf die Romanseite leiten kann. *Satoshi* ist der Arbeitstitel seines Romans, die Seite liegt unter `/satoshi`. Satoshi Nakamoto ist das Pseudonym des unbekannten Bitcoin-Erfinders.
 
+**Entschieden (Dominik, 24. Oktober): nicht kaufen** („Okay, dann nur dominikjaekel.de und .com kaufen“). Der Abschnitt bleibt als Begründung stehen; für später gilt die Alternative unten (die Seite `/satoshi` selbst, `docs/todo.md`: Platz 1 bei Google über eigene Unterseiten).
+
 Ob die Domains überhaupt frei sind, zeigt erst Schritt 3. Sind sie vergeben, entfällt die Frage.
 
 **Die Einschätzung der Cloud-Sitzung, knapp.** Das ist keine Rechtsberatung.
@@ -208,7 +213,9 @@ Dominiks Antwort in die Zwischenmeldung 1 schreiben.
 
 ## Schritt 5: Domains kaufen (nur nach Dominiks Ja)
 
-**Empfehlung: alle Domains in einer Bestellung bei INWX** (Berlin, Mitglied der DENIC seit 2006, nur Suche). Dort gibt es .de und .com bei einem Anbieter, in Euro, mit deutschem Vertrag und unabhängig vom Hosting. Ob INWX die Umlaut-Domain anbietet, ist nicht belegt. In der Domainsuche nachsehen.
+**Zu kaufen sind nur `dominikjaekel.de` und `dominikjaekel.com`** (Dominik, 24. Oktober), keine weiteren.
+
+**Empfehlung: beide Domains in einer Bestellung bei INWX** (Berlin, Mitglied der DENIC seit 2006, nur Suche). Dort gibt es .de und .com bei einem Anbieter, in Euro, mit deutschem Vertrag und unabhängig vom Hosting. Ob INWX die Umlaut-Domain anbietet, ist nicht belegt. In der Domainsuche nachsehen.
 
 | Anbieter | .de pro Jahr | .com pro Jahr | Anmerkung (alles nur Suche) |
 |---|---|---|---|
@@ -218,7 +225,7 @@ Dominiks Antwort in die Zwischenmeldung 1 schreiben.
 | Vercel | unklar | nur per Kommandozeile abfragbar | siehe unten |
 | Cloudflare | .de nicht verfügbar | – | Umlaut-Domains nicht unterstützt (gelesen, Cloudflare-Docs) → scheidet aus |
 
-**Grobkosten** für `dominikjaekel.de`, `dominikjaekel.com` und `dominikjäkel.de` bei INWX: etwa 25 bis 30 € im Jahr, geschätzt aus den Preisen oben. Den genauen Preis zeigt erst der Warenkorb.
+**Grobkosten** für `dominikjaekel.de` und `dominikjaekel.com` bei INWX: 5,02 € plus 17,52 USD im Jahr (im ersten Jahr mit der Aktion 13,50 USD), zusammen rund 20 €, geschätzt aus den Preisen oben. Den genauen Preis zeigt erst der Warenkorb.
 
 **Alternative Vercel:** Vercel stellt das DNS dann selbst ein. Nachteile: Die Domain hängt am Hosting, abgerechnet wird in USD, und die Unterstützung für Umlaut-Domains ist unklar. Laut einem Vercel-Changelog wurden einige Länderendungen gestrichen, etwa .at, .lu und .ma (nur Suche); ob .de verfügbar ist, zeigt erst das Skript. Nur wählen, wenn das Skript zeigt, dass Vercel alle gewünschten Domains zu Marktpreisen verkauft, und Dominik gar nichts am DNS einstellen will.
 
@@ -256,8 +263,8 @@ Kurz erklärt:
 ### 6.2 Zusatzdomains als Weiterleitung
 
 1. `dominikjaekel.com` hinzufügen. Danach **Edit** → **Redirect to** → `dominikjaekel.de`.
-2. Ebenso die Umlaut-Domain, aber **als Punycode eintragen:** `xn--dominikjkel-s8a.de`. Vercel nimmt Umlaute nicht direkt an und meldet sonst „invalid“ (Vercel-Docs und Community, nur Suche).
-3. Ebenso `dominik-jaekel.de`, falls gekauft.
+2. Entfällt (die Umlaut-Domain wird nicht gekauft; Dominik, 24.10.). ~~Ebenso die Umlaut-Domain, aber als Punycode eintragen: `xn--dominikjkel-s8a.de`. Vercel nimmt Umlaute nicht direkt an und meldet sonst „invalid“ (Vercel-Docs und Community, nur Suche).~~
+3. Entfällt (nicht gekauft). ~~Ebenso `dominik-jaekel.de`, falls gekauft.~~
 4. **Statuscode:** 308 wählen, also dauerhaft (301 geht auch). Laut Vercel-Docs lässt sich der Statuscode beim Bearbeiten der Domain wählen (nur Suche); laut anderen Berichten ist 307 voreingestellt (nur Suche). Gibt es nur 307: so lassen und in der Rückmeldung nennen. Die Cloud-Sitzung entscheidet dann, ob sie es im Code löst.
 5. Das Dropdown „Redirect to“ zeigt nur Domains, die schon im Projekt sind. Deshalb zuerst `dominikjaekel.de` anlegen.
 6. www ist bei den Zusatzdomains nicht nötig. Wer will, legt `www.dominikjaekel.com` zusätzlich an, ebenfalls mit Weiterleitung.
@@ -313,6 +320,8 @@ Am besten gleich nach Schritt 2 erledigen (siehe Ablauf). Die Datenschutzerklär
 4. ob Vercel unter dem EU-US Data Privacy Framework zertifiziert ist (Eintrag auf dataprivacyframework.gov) und ob zusätzlich Standardvertragsklauseln gelten,
 5. ob das Data Processing Addendum (Auftragsverarbeitungsvertrag) für Hobby-Konten gilt. Die Datenschutzerklärung hat für Hobby schon eine Fassung „kein Vertrag geschlossen“; die Angabe dient nur zur Kontrolle.
 6. in welcher Region die Seite ausgeliefert wird. Die Function Region spielt keine Rolle, die Seite hat keine Functions.
+
+**Erledigt (24. Oktober).** Zwischenmeldung 2 der Vercel-Sitzung vom 24.10.2026 (Quellen am 22. und 24.10. live gelesen) ist in `website-c/datenschutz.html` eingetragen: (1) Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, USA (Privacy Policy, „Contact Us“, Stand 1. Juni 2026); (2) Verweis auf https://vercel.com/legal/privacy-policy; (3) Server-Logs ohne feste Frist (Vercel nennt nur „minimum necessary period“; die Runtime-Logs im Dashboard betreffen nur Functions, die Seite hat keine): „nur so lange, wie es für den Betrieb und den Schutz vor Missbrauch erforderlich ist“; (4) EU-US Data Privacy Framework, Vercel aktiv zertifiziert (dataprivacyframework.gov, Re-Zertifizierung fällig 29.04.2027), der Satz zu den Standardvertragsklauseln ist gestrichen; (5) DPA nur für Pro und Enterprise, im Datenschutz die Fassung für Hobby („kein Vertrag geschlossen“), `TARIF = 'hobby'`; (6) Region: weltweites CDN ohne Beschränkung auf die EU, gedeckt durch den Satz zur Übermittlung in die USA. Die endgültige Fassung ist gebaut (`veroeffentlichen.py` ohne `--entwurf`, beide Prüfprogramme ohne Fehler).
 
 **Zwischenmeldung 2 (Datenschutz) an Dominik für die Cloud-Sitzung:** diese Angaben mit Links. Damit setzt die Cloud-Sitzung den Tarif Hobby im Code, füllt die Platzhalter und baut die endgültige Fassung. Schon erledigt (Dominik, 24. Oktober): Impressum und Datenschutz sind freigegeben, die 65 Länder bleiben, Simon-Kucher bleibt in der Vita. Die Cloud-Sitzung hat die Vercel-Angaben ebenfalls zu recherchieren versucht, vercel.com war für sie aber gesperrt; die hier gelesenen Angaben mit Link sind darum die Grundlage.
 

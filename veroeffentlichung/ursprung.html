@@ -23,11 +23,16 @@
 <script>
 document.documentElement.classList.add('js');
 </script>
+
+<script>
+(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);
+</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/vollkorn-kursiv.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
 .titelei { margin-top: var(--z); }
@@ -79,7 +84,7 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   <p class="einleitung">Drei Romane über die Geburt der organisierten Religion am Göbekli Tepe, der Literatur in Uruk und der Heiligen Schrift in Jerusalem. In Taiwan begann Dominik Jäkels Beschäftigung mit der Frühgeschichte des Menschen und die Arbeit an der Trilogie.</p>
 
-  <figure class="globus" id="globus">
+  <figure class="globus" id="globus" data-folge="2">
     <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Schauplätzen der Trilogie; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
     <p class="hinweis" hidden></p>
     <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text und auf der Tafel, mit ihren Koordinaten.</p>
@@ -172,7 +177,12 @@ html:not(.js) .globusseite > .globus { display: none; }
     return !s || a.zustand() === 'ruhe' ? null : s.name;
   };
   let wartet = !ruhig;
-  const kugelZeigen = () => { if (!wartet) return; wartet = false; figur.classList.add('kommt'); figur.classList.remove('wartet'); };
+  const kugelZeigen = () => {
+    if (!wartet) return;
+    wartet = false;
+    if (!document.documentElement.classList.contains('folge') || figur.classList.contains('da')) figur.classList.add('kommt');
+    figur.classList.remove('wartet');
+  };
   if (wartet) { figur.classList.add('wartet'); canvas.addEventListener('focus', kugelZeigen); }
   const g = F.globus({
     canvas, flaeche, hinweis: $('.hinweis', figur),
@@ -325,6 +335,7 @@ html:not(.js) .globusseite > .globus { display: none; }
     $('#ersatz').hidden = false;
     tafelHoehe();
   }
+  F.folge({ text: F.textmoment(null), lesen: () => F.woerter($('#werk-titel'), $('#werk-titel + .unterzeile')), kugel: () => g, bereit: () => !wartet });
   namenAb = true;
   a.einspielen();
   if (g && !ruhig) { g.nurOrte([ST[0].name]); g.aktiv(ST[0].name); }

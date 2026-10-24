@@ -197,7 +197,7 @@ Später geändert: nein.
 Seine Angaben: „Du musst die Flaggen aus der Karte ablesen. Dazu sind noch Argentinien und Uruguay gekommen.“ (19.10., 02:41). „Bosnien war ich nicht. Nordirland schon!“ (19.10., 02:46). „Nein. Das waren Rubbelfehler.“ (zu Bosnien, 19.10., 02:46). „(England, Schottland und Nordirland zählen auf dem Globus als ein Land.) Trenn die mal.“ (19.10., 02:47). „Sind doch 65.“ (19.10., 02:53). „Westjordanland (aber weiß nicht, ob ich das mitgezählt habe).“ (19.10., 02:54). „Sansibar (auch.)“ und „Aber muss nicht getrennt. Ist im Grunde auch nur Kleinkram.“ (19.10., 02:54 und 02:55). „Reisen fehlt halt noch. Also ich sehe noch nicht alle Länder?“ (19.10., 03:46)
 Für den Bau: Die Liste in `daten/inhalt.js` (`bereist`, `kontinente`) bleibt, wie sie ist: 65 Länder und Gebiete, England, Schottland und Nordirland einzeln, Westjordanland ohne Gazastreifen, Sansibar als Teil Tansanias. Die Fläche der bereisten Länder muss sich klar vom Rest abheben. Ein zu blasses Grau hatte er schon einmal übersehen.
 Vergleichsdokument: kein Konflikt mit Element 09 und Frage 11 (Hellgrau), solange der Unterschied deutlich bleibt.
-Später geändert: ja. 64 und 67 sind durch 65 ersetzt.
+Später geändert: ja. 64 und 67 sind durch 65 ersetzt. Vor dem Livegang bestätigt: „65 Länder bleiben.“ (24.10.)
 
 **V28. Kapstadt, Sansibar und Buenos Aires nur in der Vita, nicht auf dem Globus der Startseite.**
 „Längere Aufenthalte. Wir können 2024 noch Kapstadt […] mit aufnehmen. Aber das mehr in der Vita. Im Globus auf der Startseite wäre das überladen.“ (20.10., 03:57). Jahre korrigiert: „Sansibar, Tansania, längerer Aufenthalt 6° 10′ S, 39° 11′ O“ (20.10., 04:47) und „Sorry. Der Fehler ist: 2026 Buenos Aires. Nicht Kapstadt … 2025 Tanzania/Sansibar (das richtigziehen)“ (20.10., 05:00)
@@ -437,7 +437,7 @@ Später geändert: ja. Seine kürzere Fassung vom 20.10., 03:53, war für die St
 **V56. Simon-Kucher nur in der Vita.**
 „Ich denke, ich kann Simon-Kucher ruhig in der Vita nennen.“ (20.10., 04:02). Vorher hatte er beim Ghostwriting „Nur allgemein“ gewählt, also „schreibt beruflich für Unternehmen“ ohne Ghostwriting und ohne Medien (Antwort 19.10., 20:16).
 Für den Bau: Simon-Kucher steht genau einmal, in `vita.html`. Sonst bleibt der Beruf allgemein. Ghostwriting, Auftraggeber und Medien werden nicht genannt.
-Später geändert: ja, für Simon-Kucher. Die spätere Aussage erlaubt den Namen in der Vita. Für alles andere gilt weiter „Nur allgemein“.
+Später geändert: ja, für Simon-Kucher. Die spätere Aussage erlaubt den Namen in der Vita. Für alles andere gilt weiter „Nur allgemein“. Vor dem Livegang bestätigt: „Simon-Kucher ja.“ (24.10.)
 
 **V57. AIESEC bei Colombo und Cotonou.**
 „Bei Benin und Sri Lanka, es waren Freiwilligenprojekte mit AIESEC, das könnten wir noch erwähnen.“ (20.10., 03:57)
@@ -643,7 +643,7 @@ Ohne Konflikt, aber durch ihn entschieden: Frage 6 (V17), Frage 9 (V22), Frage 1
 6. **Don Quijote oder Don Quixote** (V71)?
 7. **Bootsfoto:** Wer hat es gemacht, und soll die Person genannt werden (V59)?
 8. **Abstecher:** von Potsdam nach Colombo und Cotonou, von Berlin nach Mallorca, jeweils hin und zurück (V24)?
-9. **Simon-Kucher:** Ist geklärt, dass die Firma genannt werden darf? Claude hatte am 20.10. um 04:07 dazu geraten (V56).
+9. ~~**Simon-Kucher:** Ist geklärt, dass die Firma genannt werden darf? Claude hatte am 20.10. um 04:07 dazu geraten (V56).~~ Beantwortet am 24. Oktober: „Simon-Kucher ja.“ Bleibt in der Vita, nur dort (V56).
 10. **„Aboriginer-Kultur“** in der Vita: lassen oder „indigene Völker“ (V55)?
 11. **Chinesisch:** in die Vita, und wie gut (V72)?
 12. **Bücher im Regal:** Bleiben *Ghostwritten* von David Mitchell, *Das kleine Gespenst* und die Bücher von Wulf Dorn und Ursula Poznanski? Claude fragte am 20.10. um 06:57.
@@ -652,3 +652,5 @@ Ohne Konflikt, aber durch ihn entschieden: Frage 6 (V17), Frage 9 (V22), Frage 1
 15. **Impressum:** ein zweiter schneller Kontaktweg neben der Mail, etwa ein Formular?
 16. **Szenentexte von *Satoshi*:** Text-Flagge 25 durchsehen. In C bleiben sie bis dahin wie in A (V36).
 17. **Einblenden (V83):** Auf *Satoshi* am Telefon den Globus früher zeigen (ohne Bindung ans Lesen, rund 2,1 statt 3,1 s)? Soll ein Klick auf das Buch die Bewegung der Kugel nicht freigeben? Auf *Ursprünge* den Halt an Göbekli Tepe schon mit der Blende beginnen lassen (erstes Gleiten nach rund 8,8 statt 11,8 s)?
+
+Beantwortet am 24. Oktober vor dem Livegang (Dominik: „Vercel Hobby … 65 Länder bleiben. Simon-Kucher ja. Impressum und Datenschutz von mir freigegeben“), standen nicht als eigene Nummer in dieser Liste, sondern in `docs/todo.md`: **65 Länder** bleiben (V27); **Tarif bei Vercel:** Hobby (`TARIF = 'hobby'` in `website-c/werkzeuge/veroeffentlichen.py`, im Datenschutz die Fassung ohne Vertrag zur Auftragsverarbeitung); **Impressum und Datenschutz** freigegeben, die beiden Vermerke `[[ZU PRÜFEN: … freigegeben?]]` sind gelöscht. Die Angaben zu Vercel im Datenschutz stammen aus der Zwischenmeldung 2 der Vercel-Sitzung vom 24. Oktober (live gelesen).

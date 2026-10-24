@@ -209,6 +209,11 @@ html:not(.js) .post { display: none; }
 .globusseite > .globus .tafel, .globusseite > .globus .steuer { margin: var(--z-viertel) calc(var(--globus) * .09 + var(--rand-r)) 0 calc(-1 * clamp(0px, var(--globuskante) - var(--rand-l) - var(--spalte) - 1.5em, 5.2em)); }
 .globusseite > .globus .steuer + .tafel { margin-top: var(--z-halb); }
 .globusseite > .globus .tafel.ohne-marke { margin-left: 0; }
+@media (min-width: 62.0625rem) {
+  .globusseite > .globus > .tafel:empty { min-height: calc(var(--tafel-h) - var(--z) * .25); }
+  .globusseite > .globus > .tafel.ohne-marke:empty { min-height: calc(var(--tafel-h) - var(--z) * .75); }
+  .globusseite > .globus:has(> .tafel:empty) { visibility: hidden; }
+}
 .tafel, .steuer { display: grid; grid-template-columns: 4.4em minmax(0, 1fr); column-gap: .8em; }
 .tafel { align-items: first baseline; align-content: start; line-height: var(--z); }
 .tafel.ohne-marke { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
@@ -242,6 +247,9 @@ html:not(.js) .post { display: none; }
 @media (max-width: 40rem) { .buchzeile { min-height: calc(var(--z) * 2); } }
 .zug { transition: transform var(--zug-dauer) ease-out; }
 .zug.ist-offen { transform: translateY(var(--zug)); }
+.folge [data-folge]:not(.da) { opacity: 0; animation: folge-notfall 0s linear 7s forwards; }
+.folge [data-folge]:focus-within { opacity: 1 !important; }
+@keyframes folge-notfall { to { opacity: 1; } }
 .karte {
   position: absolute; z-index: 30; width: min(24rem, calc(100vw - 32px));
   display: flex; flex-direction: column;

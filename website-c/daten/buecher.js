@@ -1,12 +1,12 @@
 /* Bücher von Dominik Jäkel aus seinem Goodreads-Export, bereinigt von werkzeuge/daten.cjs; in Version C von Hand berichtigt (Textänderung 47) und ergänzt
-   (Runde 5: Trust von Hernan Diaz, ganz oben; englische Ausgabe, Riverhead Books, Hardcover, 402 Seiten, s 5, eines der liebsten,
+   (Runde 5: Trust von Hernán Díaz, ganz oben; englische Ausgabe, Riverhead Books, Hardcover, 402 Seiten, s 5, eines der liebsten,
    von Dominik bestätigt; Für immer die Alpen von Benjamin Quaderer, aus der Leseliste hierher, auf Dominiks Wunsch vom
    22. Oktober 2026, Luchterhand, Hardcover, 592 Seiten), nicht neu erzeugen.
    Nur die Regale gelesen, kindheit (Kindheit und Jugend), gerade (Nachttisch) und abgebrochen; was noch wartet, steht in leseliste.js.
    t Titel, u Untertitel, a Autor, r Regal, s 5 = eines der liebsten (sonst 0), j Jahr der Erstveröffentlichung, p Seiten,
    w wiedergelesen, b Bindung (p Paperback, h Hardcover, m Mass Market, e sonst), v Verlag. Ohne Notizen und Rezensionen. */
 window.BUECHER = [
-{"t":"Trust","u":"","a":"Hernan Diaz","r":"gelesen","s":5,"j":2022,"p":402,"w":0,"b":"h","v":"Riverhead Books"},
+{"t":"Trust","u":"","a":"Hernán Díaz","r":"gelesen","s":5,"j":2022,"p":402,"w":0,"b":"h","v":"Riverhead Books"},
 {"t":"Für immer die Alpen","u":"","a":"Benjamin Quaderer","r":"gelesen","s":0,"j":2020,"p":592,"w":0,"b":"h","v":"Luchterhand"},
 {"t":"The Maniac","u":"","a":"Benjamín Labatut","r":"gelesen","s":5,"j":2023,"p":368,"w":0,"b":"h","v":"Penguin Press"},
 {"t":"When We Cease to Understand the World","u":"","a":"Benjamín Labatut","r":"gelesen","s":5,"j":2020,"p":193,"w":0,"b":"e","v":"New York Review Books"},

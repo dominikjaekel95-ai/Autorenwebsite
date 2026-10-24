@@ -666,7 +666,7 @@
         g.nurOrte(null);
         const z = schrittZoom(st[i], i);
         if (o.wegBisStation === false) { g.routeZeigen(st); g.ortAnfliegen(st[i], z); }
-        else g.chronikSchritt(st, i, { zoom: z, dauer: 1000 });
+        else g.chronikSchritt(st, i, Object.assign({ zoom: z, dauer: 1000 }, o.schritt));
       }
       art = 'hand';
       zustand = i === st.length - 1 ? 'ende' : 'hand';
@@ -689,7 +689,7 @@
         if (g.chronikLaeuft()) g.chronikStoppen();
         g.nurOrte(null); g.routeZeigen(st); g.aktiv(null);
         const sch = takt.schluss !== undefined ? takt.schluss : (g.canvas ? ueberblick(g.canvas, st, takt.schlussK || 1, takt.schlussBereich) : null);
-        if (sch) g.fliegen(sch.mitte || sch, sch.k || 1);
+        if (sch) g.fliegen(sch.mitte || sch, sch.k || 1, o.schritt ? Object.assign({}, o.schritt) : undefined);
       }
       art = null; zustand = 'ruhe'; jetzt = -1;
       leisteZeigen(); steuerZeigen();

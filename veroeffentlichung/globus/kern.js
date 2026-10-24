@@ -486,6 +486,7 @@
       hinweisTimer = setTimeout(() => { hinweis.hidden = true; }, 1600);
     }
     let finger = null, wisch = null, zeiger = null;
+    const fingerRegel = { ab: 4, verhaeltnis: 0, hinweisImAblauf: true };
     const fingerLage = t => {
       const r = canvas.getBoundingClientRect();
       return { x: (t[0].clientX + t[1].clientX) / 2 - r.left, y: (t[0].clientY + t[1].clientY) / 2 - r.top, abstand: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) };
@@ -498,7 +499,7 @@
       if (e.touches.length === 1 && !finger) {
         if (!wisch || wisch.gezeigt || (zeiger && zeiger.an)) return;
         const dx = Math.abs(e.touches[0].clientX - wisch.x), dy = Math.abs(e.touches[0].clientY - wisch.y);
-        if (dy > 8 && dy > dx) { wisch.gezeigt = true; hinweisZeigen('Zum Drehen waagrecht wischen, zum Zoomen zwei Finger'); }
+        if (dy > 8 && dy > dx && (fingerRegel.hinweisImAblauf || !chronikNummer)) { wisch.gezeigt = true; hinweisZeigen('Zum Drehen waagrecht wischen, zum Zoomen zwei Finger'); }
         return;
       }
       if (e.touches.length !== 2 || !finger) return;
@@ -513,11 +514,11 @@
       zoomStandSetzen(); tippVerstecken(); bewegung(); zeichnen();
     }, { passive: false });
     canvas.addEventListener('touchend', e => { if (e.touches.length < 2) finger = null; });
-    canvas.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && e.isPrimary) zeiger = { x: e.clientX, an: false }; }, { passive: true });
+    canvas.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && e.isPrimary) zeiger = { x: e.clientX, y: e.clientY, an: false }; }, { passive: true });
     canvas.addEventListener('pointermove', e => {
       if (!zeiger || e.pointerType !== 'touch' || !e.isPrimary || finger) return;
       const dx = e.clientX - zeiger.x;
-      if (!zeiger.an) { if (Math.abs(dx) < 4) return; zeiger.an = true; eingriff(); }
+      if (!zeiger.an) { if (Math.abs(dx) < fingerRegel.ab || Math.abs(dx) < fingerRegel.verhaeltnis * Math.abs(e.clientY - zeiger.y)) return; zeiger.an = true; eingriff(); }
       zeiger.x = e.clientX;
       mitte[0] -= dx * .25 / k;
       tippVerstecken(); bewegung(); zeichnen();
@@ -594,8 +595,8 @@
       const start = mitte.slice(), startK = k;
       const weg = d3.geoInterpolate(start, ziel);
       const abstand = d3.geoDistance(start, ziel);
-      const dauer = ruhig ? 0 : (extra.dauer != null ? extra.dauer : o.dauer || 1000);
-      const delle = Math.min(Math.log(Math.max(startK, zielK)), abstand * 1.1);
+      const dauer = ruhig ? 0 : (extra.dauer != null ? (typeof extra.dauer === 'function' ? extra.dauer(abstand / RAD) : extra.dauer) : o.dauer || 1000);
+      const delle = extra.delle === false ? 0 : Math.min(Math.log(Math.max(startK, zielK)), abstand * 1.1);
       const { jeBild } = extra, weich = extra.ease || d3.easeCubicInOut, ruhen = extra.ruhen !== false;
       if (!dauer) { mitte = ziel.slice(); k = zielK; if (jeBild) jeBild(1); zoomStandSetzen(); zeichnen(); return Promise.resolve('fertig'); }
       return new Promise(fertig => {
@@ -679,10 +680,13 @@
       const flugMs = fn(takt.flug, o.dauer || 1000), rueckMs = fn(takt.rueckweg, 500);
       const ersterMs = takt.ersterFlug == null ? flugMs : fn(takt.ersterFlug, 1000);
       const haltMs = fn(takt.halt, 600), zoomZiel = fn(takt.zoom, 2.6), weich = takt.ease || sanft;
+      const delle = takt.delle;
       const grad = z => d3.geoDistance(mitte, z) / RAD;
       const bis = takt.orte !== 'alle';
       if (ab === 0) route = routeBauen(stationen); else routeSetzen(stationen);
-      gezeigt = bis ? new Set(stationen.slice(0, ab).map(s => s.name)) : null;
+      const s0 = stationen[0];
+      const schonDa = ab === 0 && takt.ersterFlug === 0 && d3.geoDistance(mitte, [s0.lon, s0.lat]) < 1e-9 && Math.abs(k - zoomZiel(s0, 0)) < 1e-9;
+      gezeigt = bis ? new Set(stationen.slice(0, schonDa ? 1 : ab).map(s => s.name)) : null;
       chronikStand = { bei: ab - 1, unterwegs: null };
       const vorbei = () => chronikNummer !== nummer;
       const ende = () => stilleGruende.get(nummer) || 'abgebrochen';
@@ -690,14 +694,14 @@
       for (let j = 0; j < ab; j++) if (!stationen[j].neben) heim = j;
       if (!fein && stationen.some((s, i) => zoomZiel(s, i) > 1.6)) {
         feinLaden();
-        await Promise.race([feinBereit, new Promise(r => setTimeout(r, 2000))]);
+        await Promise.race([feinBereit, new Promise(r => setTimeout(r, takt.feinWarten != null ? takt.feinWarten : 2000))]);
         if (vorbei()) return ende();
       }
       for (let i = ab; i < n; i++) {
         const s = stationen[i], von = route.fortschritt, ziel = route.an[i], zk = zoomZiel(s, i), punkt = [s.lon, s.lat];
         chronikStand.unterwegs = i;
         await fliegen(punkt, zk, {
-          dauer: (i === 0 && ab === 0 ? ersterMs : flugMs)(grad(punkt), s, i), ease: weich, ab: vonHalt, an: true, ruhen: false,
+          dauer: (i === 0 && ab === 0 ? ersterMs : flugMs)(grad(punkt), s, i), ease: weich, ab: vonHalt, an: true, ruhen: false, delle,
           jeBild: e => { route.fortschritt = von + (ziel - von) * e; }
         });
         if (vorbei()) return ende();
@@ -719,7 +723,7 @@
         if (s.neben && heim !== null && route.punkte.length > ziel + 1) {
           const h = stationen[heim], hp = [h.lon, h.lat];
           const rueckK = typeof takt.rueckZoom === 'function' ? takt.rueckZoom(s, i) : zoomZiel(h, heim);
-          await fliegen(hp, rueckK, { dauer: rueckMs(grad(hp), s, i), ease: weich, ab: vonHalt, an: false, ruhen: false, jeBild: e => { route.fortschritt = ziel + e; } });
+          await fliegen(hp, rueckK, { dauer: rueckMs(grad(hp), s, i), ease: weich, ab: vonHalt, an: false, ruhen: false, delle, jeBild: e => { route.fortschritt = ziel + e; } });
           if (vorbei()) return ende();
           route.fortschritt = ziel + 1;
           vonHalt = false;
@@ -730,7 +734,7 @@
         const sch = takt.schluss || { mitte: d3.geoCentroid({ type: 'MultiPoint', coordinates: route.punkte }), k: 1 };
         const sp = sch.mitte || sch;
         aktiverOrt = takt.endeAktiv || null;
-        await fliegen(sp, sch.k || 1, { dauer: flugMs(grad(sp), null, n), ease: weich, ab: vonHalt, an: true, ruhen: false });
+        await fliegen(sp, sch.k || 1, { dauer: flugMs(grad(sp), null, n), ease: weich, ab: vonHalt, an: true, ruhen: false, delle });
         if (vorbei()) return ende();
       }
       chronikNummer = 0;
@@ -753,7 +757,7 @@
       gezeigt = null;
       const s = stationen[i], von = route.fortschritt, bis = route.an[i];
       aktiverOrt = s.name;
-      return fliegen([s.lon, s.lat], einst.zoom || Math.max(k, 2.6), { dauer: einst.dauer, jeBild: e => { route.fortschritt = von + (bis - von) * e; } });
+      return fliegen([s.lon, s.lat], einst.zoom || Math.max(k, 2.6), { dauer: einst.dauer, ease: einst.ease, delle: einst.delle, jeBild: e => { route.fortschritt = von + (bis - von) * e; } });
     }
     function routeZeigen(stationen, bisStation) {
       chronikStoppen('abgebrochen');
@@ -794,6 +798,7 @@
       chronikStoppen: () => chronikStoppen('abgebrochen'),
       chronikLaeuft: () => !!chronikNummer,
       nurOrte(namen) { gezeigt = namen ? new Set(namen) : null; zeichnen(); },
+      fingerRegel(einst) { Object.assign(fingerRegel, einst || {}); },
       gezeigt: () => (gezeigt ? new Set(gezeigt) : null),
       aktiverOrt: () => aktiverOrt,
       ortBei: (x, y) => ortBei(x, y),

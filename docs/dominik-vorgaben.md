@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 24. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V80.
+Stand: 24. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V81.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -345,6 +345,12 @@ Später geändert: nein.
 „Außerdem muss man über die Ursprungstrilogie und über Satoshi noch besser Sachen erfahren können.“ (19.10., 20:12). „Göbekli Tepe, die Bücher noch anders ausmalen.“ (19.10., 02:24)
 Für den Bau: Jeder Band hat Ort, Zeit, Thema und Inhalt aus dem Exposé. Die Ebene *Ursprung* fliegt nach Göbekli Tepe und entfaltet sich langsam (V23).
 Ort in A: `ursprung.html`, die drei `section`-Blöcke mit `h2.band-titel`.
+Später geändert: ja, das Heranfliegen an Göbekli Tepe ist entfallen (V81); die Kugel steht beim Laden schon dort.
+
+**V81. *Ursprünge* ohne Heranfliegen.**
+„Bei Ursprüngen funktioniert das gleiten beim testen gerade nicht so gut. Bitte das nochmal nachschauen. Wenn das nicht gut klappt, dann das einfliegen bei Ursprünge weglassen“ (24.10.).
+Für den Bau: Untersucht wurden das Heranfliegen (ein fast reiner Zoom von 1- auf 3,3-fach in 0,93 s, erst Stillstand, dann ein Ruck; die Leselinie brach Flüge schon nach rund 110 px Rollen hart ab; jeder Stationsflug zoomte 15 % heraus und wieder hinein) und zwei Fassungen, eine flüssigere und eine ohne. Die Urteile waren uneins, also gilt seine Regel: Das Heranfliegen entfällt. Die Kugel steht beim Laden schon nah über Göbekli Tepe; ihre Fläche bleibt leer, bis die feine Karte steht, und blendet dann in 0,7 s mit Punkt, Ring und Namen ein (vorher stand dort bis zu 4 s die grobe Karte vergrößert und wurde vor den Augen scharf). Nach dem Lesehalt gleitet sie wie bisher nach Uruk, Tyros und Jerusalem, jetzt ohne Herauszoomen und so lange, wie die Entfernung verlangt. Die Leselinie bricht keinen Flug mehr ab, sondern merkt den Band vor. Startseite, *Satoshi* und Länder fliegen unverändert.
+Ort in C: `website-c/ursprung.html` (Einspieler, Erscheinen, Leselinie); `website-c/globus/kern.js` und `website-c/seite.js` mit Angaben, die nur *Ursprünge* einschaltet (`delle`, `feinWarten`, `fingerRegel`, `schritt`, Dauer nach der Entfernung).
 Später geändert: nein.
 
 ---

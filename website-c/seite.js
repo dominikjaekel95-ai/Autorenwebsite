@@ -758,6 +758,8 @@
                                      // halt: 'lesen' ist die Lesezeit der gesetzten Tafel (lesezeit), grundhalt ms dazu
        taktAbspielen: …,             // Takt, wenn der Besucher „abspielen“ wählt (Vorgabe: takt)
        schrittZoom: k | (s, i) => k, // Vergrößerung bei einem Schritt von Hand (Vorgabe: zoom des Takts)
+       schritt: { dauer, ease, delle },  // Flug eines Schritts von Hand und zurück in die Ruhe (a.ruhen): dauer in ms oder
+                                     // (grad) => ms, Verlauf, delle: false (Vorgabe: 1000 ms, kubisch, mit Delle; Felder wie g.fliegen)
        tafel: el,                    // die Tafel; bekommt die Steuerzeile in ihren Fuß (steuerzeile: false, wenn keine)
        ortsleiste: el | [el, …],     // Elemente mit Knöpfen [data-station]; ein Klick wählt die Station
        sichtbar: el,                 // der Einspieler beginnt, wenn el zur Hälfte im Bild ist (Vorgabe: die Fläche des Globus)
@@ -919,7 +921,7 @@
         g.nurOrte(null);
         const z = schrittZoom(st[i], i);
         if (o.wegBisStation === false) { g.routeZeigen(st); g.ortAnfliegen(st[i], z); }
-        else g.chronikSchritt(st, i, { zoom: z, dauer: 1000 });
+        else g.chronikSchritt(st, i, Object.assign({ zoom: z, dauer: 1000 }, o.schritt));
       }
       art = 'hand';
       zustand = i === st.length - 1 ? 'ende' : 'hand';
@@ -944,7 +946,7 @@
         if (g.chronikLaeuft()) g.chronikStoppen();
         g.nurOrte(null); g.routeZeigen(st); g.aktiv(null);
         const sch = takt.schluss !== undefined ? takt.schluss : (g.canvas ? ueberblick(g.canvas, st, takt.schlussK || 1, takt.schlussBereich) : null);
-        if (sch) g.fliegen(sch.mitte || sch, sch.k || 1);
+        if (sch) g.fliegen(sch.mitte || sch, sch.k || 1, o.schritt ? Object.assign({}, o.schritt) : undefined);
       }
       art = null; zustand = 'ruhe'; jetzt = -1;
       leisteZeigen(); steuerZeigen();

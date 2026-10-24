@@ -36,9 +36,10 @@
  *   g.zoomen(faktor), g.ganz(), g.k(), g.mitte(), g.land(iso), g.ortBei(x, y), g.zeichnen(), g.projektion, g.erstesBild
  *   g.chronik(stationen, takt) -> Promise 'fertig' | 'abgebrochen' | 'angehalten'   (Takt siehe chronik)
  *   g.chronikAnhalten() -> { bei, unterwegs } | null; g.chronikStoppen(); g.chronikLaeuft()
- *   g.chronikSchritt(stationen, i, { zoom, dauer }) // eine Station von Hand, der Weg wächst oder schrumpft bis i
+ *   g.chronikSchritt(stationen, i, { zoom, dauer, ease, delle }) // eine Station von Hand, der Weg wächst oder schrumpft bis i
  *   g.routeZeigen(stationen, bis)                    // Weg ohne Flug, ganz oder bis zur Station bis (-1: noch kein Weg)
  *   g.nurOrte(namen | null)                          // nur diese Orte zeigen (etwa [] vor einem Einspieler), null: alle
+ *   g.fingerRegel({ ab, verhaeltnis, hinweisImAblauf }) // ab wann ein Finger die Kugel dreht (siehe Bedienung); Vorgabe wie bisher
  */
 (function () {
   const RAD = Math.PI / 180;
@@ -612,6 +613,10 @@
     // Touch wie in B: zwei Finger drehen und zoomen; ein Finger waagrecht dreht, senkrecht scrollt der Browser die Seite
     // (touch-action: pan-y im Stil)
     let finger = null, wisch = null, zeiger = null;
+    /* Ab wann ein Finger die Kugel dreht (und damit einen Ablauf beendet): ab px seitlich, und seitlich mindestens verhaeltnis-mal so
+       weit wie senkrecht (0: jede Richtung). hinweisImAblauf: false, dann kein Hinweis zum Wischen, solange ein Ablauf läuft.
+       Vorgabe wie bisher; Ursprung setzt mit g.fingerRegel 10 px und das 1,5-Fache (ein schräg ansetzender Daumen rollt die Seite) */
+    const fingerRegel = { ab: 4, verhaeltnis: 0, hinweisImAblauf: true };
     const fingerLage = t => {
       const r = canvas.getBoundingClientRect();
       return { x: (t[0].clientX + t[1].clientX) / 2 - r.left, y: (t[0].clientY + t[1].clientY) / 2 - r.top, abstand: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) };
@@ -625,7 +630,7 @@
         // Ein Finger senkrecht scrollt die Seite: dann einmal je Wischen der Hinweis
         if (!wisch || wisch.gezeigt || (zeiger && zeiger.an)) return;
         const dx = Math.abs(e.touches[0].clientX - wisch.x), dy = Math.abs(e.touches[0].clientY - wisch.y);
-        if (dy > 8 && dy > dx) { wisch.gezeigt = true; hinweisZeigen('Zum Drehen waagrecht wischen, zum Zoomen zwei Finger'); }
+        if (dy > 8 && dy > dx && (fingerRegel.hinweisImAblauf || !chronikNummer)) { wisch.gezeigt = true; hinweisZeigen('Zum Drehen waagrecht wischen, zum Zoomen zwei Finger'); }
         return;
       }
       if (e.touches.length !== 2 || !finger) return;
@@ -640,11 +645,11 @@
       zoomStandSetzen(); tippVerstecken(); bewegung(); zeichnen();
     }, { passive: false });
     canvas.addEventListener('touchend', e => { if (e.touches.length < 2) finger = null; });
-    canvas.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && e.isPrimary) zeiger = { x: e.clientX, an: false }; }, { passive: true });
+    canvas.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && e.isPrimary) zeiger = { x: e.clientX, y: e.clientY, an: false }; }, { passive: true });
     canvas.addEventListener('pointermove', e => {
       if (!zeiger || e.pointerType !== 'touch' || !e.isPrimary || finger) return;
       const dx = e.clientX - zeiger.x;
-      if (!zeiger.an) { if (Math.abs(dx) < 4) return; zeiger.an = true; eingriff(); }
+      if (!zeiger.an) { if (Math.abs(dx) < fingerRegel.ab || Math.abs(dx) < fingerRegel.verhaeltnis * Math.abs(e.clientY - zeiger.y)) return; zeiger.an = true; eingriff(); }
       zeiger.x = e.clientX;
       mitte[0] -= dx * .25 / k;
       tippVerstecken(); bewegung(); zeichnen();
@@ -719,8 +724,10 @@
       if (flugLage) { torDanach = grund === 'fertig' ? flugLage.an : 1; flugLage = null; }
       if (flugEnde) { const f = flugEnde; flugEnde = null; f(grund); }
     }
-    /* Ein Flug. extra: { dauer, jeBild(e), ease, ab, an, ruhen }
+    /* Ein Flug. extra: { dauer, jeBild(e), ease, ab, an, ruhen, delle }
+         dauer   ms, oder (grad) => ms nach der Entfernung (Vorgabe o.dauer)
          ease    Verlauf (Vorgabe d3.easeCubicInOut; ein Ablauf fliegt mit sanft)
+         delle   false: die Kugel zoomt unterwegs nicht heraus (Vorgabe: auf weiten Wegen ein wenig, siehe unten)
          ab, an  false: die feinen Linien stehen in der ersten (ab) oder zweiten Hälfte (an) des Flugs nicht (ein Ablauf: kein
                  Halt davor oder danach)
          ruhen   false: am Ende keine Ruhe (ein Ablauf fliegt gleich weiter oder meldet die Ruhe selbst) */
@@ -733,8 +740,8 @@
       const start = mitte.slice(), startK = k;
       const weg = d3.geoInterpolate(start, ziel);
       const abstand = d3.geoDistance(start, ziel);
-      const dauer = ruhig ? 0 : (extra.dauer != null ? extra.dauer : o.dauer || 1000);
-      const delle = Math.min(Math.log(Math.max(startK, zielK)), abstand * 1.1);
+      const dauer = ruhig ? 0 : (extra.dauer != null ? (typeof extra.dauer === 'function' ? extra.dauer(abstand / RAD) : extra.dauer) : o.dauer || 1000);
+      const delle = extra.delle === false ? 0 : Math.min(Math.log(Math.max(startK, zielK)), abstand * 1.1);
       const { jeBild } = extra, weich = extra.ease || d3.easeCubicInOut, ruhen = extra.ruhen !== false;
       if (!dauer) { mitte = ziel.slice(); k = zielK; if (jeBild) jeBild(1); zoomStandSetzen(); zeichnen(); return Promise.resolve('fertig'); }
       return new Promise(fertig => {
@@ -826,6 +833,8 @@
                                  // lange, dass die feine Karte danach noch 1,5 s steht (haltFuer)
          rueckweg: 500,          // ms für den Rückweg eines Abstechers, ohne Halt; Zahl oder Funktion wie flug
          ease: sanft,            // Verlauf jedes Flugs (Vorgabe: sanft an- und auslaufen)
+         delle: false,           // kein Herauszoomen unterwegs, auf keinem Flug des Ablaufs (Vorgabe: wie fliegen)
+         feinWarten: 2000,       // so lange wartet der Ablauf höchstens auf die feine Karte, bevor er fliegt (ms)
          zoom: 2.6,              // Vergrößerung, oder (station, i) => k
          rueckZoom: (station, i) => k,   // Vergrößerung auf dem Rückweg eines Abstechers (Vorgabe: die des Wohnorts)
          schluss: { mitte, k },  // am Ende dorthin (Vorgabe: Mitte aller Punkte, k = 1); null: der Globus bleibt
@@ -844,26 +853,32 @@
       const flugMs = fn(takt.flug, o.dauer || 1000), rueckMs = fn(takt.rueckweg, 500);
       const ersterMs = takt.ersterFlug == null ? flugMs : fn(takt.ersterFlug, 1000);
       const haltMs = fn(takt.halt, 600), zoomZiel = fn(takt.zoom, 2.6), weich = takt.ease || sanft;
+      const delle = takt.delle;
       const grad = z => d3.geoDistance(mitte, z) / RAD;
       const bis = takt.orte !== 'alle';
       if (ab === 0) route = routeBauen(stationen); else routeSetzen(stationen);
-      gezeigt = bis ? new Set(stationen.slice(0, ab).map(s => s.name)) : null;
+      /* Steht die Kugel schon an der ersten Station (ersterFlug: 0 und dort, in ihrer Vergrößerung), gilt sie als erreicht: ihr Punkt
+         bleibt stehen, auch solange der Ablauf noch auf die feine Karte wartet */
+      const s0 = stationen[0];
+      const schonDa = ab === 0 && takt.ersterFlug === 0 && d3.geoDistance(mitte, [s0.lon, s0.lat]) < 1e-9 && Math.abs(k - zoomZiel(s0, 0)) < 1e-9;
+      gezeigt = bis ? new Set(stationen.slice(0, schonDa ? 1 : ab).map(s => s.name)) : null;
       chronikStand = { bei: ab - 1, unterwegs: null };
       const vorbei = () => chronikNummer !== nummer;
       const ende = () => stilleGruende.get(nummer) || 'abgebrochen';
       let heim = null, vonHalt = true;
       for (let j = 0; j < ab; j++) if (!stationen[j].neben) heim = j;
-      /* Die feine Karte (rund 0,3 s Rechnen) vor dem ersten Flug, nicht mitten darin: sonst stockte der Flug. Höchstens 2 s warten */
+      /* Die feine Karte (rund 0,3 s Rechnen) vor dem ersten Flug, nicht mitten darin: sonst stockte der Flug. Höchstens 2 s warten
+         (takt.feinWarten) */
       if (!fein && stationen.some((s, i) => zoomZiel(s, i) > 1.6)) {
         feinLaden();
-        await Promise.race([feinBereit, new Promise(r => setTimeout(r, 2000))]);
+        await Promise.race([feinBereit, new Promise(r => setTimeout(r, takt.feinWarten != null ? takt.feinWarten : 2000))]);
         if (vorbei()) return ende();
       }
       for (let i = ab; i < n; i++) {
         const s = stationen[i], von = route.fortschritt, ziel = route.an[i], zk = zoomZiel(s, i), punkt = [s.lon, s.lat];
         chronikStand.unterwegs = i;
         await fliegen(punkt, zk, {
-          dauer: (i === 0 && ab === 0 ? ersterMs : flugMs)(grad(punkt), s, i), ease: weich, ab: vonHalt, an: true, ruhen: false,
+          dauer: (i === 0 && ab === 0 ? ersterMs : flugMs)(grad(punkt), s, i), ease: weich, ab: vonHalt, an: true, ruhen: false, delle,
           jeBild: e => { route.fortschritt = von + (ziel - von) * e; }
         });
         if (vorbei()) return ende();
@@ -887,7 +902,7 @@
         if (s.neben && heim !== null && route.punkte.length > ziel + 1) {
           const h = stationen[heim], hp = [h.lon, h.lat];
           const rueckK = typeof takt.rueckZoom === 'function' ? takt.rueckZoom(s, i) : zoomZiel(h, heim);
-          await fliegen(hp, rueckK, { dauer: rueckMs(grad(hp), s, i), ease: weich, ab: vonHalt, an: false, ruhen: false, jeBild: e => { route.fortschritt = ziel + e; } });
+          await fliegen(hp, rueckK, { dauer: rueckMs(grad(hp), s, i), ease: weich, ab: vonHalt, an: false, ruhen: false, delle, jeBild: e => { route.fortschritt = ziel + e; } });
           if (vorbei()) return ende();
           route.fortschritt = ziel + 1;
           vonHalt = false;
@@ -898,7 +913,7 @@
         const sch = takt.schluss || { mitte: d3.geoCentroid({ type: 'MultiPoint', coordinates: route.punkte }), k: 1 };
         const sp = sch.mitte || sch;
         aktiverOrt = takt.endeAktiv || null;
-        await fliegen(sp, sch.k || 1, { dauer: flugMs(grad(sp), null, n), ease: weich, ab: vonHalt, an: true, ruhen: false });
+        await fliegen(sp, sch.k || 1, { dauer: flugMs(grad(sp), null, n), ease: weich, ab: vonHalt, an: true, ruhen: false, delle });
         if (vorbei()) return ende();
       }
       chronikNummer = 0;
@@ -925,7 +940,7 @@
       gezeigt = null;
       const s = stationen[i], von = route.fortschritt, bis = route.an[i];
       aktiverOrt = s.name;
-      return fliegen([s.lon, s.lat], einst.zoom || Math.max(k, 2.6), { dauer: einst.dauer, jeBild: e => { route.fortschritt = von + (bis - von) * e; } });
+      return fliegen([s.lon, s.lat], einst.zoom || Math.max(k, 2.6), { dauer: einst.dauer, ease: einst.ease, delle: einst.delle, jeBild: e => { route.fortschritt = von + (bis - von) * e; } });
     }
     function routeZeigen(stationen, bisStation) {
       chronikStoppen('abgebrochen');
@@ -969,6 +984,7 @@
       chronikStoppen: () => chronikStoppen('abgebrochen'),
       chronikLaeuft: () => !!chronikNummer,
       nurOrte(namen) { gezeigt = namen ? new Set(namen) : null; zeichnen(); },
+      fingerRegel(einst) { Object.assign(fingerRegel, einst || {}); },
       // Welche Orte gerade stehen (eine Kopie; null heißt alle) und welcher gewählt ist: die Namen in Ruhe folgen dem Kern
       gezeigt: () => (gezeigt ? new Set(gezeigt) : null),
       aktiverOrt: () => aktiverOrt,

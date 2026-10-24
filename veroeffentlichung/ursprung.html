@@ -41,6 +41,8 @@ document.documentElement.classList.add('js');
 .regal { margin-top: var(--z-zwei); }
 .regal .wort.ist-offen { font-weight: 600; letter-spacing: var(--ausgleich, 0); text-decoration-line: none; }
 html:not(.js) .globusseite > .globus { display: none; }
+.globus.wartet > .flaeche { opacity: 0; pointer-events: none; }
+.globus.kommt > .flaeche { transition: opacity .7s cubic-bezier(.4, 0, .3, 1); }
 @media (min-width: 62.0625rem) {
   .globusseite > .globus { position: sticky; top: var(--z-halb); }
   .band { scroll-margin-top: 40svh; }
@@ -157,28 +159,49 @@ html:not(.js) .globusseite > .globus { display: none; }
   const bandOrte = $$('.band-ort');
   F.gleichBreit($$('[data-station]'));
   const tafelEl = $('#tafel');
-  let leise = false, a = null;
+  let leise = false, a = null, leseWunsch = null;
   const tafelSetzen = i => F.tafel(tafelEl, F.ursprungInhalt(i));
   tafelSetzen(0);
   const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
   const ORTE = ST.map(s => ({ name: s.name, lat: s.lat, lon: s.lon }));
-  const namenOrte = () => ORTE;
-  const namenAktiv = () => { const s = a && ST[a.jetzt()]; return !s || a.zustand() === 'bereit' || a.zustand() === 'ruhe' ? null : s.name; };
+  let namenAb = false;
+  const namenOrte = () => (namenAb ? ORTE : []);
+  const namenAktiv = () => {
+    if (!a || a.zustand() === 'bereit') return ruhig ? null : ST[0].name;
+    const s = ST[a.jetzt()];
+    return !s || a.zustand() === 'ruhe' ? null : s.name;
+  };
+  let wartet = !ruhig;
+  const kugelZeigen = () => { if (!wartet) return; wartet = false; figur.classList.add('kommt'); figur.classList.remove('wartet'); };
+  if (wartet) { figur.classList.add('wartet'); canvas.addEventListener('focus', kugelZeigen); }
   const g = F.globus({
     canvas, flaeche, hinweis: $('.hinweis', figur),
     radHinweis: () => !F.breit(),
-    namen: { orte: namenOrte, spur: () => ST, aktiv: namenAktiv }
+    namen: { orte: namenOrte, spur: () => ST, aktiv: namenAktiv },
+    beimZeichnen: info => {
+      if (wartet && info.fein >= 1 && info.linien >= 1) kugelZeigen();
+      if (leseWunsch !== null && !info.bewegt) setTimeout(wunschEinloesen, 0);
+    }
   });
+  if (!g) kugelZeigen();
+  else if (wartet) {
+    const feinDa = () => !!window.WELT_50M || (performance.getEntriesByType ? performance.getEntriesByType('resource') : []).some(e => /welt-50m\.js/.test(e.name) && e.decodedBodySize > 0);
+    setTimeout(() => { if (wartet && feinDa()) setTimeout(kugelZeigen, 2000); else kugelZeigen(); }, 4000);
+  }
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5, hinweisImAblauf: false });
   const neuSetzen = () => { if (g) g.namenNeu(); };
-  const START = { mitte: [40, 30], k: 1 };
+  const START = { mitte: [ST[0].lon, ST[0].lat], k: F.TAKT.ursprung.zoom };
   function ueberblick() { return g ? F.ueberblick(canvas, ST, F.TAKT.ursprung.schlussK, F.TAKT.ursprung.schlussBereich) : null; }
+  const sanft = t => t * t * t * (t * (t * 6 - 15) + 10);
+  const TAKT = Object.assign({}, F.TAKT.ursprung, { ersterFlug: 0, delle: false, feinWarten: 12000 });
+  const SCHRITT = { dauer: F.TAKT.ursprung.flug, ease: sanft, delle: false };
   function tafelHoehe() {
     F.tafelPlatz(tafelEl, [-1, 0, 1, 2, 3].map(i => F.ursprungInhalt(i)));
   }
   let nachEnde = false;
   a = F.ablauf({
     globus: g, stationen: ST, tafel: tafelEl, ortsleiste: bandOrte,
-    takt: F.TAKT.ursprung,
+    takt: TAKT, schritt: SCHRITT,
     beiStation(i, info) {
       if (leise) tafelEl.setAttribute('aria-live', 'off');
       tafelSetzen(i);
@@ -229,10 +252,23 @@ html:not(.js) .globusseite > .globus { display: none; }
   const BAENDE = $$('.band'), seiteEl = $('.globusseite');
   const fuehrt = () => !!g && F.breit() && !ruhig;
   let leseUhr = 0;
+  const einspielerUnterwegs = () => {
+    const z = a.zustand();
+    if (z !== 'einspieler' && !(z === 'bereit' && !a.gespielt())) return false;
+    return !(g.chronikLaeuft() && !g.bewegt() && g.aktiverOrt());
+  };
+  function wunschEinloesen() {
+    if (leseWunsch === null || !fuehrt() || einspielerUnterwegs()) return;
+    const i = leseWunsch;
+    leseWunsch = null;
+    lesenWaehlen(i);
+  }
   function lesenWaehlen(i) {
     if (i < 0 || !fuehrt()) return;
+    if (einspielerUnterwegs()) { leseWunsch = i; return; }
     const band = BAENDE[i].dataset.band, z = a.zustand(), jetzt = ST[a.jetzt()];
-    if (jetzt && jetzt.band === band && (z === 'hand' || z === 'ende')) return;
+    if (z === 'einspieler' && a.jetzt() === stationVon(band)) { leise = true; a.anhalten(); leise = false; return; }
+    if (jetzt && jetzt.band === band && (z === 'hand' || z === 'ende' || (z === 'angehalten' && a.jetzt() === stationVon(band)))) return;
     leise = true;
     a.waehlen(stationVon(band));
     leise = false;
@@ -241,6 +277,8 @@ html:not(.js) .globusseite > .globus { display: none; }
     clearTimeout(leseUhr);
     if (!fuehrt()) return;
     if (i < 0) {
+      leseWunsch = null;
+      if (a.zustand() === 'einspieler') return;
       if (info.vorher != null && info.vorher >= 0) leseUhr = setTimeout(() => { if (leser.jetzt() < 0) { leise = true; a.ruhen(); leise = false; } }, 200);
       return;
     }
@@ -287,7 +325,10 @@ html:not(.js) .globusseite > .globus { display: none; }
     $('#ersatz').hidden = false;
     tafelHoehe();
   }
+  namenAb = true;
   a.einspielen();
+  if (g && !ruhig) { g.nurOrte([ST[0].name]); g.aktiv(ST[0].name); }
+  neuSetzen();
   F.schriften(2500).then(() => {
     tafelHoehe();
     if (g) { g.zeichnen(); neuSetzen(); }

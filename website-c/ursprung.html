@@ -44,6 +44,13 @@
 
 /* Ohne Skript: kein Globus; Orte und Bände stehen als Text */
 html:not(.js) .globusseite > .globus { display: none; }
+/* Die Kugel steht beim Laden schon nah über Göbekli Tepe. Bis die feine Karte steht, bleibt ihre Fläche leer (die grobe Karte wäre
+   3,3-fach vergrößert zu sehen und würde vor den Augen scharf), dann blendet sie in 0,7 s ein (Dauer und Kurve wie das Einblenden
+   des Globus in der Fassung „Globus zuletzt“). Die Tafel steht schon vorher. Mit der Tastatur auf der Kugel ist sie gleich da
+   (siehe kugelZeigen) */
+.globus.wartet > .flaeche { opacity: 0; pointer-events: none; }
+/* Nur das Erscheinen geht weich; das Verbergen beim Start sofort, bevor etwas gezeichnet ist */
+.globus.kommt > .flaeche { transition: opacity .7s cubic-bezier(.4, 0, .3, 1); }
 
 /* Breit: Kugel und Tafel bleiben stehen, während links die Bände folgen */
 @media (min-width: 62.0625rem) {
@@ -170,7 +177,7 @@ html:not(.js) .globusseite > .globus { display: none; }
 
   // ================= Tafel =================
   const tafelEl = $('#tafel');
-  let leise = false, a = null;
+  let leise = false, a = null, leseWunsch = null;
   /* Neu setzen; die Steuerzeile steht über der Tafel und bleibt dabei, wie sie ist (auch ihr Fokus). Auch im Ablauf (Einspieler,
      Abspielen) die ganze Tafel: Band, Ort, Landschaft und Zeit, Koordinaten und die Zeile zum Band, mit einem Halt, der zum Lesen
      reicht (Runde 4). Vor dem Einspieler steht schon sein erster Ort da, nicht die Ruhetafel */
@@ -181,18 +188,59 @@ html:not(.js) .globusseite > .globus { display: none; }
   const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
   const ORTE = ST.map(s => ({ name: s.name, lat: s.lat, lon: s.lon }));
   // Namen in Ruhe: die vier Orte; welche davon während eines Einspielers schon stehen, weiß der Kern (g.gezeigt)
-  const namenOrte = () => ORTE;
-  const namenAktiv = () => { const s = a && ST[a.jetzt()]; return !s || a.zustand() === 'bereit' || a.zustand() === 'ruhe' ? null : s.name; };
+  /* Erst ab dem Start: die Ebene zeigt beim Setzen kurz alle vier Orte mit dem ganzen Weg, und die Namen merken sich ihre Seite;
+     Göbekli Tepe stünde dann links von seinem Punkt statt rechts wie nach einer Landung */
+  let namenAb = false;
+  const namenOrte = () => (namenAb ? ORTE : []);
+  // Vor dem Einspieler steht die Kugel schon an der ersten Station, ihr Name halbfett wie nach einer Landung
+  const namenAktiv = () => {
+    if (!a || a.zustand() === 'bereit') return ruhig ? null : ST[0].name;
+    const s = ST[a.jetzt()];
+    return !s || a.zustand() === 'ruhe' ? null : s.name;
+  };
+  /* Erst die scharfe Kugel zeigen (siehe Stil, .wartet): sobald feine Fläche und feine Linien ganz stehen, höchstens nach 4 s.
+     Ist die feine Karte dann schon angekommen und wird nur noch aufgebaut (auf einem langsamen Telefon über 1 s), bis zu 2 s mehr;
+     sonst (langsames Netz) die grobe. Auch sofort, wenn die Kugel mit der Tastatur den Fokus bekommt. Bei reduzierter Bewegung steht
+     der Überblick gleich da, wie bisher */
+  let wartet = !ruhig;
+  const kugelZeigen = () => { if (!wartet) return; wartet = false; figur.classList.add('kommt'); figur.classList.remove('wartet'); };
+  if (wartet) { figur.classList.add('wartet'); canvas.addEventListener('focus', kugelZeigen); }
   const g = F.globus({
     canvas, flaeche, hinweis: $('.hinweis', figur),
     // Breit haftet die Kugel neben dem Text, und man scrollt über sie hinweg: dort kein Hinweis auf Strg oder ⌘
     radHinweis: () => !F.breit(),
-    namen: { orte: namenOrte, spur: () => ST, aktiv: namenAktiv }
+    namen: { orte: namenOrte, spur: () => ST, aktiv: namenAktiv },
+    /* Nach jedem Bild: die Kugel zeigen, sobald sie scharf steht; steht sie still, einen Wunsch der Leselinie einlösen, den die
+       Seite während eines Flugs zurückgestellt hat */
+    beimZeichnen: info => {
+      if (wartet && info.fein >= 1 && info.linien >= 1) kugelZeigen();
+      if (leseWunsch !== null && !info.bewegt) setTimeout(wunschEinloesen, 0);
+    }
   });
+  if (!g) kugelZeigen();
+  else if (wartet) {
+    const feinDa = () => !!window.WELT_50M || (performance.getEntriesByType ? performance.getEntriesByType('resource') : []).some(e => /welt-50m\.js/.test(e.name) && e.decodedBodySize > 0);
+    setTimeout(() => { if (wartet && feinDa()) setTimeout(kugelZeigen, 2000); else kugelZeigen(); }, 4000);
+  }
+  /* Ein Daumen, der zum Rollen schräg ansetzt, dreht die Kugel nicht und beendet den Einspieler nicht: gedreht wird erst ab 10 px
+     seitlich und wenn die Bewegung mindestens anderthalbmal so weit seitlich wie senkrecht geht. Solange der Einspieler läuft,
+     legt sich auch kein Hinweis zum Wischen über die Kugel */
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5, hinweisImAblauf: false });
   const neuSetzen = () => { if (g) g.namenNeu(); };
-  // Vor dem Einspieler die ganze Kugel über der Region; er fliegt dann nah heran. Bei reduzierter Bewegung gleich der Überblick
-  const START = { mitte: [40, 30], k: 1 };
+  /* Kein Einflug (Dominik, 24. Oktober: „Wenn das nicht gut klappt, dann das Einfliegen bei Ursprünge weglassen“): die Kugel steht
+     beim Laden schon an der ersten Station, Göbekli Tepe, in ihrer Nahansicht, mit Punkt, Ring und Namen und der Tafel von Band I,
+     wie nach einer Landung. Der Einspieler hält dort, so lange man die Tafel liest, und gleitet dann weiter wie bisher (Uruk, Tyros,
+     Jerusalem, zum Schluss der Überblick). Bei reduzierter Bewegung gleich der Überblick mit dem ganzen Weg */
+  const START = { mitte: [ST[0].lon, ST[0].lat], k: F.TAKT.ursprung.zoom };
   function ueberblick() { return g ? F.ueberblick(canvas, ST, F.TAKT.ursprung.schlussK, F.TAKT.ursprung.schlussBereich) : null; }
+  /* Der erste „Flug“ dauert 0 ms: die Kugel ist schon da (der Kern lässt dann den Punkt von Göbekli Tepe stehen). Alle Flüge des
+     Ablaufs und von Hand ohne Delle (die Kugel atmete auf den kurzen Wegen um 15 %), sanft an- und auslaufend, so lange, wie der
+     Takt es nach der Entfernung sagt. Auf die feine Karte wartet der Einspieler bis zu 12 s statt 2 s (dann erst beginnt der Halt
+     an Göbekli Tepe): ihr Aufbau (auf einem langsamen Telefon über 1 s, die Kugel steht dabei) fiele bei langsamem Netz sonst in
+     einen Flug. F.TAKT.ursprung selbst bleibt, wie es ist: die Startseite nutzt ihn auch */
+  const sanft = t => t * t * t * (t * (t * 6 - 15) + 10);
+  const TAKT = Object.assign({}, F.TAKT.ursprung, { ersterFlug: 0, delle: false, feinWarten: 12000 });
+  const SCHRITT = { dauer: F.TAKT.ursprung.flug, ease: sanft, delle: false };
 
   /* Die Tafel hält die Höhe ihres längsten Inhalts. Breit bekommt die Kugel, was darüber übrig bleibt (--tafel-h). Einspaltig steht
      die Steuerzeile direkt unter der Kugel; die Tafel wächst nicht mit ihrem Text, denn die vier Orte haben verschieden lange
@@ -205,7 +253,7 @@ html:not(.js) .globusseite > .globus { display: none; }
   let nachEnde = false;
   a = F.ablauf({
     globus: g, stationen: ST, tafel: tafelEl, ortsleiste: bandOrte,
-    takt: F.TAKT.ursprung,
+    takt: TAKT, schritt: SCHRITT,
     beiStation(i, info) {
       // Was die Leselinie wählt, sagt die Tafel nicht an
       if (leise) tafelEl.setAttribute('aria-live', 'off');
@@ -269,10 +317,29 @@ html:not(.js) .globusseite > .globus { display: none; }
   const BAENDE = $$('.band'), seiteEl = $('.globusseite');
   const fuehrt = () => !!g && F.breit() && !ruhig;
   let leseUhr = 0;
+  /* Der Einspieler wird nicht mitten im Flug abgebrochen (vorher reichten bei 1440 × 900 rund 110 px Scrollen, und die Kugel blieb
+     im Zoom stehen, alle Orte erschienen auf einmal, ein neuer Flug kroch den Rest heran). Wählt die Leselinie einen Band, solange
+     der Einspieler fliegt oder noch auf seine erste Station zufliegt, merkt die Seite sich den Band (leseWunsch) und löst ihn ein,
+     sobald die Kugel an einer Station steht. Ist das der Ort dieses Bands, hält der Einspieler dort an (nichts fliegt, die Orte
+     bleiben, wie sie sind; „abspielen“ setzt fort), sonst fliegt die Kugel zum Ort des Bands. Auf großen Bildschirmen, auf denen
+     Band I schon beim Laden über der Linie steht, läuft der Einspieler so bis zu seiner ersten Station */
+  const einspielerUnterwegs = () => {
+    const z = a.zustand();
+    if (z !== 'einspieler' && !(z === 'bereit' && !a.gespielt())) return false;
+    return !(g.chronikLaeuft() && !g.bewegt() && g.aktiverOrt());
+  };
+  function wunschEinloesen() {
+    if (leseWunsch === null || !fuehrt() || einspielerUnterwegs()) return;
+    const i = leseWunsch;
+    leseWunsch = null;
+    lesenWaehlen(i);
+  }
   function lesenWaehlen(i) {
     if (i < 0 || !fuehrt()) return;
+    if (einspielerUnterwegs()) { leseWunsch = i; return; }
     const band = BAENDE[i].dataset.band, z = a.zustand(), jetzt = ST[a.jetzt()];
-    if (jetzt && jetzt.band === band && (z === 'hand' || z === 'ende')) return;
+    if (z === 'einspieler' && a.jetzt() === stationVon(band)) { leise = true; a.anhalten(); leise = false; return; }
+    if (jetzt && jetzt.band === band && (z === 'hand' || z === 'ende' || (z === 'angehalten' && a.jetzt() === stationVon(band)))) return;
     leise = true;
     a.waehlen(stationVon(band));
     leise = false;
@@ -280,8 +347,11 @@ html:not(.js) .globusseite > .globus { display: none; }
   const leser = F.leselinie(BAENDE, (i, info) => {
     clearTimeout(leseUhr);
     if (!fuehrt()) return;
-    // Zurück über den ersten Band nach oben: die Kugel zeigt wieder die ganze Trilogie, die Tafel ihren Überblick
+    // Zurück über den ersten Band nach oben: die Kugel zeigt wieder die ganze Trilogie, die Tafel ihren Überblick. Hatte die Seite
+    // einen Band nur vorgemerkt, gilt er nicht mehr, und der Einspieler fliegt weiter
     if (i < 0) {
+      leseWunsch = null;
+      if (a.zustand() === 'einspieler') return;
       if (info.vorher != null && info.vorher >= 0) leseUhr = setTimeout(() => { if (leser.jetzt() < 0) { leise = true; a.ruhen(); leise = false; } }, 200);
       return;
     }
@@ -335,7 +405,11 @@ html:not(.js) .globusseite > .globus { display: none; }
     tafelHoehe();
   }
   // Der Einspieler beginnt, wenn die Kugel zur Hälfte im Bild ist; bei reduzierter Bewegung steht sofort der ganze Weg
+  namenAb = true;
   a.einspielen();
+  // Bis dahin steht Göbekli Tepe schon da, mit Punkt, Ring und Namen (einspielen hat die Orte geleert)
+  if (g && !ruhig) { g.nurOrte([ST[0].name]); g.aktiv(ST[0].name); }
+  neuSetzen();
 
   F.schriften(2500).then(() => {
     tafelHoehe();

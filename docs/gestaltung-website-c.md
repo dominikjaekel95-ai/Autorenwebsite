@@ -350,6 +350,7 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 **Umsetzung** (Aufbau in 6.9 und 9.3):
 - Globus von A ohne heutige Grenzen, mit den Flüssen aus B (Euphrat, Tigris, Schatt al-Arab, Jordan, Nil; `daten/fluesse.js` aus `website-b/daten/`), 0,8 px in der Farbe der Küste, ohne Namen.
 - Einspieler langsam: Göbekli Tepe, Uruk, Tyros, Jerusalem, die Linie wandert in der Reihenfolge der Bände (7.2).
+- Seit dem 24. Oktober fliegt *Ursprünge* nicht mehr ein (V81; Dominik: „… dann das Einfliegen bei Ursprünge weglassen“): Die Kugel erscheint beim Laden schon nah über Göbekli Tepe mit Punkt, Ring und Namen, erst wenn die feine Karte steht, in 0,7 s eingeblendet; der Einspieler hält dort zum Lesen und gleitet dann ohne Herauszoomen nach Uruk, Tyros und Jerusalem, und die Leselinie unterbricht keinen Flug mehr.
 - Danach führt die Leselinie den Globus zum Band, den man liest (A). Klick auf Orte und die Steuerzeile wie an jedem Globus.
 - Bandüberschrift ohne Randziffer und ohne Siena (6.9). „Arbeitstitel“ hinter dem Titel im Grad klein, Tinte (V39).
 - Ortszeile je Band mit Koordinaten (V29). Die Zeile aus dem Exposé aufrecht.

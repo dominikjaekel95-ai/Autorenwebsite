@@ -1,5 +1,7 @@
 # Vercel einrichten: Anleitung für eine zweite Claude-Sitzung
 
+**Ersetzt am 24. Oktober 2026 durch [`livegang-auftrag.md`](livegang-auftrag.md)** (mit Domains, Weiterleitungen, DNS, Prüfliste und den Schritten nach dem Livegang). Diese Fassung bleibt nur zum Nachlesen.
+
 Diese Anleitung ist für eine Claude-Sitzung auf Dominiks Computer (Claude-Desktop-App oder `claude remote-control`), die Dominik beim Einrichten im Browser hilft. Der Code der Website kommt von einer anderen Sitzung in der Cloud. Diese Sitzung hier ändert keine Dateien im Repository.
 
 ## Worum es geht

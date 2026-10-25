@@ -646,3 +646,6 @@ Dominik: „Nimm sie auch aus dem Menü raus. Wir fügen es dann hinzu, sobald w
 
 ## 25. Oktober 2026: Hernán Díaz
 Dominik: „‚Hernán Díaz‘ ist falsch geschrieben als Hernan Diaz.“ Korrigiert auf *Satoshi* (zwei Stellen im Abschnitt „Wie er gemacht ist“) und in `daten/buecher.js` (*Trust*, Autor und Kommentar). Live-Fassung neu gebaut, Prüfprogramm der Vercel-Fassung: 0 Fehler.
+
+## 25. Oktober 2026: Jugendreihen unter „Kindheit und Jugend“
+Nach Dominiks Antwort stehen CHERUB, Alex Rider, Twilight, Harry Potter (mit *Beedle the Bard*), Eragon und Panem jetzt ganz unter `kindheit`, ebenso die halb einsortierten Bände von Percy Jackson und *The Golden Compass* (36 Bücher in `daten/buecher.js`; Kindheit und Jugend 121, gelesen 415). Startseite (Zeitband) und Bibliothek bei 1440, 1024 und 393 px ohne Fehler und ohne waagrechtes Rollen; V47 ergänzt.

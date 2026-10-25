@@ -382,7 +382,7 @@ Später geändert: nein.
 Für den Bau: Die Rubrik heißt so, dass sie als Auswahl erkennbar ist. „die wichtigsten aus Kindheit und Jugend“ und „was noch wartet“ setzen sich aus seinen Wörtern zusammen.
 Ort in A: `index.html`, `p.bandname` im Zeitband (im Skript erzeugt); `bibliothek.html`, Namen der Bretter.
 Vergleichsdokument: Das beantwortet Frage 22 zum Teil.
-Später geändert: nein.
+Später geändert: ja, ergänzt (25.10.): Auf den Hinweis einer anderen Sitzung („Unter ‚gelesen‘ stehen auch einige Reihen, die vermutlich aus deiner Jugend stammen … Wenn sie aber aus deiner Schulzeit stammen, gehören sie eigentlich in die Rubrik ‚Kindheit und Jugend‘“) bestätigte Dominik für die Schulzeit: CHERUB (Muchamore), Alex Rider (Horowitz), Twilight (Meyer), Harry Potter mit *The Tales of Beedle the Bard* (Rowling), Eragon (Paolini) und Die Tribute von Panem (Collins). Sie stehen jetzt ganz unter `kindheit`, ebenso die Bände von Percy Jackson und *The Golden Compass*, die vorher halb unter „gelesen“ standen (36 Bücher; Kindheit und Jugend 121, gelesen 415). Narnia, Tolkien, Ende, Card, Green und Rothfuss bleiben unter „gelesen“.
 
 **V48. Die echte Leseliste, nicht die vereinfachte.**
 „Hier ist übrigens gerade meine tatsächliche Leseliste. Nicht die vereinfachte Version.“ (19.10., 20:12)

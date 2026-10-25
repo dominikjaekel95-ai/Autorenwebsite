@@ -131,10 +131,12 @@ html:not(.js) .wartet { display: none; }
 @media (max-width: 40rem) {
   .regal { padding-top: var(--z); }
 }
-/* Finger: Rücken und Einträge 44 px hoch treffbar, ohne dass eine Zeile wächst */
+/* Finger: Rücken und Einträge 44 px hoch treffbar, ohne dass eine Zeile wächst. Die Wörter der Leiste: ihre Fläche wächst nur nach
+   unten. Mit 12 px nach oben und unten überdeckte auf dem Telefon die zweite Zeile die untere Hälfte der ersten, und ein Tipp auf
+   „1946“ sprang zu „Was noch wartet“ (Navigationstest, 25. Oktober); jetzt trifft jeder Tipp auf ein Wort dieses Wort */
 @media (pointer: coarse) {
   .zeitleiste-zeile { line-height: var(--z); }
-  .zeitleiste a { padding-block: 12px; }
+  .zeitleiste a { padding-block: 0 12px; }
   .leseliste .wort { padding-block: 8.5px; margin-block: -8.5px; }
 }
 @media (prefers-reduced-motion: reduce) {

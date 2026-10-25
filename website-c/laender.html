@@ -81,6 +81,10 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
 @media (pointer: coarse) {
   .register .gruppe { line-height: var(--zh-ueber); }
   .register button.wort { padding-block: 5.25px; margin-block: -5.25px; }
+  /* Die Wahl der Kontinente bricht auf dem Telefon in zwei Zeilen; ihre 44 px reichen hier nur nach unten. Nach oben und unten
+     überdeckte die zweite Zeile die untere Hälfte der ersten: ein Tipp auf die Unterkante von „Europa“ wählte „Amerika“
+     (Navigationstest, 25. Oktober). Die Zeilen stehen, wo sie standen */
+  .kontinente button.wort { padding-block: 0 17px; margin-block: 0 -17px; padding-block: 0 max(0px, calc(2.75rem - 1lh)); margin-block: 0 min(0px, calc(1lh - 2.75rem)); }
 }
 </style>
 </head>
@@ -206,6 +210,10 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   const BLICK = { mitte: F.breit() ? [52, 30] : [40, 28], k: 1 };
   if (g) g.ebene({ orte: [], laender: true, blick: BLICK }, { fliegen: false });
   else { figur.classList.add('ohne-globus'); $('#ersatz').hidden = false; }
+  /* Ein Daumen, der zum Rollen schräg ansetzt, dreht die Kugel nicht und beendet keinen Einspieler: gedreht wird erst ab 10 px
+     seitlich und wenn die Bewegung mindestens anderthalbmal so weit seitlich wie senkrecht geht, wie auf ursprung.html. Vorher drehte
+     schon ein Wisch 15° neben der Senkrechten die Kugel mit und hielt den Ablauf an (Navigationstest am Telefon, 25. Oktober) */
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5 });
 
   // ================= Tafel =================
   // Mitte eines Lands, für den Blick auf einen Kontinent: Schwerpunkt seiner größten Fläche; Kleinstaaten ohne Fläche aus INHALT.winzig

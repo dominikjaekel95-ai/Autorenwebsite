@@ -68,6 +68,11 @@ html:not(.js) .globusseite > .globus { display: none; }
 @media (max-width: 40rem) {
   .baende { margin-top: var(--z-zwei); }
 }
+/* Finger: Die Bücher im Satz zur Bibliothek sind Wörter im Fließtext; ihre Fläche ist ihre Zeile. Mit 44 px überdeckte ein Buch die
+   untere Hälfte der Zeile darüber, und ein Tipp auf „Bibliothek“ öffnete „Sumerer und Akkader“ (Navigationstest, 25. Oktober) */
+@media (pointer: coarse) {
+  .regal button.wort { padding-block: 0; margin-block: 0; }
+}
 </style>
 </head>
 <body class="mit-globus">

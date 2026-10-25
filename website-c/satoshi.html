@@ -1110,6 +1110,10 @@ html.folge .klappbuch[data-folge]:not(.da) { pointer-events: none; }
     namen: { orte: () => EBENE_ORTE, spur: () => ST, aktiv: namenAktiv }
   });
   const neuSetzen = () => { if (g) g.namenNeu(); };
+  /* Ein Daumen, der zum Rollen schräg ansetzt, dreht die Kugel nicht und beendet keinen Einspieler: gedreht wird erst ab 10 px
+     seitlich und wenn die Bewegung mindestens anderthalbmal so weit seitlich wie senkrecht geht, wie auf ursprung.html. Vorher drehte
+     schon ein Wisch 15° neben der Senkrechten die Kugel mit und hielt den Ablauf an (Navigationstest am Telefon, 25. Oktober) */
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5 });
 
   function blickBerechnen() {
     if (!g) return;

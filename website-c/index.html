@@ -215,6 +215,9 @@ html.folge #regalbild[data-folge]:not(.da) { pointer-events: none; }
 .zeitband { margin-top: var(--z); }
 .zeitband-roll { position: relative; }
 .zb { display: block; overflow: visible; }
+/* Ein waagrechter Zug auf dem Band führt den Regler seiner Reihe (bandZug, 24. Oktober); senkrecht rollt die Seite, Zoomen bleibt.
+   pan-y allein für Browser, die pinch-zoom hier nicht kennen */
+.zb { touch-action: pan-y; touch-action: pan-y pinch-zoom; -webkit-user-select: none; user-select: none; }
 .zb:focus { outline: none; }
 .zb:focus-visible { outline: 1.5px solid var(--tinte); outline-offset: 6px; }
 .zb rect { shape-rendering: geometricPrecision; }
@@ -269,8 +272,10 @@ html.folge #regalbild[data-folge]:not(.da) { pointer-events: none; }
 .regler-knopf.ist-gewaehlt { background: var(--tinte); }
 .regler:focus-visible .regler-knopf { outline: 1.5px solid var(--tinte); outline-offset: 3px; }
 /* Beim Ziehen mit dem Finger steht der Name über dem Knopf, wo ihn der Finger nicht verdeckt; er deckt die Jahreszahlen des Bands
-   darüber ganz zu, statt sie anzuschneiden. Unter den zwei Reihen darunter steht er an der Stelle ihres Namens (Skript) */
-.regler-name { position: absolute; left: 0; bottom: calc(100% + 10px); width: max-content; max-width: 100%; padding: 0 .3em; font-size: var(--g-klein); line-height: var(--zh-klein); background: var(--papier); pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+   darüber ganz zu, statt sie anzuschneiden. Unter den zwei Reihen darunter steht er an der Stelle ihres Namens (Skript). Höchstens
+   so breit wie das Band: mit der Fläche des Reglers (16 px je Seite mehr) lief ein langer Name auf dem Telefon über den Rand des
+   Schirms, samt seinen drei Punkten (393 px: bis 397, 320 px: bis 330) */
+.regler-name { position: absolute; left: 0; bottom: calc(100% + 10px); width: max-content; max-width: calc(100% - 2 * var(--regler-rand)); padding: 0 .3em; font-size: var(--g-klein); line-height: var(--zh-klein); background: var(--papier); pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .regler-name[hidden] { display: none; }
 .bandname.ist-verdeckt { visibility: hidden; }
 .zb-schritte { margin-top: var(--z-viertel); }
@@ -296,6 +301,10 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   .stueck.liegt > span { left: 4px; right: 4px; }
   /* Der Regler rollt nicht mit: er steht im sichtbaren Teil und zeigt das ganze Band */
   .zb-regler { position: sticky; left: 0; }
+  /* Der Abstand über dem Band liegt im rollenden Rahmen statt davor (gleich groß): dort steht beim Zug auf dem Band der Name über
+     dem Finger, und der Rahmen schneidet oben ab, was über ihn hinausreicht */
+  .zeitband { margin-top: 0; }
+  .zeitband-roll { padding-top: var(--z); }
 }
 /* Telefon: Regler mit Jahreszahlen 44 px hoch, mit ½ z Abstand zum Band darüber, damit er nicht wie dessen Achse aussieht. Unter
    den Reglern ohne Jahreszahlen ist die Fläche leer; der Name der nächsten Reihe rückt dafür auf ½ z heran */
@@ -740,6 +749,10 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     namen: { orte: () => gezeigt(true).map(s => ({ name: s.name, text: s.kurz || s.name, lat: s.lat, lon: s.lon, neben: !!s.neben })), spur: () => gezeigt(false), aktiv: aktivName }
   });
   const namenNeu = () => { if (g) g.namenNeu(); };
+  /* Ein Daumen, der zum Rollen schräg ansetzt, dreht die Kugel nicht und beendet keinen Einspieler: gedreht wird erst ab 10 px
+     seitlich und wenn die Bewegung mindestens anderthalbmal so weit seitlich wie senkrecht geht, wie auf ursprung.html. Vorher drehte
+     schon ein Wisch 15° neben der Senkrechten die Kugel mit und hielt den Ablauf an (Navigationstest am Telefon, 25. Oktober) */
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5 });
   if (!g) {
     figur.classList.add('ohne-globus');
     $('#ersatz').hidden = false;
@@ -1139,8 +1152,16 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     const b = e.target.closest('.stueck') || naechstesStueck(e);
     if (!b) return;
     $$('.stueck', regalFlaeche).forEach(x => { x.tabIndex = x === b ? 0 : -1; });
-    bzRegal.umschalten(b, regalSatz(b), b);
+    if (bzRegal.umschalten(b, regalSatz(b), b)) zeileInSicht(regalZeileEl);
   });
+  /* Schmal: die Buchzeile ins Bild holen, wenn sie unter dem Fensterrand liegt, wie in der Bibliothek: auf dem Telefon stand sie nach
+     einem Tipp auf einen Rücken am unteren Rand bis 70 px unter dem Bild, und nichts rollte nach (Navigationstest, 25. Oktober).
+     Breit, neben der Kugel, bleibt es wie bisher */
+  function zeileInSicht(p) {
+    if (F.breit()) return;
+    const r = p.getBoundingClientRect(), H = window.innerHeight;
+    if (r.bottom > H - 8) window.scrollBy({ top: Math.min(r.bottom - H + 16, r.top - 8), behavior: ruhig ? 'auto' : 'smooth' });
+  }
 
   // Breit: wer über einen Anker zu einem Eintrag kommt, landet mit der Überschrift des Abschnitts oben (das Regalbild steht dann oben neben der Kugel)
   function ankerSetzen() {
@@ -1569,11 +1590,13 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     bandzeile.classList.remove('zeigt');
     if (offen) einpassen(zeileOffenEl, o);
     markeSetzen();
+    if (offen) satzInSicht(o);
   }
   function bandBedienung(svg) {
     if (!svg) return;
-    // Nur eine wirkliche Mausbewegung zeigt; nach dem Scrollen schickt der Browser eine Bewegung ohne Weg
-    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && (e.movementX || e.movementY)) { const t = treffer(svg, e); if (t) zeigen(t); } });
+    // Nur eine wirkliche Mausbewegung zeigt; nach dem Scrollen schickt der Browser eine Bewegung ohne Weg. Während eines Zugs über
+    // das Band zeigt der Zug (bandZug)
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && !svg._zieht && (e.movementX || e.movementY)) { const t = treffer(svg, e); if (t) zeigen(t); } });
     svg.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !svg.matches(':focus-visible')) zeigen(null); });
     svg.addEventListener('pointerdown', e => { svg._zeiger = e.pointerType; });
     /* Der Klick selbst nennt in Chromium und Safari nur ganze Pixel (clientX ist dort eine ganze Zahl). Auf Bildschirmen mit doppelter
@@ -1581,6 +1604,9 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
        Strichs, den das Zeigen eben genannt hat. Darum zählt die genaue Lage beim Loslassen, wenn sie zu diesem Klick gehört */
     svg.addEventListener('pointerup', e => { svg._wo = { clientX: e.clientX, clientY: e.clientY }; });
     svg.addEventListener('click', e => {
+      // Nach einem Zug über das Band hat das Loslassen schon gewählt; der Klick, den der Browser danach noch schickt, legte es sonst
+      // wieder zurück
+      if (svg._nachZug) { svg._nachZug = false; svg._wo = null; return; }
       const wo = svg._wo && Math.abs(svg._wo.clientX - e.clientX) < 1.5 && Math.abs(svg._wo.clientY - e.clientY) < 1.5 ? svg._wo : e;
       svg._wo = null;
       const t = treffer(svg, wo, svg._zeiger && svg._zeiger !== 'mouse' ? 12 : 4);
@@ -1626,6 +1652,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
         if (neu.x < roll.scrollLeft || neu.x > roll.scrollLeft + vw - 40) roll.scrollLeft = neu.x - vw / 2;
       }
     });
+    bandZug(svg);
   }
   // ================= Die Regler (Runde 6, S9; Runde 8: einer je Reihe) =================
   /* Unter jeder Reihe ihr eigener Regler: unter „gelesen“ (mit den quer liegenden Büchern an ihrer Stelle) der mit den Jahreszahlen,
@@ -1766,13 +1793,21 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (zeigt) {
       r.name.innerHTML = kurz(o.b);
       r.name.hidden = false;
+      /* Zieht der Finger auf dem Band selbst (bandZug), läge der Name unter „gelesen“ an der Achse unter dem Finger: dort steht er
+         über dem Band, im Abstand zur Legende darüber, und mittig über dem Strich unter dem Finger statt über dem Knopf */
+      const band = r.zug.band || null, q = r.el.getBoundingClientRect();
       if (r.titel) {
-        r.name.style.top = Math.round(r.titel.getBoundingClientRect().top - r.el.getBoundingClientRect().top) + 'px';
+        r.name.style.top = Math.round(r.titel.getBoundingClientRect().top - q.top) + 'px';
         r.name.style.bottom = 'auto';
-      }
+      } else if (band) {
+        const bo = band.getBoundingClientRect().top, oben = ZB.schmal ? roll.getBoundingClientRect().top : -Infinity;
+        r.name.style.top = Math.round(Math.max(oben, bo - r.name.offsetHeight - 4) - q.top) + 'px';
+        r.name.style.bottom = 'auto';
+      } else { r.name.style.top = ''; r.name.style.bottom = ''; }
       const w = r.name.offsetWidth;
       const rand = parseFloat(getComputedStyle(r.el).paddingLeft) || 0;
-      r.name.style.left = Math.round(rand + Math.max(0, Math.min(ZB.T - w, x - w / 2))) + 'px';
+      const xs = band ? band.getBoundingClientRect().left + o.mitte - q.left - rand : x;
+      r.name.style.left = Math.round(rand + Math.max(0, Math.min(ZB.T - w, xs - w / 2))) + 'px';
     } else r.name.hidden = true;
     if (r.titel) r.titel.classList.toggle('ist-verdeckt', zeigt);
   }
@@ -1812,8 +1847,9 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (!ZB.schmal || !o) return;
     roll.scrollLeft = Math.round(o.mitte / ZB.breite * (roll.scrollWidth - roll.clientWidth));
   }
-  // Ein Buch über einen Regler, früher, später oder eine Jahreszahl wählen: der Satz darunter, der Strich in Tinte
-  function waehlen(o) {
+  // Ein Buch über einen Regler, früher, später oder eine Jahreszahl wählen: der Satz darunter, der Strich in Tinte. Nach einem Zug
+  // über das Band (ohneRollen) bleibt das Band, wo der Zug es hingestellt hat: der Strich steht unter dem Finger
+  function waehlen(o, ohneRollen) {
     if (!o) return;
     REGLER.forEach(r => { r.zieht = null; });
     zeigen(null);
@@ -1821,12 +1857,30 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     if (!el) return;
     const r = reglerVon(o.reihe);
     if (r) r.i = o.ri;
-    ausrichten(o);
+    if (!ohneRollen) ausrichten(o);
     bzBand.zeigen(satzVon(o.b), el, o.id);
     ZB.offen = o;
     bandzeile.classList.remove('zeigt');
     einpassen(zeileOffenEl, o);
     markeSetzen();
+    satzInSicht(o);
+  }
+  /* Schmal: Der Satz steht unter der Reihe „gelesen“, auch wenn man unter „Kindheit und Jugend“ oder „was noch wartet“ wählt. Dort
+     stand er nach dem Loslassen bis 430 px über dem Finger und ragte oben aus dem Bild (393 px: um 34 px, quer 844 × 390 auch ganz);
+     nach einem Tipp auf das Band am unteren Rand lag er ganz unter dem Bild (Navigationstest, 25. Oktober). Ragt er oben oder unten
+     hinaus, rollt die Seite einmal so weit, dass er ganz zu sehen ist, aber nie so weit, dass die Reihe, in der man gewählt hat (Band
+     und Regler), aus dem Bild geht: sonst rollt nichts. Breit steht er immer im Bild */
+  function satzInSicht(o) {
+    if (F.breit() || !o) return;
+    const q = zeileOffenEl.getBoundingClientRect(), H = window.innerHeight;
+    if (!q.height) return;
+    const strich = document.getElementById(o.id), band = strich && strich.ownerSVGElement, r = reglerVon(o.reihe);
+    const teile = [band, r && r.el].filter(Boolean).map(e => e.getBoundingClientRect());
+    const oben = teile.length ? Math.min(...teile.map(x => x.top)) : q.top, unten = teile.length ? Math.max(...teile.map(x => x.bottom)) : q.bottom;
+    let d = 0;
+    if (q.top < 8) d = Math.min(0, Math.max(q.top - 8, unten - H + 8));
+    else if (q.bottom > H - 8) d = Math.max(0, Math.min(q.bottom - H + 16, q.top - 8, oben - 8));
+    if (Math.abs(d) > 2) window.scrollBy({ top: d, behavior: ruhig ? 'auto' : 'smooth' });
   }
   // Beim Ziehen: der Strich in Tinte und darunter die kurze Angabe, wie beim Zeigen mit der Maus
   function ziehenZu(r, o) {
@@ -1922,6 +1976,135 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     el.addEventListener('blur', () => zeileOffenEl.setAttribute('aria-live', 'polite'));
   }
   REGLER.forEach(reglerBedienung);
+
+  /* ================= Ziehen auf dem Band selbst (24. Oktober) =================
+     Dominik, nach der Rückmeldung seines Bruders („Es lädt hervorragend aber es ist teilweise schwierig das auf dem Smartphone zu
+     navigieren“, „Ich meine wer versucht dann auch durch alle Bücher zu scrollen bis auf mich“): „wenn man auf den Zeitstrahl klickt
+     sollte der Slider schon mitaktiviert werden. Sonst ist es mühsam mobil. Also das ganze sollte eine runde bewegung sein, das
+     durchscrollen mit dem Slider ... Der slider erscheint quasi mit dem Klick. […] Nicht erst wenn man getrennt auf ihn draufklickt“.
+     Bis dahin rollte ein Wisch über das Band auf dem Telefon nur den Ausschnitt und nannte kein Buch; wählen ging nur mit einem Tipp
+     auf einen Strich (im Median 0,76 px breit, S9) oder über den Regler darunter.
+     Jetzt führt ein waagrechter Zug auf jeder der drei Reihen den Regler dieser Reihe, wie ein Zug an ihm selbst: unterwegs der
+     Strich in Tinte, der Knopf seiner Reihe in Tinte, die kurze Angabe in der Buchzeile und, mit dem Finger, der Name über dem Band
+     (einenZeigen); beim Loslassen der Satz. Gewählt ist immer der Strich unter dem Finger. Auf dem Telefon rollt das Band dabei mit:
+     nahe beim Ansatz kaum (dort geht man Buch für Buch), zum Rand des sichtbaren Teils hin immer weiter, und am Rand steht es an
+     seinem Ende. So reicht ein Zug von der Mitte zum linken Rand bis Gilgamesch und einer zum rechten bis zum neuesten Buch, und
+     zurück kommt man auf demselben Weg wieder an denselben Büchern vorbei. Wer nahe am Rand ansetzt (der Weg zum Rand reicht dann
+     nicht für das ganze Band), dem rollt es weiter, solange der Finger am Rand bleibt. Ein kurzer Tipp wählt wie bisher den Strich
+     und setzt den Knopf dorthin (bandBedienung). Senkrecht rollt die Seite: touch-action: pan-y am Band, und der erste Weg von 6 px
+     entscheidet, ob es ein Zug ist. Mit der Maus ebenso (breit, ohne Rollen); ein Klick bleibt ein Klick */
+  function bandZug(svg) {
+    const r = reglerVon(svg.id === 'zb-kind' ? 'kind' : svg.id === 'zb-warte' ? 'warte' : 'gelesen');
+    if (!r) return;
+    // RAND: die Zone am Rand des sichtbaren Teils, in der das Band weiterrollt (px); TEMPO dort höchstens (px je ms); WEIT: so viel
+    // Band höchstens je px Weg bis zum Rand
+    // SCHRAEG: ab diesem Verhältnis von waagrechtem zu senkrechtem Weg ist es ein Zug. Chromium rollt die Seite (pan-y) bis gut 38°
+    // zur Senkrechten, steiler nicht mehr; mit dx > dy (45°) tat ein Wisch zwischen 39° und 45° darum gar nichts (Prüfung, 25. Oktober)
+    const RAND = 18, TEMPO = 1.2, WEIT = 5, SCHRAEG = 0.8;
+    let z = null, lauf = 0, zuletzt = 0;
+    // Die Rollstellung zur Lage des Fingers: am Ansatz die alte, zum Rand hin im Quadrat des Wegs wachsend, am Rand das Ende
+    function rollFuer(fx) {
+      if (fx < z.x0) { const u = Math.min(1, (z.x0 - fx) / Math.max(1, z.x0 - z.a)); return z.sl0 - z.links * u * u; }
+      const v = Math.min(1, (fx - z.x0) / Math.max(1, z.b - z.x0));
+      return z.sl0 + z.rechts * v * v;
+    }
+    function verankern(fx) {
+      const sl = roll.scrollLeft, max = Math.max(0, roll.scrollWidth - roll.clientWidth);
+      Object.assign(z, { x0: fx, sl0: sl, links: Math.min(sl, WEIT * Math.max(0, fx - z.a)), rechts: Math.min(max - sl, WEIT * Math.max(0, z.b - fx)) });
+    }
+    function fahren(fx) {
+      if (ZB.schmal) roll.scrollLeft = rollFuer(fx);
+      const o = naechstes(reiheVon(r), fx - svg.getBoundingClientRect().left);
+      if (!o) return;
+      if (o !== r.zieht) { r.zieht = o; r.i = o.ri; zeigen(o); reglerZeigen(); }
+      else if (z.finger) einenZeigen(r);
+    }
+    // Am Rand: wie tief der Finger in der Zone steht (−1 … 1), nur in der Richtung, in die er seit dem Ansatz gezogen hat
+    function tiefe() {
+      if (!z || !z.aktiv || !ZB.schmal) return 0;
+      const l = (z.a + RAND - z.fx) / RAND, re = (z.fx - (z.b - RAND)) / RAND;
+      return l > 0 && z.fx < z.sx ? -Math.min(1, l) : re > 0 && z.fx > z.sx ? Math.min(1, re) : 0;
+    }
+    function randRollen() {
+      if (lauf || !tiefe()) return;
+      zuletzt = performance.now();
+      const schritt = jetzt => {
+        lauf = 0;
+        const t = tiefe();
+        if (!t) return;
+        const dt = Math.min(50, jetzt - zuletzt), vor = roll.scrollLeft;
+        zuletzt = jetzt;
+        roll.scrollLeft = vor + t * TEMPO * dt;
+        if (Math.abs(roll.scrollLeft - vor) < .01) return;   // am Ende des Bands
+        verankern(z.fx);
+        fahren(z.fx);
+        lauf = requestAnimationFrame(schritt);
+      };
+      lauf = requestAnimationFrame(schritt);
+    }
+    function ende() {
+      const war = z;
+      z = null; svg._zieht = false;
+      if (lauf) { cancelAnimationFrame(lauf); lauf = 0; }
+      if (r.zug === war) r.zug = null;
+      return war;
+    }
+    /* Ein zweiter Finger heißt Zoomen (pinch-zoom): der Zug legt alles zurück, auch das Band, und lässt die Geste dem Browser. Sonst
+       fuhr der erste Finger nach 6 px schon den Regler, und das preventDefault unten verhinderte das Zoomen: zwei Finger waagrecht
+       auseinander wählten Caesar, statt zu zoomen (Prüfung, 25. Oktober). Am Dokument, weil der zweite Finger neben dem Band liegen kann */
+    function abbrechen() {
+      const war = ende();
+      if (!war.aktiv) return;
+      roll.scrollLeft = war.slStart;
+      r.zieht = null; r.i = war.iVor;
+      zeigen(null); reglerZeigen();
+    }
+    document.addEventListener('touchstart', e => { if (z && e.touches.length > 1) abbrechen(); }, { passive: true, capture: true });
+    svg.addEventListener('pointerdown', e => {
+      svg._nachZug = false;
+      if (e.button !== 0 || !e.isPrimary || !reiheVon(r).length) return;
+      const q = roll.getBoundingClientRect(), pl = ZB.schmal ? (parseFloat(getComputedStyle(roll).paddingLeft) || 0) : 0;
+      z = { id: e.pointerId, sx: e.clientX, sy: e.clientY, fx: e.clientX, aktiv: false, finger: e.pointerType !== 'mouse', band: svg, a: q.left + pl, b: q.left + pl + sichtBreite(), slStart: roll.scrollLeft };
+      verankern(e.clientX);
+    });
+    svg.addEventListener('pointermove', e => {
+      if (!z || e.pointerId !== z.id) return;
+      z.fx = e.clientX;
+      if (!z.aktiv) {
+        const dx = Math.abs(e.clientX - z.sx), dy = Math.abs(e.clientY - z.sy);
+        const steil = dx < SCHRAEG * dy;
+        if (steil && dy >= 6) { z = null; return; }   // senkrecht: die Seite rollt (mit der Maus: nichts)
+        if (dx < (z.finger ? 6 : 4) || steil) return;
+        z.aktiv = true; z.iVor = r.i;
+        r.zug = z; svg._zieht = true;
+        try { svg.setPointerCapture(e.pointerId); } catch (_) { }
+        bzBand.schliessen();
+      }
+      fahren(e.clientX);
+      randRollen();
+    });
+    // Läuft der Zug, rollt die Seite nicht mehr mit, auch wenn der Finger etwas nach oben oder unten wandert: Safari auf dem iPhone
+    // finge sonst mit pan-y allein senkrecht zu rollen an und bräche den Zug ab (pointercancel)
+    svg.addEventListener('touchmove', e => { if (z && z.aktiv && e.cancelable && e.touches.length === 1) e.preventDefault(); }, { passive: false });
+    svg.addEventListener('pointerup', e => {
+      if (!z || e.pointerId !== z.id) return;
+      const war = ende();
+      if (!war.aktiv) return;   // ein Tipp: der Klick wählt (bandBedienung)
+      svg._nachZug = true;
+      waehlen(r.zieht, true);
+    });
+    // Übernimmt der Browser (etwa für die Seite), wählt ein Zug von mindestens 24 px, was unter dem Finger war, wie am Regler;
+    // ein kürzerer war wohl keiner und legt alles zurück
+    svg.addEventListener('pointercancel', e => {
+      if (!z || e.pointerId !== z.id) return;
+      const war = ende();
+      if (!war.aktiv) return;
+      if (Math.abs(war.fx - war.sx) >= 24 && r.zieht) { waehlen(r.zieht, true); return; }
+      r.zieht = null; r.i = war.iVor;
+      zeigen(null); reglerZeigen();
+    });
+  }
+
   // Früher und später bleiben an ihrem Platz und im Fokus, auch am Ende der Reihe (dann leise, aria-disabled)
   if (frueherEl && spaeterEl) {
     frueherEl.addEventListener('click', () => { if (frueherEl.getAttribute('aria-disabled') !== 'true') schritt(-1); });

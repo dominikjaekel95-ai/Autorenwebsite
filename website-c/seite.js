@@ -594,8 +594,19 @@
       document.addEventListener('wheel', e => { if (e.target === o.canvas) merken(e.clientX, e.clientY); }, { passive: true, capture: true });
       document.addEventListener('touchmove', e => { if (e.target === o.canvas && e.touches[0]) merken(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true, capture: true });
       function setzen() {
+        el.style.width = '';
         if (!zuletzt || performance.now() - zuletzt.t > 400) { el.classList.remove('am-zeiger'); el.style.left = el.style.top = ''; return; }
         el.classList.add('am-zeiger');
+        /* Ist er breiter als das Fenster, bricht er in zwei Zeilen (stil.css, .am-zeiger); gemessen wird dann mit der ganzen Breite,
+           und der Kasten wird so breit wie seine längste Zeile, nicht wie der Platz bis zum Rand: sonst deckte sein Papier rechts
+           neben dem Text die Kugel ab (Navigationstest am Telefon, 25. Oktober) */
+        el.style.left = '8px';
+        const rg = document.createRange(); rg.selectNodeContents(el);
+        const zeilen = [...rg.getClientRects()].filter(r => r.width > 0);
+        if (new Set(zeilen.map(r => Math.round(r.top))).size > 1) {
+          const rand = parseFloat(getComputedStyle(el).paddingLeft) || 0;
+          el.style.width = Math.ceil(Math.max(...zeilen.map(r => r.right)) - Math.min(...zeilen.map(r => r.left)) + 2 * rand + 1) + 'px';
+        }
         const b = el.offsetWidth, h = el.offsetHeight, W = document.documentElement.clientWidth, H = window.innerHeight;
         el.style.left = Math.round(Math.max(8, Math.min(W - b - 8, zuletzt.x + 16))) + 'px';
         el.style.top = Math.round(Math.max(8, Math.min(H - h - 8, zuletzt.y - h - 12))) + 'px';

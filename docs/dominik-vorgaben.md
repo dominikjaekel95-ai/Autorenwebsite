@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 24. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V84.
+Stand: 25. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V85.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -159,6 +159,13 @@ Zur weißen Fläche neben „Was ich schreibe“: „Sollen wir den Globus viell
 Für den Bau: Ab 62,0625 rem bleiben Kugel, Steuerzeile und Tafel als ein Block stehen, während links der erste Bildschirm, „Was ich schreibe“, die Überschrift „Mein digitales Bücherregal“ und die Legende („Von Gilgamesch bis Labatut …“) vorbeiziehen. Er hält vor dem Zeitband, mindestens 3 z darüber; das Zeitband mit seinen drei Reihen, Reglern, der Buchzeile und „Die ganze Bibliothek“ steht über die ganze Breite und wird nie überdeckt. Tafel und Steuerzeile sind, solange er steht, immer ganz im Bild. Der erste Bildschirm beim Laden bleibt, wie er ist; unter 62 rem und ohne Skript ändert sich nichts. Für Vorleseprogramme bleibt die Gliederung, wie sie war: „Vita und Globus“, „Was ich schreibe“, „Mein digitales Bücherregal“ nebeneinander, jeder Abschnitt ganz.
 Ort in C: `website-c/index.html`, Abschnitt „Breit wandert der Globus mit“ im Stil (Raster von `main` mit Unterrastern), `--globus-block` im Skript bei `regalOrt`.
 Später geändert: nein. Bestätigt mit V83 (24. Oktober): „Und Globus muss mitwandern bei Gelassen. Und zwar relativ weit mitwandern, das bitte nicht vergessen etc ...“ Die Wanderstrecke ist mit dem Einblenden unverändert.
+
+**V85. Navigation am Telefon einfacher; auf dem Zeitband führt der Finger auf dem Band gleich den Regler, in einer Bewegung.**
+Nach der Rückmeldung seines Bruders („Es lädt hervorragend aber es ist teilweise schwierig das auf dem Smartphone zu navigieren. Glaube aber das Format ist schon richtig“, „Ich meine wer versucht dann auch durch alle Bücher zu scrollen bis auf mich“): „Kannst du nochmal einen Navigationstest mobil machen, der alles durchgeht? Und schaut wo Hürden liegen könnten. Einfach nur die Navigation vereinfachen, idealerweise ohne viel sonst zu verändern. […] Ich glaube es ist vor allem, wenn man auf den Zeitstrahl klickt sollte der Slider schon mitaktiviert werden. Sonst ist es mühsam mobil. Also das ganze sollte eine runde Bewegung sein, das Durchscrollen mit dem Slider ... Der Slider erscheint quasi mit dem Klick. Weißt du was ich meine? Nicht erst wenn man getrennt auf ihn draufklickt.“ (24.10., 22:45)
+Für den Bau: Auf dem Telefon und dem Tablet führt ein waagrechter Zug auf jeder der drei Reihen des Zeitbands den Regler dieser Reihe: Strich und Knopf in Tinte, der Name über dem Band, beim Loslassen der Satz zum Buch unter dem Finger. Am Telefon rollt das Band dabei mit, zum Rand hin bis zu seinem Ende, so dass ein Zug von der Mitte zum Rand bis Gilgamesch oder bis zum neuesten Buch reicht. Ein kurzer Tipp wählt wie bisher, senkrecht (bis gut 38° zur Senkrechten) rollt die Seite, zwei Finger zoomen; einen Schwung gibt es auf dem Band nicht mehr. Die übrige Navigation wird einfacher, ohne dass sich etwas Sichtbares ändert: Trefferflächen, die einander überdeckten, sind getrennt (Leiste der Bibliothek, Kontinente auf Länder, Fuß, Satz zur Bibliothek auf *Ursprünge*), das Menü ist auf Tablet und quer 44 px hoch treffbar, ein schräger Daumen dreht die Kugel nicht, der Hinweis an der Kugel bricht in zwei Zeilen, der Satz zum Buch und die Buchzeile des Regalbilds rollen sich ins Bild. Keine neuen Texte, keine neuen Elemente; am Desktop bleibt alles pixelgleich. Die Vorschläge, die etwas Neues bräuchten (Menü auch am Fuß, „zurück“ auf Länder quer), stehen in `docs/todo.md`.
+Ort in C: `website-c/index.html` (`bandZug`, `satzInSicht`, `zeileInSicht`, `.zb` mit `touch-action: pan-y pinch-zoom`), `website-c/stil.css` (`.hinweis.am-zeiger`, Fuß, Menü unter `pointer: coarse`), `website-c/seite.js` (Breite des Hinweises), `bibliothek.html`, `laender.html`, `satoshi.html`, `ursprung.html`; Änderungsprotokoll, 25. Oktober.
+Offen (für Dominik): den Testlink auf dem eigenen Telefon abnehmen, erst dann geht es live; wie stark das Band zum Rand hin mitrollt, lässt sich nach seinem Test nachstellen. Safari auf dem iPhone ist ungeprüft.
+Später geändert: nein.
 
 ---
 
@@ -534,7 +541,7 @@ Später geändert: ja. „sehr dezent“ ergänzt die erste Nachricht.
 „Und ich werde dann später noch mein Instagram und auch mein LinkedIn hinzufügen. Unten drunter.“ (20.10., 19:09)
 Für den Bau: Im Fuß ist ein Platz vorbereitet und verborgen. Keine toten Links, bis er die Adressen schickt.
 Ort in A: alle Seiten, `p.profile[hidden]`.
-Später geändert: nein.
+Später geändert: ja, ergänzt (24.10., 22:45): „Instagram ist angelegt: instagram.com/dominikjaekel (aber noch nicht. Ich will das noch füllen)“. Eingetragen wird die Adresse erst, wenn er es gefüllt hat (`docs/todo.md`); LinkedIn ist offen.
 
 ---
 
@@ -654,9 +661,10 @@ Ohne Konflikt, aber durch ihn entschieden: Frage 6 (V17), Frage 9 (V22), Frage 1
 11. **Chinesisch:** in die Vita, und wie gut (V72)?
 12. **Bücher im Regal:** Bleiben *Ghostwritten* von David Mitchell, *Das kleine Gespenst* und die Bücher von Wulf Dorn und Ursula Poznanski? Claude fragte am 20.10. um 06:57.
 13. **Newsletter:** Wortlaut der Zeile freigeben, auch Journal-Einträge ankündigen, Anbieter wählen (V68)?
-14. **Instagram und LinkedIn:** die Adressen (V69).
+14. **Instagram und LinkedIn:** die Adressen (V69). Instagram ist angelegt (instagram.com/dominikjaekel) und kommt auf die Seite, sobald er es gefüllt hat; LinkedIn ist offen.
 15. **Impressum:** ein zweiter schneller Kontaktweg neben der Mail, etwa ein Formular?
 16. **Szenentexte von *Satoshi*:** Text-Flagge 25 durchsehen. In C bleiben sie bis dahin wie in A (V36).
 17. **Einblenden (V83):** Auf *Satoshi* am Telefon den Globus früher zeigen (ohne Bindung ans Lesen, rund 2,1 statt 3,1 s)? Soll ein Klick auf das Buch die Bewegung der Kugel nicht freigeben? Auf *Ursprünge* den Halt an Göbekli Tepe schon mit der Blende beginnen lassen (erstes Gleiten nach rund 8,8 statt 11,8 s)?
+18. **Grafik mit den Büchern** auf der Startseite („Die Grafik mit den Büchern könnte auch deutlich schöner sein“, sein Bruder; Dominik: „Sie könnten vielleicht nicht ganz aufeinander liegen. Gib mal 5 Versionen sowohl mobil als auch Desktop. Ich finde es auf dem Desktop eigentlich ganz okay. Aber vielleicht findest du auch noch was Besseres“, 24.10., 22:45): welche der fünf Fassungen (Vergleich in `docs/todo.md`)? Bis dahin bleibt das Bild, wie es ist (V75).
 
 Beantwortet am 24. Oktober vor dem Livegang (Dominik: „Vercel Hobby … 65 Länder bleiben. Simon-Kucher ja. Impressum und Datenschutz von mir freigegeben“), standen nicht als eigene Nummer in dieser Liste, sondern in `docs/todo.md`: **65 Länder** bleiben (V27); **Tarif bei Vercel:** Hobby (`TARIF = 'hobby'` in `website-c/werkzeuge/veroeffentlichen.py`, im Datenschutz die Fassung ohne Vertrag zur Auftragsverarbeitung); **Impressum und Datenschutz** freigegeben, die beiden Vermerke `[[ZU PRÜFEN: … freigegeben?]]` sind gelöscht. Die Angaben zu Vercel im Datenschutz stammen aus der Zwischenmeldung 2 der Vercel-Sitzung vom 24. Oktober (live gelesen).

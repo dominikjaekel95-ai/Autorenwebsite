@@ -264,6 +264,10 @@ html:not(.js) .post { display: none; }
 .hinweis { left: 14%; top: 4%; }
 /* Ausgelöst von Rad oder Finger: beim Zeiger, im sichtbaren Teil des Fensters (FSeite setzt left und top) */
 .hinweis.am-zeiger { position: fixed; z-index: 20; }
+/* Auf dem Telefon ist der Hinweis zum Wischen breiter als das Fenster und lief rechts hinaus (393 px mit 10 % größerer Schrift: um
+   47 px, 320 px: um 81 px). Am Zeiger bricht er darum, wo nötig, in zwei ausgeglichene Zeilen; FSeite misst ihn danach und setzt
+   ihn ganz ins Bild. Breit passt er in eine Zeile wie bisher (Navigationstest am Telefon, 25. Oktober) */
+.hinweis.am-zeiger { white-space: normal; max-width: calc(100vw - 16px); text-wrap: balance; }
 .tipp[hidden], .hinweis[hidden], .ersatz[hidden] { display: none; }
 /* Ohne Globus (kein Skript, Fehler): ein Satz an seiner Stelle */
 .ersatz { font-style: normal; max-width: 22em; padding: var(--z-zwei) 0 var(--z); }
@@ -443,12 +447,24 @@ html:not(.js) .post { display: none; }
   /* Fuß und Name: 44 px Trefferfläche; ein Verweis im Satz wächst nur in seiner Fläche, nicht in der Zeile */
   .fuss .impressum { line-height: var(--z); }
   .fuss a { padding-block: 8px; padding-block: max(0px, calc((2.75rem - 1lh) / 2)); }
+  /* „Impressum“ und „Datenschutz“ stehen eine Zeile auseinander, ihre Flächen reichten übereinander: ein Tipp auf die untere Hälfte
+     von „Impressum“ öffnete den Datenschutz (Navigationstest, Dominiks Telefon mit 10 % größerer Schrift). Zwischen den beiden wächst
+     keine Fläche mehr; nach oben und unten bleibt sie */
+  .fuss .impressum a:first-child { padding-bottom: 0; }
+  .fuss .impressum a:last-child { padding-top: 0; }
   .briefkopf a.name { padding-block: 8.5px; margin-block: -8.5px; }
   .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
   .post .wort { padding-block: 1.25rem 0; margin-block: 0; min-height: 2.75rem; }
 }
 @media (max-width: 40rem) {
   .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
+}
+/* Finger auf dem Tablet und dem Telefon quer (breiter als 40 rem): die Wörter der Navigation 44 px hoch treffbar, ohne dass der Kopf
+   wächst (vorher 25 px). Bricht die Navigation in zwei Zeilen, wächst die Fläche nur nach unten: die Flächen der beiden Zeilen
+   überdecken einander sonst, und ein Tipp auf die untere Hälfte eines Worts träfe das Wort darunter (Navigationstest, 25. Oktober) */
+@media (pointer: coarse) and (min-width: 40.0625rem) {
+  .nav-liste a { display: inline-block; padding-block: 8.5px; margin-block: -8.5px; padding-block: max(0px, calc((2.75rem - 1lh) / 2)); margin-block: min(0px, calc((1lh - 2.75rem) / 2)); }
+  .nav.zweizeilig .nav-liste a { padding-block: 0 17px; margin-block: 0 -17px; padding-block: 0 max(0px, calc(2.75rem - 1lh)); margin-block: 0 min(0px, calc(1lh - 2.75rem)); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; scroll-behavior: auto !important; }

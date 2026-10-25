@@ -1995,7 +1995,27 @@
      Solange der Wert leer ist, steht die Anschrift in keinem Fuß und nicht in der ausgelieferten seite.js (der Bau entfernt diesen
      Kommentar). */
   const ANSCHRIFT_IM_FUSS = '';
+  /* Die fünf Menüwörter noch einmal oben im Fuß jeder Seite, für das Telefon und das Tablet (stil.css: .fuss-nav; breit mit der Maus
+     verborgen). Vom Ende der Seite zurück zum Menü waren es auf Dominiks Telefon in der Bibliothek 19 Wischer, auf Satoshi 17, im
+     Datenschutz 10 (Navigationstest, 25. Oktober). Dominik, 25. Oktober: „die beiden Vorschläge gerne auch noch miteinbauen. Wenn
+     sie die Navigation deutlich verbessern mobil“. Eine Abschrift der Navigation im Kopf: dieselben Wörter, Verweise und
+     Markierungen und dieselbe Bezeichnung „Website“ (eine zweite Navigation mit denselben Verweisen trägt denselben Namen, so die
+     ARIA-Praxis). Ohne Skript bleibt der Fuß, wie er war */
+  function fussNavigation() {
+    const kopf = $('header .nav');
+    if (!kopf) return;
+    $$('footer.fuss').forEach(f => {
+      if ($('.fuss-nav', f)) return;
+      const nav = kopf.cloneNode(true);
+      nav.classList.add('fuss-nav');
+      nav.classList.remove('zweizeilig');
+      nav.removeAttribute('data-bereit');
+      $$('[id]', nav).forEach(e => e.removeAttribute('id'));
+      f.prepend(nav);
+    });
+  }
   function fuss() {
+    fussNavigation();
     if (ANSCHRIFT_IM_FUSS) {
       const anschrift = ': ' + sauber(ANSCHRIFT_IM_FUSS).replace(/(\p{L}) (?=\d)|(\d) (?=\p{L})/gu, (m, a, b) => (a || b) + NBSP);
       $$('.fuss .impressum > a:first-child').forEach(a => {

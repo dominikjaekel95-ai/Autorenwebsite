@@ -136,6 +136,10 @@ a.name:hover, a.name:focus-visible { text-decoration-line: underline; }
 .kolophon-fuss { margin-top: var(--z); max-width: 36em; }
 .profile { display: flex; flex-wrap: wrap; column-gap: 1.2em; }
 .profile[hidden] { display: none; }
+.fuss-nav { display: none; }
+@media (max-width: 62rem), (pointer: coarse) {
+  .fuss .fuss-nav { display: block; margin: 0 0 var(--z); }
+}
 html:not(.js) .post { display: none; }
 .post-eingabe { white-space: nowrap; }
 .post-feld {
@@ -182,6 +186,7 @@ html:not(.js) .post { display: none; }
 .tipp.links { transform: translate(calc(-100% - 14px), -50%); }
 .hinweis { left: 14%; top: 4%; }
 .hinweis.am-zeiger { position: fixed; z-index: 20; }
+.hinweis.am-zeiger { white-space: normal; max-width: calc(100vw - 16px); text-wrap: balance; }
 .tipp[hidden], .hinweis[hidden], .ersatz[hidden] { display: none; }
 .ersatz { font-style: normal; max-width: 22em; padding: var(--z-zwei) 0 var(--z); }
 .ohne-globus .flaeche { display: none; }
@@ -291,6 +296,7 @@ html:not(.js) .post { display: none; }
   .nav { margin-top: calc(var(--z) - 8.5px); }
   .nav-liste { column-gap: .75em; }
   .nav-liste a { display: inline-block; padding: 8.5px 0; }
+  .fuss .fuss-nav { margin: -8.5px 0 calc(var(--z) - 8.5px); }
   .tafel, .steuer { grid-template-columns: 3.6em minmax(0, 1fr); column-gap: .65em; }
   .steuerzeile { column-gap: 1em; }
   .tafel.ohne-marke { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
@@ -301,12 +307,18 @@ html:not(.js) .post { display: none; }
   .ortsleiste { line-height: var(--zh-ueber); }
   .fuss .impressum { line-height: var(--z); }
   .fuss a { padding-block: 8px; padding-block: max(0px, calc((2.75rem - 1lh) / 2)); }
+  .fuss .impressum a:first-child { padding-bottom: 0; }
+  .fuss .impressum a:last-child { padding-top: 0; }
   .briefkopf a.name { padding-block: 8.5px; margin-block: -8.5px; }
   .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
   .post .wort { padding-block: 1.25rem 0; margin-block: 0; min-height: 2.75rem; }
 }
 @media (max-width: 40rem) {
   .post-feld { height: 2.75rem; padding: 1.25rem 0 0; font-size: max(1rem, 1em); }
+}
+@media (pointer: coarse) and (min-width: 40.0625rem) {
+  .nav-liste a { display: inline-block; padding-block: 8.5px; margin-block: -8.5px; padding-block: max(0px, calc((2.75rem - 1lh) / 2)); margin-block: min(0px, calc((1lh - 2.75rem) / 2)); }
+  .nav.zweizeilig .nav-liste a { padding-block: 0 17px; margin-block: 0 -17px; padding-block: 0 max(0px, calc(2.75rem - 1lh)); margin-block: 0 min(0px, calc(1lh - 2.75rem)); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; scroll-behavior: auto !important; }

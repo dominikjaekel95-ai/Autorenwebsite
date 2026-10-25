@@ -801,6 +801,7 @@ html.folge .klappbuch[data-folge]:not(.da) { pointer-events: none; }
     namen: { orte: () => EBENE_ORTE, spur: () => ST, aktiv: namenAktiv }
   });
   const neuSetzen = () => { if (g) g.namenNeu(); };
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5 });
   function blickBerechnen() {
     if (!g) return;
     BLICK.k = F.breit() ? .92 : 1;

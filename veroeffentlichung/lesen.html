@@ -114,8 +114,7 @@ document.documentElement.classList.add('js');
   }
   function navMarke(seite) {
     document.querySelectorAll('.nav-liste a[aria-current="true"]').forEach(a => a.removeAttribute('aria-current'));
-    const a = seite && document.querySelector('.nav-liste a[href="' + seite + '"]');
-    if (a) a.setAttribute('aria-current', 'true');
+    if (seite) document.querySelectorAll('.nav-liste a[href="' + seite + '"]').forEach(a => a.setAttribute('aria-current', 'true'));
   }
   function zeigen(neu) {
     const slug = slugAusAdresse(), alle = T.alle();

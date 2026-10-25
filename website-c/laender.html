@@ -77,6 +77,12 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   /* Wer mit der Tastatur durch das Verzeichnis geht, landet nicht unter dem Band */
   .mit-band .register .wort { scroll-margin-top: calc(var(--band) + var(--z-halb) + var(--z)); }
 }
+/* Der Rückweg nach einem Sprung zur Kugel (schmal ohne Band, Skript bei der Tafel): ein Bedienwort in der Unterzeile hinter
+   „bereist“, im Grad klein, so wird die Tafel nicht höher; Name, „bereist“ und das Wort stehen nach dem Sprung im Bild. Bricht die
+   Zeile doch um (ein nicht bereistes Land auf der Kugel, Schrift größer), beginnt das Wort ohne Einzug am Zeilenanfang: der
+   Abstand steht deshalb hinter „bereist“, nicht vor dem Wort, und das Wort bricht nicht in sich */
+.tafel-unter .vor-rueckweg { margin-right: .9em; }
+.tafel-unter .rueckweg { white-space: nowrap; }
 /* Finger: die Namen im Register 44 px hoch treffbar; die Zeilen stehen dafür etwas weiter auseinander */
 @media (pointer: coarse) {
   .register .gruppe { line-height: var(--zh-ueber); }
@@ -227,10 +233,10 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   const kontinentInhalt = k => ({ kopf: k, satz: zahl((KONTINENTE[k] || []).length), fuss: false });
   // Das Land und ob er dort war; Koordinaten nennt die Tafel nicht mehr (Dominik, 21. Oktober)
   function landInhalt(iso, f) {
-    const ist = bereist.includes(iso), guide = LAENDERGUIDES[iso];
+    const ist = bereist.includes(iso), guide = LAENDERGUIDES[iso], unter = ist ? 'bereist' : 'nicht bereist';
     return {
       kopf: ist || !f ? name(iso) : f.name,
-      unter: ist ? 'bereist' : 'nicht bereist',
+      unter: rueckwegZeigen() ? { html: '<span class="vor-rueckweg">' + esc(unter) + '</span> <button type="button" class="wort rueckweg" data-zurueck>zurück zum Verzeichnis</button>' } : unter,
       fuss: guide ? `<a href="${esc(guide)}">Zum Länderguide</a>` : false
     };
   }
@@ -268,21 +274,54 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   }
 
   // Schmal ohne Band (niedriges Fenster): nach einer Wahl die Scheibe ins Bild holen, wenn sie nicht ganz zu sehen ist
+  function globusFehlt() {
+    if (F.breit() || bandAn || !g) return false;
+    const r = flaeche.getBoundingClientRect();
+    return !(r.top >= 0 && r.bottom <= window.innerHeight);
+  }
   function globusInSicht() {
-    if (F.breit() || bandAn || !g) return;
-    const r = flaeche.getBoundingClientRect(), H = window.innerHeight;
-    if (r.top >= 0 && r.bottom <= H) return;
-    window.scrollBy({ top: r.top - 12, behavior: ruhig ? 'auto' : 'smooth' });
+    if (!globusFehlt()) return;
+    const dy = flaeche.getBoundingClientRect().top - 12;
+    window.scrollBy({ top: dy + Math.max(0, rueckwegDarunter(dy)), behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  /* Der Rückweg: Auf dem Telefon quer (schmal ohne Band) holt ein Land aus dem Verzeichnis die Kugel ins Bild, auf Dominiks Telefon
+     bis zu 751 px nach oben, ohne Weg zurück; zum Land waren es danach bis zu drei Wischer (Navigationstest, 25. Oktober). Dominik,
+     25. Oktober: „die beiden Vorschläge gerne auch noch miteinbauen. Wenn sie die Navigation deutlich verbessern mobil“. Nach so
+     einem Sprung steht in der Tafel hinter „bereist“ leise „zurück zum Verzeichnis“: Es rollt zurück, bis der Name wieder dort
+     steht, wo er beim Antippen stand, und gibt ihm den Fokus. Der Rückweg gilt, bis man ihn nimmt oder einen Kontinent, den
+     Überblick oder ohne Sprung ein anderes Land wählt; ein Land auf der Kugel ändert ihn nicht. Ohne Sprung gibt es ihn nicht */
+  let rueck = null;          // { knopf, top }: der Name im Verzeichnis und wo er im Bild stand
+  const rueckwegZeigen = () => !!rueck && !bandAn && !F.breit();
+  function zurueck() {
+    const z = rueck;
+    rueck = null;
+    tafelSetzen();
+    if (!z || !z.knopf.isConnected) return;
+    window.scrollBy({ top: z.knopf.getBoundingClientRect().top - z.top, behavior: ruhig ? 'auto' : 'smooth' });
+    z.knopf.focus({ preventScroll: true });
+  }
+  /* Mit größerer Schrift wird die Tafel nach dem Sprung höher: ein langer Name (Vereinigte Arabische Emirate) bricht in zwei Zeilen,
+     ebenso die Unterzeile, wenn man danach auf der Kugel ein Land antippt, das er nicht bereist hat. Das Wort stand dann unter dem
+     Fensterrand und ließ sich nicht antippen (Prüfung am Telefon, 25. Oktober, quer mit Text +20 %). Dann rollt die Seite um so viel
+     weiter, dass es mit 8 px Luft im Bild steht; die Kugel bleibt dabei bis auf einen schmalen Rand oben im Bild */
+  function rueckwegDarunter(dy) {
+    const r = rueckwegZeigen() && $('.rueckweg', tafelEl);
+    return r ? r.getBoundingClientRect().bottom - dy - (window.innerHeight - 8) : 0;
+  }
+  function rueckwegInSicht() {
+    const unten = rueckwegDarunter(0);
+    if (unten > 0) window.scrollBy({ top: unten, behavior: ruhig ? 'auto' : 'smooth' });
   }
 
-  function landZeigen(iso) {
+  function landZeigen(iso, knopf) {
     wahl = { iso }; zeiger = null;
+    rueck = knopf && globusFehlt() ? { knopf, top: knopf.getBoundingClientRect().top } : null;
     markieren(); tafelSetzen();
     if (g) g.landAnfliegen(iso);
     globusInSicht();
   }
   function kontinentZeigen(k) {
-    wahl = { kontinent: k }; zeiger = null;
+    wahl = { kontinent: k }; zeiger = null; rueck = null;
     markieren(); tafelSetzen();
     if (g) {
       let ziel = KONTINENT_BLICK[k];
@@ -299,7 +338,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     globusInSicht();
   }
   function ueberblickZeigen() {
-    wahl = null; zeiger = null;
+    wahl = null; zeiger = null; rueck = null;
     markieren(); tafelSetzen();
     if (g) { g.auswahl(null); g.fliegen(BLICK.mitte, BLICK.k); }
     globusInSicht();
@@ -309,7 +348,8 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     const t = e.target.closest('button');
     if (!t || !t.closest('main')) return;
     const d = t.dataset;
-    if (d.land) landZeigen(d.land);
+    if (d.land) landZeigen(d.land, t);
+    else if (d.zurueck !== undefined) zurueck();
     else if (d.kontinent) kontinentZeigen(d.kontinent);
     else if (d.ueberblick !== undefined) ueberblickZeigen();
   });
@@ -334,12 +374,14 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     markieren();
     g.auswahl(f.iso);
     tafelStand = ''; tafelSetzen();
+    rueckwegInSicht();
   });
   // Ohne Land unter dem Zeiger gibt es auch keins, das ein Klick wählen könnte
   if (tipp) new MutationObserver(() => { if (tipp.hidden) zeiger = null; }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
 
   let uhr = 0;
-  window.addEventListener('resize', () => { clearTimeout(uhr); uhr = setTimeout(() => { bandSetzen(); tafelHoehe(); }, 120); });
+  // Mit dem Band (Telefon wieder hochkant) entfällt der Rückweg; die Tafel zeigt ihn dann nicht mehr
+  window.addEventListener('resize', () => { clearTimeout(uhr); uhr = setTimeout(() => { bandSetzen(); tafelSetzen(); tafelHoehe(); }, 120); });
   let rollBild = 0;
   window.addEventListener('scroll', () => { if (!rollBild) rollBild = requestAnimationFrame(() => { rollBild = 0; haftet(); }); }, { passive: true });
 

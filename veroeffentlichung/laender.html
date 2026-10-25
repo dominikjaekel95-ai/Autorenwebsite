@@ -68,9 +68,12 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   .mit-band .register { margin-top: var(--z); }
   .mit-band .register .wort { scroll-margin-top: calc(var(--band) + var(--z-halb) + var(--z)); }
 }
+.tafel-unter .vor-rueckweg { margin-right: .9em; }
+.tafel-unter .rueckweg { white-space: nowrap; }
 @media (pointer: coarse) {
   .register .gruppe { line-height: var(--zh-ueber); }
   .register button.wort { padding-block: 5.25px; margin-block: -5.25px; }
+  .kontinente button.wort { padding-block: 0 17px; margin-block: 0 -17px; padding-block: 0 max(0px, calc(2.75rem - 1lh)); margin-block: 0 min(0px, calc(1lh - 2.75rem)); }
 }
 </style>
 </head>
@@ -178,6 +181,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   const BLICK = { mitte: F.breit() ? [52, 30] : [40, 28], k: 1 };
   if (g) g.ebene({ orte: [], laender: true, blick: BLICK }, { fliegen: false });
   else { figur.classList.add('ohne-globus'); $('#ersatz').hidden = false; }
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5 });
   function mitte(iso, f) {
     f = f || (g && g.land(iso));
     return (f && f.punkt) || (I.winzig && I.winzig[iso]) || null;
@@ -186,10 +190,10 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
   const ueberblickInhalt = () => ({ kopf: 'Reisen', satz: zahl(bereist.length), fuss: false });
   const kontinentInhalt = k => ({ kopf: k, satz: zahl((KONTINENTE[k] || []).length), fuss: false });
   function landInhalt(iso, f) {
-    const ist = bereist.includes(iso), guide = LAENDERGUIDES[iso];
+    const ist = bereist.includes(iso), guide = LAENDERGUIDES[iso], unter = ist ? 'bereist' : 'nicht bereist';
     return {
       kopf: ist || !f ? name(iso) : f.name,
-      unter: ist ? 'bereist' : 'nicht bereist',
+      unter: rueckwegZeigen() ? { html: '<span class="vor-rueckweg">' + esc(unter) + '</span> <button type="button" class="wort rueckweg" data-zurueck>zurück zum Verzeichnis</button>' } : unter,
       fuss: guide ? `<a href="${esc(guide)}">Zum Länderguide</a>` : false
     };
   }
@@ -221,20 +225,43 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
       if (an) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
     });
   }
-  function globusInSicht() {
-    if (F.breit() || bandAn || !g) return;
-    const r = flaeche.getBoundingClientRect(), H = window.innerHeight;
-    if (r.top >= 0 && r.bottom <= H) return;
-    window.scrollBy({ top: r.top - 12, behavior: ruhig ? 'auto' : 'smooth' });
+  function globusFehlt() {
+    if (F.breit() || bandAn || !g) return false;
+    const r = flaeche.getBoundingClientRect();
+    return !(r.top >= 0 && r.bottom <= window.innerHeight);
   }
-  function landZeigen(iso) {
+  function globusInSicht() {
+    if (!globusFehlt()) return;
+    const dy = flaeche.getBoundingClientRect().top - 12;
+    window.scrollBy({ top: dy + Math.max(0, rueckwegDarunter(dy)), behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  let rueck = null;
+  const rueckwegZeigen = () => !!rueck && !bandAn && !F.breit();
+  function zurueck() {
+    const z = rueck;
+    rueck = null;
+    tafelSetzen();
+    if (!z || !z.knopf.isConnected) return;
+    window.scrollBy({ top: z.knopf.getBoundingClientRect().top - z.top, behavior: ruhig ? 'auto' : 'smooth' });
+    z.knopf.focus({ preventScroll: true });
+  }
+  function rueckwegDarunter(dy) {
+    const r = rueckwegZeigen() && $('.rueckweg', tafelEl);
+    return r ? r.getBoundingClientRect().bottom - dy - (window.innerHeight - 8) : 0;
+  }
+  function rueckwegInSicht() {
+    const unten = rueckwegDarunter(0);
+    if (unten > 0) window.scrollBy({ top: unten, behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  function landZeigen(iso, knopf) {
     wahl = { iso }; zeiger = null;
+    rueck = knopf && globusFehlt() ? { knopf, top: knopf.getBoundingClientRect().top } : null;
     markieren(); tafelSetzen();
     if (g) g.landAnfliegen(iso);
     globusInSicht();
   }
   function kontinentZeigen(k) {
-    wahl = { kontinent: k }; zeiger = null;
+    wahl = { kontinent: k }; zeiger = null; rueck = null;
     markieren(); tafelSetzen();
     if (g) {
       let ziel = KONTINENT_BLICK[k];
@@ -249,7 +276,7 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     globusInSicht();
   }
   function ueberblickZeigen() {
-    wahl = null; zeiger = null;
+    wahl = null; zeiger = null; rueck = null;
     markieren(); tafelSetzen();
     if (g) { g.auswahl(null); g.fliegen(BLICK.mitte, BLICK.k); }
     globusInSicht();
@@ -258,7 +285,8 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     const t = e.target.closest('button');
     if (!t || !t.closest('main')) return;
     const d = t.dataset;
-    if (d.land) landZeigen(d.land);
+    if (d.land) landZeigen(d.land, t);
+    else if (d.zurueck !== undefined) zurueck();
     else if (d.kontinent) kontinentZeigen(d.kontinent);
     else if (d.ueberblick !== undefined) ueberblickZeigen();
   });
@@ -281,10 +309,11 @@ html:not(.js) .globusseite > .globus, html:not(.js) .kontinente { display: none;
     markieren();
     g.auswahl(f.iso);
     tafelStand = ''; tafelSetzen();
+    rueckwegInSicht();
   });
   if (tipp) new MutationObserver(() => { if (tipp.hidden) zeiger = null; }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
   let uhr = 0;
-  window.addEventListener('resize', () => { clearTimeout(uhr); uhr = setTimeout(() => { bandSetzen(); tafelHoehe(); }, 120); });
+  window.addEventListener('resize', () => { clearTimeout(uhr); uhr = setTimeout(() => { bandSetzen(); tafelSetzen(); tafelHoehe(); }, 120); });
   let rollBild = 0;
   window.addEventListener('scroll', () => { if (!rollBild) rollBild = requestAnimationFrame(() => { rollBild = 0; haftet(); }); }, { passive: true });
   markieren();

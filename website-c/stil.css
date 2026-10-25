@@ -204,6 +204,12 @@ a.name:hover, a.name:focus-visible { text-decoration-line: underline; }
 .kolophon-fuss { margin-top: var(--z); max-width: 36em; }
 .profile { display: flex; flex-wrap: wrap; column-gap: 1.2em; }
 .profile[hidden] { display: none; }
+/* Die Menüwörter am Fuß (FSeite.fuss setzt eine Abschrift der Navigation oben in jeden Fuß): auf dem Telefon und dem Tablet, also
+   schmal oder mit dem Finger; breit mit der Maus bleiben sie verborgen. Gesetzt wie oben, 1 z über der Zeile mit den Anfragen */
+.fuss-nav { display: none; }
+@media (max-width: 62rem), (pointer: coarse) {
+  .fuss .fuss-nav { display: block; margin: 0 0 var(--z); }
+}
 /* Newsletter-Zeile: das Feld ist ein Strich von 1 px in Tinte, „Eintragen“ ein unterstrichenes Wort. Zum Start ausgeblendet: FSeite.fuss
    setzt sie nur mit NEWSLETTER = true (seite.js). Ohne Skript ist das Formular verborgen (es schickt nichts ab) */
 html:not(.js) .post { display: none; }
@@ -431,6 +437,8 @@ html:not(.js) .post { display: none; }
   .nav { margin-top: calc(var(--z) - 8.5px); }
   .nav-liste { column-gap: .75em; }
   .nav-liste a { display: inline-block; padding: 8.5px 0; }
+  /* Im Fuß: der Abstand zum Text darüber und zu den Anfragen bleibt wie ohne die 8,5 px */
+  .fuss .fuss-nav { margin: -8.5px 0 calc(var(--z) - 8.5px); }
   .tafel, .steuer { grid-template-columns: 3.6em minmax(0, 1fr); column-gap: .65em; }
   /* „früher  später  noch einmal von vorn“ passt so auch bei 360 px in eine Zeile */
   .steuerzeile { column-gap: 1em; }

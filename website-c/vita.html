@@ -44,6 +44,16 @@
 .daten li + li { margin-top: var(--z-viertel); }
 /* Ein unsichtbares geschütztes Leerzeichen im Jahr trennt es beim Kopieren und Vorlesen vom Ort („2025 Sansibar“) */
 .daten .jahr { position: absolute; top: 0; right: calc(100% + .6em); white-space: nowrap; font-variant-numeric: oldstyle-nums tabular-nums; }
+/* Zeitspannen (Dominik, 25. Oktober: „Hier muss noch 2014 bis 2015 liberal arts stehen und 2015 bis 2018 HPI“): das Endjahr steht
+   in der Jahresspalte unter dem Anfangsjahr, Ziffer unter Ziffer. Der Halbgeviertstrich davor hängt aus der Spalte heraus (breit in
+   den Steg, schmal in den Rand), so bleibt die Spalte so breit wie bei allen anderen Einträgen, und keiner rückt oder bricht neu um.
+   Vorleseprogramme und Kopieren bekommen „2014 bis 2015 Freiburg …“ in einer Zeile: das Wort steht unsichtbar im Text, mit
+   geschützten Leerzeichen wie beim Jahr (normale fielen im unsichtbaren Kasten weg, die Kopie lautete „bis2015“), das Endjahr
+   absolut unter dem Anfangsjahr (als Block bräche es die Kopie in drei Zeilen), der Strich nur im Bild (ohne Ersatztext, ältere
+   Browser lesen ihn mit). Der Eintrag ist mindestens zwei Zeilen hoch, auch wenn sein Text in eine passt */
+.daten .spanne { min-height: calc(var(--zh-text) * 2); }
+.daten .bis { position: absolute; right: 0; top: 100%; }
+.daten .bis::before { content: "\2013"; content: "\2013" / ""; position: absolute; right: 100%; }
 .werdegang { margin-top: var(--z-zwei); }
 .werdegang .weiter { margin-top: var(--z-dreiviertel); }
 
@@ -104,8 +114,8 @@
       <h2 class="titel" id="stationen-titel">Stationen</h2>
       <ul class="daten">
         <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren</li>
-        <li><span class="jahr">2014<span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span></li>
-        <li><span class="jahr">2015<span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span></li>
+        <li class="spanne"><span class="jahr">2014<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2015</span><span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span></li>
+        <li class="spanne"><span class="jahr">2015<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2018</span><span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span></li>
         <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit AIESEC</li>
         <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit AIESEC</li>
         <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor</li>

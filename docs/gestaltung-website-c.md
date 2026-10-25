@@ -701,12 +701,14 @@ Auf Touchgeräten ist jede Bedienung mindestens 44 px hoch: Navigation, früher,
 - Reihenfolge der Navigation wie A: *Satoshi*, *Ursprung*, Erzählungen, *Untertext*, Länder, Bibliothek, Vita.
 - Verweise ohne Strich, Strich beim Zeigen. Aktuelle Seite halbfett, ohne Verweis (`aria-current="page"`). Auf der Leseseite steht die Liste, zu der ein Text gehört, halbfett und bleibt ein Verweis.
 - Telefon: Name, Tagline, dann die Navigation offen in zwei Zeilen. Kein Schalter, kein Menüzeichen.
+- Seit 25. Oktober (V86) steht die Navigation auf dem Telefon und dem Tablet ein zweites Mal am Fuß jeder Seite (6.2).
 - Sprungmarke „Zum Inhalt“ wie A.
 
 ### 6.2 Fuß
 
 Von oben nach unten, alles linksbündig in der Satzbreite:
 
+0. Seit 25. Oktober (V86, Vorschlag A aus dem Navigationstest): die fünf Menüwörter wie oben, eine Abschrift der Navigation (`FSeite.fuss` setzt sie mit `fussNavigation()`, `nav.fuss-nav`, `aria-label` „Website“, die jetzige Seite halbfett mit `aria-current`, keine doppelten ids), gesetzt wie oben und auf dem Telefon wie oben nach „Länder“ gebrochen, 1 z über der Zeile mit den Anfragen, jede Trefferfläche 44 px hoch. Nur schmal bis 62 rem oder mit dem Finger (Telefon, Tablet hoch und quer); breit mit der Maus `display: none`. Ohne Skript entfällt sie. Grund: vom Seitenende zurück zum Menü vorher bis 19 Wischer (Bibliothek, 393 px), quer bis 33; jetzt ein Tipp.
 1. „Anfragen zu Lesungen und zu den Romanen:“ und die E-Mail-Adresse als unterstrichener Verweis. Grad Text. Wortlaut und Adresse wie A.
 2. Die Newsletter-Zeile, Wortlaut wie A: „Eine E-Mail, wenn ein Buch erscheint oder eine Lesung ansteht:“, dahinter das Feld und „Eintragen“. Grad klein. Das Feld ist ein Strich von 1 px in Tinte, ohne Rahmen, ohne Rundung, 16 em breit. Beim Fokus wird der Strich 2 px. „Eintragen“ ist ein unterstrichenes Wort. Auf dem Telefon sind Feld und Wort 44 px hoch, im Feld mindestens 16 px Schrift. Nach dem Eintragen erscheint in der Statuszeile „Danke. Im Testsystem wird noch nichts verschickt.“ Es wird nichts verschickt und nichts geladen. Ohne Skript ist das Formular verborgen.
 3. „Impressum“ und in der nächsten Zeile „Datenschutz“, zwei Verweise, Grad klein. Seit Runde 6 (S4, Dominiks Entscheidung) ohne Anschrift: Sie steht nur noch auf `impressum.html`, die Impressumspflicht erfüllt der Verweis. Bis Runde 5 stand „Impressum: Dominik Jäkel, Stresemannstraße 76, 10963 Berlin“ (wie A); zurück mit einer Zeile, `ANSCHRIFT_IM_FUSS` in `seite.js`.
@@ -836,6 +838,7 @@ Zwischen den Bänden 2 z. Unter Band III der Satz zur Bibliothek (V44), die Tite
 - Klick: Herausziehen (14) und die Buchzeile unter dem Brett (6.13). Bei eigenen Werken nennt sie Titel, Art und Stand aus `INHALT.werke` und verweist auf die Seite des Werks.
 - Keine Bildlegende (R10).
 - **Text:** Die Legende „Was ich schreibe, und daneben, was gerade auf dem Nachttisch liegt.“ entfällt.
+- Seit 25. Oktober (V86, geht dem Gesagten vor): Die liegenden Bücher liegen auf jeder Breite leicht versetzt, nicht bündig: das größte zuunterst bündig, jedes weitere 1,4 bis 6,3 mm nach links oder rechts, stufenlos, ohne Drehung, mit ihren Konturen (aufeinander teilen sie sich eine). Der Versatz kommt aus Titel und Autor (`versatzMm`, `F.hash`, `VERSATZ = .7`), nie aus Zufall; die Richtung wechselt bei zwei von drei Büchern, so entsteht kein Zickzack. Länder lehnt an dem Buch, das am weitesten herausragt (`anLehne`). Telefon (unter 40 rem): jedes liegende Buch 18 px und 0,03 px je Seite stark (`staerkePx`, Camus 24,4 px, Musil 49 px), der Stapel so hoch wie die Rücken, jedes Buch beschriftet (mindestens 9,5 px). Breiter Stärke nach Seitenzahl im Maßstab der Rücken (Bild 146 px bei 1024, 155 bei 1280, 188 bei 1440, höchstens 191). Ein Tipp irgendwo in die Fläche wählt das nächste Buch (`naechstesStueck`), mit der Maus nur das Buch selbst. In der Bibliothek liegt der Nachttisch weiter bündig (6.14).
 
 ### 6.11 Zeitband (Startseite)
 
@@ -880,18 +883,20 @@ Zwischen den Bänden 2 z. Unter Band III der Satz zur Bibliothek (V44), die Tite
 ### 6.14 Leseliste und Nachttisch
 
 - „was noch wartet“: Liste, je Zeile „Autor, *Titel*“, Grad Text, am Desktop zwei Spalten mit 2 z Abstand, Telefon einspaltig, nach Erscheinungsjahr. Einträge ¼ z auseinander. Jeder Eintrag lässt sich zeigen und wählen wie ein Rücken (Auswahlliste nach 07) und öffnet seine Buchzeile.
-- Nachttisch: zwei Stapel liegender Bücher in den Farben ihrer Familie, bündig, das größte zuunterst, ohne Versatz und ohne Bewegung beim Zeigen. Darunter „Auf dem Nachttisch“, Grad klein.
+- Nachttisch: zwei Stapel liegender Bücher in den Farben ihrer Familie, bündig, das größte zuunterst, ohne Versatz und ohne Bewegung beim Zeigen. Darunter „Auf dem Nachttisch“, Grad klein. Das gilt für die Bibliothek; im Regalbild der Startseite liegen die Bücher seit 25. Oktober leicht versetzt (V86, 6.10).
 
 ### 6.15 Länderregister
 
 - Ein Absatz je Kontinent, hängender Einzug 1 em: das Stichwort in Kapitälchen, ein Leerzeichen, die Länder alphabetisch, Komma getrennt.
 - Jeder Name ein Knopf, der den Globus zum Land dreht. Strich nach 07. Gewähltes Land halbfett. Lange Namen dürfen umbrechen.
 - Über dem Register „Länderguides, in Arbeit.“ und der Satz von A zum Grau.
+- Seit 25. Oktober (V86, Vorschlag B aus dem Navigationstest): Schmal ohne Band (Telefon quer) holt ein Name die Kugel ins Bild, 187 bis 850 px nach oben. Nach so einem Sprung steht in der Unterzeile der Tafel hinter „bereist“ das Bedienwort „zurück zum Verzeichnis“ (Grad klein, unterstrichen wie jedes Wort, 0,9 em Abstand hinter „bereist“; bricht die Zeile um, beginnt es ohne Einzug). Ein Tipp rollt zurück, bis der Name dort steht, wo er beim Antippen stand, und gibt ihm den Fokus. Wird die Tafel höher (langer Name, größere Schrift), rollt die Seite so weit, dass das Wort mit 8 px Luft im Bild steht. Ohne Sprung, hochkant mit Band und breit erscheint es nicht; ein Kontinent oder der Überblick nimmt es weg.
 
 ### 6.16 Stationen der Vita und Bild
 
 - Bild: oben in der rechten Spalte, `width: min(100%, 24em)`, Seitenverhältnis 3 : 4, ohne Rahmen. Darunter ¼ z die Legende im Grad klein.
 - Stationen: `h2` „Stationen“, darunter die Liste von A. Die Jahreszahl hängt im Steg zwischen den Spalten (rechtsbündig, Mediävalziffern mit fester Breite), dann Ort, Komma, Tätigkeit im Grad Text, in der nächsten Zeile die Koordinaten im Grad klein. Einträge ¼ z auseinander. Nebenorte gleich groß und gleich dunkel.
+- Zeitspannen (seit 25. Oktober, V86: Freiburg 2014–2015, Potsdam 2015–2018): das Endjahr in der Jahresspalte unter dem Anfangsjahr, Ziffer unter Ziffer, rechtsbündig wie das Jahr; der Halbgeviertstrich ohne Leerzeichen hängt davor aus der Spalte (breit in den Steg, schmal in den Rand), damit die Spalte nicht breiter wird. Der Eintrag ist mindestens zwei Zeilen hoch (`li.spanne`). Für Vorleseprogramme und beim Kopieren „2014 bis 2015“ (unsichtbares „bis“ mit geschützten Leerzeichen, das Endjahr absolut gesetzt).
 - Darunter der Verweis von A „… auf dem Globus“.
 
 ### 6.17 Leseseite
@@ -1088,6 +1093,8 @@ Im Kopf jeder Seite `<link rel="preload" href="schrift/vollkorn.woff2" as="font"
 
 **Seit 23. Oktober (V75, Testfassung „7 und 6“), geht dem oben Gesagten vor:** Ab 62,0625 rem steht das Regalbild (eigene Werke und Nachttisch) links 2 z unter der Kurzvita neben der Kugel des Lebens (`regalOrt` setzt es an der Grenze um), „Was ich schreibe“ hat nur Überschrift und Werkverzeichnis in der Satzbreite; die Kartenwahl und der Text der Ebene entfallen auf allen Breiten. Unter 62 rem steht das Regalbild über dem Verzeichnis, mit dem Nachttisch daneben, nur kleiner (bei 390 px 333 px breit; Titel unter 9 px entfallen, ein Tipp bis 10 px neben ein Buch trifft das nächste, zwischen den Stapeln mindestens 14 px Luft). Telefon (unter 40 rem): Unter 40 rem (Telefon) stehen die eigenen Werke wieder in der ursprünglichen Größe mit lesbaren Titeln auf den Rücken (0,86 px je mm, Titel 10,8 px), daneben vom Nachttisch nur der rechte Stapel (Camus, Aristotle, Kafka, Bolaño, Musil), in derselben Größe; nur wenn er bei sehr schmalen Schirmen nicht daneben passt, wird allein der Stapel kleiner (bei 320 px 56 %), nie die Rücken. Seine Titel nehmen den Grad der Rücken. Zwischen 40 und 62 rem beide Stapel wie am Desktop.
 **Unterschrift des Regalbilds** „Meine Projekte und was auf dem Nachttisch liegt“ (Dominiks Wortlaut), `figcaption` im Grad klein, in Tinte, wandert mit dem Bild: am Desktop ¼ z unter dem Brett, darunter die Buchzeile (so springt sie beim Klick nicht); auf dem Telefon zwischen „Was ich schreibe“ (1½ z darüber, mit der Maus 2 z) und dem Bild (¼ z bis zum höchsten Rücken, mit der Maus ¾ z für den Namen beim Zeigen und ¼ z Luft), also näher am Bild als an der Überschrift; unter 23 em ausgeglichen auf zwei Zeilen.
+
+**Seit 25. Oktober (V86), Büchergrafik, geht dem oben Gesagten vor:** Die Bücher des Nachttischs liegen auf allen Breiten leicht versetzt (6.10). Am Telefon (unter 40 rem) Fassung V5 „Eine Höhe“: der Stapel so hoch wie die Rücken, jedes liegende Buch 18 px und 0,03 px je Seite stark und beschriftet; die Rücken bleiben bei 0,86 px je mm, kürzer wird nur der Stapel (bei 390 px 84 %, 360 px 69 %, 320 px 48 %). Zwischen 40 und 62 rem und breiter das Bild wie bisher mit zwei Stapeln, Stärke nach Seitenzahl, mit demselben Versatz (Fassung V1 „Versetzt“); der Maßstab ist dafür rund 2 % kleiner, der Globus wandert bei 1280 × 800 742 px, bei 1024 × 768 907 px (1440 × 900 unverändert 656). Ein Tipp irgendwo in die Fläche wählt das nächste Buch. Unterschrift, Bedienung und Buchzeile bleiben.
 
 **Seit 23. Oktober (V78):** ab 62,0625 rem bleibt der Block aus Kugel, Steuerzeile und Tafel beim Rollen stehen (sticky), neben „Was ich schreibe“, der Überschrift „Mein digitales Bücherregal“ und der Legende, und hält 3 z über dem Zeitband, das über die ganze Breite frei bleibt (bei 1440 × 900 rund 656 px Weg); die Abschnitte bleiben im Quelltext getrennt, nur `main` ist ein gemeinsames Raster mit Unterrastern. Für die Lage beim Kleben zählt der Block so hoch, wie er mit dem längsten Steuerwort („noch einmal von vorn“) wird: In niedrigen Fenstern (Kugel unter rund 480 px) bricht die Steuerzeile an der letzten Station um, ohne dass Kugel und Steuerzeile springen; die Tafel hat dort, solange keine Station am Ende ist, 1¼ z mehr Luft nach unten (50 statt 14 px), die Kugel ist oben 35,6 px mehr angeschnitten.
 

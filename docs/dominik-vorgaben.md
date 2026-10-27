@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 25. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V86.
+Stand: 27. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V87.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -176,6 +176,16 @@ Für den Bau:
 - **Länder quer (Vorschlag B):** Nach einem Sprung zur Kugel steht in der Tafel hinter „bereist“ leise „zurück zum Verzeichnis“; ein Tipp bringt den Namen im Verzeichnis genau dorthin zurück, wo er beim Antippen stand. Vorher 1 bis 3 Wischer zurück, jetzt ein Tipp. Nur auf dem Telefon quer (schmal ohne Band); hochkant mit Band und am Desktop nicht. „zurück zum Verzeichnis“ sind die einzigen neuen Wörter dieser Runde.
 Ort in C: `website-c/index.html` (`figure#regalbild`: `versatzMm`, `staerkePx`, `regalZeichnen` mit `lage`, `anLehne`, `bau`, `groesster`; `naechstesStueck`), `website-c/vita.html` (`li.spanne`, `.bis`), `website-c/seite.js` (`fussNavigation`), `website-c/stil.css` (`.fuss-nav`), `website-c/lesen.html`, `website-c/laender.html` (`rueck`, `zurueck`, `.tafel-unter .rueckweg`); Änderungsprotokoll, 25. Oktober („Büchergrafik, Vita, Menü im Fuß“).
 Später geändert: nein.
+
+**V87. Website wieder offline: unter / ein Platzhalter mit dem ersten Bildschirm der Startseite, darunter „Seite im Aufbau.“; getrennt davon *Satoshi* als digitales Exposé ohne Navigation zu anderen Seiten.**
+„Ich bekomme leider eher schlechtes Feedback zur Seite von allen meinen engeren Kontakten. Können wir sie wieder offline nehmen? Ich würde einfach einen Platzhalter auf der Startseite. Vielleicht trotzdem was mit dem Globus einfach hier entsteht etwas ... Etc ... Der Globus kann sich vielleicht trotzdem bewegen. Also mach mal einen Vorschlag für eine Platzhalterwebsite. Einfach eine einzelne indizierte Seite ohne Verlinkungen. Im Grunde halt das was man sonst direkt sieht ... / Wenn man auf den Desktop navigiert. Und darunter ... Seite im Aufbau. Der Globus kann sich gerne auch schon Mal bewegen. Es soll neugierig machen. Aber ohne zu viel preiszugeben. / Dann brauche ich getrennt davon eine Seite für Satoshi. Das bleibt. Das ist das sogenannte digitale Exposé. Dafür eigentlich keine weiteren Änderungen. Also im Grunde die bestehende Seite ohne die Navigationselemente zu den anderen Seiten. Und dann einfach: Digitales Exposé (dazu schreibe ich noch kurz? Eine Anmerkung / bitte Link nur mit Zustimmung des Autors teilen)“ (27.10.)
+Für den Bau:
+- **Sofort (27.10.):** ein schlichter Zwischenstand von Hand in `veroeffentlichung/` (Startseite nur „Seite im Aufbau.“, die übrigen Seiten mit 307 auf /, *Satoshi* mit `noindex`; Änderungsprotokoll, 27. Oktober).
+- **Platzhalter** (`website-c/platzhalter.html`, unter / ausgeliefert): Name, Rolle, der erste Satz mit seinem Einflug und der Globus wie im ersten Bildschirm der Startseite, ohne Menü; darunter „Seite im Aufbau.“ (sein Wort, im Grad Text, in Tinte, vom ersten Bild an). Die Kugel zeichnet den Weg seines Lebens nach, ohne Ortsnamen, ohne Jahre, ohne Vergrößerung, in rund 25 s, und kommt dann zur Ruhe (Fassung C von dreien, Claudes Empfehlung). Weg bleiben Kurzvita, Tafel mit den Stationen (sie nennt Jahre und Vermerke der Vita), Steuerzeile, Regalbild, Werkverzeichnis, Zeitband und Bibliothek. Verweise nur auf Impressum und Datenschutz (in Deutschland Pflicht, § 5 DDG, DSGVO), klein im Fuß. Kein Countdown, kein Feld, kein Fortschritt. Nur / ist indiziert und steht in der Sitemap.
+- **Digitales Exposé** (`website-c/satoshi.html`, unter /satoshi): Inhalt unverändert; ohne Menü oben und im Fuß, der Name im Kopf ohne Verweis, Verweise im Text auf andere eigene Seiten als Text („Dominik Jäkel“ in den Eckdaten, „Bibliothek“ in „Wie er gemacht ist“). Es bleiben die Anker der Seite, die Adresse für Anfragen, Impressum, Datenschutz und die Verweise nach außen. An der Stelle des Menüs „Digitales Exposé“ und eine Stufe kleiner „Bitte den Link nur mit Zustimmung des Autors teilen.“ (nach seinem Wortlaut; er wollte selbst noch etwas schreiben, Übersicht 3, Punkt 20). `noindex`, nicht in der Sitemap, von keiner anderen Seite verlinkt.
+- **Werkzeug:** Der Schalter `AUSGABE` in `website-c/werkzeuge/veroeffentlichen.py` steht auf `'platzhalter'`; `'website'` bringt die volle Website unverändert zurück. Die volle Fassung bleibt in `website-c/` erhalten.
+Ort in C: `website-c/platzhalter.html`, `website-c/satoshi.html` (`data-nur`, `data-verweis`, `.expose-kopf`), `website-c/impressum.html`, `website-c/datenschutz.html`, `website-c/404.html` (Menü mit `data-nur="website"`), `website-c/werkzeuge/veroeffentlichen.py` (`AUSGABE`, `VERWEISE_PLATZHALTER`), `website-c/werkzeuge/artefakt.py`; Änderungsprotokoll, 27. Oktober („Platzhalter und digitales Exposé“).
+Später geändert: nein. Noch nicht live: erst nach seiner Abnahme (`docs/todo.md`).
 
 ---
 
@@ -637,6 +647,7 @@ Hier stehen nur die Themen. Einzelheiten werden nicht abgeschrieben.
 | „Nach eigener Zählung 67“ | **gestrichen** (20.10., 03:53) | nirgends |
 | Kolophon | von ihm (20.10., 04:10) | alle Seiten, `p.kolophon-fuss` |
 | Leseliste, nur Titel und Autor | von ihm (19.10., 20:12) | `daten/leseliste.js` |
+| „Seite im Aufbau.“, „Digitales Exposé“ | seine Wörter (27.10., V87) | C: `platzhalter.html` `p.aufbau`; `satoshi.html` `.expose-kopf` |
 
 ## Übersicht 2: Konflikte mit `aenderungen-website-b.md`
 
@@ -676,5 +687,11 @@ Ohne Konflikt, aber durch ihn entschieden: Frage 6 (V17), Frage 9 (V22), Frage 1
 16. **Szenentexte von *Satoshi*:** Text-Flagge 25 durchsehen. In C bleiben sie bis dahin wie in A (V36).
 17. **Einblenden (V83):** Auf *Satoshi* am Telefon den Globus früher zeigen (ohne Bindung ans Lesen, rund 2,1 statt 3,1 s)? Soll ein Klick auf das Buch die Bewegung der Kugel nicht freigeben? Auf *Ursprünge* den Halt an Göbekli Tepe schon mit der Blende beginnen lassen (erstes Gleiten nach rund 8,8 statt 11,8 s)?
 18. ~~**Grafik mit den Büchern** auf der Startseite („Die Grafik mit den Büchern könnte auch deutlich schöner sein“, sein Bruder; Dominik: „Sie könnten vielleicht nicht ganz aufeinander liegen. Gib mal 5 Versionen sowohl mobil als auch Desktop. Ich finde es auf dem Desktop eigentlich ganz okay. Aber vielleicht findest du auch noch was Besseres“, 24.10., 22:45): welche der fünf Fassungen (Vergleich in `docs/todo.md`)? Bis dahin bleibt das Bild, wie es ist (V75).~~ Beantwortet am 25. Oktober: „Nimm bei den Graphiken deine Empfehlungen.“ Eingebaut: am Telefon V5 „Eine Höhe“, breiter das Bild mit dem Versatz aus V1 (V86).
+
+19. **Platzhalter (V87):** Was genau kam bei seinen Kontakten schlecht an (die Kugel, die Bewegung, die Texte, die Menge)? Der Platzhalter behält Kugel, Bewegung und den ersten Satz.
+20. **Bitte im Exposé (V87):** „Bitte den Link nur mit Zustimmung des Autors teilen.“ so lassen oder seinen eigenen Wortlaut? Er schrieb „dazu schreibe ich noch kurz?“.
+21. **Rolle auf dem Platzhalter:** „Schriftsteller und Reisender“ wie bisher (die Kugel begründet es) oder nur „Schriftsteller“ wie im Zwischenstand von Hand?
+22. **Adresse des Exposés:** /satoshi behalten (geteilte Links bleiben gültig) oder für neue Weitergaben eine weniger erratbare Adresse (etwa /satoshi-expose-7k4q)?
+23. **Satz zur Bibliothek im Exposé:** „*Ficciones* steht in der Bibliothek, ebenso …“ steht dort als Text und meint eine Seite, die man vom Exposé aus nicht erreicht. Lassen oder im Exposé weglassen?
 
 Beantwortet am 24. Oktober vor dem Livegang (Dominik: „Vercel Hobby … 65 Länder bleiben. Simon-Kucher ja. Impressum und Datenschutz von mir freigegeben“), standen nicht als eigene Nummer in dieser Liste, sondern in `docs/todo.md`: **65 Länder** bleiben (V27); **Tarif bei Vercel:** Hobby (`TARIF = 'hobby'` in `website-c/werkzeuge/veroeffentlichen.py`, im Datenschutz die Fassung ohne Vertrag zur Auftragsverarbeitung); **Impressum und Datenschutz** freigegeben, die beiden Vermerke `[[ZU PRÜFEN: … freigegeben?]]` sind gelöscht. Die Angaben zu Vercel im Datenschutz stammen aus der Zwischenmeldung 2 der Vercel-Sitzung vom 24. Oktober (live gelesen).

@@ -1,6 +1,17 @@
 # To-do-Liste
 
-Stand: 25. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es tut, steht dabei: **Dominik** (Anmelden, Bezahlen, Entscheiden, alles im Browser) oder **Claude** (Code im Repository).
+Stand: 27. Oktober 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es tut, steht dabei: **Dominik** (Anmelden, Bezahlen, Entscheiden, alles im Browser) oder **Claude** (Code im Repository).
+
+## Platzhalter und digitales Exposé (27. Oktober, V87)
+
+Seit dem 27. Oktober ist ein schlichter Zwischenstand von Hand live (Startseite nur „Seite im Aufbau.“, die übrigen Seiten auf `/` umgeleitet, *Satoshi* mit `noindex`). Der Platzhalter mit Globus und das digitale Exposé sind gebaut und geprüft, aber noch nicht live.
+
+- [ ] **Dominik:** Den Platzhalter und das Exposé auf dem Testlink abnehmen (Bau mit `python3 website-c/werkzeuge/artefakt.py --platzhalter <ziel>`): unter `/` Name, Rolle, der erste Satz, „Seite im Aufbau.“ und die Kugel, die den Weg ohne Namen nachzeichnet und nach rund 25 s ruht; das Exposé ohne Menü, mit „Digitales Exposé“ und der Bitte.
+- [ ] **Dominik:** Dazu entscheiden (`docs/dominik-vorgaben.md`, Übersicht 3, Punkte 19 bis 23): was am Feedback schlecht war (betraf es Kugel oder Bewegung, behält der Platzhalter genau das); den Wortlaut der Bitte („Bitte den Link nur mit Zustimmung des Autors teilen.“) oder seinen eigenen; die Rolle „Schriftsteller und Reisender“ oder nur „Schriftsteller“; ob der Satz „*Ficciones* steht in der Bibliothek …“ im Exposé bleibt.
+- [ ] **Dominik:** Adresse des Exposés: `/satoshi` behalten (bereits geteilte Links bleiben gültig; `noindex`, nicht in der Sitemap, von keiner Seite verlinkt, aber leicht zu erraten) oder für neue Weitergaben eine Adresse mit Kennung wie `/satoshi-expose-7k4q` (dann leitet `/satoshi` auf `/`, alte Links führen nicht mehr zum Exposé; beide Adressen parallel machten nichts geheimer). Empfehlung: vorerst `/satoshi`. Geheim ist keine der beiden: wer den Link hat, sieht die Seite.
+- [ ] **Claude:** Nach der Abnahme live bauen: `python3 website-c/werkzeuge/veroeffentlichen.py` (der Schalter `AUSGABE` steht schon auf `'platzhalter'`), danach im Browser `pruefen-platz.cjs` hinter `server.py` (Verweise, die erst ein Skript setzt, sieht nur dieses Prüfprogramm), dann committen und pushen. Das ersetzt den Zwischenstand von Hand in `veroeffentlichung/`.
+- [ ] **Später, Rückkehr zur vollen Website:** in `website-c/werkzeuge/veroeffentlichen.py` `AUSGABE = 'website'` setzen, neu bauen, `pruefen.cjs` und `pruefen-artefakt.cjs` laufen lassen, pushen. Die Weiterleitungen (307, nicht dauerhaft) und `noindex` fallen damit von selbst weg; `platzhalter.html` geht dann nicht mit.
+- [ ] **Claude**, klein, offen aus der Prüfung vom 27. Oktober (Stufe „kann“): `seite.js` nennt im Platzhalter die alten Adressen; `daten/inhalt.js` ist öffentlich (das Exposé braucht es; eine eigene Datei nur für das Exposé wäre möglich); die wirkungslose Regel `[data-nur="expose"]` im Exposé; die kursive Vollkorn und `welt-50m.js` lädt auch der Platzhalter.
 
 ## Entscheidungen, die offen sind
 

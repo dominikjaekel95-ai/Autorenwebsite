@@ -1197,6 +1197,18 @@ Kopf, dann der Text nach 6.17 in der Satzbreite, Fuß. Gleich auf allen Breiten.
 
 Kopf, dann eine Spalte nach 6.18, Fuß. Gleich auf allen Breiten.
 
+### 9.10 Platzhalter und digitales Exposé (27. Oktober, V87)
+
+Solange die Website offline ist, liefert der Bau (`AUSGABE = 'platzhalter'`) nur vier Seiten und 404 aus; die volle Website bleibt in `website-c/` und kommt mit `AUSGABE = 'website'` unverändert zurück.
+
+**Platzhalter (`platzhalter.html`, unter `/`).** Der erste Bildschirm der Startseite ohne Menü: links Kopf (Name, Rolle), der erste Satz mit Einflug, ¾ z darunter „Seite im Aufbau.“ im Grad Text, in Tinte, aufrecht, vom ersten Bild an; rechts die Kugel wie auf der Startseite, ohne Tafel und Steuerzeile; unten im Fuß nur Impressum und Datenschutz, im Grad klein. Telefon: dasselbe untereinander, die Kugel unter „Seite im Aufbau.“; bei 393 × 852 (Text +10 %) passt alles in einen Bildschirm, am Desktop von 1024 bis 1920 ebenso, ohne Rollen. Bewegung: Folge wie 9.1 (Satz, zuletzt die Kugel, „gelassen“), dann zeichnet die Kugel den Weg des Lebens nach, ohne Namen, ohne Vergrößerung (k = 1), ein Ring an der jeweils letzten Station, Flug 1,4 bis 2,6 s nach der Weite (unter 8° 0,8 s), Halt 0,9 s (an nahen Stationen 0,5 s), zusammen rund 25 s; danach Ruhe, der ganze Weg ohne Ring. Ein Griff an die Kugel beendet den Ablauf; bei reduzierter Bewegung steht der Weg sofort. Kein Countdown, kein Feld, kein Fortschritt, kein „Hier entsteht …“ (`docs/ki-merkmale.md`).
+
+**Digitales Exposé (`satoshi.html`, unter `/satoshi`).** Die Seite wie 9.2, ohne Navigation zu anderen eigenen Seiten: kein Menü oben und im Fuß, der Name im Kopf ohne Verweis, „Dominik Jäkel“ in den Eckdaten und „Bibliothek“ in „Wie er gemacht ist“ als Text. An der Stelle des Menüs „Digitales Exposé“ im Lesegrad, 1 z unter der Rolle, darunter eine Stufe kleiner (Nebentext, in Tinte, ausgeglichen gebrochen) „Bitte den Link nur mit Zustimmung des Autors teilen.“; kein Label über dem Titel. Alles darunter steht wie in der vollen Website.
+
+**Impressum, Datenschutz, 404:** wie 9.9, ohne Menü und ohne „Zum Inhalt“; der Name im Kopf führt auf `/`.
+
+**Suchmaschinen:** nur `/` ist indiziert und steht in der Sitemap; Exposé, Impressum und Datenschutz tragen `noindex` (auch als `X-Robots-Tag`); die übrigen Adressen leiten mit 307 auf `/`.
+
 ---
 
 ## 10. Standardentscheidungen, die Dominik morgen prüfen sollte

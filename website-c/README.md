@@ -15,7 +15,9 @@ Dann `http://localhost:8000/` öffnen. Die Seiten laden nichts von fremden Serve
 ## Bauen für den Testlink auf claude.ai
 
 ```
-python3 website-c/werkzeuge/artefakt.py <zielordner>
+python3 website-c/werkzeuge/artefakt.py <zielordner>                 die Ausgabe, die AUSGABE nennt (jetzt der Platzhalter)
+python3 website-c/werkzeuge/artefakt.py --website <zielordner>       die volle Website
+python3 website-c/werkzeuge/artefakt.py --platzhalter <zielordner>   der Platzhalter mit dem digitalen Exposé
 ```
 
 Der Bau kopiert `website-c/` ohne `werkzeuge/`, ohne diese Datei und ohne Bilder, auf die nichts verweist. Er entfernt alle Kommentare aus HTML, CSS und den eigenen Skripten (nicht aus `lib/`) und nimmt der Hauptseite ihr Gerüst, weil claude.ai sie selbst in eines bettet. Die Klassen ihres `<body>` setzt dann ein kleines Skript. Liest man den Bau ohne das Gerüst von claude.ai, landen sie auf `<html>`. Stile fragen darum nur nach Vorfahren (`.mit-globus .kopf`), nie nach `body.mit-globus`.
@@ -28,7 +30,11 @@ Der Bau kopiert `website-c/` ohne `werkzeuge/`, ohne diese Datei und ohne Bilder
 python3 website-c/werkzeuge/veroeffentlichen.py              die echte Veröffentlichung
 python3 website-c/werkzeuge/veroeffentlichen.py --entwurf    auch mit offenen [[ZU PRÜFEN …]]-Stellen
 python3 website-c/werkzeuge/veroeffentlichen.py --ziel <ordner>   zum Ausprobieren woanders hin
+python3 website-c/werkzeuge/veroeffentlichen.py --website        für diesen Bau die volle Website, gleich, was AUSGABE sagt
+python3 website-c/werkzeuge/veroeffentlichen.py --platzhalter    für diesen Bau den Platzhalter, gleich, was AUSGABE sagt
 ```
+
+**Zwei Ausgaben (27. Oktober, V87).** Der Schalter `AUSGABE` oben in `werkzeuge/veroeffentlichen.py` wählt, was ausgeliefert wird; `artefakt.py` folgt ihm. Er steht auf `'platzhalter'`, solange die Website offline ist: unter `/` der Platzhalter (`platzhalter.html`: Name, Rolle, der erste Satz, der Globus, „Seite im Aufbau.“, Impressum und Datenschutz), unter `/satoshi` das digitale Exposé (die Seite *Satoshi* ohne Navigation zu anderen Seiten, mit „Digitales Exposé“ und der Bitte, den Link nur mit Zustimmung zu teilen), dazu Impressum, Datenschutz und `404.html`. Nur `/` ist indiziert und steht in der Sitemap; die übrigen Adressen leitet `vercel.json` mit 307 auf `/`. Was nur in einer Ausgabe steht, ist in den Seiten markiert (`data-nur="website"`, `data-nur="expose"`, `data-verweis="website"`, erklärt in `satoshi.html`). Zurück zur vollen Website: `AUSGABE = 'website'` und neu bauen, sonst ändert sich nichts. Vor jedem Livegang auch das Prüfprogramm im Browser laufen lassen; Verweise, die erst ein Skript setzt, sieht der Bau nicht.
 
 Vercel liefert den Ordner `../veroeffentlichung/` aus (Root Directory `veroeffentlichung`, Framework „Other“, kein Build-Schritt, siehe `../docs/vercel-einrichtung.md`). Vercel baut nur neu, wenn sich dort etwas ändert. Darum entsteht der Ordner nur mit diesem Werkzeug, als bewusster, geprüfter Stand. Von Hand wird in `veroeffentlichung/` nichts geändert, und Zwischenstände in `website-c/` gehen erst online, wenn jemand neu veröffentlicht.
 

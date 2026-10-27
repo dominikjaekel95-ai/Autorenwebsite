@@ -26,11 +26,14 @@
 </style>
 </head>
 <body>
-<a class="sprung" href="#inhalt">Zum Inhalt</a>
-
+<a class="sprung" href="#inhalt" data-nur="website">Zum Inhalt</a>
+<!-- Zwei Ausgaben (27. Oktober; Markierungen wie auf satoshi.html erklärt): data-nur="website" steht nur in der vollen Website.
+     In der Platzhalter-Ausgabe (werkzeuge/veroeffentlichen.py, AUSGABE) gibt es die übrigen Seiten nicht, darum fallen dort die
+     Navigation (mit ihr die Abschrift im Fuß, die seite.js aus ihr macht) und der Sprung „Zum Inhalt“ weg, der nur über sie führt.
+     Der Name im Kopf führt in beiden Ausgaben zur Startseite -->
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
-  <nav class="nav" aria-label="Website">
+  <nav class="nav" aria-label="Website" data-nur="website">
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>
       <li><a href="ursprung.html"><i>Ursprünge</i></a></li>

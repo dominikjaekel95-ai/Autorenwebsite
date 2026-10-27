@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dominik Jäkel</title>
+<meta name="description" content="Dominik Jäkel, Schriftsteller und Reisender. Seite im Aufbau.">
+<meta name="theme-color" content="#FFFEFC">
+<script>document.documentElement.classList.add('js');</script>
+<!-- Einblenden in Folge (FSeite.folge): Text zuerst, der Globus zuletzt. Schon hier gesetzt, damit vor dem ersten Bild nichts aufblitzt;
+     ohne Skript, im verborgenen Tab und bei reduzierter Bewegung wird nichts verborgen. Nach der Zurück- oder Vor-Taste (.zurueck)
+     steht alles sofort, ohne Einflug -->
+<script>(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="stil.css">
+<style>
+/* Platzhalter der Startseite (27. Oktober). Dominik, nach dem Feedback seiner engeren Kontakte: „Ich würde einfach einen
+   Platzhalter auf der Startseite. Vielleicht trotzdem was mit dem Globus einfach hier entsteht etwas … Im Grunde halt das was man
+   sonst direkt sieht ... / Wenn man auf den Desktop navigiert. Und darunter ... Seite im Aufbau. Der Globus kann sich gerne auch
+   schon Mal bewegen. Es soll neugierig machen. Aber ohne zu viel preiszugeben.“
+   Aus index.html bleiben der Kopf ohne Menü (Name und Rolle), der erste Satz mit seinem Einflug und der Globus; Kurzvita, Regal,
+   Tafel, Steuerzeile, „Was ich schreibe“ und das Bücherregal fallen weg, im Fuß bleiben nur Impressum und Datenschutz. Die Tafel
+   fällt auch weg, weil sie zu jeder Station Jahr, Ort und Vermerk aus der Vita nennt: die Kurzvita in Einzelteilen. Neu ist nur
+   „Seite im Aufbau.“ (Dominiks Wort): im Grad Text, in Tinte, aufrecht, nicht grau und nicht klein. Kein Countdown, kein Feld,
+   kein Fortschritt (docs/ki-merkmale.md). Es erscheint wie die Startseite im Tempo „gelassen“, der Globus zuletzt.
+   Fassung C „Hier entsteht etwas“ (gewählt aus drei Fassungen, 27. Oktober): die Kugel zeichnet den Weg des Lebens nach, ohne
+   Namen und ohne Vergrößerung, und kommt dann zur Ruhe. Nach dem Urteil zu den Fassungen steht „Seite im Aufbau.“ wie Text auf
+   jeder Seite vom ersten Bild an (die Regel „Text wartet nie“, FSeite.folge), ¾ z unter dem ersten Satz, wo auf der Startseite die
+   Kurzvita steht; die Stationen stehen nur als Koordinaten in dieser Seite (daten/inhalt.js mit den Vermerken der Vita lädt sie
+   nicht), und der Anfang in Europa ist kürzer.
+   Die Werkzeuge liefern diese Datei nur in der Platzhalter-Ausgabe aus, dort als index.html (werkzeuge/veroeffentlichen.py,
+   AUSGABE). Der erste Satz mit seinem Skript und seinen Stilen ist eine Abschrift aus index.html; die Werkzeuge prüfen, dass
+   sie Zeichen für Zeichen gleich ist. */
+
+/* ---------- Der erste Satz (02) ----------
+   IM Fell French Canon im Grad Einstieg, jedes Glied eine Zeile. Der Platz für drei Zeilen steht von Anfang an fest. */
+.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 3); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
+/* Letzte Sicherung, falls das Skript den Satz nicht anpassen kann: nie breiter als die Spalte, ein zu langes Wort bricht eher, als
+   über den Rand zu laufen (Dominik: „der Punkt von eigenes abgeschnitten“). Den Flug berührt das nicht, er verschiebt nur. */
+.globusseite > .einstieg { max-width: min(100%, var(--mass)); min-width: 0; overflow-wrap: break-word; }
+.einstieg.gesetzt .glied-satz, .einstieg .paar { white-space: nowrap; }
+.einstieg-satz { display: inline; }
+html:not(.js) .einstieg .glied-satz { display: block; }
+.einstieg-satz .w { display: inline-block; }
+/* Die Vorlesekopie zählt beim Markieren und Kopieren nicht mit */
+.einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
+/* Höchstens 1200 ms wartet der Satz auf seine Schrift. Läuft das Skript nicht weiter, steht er nach 2 s von selbst da */
+.einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 2s forwards; }
+@keyframes einstieg-notfall { to { opacity: 1; } }
+
+
+/* Die Seite ist mindestens so hoch wie das Fenster; der Fuß steht unten, auch wenn darüber wenig steht */
+body { min-height: 100svh; display: flex; flex-direction: column; }
+main { flex: 1 0 auto; }
+html:not(.js) .globusseite > .globus { display: none; }
+.aufbau { font-size: var(--g-text); line-height: var(--zh-text); }
+@media (max-width: 62rem) {
+  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); }
+}
+
+/* „Seite im Aufbau.“ steht, wo auf der Startseite die Kurzvita steht, ¾ z unter dem ersten Satz, auf jeder Breite; auf dem
+   Telefon folgt die Kugel darunter. Er steht vom ersten Bild an, ohne Blende: so ist er auch bei 320 × 568 und quer im ersten
+   Bildschirm, und die Spalte mit Name, Satz und Zeile ist geschlossen (Urteil zu den drei Fassungen, 27. Oktober) */
+.globusseite > .aufbau { margin-top: var(--z-dreiviertel); }
+</style>
+</head>
+<body class="mit-globus">
+<header class="kopf">
+  <h1 class="briefkopf"><span class="name">Dominik Jäkel</span> <span class="rolle">Schriftsteller und Reisender</span></h1>
+</header>
+
+<main>
+<section class="globusseite">
+  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt tagsüber</span> <span class="glied-satz">unter fremden Namen</span> <span class="glied-satz">und abends unter seinem eigenen.</span></p>
+  <script>
+  /* Der erste Satz fliegt bei jedem Laden einmal ein, Wort für Wort von rechts, in rund 2 s (02; Tempo T2 „gelassen“). Er wartet höchstens
+     1200 ms auf die IM Fell (bis zum 23. Oktober 600 ms, wie FSeite.schriftEinstieg; seite.js ist an dieser Stelle noch nicht
+     geladen). Auf dem Telefon im Mobilnetz und im Fenster der Claude-App kam sie oft später, dann stand der Satz ohne Flug (Dominik,
+     23. Oktober: „Beim Handy. Hatten wir uns entschieden, dass die Buchstaben nicht einfliegen. Finde das schon ganz schick
+     eigentlich?“; V79). So lange ist er unsichtbar und schon an die Spalte angepasst (in der Ersatzschrift), sein Platz ist
+     reserviert, nichts darunter rückt. Ist sie dann nicht da, steht der Satz ohne Flug und wird angepasst, wenn sie kommt. Bei
+     reduzierter Bewegung und nach der Zurück-Taste steht er sofort. Regal und Globus richten sich nach ihm (el.flug meldet Beginn
+     und Textmoment, sobald er fliegt; el.steht erfüllt sich nach dem Flug; FSeite.folge unten beim Einspieler des Lebens); er
+     selbst wartet auf nichts.
+     Vorleseprogramme lesen den Satz einmal als Ganzes (die Kopie in .unsichtbar), die Wortkästen sind aria-hidden. */
+  (function () {
+    'use strict';
+    var el = document.getElementById('einstieg');
+    if (!el || !el.querySelector('.glied-satz')) return;
+    var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+    var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
+    // Wann der Satz steht: nach dem Flug (true) oder gleich, ohne Flug (false). el.flug: { beginn, tm, ende } in ms ab dem Aufruf,
+    // sobald der Flug läuft, ohne Flug null. Danach richten sich Regal und Globus (FSeite.folge)
+    var stehtJetzt = function () {}, flugJetzt = function () {};
+    el.steht = new Promise(function (r) { stehtJetzt = r; });
+    el.flug = new Promise(function (r) { flugJetzt = r; });
+    var zurueck = document.documentElement.classList.contains('zurueck');
+
+    var text = el.textContent.replace(/\s+/g, ' ').trim();
+    var satz = document.createElement('span');
+    satz.className = 'einstieg-satz';
+    satz.setAttribute('aria-hidden', 'true');
+    while (el.firstChild) satz.appendChild(el.firstChild);
+    var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
+    // Was nie getrennt wird, auch wenn der Satz frei bricht: der Name und „seinem eigenen.“
+    var PAARE = ['Dominik Jäkel', 'seinem eigenen.'];
+    glieder.forEach(function (g) {
+      var woerter = g.textContent.trim().split(/\s+/);
+      g.textContent = '';
+      var paar = null;
+      woerter.forEach(function (w, i) {
+        var s = document.createElement('span');
+        s.className = 'w';
+        s.textContent = w;
+        var beginnt = PAARE.some(function (p) { return p.split(' ')[0] === w && p.split(' ')[1] === woerter[i + 1]; });
+        if (beginnt) {
+          if (i) g.appendChild(document.createTextNode(' '));
+          paar = document.createElement('span');
+          paar.className = 'paar';
+          paar.appendChild(s);
+          g.appendChild(paar);
+          return;
+        }
+        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); paar = null; return; }
+        if (i) g.appendChild(document.createTextNode(' '));
+        g.appendChild(s);
+      });
+    });
+    var vorlesen = document.createElement('span');
+    vorlesen.className = 'unsichtbar einstieg-vorlesen';
+    vorlesen.textContent = text;
+    el.appendChild(vorlesen);
+    el.appendChild(satz);
+    var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
+
+    /* Jedes Glied eine Zeile. Passt das längste nicht mit Luft in die Spalte, wird die Schrift kleiner, bis es passt, am Desktop
+       nicht unter 28,5 px, sonst nicht unter 20,7 px. Reicht auch das nicht, bricht der Satz frei; über den Rand läuft er nie.
+       Dominik am 23. Oktober, mit einem Bildschirmfoto: „Bei mir auf dem eigenen Handy ist der Punkt von eigenes abgeschnitten.“
+       Auf seinem Telefon stand der Satz rund 10 % größer, als die Anpassung ihn in Chromium setzt. Darum:
+       - Luft: das längste Glied nimmt höchstens 97 % der Spalte ein, mindestens 6 px bleiben frei (Stufen in anpassen());
+       - nach dem Setzen wird nachgemessen und, wenn nötig, noch einmal verkleinert (bis zu drei Durchgänge). Nicht jedes Telefon
+         vergrößert Schrift im Verhältnis (Schriftgröße des Systems, Textzoom einer App), und gerechnet wird von der Größe, die
+         gesetzt wurde, nicht von der, die das Gerät daraus macht;
+       - gesetzt wird noch einmal, wenn eine Schrift ankommt, nach dem Laden, nach dem Flug und wenn die Spalte breiter oder
+         schmaler wird (unten). Der Punkt bleibt; er gehört zum Satz. */
+    function laengstes() {
+      var links = el.getBoundingClientRect().left + el.clientLeft + (parseFloat(getComputedStyle(el).paddingLeft) || 0);
+      var rechts = links;
+      glieder.forEach(function (g) { rechts = Math.max(rechts, g.getBoundingClientRect().right); });
+      return rechts - links;
+    }
+    // Was beim letzten Setzen galt: Breite der Spalte und Breite jedes Worts. Ändert sich eins davon, wird neu gesetzt (unten)
+    var masse = '';
+    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
+    function setzen() {
+      anpassen();
+      masse = mass();
+    }
+    function anpassen() {
+      el.style.fontSize = '';
+      el.classList.add('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var unten = breit() ? 28.5 : 20.7;
+      /* Drei Stufen, jede mit bis zu drei Durchgängen: erst 97 % der Spalte (mindestens 6 px Luft) bis zum kleinsten Grad; reicht
+         das nicht, dort nur 2 px Luft (der Punkt steht dann noch in der Spalte, rechts bleibt der Rand der Seite); reicht auch das
+         nicht, bis zu einem harten Boden (19 px, am Desktop 26,2 px) weiter verkleinern. So wird es auf einem Telefon, das die
+         Schrift größer zeichnet, „minimal kleiner die Schrift“ (Dominik) statt vier Zeilen in voller Größe. */
+      var stufen = [
+        { ziel: Math.min(breite * .97, breite - 6), boden: unten },
+        { ziel: breite - 2, boden: unten },
+        { ziel: breite - 2, boden: Math.round(unten * .92 * 10) / 10 }
+      ];
+      var gesetzt = parseFloat(getComputedStyle(el).fontSize);
+      for (var st = 0; st < stufen.length; st++) {
+        var ziel = stufen[st].ziel, boden = stufen[st].boden;
+        for (var n = 0; n <= 3; n++) {
+          var lang = laengstes();
+          if (lang <= ziel) return;
+          if (n === 3 || gesetzt <= boden) break;
+          var kleiner = Math.floor(gesetzt * ziel / lang * 10) / 10;
+          if (kleiner >= gesetzt) kleiner = Math.round((gesetzt - .1) * 10) / 10;
+          if (kleiner < boden) kleiner = boden;
+          el.style.fontSize = kleiner + 'px';
+          gesetzt = kleiner;
+        }
+      }
+      /* Passt es auch so nicht, bricht der Satz frei, in der Ausgangsgröße, wenn er so in die Spalte passt (wie bisher bei
+         320 px); sonst im kleinsten Grad, damit nie ein Wort über den Rand läuft. */
+      el.classList.remove('gesetzt');
+      el.style.fontSize = '';
+      if (laengstes() > breite) el.style.fontSize = unten + 'px';   // laengstes() misst die Glieder, der Flug verschiebt nur die Wörter
+    }
+    // Ein zweites Setzen wartet aufs nächste Bild; mehrere Anlässe zugleich setzen einmal
+    var bild = 0;
+    function nachsetzen() {
+      if (bild) return;
+      var los = function () { bild = 0; setzen(); };
+      bild = window.requestAnimationFrame ? window.requestAnimationFrame(los) : setTimeout(los, 16);
+    }
+
+    /* Die Frist gilt nach der Uhr: Ist die Seite länger blockiert (Aufbau der Kugel auf einem langsamen Telefon) und kommt die
+       Schrift in dieser Zeit, gewann sonst die zuerst eingereihte Zusage, und der Satz flog erst nach 3 bis 3,6 s ein, statt nach
+       1,2 s ohne Flug zu stehen */
+    function imFell(ms) {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var ab = performance.now();
+      var laden = document.fonts.load('38px "IM Fell French Canon"').then(function (l) { return !!(l && l.length); });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; })
+        .then(function (da) { return da && performance.now() - ab <= ms + 100; });
+    }
+
+    /* Wie Lettern, die von rechts an die Zeile geschoben werden (Tempo T2 „gelassen“): je Wort ein Weg von 0,2 em in WEG ms, in der
+       Kurve (.22,.7,.28,1), und getrennt davon die Deckkraft in DECKKRAFT ms (ease), so dass man jedes Wort satt werden sieht;
+       VERSATZ ms von Wort zu Wort, ATEM ms zwischen den Gliedern, kein Nachfedern, keine Unschärfe (bis zum 24. Oktober lag über
+       jedem Wort eine unscharfe Kopie, die ins scharfe überblendete; im Tempo „gelassen“, das Dominik am 24. Oktober gewählt hat,
+       entfällt sie). Ganz: 9 × VERSATZ + 2 × ATEM + WEG, rund 1,9 s. Textmoment: das letzte Wort steht zu 95 % (Beginn +
+       max(DECKKRAFT, 0,6 × WEG)). Beides sind Animationen von Deckkraft und Verschiebung, die der Browser ohne den Hauptfaden
+       weiterführt: baut die Seite in dieser Zeit die Kugel auf, stockt nichts */
+    var WEG = 800, DECKKRAFT = 420, VERSATZ = 75, ATEM = 220;
+    function einfliegen() {
+      if (!woerter[0].animate) { flugJetzt(null); stehtJetzt(false); return; }
+      var t = 0, laeufe = [];
+      glieder.forEach(function (g, gi) {
+        if (gi) t += ATEM;
+        Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
+          if (wi) t += VERSATZ;
+          laeufe.push(w.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DECKKRAFT, delay: t, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'backwards' }));
+          laeufe.push(w.animate([{ transform: 'translateX(.2em)' }, { transform: 'translateX(0)' }], { duration: WEG, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+        });
+      });
+      var letztes = t, gemeldet = false;
+      var melden = function () {
+        if (gemeldet) return;
+        gemeldet = true;
+        var b = laeufe[0].startTime;
+        if (b == null || !isFinite(b)) b = performance.now();
+        flugJetzt({ beginn: b, tm: b + letztes + Math.max(DECKKRAFT, .6 * WEG), ende: b + letztes + Math.max(DECKKRAFT, WEG) });
+      };
+      if (laeufe[0].ready) laeufe[0].ready.then(melden, melden); else melden();
+      setTimeout(melden, 1000);
+      // Nach dem Flug noch einmal nachgemessen; steht der Satz richtig, ändert sich nichts
+      var gestanden = function () { setzen(); stehtJetzt(true); };
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(gestanden, gestanden);
+    }
+
+    setzen();
+    if (!still() && !zurueck) el.classList.add('wartet');
+    imFell(1200).then(function (da) {
+      setzen();
+      // Hat der Notbehelf im Stil den Satz schon gezeigt (das Skript stand länger als 2 s), fliegt er nicht mehr: sonst verschwände er
+      var schonDa = el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
+      el.classList.remove('wartet');
+      if (da && !schonDa && !still() && !zurueck) einfliegen(); else { flugJetzt(null); stehtJetzt(false); }
+    });
+    // Kommt eine Schrift später, wird der Satz noch einmal an die Spalte angepasst (ohne Flug); ebenso nach dem Laden der Seite
+    if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(nachsetzen).catch(function () {});
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', nachsetzen);
+    window.addEventListener('load', nachsetzen);
+
+    /* Wird die Spalte breiter oder schmaler, wird neu gesetzt, auch wenn das Fenster gleich breit bleibt (etwa wenn eine App ihr
+       Fenster erst nach dem Laden einpasst); ebenso, wenn ein Wort breiter oder schmaler wird, weil eine Schrift angekommen ist.
+       Das geschieht nach dem Umbruch und vor dem nächsten Bild, man sieht den Satz also nie über den Rand laufen. Die Höhe zählt
+       nicht, und was setzen() selbst ändert, steht danach in masse: so setzt der Beobachter sich nicht immer wieder selbst. Nach
+       einem Setzen schaut er erst im nächsten Bild wieder hin (sonst meldet der Browser eine Schleife). */
+    if (window.ResizeObserver) {
+      var beobachter = new ResizeObserver(function () {
+        if (mass() === masse) return;
+        setzen();
+        beobachter.disconnect();
+        requestAnimationFrame(beobachten);
+      });
+      var beobachten = function () {
+        beobachter.observe(el);
+        woerter.forEach(function (w) { beobachter.observe(w); });
+      };
+      beobachten();
+    } else {
+      var warte = 0;
+      window.addEventListener('resize', function () {
+        clearTimeout(warte);
+        warte = setTimeout(function () { if (mass() !== masse) setzen(); }, 140);
+      });
+    }
+  })();
+  </script>
+  <p class="aufbau">Seite im Aufbau.</p>
+  <figure class="globus" id="globus" data-folge="2">
+    <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
+    <p class="hinweis" hidden></p>
+    <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden.</p>
+  </figure>
+</section>
+</main>
+
+<footer class="fuss">
+  <p class="impressum"><a href="impressum.html">Impressum</a><br><a href="datenschutz.html">Datenschutz</a></p>
+</footer>
+
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="globus/kern.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite;
+  if (!F) return;
+  const { $ } = F;
+  const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas');
+  /* C: derselbe Weg des Lebens, aber ohne Namen und ohne Vergrößerung (k = 1): die Kugel dreht sich von Ort zu Ort, die Linie
+     wächst mit, ein Ring zeigt die jeweils letzte Station. Langsamer als der Takt des Lebens, weil dort die Zeit für die Tafel dazu
+     kam: Flug 1,4 s bis 2,6 s nach der Weite, 0,9 s Halt, kein Herauszoomen auf weiten Wegen. Am Ende der Überblick ohne Ring.
+     Ein Griff an die Kugel beendet ihn, dann steht der ganze Weg; bei reduzierter Bewegung steht er sofort. Ohne namen schriebe
+     der Kern die Orte selbst an: darum eine leere Beschriftung.
+     Die acht Stationen aus INHALT.leben (daten/inhalt.js) stehen hier nur als Breite und Länge, die Aufenthalte mit 'neben'; ohne
+     Namen, Jahre und Vermerke, damit davon nichts im Quelltext dieser Seite steht. name ist nur der Schlüssel, mit dem der Kern die
+     Stationen auseinanderhält, er steht nirgends. Die Werkzeuge prüfen, dass die Liste zu daten/inhalt.js passt */
+  const LEBEN = [
+    [51.51, 7.47], [47.99, 7.85], [52.39, 13.06], [6.93, 79.86, 'neben'], [6.37, 2.43, 'neben'], [22.63, 120.3], [52.52, 13.4], [39.57, 2.65, 'neben']
+  ].map(([lat, lon, art], i) => ({ name: 'station-' + (i + 1), lat, lon, neben: art === 'neben' }));
+  const HEUTE = LEBEN.map(s => !s.neben).lastIndexOf(true);          // der letzte Wohnort
+  const BLICK = { mitte: [62, 30], k: 1 };
+  function blickBerechnen() {
+    if (!g) return;
+    const m = F.blickFuer(canvas, LEBEN, { lon: [20, 100], lat: [5, 50] });
+    if (m) BLICK.mitte = m;
+  }
+  const g = F.globus({ canvas, flaeche, hinweis: $('.hinweis', figur), namen: { orte: () => [], spur: () => [], aktiv: () => null } });
+  /* Ein Daumen, der zum Rollen schräg ansetzt, dreht die Kugel nicht und beendet keinen Ablauf (wie auf der Startseite) */
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5 });
+  if (!g) {
+    figur.classList.add('ohne-globus');
+    $('#ersatz').hidden = false;
+  }
+  if (g) { blickBerechnen(); g.ebene({ orte: LEBEN, laender: false, blick: BLICK }, { fliegen: false }); }
+  const nachWeite = (kurz, lang, bis) => grad => Math.round(kurz + (lang - kurz) * Math.min(1, grad / bis));
+  /* Der Anfang in Europa: Dortmund, Freiburg und Potsdam liegen bei k = 1 als ein Fleck beieinander (3,5° und 5,6° je Schritt),
+     im vollen Takt stand die Kugel dort rund 5,5 s fast still. Schritte unter NAH Grad fliegen darum in 0,8 s, und an beiden Enden
+     eines solchen Schritts hält sie 0,5 s statt 0,9 s (Urteil zu den Fassungen: „Anfang straffen“) */
+  const NAH = 8;
+  const weite = (a, b) => window.d3 && a && b ? d3.geoDistance([a.lon, a.lat], [b.lon, b.lat]) * 180 / Math.PI : 180;
+  const kurzerHalt = (s, i) => weite(LEBEN[i - 1], s) < NAH || (!s.neben && weite(s, LEBEN[i + 1]) < NAH);
+  const flug = nachWeite(1400, 2600, 180);
+  const takt = { flug: grad => grad < NAH ? 800 : flug(grad), rueckweg: flug, halt: (s, i) => kurzerHalt(s, i) ? 500 : 900, zoom: 1, rueckZoom: () => 1, delle: false };
+  const ablauf = F.ablauf({ globus: g, stationen: LEBEN, tafel: null, steuerzeile: false, takt, endeBei: HEUTE, ruhe: 'ruhe' });
+  /* Einblenden in Folge wie auf der Startseite (FSeite.folge, Tempo „gelassen“): erst der Satz, der Globus zuletzt, dann die
+     Bewegung. Ohne Regal gibt es kein Nebenbild; wer vorher klickt, tippt, eine Taste drückt oder rollt, sieht sofort alles */
+  F.folge({ text: F.textmoment($('#einstieg')), lesen: () => F.woerter($('#einstieg .einstieg-vorlesen') || $('#einstieg')), kugel: () => g });
+  ablauf.einspielen();
+  F.schriften(2500).then(() => { if (g) { blickBerechnen(); g.zeichnen(); } });
+})();
+</script>
+</body>
+</html>

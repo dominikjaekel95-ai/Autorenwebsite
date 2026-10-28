@@ -33,14 +33,20 @@ Zwei Ausgaben (27. Oktober), wie in der Veröffentlichung (werkzeuge/veroeffentl
   python3 website-c/werkzeuge/artefakt.py <zielordner>                 die Ausgabe, die AUSGABE in veroeffentlichen.py nennt
                                                                         (seit dem 27. Oktober 'platzhalter', solange die Website
                                                                         offline ist)
-  python3 website-c/werkzeuge/artefakt.py --platzhalter <zielordner>   der Platzhalter: platzhalter.html als Hauptseite, dazu
-                                                                        satoshi.html als digitales Exposé, Impressum, Datenschutz
+  python3 website-c/werkzeuge/artefakt.py --platzhalter <zielordner>   der Platzhalter: index.html mit den Markierungen der
+                                                                        Platzhalter-Ausgabe als Hauptseite, dazu satoshi.html als
+                                                                        digitales Exposé, vita.html (nur von dort aus verwiesen),
+                                                                        Impressum, Datenschutz
   python3 website-c/werkzeuge/artefakt.py --website <zielordner>       die volle Website, gleich, was AUSGABE sagt
+  … --schluss v1|v2                                                     im Platzhalter die Fassung des Schlusses „Seite im
+                                                                        Aufbau.“ am Desktop für diesen Bau, gleich, was SCHLUSS in
+                                                                        veroeffentlichen.py sagt
 In beiden Ausgaben setzt der Bau die Markierungen data-nur und data-verweis um (ausgabe_umsetzen unten) und lässt keine stehen.
-In der vollen Website fehlt platzhalter.html; im Platzhalter fehlen die übrigen Seiten und aus daten/ und bilder/, worauf keine
-ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht mitgeht. Wohin jede Seite dort verweisen darf,
-steht in VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf Impressum und Datenschutz, auf das Exposé nur das
-Exposé selbst); auch das prüft der Bau.
+Im Platzhalter trägt das <html> der Hauptseite dazu data-ausgabe="platzhalter" und data-schluss (das Skript ganz oben setzt beides,
+wie die Sprache); danach richten sich die Skripte und Stile der Seite. Im Platzhalter fehlen die übrigen Seiten und aus daten/ und
+bilder/, worauf keine ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht mitgeht. Wohin jede Seite dort
+verweisen darf, steht in VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf Impressum, Datenschutz, Anker, die
+Adresse für Anfragen und nach außen; auf die Vita nur das Exposé); auch das prüft der Bau.
 
 Zum Schluss prüft der Bau, dass jede unveränderte Kopie der Quelle gleicht, dass in keiner ausgelieferten Text-Datei ein
 Kommentar übrig ist, und nennt Zahl und Größe der Dateien.
@@ -209,11 +215,19 @@ def html_ohne_kommentare(t):
 #   data-verweis="website"  ein Verweis, der nur in der vollen Website gilt; im Platzhalter wird das <a> ein <span> mit denselben
 #                           übrigen Attributen (href, rel, target, hreflang, aria-current fallen weg), der Text bleibt
 #   data-nur="expose"       nur im Platzhalter (dem digitalen Exposé); in der vollen Website fällt das Element weg
-# Was bleibt, verliert die Markierung; danach steht keine mehr da. Gefunden werden die Elemente mit html.parser (Start- und
-# Endmarke mit Verschachtelung), nicht über Textersetzung. Eine Seite ohne Markierung bleibt Zeichen für Zeichen, wie sie ist.
+#   data-nur="platzhalter"  ebenso, für die Startseite als Platzhalter (der Schluss „Seite im Aufbau.“, sein Stil und Skript)
+# Was bleibt, verliert die Markierung; danach steht keine mehr da. Ein <span>, das nichts als die Markierung trägt, ist nur eine
+# Hülle (etwa um einen Satz, der im Platzhalter wegfällt): bleibt sein Inhalt, fallen Start- und Endmarke ganz weg, damit die
+# Seite dort Zeichen für Zeichen bleibt, wie sie ohne Hülle war. Zeigt danach ein aria-labelledby, aria-describedby oder
+# aria-controls auf eine id, die mit einem weggefallenen Element ging, fällt dieser Verweis weg (und das Attribut, wenn nichts
+# bleibt). Gefunden werden die Elemente mit html.parser (Start- und Endmarke mit Verschachtelung), nicht über Textersetzung. Eine
+# Seite ohne Markierung bleibt Zeichen für Zeichen, wie sie ist.
 AUSGABEN = ('website', 'platzhalter')
+NUR_WERTE = ('website', 'expose', 'platzhalter')
 LEERE_ELEMENTE = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr'}
 MARKIERUNG = re.compile(r'\sdata-(?:nur|verweis)=')
+IDREF = ('aria-labelledby', 'aria-describedby', 'aria-controls')
+HUELLE = re.compile(r'<span\s+data-nur="[a-z]+"\s*>')
 
 
 class _Markierte(HTMLParser):
@@ -287,16 +301,22 @@ def ausgabe_umsetzen(text, ausgabe, seite='?'):
     aenderungen = []   # (anfang, ende, ersatz)
     for e in p.funde:
         nur, verweis = e['attrs'].get('data-nur'), e['attrs'].get('data-verweis')
-        if nur not in (None, 'website', 'expose') or verweis not in (None, 'website') or (nur and verweis):
+        if (nur is not None and nur not in NUR_WERTE) or verweis not in (None, 'website') or (nur and verweis):
             fehler(f'{seite}: unbekannte Markierung data-nur={nur!r} data-verweis={verweis!r} an <{e["tag"]}>')
         if verweis and e['tag'] != 'a':
             fehler(f'{seite}: data-verweis an <{e["tag"]}>; nur an <a> erlaubt')
         (sa, se), (ea, ee) = e['start'], e['ende']
-        if (nur == 'website' and ausgabe == 'platzhalter') or (nur == 'expose' and ausgabe == 'website'):
+        if (nur == 'website' and ausgabe == 'platzhalter') or (nur in ('expose', 'platzhalter') and ausgabe == 'website'):
             za, zn = text.rfind('\n', 0, sa) + 1, text.find('\n', ee)
             if zn >= 0 and not text[za:sa].strip() and not text[ee:zn].strip():
                 sa, ee = za, zn + 1
             aenderungen.append((sa, ee, ''))
+            continue
+        if nur and e['tag'] == 'span' and HUELLE.fullmatch(text[sa:se]):
+            # Eine Hülle: bleibt ihr Inhalt, fallen Start- und Endmarke weg
+            if text[ea:ee].lower() != '</span>':
+                fehler(f'{seite}: <span data-nur> ohne eigenes </span>')
+            aenderungen += [(sa, se, ''), (ea, ee, '')]
             continue
         marke = _attribut_weg(text[sa:se], 'data-nur' if nur else 'data-verweis', seite)
         if verweis and ausgabe == 'platzhalter':
@@ -318,6 +338,14 @@ def ausgabe_umsetzen(text, ausgabe, seite='?'):
     neu = ''.join(teile) + text[pos:]
     if MARKIERUNG.search(neu):
         fehler(f'{seite}: nach dem Umsetzen der Ausgabe {ausgabe} steht noch eine Markierung data-nur oder data-verweis da')
+    # Verweise auf ids, die mit einem weggefallenen Element gingen (etwa aria-labelledby auf eine Überschrift, die es nur in der
+    # vollen Website gibt)
+    weg = set(re.findall(r'\sid="([^"]+)"', text)) - set(re.findall(r'\sid="([^"]+)"', neu))
+    if weg:
+        def ohne(m):
+            refs = [r for r in m.group(3).split() if r not in weg]
+            return f'{m.group(1)}{m.group(2)}="{" ".join(refs)}"' if refs else ''
+        neu = re.sub(r'(\s)(' + '|'.join(IDREF) + r')="([^"]*)"', ohne, neu)
     return neu
 
 
@@ -348,6 +376,19 @@ def tarif_waehlen(text):
     return v.tarif_waehlen(text, v.TARIF)
 
 
+SCHLUESSE = ('v1', 'v2')
+
+
+def ausgabe_kennzeichnen(text, schluss, seite=HAUPTSEITE):
+    """Die Startseite als Platzhalter: <html lang="de"> bekommt data-ausgabe="platzhalter" und data-schluss (v1 oder v2), den
+    Schalter, nach dem sich ihre Skripte und Stile richten (Stil und Skript mit data-nur="platzhalter" in index.html)."""
+    if schluss not in SCHLUESSE:
+        fehler(f'Schluss {schluss!r}; erlaubt sind {", ".join(SCHLUESSE)}')
+    if len(re.findall(r'<html\b', text)) != 1 or text.count('<html lang="de">') != 1:
+        fehler(f'{seite}: <html lang="de"> steht nicht genau einmal da (oder trägt schon weitere Attribute)')
+    return text.replace('<html lang="de">', f'<html lang="de" data-ausgabe="platzhalter" data-schluss="{schluss}">', 1)
+
+
 def hauptseite_umbauen(text):
     m = re.match(r'﻿?<!doctype html>[ \t]*\n?', text, re.I)
     if not m:
@@ -358,8 +399,8 @@ def hauptseite_umbauen(text):
     if not m:
         fehler(f'{HAUPTSEITE}: kein <html> nach dem Doctype')
     html_attr = attribute(m.group(1), 'html')
-    if set(html_attr) - {'lang'}:
-        fehler(f'<html> trägt mehr als lang: {html_attr}')
+    if set(html_attr) - {'lang', 'data-ausgabe', 'data-schluss'}:
+        fehler(f'<html> trägt mehr als lang, data-ausgabe und data-schluss: {html_attr}')
     text = text[m.end():]
 
     m = re.match(r'<head>[ \t]*\n?', text)
@@ -399,7 +440,12 @@ def hauptseite_umbauen(text):
 
     oben = []
     if html_attr.get('lang'):
-        oben.append(f"<script>document.documentElement.lang = {js_text(html_attr['lang'])};</script>\n")
+        # Dazu im Platzhalter die beiden Schalter am html (ausgabe_kennzeichnen), bevor ein Stil oder Skript nach ihnen fragt
+        schalter = ''.join(f" document.documentElement.setAttribute({js_text(k)}, {js_text(html_attr[k])});"
+                           for k in ('data-ausgabe', 'data-schluss') if k in html_attr)
+        oben.append(f"<script>document.documentElement.lang = {js_text(html_attr['lang'])};{schalter}</script>\n")
+    elif set(html_attr) - {'lang'}:
+        fehler('<html> trägt data-ausgabe oder data-schluss, aber keine Sprache')
     klassen = body_attr.get('class', '').split()
     koerper = ''
     if klassen:
@@ -421,9 +467,9 @@ def verwiesene_bilder(dateien):
 
 
 def dateien_sammeln(v, ausgabe='website'):
-    """Die Dateien der Ausgabe und die ausgelassenen Bilder. Volle Website: alles außer platzhalter.html, ohne Bilder, auf die nichts
-    verweist. Platzhalter: nur die Seiten aus SEITEN_PLATZHALTER (index.html kommt dann aus platzhalter.html); was aus daten/ und
-    bilder/ mitgeht, entscheidet main() nach den bereinigten Texten (veroeffentlichen.verwiesen)."""
+    """Die Dateien der Ausgabe und die ausgelassenen Bilder. Volle Website: alles, ohne Bilder, auf die nichts verweist. Platzhalter:
+    nur die Seiten aus SEITEN_PLATZHALTER; was aus daten/ und bilder/ mitgeht, entscheidet main() nach den bereinigten Texten
+    (veroeffentlichen.verwiesen)."""
     alle = []
     for ordner, unterordner, namen in os.walk(QUELLE):
         rel = Path(ordner).relative_to(QUELLE)
@@ -433,11 +479,14 @@ def dateien_sammeln(v, ausgabe='website'):
             if name.startswith('.') or str(p) in AUSLASSEN:
                 continue
             alle.append(p)
-    weg_seiten = {Path(v.PLATZHALTER)}
+    # Nur die elf Seiten (404.html gehört zur Veröffentlichung); eine weitere Seite (etwa ein alter platzhalter.html) bricht ab
+    seiten = {p.name for p in alle if p.suffix == '.html' and len(p.parts) == 1}
+    if seiten != set(v.SEITEN):
+        fehler(f'Die Seiten in website-c/ sind nicht die elf aus SEITEN: zu viel {sorted(seiten - set(v.SEITEN))}, '
+               f'es fehlt {sorted(set(v.SEITEN) - seiten)}')
     if ausgabe == 'platzhalter':
-        weg_seiten |= {Path(s) for s in v.SEITEN if s not in v.SEITEN_PLATZHALTER}
+        weg_seiten = {Path(s) for s in v.SEITEN if s not in v.SEITEN_PLATZHALTER}
         return [p for p in alle if p not in weg_seiten], []
-    alle = [p for p in alle if p not in weg_seiten]
     bilder = {p for p in alle if p.parts[0] == 'bilder'}
     weg = sorted(bilder - verwiesene_bilder(alle))
     return [p for p in alle if p not in weg], weg
@@ -446,8 +495,8 @@ def dateien_sammeln(v, ausgabe='website'):
 def verweise_pruefen(texte, dateien, regeln):
     """Platzhalter: jeder lokale Verweis einer Seite (href, src) zeigt auf eine Datei, die mitgeht; nach außen nur https. Dazu
     führen die Verweise jeder Seite (<a href>, <area href>, <form action>) nur dorthin, wohin regeln (VERWEISE_PLATZHALTER in
-    veroeffentlichen.py) es erlauben: eigene Seiten (ein Anker allein zeigt auf die Seite selbst) und, wenn erlaubt, mailto: und
-    nach außen."""
+    veroeffentlichen.py) es erlauben: eigene Seiten und, wenn erlaubt, mailto: und nach außen. Ein Anker allein (#globus) bleibt auf
+    der Seite selbst und ist immer erlaubt, wenn es sein Ziel gibt."""
     namen = {p.as_posix() for p in dateien}
     probleme = []
     for p, text in texte.items():
@@ -470,7 +519,11 @@ def verweise_pruefen(texte, dateien, regeln):
                     probleme.append(f'{p}: {name}="{ref}"')
                     continue
                 pfad = ref.split('#')[0].split('?')[0]
-                z = os.path.normpath((p.parent / pfad).as_posix()) if pfad else p.as_posix()
+                if not pfad:
+                    if verweis and ref[1:] and not re.search(r'\sid="' + re.escape(ref[1:]) + '"', text):
+                        probleme.append(f'{p}: Anker {ref} ohne Ziel auf der Seite')
+                    continue
+                z = os.path.normpath((p.parent / pfad).as_posix())
                 if z not in namen:
                     probleme.append(f'{p}: Verweis auf {ref}, die Datei geht nicht mit')
                 elif verweis and z not in erlaubt:
@@ -501,32 +554,41 @@ def main():
         fehler('--platzhalter und --website schließen einander aus')
     ausgabe = 'platzhalter' if '--platzhalter' in argumente else 'website' if '--website' in argumente else v.AUSGABE
     argumente = [a for a in argumente if a not in ('--platzhalter', '--website')]
+    schluss = v.SCHLUSS
+    if '--schluss' in argumente:
+        i = argumente.index('--schluss')
+        if i + 1 >= len(argumente):
+            fehler('--schluss braucht v1 oder v2')
+        schluss = argumente[i + 1]
+        del argumente[i:i + 2]
     if len(argumente) != 1 or argumente[0].startswith('-'):
-        fehler('Aufruf: python3 website-c/werkzeuge/artefakt.py [--platzhalter | --website] <zielordner>')
+        fehler('Aufruf: python3 website-c/werkzeuge/artefakt.py [--platzhalter | --website] [--schluss v1|v2] <zielordner>')
     if ausgabe not in AUSGABEN:
         fehler(f'AUSGABE in veroeffentlichen.py ist {ausgabe!r}; erlaubt sind {", ".join(AUSGABEN)}')
+    if schluss not in SCHLUESSE:
+        fehler(f'Schluss {schluss!r}; erlaubt sind {", ".join(SCHLUESSE)}')
     platz = ausgabe == 'platzhalter'
     ziel = Path(argumente[0]).expanduser().resolve()
     ziel_pruefen(ziel)
 
-    if platz:
-        if not (QUELLE / v.PLATZHALTER).is_file():
-            fehler(f'Ausgabe platzhalter: {v.PLATZHALTER} fehlt in {QUELLE}')
-        v.platzhalter_pruefen()
     dateien, weg = dateien_sammeln(v, ausgabe)
     if Path(HAUPTSEITE) not in dateien:
         fehler(f'{HAUPTSEITE} fehlt in {QUELLE}')
 
-    def quelle_von(p):
-        return QUELLE / (v.PLATZHALTER if platz and p == Path(HAUPTSEITE) else p)
-
-    # Texte ohne Kommentare, die Seiten mit umgesetzten Markierungen der Ausgabe
+    # Texte ohne Kommentare, die Seiten mit umgesetzten Markierungen der Ausgabe; im Platzhalter trägt die Hauptseite die Schalter
     texte = {}
     for p in dateien:
-        neu = bereinigen(p, quelle_von(p).read_text(encoding='utf-8')) if p.suffix in TEXTDATEIEN else None
+        neu = bereinigen(p, (QUELLE / p).read_text(encoding='utf-8')) if p.suffix in TEXTDATEIEN else None
         if neu is not None and p.suffix == '.html':
             neu = ausgabe_umsetzen(neu, ausgabe, p.as_posix())
         if p == Path(HAUPTSEITE):
+            if platz:
+                neu = ausgabe_kennzeichnen(neu, schluss)
+                # Dieselbe Prüfung der Startseite als Platzhalter wie in der Veröffentlichung (ohne den Text der Skripte)
+                probleme = []
+                v.platzhalter_seite_pruefen(re.sub(r'(<script\b[^>]*>).*?(</script>)', r'\1\2', neu, flags=re.S | re.I), schluss, probleme)
+                if probleme:
+                    fehler('Prüfung der Hauptseite fehlgeschlagen:\n  ' + '\n  '.join(probleme))
             neu = hauptseite_umbauen(neu)
         if p == Path('datenschutz.html'):
             neu = tarif_waehlen(neu)
@@ -561,11 +623,12 @@ def main():
 
     groesse = sum((ziel / p).stat().st_size for p in dateien)
     print(f'Bau in {ziel}')
-    print(f'Ausgabe: {ausgabe}' + (f' (Hauptseite aus {v.PLATZHALTER}; dazu {", ".join(v.SEITEN_PLATZHALTER[1:])})' if platz else ' (die volle Website)'))
+    print(f'Ausgabe: {ausgabe}' + (f' (Hauptseite: die Startseite als Platzhalter, Schluss {schluss}; dazu {", ".join(v.SEITEN_PLATZHALTER[1:])})'
+                                   if platz else ' (die volle Website)'))
     print(f'{len(dateien)} Dateien, {groesse / 1024:.1f} KB')
     print(f'Hauptseite: {ziel / HAUPTSEITE} (ohne eigenes Gerüst)')
     print(f'Ohne Kommentare: {len(bereinigt)} Dateien')
-    seiten_weg = sorted(s for s in v.SEITEN if s not in v.SEITEN_PLATZHALTER) if platz else [v.PLATZHALTER]
+    seiten_weg = sorted(s for s in v.SEITEN if s not in v.SEITEN_PLATZHALTER) if platz else []
     print('Ausgelassen: ' + ', '.join(sorted(AUSLASSEN) + seiten_weg + [str(p) + ' (nirgends verwiesen)' for p in weg]))
 
 

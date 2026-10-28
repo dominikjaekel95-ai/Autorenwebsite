@@ -9,6 +9,8 @@ Aufruf (aus einem beliebigen Ordner):
   … --ziel <ordner>                                             woanders hin bauen, etwa zum Ausprobieren
   … --platzhalter                                               für diesen Bau die Platzhalter-Ausgabe, gleich, was AUSGABE sagt
   … --website                                                   für diesen Bau die volle Website, gleich, was AUSGABE sagt
+  … --schluss v1|v2                                             im Platzhalter für diesen Bau diese Fassung des Schlusses am
+                                                                Desktop, gleich, was SCHLUSS sagt
 
 Die Adresse der Website steht an genau einer Stelle: BASIS_URL unten. Aus ihr entstehen Canonical, Open Graph, die
 strukturierten Daten, sitemap.xml und robots.txt. Ändert sich die Domain, nur BASIS_URL ändern und neu bauen.
@@ -17,31 +19,37 @@ Schalter oben im Werkzeug: TARIF (Tarif bei Vercel, 'pro' oder 'hobby'; None, so
 Auftragsverarbeitung im Datenschutz (Runde 6, S8). AUSGABE ('website' oder 'platzhalter', 27. Oktober) wählt, was ausgeliefert
 wird. Er steht auf 'platzhalter', solange die Website offline ist (Dominik: „Können wir sie wieder offline nehmen?“): so bringt
 ein Bau ohne Zusatz nicht aus Versehen die volle Website zurück. Zurück zur vollen Website: AUSGABE = 'website' und neu bauen;
-die volle Website bleibt dabei Byte für Byte, wie sie vor dem Schalter war.
+die volle Website bleibt dabei, wie sie vor dem Schalter war (alle Markierungen fallen dort weg). SCHLUSS ('v1' oder 'v2') wählt
+im Platzhalter, wie am Desktop der Schluss „Seite im Aufbau.“ kommt: v1 „Alles verblasst“ (wie auf dem Telefon, mit dem Globus),
+v2 „Der Globus bleibt“ (er wandert mit und bleibt klar, links verblasst alles). Auf dem Telefon sind beide gleich.
 
 Zwei Ausgaben aus derselben Quelle (27. Oktober). Dominik: „Können wir sie wieder offline nehmen? Ich würde einfach einen
-Platzhalter auf der Startseite. […] Einfach eine einzelne indizierte Seite ohne Verlinkungen.“ und „Dann brauche ich getrennt davon
-eine Seite für Satoshi. Das bleibt. Das ist das sogenannte digitale Exposé.“
-  - 'website': die volle Website mit den elf Seiten, wie unten beschrieben. platzhalter.html geht nicht mit.
-  - 'platzhalter': nur fünf Seiten. Unter / steht platzhalter.html (als index.html; der erste Bildschirm der Startseite ohne Menü,
-    darunter „Seite im Aufbau.“), unter /satoshi das digitale Exposé, dazu /impressum, /datenschutz und 404.html. Indiziert und in
-    der Sitemap ist nur /; das Exposé, Impressum und Datenschutz tragen noindex (auch als X-Robots-Tag in vercel.json). Alle
-    übrigen Adressen der elf Seiten, mit und ohne .html, leitet vercel.json mit 307 (nicht dauerhaft, damit ein späterer Neustart
-    ohne Altlasten geht) auf / weiter. Strukturierte Daten nur auf /: Person, knapp (Name, Adresse, Beruf), ohne Kurzvita und Werke.
-    Aus daten/ und bilder/ geht nur mit, worauf eine ausgelieferte Seite, ein Stil oder ein eigenes Skript verweist (ohne Kommentare
-    gelesen); Schriften mit Lizenzen, Bibliotheken, Kern und Icons gehen ganz mit. Vorher prüft der Bau, dass platzhalter.html den
-    Kopf, den ersten Satz mit Skript und Stilen und die Zeile Impressum/Datenschutz Zeichen für Zeichen aus index.html übernimmt und
-    dass ihre Stationen (nur Breite, Länge, Aufenthalt) zu INHALT.leben in daten/inhalt.js passen. Im Bau der vollen Website
-    prüft er das auch und nennt Abweichungen als Hinweis, ohne abzubrechen.
+Platzhalter auf der Startseite. […] Einfach eine einzelne indizierte Seite ohne Verlinkungen.“, „Dann brauche ich getrennt davon
+eine Seite für Satoshi. Das bleibt. Das ist das sogenannte digitale Exposé.“ und zum Platzhalter: „Halte von der Startseite die drei
+Elemente. Vita. Globus. Das Regal mit den Projekten und dem Schreibtisch“.
+  - 'website': die volle Website mit den elf Seiten, wie unten beschrieben.
+  - 'platzhalter': nur sechs Seiten. Unter / steht die Startseite selbst (index.html) ohne Menü, Werkverzeichnis und Bücherregal;
+    darunter kommt beim Rollen der Schluss „Seite im Aufbau.“ (Fassung nach SCHLUSS, am html als data-schluss; dazu
+    data-ausgabe="platzhalter", nach dem sich Stil und Skript der Seite richten). Unter /satoshi das digitale Exposé, unter /vita
+    die Vita (Dominik: „man soll sie eben nur über Satoshi finden können. Nicht über andere Seiten“), dazu /impressum,
+    /datenschutz und 404.html. Indiziert und in der Sitemap ist nur /; Exposé, Vita, Impressum und Datenschutz tragen noindex
+    (auch als X-Robots-Tag in vercel.json). Alle übrigen Adressen der elf Seiten, mit und ohne .html, leitet vercel.json mit 307
+    (nicht dauerhaft, damit ein späterer Neustart ohne Altlasten geht) auf / weiter. Strukturierte Daten nur auf /: die Person wie
+    in der vollen Website (Name, Adresse, Beruf, Kurzvita, Preis, Verein), ohne Werke. Meta-Beschreibung und Open Graph wie auf der
+    Startseite. Aus daten/ und bilder/ geht nur mit, worauf eine ausgelieferte Seite, ein Stil oder ein eigenes Skript verweist
+    (ohne Kommentare gelesen); Schriften mit Lizenzen, Bibliotheken, Kern und Icons gehen ganz mit.
     Verweise (Dominik: „ohne Verlinkungen“; Impressum und Datenschutz bleiben, § 5 DDG und DSGVO): Der Bau prüft je Seite, wohin
-    ihre Verweise führen dürfen (VERWEISE_PLATZHALTER): / nur auf Impressum und Datenschutz; das Exposé nur auf sich selbst (Anker),
-    Impressum, Datenschutz, die Adresse für Anfragen und nach außen; Impressum, Datenschutz und 404.html nur auf /, Impressum,
-    Datenschutz, die Adresse für Anfragen und nach außen. Auf /satoshi verweist so keine andere Seite: den Link gibt der Autor
-    weiter. Verweise, die erst ein Skript im Browser setzt, sieht der Bau nicht; darum vor jedem Livegang auch das Prüfprogramm
-    im Browser laufen lassen (docs/todo.md).
+    ihre Verweise führen dürfen (VERWEISE_PLATZHALTER; ein Anker auf der Seite selbst ist immer erlaubt, wenn es sein Ziel gibt):
+    / nur auf Impressum, Datenschutz, die Adresse für Anfragen und nach außen; das Exposé dazu auf die Vita; die Vita auf das
+    Exposé, / (der Name im Kopf, „auf dem Globus“), Impressum, Datenschutz, Anfragen und nach außen; Impressum, Datenschutz und
+    404.html nur auf /, Impressum, Datenschutz, Anfragen und nach außen. Auf /satoshi verweist so nur die Vita, auf /vita nur das
+    Exposé: den Link zum Exposé gibt der Autor weiter. Verweise, die erst ein Skript im Browser setzt, sieht der Bau nicht (auf /
+    macht das Skript des Platzhalters jeden Verweis auf eine andere eigene Seite zu Text); darum vor jedem Livegang auch das
+    Prüfprogramm im Browser laufen lassen (docs/todo.md).
   - In beiden setzt der Bau die Markierungen in den Seiten um (artefakt.ausgabe_umsetzen; erklärt auf satoshi.html):
-    data-nur="website" nur in der vollen Website, data-nur="expose" nur im Platzhalter, data-verweis="website" ein Verweis, der im
-    Platzhalter reiner Text wird. Danach steht keine Markierung mehr da (geprüft).
+    data-nur="website" nur in der vollen Website, data-nur="expose" und data-nur="platzhalter" nur im Platzhalter,
+    data-verweis="website" ein Verweis, der im Platzhalter reiner Text wird. Danach steht keine Markierung mehr da (geprüft), und
+    jedes aria-labelledby, aria-describedby und aria-controls zeigt auf eine vorhandene id (geprüft).
 
 Was der Bau tut:
   - Er kopiert website-c/ ohne werkzeuge/, README.md, versteckte Dateien und ohne Bilder aus bilder/, auf die nichts verweist.
@@ -118,29 +126,32 @@ TARIF = 'hobby'
 # claude.ai (artefakt.py) folgt demselben Schalter. Er steht auf 'platzhalter', solange die Website offline ist: dann bringt ein
 # Bau ohne Zusatz nicht aus Versehen die volle Website zurück. Zurück zur vollen Website: hier 'website' eintragen und neu bauen
 AUSGABE = 'platzhalter'
-PLATZHALTER = 'platzhalter.html'
-SEITEN_PLATZHALTER = ['index.html', 'satoshi.html', 'impressum.html', 'datenschutz.html']
-NOINDEX_PLATZHALTER = {'satoshi.html', 'impressum.html', 'datenschutz.html'}
+SEITEN_PLATZHALTER = ['index.html', 'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html']
+NOINDEX_PLATZHALTER = {'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html'}
 LD_PLATZHALTER = {'index.html': 'Person'}
-# Wohin im Platzhalter jede Seite verweisen darf (<a href>, <area href>, <form action>): die eigenen Seiten (ein Anker auf der
-# Seite selbst zählt als diese Seite) und ob dazu mailto: und Verweise nach außen (AUSSEN_ERLAUBT) sein dürfen. Dominik: „Einfach
+# Wohin im Platzhalter jede Seite verweisen darf (<a href>, <area href>, <form action>): die eigenen Seiten und ob dazu mailto: und
+# Verweise nach außen (AUSSEN_ERLAUBT) sein dürfen; ein Anker auf der Seite selbst (#globus) ist immer erlaubt. Dominik: „Einfach
 # eine einzelne indizierte Seite ohne Verlinkungen.“ Impressum und Datenschutz bleiben (§ 5 DDG, DSGVO). Auf das Exposé
-# (satoshi.html) verweist nur das Exposé selbst; die übrigen Seiten führen zurück auf / (der Name im Kopf, „Zur Startseite“)
+# (satoshi.html) verweist nur die Vita, auf die Vita nur das Exposé (Dominik: „Du sollst von Satoshi auf meine Vita verweisen. Die
+# Vita soll nicht tot sein. ABER .... man soll sie eben nur über Satoshi finden können. Nicht über andere Seiten“); die übrigen
+# Seiten führen zurück auf / (der Name im Kopf, „Zur Startseite“), / selbst auf keine eigene Seite außer Impressum und Datenschutz
 VERWEISE_PLATZHALTER = {
-    'index.html': ({'impressum.html', 'datenschutz.html'}, False),
-    'satoshi.html': ({'satoshi.html', 'impressum.html', 'datenschutz.html'}, True),
+    'index.html': ({'impressum.html', 'datenschutz.html'}, True),
+    'satoshi.html': ({'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html'}, True),
+    'vita.html': ({'index.html', 'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html'}, True),
     'impressum.html': ({'index.html', 'impressum.html', 'datenschutz.html'}, True),
     'datenschutz.html': ({'index.html', 'impressum.html', 'datenschutz.html'}, True),
     '404.html': ({'index.html', 'impressum.html', 'datenschutz.html'}, True),
 }
-# Was platzhalter.html Zeichen für Zeichen aus index.html übernimmt: Name und Rolle, der erste Satz mit seinem Skript, seine Stile
-# und die Zeile im Fuß (platzhalter_pruefen)
-AUS_DER_STARTSEITE = {
-    'Name und Rolle': r'<h1 class="briefkopf">.*?</h1>',
-    'der erste Satz mit seinem Skript': r'<p class="einstieg[^"]*" id="einstieg">.*?</p>\s*<script>.*?</script>',
-    'die Stile des ersten Satzes': r'/\* ---------- Der erste Satz \(02\) ----------.*?@keyframes einstieg-notfall \{[^{}]*\{[^{}]*\} \}',
-    'die Zeile Impressum und Datenschutz': r'<p class="impressum">.*?</p>',
-}
+
+# ---------- Schalter: der Schluss des Platzhalters am Desktop (27. Oktober) ----------
+# Dominik: „Auf dem Desktop soll der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite im Aufbau.“
+# 'v1' „Alles verblasst“: wie auf dem Telefon verblasst beim Rollen der ganze Startbildschirm samt Globus. 'v2' „Der Globus bleibt“:
+# der Globus wandert mit und bleibt klar, links verblassen Satz, Vita und Regal; am Ende des Wegs steht er ganz neben der Zeile, der
+# Fuß folgt beim Weiterrollen. „Seite im Aufbau.“ steht am Ende in beiden etwas über der Mitte des Fensters, in der Textspalte.
+# Vorgabe v1 (28. Oktober, nach dem Urteil: am Telefon und am Desktop dieselbe Geste; in v2 ist die klare Kugel am Ende der Seite
+# oben angeschnitten). Die Wahl liegt bei Dominik. --schluss v1|v2 im Aufruf gilt für einen Bau; artefakt.py folgt demselben Schalter
+SCHLUSS = 'v1'
 
 QUELLE = Path(__file__).resolve().parents[1]
 ZIEL = QUELLE.parent / 'veroeffentlichung'
@@ -271,9 +282,7 @@ def vorher_pruefen(dateien, ausgabe='website'):
             fehler(f'website-c/{p} gibt es; beide schreibt nur der Bau (aus BASIS_URL). Bitte die Datei entfernen')
     if ausgabe not in artefakt.AUSGABEN:
         fehler(f'AUSGABE ist {ausgabe!r}; erlaubt sind {", ".join(artefakt.AUSGABEN)}')
-    if ausgabe == 'platzhalter' and PLATZHALTER not in namen:
-        fehler(f'Ausgabe platzhalter: website-c/{PLATZHALTER} fehlt')
-    seiten = {p.name for p in dateien if p.suffix == '.html' and len(p.parts) == 1} - {FEHLERSEITE, PLATZHALTER}
+    seiten = {p.name for p in dateien if p.suffix == '.html' and len(p.parts) == 1} - {FEHLERSEITE}
     if seiten != set(SEITEN):
         fehler(f'Die Seiten in website-c/ sind nicht die elf aus SEITEN: zu viel {sorted(seiten - set(SEITEN))}, '
                f'es fehlt {sorted(set(SEITEN) - seiten)}')
@@ -396,16 +405,23 @@ def profile_lesen(seite_js):
     return re.findall(r'\burl\s*:\s*[\'"](https://[^\'"\s]+)[\'"]', m.group(1))
 
 
+def person_daten(texte):
+    """Die Person (Startseite und Vita der vollen Website, / im Platzhalter): Name, Adresse der Startseite, Beruf, Kurzvita, Preis,
+    Verein; sameAs aus PROFILE, sobald es dort steht. Keine Werke, keine Adresse der Vita."""
+    person = {'@context': 'https://schema.org', '@type': 'Person', '@id': BASIS_URL + '/#person', 'name': PERSON_NAME,
+              'url': url_fuer('index.html'), 'jobTitle': PERSON_BERUF, 'description': kurzvita(texte[Path('index.html')]),
+              'award': PERSON_PREIS, 'affiliation': PERSON_VEREIN}
+    profile = profile_lesen(texte[Path('seite.js')])
+    if profile:
+        person['sameAs'] = profile
+    return person
+
+
 def strukturierte_daten(texte):
     """Je Seite aus LD_SEITEN das Objekt für <script type="application/ld+json">, aus den Seiten selbst gelesen."""
     person_id = BASIS_URL + '/#person'
     autor = {'@type': 'Person', '@id': person_id, 'name': PERSON_NAME, 'url': url_fuer('index.html')}
-    person = {'@context': 'https://schema.org', '@type': 'Person', '@id': person_id, 'name': PERSON_NAME, 'url': url_fuer('index.html'),
-              'jobTitle': PERSON_BERUF, 'description': kurzvita(texte[Path('index.html')]), 'award': PERSON_PREIS,
-              'affiliation': PERSON_VEREIN}
-    profile = profile_lesen(texte[Path('seite.js')])
-    if profile:
-        person['sameAs'] = profile
+    person = person_daten(texte)
     s = texte[Path('satoshi.html')]
     buch = {'@context': 'https://schema.org', '@type': 'Book', '@id': url_fuer('satoshi.html') + '#buch',
             'name': nur_text(stueck(s, r'<h1\b[^>]*>(.*?)</h1>', '<h1>', 'satoshi.html')), 'url': url_fuer('satoshi.html'),
@@ -426,61 +442,6 @@ def strukturierte_daten(texte):
              'description': nur_text(stueck(u, r'<meta name="description" content="([^"]*)">', 'Meta-Beschreibung', 'ursprung.html')),
              'hasPart': baende}
     return {'index.html': person, 'vita.html': person, 'satoshi.html': buch, 'ursprung.html': reihe}
-
-
-def person_knapp(texte):
-    """Strukturierte Daten des Platzhalters (nur auf /): die Person mit Name, Adresse und Beruf, ohne Kurzvita, Preis, Verein und
-    Werke; sameAs aus PROFILE, sobald es dort steht."""
-    person = {'@context': 'https://schema.org', '@type': 'Person', '@id': BASIS_URL + '/#person', 'name': PERSON_NAME,
-              'url': url_fuer('index.html'), 'jobTitle': PERSON_BERUF}
-    profile = profile_lesen(texte[Path('seite.js')])
-    if profile:
-        person['sameAs'] = profile
-    return {'index.html': person}
-
-
-# ---------- Platzhalter (27. Oktober) ----------
-def stationen_lesen(text, muster, was, probleme):
-    """Der Text zwischen den Klammern einer Liste von Stationen im Quelltext ('' und ein Problem, wenn sie fehlt)."""
-    m = re.search(muster, text, re.S)
-    if not m:
-        probleme.append(f'{was}: die Liste der Stationen nicht gefunden')
-        return ''
-    return m.group(1)
-
-
-def platzhalter_pruefen(streng=True):
-    """platzhalter.html übernimmt aus index.html Name und Rolle, den ersten Satz mit Skript und Stilen und die Zeile im Fuß
-    Zeichen für Zeichen (AUS_DER_STARTSEITE), und ihre Stationen passen zu INHALT.leben (daten/inhalt.js): dieselbe Reihenfolge,
-    Breite, Länge und Aufenthalt (neben). Ändert sich etwas davon auf der Startseite oder in den Daten, baut der Platzhalter erst,
-    wenn platzhalter.html nachgezogen ist (oder die Regel hier mit Absicht geändert wird). streng (Platzhalter): bei Abweichung
-    kein Bau; sonst (volle Website) nur die Liste der Abweichungen, als Hinweis, dass platzhalter.html nachzuziehen ist."""
-    probleme = []
-    start = (QUELLE / 'index.html').read_text(encoding='utf-8')
-    platz = (QUELLE / PLATZHALTER).read_text(encoding='utf-8')
-    for was, muster in AUS_DER_STARTSEITE.items():
-        teile = re.findall(muster, start, re.S)
-        if len(teile) != 1:
-            probleme.append(f'index.html: {was} steht nicht genau einmal da ({len(teile)}); AUS_DER_STARTSEITE in veroeffentlichen.py anpassen')
-        elif platz.count(teile[0]) != 1:
-            probleme.append(f'{PLATZHALTER}: {was} stimmt nicht mehr Zeichen für Zeichen mit index.html überein; bitte aus index.html übernehmen')
-    js = artefakt.js_ohne_kommentare((QUELLE / 'daten' / 'inhalt.js').read_text(encoding='utf-8'))
-    leben = []
-    for e in re.findall(r'\{[^{}]*\}', stationen_lesen(js, r'\bleben\s*:\s*\[(.*?)\]', 'daten/inhalt.js', probleme)):
-        lat, lon = re.search(r'\blat\s*:\s*(-?[\d.]+)', e), re.search(r'\blon\s*:\s*(-?[\d.]+)', e)
-        if not lat or not lon:
-            probleme.append(f'daten/inhalt.js: eine Station in leben ohne lat oder lon: {e[:60]}')
-            continue
-        leben.append((float(lat.group(1)), float(lon.group(1)), bool(re.search(r'\bneben\s*:\s*true\b', e))))
-    hier = [(float(a), float(b), bool(c)) for a, b, c in re.findall(r"\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*(,\s*'neben'\s*)?\]",
-                                                                    stationen_lesen(platz, r'const LEBEN = \[(.*?)\]\.map', PLATZHALTER, probleme))]
-    if not leben or hier != leben:
-        probleme.append(f'{PLATZHALTER}: die Stationen (const LEBEN) passen nicht zu INHALT.leben in daten/inhalt.js:\n  hier  {hier}\n  dort  {leben}')
-    if re.search(r'<script src="daten/inhalt\.js"', platz):
-        probleme.append(f'{PLATZHALTER} lädt daten/inhalt.js; die Stationen stehen in der Seite selbst')
-    if probleme and streng:
-        fehler('\n'.join(probleme))
-    return probleme
 
 
 def verwiesen(dateien, texte, immer):
@@ -746,7 +707,8 @@ def umleitungen_pruefen(konfig, umleiten, noindex, namen, probleme):
 
 def verweise_platzhalter(seite, text, probleme):
     """Platzhalter: wohin die Verweise einer Seite führen (<a href>, <area href>, <form action>), nach VERWEISE_PLATZHALTER. text ist
-    das HTML der Seite ohne den Text ihrer Skripte. Ein Anker allein (#inhalt) zeigt auf die Seite selbst."""
+    das HTML der Seite ohne den Text ihrer Skripte. Ein Anker allein (#globus) bleibt auf der Seite selbst und ist erlaubt, wenn
+    es sein Ziel gibt."""
     erlaubt, auch_aussen = VERWEISE_PLATZHALTER.get(seite, (set(), False))
     if seite not in VERWEISE_PLATZHALTER:
         probleme.append(f'{seite}: keine Regel in VERWEISE_PLATZHALTER')
@@ -761,10 +723,33 @@ def verweise_platzhalter(seite, text, probleme):
                 probleme.append(f'{seite}: Verweis auf {ref}')
                 continue
             z = ziel_von(seite, ref)
-            ziel = (z or Path(seite)).as_posix()
+            if z is None:
+                if ref[1:] and not re.search(r'\sid="' + re.escape(ref[1:]) + '"', text):
+                    probleme.append(f'{seite}: Anker {ref} ohne Ziel auf der Seite')
+                continue
+            ziel = z.as_posix()
             if ziel not in erlaubt:
                 probleme.append(f'{seite}: Verweis auf {ref} (im Platzhalter verweist diese Seite nur auf '
                                 f'{", ".join(sorted(adresse(s) for s in erlaubt))}{", mailto: und nach außen" if auch_aussen else ""})')
+
+
+def platzhalter_seite_pruefen(text, schluss, probleme):
+    """Platzhalter, /: die Startseite ohne Menü, Werkverzeichnis und Bücherregal, mit genau einem Schluss „Seite im Aufbau.“, ihrem
+    Stil und ihrem Skript (text ohne den Text der Skripte). Dominik: „Halte von der Startseite die drei Elemente. Vita. Globus. Das
+    Regal mit den Projekten und dem Schreibtisch“"""
+    if schluss not in artefakt.SCHLUESSE:
+        probleme.append(f'index.html: Schluss {schluss!r}; erlaubt sind {", ".join(artefakt.SCHLUESSE)}')
+    if text.count('<p class="aufbau">Seite im Aufbau.</p>') != 1 or text.count('id="schluss"') != 1:
+        probleme.append('index.html: „Seite im Aufbau.“ (p.aufbau in #schluss) steht nicht genau einmal da')
+    for was, muster in (('ein Menü', r'<nav\b'), ('das Werkverzeichnis', r'class="verzeichnis"'), ('das Bücherregal', r'id="gelesen"'),
+                        ('„Was ich schreibe“', r'id="schreiben-titel"'), ('der Sprung „Zum Inhalt“', r'class="sprung"'),
+                        ('„Ausführlich in der Vita“', r'Ausführlich in der')):
+        if re.search(muster, text):
+            probleme.append(f'index.html: im Platzhalter steht noch {was}')
+    for was, muster in (('der Kopf', r'<h1 class="briefkopf">'), ('der erste Satz', r'id="einstieg"'), ('die Kurzvita', r'<p class="vita">'),
+                        ('der Globus', r'id="globus"'), ('das Regal', r'id="regalbild"'), ('die Tafel', r'id="tafel"')):
+        if not re.search(muster, text):
+            probleme.append(f'index.html: im Platzhalter fehlt {was}')
 
 
 def vercel_pruefen(konfig, hashes, probleme):
@@ -797,8 +782,9 @@ def vercel_pruefen(konfig, hashes, probleme):
             probleme.append(f'vercel.json: Cache-Control für {quelle} ist „{cache.get(quelle)}“')
 
 
-def pruefen(neu, dateien, seiten, noindex, ld_seiten=LD_SEITEN, umleiten=None):
-    """Prüft den Bau in neu; umleiten: im Platzhalter die Seiten, die vercel.json auf / weiterleitet (sonst None, keine)."""
+def pruefen(neu, dateien, seiten, noindex, ld_seiten=LD_SEITEN, umleiten=None, schluss=None):
+    """Prüft den Bau in neu; umleiten: im Platzhalter die Seiten, die vercel.json auf / weiterleitet (sonst None, keine); schluss:
+    im Platzhalter die Fassung des Schlusses, die das html von / tragen muss."""
     namen = {p.as_posix() for p in dateien}
     probleme, hashes = [], set()
     for p in dateien:
@@ -837,8 +823,16 @@ def pruefen(neu, dateien, seiten, noindex, ld_seiten=LD_SEITEN, umleiten=None):
             probleme.append(f'{seite}: Markierung data-nur oder data-verweis übrig (artefakt.ausgabe_umsetzen)')
         if re.search(r'(?:href|src|action)="\s*javascript:', text, re.I):
             probleme.append(f'{seite}: javascript:-Verweis (verbietet die CSP)')
+        # Jeder Verweis auf eine id (aria-labelledby und Verwandte) trifft eine id der Seite (artefakt.ausgabe_umsetzen)
+        ids = set(re.findall(r'\sid="([^"]+)"', text))
+        for name, refs in re.findall(r'\s(' + '|'.join(artefakt.IDREF) + r')="([^"]*)"', text):
+            for r in refs.split() or ['']:
+                if r not in ids:
+                    probleme.append(f'{seite}: {name}="{refs}" zeigt auf keine id der Seite ({r or "leer"})')
         if umleiten is not None:
             verweise_platzhalter(seite, text, probleme)
+            if seite == 'index.html':
+                platzhalter_seite_pruefen(text, schluss, probleme)
         sichtbar = re.sub(r'<(script|style)\b.*?</\1>', '', text, flags=re.S | re.I)
         if TESTSYSTEM.search(sichtbar):
             probleme.append(f'{seite}: „{TESTSYSTEM.search(sichtbar).group(0)}“ in der Seite')
@@ -878,8 +872,10 @@ def pruefen(neu, dateien, seiten, noindex, ld_seiten=LD_SEITEN, umleiten=None):
         for teil in pflicht:
             if teil not in kopf:
                 probleme.append(f'{seite}: im Kopf fehlt {teil}')
-        if not re.match(r'<!doctype html>\s*<html lang="de">\s*<head>', text, re.I) or not text.rstrip().endswith('</html>'):
-            probleme.append(f'{seite}: Gerüst unvollständig')
+        html_soll = (f'<html lang="de" data-ausgabe="platzhalter" data-schluss="{schluss}">' if umleiten is not None and seite == 'index.html'
+                     else '<html lang="de">')
+        if not re.match(r'<!doctype html>\s*' + re.escape(html_soll) + r'\s*<head>', text, re.I) or not text.rstrip().endswith('</html>'):
+            probleme.append(f'{seite}: Gerüst unvollständig (erwartet {html_soll})')
     for css in [p for p in dateien if p.suffix == '.css']:
         for ref in re.findall(r'url\(\s*["\']?([^"\')]+)', (neu / css).read_text(encoding='utf-8')):
             if not re.match(r'data:|#', ref) and ziel_von(css.as_posix(), ref).as_posix() not in namen:
@@ -916,51 +912,56 @@ def main():
         fehler('--platzhalter und --website schließen einander aus')
     ausgabe = 'platzhalter' if '--platzhalter' in argumente else 'website' if '--website' in argumente else AUSGABE
     argumente = [a for a in argumente if a not in ('--entwurf', '--platzhalter', '--website')]
+    schluss = SCHLUSS
+    if '--schluss' in argumente:
+        i = argumente.index('--schluss')
+        if i + 1 >= len(argumente):
+            fehler('--schluss braucht v1 oder v2')
+        schluss = argumente[i + 1]
+        del argumente[i:i + 2]
     ziel = ZIEL
     if argumente[:1] == ['--ziel'] and len(argumente) == 2:
         ziel = Path(argumente[1]).expanduser().resolve()
     elif argumente:
-        fehler('Aufruf: python3 website-c/werkzeuge/veroeffentlichen.py [--entwurf] [--platzhalter | --website] [--ziel <ordner>]')
+        fehler('Aufruf: python3 website-c/werkzeuge/veroeffentlichen.py [--entwurf] [--platzhalter | --website] [--schluss v1|v2] '
+               '[--ziel <ordner>]')
+    if schluss not in artefakt.SCHLUESSE:
+        fehler(f'SCHLUSS ist {schluss!r}; erlaubt sind {", ".join(artefakt.SCHLUESSE)}')
     ziel_pruefen(ziel)
     platz = ausgabe == 'platzhalter'
 
     dateien = dateien_sammeln()
     vorher_pruefen(dateien, ausgabe)
-    if platz:
-        platzhalter_pruefen()
-    hinweise = [] if platz or PLATZHALTER not in {p.as_posix() for p in dateien} else platzhalter_pruefen(streng=False)
     heute = datetime.date.today().isoformat()
     if TARIF not in (None, 'pro', 'hobby'):
         fehler(f"TARIF ist {TARIF!r}; erlaubt sind None (noch offen), 'pro' und 'hobby'")
     zahl_texte, arten = texte_zaehlen()
 
-    # Die Seiten der Ausgabe: in der vollen Website die elf (platzhalter.html geht nicht mit), im Platzhalter vier, und unter
-    # index.html steht dort platzhalter.html
+    # Die Seiten der Ausgabe: in der vollen Website die elf, im Platzhalter fünf (dazu jeweils 404.html)
     seiten_liste = SEITEN_PLATZHALTER if platz else SEITEN
-    weg_seiten = sorted({Path(s) for s in SEITEN if s not in seiten_liste} | {Path(PLATZHALTER)})
+    weg_seiten = sorted(Path(s) for s in SEITEN if s not in seiten_liste)
     dateien = [p for p in dateien if p not in weg_seiten]
 
-    def quelle_von(p):
-        return QUELLE / (PLATZHALTER if platz and p == Path('index.html') else p)
-
     # Die Seiten und eigenen Texte ohne Kommentare und mit umgesetzten Markierungen der Ausgabe, die Seiten mit Canonical und
-    # Vorschau-Angaben
+    # Vorschau-Angaben; im Platzhalter trägt das html von / die Schalter für seine Skripte und Stile (data-ausgabe, data-schluss)
     texte = {}
     for p in dateien:
         if p.suffix in TEXTDATEIEN:
-            neu = artefakt.bereinigen(p, quelle_von(p).read_text(encoding='utf-8'))
+            neu = artefakt.bereinigen(p, (QUELLE / p).read_text(encoding='utf-8'))
             if neu is not None:
                 texte[p] = artefakt.ausgabe_umsetzen(neu, ausgabe, p.as_posix()) if p.suffix == '.html' else neu
+    if platz:
+        texte[Path('index.html')] = artefakt.ausgabe_kennzeichnen(texte[Path('index.html')], schluss)
     texte[Path('datenschutz.html')] = tarif_waehlen(texte[Path('datenschutz.html')], TARIF)
     for p in texte:
         texte[p] = verweise_umschreiben(p, texte[p])
     seiten = [p.as_posix() for p in dateien if p.suffix == '.html']
     offen = {s for s in seiten if MARKER.search(texte[Path(s)])}
     if platz:
-        # Im Platzhalter ist nur / indiziert: das Exposé, Impressum und Datenschutz tragen noindex; die übrigen Seiten leitet
-        # vercel.json auf / weiter
+        # Im Platzhalter ist nur / indiziert: Exposé, Vita, Impressum und Datenschutz tragen noindex; die übrigen Seiten leitet
+        # vercel.json auf / weiter. Strukturierte Daten nur auf /: die Person wie in der vollen Website
         noindex = (offen if entwurf else set()) | NOINDEX_PLATZHALTER
-        ld_seiten, ld = LD_PLATZHALTER, person_knapp(texte)
+        ld_seiten, ld = LD_PLATZHALTER, {'index.html': person_daten(texte)}
         umleiten = [s for s in SEITEN if s not in seiten_liste]
     else:
         # noindex und nicht in der Sitemap: im Entwurf die Seiten mit offenen Stellen; lesen.html, solange es keinen Text gibt;
@@ -1002,7 +1003,7 @@ def main():
         eintraege = sitemap(neu, ziel, heute, noindex, seiten_liste)
         if [u for u, _ in eintraege] != [url_fuer(s) for s in seiten_liste if s not in noindex]:
             fehler('sitemap.xml: die Seiten passen nicht zu den Seiten ohne noindex')
-        if pruefen(neu, ausgeliefert, seiten, noindex, ld_seiten, umleiten) != set(hashes):
+        if pruefen(neu, ausgeliefert, seiten, noindex, ld_seiten, umleiten, schluss if platz else None) != set(hashes):
             fehler('Die Hashes in vercel.json passen nicht zu den Skripten in den Seiten')
 
         marker = marker_suchen(neu, ausgeliefert)
@@ -1026,8 +1027,8 @@ def main():
 
     groesse = sum((ziel / p).stat().st_size for p in ausgeliefert)
     print(f'{"Entwurf" if entwurf else "Veröffentlichung"} in {ziel}, Adresse {BASIS_URL}')
-    print(f'Ausgabe: {ausgabe}' + (f' (unter / {PLATZHALTER}; dazu {", ".join(seiten_liste[1:])} und {FEHLERSEITE}; '
-                                   f'{len(umleiten) * 2} Weiterleitungen mit 307 auf /)' if platz else ' (die volle Website)'))
+    print(f'Ausgabe: {ausgabe}' + (f' (unter / die Startseite als Platzhalter, Schluss {schluss}; dazu {", ".join(seiten_liste[1:])} und '
+                                   f'{FEHLERSEITE}; {len(umleiten) * 2} Weiterleitungen mit 307 auf /)' if platz else ' (die volle Website)'))
     print(f'{len(ausgeliefert)} Dateien, {groesse / 1024:.1f} KB; {len(hashes)} Skripte in den Seiten, je mit Hash in script-src')
     print('Sitemap: ' + ', '.join(f'{u.removeprefix(BASIS_URL) or "/"} {d}' for u, d in eintraege))
     if platz:
@@ -1038,11 +1039,8 @@ def main():
               + ''.join(f'; {s} {"in der Sitemap" if art in arten else "ohne Text ihrer Art: noindex"}' for s, art in LISTENSEITEN.items()) + ')')
     print('Strukturierte Daten: ' + ', '.join(f'{s} {t}' for s, t in ld_seiten.items())
           + f'; Tarif bei Vercel: {TARIF or "offen (beide Fassungen und die Markierung stehen im Datenschutz)"}')
-    print('Ausgelassen: ' + ', '.join(sorted(AUSLASSEN) + [p.as_posix() for p in weg_seiten if not (platz and p == Path(PLATZHALTER))]
+    print('Ausgelassen: ' + ', '.join(sorted(AUSLASSEN) + [p.as_posix() for p in weg_seiten]
                                       + [p.as_posix() + ' (nirgends verwiesen)' for p in weg]))
-    if hinweise:
-        print(f'Hinweis: {PLATZHALTER} ist nicht mehr auf dem Stand der Startseite oder der Daten; der Bau des Platzhalters bricht so '
-              'ab, bis sie nachgezogen ist:\n  ' + '\n  '.join(hinweise))
 
 
 if __name__ == '__main__':

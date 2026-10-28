@@ -319,13 +319,62 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   .regler, .regler.ohne-jahre { height: 2.75rem; }
 }
 </style>
+<style data-nur="platzhalter">
+/* Der Platzhalter ist diese Seite selbst (27. Oktober). Dominik: „Halte von der Startseite die drei Elemente. Vita. Globus. Das Regal
+   mit den Projekten und dem Schreibtisch ... Aber wenn man runterzoomt soll auf dem Handy alles verblassen und dann Seite im Aufbau.
+   Es so neugierig machen. Auf dem Desktop soll der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite
+   im Aufbau.“ Was nur in der vollen Website steht (Menü, Werkverzeichnis, Bücherregal), trägt data-nur="website"; dieser Block, der
+   Schluss „Seite im Aufbau.“ und sein Skript tragen data-nur="platzhalter" und stehen nur in der Platzhalter-Ausgabe der Werkzeuge
+   (Markierungen erklärt auf satoshi.html). In der Quelle verbirgt die erste Regel den Schluss; alles andere gilt nur, wenn der Bau
+   am html data-ausgabe="platzhalter" setzt, dazu data-schluss, die Fassung am Desktop (v1 „Alles verblasst“, v2 „Der Globus bleibt“).
+   Der Kopf behält breit seine Höhe (--kopf-h), der erste Satz bleibt an seiner Stelle; schmal schließt sich die Lücke des Menüs */
+[data-nur="platzhalter"] { display: none !important; }
+/* „Seite im Aufbau.“ im Grad Text, in Tinte, aufrecht, in der Textspalte; ohne Skript und bei reduzierter Bewegung steht die Zeile
+   3 z unter dem, was über ihr bleibt (breit und ohne Skript gibt der leere Abschnitt „Was ich schreibe“ die 3 z), und 3 z über dem
+   Fuß, damit sie nicht an „Anfragen“ hängt */
+html[data-ausgabe="platzhalter"] .schluss { padding: var(--z-drei) var(--rand-r) var(--z-drei) var(--rand-l); }
+html[data-ausgabe="platzhalter"]:not(.js) .schluss { padding-top: 0; }
+html[data-ausgabe="platzhalter"] .aufbau { max-width: var(--mass); }
+@media (max-width: 62rem) { html[data-ausgabe="platzhalter"] .schluss { padding-right: var(--rand-l); } }
+/* Mit Bewegung (Skript unten setzt .mit-weg): zwischen dem Inhalt und der Zeile knapp ein Fünftel des Fensters (19 svh), mindestens
+   3 z; darunter so viel, dass die Zeile am Ende des Wegs etwas über der Mitte des Fensters steht (ihre Mitte bei 44 % der Höhe) und
+   der Fuß darunter ganz zu sehen ist (--schluss-rest: halbe Zeile und Fuß, vom Skript gemessen). So steht sie am Telefon zwischen dem
+   blassen Regal und dem Fuß, nicht dicht über „Anfragen“. svh und lvh, damit die Leiste des Browsers auf dem Telefon beim Rollen
+   nichts verschiebt */
+html[data-ausgabe="platzhalter"] .schluss.mit-weg {
+  padding-top: max(var(--z-drei), 19vh); padding-top: max(var(--z-drei), 19svh);
+  padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px))); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)));
+}
+/* Breit steht der Schluss in der Textspalte, in den Zeilen von main, durch die der Globus mitwandert (8 und 9; in der vollen Website
+   Überschrift und Legende des Bücherregals): so klebt der Globus weiter, bis der Fuß kommt. Die 3 z darüber gibt „Was ich schreibe“.
+   In v2 reicht der Schluss dazu so weit hinunter, dass der Globus am Ende des Wegs noch ganz klebt, neben der Zeile
+   (--schluss-globus, vom Skript gemessen); der Fuß folgt beim Weiterrollen. Den Rand unter dem Globus (2 z bis zum Zeitband, das
+   hier fehlt) braucht v2 nicht: ohne ihn kommt der Fuß 2 z früher, und die Zeile bleibt am Ende der Seite im Bild */
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 62.0625rem) {
+    html[data-ausgabe="platzhalter"].js .schluss { grid-column: 2; grid-row: 8 / 10; width: var(--neben-globus); padding: 0 0 var(--z-drei); }
+    html[data-ausgabe="platzhalter"][data-schluss="v2"].js .globusseite > .globus { margin-bottom: 0; }
+    html[data-ausgabe="platzhalter"].js .schluss.mit-weg { padding-top: max(0px, 19vh - var(--z-drei)); padding-top: max(0px, 19svh - var(--z-drei)); padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px)), var(--schluss-globus, 0px)); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)), var(--schluss-globus, 0px)); }
+  }
+}
+/* Was verblasst, bleibt mit der Tastatur bedienbar und erreichbar (kein inert: das nähme den Inhalt auch Vorleseprogrammen). Steht
+   der Fokus der Tastatur darin, ist es wieder ganz da; nur der sichtbare Fokus (:focus-visible), denn ein Klick oder Tipp auf Globus
+   oder Regal lässt den Fokus dort, und dann verblasste beim Weiterrollen nichts mehr. Ab halbem Weg (.fern) nimmt das Blasse keinen
+   Klick und keinen Tipp mehr an: ein Tipp auf ein blasses Buch öffnete sonst eine blasse Buchzeile, und die Seite würde länger */
+html[data-ausgabe="platzhalter"] .blass.fern { pointer-events: none; }
+html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !important; pointer-events: auto; }
+</style>
 </head>
 <body class="mit-globus">
-<a class="sprung" href="#inhalt">Zum Inhalt</a>
-
+<a class="sprung" href="#inhalt" data-nur="website">Zum Inhalt</a>
+<!-- Zwei Ausgaben aus dieser Datei (27. Oktober; Markierungen wie auf satoshi.html erklärt, der Platzhalter im Stil oben):
+     data-nur="website" steht nur in der vollen Website, data-nur="platzhalter" nur im Platzhalter, data-verweis="website" wird im
+     Platzhalter ein span mit denselben Klassen. Im Platzhalter fehlen das Menü (mit ihm die Abschrift im Fuß, die seite.js daraus
+     macht) und der Sprung „Zum Inhalt“, der nur über das Menü führt. Der Kommentar steht an der Stelle einer Leerzeile: ohne
+     Kommentare bleibt die volle Website Zeichen für Zeichen, wie sie war -->
 <header class="kopf">
   <h1 class="briefkopf"><span class="name">Dominik Jäkel</span> <span class="rolle">Schriftsteller und Reisender</span></h1>
-  <nav class="nav" aria-label="Website">
+  <nav class="nav" aria-label="Website" data-nur="website">
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>
       <li><a href="ursprung.html"><i>Ursprünge</i></a></li>
@@ -552,7 +601,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     }
   })();
   </script>
-  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation.<span data-nur="website"> Ausführlich in der <a href="vita.html">Vita</a>.</span></p>
 
   <p class="ebenen" role="group" aria-label="Globus"><button type="button" class="wort" data-ebene="leben" aria-pressed="true">Leben</button> <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">Reisen</button> <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false"><i>Satoshi</i></button> <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false"><i>Ursprünge</i></button></p>
 
@@ -561,7 +610,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   <div class="ebenentext">
     <div data-text="reisen" hidden>
       <p class="kontinente" role="group" aria-label="Kontinente"><button type="button" class="wort" data-ueberblick aria-pressed="true">Alle Länder</button> <button type="button" class="wort" data-kontinent="Europa" aria-pressed="false">Europa</button> <button type="button" class="wort" data-kontinent="Asien" aria-pressed="false">Asien</button> <button type="button" class="wort" data-kontinent="Afrika" aria-pressed="false">Afrika</button> <button type="button" class="wort" data-kontinent="Amerika" aria-pressed="false">Amerika</button></p>
-      <p>Die <a href="laender.html">Länderguides</a> sind in Arbeit.</p>
+      <p>Die <a href="laender.html" data-verweis="website">Länderguides</a> sind in Arbeit.</p>
     </div>
     <div data-text="satoshi" hidden id="satoshi-text"></div>
     <div data-text="ursprung" hidden id="ursprung-text"></div>
@@ -577,7 +626,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 </section>
 
 <section class="abschnitt" id="schreiben" aria-labelledby="schreiben-titel">
-  <h2 class="titel" id="schreiben-titel">Was ich schreibe</h2>
+  <h2 class="titel" id="schreiben-titel" data-nur="website">Was ich schreibe</h2>
   <div class="schreiben-raster">
     <!-- Das Regalbild mit seiner Unterschrift (Dominiks Wortlaut). Breit setzt das Skript es neben die Kugel (regalOrt), die Unterschrift
          wandert mit; schmal steht sie über dem Bild, breit unter dem Brett (CSS) -->
@@ -598,7 +647,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
     </script>
 
     <!-- Werkverzeichnis: je Werk ein Eintrag, der Titel führt zur Seite des Werks -->
-    <div class="verzeichnis">
+    <div class="verzeichnis" data-nur="website">
       <div class="gruppe">
         <p class="eintrag" id="satoshi"><a href="satoshi.html"><i>Satoshi</i></a>. Roman in vierzig Kapiteln. Die Gründungslegende von Bitcoin. Das Manuskript liegt vollständig vor.</p>
         <p class="eintrag" id="ursprung"><a href="ursprung.html"><i>Ursprünge</i></a>. Drei Romane über die Anfänge der Zivilisation, begonnen in Kaohsiung, Taiwan. In Arbeit.</p>
@@ -614,7 +663,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   </div>
 </section>
 
-<section class="abschnitt" id="gelesen" aria-labelledby="gelesen-titel">
+<section class="abschnitt" id="gelesen" aria-labelledby="gelesen-titel" data-nur="website">
   <h2 class="titel" id="gelesen-titel">Mein digitales Bücherregal</h2>
   <p class="gelesen-vorwort">Von Gilgamesch bis Labatut, geordnet nach dem Jahr, in dem ein Buch zuerst erschien. Jeder Strich ist so breit wie der Rücken des Buchs. Dunkel stehen die liebsten, halb so hoch, was ich nicht zu Ende gelesen habe. Ein kleiner Strich darüber zeigt, dass ich ein Buch wieder gelesen habe. Quer darauf liegt, was ich gerade lese.</p>
   <div class="zeitband" id="zeitband">
@@ -639,6 +688,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   </div>
   <p class="ganze"><a href="bibliothek.html">Die ganze Bibliothek</a></p>
 </section>
+<div class="schluss" id="schluss" data-nur="platzhalter"><p class="aufbau">Seite im Aufbau.</p></div>
 </main>
 
 <footer class="fuss" id="kontakt" aria-label="Kontakt">
@@ -659,8 +709,59 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 <script src="globus/kern.js"></script>
 <script src="daten/inhalt.js"></script>
 <script src="daten/buecher.js"></script>
-<script src="daten/leseliste.js"></script>
+<script src="daten/leseliste.js" data-nur="website"></script>
 <script src="seite.js"></script>
+<script data-nur="platzhalter">
+/* Nur im Platzhalter, vor dem Skript der Seite (der Schluss folgt im Skript ganz unten; Stil oben): ohne data-ausgabe="platzhalter"
+   am html, also in der Quelle, tut es nichts, und aus der vollen Website nehmen die Werkzeuge es heraus. So bleiben seite.js und das
+   Skript der Seite, wie sie in der vollen Website sind, Zeichen für Zeichen.
+   Verweise. Dominik: „Einfach eine einzelne indizierte Seite ohne Verlinkungen … Es soll neugierig machen. Aber ohne zu viel
+   preiszugeben.“ Von hier führt kein Verweis auf eine andere eigene Seite, auch keiner, den ein Skript erst setzt (die Buchzeile nach
+   einem Tipp auf ein eigenes Werk im Regal, die Texte der verborgenen Ebenen Satoshi und Ursprünge): er wird ein span mit denselben
+   Klassen, der Text bleibt, ohne Strich. Es bleiben die Verweise nach außen, die Adresse für Anfragen, Impressum, Datenschutz und
+   Anker. Der Wächter steht vor dem Skript der Seite: was es beim Laden setzt, wird Text, bevor der Browser es zeichnet.
+   Das Zeitband. Das Skript der Seite hängt an #zeitband-roll das Rollen des Bands an; im Platzhalter fehlt das Bücherregal
+   (data-nur="website"), und ohne Band bräche es dort ab (Regal, Größenänderung und Schriften liefen nicht weiter). Ein leeres,
+   verborgenes Element an seiner Stelle lässt es weiterlaufen: verborgen hat es keine Breite, das Band wird nicht gebaut.
+   Ankunft über „auf dem Globus“ (die Vita verweist auf index.html#globus). Breit klebt der Globus, und einem klebenden Ziel rollt
+   der Browser beim Laden immer weiter nach (bei 1024 px bis 357 px, mitten in den Weg des Schlusses, der Globus schon blass). Breit
+   steht er im ersten Bildschirm ganz oben: dort bleibt die Seite; der Anker kommt nach dem Laden zurück in die Adresse */
+(function () {
+  'use strict';
+  if (document.documentElement.getAttribute('data-ausgabe') !== 'platzhalter') return;
+  const BLEIBT = /^(?:https:\/\/|mailto:|#)|^(?:\.?\/)?(?:impressum|datenschutz)(?:\.html)?(?:#.*)?$/i;
+  const OHNE = ['href', 'rel', 'target', 'hreflang', 'aria-current', 'download', 'ping', 'referrerpolicy', 'type'];
+  function alsText(a) {
+    const s = document.createElement('span');
+    Array.from(a.attributes).forEach(x => { if (!OHNE.includes(x.name)) s.setAttribute(x.name, x.value); });
+    while (a.firstChild) s.appendChild(a.firstChild);
+    a.replaceWith(s);
+  }
+  function verweise(wurzel) {
+    if (!wurzel || wurzel.nodeType !== 1) return;
+    const liste = (wurzel.matches('a[href]') ? [wurzel] : []).concat(Array.from(wurzel.querySelectorAll('a[href]')));
+    liste.forEach(a => { if (!BLEIBT.test((a.getAttribute('href') || '').trim())) alsText(a); });
+  }
+  verweise(document.body);
+  new MutationObserver(liste => liste.forEach(m => {
+    if (m.type === 'attributes') verweise(m.target); else m.addedNodes.forEach(verweise);
+  })).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
+  if (!document.getElementById('zeitband-roll')) {
+    const leer = document.createElement('div');
+    leer.id = 'zeitband-roll';
+    leer.hidden = true;
+    leer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(leer);
+  }
+  const ziel = location.hash === '#globus' && document.getElementById('globus');
+  if (ziel && getComputedStyle(ziel).position === 'sticky') {
+    const adresse = location.href;
+    history.replaceState(history.state, '', location.pathname + location.search);
+    window.scrollTo(0, 0);
+    window.addEventListener('load', () => history.replaceState(history.state, '', adresse));
+  }
+})();
+</script>
 <script>
 (function () {
   'use strict';
@@ -2185,6 +2286,101 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
       regalZeichnen(); bandBauen(); ankerSetzen();
     }, 140);
   });
+})();
+</script>
+<script data-nur="platzhalter">
+/* Nur im Platzhalter (Stil oben; die Verweise setzt das Skript vor dem der Seite um): ohne data-ausgabe="platzhalter" am html, also
+   in der Quelle, tut dieses Skript nichts, und aus der vollen Website nehmen die Werkzeuge es heraus.
+   Der Schluss. Dominik: „wenn man runterzoomt soll auf dem Handy alles verblassen und dann Seite im Aufbau. […] Auf dem Desktop soll
+   der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite im Aufbau.“ Ist der Inhalt ganz zu sehen
+   (sein Ende am unteren Fensterrand), verblasst er mit jedem Pixel Weg weiter, bis „Seite im Aufbau.“ etwas über der Mitte des
+   Fensters steht (ihre Mitte bei HOEHE, 44 % seiner Höhe); zurückrollen holt ihn zurück. Nur die Deckkraft folgt dem Weg, stetig
+   (smoothstep), ohne Federn; die Zeile selbst wird nicht eingeblendet, das Scrollen bleibt frei, nichts rastet ein. Am Ende bleibt
+   das Blasse sichtbar (BLASS: die Rücken als Formen, „Satoshi“ und „Ursprünge“ gerade noch zu entziffern), der Fuß darunter ganz.
+   Verblasst: schmal und in v1 der Kopf, die Globusseite (mit dem Globus) und „Was ich schreibe“ (dort steht schmal das Regal); breit
+   in v2 alles außer dem Globus, der weiter mitwandert und klar bleibt, am Ende des Wegs ganz neben der Zeile (--schluss-globus, Stil
+   oben). Ab halbem Weg nimmt das Blasse keinen Klick und Tipp mehr an (.fern, Stil oben). Auf die Elemente mit data-folge (Regal,
+   Globus) schreibt das Skript nicht selbst, ihre Blende führt FSeite.folge. Bei reduzierter Bewegung verblasst nichts, die Zeile
+   steht 3 z unter dem Inhalt (Stil oben) */
+(function () {
+  'use strict';
+  const html = document.documentElement;
+  if (html.getAttribute('data-ausgabe') !== 'platzhalter') return;
+  const F = window.FSeite, $ = s => document.querySelector(s);
+  const schluss = $('#schluss'), zeile = $('#schluss .aufbau'), kopf = $('header.kopf'), seite = $('.globusseite'), schreiben = $('#schreiben');
+  const globus = $('.globusseite > .globus');
+  if (!F || !schluss || !zeile || !kopf || !seite || !schreiben) return;
+  const BLASS = .16, HOEHE = .44, FERN = .5;
+  const V2 = html.getAttribute('data-schluss') === 'v2';
+  const mqRuhig = window.matchMedia('(prefers-reduced-motion: reduce)'), mqBreit = window.matchMedia('(min-width: 62.0625rem)');
+  // Die kleine Höhe des Fensters (svh): ändert sich nicht, wenn die Leiste des Browsers auf dem Telefon beim Rollen kommt und geht
+  const probe = document.createElement('div');
+  probe.setAttribute('aria-hidden', 'true');
+  probe.style.cssText = 'position:absolute;left:0;top:0;width:0;height:100vh;height:100svh;visibility:hidden;pointer-events:none';
+  document.body.appendChild(probe);
+  let ziele = [], weg = null, zuletzt = null, fern = null, bild = 0, messBild = 0;
+  const masse = {};
+  // Ein gemessenes Maß als Eigenschaft am Schluss (null: entfernen); geschrieben wird erst ab ½ px Unterschied, damit sich der Stil,
+  // der Seitenhöhe und ResizeObserver nicht gegenseitig in Gang halten (sonst maß sich das Skript in jedem Bild neu, und der Fuß zitterte)
+  function mass(name, px) {
+    if (px == null) { if (masse[name] != null) { schluss.style.removeProperty(name); masse[name] = null; } return; }
+    if (masse[name] != null && Math.abs(masse[name] - px) < .5) return;
+    masse[name] = px;
+    schluss.style.setProperty(name, px.toFixed(1) + 'px');
+  }
+  function frei(e) { e.style.opacity = ''; e.classList.remove('blass', 'fern'); }
+  function zieleSetzen() {
+    const neu = V2 && mqBreit.matches
+      ? [kopf, schreiben].concat(Array.from(seite.children).filter(e => !e.matches('.globus, .regalbild, script')), Array.from(($('#regalbild') || {}).children || []))
+      : [kopf, seite, schreiben];
+    ziele.forEach(e => { if (!neu.includes(e)) frei(e); });
+    neu.forEach(e => e.classList.add('blass'));
+    ziele = neu;
+    zuletzt = null; fern = null;
+  }
+  function messen() {
+    messBild = 0;
+    schluss.classList.toggle('mit-weg', !mqRuhig.matches);
+    if (mqRuhig.matches) { ziele.forEach(frei); ziele = []; weg = null; mass('--schluss-rest', null); mass('--schluss-globus', null); return; }
+    zieleSetzen();
+    const y = window.scrollY, H = probe.getBoundingClientRect().height || window.innerHeight;
+    const z = zeile.getBoundingClientRect(), zh = z.height;
+    // Unter der Zeile: die halbe Zeile und was unter dem Schluss bis zum Ende der Seite folgt (der Fuß mit seinem Abstand), aus den
+    // gebrochenen Kanten beider gemessen, so hängt der Wert nicht vom eigenen Abstand ab
+    mass('--schluss-rest', zh / 2 + html.getBoundingClientRect().bottom - schluss.getBoundingClientRect().bottom);
+    // v2 breit: so viel Raum unter der Zeile, dass der Globus (ruhend oben, mit Tafel und seinem Rand unten) noch ganz klebt, wenn
+    // die Zeile am Ende des Wegs steht
+    if (V2 && mqBreit.matches && globus) {
+      const s = getComputedStyle(globus);
+      mass('--schluss-globus', Math.max(0, (parseFloat(s.top) || 0) + globus.getBoundingClientRect().height + (parseFloat(s.marginBottom) || 0) - H * HOEHE - zh / 2));
+    } else mass('--schluss-globus', null);
+    // Das Ende des Inhalts: breit das der Zeilen mit Satz, Vita, Regal und Globus (die Oberkante des leeren „Was ich schreibe“), schmal das Regal
+    const ende = (mqBreit.matches ? schreiben.getBoundingClientRect().top : schreiben.getBoundingClientRect().bottom) + y;
+    weg = { s0: Math.max(0, ende - H), s1: z.top + y + zh / 2 - H * HOEHE };
+    // Ein Weg unter 40 px (nur in Fenstern, die höher sind als die ganze Seite): nichts verblasst
+    if (weg.s1 - weg.s0 < 40) { weg = null; ziele.forEach(e => { e.style.opacity = ''; e.classList.remove('fern'); }); zuletzt = null; fern = null; }
+    zeichnen();
+  }
+  function zeichnen() {
+    bild = 0;
+    if (!weg) return;
+    let p = (window.scrollY - weg.s0) / (weg.s1 - weg.s0);
+    p = p <= 0 ? 0 : p >= 1 ? 1 : p;
+    const d = p > 0 ? (1 - (1 - BLASS) * p * p * (3 - 2 * p)).toFixed(3) : '';
+    if (d !== zuletzt) { zuletzt = d; ziele.forEach(e => { e.style.opacity = d; }); }
+    const f = p > FERN;
+    if (f !== fern) { fern = f; ziele.forEach(e => e.classList.toggle('fern', f)); }
+  }
+  const anstossen = () => { if (!bild) bild = requestAnimationFrame(zeichnen); };
+  const neuMessen = () => { if (!messBild) messBild = requestAnimationFrame(messen); };
+  window.addEventListener('scroll', anstossen, { passive: true });
+  window.addEventListener('resize', neuMessen, { passive: true });
+  window.addEventListener('load', neuMessen);
+  if (window.ResizeObserver) new ResizeObserver(neuMessen).observe(document.body);
+  mqRuhig.addEventListener('change', neuMessen);
+  mqBreit.addEventListener('change', neuMessen);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(neuMessen);
+  messen();
 })();
 </script>
 </body>

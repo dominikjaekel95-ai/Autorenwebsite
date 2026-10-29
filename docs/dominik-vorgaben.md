@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 28. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V88.
+Stand: 29. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V88.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -197,7 +197,8 @@ Für den Bau:
 - **Vita** (`vita.html`) unter /vita, mit `noindex`, nicht in der Sitemap, ohne Menü, Inhalt unverändert, „Ursprungstrilogie“ als Text. Nur das Exposé verweist auf sie: „Dominik Jäkel“ in den Eckdaten führt zur Vita. Keine andere Seite und nicht die strukturierten Daten. Der Name im Kopf des Exposés bleibt ohne Verweis; sonst bleibt das Exposé, wie es war.
 - **Adresse /satoshi bleibt** („Bisher verschickte Links sind kein Grund zu Sorge“). Aus Google nimmt er /satoshi selbst über die Search Console (`noindex` ist live; Schritte in `docs/todo.md`).
 Ort in C: `website-c/index.html` (`data-nur="website"`, `data-verweis="website"`, `data-nur="platzhalter"`: Stil, `#schluss`, zwei Skripte), `website-c/vita.html`, `website-c/satoshi.html` (Eckdaten), `website-c/werkzeuge/veroeffentlichen.py` (`SCHLUSS`, `VERWEISE_PLATZHALTER`, `SEITEN_PLATZHALTER`), `website-c/werkzeuge/artefakt.py`; Änderungsprotokoll, 27. Oktober („Platzhalter mit dem Startbildschirm“); `docs/gestaltung-website-c.md` 9.10.
-Später geändert: nein. Noch nicht live: erst nach seiner Abnahme und der Wahl der Fassung (`docs/todo.md`).
+Abnahme am 29. Oktober: „‚moderiert u.a. die Werkstattbühne‘ das fehlt. Sonst kann es gerne so bleiben ... Schalte mal live.“ Eingesetzt „moderiert u.&nbsp;a. die Werkstattbühne“ in der Kurzvita (`index.html`, `p.vita`) und gleichlautend in den Eckdaten des Exposés (`satoshi.html`). Fassung am Desktop: v1 „Alles verblasst“ (Vorgabe im Schalter, ohne Einwand übernommen).
+Später geändert: nein. Live seit 29. Oktober (Bau mit `AUSGABE = 'platzhalter'`, `SCHLUSS = 'v1'`).
 
 ---
 

@@ -1,39 +1,1767 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-ausgabe="platzhalter" data-schluss="v1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dominik Jäkel</title>
-<meta name="description" content="Dominik Jäkel, Schriftsteller. Die Website ist im Aufbau.">
+<meta name="description" content="Dominik Jäkel, Schriftsteller und Reisender, lebt in Berlin. Sein Debütroman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
 <link rel="canonical" href="https://dominikjaekel.de/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dominik Jäkel">
 <meta property="og:locale" content="de_DE">
 <meta property="og:title" content="Dominik Jäkel">
-<meta property="og:description" content="Dominik Jäkel, Schriftsteller. Die Website ist im Aufbau.">
+<meta property="og:description" content="Dominik Jäkel, Schriftsteller und Reisender, lebt in Berlin. Sein Debütroman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
 <meta property="og:url" content="https://dominikjaekel.de/">
+<meta property="og:image" content="https://dominikjaekel.de/bilder/vorschau.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller und Reisender. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","@id":"https://dominikjaekel.de/#person","name":"Dominik Jäkel","url":"https://dominikjaekel.de/","jobTitle":"Schriftsteller","description":"Dominik Jäkel studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u. a. die Werkstattbühne des Autorenforums Berlin e. V. 2022 erhielt er den A.-E.-Johann-Preis. Gerade schließt er seinen Debütroman Satoshi ab; daneben schreibt er an einer Romantrilogie über die Ursprünge der Zivilisation.","award":"A.-E.-Johann-Preis (2022)","affiliation":{"@type":"Organization","name":"Autorenforum Berlin e. V.","url":"https://autorenforum-berlin.de/"}}</script>
 <meta name="theme-color" content="#FFFEFC">
+<script>
+document.documentElement.classList.add('js');
+</script>
+
+<script>
+(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);
+</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="schrift/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="schrift/im-fell-french-canon.woff2" as="font" type="font/woff2" crossorigin>
+
 <link rel="stylesheet" href="stil.css">
 <style>
-body { min-height: 100svh; display: flex; flex-direction: column; }
-.platzhalter { flex: 1; padding: var(--z-zwei) var(--rand-r) 0 var(--rand-l); }
-.platzhalter p { color: var(--leise); }
+.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 3); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
+.globusseite > .einstieg { max-width: min(100%, var(--mass)); min-width: 0; overflow-wrap: break-word; }
+.einstieg.gesetzt .glied-satz, .einstieg .paar { white-space: nowrap; }
+.einstieg-satz { display: inline; }
+html:not(.js) .einstieg .glied-satz { display: block; }
+.einstieg-satz .w { display: inline-block; }
+.einstieg .einstieg-vorlesen { -webkit-user-select: none; user-select: none; }
+.einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 2s forwards; }
+@keyframes einstieg-notfall { to { opacity: 1; } }
+.globusseite > .vita { margin-top: var(--z-dreiviertel); }
+.ebenen, .kontinente { display: flex; flex-wrap: wrap; column-gap: .85em; }
+.globusseite > .ebenen { margin-top: var(--z); }
+.globusseite > .ebenentext { margin-top: var(--z-viertel); }
+.ebenentext p + p { margin-top: var(--z-dreiviertel); }
+.ebenentext:not(:has(> [data-text]:not([hidden]))) { display: none; }
+.ebenentext .band + .band { margin-top: var(--z-viertel); }
+.ebenentext p + .band { margin-top: var(--z-halb); }
+.ebenentext .band { padding-left: 1.9em; text-indent: -1.9em; }
+.ebenentext .band-nr { display: inline-block; width: 1.4em; margin-right: .25em; text-align: right; text-indent: 0; font-variant-numeric: lining-nums; }
+html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
+.globusseite > .ebenen, .globusseite > .ebenentext { display: none !important; }
+@media (min-width: 62.0625rem) {
+  .globusseite > .regalbild { margin-top: calc(var(--z-zwei) - var(--zh-klein)); }
+  .globusseite > .regalbild { container-type: inline-size; }
+  .globusseite > .regalbild > .regalbild-flaeche:empty { min-height: min(193px, calc((100cqw - 13.4737px) * .338035 + 2.5px)); min-height: min(193px, round(up, calc((round(nearest, 100cqw, 1px) - 13.4737px) * .338035 + 2px), 1px)); }
+  .globusseite > .regalbild:has(> .regalbild-flaeche:empty) { visibility: hidden; }
+  .schreiben-raster:not(:has(> .regalbild)) { grid-template-columns: minmax(0, var(--mass)); }
+}
+@property --neben-globus { syntax: '<length>'; inherits: true; initial-value: 0px; }
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 62.0625rem) {
+    .js main {
+      --neben-globus: min(var(--mass), max(var(--spalte), calc(var(--globuskante) - var(--rand-l) - clamp(0px, var(--globuskante) - var(--rand-l) - var(--spalte) - 1.5em, 5.2em) - 1.5em)));
+      display: grid; grid-template-columns: var(--rand-l) minmax(0, var(--spalte)) minmax(0, 1fr);
+      grid-template-rows: auto auto auto auto auto 1fr auto auto auto auto auto;
+    }
+    .js .globusseite { grid-column: 1 / -1; grid-row: 1 / 10; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+    .js .globusseite::before { content: ""; grid-column: 1; grid-row: 1 / 7; height: max(0px, calc(var(--z-halb) - var(--kopf-h) + var(--globus-block, var(--globus) + var(--tafel-h)))); pointer-events: none; }
+    .js .globusseite > .globus { grid-row: 1 / -1; position: sticky; top: min(var(--z-halb), calc(100svh - var(--globus-hoch, var(--globus-block, var(--globus) + var(--tafel-h))) - var(--z-halb))); margin-bottom: calc(var(--z-drei) - var(--z)); }
+    .js #schreiben { grid-column: 2; grid-row: 7; padding: var(--z-drei) 0 0; width: var(--neben-globus); }
+    .js #gelesen { grid-column: 1 / -1; grid-row: 8 / 12; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; padding: var(--z-drei) 0 0; }
+    .js #gelesen > .titel { grid-column: 2; grid-row: 1; width: var(--neben-globus); }
+    .js #gelesen > .gelesen-vorwort { grid-column: 2; grid-row: 2; width: var(--neben-globus); max-width: none; }
+    .js #gelesen > .zeitband { grid-column: 2 / -1; grid-row: 3; margin-right: var(--rand-r); }
+    .js #gelesen > .ganze { grid-column: 2 / -1; grid-row: 4; margin-right: var(--rand-r); }
+  }
+}
+.schreiben-raster { display: grid; grid-template-columns: minmax(0, var(--spalte)) minmax(0, 1fr); align-items: start; }
+.schreiben-raster .verzeichnis { grid-column: 1; grid-row: 1; }
+.schreiben-raster .regalbild { grid-column: 2; grid-row: 1; margin-left: max(calc(var(--z) * 1.5), calc(var(--globuskante) - var(--rand-l) - var(--spalte))); }
+.gruppe + .gruppe { margin-top: var(--z); }
+.eintrag + .eintrag { margin-top: var(--z-viertel); }
+.eintrag { scroll-margin-top: var(--z); }
+.regalbild { position: relative; display: flex; flex-direction: column; }
+.regal-unterschrift { order: 0; margin-top: var(--z-halb); font-size: var(--g-klein); line-height: var(--zh-klein); color: var(--tinte); text-wrap: balance; }
+.regalbild > .regalbild-flaeche, .regalbild > .brett { order: 1; }
+.regalbild > #regal-zeile { order: 3; }
+@media (min-width: 62.0625rem) {
+  .regal-unterschrift { order: 2; margin-top: var(--z-viertel); }
+}
+.regalbild-flaeche { position: relative; margin-top: var(--zh-klein); }
+@media (max-width: 62rem) {
+  .regal-unterschrift { margin-top: var(--z); }
+  .regalbild-flaeche { margin-top: var(--z-viertel); }
+}
+@media (max-width: 62rem) and (hover: hover) {
+  .regal-unterschrift { margin-top: calc(var(--z) * 1.5); }
+  .regalbild-flaeche { margin-top: calc(var(--zh-klein) + var(--z-viertel)); }
+}
+.stueck {
+  position: absolute; bottom: 0; display: block; margin: 0; padding: 0; border: .75px solid var(--tinte); border-radius: 0;
+  background: var(--papier); color: var(--tinte); font: inherit; cursor: pointer; overflow: hidden;
+  transform-origin: 100% 100%; transform: rotate(var(--neig, 0deg)) translate(var(--hx, 0px), var(--hy, 0px));
+  transition: transform var(--zug-dauer) ease-out; -webkit-tap-highlight-color: transparent;
+}
+.stueck > span { position: absolute; white-space: nowrap; line-height: 1; letter-spacing: normal; pointer-events: none; }
+.stueck.eigen > span { left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+.stueck.liegt > span { left: 7px; right: 7px; top: 50%; transform: translateY(-50%); overflow: hidden; text-align: left; }
+.stueck.eigen { background: var(--tinte); color: var(--papier); border-color: var(--papier); }
+.stueck:hover, .stueck.ist-gemeint, .stueck.ist-ziel, .stueck.ist-offen { box-shadow: inset 0 0 0 .75px var(--tinte); }
+.stueck.dunkel:hover, .stueck.dunkel.ist-gemeint, .stueck.dunkel.ist-ziel, .stueck.dunkel.ist-offen { box-shadow: inset 0 0 0 .75px var(--tinte), inset 0 0 0 1.75px var(--papier); }
+.stueck:focus-visible { outline: 1.5px solid var(--tinte); outline-offset: 2px; z-index: 1; }
+.stueck.eigen.ist-offen { --hy: var(--zug); }
+.stueck.liegt.ist-offen { --hx: calc(var(--zug) * -1); }
+.brett { height: 4px; background: var(--brett); }
+.regal-name { position: absolute; left: 0; top: 0; width: max-content; max-width: 100%; font-size: var(--g-klein); line-height: var(--zh-klein); background: var(--papier); pointer-events: none; }
+.regal-name[hidden] { display: none; }
+html:not(.js) .regalbild { display: none; }
+html.folge #regalbild[data-folge]:not(.da) { pointer-events: none; }
+.gelesen-vorwort { max-width: var(--mass); }
+.zeitband { margin-top: var(--z); }
+.zeitband-roll { position: relative; }
+.zb { display: block; overflow: visible; }
+.zb { touch-action: pan-y; touch-action: pan-y pinch-zoom; -webkit-user-select: none; user-select: none; }
+.zb:focus { outline: none; }
+.zb:focus-visible { outline: 1.5px solid var(--tinte); outline-offset: 6px; }
+.zb rect { shape-rendering: geometricPrecision; }
+.zb .grau, .zb .ab { fill: var(--zb-strich); }
+.zb .lieb { fill: var(--tinte); }
+.zb .wieder { stroke: var(--tinte); stroke-width: 1; }
+.zb .quer { fill: var(--zb-strich); stroke: var(--tinte); stroke-width: .75; }
+.zb .haar { stroke: var(--tinte); stroke-width: .75; }
+.zb .bruch { stroke: var(--tinte); stroke-width: .9; fill: none; }
+.zb .jahr { font-family: var(--schrift); font-size: var(--g-klein); fill: var(--tinte); font-variant-numeric: oldstyle-nums tabular-nums; }
+.zb .marke { stroke: var(--tinte); stroke-width: 1.4; }
+.zb-kind rect { fill: var(--zb-kind); }
+.zb-warte rect { fill: var(--papier); stroke: var(--zb-warte); stroke-width: .65; }
+.zb rect.an, .zb rect.ist-offen { fill: var(--tinte); }
+.zb-warte rect.an, .zb-warte rect.ist-offen { stroke: var(--tinte); }
+.bandzeile { position: relative; margin-top: var(--z-viertel); min-height: var(--z); }
+.bandzeile > span { position: absolute; left: 0; top: 0; width: max-content; max-width: 100%; }
+.bandzeile .buchzeile { min-height: 0; margin-top: 0; }
+.bandzeile .zeile-zeigen { visibility: hidden; }
+.bandzeile.zeigt .zeile-zeigen { visibility: visible; }
+.bandzeile.zeigt .zeile-offen { visibility: hidden; }
+.bandzeile .zeile-ruhe { color: var(--zb-strich); visibility: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bandzeile.ruht:not(.zeigt) .zeile-ruhe { visibility: visible; }
+.bandname { margin-top: var(--z); font-size: var(--g-klein); line-height: var(--zh-klein); position: sticky; left: 0; width: max-content; max-width: 100%; }
+.zb-regler { position: relative; }
+.regler { --regler-rand: 16px; position: relative; height: calc(var(--z) * 1.25); margin: 0 calc(var(--regler-rand) * -1); padding: 0 var(--regler-rand); cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+.regler:focus { outline: none; }
+.regler.ohne-jahre { height: calc(var(--z) * .75); }
+.regler-spur { position: absolute; left: var(--regler-rand); top: 0; display: block; overflow: visible; pointer-events: none; }
+.regler-spur .haar { stroke: var(--tinte); stroke-width: .75; }
+.regler-spur .bruch { stroke: var(--tinte); stroke-width: .9; fill: none; }
+.regler-spur .sicht { stroke: var(--tinte); stroke-width: 1.75; }
+.regler-spur .jahr { font-family: var(--schrift); font-size: var(--g-klein); fill: var(--tinte); font-variant-numeric: oldstyle-nums tabular-nums; }
+.regler-spur .jahr.ist-gemeint { text-decoration: underline; }
+.regler-knopf { position: absolute; left: var(--regler-rand); top: 0; width: 6px; height: 14px; margin-left: -3px; background: var(--papier); box-shadow: inset 0 0 0 .75px var(--tinte); pointer-events: none; }
+.regler-knopf.ist-gewaehlt { background: var(--tinte); }
+.regler:focus-visible .regler-knopf { outline: 1.5px solid var(--tinte); outline-offset: 3px; }
+.regler-name { position: absolute; left: 0; bottom: calc(100% + 10px); width: max-content; max-width: calc(100% - 2 * var(--regler-rand)); padding: 0 .3em; font-size: var(--g-klein); line-height: var(--zh-klein); background: var(--papier); pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.regler-name[hidden] { display: none; }
+.bandname.ist-verdeckt { visibility: hidden; }
+.zb-schritte { margin-top: var(--z-viertel); }
+.zb-schritte .wort[aria-disabled="true"] { color: var(--leise); text-decoration-line: none; cursor: default; }
+@media (hover: none) { .regler-spur .jahr { text-decoration: underline; } }
+.zb-kind, .zb-warte { margin-top: var(--z-viertel); }
+.ganze { margin-top: var(--z-dreiviertel); }
+html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
+@media (max-width: 62rem) {
+  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); }
+  .globusseite > .ebenentext { order: 1; margin-top: var(--z); }
+  .schreiben-raster { grid-template-columns: minmax(0, var(--mass)); }
+  .schreiben-raster .regalbild { grid-column: 1; grid-row: 1; margin: 0; }
+  .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 2; margin-top: var(--z); }
+}
+@media (max-width: 40rem) {
+  .zeitband-roll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; overscroll-behavior-x: contain; padding-bottom: var(--z-viertel); margin: 0 calc(var(--rand-l) * -1); padding-left: var(--rand-l); padding-right: var(--rand-l); scroll-padding: 0 var(--rand-l); }
+  .bandzeile > span { text-wrap: balance; hyphens: manual; -webkit-hyphens: manual; }
+  .stueck.liegt > span { left: 4px; right: 4px; }
+  .zb-regler { position: sticky; left: 0; }
+  .zeitband { margin-top: 0; }
+  .zeitband-roll { padding-top: var(--z); }
+}
+@media (max-width: 40rem) {
+  .zb-regler { margin-top: var(--z-halb); }
+  .zb-regler + .bandname { margin-top: var(--z-halb); }
+}
+@media (max-width: 40rem), (pointer: coarse) {
+  .regler, .regler.ohne-jahre { height: 2.75rem; }
+}
+</style>
+<style>
+[data-nur="platzhalter"] { display: none !important; }
+html[data-ausgabe="platzhalter"] .schluss { padding: var(--z-drei) var(--rand-r) var(--z-drei) var(--rand-l); }
+html[data-ausgabe="platzhalter"]:not(.js) .schluss { padding-top: 0; }
+html[data-ausgabe="platzhalter"] .aufbau { max-width: var(--mass); }
+@media (max-width: 62rem) { html[data-ausgabe="platzhalter"] .schluss { padding-right: var(--rand-l); } }
+html[data-ausgabe="platzhalter"] .schluss.mit-weg {
+  padding-top: max(var(--z-drei), 19vh); padding-top: max(var(--z-drei), 19svh);
+  padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px))); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)));
+}
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 62.0625rem) {
+    html[data-ausgabe="platzhalter"].js .schluss { grid-column: 2; grid-row: 8 / 10; width: var(--neben-globus); padding: 0 0 var(--z-drei); }
+    html[data-ausgabe="platzhalter"][data-schluss="v2"].js .globusseite > .globus { margin-bottom: 0; }
+    html[data-ausgabe="platzhalter"].js .schluss.mit-weg { padding-top: max(0px, 19vh - var(--z-drei)); padding-top: max(0px, 19svh - var(--z-drei)); padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px)), var(--schluss-globus, 0px)); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)), var(--schluss-globus, 0px)); }
+  }
+}
+html[data-ausgabe="platzhalter"] .blass.fern { pointer-events: none; }
+html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !important; pointer-events: auto; }
 </style>
 </head>
-<body>
+<body class="mit-globus">
+
 <header class="kopf">
-  <p class="briefkopf"><span class="name">Dominik Jäkel</span> <span class="rolle">Schriftsteller</span></p>
+  <h1 class="briefkopf"><span class="name">Dominik Jäkel</span> <span class="rolle">Schriftsteller und Reisender</span></h1>
 </header>
-<main class="platzhalter" id="inhalt">
-  <p>Seite im Aufbau.</p>
+
+<main id="inhalt">
+<section class="globusseite" aria-label="Vita und Globus">
+  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt tagsüber</span> <span class="glied-satz">unter fremden Namen</span> <span class="glied-satz">und abends unter seinem eigenen.</span></p>
+  <script>
+  (function () {
+    'use strict';
+    var el = document.getElementById('einstieg');
+    if (!el || !el.querySelector('.glied-satz')) return;
+    var still = function () { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+    var breit = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches); };
+    var stehtJetzt = function () {}, flugJetzt = function () {};
+    el.steht = new Promise(function (r) { stehtJetzt = r; });
+    el.flug = new Promise(function (r) { flugJetzt = r; });
+    var zurueck = document.documentElement.classList.contains('zurueck');
+    var text = el.textContent.replace(/\s+/g, ' ').trim();
+    var satz = document.createElement('span');
+    satz.className = 'einstieg-satz';
+    satz.setAttribute('aria-hidden', 'true');
+    while (el.firstChild) satz.appendChild(el.firstChild);
+    var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
+    var PAARE = ['Dominik Jäkel', 'seinem eigenen.'];
+    glieder.forEach(function (g) {
+      var woerter = g.textContent.trim().split(/\s+/);
+      g.textContent = '';
+      var paar = null;
+      woerter.forEach(function (w, i) {
+        var s = document.createElement('span');
+        s.className = 'w';
+        s.textContent = w;
+        var beginnt = PAARE.some(function (p) { return p.split(' ')[0] === w && p.split(' ')[1] === woerter[i + 1]; });
+        if (beginnt) {
+          if (i) g.appendChild(document.createTextNode(' '));
+          paar = document.createElement('span');
+          paar.className = 'paar';
+          paar.appendChild(s);
+          g.appendChild(paar);
+          return;
+        }
+        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); paar = null; return; }
+        if (i) g.appendChild(document.createTextNode(' '));
+        g.appendChild(s);
+      });
+    });
+    var vorlesen = document.createElement('span');
+    vorlesen.className = 'unsichtbar einstieg-vorlesen';
+    vorlesen.textContent = text;
+    el.appendChild(vorlesen);
+    el.appendChild(satz);
+    var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
+    function laengstes() {
+      var links = el.getBoundingClientRect().left + el.clientLeft + (parseFloat(getComputedStyle(el).paddingLeft) || 0);
+      var rechts = links;
+      glieder.forEach(function (g) { rechts = Math.max(rechts, g.getBoundingClientRect().right); });
+      return rechts - links;
+    }
+    var masse = '';
+    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
+    function setzen() {
+      anpassen();
+      masse = mass();
+    }
+    function anpassen() {
+      el.style.fontSize = '';
+      el.classList.add('gesetzt');
+      var breite = el.clientWidth;
+      if (!breite) return;
+      var unten = breit() ? 28.5 : 20.7;
+      var stufen = [
+        { ziel: Math.min(breite * .97, breite - 6), boden: unten },
+        { ziel: breite - 2, boden: unten },
+        { ziel: breite - 2, boden: Math.round(unten * .92 * 10) / 10 }
+      ];
+      var gesetzt = parseFloat(getComputedStyle(el).fontSize);
+      for (var st = 0; st < stufen.length; st++) {
+        var ziel = stufen[st].ziel, boden = stufen[st].boden;
+        for (var n = 0; n <= 3; n++) {
+          var lang = laengstes();
+          if (lang <= ziel) return;
+          if (n === 3 || gesetzt <= boden) break;
+          var kleiner = Math.floor(gesetzt * ziel / lang * 10) / 10;
+          if (kleiner >= gesetzt) kleiner = Math.round((gesetzt - .1) * 10) / 10;
+          if (kleiner < boden) kleiner = boden;
+          el.style.fontSize = kleiner + 'px';
+          gesetzt = kleiner;
+        }
+      }
+      el.classList.remove('gesetzt');
+      el.style.fontSize = '';
+      if (laengstes() > breite) el.style.fontSize = unten + 'px';
+    }
+    var bild = 0;
+    function nachsetzen() {
+      if (bild) return;
+      var los = function () { bild = 0; setzen(); };
+      bild = window.requestAnimationFrame ? window.requestAnimationFrame(los) : setTimeout(los, 16);
+    }
+    function imFell(ms) {
+      if (!document.fonts || !document.fonts.load) return Promise.resolve(false);
+      var ab = performance.now();
+      var laden = document.fonts.load('38px "IM Fell French Canon"').then(function (l) { return !!(l && l.length); });
+      return Promise.race([laden, new Promise(function (r) { setTimeout(function () { r(false); }, ms); })]).catch(function () { return false; })
+        .then(function (da) { return da && performance.now() - ab <= ms + 100; });
+    }
+    var WEG = 800, DECKKRAFT = 420, VERSATZ = 75, ATEM = 220;
+    function einfliegen() {
+      if (!woerter[0].animate) { flugJetzt(null); stehtJetzt(false); return; }
+      var t = 0, laeufe = [];
+      glieder.forEach(function (g, gi) {
+        if (gi) t += ATEM;
+        Array.prototype.forEach.call(g.querySelectorAll('.w'), function (w, wi) {
+          if (wi) t += VERSATZ;
+          laeufe.push(w.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DECKKRAFT, delay: t, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'backwards' }));
+          laeufe.push(w.animate([{ transform: 'translateX(.2em)' }, { transform: 'translateX(0)' }], { duration: WEG, delay: t, easing: 'cubic-bezier(.22,.7,.28,1)', fill: 'backwards' }));
+        });
+      });
+      var letztes = t, gemeldet = false;
+      var melden = function () {
+        if (gemeldet) return;
+        gemeldet = true;
+        var b = laeufe[0].startTime;
+        if (b == null || !isFinite(b)) b = performance.now();
+        flugJetzt({ beginn: b, tm: b + letztes + Math.max(DECKKRAFT, .6 * WEG), ende: b + letztes + Math.max(DECKKRAFT, WEG) });
+      };
+      if (laeufe[0].ready) laeufe[0].ready.then(melden, melden); else melden();
+      setTimeout(melden, 1000);
+      var gestanden = function () { setzen(); stehtJetzt(true); };
+      Promise.all(laeufe.map(function (a) { return a.finished; })).then(gestanden, gestanden);
+    }
+    setzen();
+    if (!still() && !zurueck) el.classList.add('wartet');
+    imFell(1200).then(function (da) {
+      setzen();
+      var schonDa = el.classList.contains('wartet') && getComputedStyle(satz).opacity === '1';
+      el.classList.remove('wartet');
+      if (da && !schonDa && !still() && !zurueck) einfliegen(); else { flugJetzt(null); stehtJetzt(false); }
+    });
+    if (document.fonts && document.fonts.load) document.fonts.load('38px "IM Fell French Canon"').then(setzen).catch(function () {});
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(nachsetzen).catch(function () {});
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', nachsetzen);
+    window.addEventListener('load', nachsetzen);
+    if (window.ResizeObserver) {
+      var beobachter = new ResizeObserver(function () {
+        if (mass() === masse) return;
+        setzen();
+        beobachter.disconnect();
+        requestAnimationFrame(beobachten);
+      });
+      var beobachten = function () {
+        beobachter.observe(el);
+        woerter.forEach(function (w) { beobachter.observe(w); });
+      };
+      beobachten();
+    } else {
+      var warte = 0;
+      window.addEventListener('resize', function () {
+        clearTimeout(warte);
+        warte = setTimeout(function () { if (mass() !== masse) setzen(); }, 140);
+      });
+    }
+  })();
+</script>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u.&nbsp;a. die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation.</p>
+
+  <p class="ebenen" role="group" aria-label="Globus"><button type="button" class="wort" data-ebene="leben" aria-pressed="true">Leben</button> <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">Reisen</button> <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false"><i>Satoshi</i></button> <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false"><i>Ursprünge</i></button></p>
+
+  
+  <div class="ebenentext">
+    <div data-text="reisen" hidden>
+      <p class="kontinente" role="group" aria-label="Kontinente"><button type="button" class="wort" data-ueberblick aria-pressed="true">Alle Länder</button> <button type="button" class="wort" data-kontinent="Europa" aria-pressed="false">Europa</button> <button type="button" class="wort" data-kontinent="Asien" aria-pressed="false">Asien</button> <button type="button" class="wort" data-kontinent="Afrika" aria-pressed="false">Afrika</button> <button type="button" class="wort" data-kontinent="Amerika" aria-pressed="false">Amerika</button></p>
+      <p>Die <span>Länderguides</span> sind in Arbeit.</p>
+    </div>
+    <div data-text="satoshi" hidden id="satoshi-text"></div>
+    <div data-text="ursprung" hidden id="ursprung-text"></div>
+  </div>
+
+  <figure class="globus" id="globus" data-folge="2">
+    <div class="flaeche" id="flaeche"><canvas id="globus-canvas" tabindex="0" aria-label="Globus mit den Orten aus dem Text; Pfeiltasten drehen, Plus und Minus zoomen"></canvas></div>
+    <div class="tipp" hidden></div>
+    <p class="hinweis" hidden></p>
+    <p class="ersatz" id="ersatz" hidden>Der Globus lässt sich gerade nicht laden. Die Orte stehen im Text und auf der Tafel.</p>
+    <div class="tafel" id="tafel" aria-live="polite"></div>
+  </figure>
+</section>
+
+<section class="abschnitt" id="schreiben">
+  <div class="schreiben-raster">
+    
+    <figure class="regalbild" id="regalbild" data-folge="1">
+      <figcaption class="regal-unterschrift">Meine Projekte und was auf dem Nachttisch liegt</figcaption>
+      <div class="regalbild-flaeche" id="regalbild-flaeche" role="group" aria-label="Eigene Bücher und der Stapel vom Nachttisch"></div>
+      <div class="brett"></div>
+      <p class="regal-name" id="regal-name" aria-hidden="true" hidden></p>
+      <p id="regal-zeile" class="buchzeile"></p>
+    </figure>
+    <script>
+    if (window.matchMedia && window.matchMedia('(min-width: 62.0625rem)').matches) document.querySelector('.globusseite').insertBefore(document.getElementById('regalbild'), document.getElementById('globus'));
+    if (document.documentElement.classList.contains('folge')) setTimeout(function () { document.getElementById('regalbild').classList.add('da'); }, 7000);
+</script>
+
+    
+  </div>
+</section>
+
+<div class="schluss" id="schluss"><p class="aufbau">Seite im Aufbau.</p></div>
 </main>
-<footer class="fuss" aria-label="Rechtliches">
-  <p class="impressum"><a href="/impressum">Impressum</a><br><a href="/datenschutz">Datenschutz</a></p>
+
+<footer class="fuss" id="kontakt" aria-label="Kontakt">
+  <div class="kontakt">
+    <p class="anfragen">Anfragen zu Lesungen und zu den Romanen: <a href="mailto:dominik.jd.jaekel@gmail.com">dominik.jd.jaekel@gmail.com</a></p>
+    <p class="impressum"><a href="/impressum">Impressum</a><br><a href="/datenschutz">Datenschutz</a></p>
+    <p class="profile" hidden></p>
+  </div>
+  <p class="kolophon-fuss">Website gesetzt aus der Vollkorn von Friedrich&nbsp;Althausen, der erste Satz aus der IM&nbsp;Fell&nbsp;French&nbsp;Canon von Igino&nbsp;Marini. Küsten und Grenzen nach Natural&nbsp;Earth.</p>
 </footer>
+
+<script src="lib/d3.min.js"></script>
+<script src="lib/topojson-client.min.js"></script>
+<script src="daten/welt-110m.js"></script>
+<script src="daten/laender-de.js"></script>
+<script src="daten/uk-landesteile.js"></script>
+<script src="daten/fluesse.js"></script>
+<script src="globus/kern.js"></script>
+<script src="daten/inhalt.js"></script>
+<script src="daten/buecher.js"></script>
+<script src="seite.js"></script>
+<script>
+(function () {
+  'use strict';
+  if (document.documentElement.getAttribute('data-ausgabe') !== 'platzhalter') return;
+  const BLEIBT = /^(?:https:\/\/|mailto:|#)|^(?:\.?\/)?(?:impressum|datenschutz)(?:\.html)?(?:#.*)?$/i;
+  const OHNE = ['href', 'rel', 'target', 'hreflang', 'aria-current', 'download', 'ping', 'referrerpolicy', 'type'];
+  function alsText(a) {
+    const s = document.createElement('span');
+    Array.from(a.attributes).forEach(x => { if (!OHNE.includes(x.name)) s.setAttribute(x.name, x.value); });
+    while (a.firstChild) s.appendChild(a.firstChild);
+    a.replaceWith(s);
+  }
+  function verweise(wurzel) {
+    if (!wurzel || wurzel.nodeType !== 1) return;
+    const liste = (wurzel.matches('a[href]') ? [wurzel] : []).concat(Array.from(wurzel.querySelectorAll('a[href]')));
+    liste.forEach(a => { if (!BLEIBT.test((a.getAttribute('href') || '').trim())) alsText(a); });
+  }
+  verweise(document.body);
+  new MutationObserver(liste => liste.forEach(m => {
+    if (m.type === 'attributes') verweise(m.target); else m.addedNodes.forEach(verweise);
+  })).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
+  if (!document.getElementById('zeitband-roll')) {
+    const leer = document.createElement('div');
+    leer.id = 'zeitband-roll';
+    leer.hidden = true;
+    leer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(leer);
+  }
+  const ziel = location.hash === '#globus' && document.getElementById('globus');
+  if (ziel && getComputedStyle(ziel).position === 'sticky') {
+    const adresse = location.href;
+    history.replaceState(history.state, '', location.pathname + location.search);
+    window.scrollTo(0, 0);
+    window.addEventListener('load', () => history.replaceState(history.state, '', adresse));
+  }
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FSeite, I = window.INHALT || {};
+  if (!F) return;
+  const { $, $$, esc } = F;
+  const ruhig = F.ruhig();
+  const LEBEN = F.stationen();
+  const SZENEN = F.szenen();
+  const URSPRUNG = F.ursprungOrte();
+  const SAT = I.satoshi || {};
+  const BAND = {};
+  ((I.trilogie && I.trilogie.baende) || []).forEach(b => { BAND[b.band] = b; });
+  const HEUTE = LEBEN.map(s => !s.neben).lastIndexOf(true);
+  const einmal = liste => { const da = new Set(); return liste.filter(s => !da.has(s.name) && da.add(s.name)); };
+  const SATOSHI_ORTE = einmal(SZENEN).map(s => ({ name: s.name, kurz: s.kurz, notiz: s.notiz, lat: s.lat, lon: s.lon }));
+  const STATIONEN = { leben: LEBEN, satoshi: SZENEN, ursprung: URSPRUNG };
+  const BLICK = {
+    leben: { mitte: [62, 30], k: 1 },
+    reisen: { mitte: [52, 30], k: 1 },
+    satoshi: { mitte: [-48, 18], k: 1 },
+    ursprung: { mitte: [40.6, 33.8], k: 3.3 }
+  };
+  const EBENEN = {
+    leben: { orte: LEBEN, laender: false, blick: BLICK.leben },
+    reisen: { orte: [], laender: true, blick: BLICK.reisen },
+    satoshi: { orte: SATOSHI_ORTE, laender: false, blick: BLICK.satoshi },
+    ursprung: { orte: URSPRUNG, laender: false, grenzen: false, fluesse: true, blick: BLICK.ursprung }
+  };
+  const KONTINENTE = { Europa: [[13, 50], 3.3], Asien: [[94, 26], 1.75], Afrika: [[16, 4], 1.9], Amerika: [[-80, 12], 1.25] };
+  (function () {
+    const wort = o => {
+      const b = `<button type="button" class="wort" data-satoshi="${esc(o.name)}" aria-pressed="false">${esc(o.kurz || o.name)}</button>`;
+      if (o.name === 'Black Rock Desert') return 'die ' + b + ' in Nevada';
+      if (o.notiz === 'Patagonien') return b + ' in Patagonien';
+      return b;
+    };
+    const w = SATOSHI_ORTE.map(wort);
+    $('#satoshi-text').innerHTML =
+      `<p><a class="werk" href="${F.SEITEN.satoshi}">Satoshi</a> erzählt die Gründungslegende von Bitcoin. Der Roman beginnt 2001 in Buenos Aires, die Kernhandlung spielt 2007 bis 2010.</p>` +
+      `<p>Die Schauplätze in der Reihenfolge des Romans: ${w.slice(0, -1).join(', ')} und ${w[w.length - 1]}.</p>`;
+  })();
+  (function () {
+    const zeile = b => {
+      const orte = URSPRUNG.filter(o => o.band === b).map(o => `<button type="button" class="wort" data-station="${o.i}" aria-pressed="false">${esc(o.name)}</button>`);
+      return `<p class="band"><span class="band-nr">${b}</span> <i>${esc((BAND[b] || {}).titel || '')}</i>, ${orte.join(' und ')}</p>`;
+    };
+    $('#ursprung-text').innerHTML = `<p>Die drei Bände der <a href="${F.SEITEN.ursprung}">Ursprungstrilogie</a>:</p>` + ['I', 'II', 'III'].map(zeile).join('');
+  })();
+  $$('.ebenentext').forEach(F.satzzeichenBinden);
+  F.gleichBreit($$('.ebenen .wort, .kontinente .wort, [data-satoshi], #ursprung-text [data-station]'));
+  const figur = $('#globus'), flaeche = $('#flaeche'), canvas = $('#globus-canvas'), tipp = $('.tipp', figur), tafelEl = $('#tafel');
+  let ebeneJetzt = 'leben';
+  const A = {};
+  function gezeigt(einzeln) {
+    const st = STATIONEN[ebeneJetzt];
+    if (!st) return [];
+    return einzeln ? einmal(st) : st;
+  }
+  function aktivName() {
+    const st = STATIONEN[ebeneJetzt], a = A[ebeneJetzt];
+    if (!st || !a) return null;
+    const z = a.zustand();
+    if (z === 'ruhe' || z === 'bereit') return null;
+    const s = st[a.jetzt()];
+    return s ? s.name : null;
+  }
+  const g = F.globus({
+    canvas, flaeche, tipp, hinweis: $('.hinweis', figur),
+    tippText: land => { landHover = land; return land.name; },
+    namen: { orte: () => gezeigt(true).map(s => ({ name: s.name, text: s.kurz || s.name, lat: s.lat, lon: s.lon, neben: !!s.neben })), spur: () => gezeigt(false), aktiv: aktivName }
+  });
+  const namenNeu = () => { if (g) g.namenNeu(); };
+  if (g && g.fingerRegel) g.fingerRegel({ ab: 10, verhaeltnis: 1.5 });
+  if (!g) {
+    figur.classList.add('ohne-globus');
+    $('#ersatz').hidden = false;
+  }
+  function blickBerechnen() {
+    if (!g) return;
+    const m = F.blickFuer(canvas, LEBEN, { lon: [20, 100], lat: [5, 50] });
+    if (m) BLICK.leben.mitte = m;
+    const u = F.blickFuer(canvas, URSPRUNG, { lon: [32, 48], lat: [26, 40], k: BLICK.ursprung.k, schritt: .25 });
+    if (u) BLICK.ursprung.mitte = u;
+    BLICK.reisen.mitte = F.breit() ? [52, 30] : [40, 28];
+    BLICK.satoshi.k = F.breit() ? .92 : 1;
+    const s = F.blickFuer(canvas, SATOSHI_ORTE.filter(o => o.lon < 40), { lon: [-90, 10], lat: [-10, 40], schritt: 2, k: BLICK.satoshi.k });
+    if (s) BLICK.satoshi.mitte = s;
+  }
+  function lebenInhalt(i) {
+    const s = LEBEN[i], t = F.stationInhalt(s);
+    if (i === HEUTE) t.marke = F.jahrMarke('seit ' + s.jahr);
+    return t;
+  }
+  function satoshiInhalt(i, mitText) {
+    if (i < 0) return { kopf: 'Satoshi', unter: 'Roman', text: SAT.hook || '' };
+    const s = SZENEN[i], notiz = s.notiz && String(s.text).indexOf(s.notiz) !== 0 ? s.notiz : '';
+    const text = String(s.text || '').replace(/(\d\.) (?=[A-ZÄÖÜ][a-zäöü]+ \d{4})/g, '$1' + F.NBSP);
+    return { zeichen: 'wohnort', marke: s.jahr, kopf: notiz ? s.kurz + ', ' + notiz : s.kurz, text: mitText ? F.textMitVerweis(text, s.verweis) : '' };
+  }
+  const ursprungTafel = i => Object.assign(F.ursprungInhalt(i), { daten: '' });
+  const BEREIST = I.bereist || [];
+  let landHover = null, landGewaehlt = null, kontinentGewaehlt = null, reisenZuletzt = '';
+  function reisenInhalt(land, kontinent) {
+    if (land) return { kopf: land.name, unter: BEREIST.includes(land.iso) ? 'bereist' : 'nicht bereist' };
+    if (kontinent) return { kopf: kontinent, satz: F.gross(F.zahlwort((I.kontinente[kontinent] || []).length)) + ' Länder und Gebiete, grau auf dem Globus.' };
+    return { kopf: 'Reisen', satz: F.gross(F.zahlwort(BEREIST.length)) + ' Länder und Gebiete, grau auf dem Globus.' };
+  }
+  function reisenTafel() {
+    const land = landGewaehlt;
+    const schluessel = (land ? land.iso : '') + '|' + (kontinentGewaehlt || '');
+    if (schluessel === reisenZuletzt) return;
+    reisenZuletzt = schluessel;
+    F.tafel(tafelEl, reisenInhalt(land, kontinentGewaehlt));
+  }
+  const lebenAlle = () => LEBEN.map((s, i) => lebenInhalt(i));
+  const reisenAlle = () => [reisenInhalt(null, null), reisenInhalt(null, 'Europa'), reisenInhalt({ iso: BEREIST[0], name: 'Demokratische Republik Kongo' }, null)];
+  const satoshiAlle = mitText => [satoshiInhalt(-1)].concat(mitText ? SZENEN.map((s, i) => satoshiInhalt(i, true)) : []);
+  const ursprungAlle = () => [-1, 0, 1, 2, 3].map(ursprungTafel);
+  function tafelHoehe() {
+    if (F.breit()) F.tafelPlatz(tafelEl, lebenAlle().concat(reisenAlle(), satoshiAlle(true), ursprungAlle()));
+    else {
+      F.tafelPlatz(tafelEl, []);
+      const je = { leben: lebenAlle, reisen: reisenAlle, satoshi: () => satoshiAlle(true), ursprung: ursprungAlle };
+      F.tafelReservieren(tafelEl, (je[ebeneJetzt] || (() => []))());
+    }
+  }
+  F.tafel(tafelEl, lebenInhalt(0));
+  if (g) { blickBerechnen(); g.ebene(EBENEN.leben, { fliegen: false }); }
+  A.leben = F.ablauf({
+    globus: g, stationen: LEBEN, tafel: tafelEl, takt: F.TAKT.leben, endeBei: HEUTE,
+    beiStation: i => { if (i >= 0) F.tafel(tafelEl, lebenInhalt(i)); namenNeu(); }
+  });
+  const satoshiWorte = i => $$('[data-satoshi]').forEach(b => b.setAttribute('aria-pressed', String(i >= 0 && b.dataset.satoshi === SZENEN[i].name)));
+  A.satoshi = F.ablauf({
+    globus: g, stationen: SZENEN, tafel: tafelEl, takt: Object.assign({}, F.TAKT.satoshi, { schluss: BLICK.satoshi }),
+    taktAbspielen: Object.assign({}, F.TAKT.satoshiAbspielen, { schluss: null }), schrittZoom: F.TAKT.satoshiAbspielen.zoom,
+    ruhe: 'ruhe', aktiv: false,
+    beiStation: i => { F.tafel(tafelEl, satoshiInhalt(i, true)); satoshiWorte(i); namenNeu(); }
+  });
+  A.ursprung = F.ablauf({
+    globus: g, stationen: URSPRUNG, tafel: tafelEl, ortsleiste: $('#ursprung-text'), takt: F.TAKT.ursprung, aktiv: false,
+    beiStation: i => { F.tafel(tafelEl, ursprungTafel(i)); namenNeu(); }
+  });
+  $('#satoshi-text').addEventListener('click', e => {
+    const b = e.target.closest('[data-satoshi]');
+    if (b) { A.satoshi.waehlenName(b.dataset.satoshi); globusInSicht(b); }
+  });
+  function ebeneWaehlen(name) {
+    if (name === ebeneJetzt) return;
+    if (A[ebeneJetzt]) A[ebeneJetzt].loesen();
+    ebeneJetzt = name;
+    $$('[data-ebene]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ebene === name)));
+    $$('[data-text]').forEach(t => { t.hidden = t.dataset.text !== name; });
+    landHover = null; landGewaehlt = null; kontinentGewaehlt = null; reisenZuletzt = null;
+    $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', String(b.hasAttribute('data-ueberblick'))));
+    if (g) g.auswahl(null);
+    const a = A[name];
+    tafelHoehe();
+    if (g) g.ebene(EBENEN[name]);
+    if (a) a.zeigen();
+    else reisenTafel();
+    namenNeu();
+  }
+  function globusInSicht(wort) {
+    if (F.breit() || !g) return;
+    const f = flaeche.getBoundingClientRect(), fig = figur.getBoundingClientRect(), H = window.innerHeight;
+    const oben = Math.min(f.top, wort ? wort.getBoundingClientRect().top : f.top);
+    let d = 0;
+    if (fig.bottom > H - 8) d = fig.bottom - H + 12;
+    if (oben - d < 8) d = oben - 12;
+    if (f.bottom - d > H - 4) d = Math.min(f.bottom - H + 12, f.top - 12);
+    if (Math.abs(d) > 6) window.scrollBy({ top: d, behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  function landAn(e) {
+    const p = g && g.projektion, d3 = window.d3;
+    if (!p || !d3) return null;
+    const r = canvas.getBoundingClientRect();
+    const ll = p.invert([e.clientX - r.left, e.clientY - r.top]);
+    const rot = p.rotate();
+    if (!ll || d3.geoDistance(ll, [-rot[0], -rot[1]]) > Math.PI / 2 - .02) return null;
+    for (const iso of BEREIST) { const f = g.land(iso); if (f && d3.geoContains(f, ll)) return f; }
+    return null;
+  }
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button');
+    if (!t) return;
+    const d = t.dataset;
+    if (d.ebene) { ebeneWaehlen(d.ebene); globusInSicht($('.ebenen')); }
+    else if (d.kontinent) {
+      $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', String(b === t)));
+      kontinentGewaehlt = d.kontinent; landGewaehlt = null; reisenTafel();
+      const [mitte, k] = KONTINENTE[d.kontinent], versatz = F.breit() ? 5.2 / k : 0;
+      if (g) { g.auswahl(null); g.fliegen([mitte[0] + versatz, mitte[1]], k); }
+      globusInSicht(t);
+    } else if ('ueberblick' in d) {
+      $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', String(b === t)));
+      kontinentGewaehlt = null; landGewaehlt = null; reisenTafel();
+      if (g) { g.auswahl(null); g.fliegen(BLICK.reisen.mitte, BLICK.reisen.k); }
+      globusInSicht(t);
+    }
+  });
+  $('#ursprung-text').addEventListener('click', e => { const b = e.target.closest('[data-station]'); if (b) globusInSicht(b); });
+  if (tipp) new MutationObserver(() => { if (tipp.hidden) landHover = null; }).observe(tipp, { attributes: true, attributeFilter: ['hidden'] });
+  canvas.addEventListener('click', e => {
+    if (ebeneJetzt !== 'reisen' || !g) return;
+    const land = landAn(e) || landHover;
+    if (!land) return;
+    landGewaehlt = land; kontinentGewaehlt = null;
+    $$('.kontinente .wort').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    g.auswahl(land.iso);
+    reisenZuletzt = null; reisenTafel();
+  });
+  F.folge({ text: F.textmoment($('#einstieg')), lesen: () => F.woerter($('#einstieg .einstieg-vorlesen') || $('#einstieg')), kugel: () => g });
+  A.leben.einspielen();
+  tafelHoehe();
+  F.schriften(2500).then(() => { tafelHoehe(); if (g) { blickBerechnen(); g.zeichnen(); } namenNeu(); });
+  const BUECHER = F.buch.alle();
+  const regalFlaeche = $('#regalbild-flaeche'), regalName = $('#regal-name'), regalZeileEl = $('#regal-zeile');
+  const bzRegal = F.buchzeile(regalZeileEl);
+  const EIGEN = [
+    { id: 'satoshi', t: 'Satoshi', h: 205, d: 27, vor: 0 },
+    { id: 'ursprung-1', t: 'Ursprünge I', h: 205, d: 24, vor: 4 },
+    { id: 'ursprung-2', t: 'Ursprünge II', h: 205, d: 24, vor: 0 },
+    { id: 'ursprung-3', t: 'Ursprünge III', h: 205, d: 24, vor: 0 },
+    { id: 'erzaehlungen', t: 'Erzählungen', h: 205, d: 21, vor: 14 },
+    { id: 'untertext', t: 'Untertext', h: 205, d: 16, vor: 1 },
+    { id: 'laender', t: 'Länder', h: 222, d: 19, vor: 12, lehnt: 7 }
+  ];
+  const WERK_GERADE = ['erzaehlungen', 'laender'];
+  const NACHTTISCH = BUECHER.filter(b => b.r === 'gerade');
+  const farbe = b => (F.buch && typeof F.buch.farbe === 'function' ? F.buch.farbe(b) : null);
+  const einStapel = () => window.matchMedia('(max-width: 40rem)').matches;
+  function werkName(id) {
+    const w = (I.werke || []).find(x => x.id === id);
+    if (!w) return '';
+    const n = esc(w.buchtitel || w.titel);
+    return WERK_GERADE.includes(id) ? n : `<i>${n}</i>`;
+  }
+  const VERSATZ = .7;
+  function versatzMm(st) {
+    let richtung = 0;
+    return st.map((s, n) => {
+      if (!n) return 0;
+      const h = F.hash(s.b.key + '|versatz');
+      richtung = n === 1 ? (h & 1 ? 1 : -1) : ((h >>> 3) % 3 ? -richtung : richtung);
+      return richtung * (2 + ((h >>> 4) % 700) / 100) * VERSATZ;
+    });
+  }
+  const staerkePx = b => 18 + .03 * (b.p || 250);
+  function regalZeichnen() {
+    const platz = regalFlaeche.parentElement.clientWidth;
+    if (!platz) return;
+    bzRegal.schliessen();
+    const allein = einStapel(), KONTUR = .75;
+    const liegend = NACHTTISCH.map(b => ({ b, breite: b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185, dicke: (b.p || 250) * .06 + (b.b === 'h' ? 5 : 1) }));
+    const stapel = [[], []], hoch = [0, 0];
+    liegend.slice().sort((p, q) => q.dicke - p.dicke).forEach(s => { const i = hoch[0] <= hoch[1] ? 0 : 1; stapel[i].push(s); hoch[i] += s.dicke; });
+    if (hoch[1] > hoch[0]) { stapel.reverse(); hoch.reverse(); }
+    if (allein) { stapel.shift(); hoch.shift(); }
+    stapel.forEach(st => st.sort((p, q) => q.breite - p.breite || q.dicke - p.dicke));
+    let x = 0, schub = 0, lehne = null;
+    EIGEN.forEach((e, n) => {
+      if (n && !e.vor) schub += KONTUR;
+      x += e.vor; e.x = x; e.schub = schub; e.neigt = !!e.lehnt;
+      if (e.neigt) lehne = { rechts: x + e.d, schub, h: e.h, rad: e.lehnt * Math.PI / 180 };
+      x += e.d;
+    });
+    function lage(st, ms) {
+      const dx = versatzMm(st);
+      let y = 0;
+      return st.map((s, n) => { const g = { s, x: dx[n] * ms, y0: y, y1: y + (allein ? staerkePx(s.b) : s.dicke * ms), L: s.breite * ms }; y = g.y1 - KONTUR; return g; });
+    }
+    function anLehne(gs, m) {
+      const R = lehne.rechts * m - lehne.schub, C = (lehne.h * m + 12) * Math.cos(lehne.rad), tan = Math.tan(lehne.rad);
+      return Math.max(...gs.filter(g => g.y0 < C).map(g => R + Math.min(g.y1, C) * tan + .25 - g.x));
+    }
+    const LUFT = 24, LUFT_PX = 14, RECHTS = 3, RECHTS_PX = 13;
+    function bau(m, ms) {
+      const gs = stapel.map(st => lage(st, ms)), sx = [anLehne(gs[0], m)];
+      let ende = sx[0] + Math.max(...gs[0].map(g => g.x + g.L));
+      if (gs[1]) {
+        sx[1] = ende + Math.max(LUFT * ms, LUFT_PX) - Math.min(...gs[1].map(g => g.x));
+        ende = sx[1] + Math.max(...gs[1].map(g => g.x + g.L));
+      }
+      return { gs, sx, breitePx: ende + Math.max(RECHTS * ms, RECHTS_PX) };
+    }
+    function groesster(passt, hoechstens) {
+      if (passt(hoechstens)) return hoechstens;
+      let lo = 0, hi = hoechstens;
+      for (let k = 0; k < 30; k++) { const mitte = (lo + hi) / 2; if (passt(mitte)) lo = mitte; else hi = mitte; }
+      return lo;
+    }
+    let m, ms;
+    if (allein) { m = Math.min(.86, (platz - 2) / (x + 1)); ms = groesster(s => bau(m, s).breitePx <= platz - 2, m); }
+    else m = ms = groesster(s => bau(s, s).breitePx <= platz - 2, .86);
+    const { gs, sx, breitePx } = bau(m, ms);
+    const px = v => (v * m).toFixed(1) + 'px';
+    const schriftEigen = Math.min(13, m * 12.5), schriftLiegend = allein ? Math.max(9.5, Math.min(13, m * 11.5)) : Math.min(13, ms * 11.5);
+    let html = '';
+    EIGEN.forEach(e => {
+      const text = schriftEigen >= 9 ? `<span style="font-size:${schriftEigen.toFixed(1)}px">${esc(e.t)}</span>` : '';
+      html += `<button type="button" class="stueck eigen dunkel" data-werk="${e.id}" aria-label="${esc(e.t)}" style="left:${(e.x * m - e.schub).toFixed(2)}px;width:${px(e.d)};height:${px(e.h)}${e.neigt ? `;--neig:${e.lehnt}deg` : ''}">${text}</button>`;
+    });
+    let oben = 222 * m;
+    gs.forEach((st, k) => st.forEach(g => {
+      const b = g.s.b, i = BUECHER.indexOf(b), f = farbe(b), d = g.y1 - g.y0;
+      const text = schriftLiegend >= 9 && d >= schriftLiegend + 4 ? `<span style="font-size:${schriftLiegend.toFixed(1)}px">${esc(b.nn || b.autor)}<span class="leer">&ensp;</span>${esc(F.buch.titelKurz(b.t))}</span>` : '';
+      const ton = f ? `;background:${f.grund};color:${f.tinte}` : '';
+      html += `<button type="button" class="stueck liegt${f && f.dunkel ? ' dunkel' : ''}" data-buch="${i}" data-stapel="${k}" aria-label="${esc(b.autor + ', ' + b.t)}" style="left:${(sx[k] + g.x).toFixed(1)}px;bottom:${g.y0.toFixed(2)}px;width:${g.L.toFixed(1)}px;height:${d.toFixed(1)}px${ton}">${text}</button>`;
+      oben = Math.max(oben, g.y1);
+    }));
+    regalFlaeche.style.height = Math.ceil(oben + 2) + 'px';
+    regalFlaeche.style.width = Math.ceil(breitePx) + 'px';
+    regalFlaeche.innerHTML = html;
+    $$('.stueck.liegt > span', regalFlaeche).forEach(sp => {
+      if (sp.scrollWidth <= sp.clientWidth) return;
+      while (sp.childNodes.length > 1) sp.removeChild(sp.lastChild);
+      if (sp.scrollWidth > sp.clientWidth) sp.remove();
+    });
+    rovingSetzen();
+    zielZeigen();
+  }
+  const regalSatz = b => b.dataset.werk ? F.werkSatz(b.dataset.werk) : F.buch.satz(BUECHER[+b.dataset.buch]);
+  function regalNameZeigen(b) {
+    if (!b) { regalName.hidden = true; return; }
+    const buch = b.dataset.buch != null ? BUECHER[+b.dataset.buch] : null;
+    regalName.innerHTML = buch ? `${esc(buch.nn || buch.autor)}, <i>${esc(F.buch.titelKurz(buch.t))}</i>` : werkName(b.dataset.werk);
+    regalName.hidden = false;
+    const stapel = buch ? $$('.stueck.liegt', regalFlaeche).filter(x => x.dataset.stapel === b.dataset.stapel) : [b];
+    const oben = Math.min(...stapel.map(x => x.getBoundingClientRect().top));
+    const r = b.getBoundingClientRect(), o = regalName.offsetParent.getBoundingClientRect();
+    const breite = regalName.offsetWidth, platz = regalName.offsetParent.clientWidth;
+    const links = Math.max(0, Math.min(platz - breite, r.left - o.left));
+    const unter = $$('.stueck', regalFlaeche).map(x => x.getBoundingClientRect()).filter(q => q.right > o.left + links && q.left < o.left + links + breite);
+    const hoechst = Math.min(oben, ...unter.map(q => q.top));
+    regalName.style.left = links + 'px';
+    regalName.style.top = Math.round(hoechst - o.top - regalName.offsetHeight - 2) + 'px';
+  }
+  function zeileReservieren(el, saetze, breite) {
+    if (!el || !el.parentNode) return;
+    const probe = el.cloneNode(false);
+    probe.removeAttribute('id'); probe.removeAttribute('aria-live'); probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;margin:0;min-height:0;max-width:none;width:${Math.max(1, Math.floor(breite || el.clientWidth))}px`;
+    el.parentNode.appendChild(probe);
+    let h = 0;
+    saetze.forEach(s => { probe.innerHTML = s; h = Math.max(h, probe.getBoundingClientRect().height); });
+    probe.remove();
+    return Math.ceil(h);
+  }
+  const RUECKEN = { satoshi: ['satoshi'], ursprung: ['ursprung-1', 'ursprung-2', 'ursprung-3'], erzaehlungen: ['erzaehlungen'], untertext: ['untertext'], laender: ['laender'] };
+  function rueckenMarkieren(id, an, klasse) {
+    (RUECKEN[id] || []).forEach(w => { const b = $(`.stueck[data-werk="${w}"]`, regalFlaeche); if (b) b.classList.toggle(klasse, an); });
+  }
+  const anker = () => { try { return decodeURIComponent(location.hash.slice(1)); } catch (e) { return ''; } };
+  function zielZeigen() {
+    $$('.stueck.ist-ziel', regalFlaeche).forEach(b => b.classList.remove('ist-ziel'));
+    if (RUECKEN[anker()]) rueckenMarkieren(anker(), true, 'ist-ziel');
+  }
+  window.addEventListener('hashchange', zielZeigen);
+  $$('.verzeichnis .eintrag').forEach(e => {
+    e.addEventListener('pointerenter', ev => { if (ev.pointerType === 'mouse') rueckenMarkieren(e.id, true, 'ist-gemeint'); });
+    e.addEventListener('pointerleave', () => rueckenMarkieren(e.id, false, 'ist-gemeint'));
+    e.addEventListener('focusin', () => rueckenMarkieren(e.id, true, 'ist-gemeint'));
+    e.addEventListener('focusout', () => rueckenMarkieren(e.id, false, 'ist-gemeint'));
+  });
+  function rovingSetzen() {
+    const alle = $$('.stueck', regalFlaeche);
+    const offen = alle.find(b => b.classList.contains('ist-offen'));
+    alle.forEach((b, i) => { b.tabIndex = (offen ? b === offen : i === 0) ? 0 : -1; });
+  }
+  regalFlaeche.addEventListener('keydown', e => {
+    const b = e.target.closest('.stueck');
+    if (!b || e.altKey || e.ctrlKey || e.metaKey) return;
+    const alle = $$('.stueck', regalFlaeche), i = alle.indexOf(b);
+    const ziel = { ArrowRight: alle[i + 1], ArrowDown: alle[i + 1], ArrowLeft: alle[i - 1], ArrowUp: alle[i - 1], Home: alle[0], End: alle[alle.length - 1] }[e.key];
+    if (!ziel) return;
+    e.preventDefault();
+    alle.forEach(x => { x.tabIndex = x === ziel ? 0 : -1; });
+    ziel.focus();
+  });
+  regalFlaeche.addEventListener('pointerover', e => { const b = e.target.closest('.stueck'); if (b && e.pointerType === 'mouse') regalNameZeigen(b); });
+  regalFlaeche.addEventListener('pointerout', e => { const b = e.target.closest('.stueck'); if (b && !b.contains(e.relatedTarget) && document.activeElement !== b) regalNameZeigen(null); });
+  regalFlaeche.addEventListener('focusin', e => { const b = e.target.closest('.stueck'); if (b && b.matches(':focus-visible')) regalNameZeigen(b); });
+  regalFlaeche.addEventListener('focusout', () => regalNameZeigen(null));
+  let zeigerArt = '';
+  regalFlaeche.addEventListener('pointerdown', e => { zeigerArt = e.pointerType; });
+  function naechstesStueck(e) {
+    if ((e.pointerType || zeigerArt) === 'mouse') return null;
+    let best = null, abstand = Infinity;
+    $$('.stueck', regalFlaeche).forEach(x => {
+      const r = x.getBoundingClientRect();
+      const d = Math.hypot(Math.max(r.left - e.clientX, 0, e.clientX - r.right), Math.max(r.top - e.clientY, 0, e.clientY - r.bottom));
+      if (d <= abstand) { best = x; abstand = d; }
+    });
+    return best;
+  }
+  regalFlaeche.addEventListener('click', e => {
+    const b = e.target.closest('.stueck') || naechstesStueck(e);
+    if (!b) return;
+    $$('.stueck', regalFlaeche).forEach(x => { x.tabIndex = x === b ? 0 : -1; });
+    if (bzRegal.umschalten(b, regalSatz(b), b)) zeileInSicht(regalZeileEl);
+  });
+  function zeileInSicht(p) {
+    if (F.breit()) return;
+    const r = p.getBoundingClientRect(), H = window.innerHeight;
+    if (r.bottom > H - 8) window.scrollBy({ top: Math.min(r.bottom - H + 16, r.top - 8), behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  function ankerSetzen() {
+    const titel = $('#schreiben-titel'), z = F.masz('--z');
+    $$('.verzeichnis .eintrag').forEach(e => {
+      e.style.scrollMarginTop = F.breit() && titel ? Math.max(0, Math.round(e.getBoundingClientRect().top - titel.getBoundingClientRect().top + z)) + 'px' : '';
+    });
+  }
+  let angefasst = false;
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(t => window.addEventListener(t, () => { angefasst = true; }, { passive: true }));
+  function zielAnfahren() {
+    const el = RUECKEN[anker()] && document.getElementById(anker());
+    if (el && !angefasst) el.scrollIntoView({ block: 'start' });
+  }
+  regalZeichnen();
+  const regalBild = $('#regalbild'), regalHeim = $('#schreiben .schreiben-raster'), mqBreit = window.matchMedia('(min-width: 62.0625rem)');
+  function regalOrt() {
+    const seite = $('.globusseite');
+    if (mqBreit.matches) { if (regalBild.parentElement !== seite) seite.insertBefore(regalBild, $('#globus')); }
+    else if (regalBild.parentElement !== regalHeim) regalHeim.insertBefore(regalBild, regalHeim.firstChild);
+    regalNameZeigen(null);
+    regalZeichnen(); ankerSetzen();
+  }
+  mqBreit.addEventListener('change', regalOrt);
+  const STEUER_LANG = 'noch einmal von vorn';
+  let blockH = 0;
+  function steuerMehr() {
+    const sz = $('#globus .steuerzeile');
+    if (!sz || ruhig || !mqBreit.matches || !sz.clientWidth) return 0;
+    const kopie = sz.cloneNode(true);
+    kopie.removeAttribute('hidden'); kopie.removeAttribute('id');
+    kopie.setAttribute('aria-hidden', 'true'); kopie.inert = true;
+    kopie.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;width:' + sz.getBoundingClientRect().width + 'px';
+    const wort = $('[data-steuer="wort"]', kopie);
+    if (wort) { wort.hidden = false; wort.textContent = STEUER_LANG; }
+    sz.parentNode.appendChild(kopie);
+    const mehr = Math.max(0, kopie.getBoundingClientRect().height - sz.getBoundingClientRect().height);
+    kopie.remove();
+    return mehr;
+  }
+  function blockSetzen() {
+    if (!blockH) return;
+    const seite = $('.globusseite');
+    seite.style.setProperty('--globus-block', blockH + 'px');
+    seite.style.setProperty('--globus-hoch', (blockH + steuerMehr()) + 'px');
+  }
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(e => {
+      const k = e[e.length - 1];
+      blockH = k.borderBoxSize && k.borderBoxSize[0] ? k.borderBoxSize[0].blockSize : k.target.getBoundingClientRect().height;
+      blockSetzen();
+    }).observe($('#globus'));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(blockSetzen).catch(() => {});
+  }
+  regalOrt();
+  const mitMass = b => {
+    const p = b.p > 0 ? b.p : 280, h = F.hash(b.key);
+    return { breite: p * 0.06 + (b.b === 'h' ? 5 : 1), hoehe: (b.b === 'h' ? 225 : b.b === 'm' ? 175 : 185) * (0.975 + (h % 997) / 997 * 0.05) };
+  };
+  BUECHER.forEach(b => { b.mm = mitMass(b); b.h = F.hash(b.key); });
+  const ordnung = F.buch.ordnung;
+  const HAUPT = BUECHER.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort(ordnung);
+  const GERADE = BUECHER.filter(b => b.r === 'gerade' && b.j != null).sort(ordnung);
+  const KIND = BUECHER.filter(b => b.r === 'kindheit' && b.j != null).sort(ordnung);
+  const WARTE = BUECHER.filter(b => b.r === 'leseliste' && b.j != null).sort(ordnung);
+  const kurz = x => F.buch.zeile(x).html;
+  const satzVon = x => F.buch.satz(x);
+  const roll = $('#zeitband-roll'), bandzeile = $('#bandzeile'), zeileZeigenEl = $('#zeile-zeigen'), zeileOffenEl = $('#zeile-offen'), zeileRuheEl = $('#zeile-ruhe');
+  const ZB = { items: [], folgen: {}, aktiv: null, breite: 0, schmal: false, y0: 0, offen: null };
+  const bzBand = F.buchzeile(zeileOffenEl, { beimSchliessen: () => { ZB.offen = null; markeSetzen(); } });
+  const messCtx = document.createElement('canvas').getContext('2d');
+  const textBreite = (text, font) => { messCtx.font = font; return messCtx.measureText(text).width; };
+  const bandSchmal = () => window.matchMedia('(max-width: 40rem)').matches;
+  const JAHRESMARKEN = [1800, 1900, 1950, 2000];
+  function bandBauen() {
+    if (!roll || !HAUPT.length) return;
+    const schmal = bandSchmal();
+    const verfuegbar = roll.clientWidth - (schmal ? 2 * (parseFloat(getComputedStyle(roll).paddingLeft) || 0) : 0);
+    if (verfuegbar <= 0) return;
+    bzBand.schliessen();
+    const sy = schmal ? 0.4 : Math.max(0.36, Math.min(0.5, verfuegbar / 2300));
+    let minL = schmal ? 0.45 : 0.5;
+    let minB = schmal ? 0.7 : 0.8;
+    const BRUCH = 40;
+    const BODEN = 7;
+    const luecke = d => d <= 0 ? 0 : 1.8 * Math.pow(d, 0.85);
+    const liegeLaenge = b => b.mm.hoehe * sy;
+    const liegeDicke = b => Math.max(5, b.mm.breite * sy);
+    function anordnen(sx) {
+      const pos = [], brueche = [], amBoden = []; let x = 0, vor = null;
+      HAUPT.forEach(b => {
+        if (vor) {
+          const d = b.j - vor.j;
+          if (d > 150) {
+            GERADE.forEach(l => { if (l.j > vor.j && l.j < b.j) { x += BODEN; amBoden.push({ b: l, x, len: liegeLaenge(l), dick: liegeDicke(l) }); x += liegeLaenge(l); } });
+            brueche.push({ von: x, bis: x + BRUCH });
+            x += BRUCH;
+          } else x += Math.max(minL, sx * luecke(d));
+        }
+        const w = Math.max(minB, sx * b.mm.breite);
+        pos.push({ b, x, w }); x += w; vor = b;
+      });
+      return { pos, brueche, amBoden, buecherEnde: x, ende: x };
+    }
+    let zielBreite = verfuegbar;
+    if (schmal) zielBreite = Math.round(Math.max(verfuegbar * 2.2, anordnen(0).ende * 1.15));
+    else for (let n = 0; n < 30 && anordnen(0).ende > zielBreite * .8; n++) { minB *= .9; minL *= .9; }
+    let lo = 0, hi = 1.5;
+    for (let n = 0; n < 40; n++) { const m = (lo + hi) / 2; if (anordnen(m).ende > zielBreite) hi = m; else lo = m; }
+    const sx = lo;
+    const A2 = anordnen(sx);
+    const W = Math.ceil(zielBreite);
+    const pos = A2.pos;
+    function X(jahr) {
+      let a = 0, c = pos.length;
+      while (a < c) { const m = (a + c) >> 1; if (pos[m].b.j < jahr) a = m + 1; else c = m; }
+      if (a === 0) return pos[0].x;
+      if (a === pos.length) return pos[a - 1].x + pos[a - 1].w;
+      const p = pos[a - 1], q = pos[a];
+      if (q.b.j === jahr) return q.x;
+      const t = (jahr - p.b.j) / (q.b.j - p.b.j);
+      return p.x + p.w + (q.x - p.x - p.w) * t;
+    }
+    function nebenband(liste, grenze) {
+      const out = []; let ende = -Infinity;
+      liste.forEach(b => {
+        const w = Math.max(minB, sx * b.mm.breite);
+        const x = Math.max(X(b.j), ende + minL);
+        out.push({ b, x, w }); ende = x + w;
+      });
+      let rechts = grenze;
+      for (let i = out.length - 1; i >= 0; i--) {
+        if (out[i].x + out[i].w > rechts) out[i].x = rechts - out[i].w;
+        rechts = out[i].x - minL;
+      }
+      return out;
+    }
+    const kind = nebenband(KIND, A2.buecherEnde);
+    const warte = nebenband(WARTE, A2.buecherEnde);
+    const maxH = 225 * 1.025 * sy;
+    const hoehe = (b, f) => b.mm.hoehe * sy * (f || 1);
+    const stehendHoehe = (x0, x1) => {
+      let m = 0;
+      for (const p of pos) { if (p.x > x1) break; if (p.x + p.w >= x0) m = Math.max(m, hoehe(p.b, p.b.r === 'abgebrochen' ? .5 : 1)); }
+      return m;
+    };
+    const amBoden = new Set(A2.amBoden.map(l => l.b));
+    const liegend = GERADE.filter(b => !amBoden.has(b)).map(b => ({ b, len: liegeLaenge(b), dick: liegeDicke(b), mitte: X(b.j) })).sort((a, b) => a.mitte - b.mitte);
+    const MAXDICK = maxH * .5;
+    const stapel = [];
+    liegend.forEach(l => {
+      const st = stapel[stapel.length - 1];
+      if (st) {
+        const mitte = st.buecher.reduce((a, x) => a + x.mitte, 0) / st.buecher.length;
+        const dicke = st.buecher.reduce((a, x) => a + x.dick, 0);
+        if (st.buecher.length < 3 && dicke + l.dick <= MAXDICK && Math.abs(l.mitte - mitte) < l.len * .6) { st.buecher.push(l); return; }
+      }
+      stapel.push({ buecher: [l] });
+    });
+    stapel.forEach(st => {
+      st.lang = Math.max(...st.buecher.map(l => l.len));
+      st.x0 = st.buecher.reduce((a, l) => a + l.mitte, 0) / st.buecher.length - st.lang / 2;
+    });
+    for (let n = 0; n < stapel.length; n++) { const vor = stapel[n - 1]; stapel[n].x0 = Math.max(stapel[n].x0, vor ? vor.x0 + vor.lang + 10 : 4); }
+    for (let n = stapel.length - 1; n >= 0; n--) { const nach = stapel[n + 1]; stapel[n].x0 = Math.min(stapel[n].x0, nach ? nach.x0 - stapel[n].lang - 10 : A2.buecherEnde - stapel[n].lang); }
+    const gelegt = [];
+    stapel.forEach(st => {
+      const x0 = st.x0, lang = st.lang;
+      let boden = stehendHoehe(x0, x0 + lang) + 0.5;
+      st.buecher.sort((a, b) => b.dick - a.dick || ordnung(a.b, b.b)).forEach(l => {
+        l.x = Math.max(0, Math.min(W - l.len, x0 + (lang - l.len) / 2));
+        l.boden = boden;
+        boden += l.dick + 1;
+        gelegt.push(l);
+      });
+    });
+    A2.amBoden.forEach(l => { l.boden = 0; gelegt.push(l); });
+    const oben = Math.max(maxH, ...gelegt.map(l => l.boden + l.dick)) + 4;
+    const y0 = Math.ceil(oben);
+    const items = []; const folgen = { quer: [], haupt: [], kind: [], warte: [] };
+    let sHaupt = '', sQuer = '', sKind = '', sWarte = '';
+    const rect = (x, y, w, h) => `x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${w.toFixed(2)}" height="${h.toFixed(2)}"`;
+    const label = x => esc(F.buch.zeile(x).text);
+    function eintragen(folge, o) {
+      o.id = 'zb' + items.length; o.folge = folge; o.idx = folgen[folge].length;
+      items.push(o); folgen[folge].push(o);
+      return o.id;
+    }
+    pos.forEach(p => {
+      const b = p.b, halb = b.r === 'abgebrochen';
+      const h = hoehe(b, halb ? .5 : 1);
+      const cls = halb ? 'ab' : b.s === 5 ? 'lieb' : 'grau';
+      const id = eintragen('haupt', { b, x: p.x, w: p.w, y: y0 - h, h });
+      sHaupt += `<rect id="${id}" role="option" aria-label="${label(b)}" class="${cls}" ${rect(p.x, y0 - h, p.w, h)}/>`;
+      if (b.w) sHaupt += `<line class="wieder" x1="${(p.x - 1.5).toFixed(2)}" x2="${(p.x + p.w + 1.5).toFixed(2)}" y1="${(y0 - h - 3).toFixed(2)}" y2="${(y0 - h - 3).toFixed(2)}"/>`;
+    });
+    gelegt.slice().sort((a, b) => a.boden - b.boden).forEach(l => {
+      const y = y0 - l.boden - l.dick;
+      const id = eintragen('quer', { b: l.b, x: l.x, w: l.len, y, h: l.dick, quer: true });
+      sQuer += `<rect class="quer" id="${id}" role="option" aria-label="${label(l.b)}" ${rect(l.x + .4, y + .4, l.len - .8, l.dick - .8)}/>`;
+    });
+    const gk = F.masz('--g-klein') || 15;
+    const yL = y0 + 5, yT = yL + Math.round(gk * 1.1);
+    const fontJ = `${gk}px "Vollkorn"`;
+    let sLeiste = '';
+    const linie = (x1, x2, y1, y2) => `<line class="haar" x1="${x1.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y1.toFixed(1)}" y2="${y2.toFixed(1)}"/>`;
+    let start = pos[0].x;
+    A2.brueche.forEach(br => {
+      const m = (br.von + br.bis) / 2;
+      sLeiste += linie(start, m - 5, yL, yL);
+      sLeiste += `<path class="bruch" d="M${(m - 4.5).toFixed(1)} ${yL + 4} L${(m - 1.5).toFixed(1)} ${yL - 4} M${(m + 1.5).toFixed(1)} ${yL + 4} L${(m + 4.5).toFixed(1)} ${yL - 4}"/>`;
+      start = m + 5;
+    });
+    sLeiste += linie(start, A2.buecherEnde, yL, yL);
+    const marken = [{ text: `${HAUPT[0].t}, ${F.jahrText(HAUPT[0].j)}`, kurz: HAUPT[0].t, jahr: null, x: pos[0].x + pos[0].w / 2, anker: 'start', tx: pos[0].x }]
+      .concat(JAHRESMARKEN.map(j => ({ text: String(j), jahr: j, x: X(j), anker: 'middle' })));
+    marken.forEach((m, i) => { m.i = i; if (m.tx === undefined) m.tx = m.x; });
+    let belegtBis = -Infinity, sJahre = '';
+    const anAchse = [];
+    marken.forEach(m => {
+      const b = textBreite(m.text, fontJ);
+      const x0 = m.anker === 'start' ? m.tx : m.tx - b / 2;
+      if (x0 < belegtBis + 10) return;
+      belegtBis = x0 + b;
+      anAchse.push(m);
+      sLeiste += linie(m.x, m.x, yL, yL + 3.5);
+      sJahre += `<text class="jahr" x="${m.tx.toFixed(1)}" y="${yT}" text-anchor="${m.anker}">${esc(m.text)}</text>`;
+    });
+    const Hh = schmal ? yT + Math.ceil(gk * .35) : y0 + 1;
+    kind.forEach(p => { p.h = hoehe(p.b, .55); });
+    warte.forEach(p => { p.h = hoehe(p.b, .42); });
+    const kH = Math.ceil(maxH * .55) + 2, wH = Math.ceil(maxH * .42) + 2;
+    kind.forEach(p => {
+      const id = eintragen('kind', { b: p.b, x: p.x, w: p.w, y: kH - p.h, h: p.h });
+      sKind += `<rect id="${id}" role="option" aria-label="${label(p.b)}" ${rect(p.x, kH - p.h, p.w, p.h)}/>`;
+    });
+    warte.forEach(p => {
+      const id = eintragen('warte', { b: p.b, x: p.x, w: p.w, y: wH - p.h, h: p.h });
+      sWarte += `<rect id="${id}" role="option" aria-label="${label(p.b)}" ${rect(p.x + .3, wH - p.h + .3, Math.max(.4, p.w - .6), p.h - .3)}/>`;
+    });
+    folgen.haupt.sort((a, b) => a.x - b.x); folgen.haupt.forEach((o, i) => { o.idx = i; });
+    folgen.quer.sort((a, b) => a.x - b.x); folgen.quer.forEach((o, i) => { o.idx = i; });
+    const reihen = { gelesen: folgen.haupt.concat(folgen.quer), kind: folgen.kind.slice(), warte: folgen.warte.slice() };
+    Object.keys(reihen).forEach(k => {
+      reihen[k].forEach(o => { o.mitte = o.x + o.w / 2; });
+      reihen[k].sort((a, b) => a.mitte - b.mitte).forEach((o, i) => { o.reihe = k; o.ri = i; });
+    });
+    const svg = (id, cls, h, inhalt, name) => `<svg id="${id}" class="zb ${cls}" width="${W}" height="${h}" viewBox="0 0 ${W} ${h}" tabindex="0" role="listbox" aria-label="${name}">${inhalt}</svg>`;
+    const achse = schmal ? `<g aria-hidden="true">${sLeiste}${sJahre}</g><line class="marke" id="zb-marke" x1="0" x2="0" y1="${y0 + 1}" y2="${y0 + 11}" visibility="hidden"/>` : '';
+    $('#zb-haupt-ort').innerHTML = svg('zb-haupt', 'zb-hauptband', Hh, `<g>${sHaupt}</g><g>${sQuer}</g>${achse}`, 'Gelesen, nach dem Jahr des ersten Erscheinens. Pfeiltasten wählen ein Buch, Eingabe zeigt seine Angaben.');
+    $('#zb-kind-ort').innerHTML = svg('zb-kind', 'zb-kind', kH, sKind, 'Die wichtigsten Bücher aus Kindheit und Jugend');
+    $('#zb-warte-ort').innerHTML = svg('zb-warte', 'zb-warte', wH, sWarte, 'Was noch wartet');
+    Object.assign(ZB, { items, folgen, aktiv: null, breite: W, schmal, y0, offen: null, reihen, marken, anAchse, gk, fontJ, brueche: A2.brueche, achse: [pos[0].x, A2.buecherEnde] });
+    bandzeile.style.width = W + 'px';
+    bandzeile.classList.remove('zeigt');
+    ['zb-haupt', 'zb-kind', 'zb-warte'].forEach(id => bandBedienung(document.getElementById(id)));
+    bandzeileReservieren();
+    if (schmal) roll.scrollLeft = roll.scrollWidth;
+    reglerBauen();
+    ruheSetzen();
+  }
+  function sichtBreite() {
+    if (!ZB.schmal) return ZB.breite;
+    const pl = parseFloat(getComputedStyle(roll).paddingLeft) || 0;
+    return roll.clientWidth - 2 * pl;
+  }
+  function bandzeileReservieren() {
+    const breite = sichtBreite();
+    [zeileZeigenEl, zeileOffenEl, zeileRuheEl].forEach(el => { el.style.maxWidth = breite + 'px'; });
+    const z = F.masz('--z');
+    const ohneTags = s => s.replace(/<[^>]*>/g, '').length;
+    const alle = ZB.items.map(o => o.b).filter((b, i, a) => a.indexOf(b) === i);
+    const laengste = alle.map(satzVon).sort((p, q) => ohneTags(q) - ohneTags(p)).slice(0, ZB.schmal ? 24 : 12);
+    const h = zeileReservieren(zeileOffenEl, laengste, Math.min(breite, ZB.breite));
+    bandzeile.style.minHeight = Math.max(h || 0, ZB.schmal ? z * 3 : z) + 'px';
+  }
+  function treffer(svg, e, toleranz) {
+    const r = svg.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const tol = toleranz || 4, tolY = tol > 4 ? 4 : 1;
+    const folge = svg.id === 'zb-kind' ? 'kind' : svg.id === 'zb-warte' ? 'warte' : 'haupt';
+    if (folge === 'haupt') {
+      const q = ZB.folgen.quer.find(o => x >= o.x && x <= o.x + o.w && y >= o.y - tolY && y <= o.y + o.h + tolY);
+      if (q) return q;
+      if (y > ZB.y0 + 12) return null;
+    }
+    const f = ZB.folgen[folge];
+    if (!f.length) return null;
+    let lo = 0, hi = f.length - 1;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (f[m].x <= x) lo = m; else hi = m - 1; }
+    let best = null, abst = Infinity;
+    [f[lo], f[lo + 1]].filter(Boolean).forEach(o => { const d = x < o.x ? o.x - x : x > o.x + o.w ? x - o.x - o.w : 0; if (d < abst) { abst = d; best = o; } });
+    return abst <= tol ? best : null;
+  }
+  function einpassen(el, o) {
+    if (!el || !o) return;
+    const bw = el.offsetWidth;
+    let links = o.x + o.w / 2 - 6;
+    if (ZB.schmal) {
+      const sl = roll.scrollLeft;
+      links = Math.max(sl, Math.min(sl + sichtBreite() - bw, links));
+    }
+    el.style.left = Math.round(Math.max(0, Math.min(ZB.breite - bw, links))) + 'px';
+  }
+  function markeSetzen() {
+    reglerFolgen();
+    ruheSetzen();
+    const marke = document.getElementById('zb-marke');
+    if (!marke) return;
+    const o = bandzeile.classList.contains('zeigt') ? ZB.aktiv : ZB.offen;
+    if (!o || o.folge !== 'haupt') { marke.setAttribute('visibility', 'hidden'); return; }
+    const m = o.x + o.w / 2;
+    marke.setAttribute('x1', m); marke.setAttribute('x2', m); marke.setAttribute('visibility', 'visible');
+  }
+  function ruheBuch() {
+    const g = reglerVon('gelesen'), liste = reiheVon(g);
+    if (!liste.length) return null;
+    return liste[g.i == null ? 0 : Math.min(g.i, liste.length - 1)];
+  }
+  function ohneVerweise(html) {
+    const t = document.createElement('template');
+    t.innerHTML = html;
+    t.content.querySelectorAll('a').forEach(a => a.replaceWith(...a.childNodes));
+    return t.innerHTML;
+  }
+  function ruheSetzen() {
+    if (!zeileRuheEl) return;
+    const o = ZB.schmal ? ruheBuch() : null;
+    const ruht = !!o && !bzBand.offen() && !bandzeile.classList.contains('zeigt') && !REGLER.some(r => r.zieht || (r.zug && r.zug.aktiv));
+    bandzeile.classList.toggle('ruht', ruht);
+    if (!o) { if (zeileRuheEl.dataset.buch) { zeileRuheEl.innerHTML = ''; zeileRuheEl.dataset.buch = ''; } return; }
+    if (!ruht) return;
+    if (zeileRuheEl.dataset.buch !== o.id) { zeileRuheEl.innerHTML = ohneVerweise(satzVon(o.b)); zeileRuheEl.dataset.buch = o.id; }
+    einpassen(zeileRuheEl, o);
+  }
+  if (zeileRuheEl) zeileRuheEl.addEventListener('click', () => { if (bandzeile.classList.contains('ruht')) waehlen(ruheBuch()); });
+  const nachSchriften = () => { if (ZB.items.length) bandzeileReservieren(); ruheSetzen(); };
+  if (document.fonts) {
+    document.fonts.addEventListener('loadingdone', nachSchriften);
+    document.fonts.ready.then(nachSchriften);
+  }
+  function zeigen(o) {
+    if (ZB.aktiv === o) return;
+    if (ZB.aktiv) { const alt = document.getElementById(ZB.aktiv.id); if (alt) alt.classList.remove('an'); }
+    ZB.aktiv = o;
+    if (!o) { bandzeile.classList.remove('zeigt'); zeileZeigenEl.innerHTML = ''; markeSetzen(); return; }
+    const el = document.getElementById(o.id);
+    if (el) { el.classList.add('an'); if (el.ownerSVGElement) el.ownerSVGElement.setAttribute('aria-activedescendant', o.id); }
+    zeileZeigenEl.innerHTML = kurz(o.b);
+    bandzeile.classList.add('zeigt');
+    einpassen(zeileZeigenEl, o);
+    markeSetzen();
+  }
+  function oeffnen(o) {
+    const el = document.getElementById(o.id);
+    if (!el) return;
+    const offen = bzBand.umschalten(o.id, satzVon(o.b), el);
+    ZB.offen = offen ? o : null;
+    bandzeile.classList.remove('zeigt');
+    if (offen) einpassen(zeileOffenEl, o);
+    markeSetzen();
+    if (offen) satzInSicht(o);
+  }
+  function bandBedienung(svg) {
+    if (!svg) return;
+    svg.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && !svg._zieht && (e.movementX || e.movementY)) { const t = treffer(svg, e); if (t) zeigen(t); } });
+    svg.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !svg.matches(':focus-visible')) zeigen(null); });
+    svg.addEventListener('pointerdown', e => { svg._zeiger = e.pointerType; });
+    svg.addEventListener('pointerup', e => { svg._wo = { clientX: e.clientX, clientY: e.clientY }; });
+    svg.addEventListener('click', e => {
+      if (svg._nachZug) { svg._nachZug = false; svg._wo = null; return; }
+      const wo = svg._wo && Math.abs(svg._wo.clientX - e.clientX) < 1.5 && Math.abs(svg._wo.clientY - e.clientY) < 1.5 ? svg._wo : e;
+      svg._wo = null;
+      const t = treffer(svg, wo, svg._zeiger && svg._zeiger !== 'mouse' ? 12 : 4);
+      if (!t) return;
+      zeigen(null);
+      oeffnen(t);
+    });
+    svg.addEventListener('focus', () => {
+      if (ZB.aktiv && document.getElementById(ZB.aktiv.id) && document.getElementById(ZB.aktiv.id).ownerSVGElement === svg) return;
+      const f = svg.id === 'zb-kind' ? ZB.folgen.kind : svg.id === 'zb-warte' ? ZB.folgen.warte : ZB.folgen.haupt;
+      if (!f.length || !svg.matches(':focus-visible')) return;
+      zeigen(f[0]);
+      if (ZB.schmal) {
+        const vw = sichtBreite();
+        if (f[0].x < roll.scrollLeft || f[0].x > roll.scrollLeft + vw - 40) roll.scrollLeft = f[0].x - vw / 2;
+      }
+    });
+    svg.addEventListener('blur', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('.zb')) zeigen(null); });
+    svg.addEventListener('keydown', e => {
+      const o = ZB.aktiv || ZB.offen; if (!o) return;
+      const reihen = ['quer', 'haupt', 'kind', 'warte'];
+      const f = ZB.folgen[o.folge];
+      let neu = null;
+      if (e.key === 'ArrowRight') neu = f[Math.min(f.length - 1, o.idx + 1)];
+      else if (e.key === 'ArrowLeft') neu = f[Math.max(0, o.idx - 1)];
+      else if (e.key === 'Home') neu = f[0];
+      else if (e.key === 'End') neu = f[f.length - 1];
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const ziel = ZB.folgen[reihen[reihen.indexOf(o.folge) + (e.key === 'ArrowUp' ? -1 : 1)]];
+        if (ziel && ziel.length) { const m = o.x + o.w / 2; neu = ziel.reduce((a, c) => Math.abs(c.x + c.w / 2 - m) < Math.abs(a.x + a.w / 2 - m) ? c : a); }
+      } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(o); return; }
+      else if (e.key === 'Escape') { if (!bzBand.offen()) zeigen(null); return; }
+      if (!neu) return;
+      e.preventDefault();
+      const zielSvg = document.getElementById(neu.id).ownerSVGElement;
+      zeigen(neu);
+      if (zielSvg !== svg) zielSvg.focus({ preventScroll: true });
+      if (ZB.schmal) {
+        const vw = sichtBreite();
+        if (neu.x < roll.scrollLeft || neu.x > roll.scrollLeft + vw - 40) roll.scrollLeft = neu.x - vw / 2;
+      }
+    });
+    bandZug(svg);
+  }
+  const frueherEl = $('#zb-frueher'), spaeterEl = $('#zb-spaeter');
+  const KNOPF_H = 14;
+  const REGLER = [['gelesen', '#regler', '#zb-regler'], ['kind', '#regler-kind', '#zb-regler-kind'], ['warte', '#regler-warte', '#zb-regler-warte']]
+    .map(([reihe, el, kasten]) => ({ reihe, el: $(el), kasten: $(kasten) })).filter(r => r.el && r.kasten)
+    .map(r => Object.assign(r, { jahre: r.reihe === 'gelesen', knopf: $('.regler-knopf', r.el), spur: $('.regler-spur', r.el), name: $('.regler-name', r.el), i: null, zieht: null, zug: null, marken: [], ext: null }));
+  REGLER.forEach(r => {
+    const t = !r.jahre && r.kasten.previousElementSibling && r.kasten.previousElementSibling.previousElementSibling;
+    r.titel = t && t.classList.contains('bandname') ? t : null;
+  });
+  const reglerVon = k => REGLER.find(r => r.reihe === k) || null;
+  const reiheVon = r => (r && ZB.reihen && ZB.reihen[r.reihe]) || [];
+  function schrittReihe() {
+    const zr = REGLER.find(r => r.zieht);
+    if (zr) return { liste: reiheVon(zr), i: zr.i };
+    const o = ZB.offen;
+    if (o && o.reihe && reglerVon(o.reihe)) return { liste: reiheVon(reglerVon(o.reihe)), i: o.ri };
+    const g = reglerVon('gelesen');
+    return { liste: reiheVon(g), i: g ? g.i : null };
+  }
+  function naechstes(liste, x) {
+    if (!liste.length) return null;
+    let lo = 0, hi = liste.length - 1;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (liste[m].mitte <= x) lo = m; else hi = m - 1; }
+    const b = liste[lo + 1];
+    return b && Math.abs(b.mitte - x) < Math.abs(liste[lo].mitte - x) ? b : liste[lo];
+  }
+  function abJahr(liste, jahr) {
+    if (jahr == null) return 0;
+    let i = liste.findIndex(o => !o.quer && o.b.j >= jahr);
+    if (i < 0) i = liste.findIndex(o => o.b.j >= jahr);
+    return i < 0 ? liste.length - 1 : i;
+  }
+  function reglerBauen() {
+    if (!REGLER.length || !ZB.reihen) return;
+    const T = ZB.schmal ? sichtBreite() : ZB.breite, s = T / ZB.breite;
+    ZB.T = T; ZB.s = s;
+    const y = ZB.schmal ? 12.5 : 8.5, yT = Math.round(y + ZB.gk * 1.1) + 3;
+    ZB.spurY = y;
+    const linie = (x1, x2, y1, y2) => `<line class="haar" x1="${x1.toFixed(1)}" x2="${x2.toFixed(1)}" y1="${y1}" y2="${y2}"/>`;
+    let beschriftet = [];
+    REGLER.forEach(r => {
+      Object.assign(r, { i: null, zieht: null, zug: null, marken: [] });
+      r.kasten.style.width = T + 'px';
+      const liste = reiheVon(r), H = r.el.clientHeight;
+      let d = '', jahre = '';
+      if (r.jahre) {
+        r.ext = ZB.achse.slice();
+        let start = r.ext[0] * s;
+        (ZB.schmal ? [] : ZB.brueche).forEach(br => {
+          const m = (br.von + br.bis) / 2 * s;
+          d += linie(start, m - 5, y, y);
+          d += `<path class="bruch" d="M${(m - 4.5).toFixed(1)} ${y + 4} L${(m - 1.5).toFixed(1)} ${y - 4} M${(m + 1.5).toFixed(1)} ${y + 4} L${(m + 4.5).toFixed(1)} ${y - 4}"/>`;
+          start = m + 5;
+        });
+        d += linie(start, r.ext[1] * s, y, y);
+        let belegtBis = -Infinity;
+        const kandidaten = ZB.schmal ? ZB.marken : ZB.anAchse;
+        kandidaten.forEach((m, k) => {
+          const x = m.tx * s;
+          let text = m.text, b = textBreite(text, ZB.fontJ);
+          if (ZB.schmal && m.jahr == null && m.kurz) {
+            const n = kandidaten[k + 1];
+            const grenze = n ? n.tx * s - textBreite(n.text, ZB.fontJ) / 2 - 12 : T;
+            if (x + b > grenze) { text = m.kurz; b = textBreite(text, ZB.fontJ); }
+          }
+          const x0 = m.anker === 'start' ? x : x - b / 2;
+          if (x0 < belegtBis + 12 || x0 + b > T + 1) return;
+          belegtBis = x0 + b;
+          r.marken.push({ m, von: x0 - 6, bis: x0 + b + 6, k: r.marken.length });
+          d += linie(m.x * s, m.x * s, y, y + 3.5);
+          jahre += `<text class="jahr" data-k="${r.marken.length - 1}" x="${x.toFixed(1)}" y="${yT}" text-anchor="${m.anker}">${esc(text)}</text>`;
+        });
+        beschriftet = r.marken.map(z => z.m);
+      } else if (liste.length) {
+        r.ext = [Math.min(...liste.map(o => o.x)), Math.max(...liste.map(o => o.x + o.w))];
+        d += linie(r.ext[0] * s, r.ext[1] * s, y, y);
+        beschriftet.filter(m => m.jahr != null && m.x >= r.ext[0] && m.x <= r.ext[1]).forEach(m => { d += linie(m.x * s, m.x * s, y, y + 3.5); });
+      }
+      r.spur.setAttribute('width', T); r.spur.setAttribute('height', H); r.spur.setAttribute('viewBox', `0 0 ${T} ${H}`);
+      r.spur.innerHTML = `<g>${d}</g><line class="sicht" id="${r.el.id}-sicht" y1="${y}" y2="${y}" x1="0" x2="0" visibility="hidden"/>${jahre}`;
+      r.knopf.style.top = (y - KNOPF_H / 2) + 'px';
+    });
+    reglerZeigen();
+  }
+  function einenZeigen(r) {
+    const liste = reiheVon(r);
+    if (!liste.length) return;
+    const ruhe = r.i == null;
+    const o = r.zieht || liste[ruhe ? 0 : Math.min(r.i, liste.length - 1)];
+    const x = o.mitte * ZB.s;
+    r.knopf.style.left = `calc(var(--regler-rand) + ${x.toFixed(2)}px)`;
+    r.knopf.classList.toggle('ist-gewaehlt', !!r.zieht || (!ruhe && ZB.offen === o));
+    r.el.setAttribute('aria-valuemin', '1');
+    r.el.setAttribute('aria-valuemax', String(liste.length));
+    r.el.setAttribute('aria-valuenow', String(o.ri + 1));
+    r.el.setAttribute('aria-valuetext', F.buch.zeile(o.b).text);
+    const zeigt = !!(r.zieht && r.zug && r.zug.finger);
+    if (zeigt) {
+      r.name.innerHTML = kurz(o.b);
+      r.name.hidden = false;
+      const band = r.zug.band || null, q = r.el.getBoundingClientRect();
+      if (r.titel) {
+        r.name.style.top = Math.round(r.titel.getBoundingClientRect().top - q.top) + 'px';
+        r.name.style.bottom = 'auto';
+      } else if (band) {
+        const bo = band.getBoundingClientRect().top, oben = ZB.schmal ? roll.getBoundingClientRect().top : -Infinity;
+        r.name.style.top = Math.round(Math.max(oben, bo - r.name.offsetHeight - 4) - q.top) + 'px';
+        r.name.style.bottom = 'auto';
+      } else { r.name.style.top = ''; r.name.style.bottom = ''; }
+      const w = r.name.offsetWidth;
+      const rand = parseFloat(getComputedStyle(r.el).paddingLeft) || 0;
+      const xs = band ? band.getBoundingClientRect().left + o.mitte - q.left - rand : x;
+      r.name.style.left = Math.round(rand + Math.max(0, Math.min(ZB.T - w, xs - w / 2))) + 'px';
+    } else r.name.hidden = true;
+    if (r.titel) r.titel.classList.toggle('ist-verdeckt', zeigt);
+  }
+  function reglerZeigen() {
+    if (!ZB.reihen) return;
+    REGLER.forEach(einenZeigen);
+    const sr = schrittReihe();
+    if (sr.liste.length && frueherEl && spaeterEl) {
+      const i = sr.i == null ? -1 : sr.i;
+      frueherEl.setAttribute('aria-disabled', String(i <= 0));
+      spaeterEl.setAttribute('aria-disabled', String(i >= sr.liste.length - 1));
+    }
+    sichtZeichnen();
+  }
+  function sichtZeichnen() {
+    REGLER.forEach(r => {
+      const el = document.getElementById(r.el.id + '-sicht');
+      if (!el) return;
+      if (!ZB.schmal || !r.ext) { el.setAttribute('visibility', 'hidden'); return; }
+      const s = ZB.s, von = Math.max(r.ext[0], roll.scrollLeft), bis = Math.min(r.ext[1], roll.scrollLeft + sichtBreite());
+      if (bis <= von) { el.setAttribute('visibility', 'hidden'); return; }
+      el.setAttribute('x1', (von * s).toFixed(1)); el.setAttribute('x2', (bis * s).toFixed(1)); el.setAttribute('visibility', 'visible');
+    });
+  }
+  function reglerFolgen() {
+    if (!ZB.reihen || REGLER.some(r => r.zieht)) return;
+    const o = ZB.offen, r = o && reglerVon(o.reihe);
+    if (r) r.i = o.ri;
+    reglerZeigen();
+  }
+  function ausrichten(o) {
+    if (!ZB.schmal || !o) return;
+    roll.scrollLeft = Math.round(o.mitte / ZB.breite * (roll.scrollWidth - roll.clientWidth));
+  }
+  function waehlen(o, ohneRollen) {
+    if (!o) return;
+    REGLER.forEach(r => { r.zieht = null; });
+    zeigen(null);
+    const el = document.getElementById(o.id);
+    if (!el) return;
+    const r = reglerVon(o.reihe);
+    if (r) r.i = o.ri;
+    if (!ohneRollen) ausrichten(o);
+    bzBand.zeigen(satzVon(o.b), el, o.id);
+    ZB.offen = o;
+    bandzeile.classList.remove('zeigt');
+    einpassen(zeileOffenEl, o);
+    markeSetzen();
+    satzInSicht(o);
+  }
+  function satzInSicht(o) {
+    if (F.breit() || !o) return;
+    const q = zeileOffenEl.getBoundingClientRect(), H = window.innerHeight;
+    if (!q.height) return;
+    const strich = document.getElementById(o.id), band = strich && strich.ownerSVGElement, r = reglerVon(o.reihe);
+    const teile = [band, r && r.el].filter(Boolean).map(e => e.getBoundingClientRect());
+    const oben = teile.length ? Math.min(...teile.map(x => x.top)) : q.top, unten = teile.length ? Math.max(...teile.map(x => x.bottom)) : q.bottom;
+    let d = 0;
+    if (q.top < 8) d = Math.min(0, Math.max(q.top - 8, unten - H + 8));
+    else if (q.bottom > H - 8) d = Math.max(0, Math.min(q.bottom - H + 16, q.top - 8, oben - 8));
+    if (Math.abs(d) > 2) window.scrollBy({ top: d, behavior: ruhig ? 'auto' : 'smooth' });
+  }
+  function ziehenZu(r, o) {
+    if (!o) return;
+    r.zieht = o; r.i = o.ri;
+    ausrichten(o);
+    zeigen(o);
+    reglerZeigen();
+  }
+  function schritt(d) {
+    const { liste, i: j } = schrittReihe();
+    if (!liste.length) return;
+    if (j == null && d < 0) return;
+    const i = j == null ? -1 : j;
+    const ziel = Math.max(0, Math.min(liste.length - 1, i + d));
+    if (ziel === j && ZB.offen === liste[ziel]) return;
+    waehlen(liste[ziel]);
+  }
+  function reglerBedienung(r) {
+    const el = r.el;
+    const lage = e => { const q = el.getBoundingClientRect(); return { x: e.clientX - q.left - (parseFloat(getComputedStyle(el).paddingLeft) || 0), y: e.clientY - q.top }; };
+    const buchBei = x => naechstes(reiheVon(r), x / ZB.s);
+    const markeBei = p => p.y > ZB.spurY + 4 ? r.marken.find(z => p.x >= z.von && p.x <= z.bis) || null : null;
+    const ziel = p => { const z = markeBei(p), liste = reiheVon(r); return z ? liste[abJahr(liste, z.m.jahr)] : buchBei(p.x); };
+    const gemeint = z => { $$('.jahr', r.spur).forEach(t => t.classList.toggle('ist-gemeint', !!z && +t.dataset.k === z.k)); };
+    el.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || !reiheVon(r).length) return;
+      const p = lage(e);
+      r.zug = { id: e.pointerId, x0: e.clientX, aktiv: false, finger: e.pointerType !== 'mouse', marke: markeBei(p) };
+      if (e.pointerType === 'mouse') {
+        e.preventDefault();
+        el.focus({ preventScroll: true });
+        try { el.setPointerCapture(e.pointerId); } catch (_) { }
+        if (!r.zug.marke) { r.zug.aktiv = true; bzBand.schliessen(); ziehenZu(r, buchBei(p.x)); }
+      }
+    });
+    el.addEventListener('pointermove', e => {
+      const z = r.zug;
+      if (!z || e.pointerId !== z.id) { if (e.pointerType === 'mouse') gemeint(markeBei(lage(e))); return; }
+      if (!z.aktiv) {
+        if (Math.abs(e.clientX - z.x0) < 6) return;
+        z.aktiv = true;
+        try { el.setPointerCapture(e.pointerId); } catch (_) { }
+        bzBand.schliessen();
+      }
+      ziehenZu(r, buchBei(lage(e).x));
+    });
+    el.addEventListener('pointerleave', () => { if (!r.zug) gemeint(null); });
+    el.addEventListener('pointerup', e => {
+      const z = r.zug;
+      if (!z || e.pointerId !== z.id) return;
+      const o = z.aktiv && r.zieht ? r.zieht : ziel(lage(e));
+      r.zug = null;
+      waehlen(o);
+    });
+    el.addEventListener('pointercancel', e => {
+      const z = r.zug;
+      if (!z || e.pointerId !== z.id) return;
+      r.zug = null;
+      if (z.aktiv && r.zieht) waehlen(r.zieht);
+      else { r.zieht = null; reglerZeigen(); }
+    });
+    el.addEventListener('keydown', e => {
+      const liste = reiheVon(r);
+      if (!liste.length) return;
+      const n = liste.length, i = r.i == null ? -1 : r.i, knopf = Math.max(0, i);
+      const spruenge = [0].concat(JAHRESMARKEN.map(j => abJahr(liste, j))).filter((v, k, a) => a.indexOf(v) === k).sort((a, b) => a - b);
+      let ziel;
+      switch (e.key) {
+        case 'ArrowLeft': case 'ArrowDown': ziel = r.i == null ? null : i - 1; break;
+        case 'ArrowRight': case 'ArrowUp': ziel = i + 1; break;
+        case 'PageUp': ziel = spruenge.find(v => v > knopf); if (ziel === undefined) ziel = n - 1; break;
+        case 'PageDown': ziel = spruenge.slice().reverse().find(v => v < i); if (ziel === undefined) ziel = 0; break;
+        case 'Home': ziel = 0; break;
+        case 'End': ziel = n - 1; break;
+        default: return;
+      }
+      e.preventDefault();
+      if (ziel == null || ziel < 0 || ziel >= n) return;
+      if (ziel === r.i && ZB.offen === liste[ziel]) return;
+      waehlen(liste[ziel]);
+    });
+    el.addEventListener('focus', () => zeileOffenEl.setAttribute('aria-live', 'off'));
+    el.addEventListener('blur', () => zeileOffenEl.setAttribute('aria-live', 'polite'));
+  }
+  REGLER.forEach(reglerBedienung);
+  function bandZug(svg) {
+    const r = reglerVon(svg.id === 'zb-kind' ? 'kind' : svg.id === 'zb-warte' ? 'warte' : 'gelesen');
+    if (!r) return;
+    const RAND = 18, TEMPO = 1.2, WEIT = 5, SCHRAEG = 0.8;
+    let z = null, lauf = 0, zuletzt = 0;
+    function rollFuer(fx) {
+      if (fx < z.x0) { const u = Math.min(1, (z.x0 - fx) / Math.max(1, z.x0 - z.a)); return z.sl0 - z.links * u * u; }
+      const v = Math.min(1, (fx - z.x0) / Math.max(1, z.b - z.x0));
+      return z.sl0 + z.rechts * v * v;
+    }
+    function verankern(fx) {
+      const sl = roll.scrollLeft, max = Math.max(0, roll.scrollWidth - roll.clientWidth);
+      Object.assign(z, { x0: fx, sl0: sl, links: Math.min(sl, WEIT * Math.max(0, fx - z.a)), rechts: Math.min(max - sl, WEIT * Math.max(0, z.b - fx)) });
+    }
+    function fahren(fx) {
+      if (ZB.schmal) roll.scrollLeft = rollFuer(fx);
+      const o = naechstes(reiheVon(r), fx - svg.getBoundingClientRect().left);
+      if (!o) return;
+      if (o !== r.zieht) { r.zieht = o; r.i = o.ri; zeigen(o); reglerZeigen(); }
+      else if (z.finger) einenZeigen(r);
+    }
+    function tiefe() {
+      if (!z || !z.aktiv || !ZB.schmal) return 0;
+      const l = (z.a + RAND - z.fx) / RAND, re = (z.fx - (z.b - RAND)) / RAND;
+      return l > 0 && z.fx < z.sx ? -Math.min(1, l) : re > 0 && z.fx > z.sx ? Math.min(1, re) : 0;
+    }
+    function randRollen() {
+      if (lauf || !tiefe()) return;
+      zuletzt = performance.now();
+      const schritt = jetzt => {
+        lauf = 0;
+        const t = tiefe();
+        if (!t) return;
+        const dt = Math.min(50, jetzt - zuletzt), vor = roll.scrollLeft;
+        zuletzt = jetzt;
+        roll.scrollLeft = vor + t * TEMPO * dt;
+        if (Math.abs(roll.scrollLeft - vor) < .01) return;
+        verankern(z.fx);
+        fahren(z.fx);
+        lauf = requestAnimationFrame(schritt);
+      };
+      lauf = requestAnimationFrame(schritt);
+    }
+    function ende() {
+      const war = z;
+      z = null; svg._zieht = false;
+      if (lauf) { cancelAnimationFrame(lauf); lauf = 0; }
+      if (r.zug === war) r.zug = null;
+      return war;
+    }
+    function abbrechen() {
+      const war = ende();
+      if (!war.aktiv) return;
+      roll.scrollLeft = war.slStart;
+      r.zieht = null; r.i = war.iVor;
+      zeigen(null); reglerZeigen();
+    }
+    document.addEventListener('touchstart', e => { if (z && e.touches.length > 1) abbrechen(); }, { passive: true, capture: true });
+    svg.addEventListener('pointerdown', e => {
+      svg._nachZug = false;
+      if (e.button !== 0 || !e.isPrimary || !reiheVon(r).length) return;
+      const q = roll.getBoundingClientRect(), pl = ZB.schmal ? (parseFloat(getComputedStyle(roll).paddingLeft) || 0) : 0;
+      z = { id: e.pointerId, sx: e.clientX, sy: e.clientY, fx: e.clientX, aktiv: false, finger: e.pointerType !== 'mouse', band: svg, a: q.left + pl, b: q.left + pl + sichtBreite(), slStart: roll.scrollLeft };
+      verankern(e.clientX);
+    });
+    svg.addEventListener('pointermove', e => {
+      if (!z || e.pointerId !== z.id) return;
+      z.fx = e.clientX;
+      if (!z.aktiv) {
+        const dx = Math.abs(e.clientX - z.sx), dy = Math.abs(e.clientY - z.sy);
+        const steil = dx < SCHRAEG * dy;
+        if (steil && dy >= 6) { z = null; return; }
+        if (dx < (z.finger ? 6 : 4) || steil) return;
+        z.aktiv = true; z.iVor = r.i;
+        r.zug = z; svg._zieht = true;
+        try { svg.setPointerCapture(e.pointerId); } catch (_) { }
+        bzBand.schliessen();
+      }
+      fahren(e.clientX);
+      randRollen();
+    });
+    svg.addEventListener('touchmove', e => { if (z && z.aktiv && e.cancelable && e.touches.length === 1) e.preventDefault(); }, { passive: false });
+    svg.addEventListener('pointerup', e => {
+      if (!z || e.pointerId !== z.id) return;
+      const war = ende();
+      if (!war.aktiv) return;
+      svg._nachZug = true;
+      waehlen(r.zieht, true);
+    });
+    svg.addEventListener('pointercancel', e => {
+      if (!z || e.pointerId !== z.id) return;
+      const war = ende();
+      if (!war.aktiv) return;
+      if (Math.abs(war.fx - war.sx) >= 24 && r.zieht) { waehlen(r.zieht, true); return; }
+      r.zieht = null; r.i = war.iVor;
+      zeigen(null); reglerZeigen();
+    });
+  }
+  if (frueherEl && spaeterEl) {
+    frueherEl.addEventListener('click', () => { if (frueherEl.getAttribute('aria-disabled') !== 'true') schritt(-1); });
+    spaeterEl.addEventListener('click', () => { if (spaeterEl.getAttribute('aria-disabled') !== 'true') schritt(1); });
+  }
+  let rollBild = 0;
+  roll.addEventListener('scroll', () => {
+    if (rollBild) return;
+    rollBild = requestAnimationFrame(() => { rollBild = 0; einpassen(zeileZeigenEl, ZB.aktiv); einpassen(zeileOffenEl, ZB.offen); if (bandzeile.classList.contains('ruht')) einpassen(zeileRuheEl, ruheBuch()); sichtZeichnen(); });
+  }, { passive: true });
+  bandBauen();
+  F.schriften(3000).then(() => { regalZeichnen(); bandBauen(); ankerSetzen(); zielAnfahren(); });
+  let breiteVorher = window.innerWidth, warte = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(warte);
+    warte = setTimeout(() => {
+      if (g) { blickBerechnen(); namenNeu(); }
+      tafelHoehe();
+      if (window.innerWidth === breiteVorher) return;
+      breiteVorher = window.innerWidth;
+      regalZeichnen(); bandBauen(); ankerSetzen();
+    }, 140);
+  });
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  const html = document.documentElement;
+  if (html.getAttribute('data-ausgabe') !== 'platzhalter') return;
+  const F = window.FSeite, $ = s => document.querySelector(s);
+  const schluss = $('#schluss'), zeile = $('#schluss .aufbau'), kopf = $('header.kopf'), seite = $('.globusseite'), schreiben = $('#schreiben');
+  const globus = $('.globusseite > .globus');
+  if (!F || !schluss || !zeile || !kopf || !seite || !schreiben) return;
+  const BLASS = .16, HOEHE = .44, FERN = .5;
+  const V2 = html.getAttribute('data-schluss') === 'v2';
+  const mqRuhig = window.matchMedia('(prefers-reduced-motion: reduce)'), mqBreit = window.matchMedia('(min-width: 62.0625rem)');
+  const probe = document.createElement('div');
+  probe.setAttribute('aria-hidden', 'true');
+  probe.style.cssText = 'position:absolute;left:0;top:0;width:0;height:100vh;height:100svh;visibility:hidden;pointer-events:none';
+  document.body.appendChild(probe);
+  let ziele = [], weg = null, zuletzt = null, fern = null, bild = 0, messBild = 0;
+  const masse = {};
+  function mass(name, px) {
+    if (px == null) { if (masse[name] != null) { schluss.style.removeProperty(name); masse[name] = null; } return; }
+    if (masse[name] != null && Math.abs(masse[name] - px) < .5) return;
+    masse[name] = px;
+    schluss.style.setProperty(name, px.toFixed(1) + 'px');
+  }
+  function frei(e) { e.style.opacity = ''; e.classList.remove('blass', 'fern'); }
+  function zieleSetzen() {
+    const neu = V2 && mqBreit.matches
+      ? [kopf, schreiben].concat(Array.from(seite.children).filter(e => !e.matches('.globus, .regalbild, script')), Array.from(($('#regalbild') || {}).children || []))
+      : [kopf, seite, schreiben];
+    ziele.forEach(e => { if (!neu.includes(e)) frei(e); });
+    neu.forEach(e => e.classList.add('blass'));
+    ziele = neu;
+    zuletzt = null; fern = null;
+  }
+  function messen() {
+    messBild = 0;
+    schluss.classList.toggle('mit-weg', !mqRuhig.matches);
+    if (mqRuhig.matches) { ziele.forEach(frei); ziele = []; weg = null; mass('--schluss-rest', null); mass('--schluss-globus', null); return; }
+    zieleSetzen();
+    const y = window.scrollY, H = probe.getBoundingClientRect().height || window.innerHeight;
+    const z = zeile.getBoundingClientRect(), zh = z.height;
+    mass('--schluss-rest', zh / 2 + html.getBoundingClientRect().bottom - schluss.getBoundingClientRect().bottom);
+    if (V2 && mqBreit.matches && globus) {
+      const s = getComputedStyle(globus);
+      mass('--schluss-globus', Math.max(0, (parseFloat(s.top) || 0) + globus.getBoundingClientRect().height + (parseFloat(s.marginBottom) || 0) - H * HOEHE - zh / 2));
+    } else mass('--schluss-globus', null);
+    const ende = (mqBreit.matches ? schreiben.getBoundingClientRect().top : schreiben.getBoundingClientRect().bottom) + y;
+    weg = { s0: Math.max(0, ende - H), s1: z.top + y + zh / 2 - H * HOEHE };
+    if (weg.s1 - weg.s0 < 40) { weg = null; ziele.forEach(e => { e.style.opacity = ''; e.classList.remove('fern'); }); zuletzt = null; fern = null; }
+    zeichnen();
+  }
+  function zeichnen() {
+    bild = 0;
+    if (!weg) return;
+    let p = (window.scrollY - weg.s0) / (weg.s1 - weg.s0);
+    p = p <= 0 ? 0 : p >= 1 ? 1 : p;
+    const d = p > 0 ? (1 - (1 - BLASS) * p * p * (3 - 2 * p)).toFixed(3) : '';
+    if (d !== zuletzt) { zuletzt = d; ziele.forEach(e => { e.style.opacity = d; }); }
+    const f = p > FERN;
+    if (f !== fern) { fern = f; ziele.forEach(e => e.classList.toggle('fern', f)); }
+  }
+  const anstossen = () => { if (!bild) bild = requestAnimationFrame(zeichnen); };
+  const neuMessen = () => { if (!messBild) messBild = requestAnimationFrame(messen); };
+  window.addEventListener('scroll', anstossen, { passive: true });
+  window.addEventListener('resize', neuMessen, { passive: true });
+  window.addEventListener('load', neuMessen);
+  if (window.ResizeObserver) new ResizeObserver(neuMessen).observe(document.body);
+  mqRuhig.addEventListener('change', neuMessen);
+  mqBreit.addEventListener('change', neuMessen);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(neuMessen);
+  messen();
+})();
+</script>
 </body>
 </html>

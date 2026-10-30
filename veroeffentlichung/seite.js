@@ -1118,20 +1118,10 @@
   })();
   const buch = (function () {
     let cache = null;
-    const NACHNAMEN = {
-      'Sun Tzu': 'Sun Tzu', 'Luo Guanzhong': 'Luo', 'Han Kang': 'Han', 'Gabriel García Márquez': 'García Márquez', 'Jin Yong': 'Jin Yong',
-      'Carlos Ruiz Zafón': 'Ruiz Zafón', 'Adolfo Bioy Casares': 'Bioy Casares', 'Daphne du Maurier': 'du Maurier',
-      'Ursula K. Le Guin': 'Le Guin', 'John le Carré': 'le Carré', 'Antoine de Saint-Exupéry': 'Saint-Exupéry', 'Lieutenant X': 'Lieutenant X',
-      'Thomas von Aquin': 'Thomas von Aquin', 'Anonymous': '', 'Anonym': '', 'Die 19 Finaltexte': ''
-    };
+    const NACHNAMEN = {};
     const AUTOR = { 'Anonymous': 'Anonym' };
     const DRAUSSEN = [];
-    const BERICHTIGT = [
-      { a: 'Ingeborg Bachmann', t: 'Malina', j: 1971 },
-      { a: 'Franz Kafka', t: 'In the Penal Colony', j: 1919 },
-      { a: 'Scott O\'Dell', t: 'Island of the Blue Dolphins', v: /cornelsen/i, u: '' },
-      { a: 'David Graeber', t: 'The Dawn of Everything', autor: 'David Graeber und David Wengrow' }
-    ];
+    const BERICHTIGT = [];
     const satz = s => String(s || '').replace(/(\d)-(\d)/g, '$1–$2').replace(/"([^"]*)"/g, '“$1”').replace(/'/g, '’');
     const initialen = s => satz(s).replace(/\b([A-Z])\.\s?(?=[A-Z])/g, '$1.' + NBSP);
     const verlag = v => {

@@ -9,8 +9,12 @@
 <script>document.documentElement.classList.add('js');</script>
 <!-- Einblenden in Folge (FSeite.folge): Text zuerst, der Globus zuletzt. Schon hier gesetzt, damit vor dem ersten Bild nichts aufblitzt;
      ohne Skript, im verborgenen Tab und bei reduzierter Bewegung wird nichts verborgen. Nach der Zurück- oder Vor-Taste (.zurueck)
-     steht alles sofort -->
-<script>(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);</script>
+     steht alles sofort. Beim Neuladen ohne Anker beginnt die Seite oben, nicht an der letzten Stelle, die der Browser
+     sonst wiederherstellt, oft am Globus (Dominik, 29. Oktober: „Und er springt bei mir auf dem Handy direkt zum Globus. Ist das
+     absicht?“): scrollRestoration „manual“; weil Chrome die Stelle trotzdem setzt, wenn die Seite schon beim ersten Layout lang
+     genug ist, geht sie bis kurz nach dem Laden wieder nach oben, solange niemand tippt, wischt, klickt, am Rad dreht oder eine
+     Taste drückt. Danach und beim Verlassen gilt wieder „auto“: zurück, vor und Anker auf der Seite stellen die Stelle weiter her -->
+<script>(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'reload' && !location.hash && 'scrollRestoration' in history) { var a = function () { history.scrollRestoration = 'auto'; }, z = function () { if (window.scrollY) window.scrollTo(0, 0); }, w = function () { window.removeEventListener('scroll', z); }; history.scrollRestoration = 'manual'; window.addEventListener('scroll', z, { passive: true }); ['touchstart', 'pointerdown', 'wheel', 'keydown'].forEach(function (t) { window.addEventListener(t, w, { capture: true, passive: true }); }); window.addEventListener('load', function () { setTimeout(function () { w(); a(); }, 500); }); window.addEventListener('pagehide', a); } if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="icon-512.png" type="image/png" sizes="512x512">
@@ -79,7 +83,7 @@ html:not(.js) .globusseite > .globus { display: none; }
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
 
 <header class="kopf">
-  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller und Reisender</span></p>
+  <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller</span></p>
   <nav class="nav" aria-label="Website">
     <ul class="nav-liste" id="nav-liste">
       <li><a href="satoshi.html"><i>Satoshi</i></a></li>

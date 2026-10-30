@@ -44,14 +44,17 @@ Zwei Ausgaben (27. Oktober), wie in der Veröffentlichung (werkzeuge/veroeffentl
 In beiden Ausgaben setzt der Bau die Markierungen data-nur und data-verweis um (ausgabe_umsetzen unten) und lässt keine stehen.
 Im Platzhalter trägt das <html> der Hauptseite dazu data-ausgabe="platzhalter" und data-schluss (das Skript ganz oben setzt beides,
 wie die Sprache); danach richten sich die Skripte und Stile der Seite. Im Platzhalter fehlen die übrigen Seiten und aus daten/ und
-bilder/, worauf keine ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht mitgeht. Wohin jede Seite dort
-verweisen darf, steht in VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf Impressum, Datenschutz, Anker, die
-Adresse für Anfragen und nach außen; auf die Vita nur das Exposé); auch das prüft der Bau.
+bilder/, worauf keine ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht mitgeht; daten/buecher.js geht
+nur mit den Büchern vom Nachttisch mit (buecher_platzhalter unten), und in seite.js behalten die Tabellen NACHNAMEN und BERICHTIGT
+nur, was diese Bücher brauchen (buch_tabellen_platzhalter). Wohin jede Seite dort verweisen darf, steht in
+VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf Impressum, Datenschutz, Anker, die Adresse für Anfragen und
+nach außen; auf die Vita nur das Exposé); auch das prüft der Bau.
 
 Zum Schluss prüft der Bau, dass jede unveränderte Kopie der Quelle gleicht, dass in keiner ausgelieferten Text-Datei ein
 Kommentar übrig ist, und nennt Zahl und Größe der Dateien.
 """
 import filecmp
+import json
 import os
 import re
 import shutil
@@ -376,6 +379,83 @@ def tarif_waehlen(text):
     return v.tarif_waehlen(text, v.TARIF)
 
 
+def buecher_platzhalter(text, seite='daten/buecher.js'):
+    """daten/buecher.js (schon ohne Kommentare) für den Platzhalter: nur die Bücher vom Nachttisch (r 'gerade'), mehr braucht das
+    Regal der Startseite nicht; die Bibliothek bleibt in der vollen Website (Dominik, 29. Oktober: „Das mit der Bibliothek soll
+    auch alles raus.“). Jede Zeile bleibt, wie sie war. Ergibt die Liste neu geschrieben nicht Zeichen für Zeichen die Datei
+    (ein anderes Format) oder steht kein Buch auf dem Nachttisch, baut er nicht."""
+    m = re.fullmatch(r'\s*window\.BUECHER = (\[.*\]);\s*', text, re.S)
+    if not m:
+        fehler(f'{seite}: „window.BUECHER = [ … ];“ nicht gefunden')
+    liste = json.loads(m.group(1))
+    zeile = lambda e: json.dumps(e, ensure_ascii=False, separators=(',', ':'))  # noqa: E731
+    if 'window.BUECHER = [\n' + ',\n'.join(map(zeile, liste)) + '\n];\n' != text:
+        fehler(f'{seite}: neu geschrieben nicht Zeichen für Zeichen gleich')
+    nacht = [e for e in liste if e.get('r') == 'gerade']
+    if not nacht:
+        fehler(f'{seite}: kein Buch auf dem Nachttisch (r „gerade“)')
+    return 'window.BUECHER = [\n' + ',\n'.join(map(zeile, nacht)) + '\n];\n'
+
+
+def buch_tabellen_platzhalter(texte, seite='seite.js'):
+    """seite.js für den Platzhalter (aus texte, den Texten des Baus ohne Kommentare, nach buecher_platzhalter): die zwei Tabellen
+    in FSeite.buch mit Namen und Titeln aus der Bibliothek, NACHNAMEN und BERICHTIGT, behalten nur, was ein Buch braucht, das
+    mitgeht (aus daten/buecher.js, also vom Nachttisch; derzeit nichts). Das Regal sieht so aus und verhält sich, wie es war;
+    sonst bleibt seite.js Zeichen für Zeichen, wie in der vollen Website (Dominik, 29. Oktober: „Das mit der Bibliothek soll auch
+    alles raus.“). Lädt eine Seite des Platzhalters daten/leseliste.js (deren Bücher bräuchten die Tabellen auch), steht eine
+    Tabelle nicht genau einmal da oder eine Zeile nicht in der Form, die er lesen kann, baut er nicht."""
+    text = texte[Path(seite)]
+    for p, t in texte.items():
+        if p.suffix == '.html' and re.search(r'<script\b[^>]*\bsrc="[^"]*daten/leseliste\.js"', t):
+            fehler(f'{p} lädt im Platzhalter daten/leseliste.js; {seite}: NACHNAMEN und BERICHTIGT wären zu kurz')
+    buecher = texte[Path('daten/buecher.js')]
+    s = r"'((?:[^'\\]|\\.)*)'"
+    js = lambda x: re.sub(r'\\(.)', r'\1', x)  # noqa: E731
+
+    def sauber(x):
+        # wie sauber() in seite.js, das Namen und Titel vor dem Vergleich bereinigt
+        return re.sub(r'&amp;(amp;)*', '&', '' if x is None else str(x)).replace('\u200e', '').replace('\u200f', '').strip()
+
+    liste = json.loads(re.fullmatch(r'\s*window\.BUECHER = (\[.*\]);\s*', buecher, re.S).group(1))
+    autoren = {sauber(e.get('a')) for e in liste}
+    titel = {(sauber(e.get('a')), sauber(e.get('t'))) for e in liste}
+
+    def tabelle(name, auf, zu, umbauen):
+        nonlocal text
+        treffer = list(re.finditer(r'^( *)const ' + name + ' = ' + re.escape(auf) + r'\n(.*?)\n\1' + re.escape(zu) + ';$',
+                                   text, re.M | re.S))
+        if len(treffer) != 1:
+            fehler(f'{seite}: „const {name} = {auf} … {zu};“ {len(treffer)}-mal statt einmal')
+        m = treffer[0]
+        rumpf = umbauen(m.group(2))
+        neu = (m.group(1) + 'const ' + name + ' = ' + auf + '\n' + rumpf + '\n' + m.group(1) + zu + ';' if rumpf
+               else m.group(1) + 'const ' + name + ' = ' + auf + zu + ';')
+        text = text[:m.start()] + neu + text[m.end():]
+
+    def nachnamen(rumpf):
+        paar = re.compile(s + ': ' + s)
+        if not re.fullmatch(r'[\s,]*', paar.sub('', rumpf)):
+            fehler(f'{seite}: NACHNAMEN nicht nur aus Paaren \'Name\': \'Nachname\'')
+        einzug = re.match(r' *', rumpf).group(0)
+        behalten = [m.group(0) for m in paar.finditer(rumpf) if js(m.group(1)) in autoren]
+        return einzug + ', '.join(behalten) if behalten else ''
+
+    def berichtigt(rumpf):
+        form = re.compile(r'( *\{ a: ' + s + ', t: ' + s + r'(?:, .*)? \}),?')
+        zeilen = []
+        for z in rumpf.split('\n'):
+            m = form.fullmatch(z)
+            if not m:
+                fehler(f'{seite}: BERICHTIGT, Zeile nicht lesbar: {z.strip()}')
+            if (js(m.group(2)), js(m.group(3))) in titel:
+                zeilen.append(m.group(1))
+        return ',\n'.join(zeilen)
+
+    tabelle('NACHNAMEN', '{', '}', nachnamen)
+    tabelle('BERICHTIGT', '[', ']', berichtigt)
+    return text
+
+
 SCHLUESSE = ('v1', 'v2')
 
 
@@ -595,6 +675,8 @@ def main():
         if neu is not None:
             texte[p] = neu
     if platz:
+        texte[Path('daten/buecher.js')] = buecher_platzhalter(texte[Path('daten/buecher.js')])
+        texte[Path('seite.js')] = buch_tabellen_platzhalter(texte)
         # Aus daten/ und bilder/ nur, worauf eine ausgelieferte Datei verweist; kein Verweis ins Leere
         drin = v.verwiesen(dateien, texte, [])
         weg = sorted(p for p in dateien if p not in drin)

@@ -37,7 +37,10 @@ Elemente. Vita. Globus. Das Regal mit den Projekten und dem Schreibtisch“.
     (nicht dauerhaft, damit ein späterer Neustart ohne Altlasten geht) auf / weiter. Strukturierte Daten nur auf /: die Person wie
     in der vollen Website (Name, Adresse, Beruf, Kurzvita, Preis, Verein), ohne Werke. Meta-Beschreibung und Open Graph wie auf der
     Startseite. Aus daten/ und bilder/ geht nur mit, worauf eine ausgelieferte Seite, ein Stil oder ein eigenes Skript verweist
-    (ohne Kommentare gelesen); Schriften mit Lizenzen, Bibliotheken, Kern und Icons gehen ganz mit.
+    (ohne Kommentare gelesen); Schriften mit Lizenzen, Bibliotheken, Kern und Icons gehen ganz mit. daten/buecher.js geht nur mit
+    den Büchern vom Nachttisch mit, mehr braucht das Regal nicht (artefakt.buecher_platzhalter; Dominik, 29. Oktober: „Das mit der
+    Bibliothek soll auch alles raus.“); in seite.js behalten die Tabellen NACHNAMEN und BERICHTIGT mit Namen und Titeln aus der
+    Bibliothek nur, was diese Bücher brauchen (artefakt.buch_tabellen_platzhalter).
     Verweise (Dominik: „ohne Verlinkungen“; Impressum und Datenschutz bleiben, § 5 DDG und DSGVO): Der Bau prüft je Seite, wohin
     ihre Verweise führen dürfen (VERWEISE_PLATZHALTER; ein Anker auf der Seite selbst ist immer erlaubt, wenn es sein Ziel gibt):
     / nur auf Impressum, Datenschutz, die Adresse für Anfragen und nach außen; das Exposé dazu auf die Vita; die Vita auf das
@@ -159,7 +162,9 @@ AUSLASSEN = {'werkzeuge', 'README.md'}
 TEXTDATEIEN = ('.html', '.css', '.js')
 FEHLERSEITE = '404.html'
 VORSCHAUBILD = 'bilder/vorschau.jpg'
-VORSCHAU_ALT = ('Dominik Jäkel, Schriftsteller und Reisender. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends '
+# Die Rolle wie im Kopf der Seiten und auf dem Bild (Dominik, 29. Oktober: „Und schreib nur noch schrifsteller. Nicht mehr
+# schrifsteller und Reisender“)
+VORSCHAU_ALT = ('Dominik Jäkel, Schriftsteller. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends '
                 'unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.')
 # Die Seiten in der Reihenfolge von FSeite.SEITEN (seite.js); die Startseite steht unter „/“
 SEITEN = ['index.html', 'satoshi.html', 'ursprung.html', 'erzaehlungen.html', 'untertext.html', 'laender.html', 'bibliothek.html',
@@ -952,6 +957,8 @@ def main():
                 texte[p] = artefakt.ausgabe_umsetzen(neu, ausgabe, p.as_posix()) if p.suffix == '.html' else neu
     if platz:
         texte[Path('index.html')] = artefakt.ausgabe_kennzeichnen(texte[Path('index.html')], schluss)
+        texte[Path('daten/buecher.js')] = artefakt.buecher_platzhalter(texte[Path('daten/buecher.js')])
+        texte[Path('seite.js')] = artefakt.buch_tabellen_platzhalter(texte)
     texte[Path('datenschutz.html')] = tarif_waehlen(texte[Path('datenschutz.html')], TARIF)
     for p in texte:
         texte[p] = verweise_umschreiben(p, texte[p])

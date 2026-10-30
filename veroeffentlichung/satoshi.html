@@ -17,7 +17,7 @@
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller und Reisender. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.">
+<meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFFEFC">
 <script>
@@ -25,7 +25,7 @@ document.documentElement.classList.add('js');
 </script>
 
 <script>
-(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);
+(function (h) { var n; try { n = performance.getEntriesByType('navigation')[0]; } catch (e) {} if (n && n.type === 'reload' && !location.hash && 'scrollRestoration' in history) { var a = function () { history.scrollRestoration = 'auto'; }, z = function () { if (window.scrollY) window.scrollTo(0, 0); }, w = function () { window.removeEventListener('scroll', z); }; history.scrollRestoration = 'manual'; window.addEventListener('scroll', z, { passive: true }); ['touchstart', 'pointerdown', 'wheel', 'keydown'].forEach(function (t) { window.addEventListener(t, w, { capture: true, passive: true }); }); window.addEventListener('load', function () { setTimeout(function () { w(); a(); }, 500); }); window.addEventListener('pagehide', a); } if (n && n.type === 'back_forward') h.classList.add('zurueck'); else if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches && !document.hidden) h.classList.add('folge'); })(document.documentElement);
 </script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
@@ -176,7 +176,7 @@ html.folge .klappbuch[data-folge]:not(.da) { pointer-events: none; }
 <a class="sprung" href="#inhalt">Zum Inhalt</a>
 
 <header class="kopf">
-  <p class="briefkopf"><span class="name">Dominik Jäkel</span> <span class="rolle">Schriftsteller und Reisender</span></p>
+  <p class="briefkopf"><span class="name">Dominik Jäkel</span> <span class="rolle">Schriftsteller</span></p>
   <div class="expose-kopf">
     <p>Digitales Exposé</p>
     <p class="expose-bitte">Bitte den Link nur mit Zustimmung des Autors teilen.</p>
@@ -735,7 +735,6 @@ html.folge .klappbuch[data-folge]:not(.da) { pointer-events: none; }
     <div class="prosa">
       <p><i>Satoshi</i> ist eine spekulative Chronik. Der Roman arbeitet mit dem realen Dokumentenbestand&nbsp;– <a href="https://satoshi.nakamotoinstitute.org/" rel="noopener">Satoshi Nakamotos Mails, Forenbeiträgen</a>, dem Whitepaper, dem Code und der Entwicklungsgeschichte von Bitcoin&nbsp;– und montiert ihn in die Erzählung, übersetzt, verdichtet und bearbeitet. Die Fiktion wohnt in den Leerstellen der Akten und widerspricht ihnen nirgends.</p>
       <p>Der Roman steht in einer Erzähltradition, die ihre Wurzeln in Borges’ <i>Ficciones</i> hat und zu deren heutigen Vertretern Hernán Díaz und Benjamín Labatut gehören: Literatur in den Leerstellen des Verbürgten.</p>
-      <p><i>Ficciones</i> steht in der <span>Bibliothek</span>, ebenso Labatuts <i>When We Cease to Understand the World</i> und <i>The Maniac</i> und Hernán Díaz’ <i>Trust</i>.</p>
     </div>
   </section>
 </div>

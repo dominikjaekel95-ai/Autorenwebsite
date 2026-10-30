@@ -1499,7 +1499,9 @@
      Zeit A bis E und Jahr; K Kindheit und Jugend, N Nachttisch, W was noch wartet).
      Berichtigt, solange daten/buecher.js es nicht selbst ist: das Jahr der Erstveröffentlichung, wo der Export das einer Übersetzung
      trägt; der zweite Verfasser von The Dawn of Everything. Gesetzt mit Halbgeviertstrich in Spannen, typografischen Apostrophen
-     und Anführungszeichen (die Titel sind meist englisch: “…”) und geschützten Leerzeichen nach Initialen („T. S. Eliot“). */
+     und Anführungszeichen (die Titel sind meist englisch: “…”) und geschützten Leerzeichen nach Initialen („T. S. Eliot“).
+     NACHNAMEN und BERICHTIGT kürzt der Bau des Platzhalters auf die Bücher, die dort mitgehen (artefakt.buch_tabellen_platzhalter);
+     er liest sie in dieser Form: NACHNAMEN Paare 'Name': 'Nachname', BERICHTIGT je Zeile ein { a: '…', t: '…', … }. */
   const buch = (function () {
     let cache = null;
     const NACHNAMEN = {

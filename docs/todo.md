@@ -2,6 +2,11 @@
 
 Stand: 6. November 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es tut, steht dabei: **Dominik** (Anmelden, Bezahlen, Entscheiden, alles im Browser) oder **Claude** (Code im Repository).
 
+## Erster Satz der Startseite (6. November, V91)
+
+- [x] **Claude:** Sein neuer Satz „Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie – meist unter den Namen anderer Leute.“ auf der Startseite und im Vorschaubild, live seit 6. November.
+- [ ] **Dominik:** Kurzvita der Startseite: 1995 steht jetzt zweimal kurz hintereinander – Jahreszahl dort streichen? Und bei den Stationen (EN/DE) bei 2022–2024 und (DE/EN) bei 2025–heute: Absicht? (`docs/dominik-vorgaben.md`, Übersicht 3, Punkte 26 und 27)
+
 ## Vita neu, drei Fassungen (6. November, V90)
 
 Dominik hat die Bio am 6. November mehrmals neu geschickt. Es gilt Nachricht 9 mit 10 und 11, für die Stationen Nachricht 12, für Mallorca Nachricht 4 („längerer Aufenthalt, zweiter Wohnsitz“) und unter dem Foto nur „Törn Sardinien–Korsika, 2025.“ (Nachricht 13); alle im Wortlaut in `docs/dominik-vorgaben.md`, V90. Zur ersten Fassung am Desktop schrieb er: „haben wir schon wieder dieses Platzproblem unter dem Vita Text“. Gebaut sind drei Fassungen mit demselben Inhalt (Nachricht 5: „Mach wieder drei Varianten und wähle die beste“). Im Repository steht A, Claudes Empfehlung; live ist noch die Vita vom 29. Oktober.

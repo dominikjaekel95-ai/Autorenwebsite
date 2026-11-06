@@ -31,12 +31,36 @@
    nur aus den Token in stil.css. */
 
 /* ---------- Der erste Satz (02) ----------
-   IM Fell French Canon im Grad Einstieg, jedes Glied eine Zeile. Der Platz für drei Zeilen steht von Anfang an fest. */
-.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 3); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
+   IM Fell French Canon im Grad Einstieg, jedes Glied eine Zeile. Seit dem 6. November Dominiks Satz vom Anfang seiner Bio (Dominik:
+   „Nimm das auch als Slogan für die Startseite ... / Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und
+   Technologie – meist unter den Namen anderer Leute. / Ist besser als das mit dem tagsüber und abends ... Sonst okay.“), in fünf
+   Gliedern nach Sinneinheiten: „Dominik Jäkel, Jahrgang 1995, / schreibt seit vielen Jahren / über Geld und Technologie – / meist
+   unter den Namen / anderer Leute.“ Ab 1323 px Breite stehen die letzten beiden auf einer Zeile (.satzteil, unten), vier Zeilen wie
+   die vier Teile des Satzes: mit fünf Zeilen läge die Unterschrift des Regals bei 1440 × 900 unter dem Rand. Erst dort hat die
+   Zeile „meist unter den Namen anderer Leute.“ Platz, ohne unter 28,5 px zu kommen (Boden im Skript); schmaler bliebe sie zu klein
+   für die Zeilenhöhe von 1,5 z, darum dort fünf Zeilen im Grad, den das erste Glied erlaubt, wie auf dem Telefon. Auf dem Tablet
+   finden die letzten beiden von selbst auf eine Zeile, wo sie hinpassen. Der Platz für die Zeilen steht von Anfang an fest: fünf,
+   ab 1323 px und auf dem Tablet vier (bis zum 6. November drei für „Dominik Jäkel schreibt tagsüber / unter fremden Namen / und
+   abends unter seinem eigenen.“). */
+.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 5); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
 /* Letzte Sicherung, falls das Skript den Satz nicht anpassen kann: nie breiter als die Spalte, ein zu langes Wort bricht eher, als
    über den Rand zu laufen (Dominik: „der Punkt von eigenes abgeschnitten“). Den Flug berührt das nicht, er verschiebt nur. */
 .globusseite > .einstieg { max-width: min(100%, var(--mass)); min-width: 0; overflow-wrap: break-word; }
 .einstieg.gesetzt .glied-satz, .einstieg .paar { white-space: nowrap; }
+/* Ab 82,6875 rem (1323 px; die Spalte ist dann mindestens 490 px breit, 62vw − 330 px) bleibt der letzte Satzteil, „meist unter den
+   Namen“ und „anderer Leute.“, auf einer Zeile, und das Skript passt den Grad an diese Zeile an, die längste: 633,7 px in 38 px,
+   bei 1440 px 32,7 px, ab 1451 px 33,1 px. Darunter bricht er zwischen den beiden Gliedern wie jedes andere Glied. Nur gesetzt:
+   bricht der Satz frei, bricht auch er (white-space am Leerzeichen allein hält Chromium nicht, darum die Klammer um beide Glieder) */
+@media (min-width: 82.6875rem) {
+  .einstieg { min-height: calc(var(--einstieg-zh) * 4); }
+  .einstieg.gesetzt .satzteil { white-space: nowrap; }
+}
+/* Am Desktop steht der Satz ¼ z unter dem Kopf statt 1 z (6. November, mit dem neuen Satz): ab 1323 px hat er eine Zeile mehr als
+   der alte, so rücken Kurzvita und Regal dort nur um ¾ z tiefer statt um 1½ z (darunter, mit zwei Zeilen mehr, um 2¼ z statt
+   3 z). Bei 1440 × 900 bleiben unter der Unterschrift des Regals 38 px Luft (ohne das 17 px, vorher 60), und nach einem Klick auf
+   ein Buch steht die erste Zeile seines Satzes noch im Bild, wie bisher. In der vollen Website steht darüber die Navigation, von
+   ihr bis zum Satz sind es dann 1¼ z (vorher 2 z) */
+@media (min-width: 62.0625rem) { .globusseite > .einstieg { margin-top: var(--z-viertel); } }
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
 .einstieg-satz .w { display: inline-block; }
@@ -293,7 +317,9 @@ html.folge #regalbild[data-folge]:not(.da) { pointer-events: none; }
 html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 
 @media (max-width: 62rem) {
-  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); }
+  /* Tablet und Telefon quer: die Spalte ist so breit, dass die letzten beiden Glieder (oder mehr) auf eine Zeile finden; vier Zeilen
+     reichen (768 px vier, 844 px quer drei) */
+  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); min-height: calc(var(--einstieg-zh) * 4); }
   /* Einspaltig folgt die Kugel direkt auf die Kurzvita, mit 1 z Abstand aus stil.css (ohne Wahl der Ebene darüber) */
   .globusseite > .ebenentext { order: 1; margin-top: var(--z); }
   .schreiben-raster { grid-template-columns: minmax(0, var(--mass)); }
@@ -301,6 +327,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 2; margin-top: var(--z); }
 }
 @media (max-width: 40rem) {
+  /* Auf dem Telefon steht der erste Satz in fünf Zeilen, je Glied eine (oben; 320 bis 412 px in 21 bis 27 px) */
+  .einstieg { min-height: calc(var(--einstieg-zh) * 5); }
   /* Das Band ist breiter als der Schirm und rollt in seinem eigenen Rahmen, nur unter dem Finger */
   .zeitband-roll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; overscroll-behavior-x: contain; padding-bottom: var(--z-viertel); margin: 0 calc(var(--rand-l) * -1); padding-left: var(--rand-l); padding-right: var(--rand-l); scroll-padding: 0 var(--rand-l); }
   .bandzeile > span { text-wrap: balance; hyphens: manual; -webkit-hyphens: manual; }
@@ -391,9 +419,10 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
 
 <main id="inhalt">
 <section class="globusseite" aria-label="Vita und Globus">
-  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt tagsüber</span> <span class="glied-satz">unter fremden Namen</span> <span class="glied-satz">und abends unter seinem eigenen.</span></p>
+  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel, Jahrgang 1995,</span> <span class="glied-satz">schreibt seit vielen Jahren</span> <span class="glied-satz">über Geld und Technologie&nbsp;–</span> <span class="satzteil"><span class="glied-satz">meist unter den Namen</span> <span class="glied-satz">anderer Leute.</span></span></p>
   <script>
-  /* Der erste Satz fliegt bei jedem Laden einmal ein, Wort für Wort von rechts, in rund 2 s (02; Tempo T2 „gelassen“). Er wartet höchstens
+  /* Der erste Satz fliegt bei jedem Laden einmal ein, Wort für Wort von rechts, in rund 2,7 s (02; Tempo T2 „gelassen“; mit dem Satz
+     bis zum 6. November, zwölf Wörter in drei Gliedern, waren es rund 2 s, das Tempo ist dasselbe). Er wartet höchstens
      1200 ms auf die IM Fell (bis zum 23. Oktober 600 ms, wie FSeite.schriftEinstieg; seite.js ist an dieser Stelle noch nicht
      geladen). Auf dem Telefon im Mobilnetz und im Fenster der Claude-App kam sie oft später, dann stand der Satz ohne Flug (Dominik,
      23. Oktober: „Beim Handy. Hatten wir uns entschieden, dass die Buchstaben nicht einfliegen. Finde das schon ganz schick
@@ -422,10 +451,12 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
     satz.setAttribute('aria-hidden', 'true');
     while (el.firstChild) satz.appendChild(el.firstChild);
     var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
-    // Was nie getrennt wird, auch wenn der Satz frei bricht: der Name und „seinem eigenen.“
-    var PAARE = ['Dominik Jäkel', 'seinem eigenen.'];
+    // Was nie getrennt wird, auch wenn der Satz frei bricht: der Name, „Jahrgang 1995,“ und „anderer Leute.“ (so steht in der letzten
+    // Zeile nie ein Wort allein). Getrennt wird nur an gewöhnlichem Leerraum, nicht am festen Leerzeichen: „Technologie –“ ist ein
+    // Wortkasten, der Gedankenstrich steht nie am Anfang einer Zeile und fliegt mit seinem Wort ein
+    var PAARE = ['Dominik Jäkel,', 'Jahrgang 1995,', 'anderer Leute.'];
     glieder.forEach(function (g) {
-      var woerter = g.textContent.trim().split(/\s+/);
+      var woerter = g.textContent.trim().split(/[ \t\n\r\f]+/);
       g.textContent = '';
       var paar = null;
       woerter.forEach(function (w, i) {
@@ -454,7 +485,9 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
     var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
 
     /* Jedes Glied eine Zeile. Passt das längste nicht mit Luft in die Spalte, wird die Schrift kleiner, bis es passt, am Desktop
-       nicht unter 28,5 px, sonst nicht unter 20,7 px. Reicht auch das nicht, bricht der Satz frei; über den Rand läuft er nie.
+       nicht unter 28,5 px, sonst nicht unter 20,7 px. Reicht auch das nicht, bricht der Satz frei; über den Rand läuft er nie. Ab
+       1323 px ist die längste Zeile die mit den beiden letzten Gliedern (.satzteil, Stil oben): laengstes() misst das rechte Ende
+       jedes Glieds, das zweite steht dort am Ende der Zeile.
        Dominik am 23. Oktober, mit einem Bildschirmfoto: „Bei mir auf dem eigenen Handy ist der Punkt von eigenes abgeschnitten.“
        Auf seinem Telefon stand der Satz rund 10 % größer, als die Anpassung ihn in Chromium setzt. Darum:
        - Luft: das längste Glied nimmt höchstens 97 % der Spalte ein, mindestens 6 px bleiben frei (Stufen in anpassen());
@@ -469,9 +502,12 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
       glieder.forEach(function (g) { rechts = Math.max(rechts, g.getBoundingClientRect().right); });
       return rechts - links;
     }
-    // Was beim letzten Setzen galt: Breite der Spalte und Breite jedes Worts. Ändert sich eins davon, wird neu gesetzt (unten)
+    // Was beim letzten Setzen galt: Breite der Spalte, ob der letzte Satzteil auf einer Zeile steht (ab 82,6875 rem, wie im Stil oben;
+    // an der Grenze ändert sich die gerundete Breite der Spalte oft nicht, sonst bliebe nach einem Größenwechsel der Grad der anderen
+    // Seite stehen) und Breite jedes Worts. Ändert sich eins davon, wird neu gesetzt (unten)
     var masse = '';
-    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
+    var zusammen = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 82.6875rem)').matches); };
+    function mass() { return el.clientWidth + ':' + zusammen() + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
     function setzen() {
       anpassen();
       masse = mass();
@@ -534,7 +570,8 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
        Kurve (.22,.7,.28,1), und getrennt davon die Deckkraft in DECKKRAFT ms (ease), so dass man jedes Wort satt werden sieht;
        VERSATZ ms von Wort zu Wort, ATEM ms zwischen den Gliedern, kein Nachfedern, keine Unschärfe (bis zum 24. Oktober lag über
        jedem Wort eine unscharfe Kopie, die ins scharfe überblendete; im Tempo „gelassen“, das Dominik am 24. Oktober gewählt hat,
-       entfällt sie). Ganz: 9 × VERSATZ + 2 × ATEM + WEG, rund 1,9 s. Textmoment: das letzte Wort steht zu 95 % (Beginn +
+       entfällt sie). Ganz: 13 × VERSATZ + 4 × ATEM + WEG, rund 2,7 s (18 Wortkästen in fünf Gliedern; wo die letzten beiden auf
+       einer Zeile stehen, liegt ein Atem mitten in ihr, vor „anderer Leute.“). Textmoment: das letzte Wort steht zu 95 % (Beginn +
        max(DECKKRAFT, 0,6 × WEG)). Beides sind Animationen von Deckkraft und Verschiebung, die der Browser ohne den Hauptfaden
        weiterführt: baut die Seite in dieser Zeit die Kugel auf, stockt nichts */
     var WEG = 800, DECKKRAFT = 420, VERSATZ = 75, ATEM = 220;

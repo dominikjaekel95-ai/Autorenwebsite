@@ -168,9 +168,11 @@ TEXTDATEIEN = ('.html', '.css', '.js')
 FEHLERSEITE = '404.html'
 VORSCHAUBILD = 'bilder/vorschau.jpg'
 # Die Rolle wie im Kopf der Seiten und auf dem Bild (Dominik, 29. Oktober: „Und schreib nur noch schrifsteller. Nicht mehr
-# schrifsteller und Reisender“)
-VORSCHAU_ALT = ('Dominik Jäkel, Schriftsteller. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends '
-                'unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.')
+# schrifsteller und Reisender“), dann der erste Satz der Startseite, wie er auf dem Bild steht (seit dem 6. November Dominiks Satz
+# vom Anfang seiner Bio: „Nimm das auch als Slogan für die Startseite ...“; vorher „Dominik Jäkel schreibt tagsüber unter fremden
+# Namen und abends unter seinem eigenen.“)
+VORSCHAU_ALT = ('Dominik Jäkel, Schriftsteller. Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und '
+                'Technologie – meist unter den Namen anderer Leute. Rechts ein Globus mit Europa und Afrika.')
 # Die Seiten in der Reihenfolge von FSeite.SEITEN (seite.js); die Startseite steht unter „/“
 SEITEN = ['index.html', 'satoshi.html', 'ursprung.html', 'erzaehlungen.html', 'untertext.html', 'laender.html', 'bibliothek.html',
           'vita.html', 'lesen.html', 'impressum.html', 'datenschutz.html']

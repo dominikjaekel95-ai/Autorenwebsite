@@ -16,12 +16,7 @@ window.INHALT = {
     { name: 'Cotonou', land: 'Benin', jahr: '2018', neben: true, projekt: 'Freiwilligenprojekt mit AIESEC', lat: 6.37, lon: 2.43 },
     { name: 'Kaohsiung', land: 'Taiwan', jahr: '2018', projekt: 'vier Jahre als Lektor und freier Autor', lat: 22.63, lon: 120.3 },
     { name: 'Berlin', jahr: '2022', lat: 52.52, lon: 13.4 },
-    { name: 'Mallorca', jahr: '2023', neben: true, lat: 39.57, lon: 2.65 }
-  ],
-  aufenthalte: [
-    { name: 'Kapstadt', land: 'Südafrika', jahr: '2024', lat: -33.92, lon: 18.42 },
-    { name: 'Sansibar', land: 'Tansania', jahr: '2025', lat: -6.16, lon: 39.19 },
-    { name: 'Buenos Aires', land: 'Argentinien', jahr: '2026', lat: -34.6, lon: -58.38 }
+    { name: 'Mallorca', jahr: '2023', neben: true, projekt: 'zweiter Wohnsitz', lat: 39.57, lon: 2.65 }
   ],
   satoshi: {
     orte: [

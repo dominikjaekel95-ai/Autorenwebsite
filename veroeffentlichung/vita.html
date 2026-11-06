@@ -4,14 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vita – Dominik Jäkel</title>
-<meta name="description" content="Dominik Jäkel wurde 1995 in Dortmund geboren, studierte in Freiburg und am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre in Kaohsiung auf Taiwan. Er lebt seit 2022 in Berlin und erhielt im selben Jahr den A.-E.-Johann-Preis.">
-<meta name="robots" content="noindex">
+<meta name="description" content="Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie – meist unter den Namen anderer Leute.">
 <link rel="canonical" href="https://dominikjaekel.de/vita">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dominik Jäkel">
 <meta property="og:locale" content="de_DE">
 <meta property="og:title" content="Vita – Dominik Jäkel">
-<meta property="og:description" content="Dominik Jäkel wurde 1995 in Dortmund geboren, studierte in Freiburg und am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre in Kaohsiung auf Taiwan. Er lebt seit 2022 in Berlin und erhielt im selben Jahr den A.-E.-Johann-Preis.">
+<meta property="og:description" content="Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie – meist unter den Namen anderer Leute.">
 <meta property="og:url" content="https://dominikjaekel.de/vita">
 <meta property="og:image" content="https://dominikjaekel.de/bilder/vorschau.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -19,6 +18,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller. Dominik Jäkel schreibt tagsüber unter fremden Namen und abends unter seinem eigenen. Rechts ein Globus mit Europa und Afrika.">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","@id":"https://dominikjaekel.de/#person","name":"Dominik Jäkel","url":"https://dominikjaekel.de/","jobTitle":"Schriftsteller","description":"Dominik Jäkel studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u. a. die Werkstattbühne des Autorenforums Berlin e. V. 2022 erhielt er den A.-E.-Johann-Preis. Gerade schließt er seinen Debütroman Satoshi ab; daneben schreibt er an einer Romantrilogie über die Ursprünge der Zivilisation.","award":"A.-E.-Johann-Preis (2022)","affiliation":{"@type":"Organization","name":"Autorenforum Berlin e. V.","url":"https://autorenforum-berlin.de/"}}</script>
 <meta name="theme-color" content="#FFFEFC">
 <script>
 document.documentElement.classList.add('js');
@@ -32,36 +32,49 @@ document.documentElement.classList.add('js');
 <link rel="preload" href="schrift/vollkorn-kursiv.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
-.vita-raster { display: grid; grid-template-columns: minmax(29em, 31em) minmax(0, 1fr); column-gap: clamp(4.5em, calc(var(--globuskante) - var(--rand-l) - 31em), calc(var(--z) * 8)); align-items: start; }
-.vita-links { grid-column: 1; min-width: 0; }
-.vita-rechts { grid-column: 2; min-width: 0; }
+.vita-raster {
+  --vita-satz: clamp(29em, calc(29em + (100vw - 64rem) * .15), 31em);
+  display: grid; grid-template-columns: var(--vita-satz) minmax(0, 1fr); grid-template-rows: auto auto auto;
+  column-gap: clamp(calc(var(--z) * 2), calc(var(--globuskante) - var(--rand-l) - var(--vita-satz)), calc(var(--z) * 8));
+}
+.vita-raster > .seitentitel { grid-column: 1; grid-row: 1; }
+.vita-raster > .vita-text { grid-column: 1; grid-row: 2; min-width: 0; }
+.vita-raster > .werdegang { grid-column: 1; grid-row: 3; min-width: 0; }
+.vita-raster > .vita-bild { grid-column: 2; grid-row: 1 / span 3; min-width: 0; container-type: size; }
 .vita-text > p + p { margin-top: var(--z-dreiviertel); }
-.vita-text > .einstieg { font-size: min(var(--g-gross), calc((var(--vb, 100vw) - 2 * var(--rand-l)) / 14.9)); line-height: var(--zh-ueber); }
-.vita-text > .einstieg .nw { display: block; }
-.vita-text > .einstieg + p { margin-top: var(--z); }
-.bildnis { width: min(100%, 24em, calc((100svh - var(--z) * 9) * .75)); }
+.vita-text > p:first-child { font-family: var(--anzeige); font-variant-numeric: normal; font-size: var(--g-gross); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; text-wrap: balance; text-wrap: pretty; }
+.vita-text > p:first-child + p { margin-top: var(--z); }
+.vita-text > .profil-hinweis { margin-top: var(--z-zwei); font-size: var(--g-klein); line-height: var(--zh-klein); font-style: italic; text-wrap: balance; }
+@media (pointer: coarse) {
+  .profil-hinweis a { position: relative; }
+  .profil-hinweis a::after { content: ""; position: absolute; left: -.4em; right: -.4em; top: -.25em; bottom: -18px; }
+}
+.bildnis {
+  position: sticky; top: var(--z);
+  width: min(100%, calc((100svh - var(--z) * 3.75) * .75), calc((100cqh - var(--z) * 2.25) * .75));
+  margin-top: calc(var(--zh-gross) / 2 - var(--g-gross) * .4205);
+  margin-bottom: calc((var(--zh-text) - var(--zh-klein)) / 2 - (var(--g-text) - var(--g-klein)) * .2555);
+}
 .bildnis img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; background: var(--brett); }
-.bildnis figcaption { margin-top: var(--z-viertel); font-size: var(--g-klein); line-height: var(--zh-klein); }
+.bildnis figcaption { margin-top: var(--z-viertel); font-size: var(--g-klein); line-height: var(--zh-klein); text-wrap: balance; }
+.bildnis figcaption .satz { display: block; }
 .daten { list-style: none; hyphens: manual; -webkit-hyphens: manual; }
-.daten li { position: relative; }
+.daten li { position: relative; padding-left: 3em; }
 .daten li + li { margin-top: var(--z-viertel); }
-.daten .jahr { position: absolute; top: 0; right: calc(100% + .6em); white-space: nowrap; font-variant-numeric: oldstyle-nums tabular-nums; }
+.daten .jahr { position: absolute; top: 0; left: 0; white-space: nowrap; font-variant-numeric: oldstyle-nums tabular-nums; }
 .daten .spanne { min-height: calc(var(--zh-text) * 2); }
-.daten .bis { position: absolute; right: 0; top: 100%; }
+.daten .bis { position: absolute; left: 0; top: 100%; }
 .daten .bis::before { content: "\2013"; content: "\2013" / ""; position: absolute; right: 100%; }
-.werdegang { margin-top: var(--z-zwei); }
+.werdegang { margin-top: var(--z-drei); }
 .werdegang .weiter { margin-top: var(--z-dreiviertel); }
 @media (max-width: 62rem) {
-  .vita-raster { display: flex; flex-direction: column; align-items: stretch; }
-  .vita-links, .vita-rechts { display: contents; }
-  .vita-raster .seitentitel { order: 1; }
-  .vita-raster .bildnis { order: 2; width: 100%; max-width: var(--mass); margin-bottom: var(--z); }
-  .vita-raster .vita-text { order: 3; }
-  .vita-raster .werdegang { order: 4; margin-top: var(--z-zwei); }
-  .vita-text, .werdegang { max-width: var(--mass); }
-  .daten li { padding-left: 3em; }
-  .daten .jahr { right: auto; left: 0; }
+  .vita-raster { display: block; }
+  .vita-text, .werdegang, .vita-raster > .vita-bild { max-width: var(--mass); }
+  .vita-raster > .vita-bild { container-type: normal; margin-top: var(--z-drei); }
+  .werdegang { margin-top: var(--z-zwei); }
+  .bildnis { position: static; margin: 0; width: min(100%, calc((100svh - var(--z) * 2) * .75)); }
 }
+@media (max-width: 40rem) { .vita-text > p:first-child { font-size: var(--g-ueber); } }
 </style>
 </head>
 <body class="vita-seite">
@@ -72,45 +85,45 @@ document.documentElement.classList.add('js');
 
 <main id="inhalt">
 <div class="abschnitt unterseite vita-raster">
-  <div class="vita-links">
-    <h1 class="seitentitel">Vita</h1>
+  <h1 class="seitentitel">Vita</h1>
 
-    <div class="vita-text">
-      <p class="einstieg leitsatz"><span class="nw">Dominik Jäkel schreibt tagsüber</span> <span class="nw">unter fremden Namen</span> <span class="nw">und abends unter seinem eigenen.</span></p>
-      <p>Er wurde 1995 in Dortmund geboren. In Freiburg studierte er Liberal Arts &amp; Sciences, danach in Potsdam IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span>.</p>
-      <p>2016 und 2018 ging er für Freiwilligen&shy;projekte mit AIESEC nach Colombo in Sri Lanka und nach Cotonou in Benin.</p>
-      <p>Vier Jahre lebte er in Kaohsiung auf Taiwan. Er arbeitete dort als Lektor und freier Autor, unter anderem für Sprach&shy;assistenten und Indie-Gaming-Studios. In Taiwan, das von den Kulturen seiner indigenen Völker geprägt ist, begann seine Beschäftigung mit der Früh&shy;geschichte des Menschen und die Arbeit an der Ursprungs&shy;trilogie der Zivili&shy;sation.</p>
-      <p>Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen (vor allem für die Marketing- und Pricing&shy;beratung <a href="https://www.simon-kucher.com/de" rel="noopener">Simon-Kucher</a>). Auf der Werkstatt&shy;bühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autoren&shy;forums Berlin e.&#8239;V.</a> hat er viele seiner Geschichten vorgetragen; seit einigen Jahren ist er fester Bestandteil des Moderatoren&shy;teams. Längere Aufenthalte führten ihn zudem nach Mallorca, Kapstadt, Sansibar und Buenos Aires.</p>
-      <p>2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debüt&shy;roman <a href="/satoshi"><i>Satoshi</i></a> ab. Das Manuskript liegt vollständig vor. Der Roman erzählt die Gründungs&shy;legende von Bitcoin als Liebes&shy;geschichte dreier Menschen&nbsp;– und beschäftigt sich vor allem mit der Frage, was passiert, wenn das Vertrauen in Institutionen zerbricht.</p>
-      <p>Daneben arbeitet er an der <span>Ursprungs&shy;trilogie</span>, drei Romanen über die Anfänge der Zivili&shy;sation. Sie erzählen von der Geburt der organi&shy;sierten Religion, der Literatur und der Heiligen Schrift, von Göbekli Tepe um 8000&nbsp;v.&#8239;Chr. über Uruk bis Jerusalem um 940&nbsp;v.&#8239;Chr.</p>
-    </div>
+  <div class="vita-text">
+    
+    <p>Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie&nbsp;– meist unter den Namen anderer Leute.</p>
+    <p>Er studierte IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span> (HPI) sowie Liberal Arts &amp; Sciences in Freiburg. Im Anschluss lebte er mehrere Jahre in Taiwan, lernte Mandarin und bereiste über 70 Länder (darunter ein Großteil der Schauplätze von <i>Satoshi</i>).</p>
+    <p>Heute verantwortet er den deutschsprachigen Content der Strategie&shy;beratung <a href="https://www.simon-kucher.com/de" rel="noopener">Simon-Kucher</a>. Als Ghostwriter schreibt er für führende Köpfe aus IT und Banking&nbsp;– Texte, die unter deren Namen u.&#8239;a. in der FAZ erschienen.</p>
+    <p>Seine literarische Arbeit wurde mit dem <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a> (2022) ausgezeichnet. Dominik Jäkel lebt in Berlin, moderiert regelmäßig die Werkstatt&shy;bühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autoren&shy;forums Berlin</a> und besuchte zahlreiche Seminare an der Bundes&shy;akademie für Kulturelle Bildung Wolfenbüttel.</p>
+    <p>Mit <span><i>Satoshi</i></span> führt er alle Stränge seiner Vita zusammen. Ein Ghostwriter der IT- und Finanz&shy;branche schreibt über das eine Pseudonym, das die halbe Welt endlich aufdecken will.</p>
+    
+    <p class="profil-hinweis">Das vollständige berufliche Profil, u.&#8239;a. mit Projekten als Freelancer für Intel, einen marktführenden Smartspeaker-Hersteller und Indie-Gaming-Studios, finden Sie <a href="https://www.linkedin.com/in/dominik-j%C3%A4kel-3b861615a/" rel="noopener" aria-label="hier: das berufliche Profil auf LinkedIn">hier</a>.</p>
   </div>
 
-  <div class="vita-rechts">
+  <div class="vita-bild">
     <figure class="bildnis">
-      <img src="bilder/dominik-jaekel-boot.jpg" alt="Dominik Jäkel liest an Deck eines Segelboots, im Hintergrund Berge im Abendlicht" width="1200" height="1600" decoding="async">
-      <figcaption>Mit <i>Picknick am Wegesrand</i> der Brüder Strugatzki.</figcaption>
+      
+      <img src="bilder/dominik-jaekel-boot-800.jpg" srcset="bilder/dominik-jaekel-boot-480.jpg 480w, bilder/dominik-jaekel-boot-800.jpg 800w, bilder/dominik-jaekel-boot.jpg 1200w" sizes="(max-width: 62rem) and (orientation: landscape) calc(75vh - 2.53rem), (max-width: 40.5rem) 86vw, (max-width: 62rem) 34.875rem, (max-width: 75rem) calc(90vw - 38rem), (min-aspect-ratio: 3/2) calc(75vh - 5rem), calc(90vw - 38rem)" alt="Dominik Jäkel liest an Deck eines Segelboots, im Hintergrund Berge im Abendlicht" width="1200" height="1600" decoding="async">
+      
+      <figcaption><span class="satz nw">Törn Sardinien–Korsika, 2025.</span></figcaption>
     </figure>
-
-    <section class="werdegang" aria-labelledby="stationen-titel">
-      <h2 class="titel" id="stationen-titel">Stationen</h2>
-      <ul class="daten">
-        <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren</li>
-        <li class="spanne"><span class="jahr">2014<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2015</span><span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span></li>
-        <li class="spanne"><span class="jahr">2015<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2018</span><span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span></li>
-        <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit AIESEC</li>
-        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit AIESEC</li>
-        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor</li>
-        <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> Berlin, seitdem Wohnort</li>
-        <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> <span class="nw">A.-E.-Johann-Preis</span></li>
-        <li><span class="jahr">2023<span class="unsichtbar">&nbsp;</span></span> Mallorca, längerer Aufenthalt</li>
-        <li><span class="jahr">2024<span class="unsichtbar">&nbsp;</span></span> Kapstadt, Südafrika, längerer Aufenthalt</li>
-        <li><span class="jahr">2025<span class="unsichtbar">&nbsp;</span></span> Sansibar, Tansania, längerer Aufenthalt</li>
-        <li><span class="jahr">2026<span class="unsichtbar">&nbsp;</span></span> Buenos Aires, Argentinien, längerer Aufenthalt</li>
-      </ul>
-      <p class="weiter">Die Wohnorte und die ersten längeren Aufenthalte <a class="nw" href="/#globus">auf dem Globus</a>.</p>
-    </section>
   </div>
+
+  <section class="werdegang" aria-labelledby="stationen-titel">
+    <h2 class="titel" id="stationen-titel">Stationen</h2>
+    <ul class="daten">
+      <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren</li>
+      <li class="spanne"><span class="jahr">2014<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2015</span><span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span></li>
+      <li class="spanne"><span class="jahr">2015<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2018</span><span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span></li>
+      <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit AIESEC</li>
+      <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit AIESEC</li>
+      <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor</li>
+      <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> Berlin, seitdem Wohnort</li>
+      <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> <span class="nw">A.-E.-Johann-Preis</span></li>
+      
+      <li class="spanne"><span class="jahr">2022<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2024</span><span class="unsichtbar">&nbsp;</span></span> Content Writer bei <span class="nw">Simon-Kucher (EN/DE)</span></li>
+      <li class="spanne"><span class="jahr">2025<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>heute</span><span class="unsichtbar">&nbsp;</span></span> Senior Content Writer&nbsp;(DE/EN)</li>
+    </ul>
+    <p class="weiter">Die Wohnorte und die ersten längeren Aufenthalte <a class="nw" href="/#globus">auf dem Globus</a>.</p>
+  </section>
 </div>
 </main>
 

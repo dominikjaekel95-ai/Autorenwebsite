@@ -16,70 +16,116 @@
 <link rel="preload" href="schrift/vollkorn-kursiv.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="stil.css">
 <style>
-/* Vita von Version C (docs/gestaltung-website-c.md, 6.16 und 9.5). Breit zwei Spalten: links Titel, der erste Satz und Dominiks Text,
-   rechts oben das Foto, darunter die Stationen. Die rechte Spalte steht, wo Platz ist, an der Kante des Globus der Startseite;
-   die Jahre der Stationen hängen links davon im Steg. Auf dem Telefon: Titel, Foto, erster Satz, Text, Stationen. */
+/* Vita von Version C (docs/gestaltung-website-c.md, 6.16 und 9.5), Fassung A vom 6. November („Zwei Spalten, im Gleichgewicht“).
+   Breit zwei Spalten: links Titel, Dominiks Text mit dem Hinweis auf sein berufliches Profil, darunter die Stationen; rechts nur
+   das Foto mit der Unterschrift, oben bündig mit dem Titel. Die rechte Spalte steht, wo Platz ist, an der Kante des Globus der
+   Startseite; das Foto füllt sie, soweit die Höhe des Fensters reicht. Beide Spalten enden auf einer Linie: Titel, Text und
+   Stationen sind breit rund 1 450 px hoch, so hoch wird ein Foto im Format 3 : 4 erst bei rund 1 100 px Breite. Es bleibt darum
+   beim Rollen stehen (wie der Globus der Startseite, V78), bis sein Ende mit dem Ende der Stationen zusammenfällt; neben dem Text
+   steht nie eine leere Spalte.
+   Auf dem Telefon eine Spalte in der Folge des Quelltexts: Titel, Text, Hinweis, Foto, Stationen. Der Text kommt zuerst, das
+   Foto steht als Pause zwischen ihm und den Stationen. */
 
-.vita-raster { display: grid; grid-template-columns: minmax(29em, 31em) minmax(0, 1fr); column-gap: clamp(4.5em, calc(var(--globuskante) - var(--rand-l) - 31em), calc(var(--z) * 8)); align-items: start; }
-.vita-links { grid-column: 1; min-width: 0; }
-.vita-rechts { grid-column: 2; min-width: 0; }
+.vita-raster {
+  --vita-satz: clamp(29em, calc(29em + (100vw - 64rem) * .15), 31em);
+  display: grid; grid-template-columns: var(--vita-satz) minmax(0, 1fr); grid-template-rows: auto auto auto;
+  column-gap: clamp(calc(var(--z) * 2), calc(var(--globuskante) - var(--rand-l) - var(--vita-satz)), calc(var(--z) * 8));
+}
+/* Die Satzbreite: ab 1 280 px 31 em (im Grundtext 62 bis 71 Zeichen je Zeile), darunter bis 29 em (55 bis 67 bei 1 024 px), damit
+   das Foto auf kleinen Schirmen nicht schmaler als ein Drittel der Breite wird; der Steg ist mindestens 2 z */
+.vita-raster > .seitentitel { grid-column: 1; grid-row: 1; }
+.vita-raster > .vita-text { grid-column: 1; grid-row: 2; min-width: 0; }
+.vita-raster > .werdegang { grid-column: 1; grid-row: 3; min-width: 0; }
+/* Die rechte Spalte reicht über alle drei Zeilen und zählt für ihre Höhe nicht mit (Größenbegrenzung): sie ist so hoch wie die
+   linke Spalte, und das Foto darin richtet sich nach ihr (100cqh) */
+.vita-raster > .vita-bild { grid-column: 2; grid-row: 1 / span 3; min-width: 0; container-type: size; }
+
+/* Der Text: Absätze ¾ z auseinander. Der erste Absatz ist ein Satz, er sagt, was auf der Startseite der erste Satz sagt, und
+   steht wie früher der Leitsatz der Vita in der IM Fell im Grad groß (das Kolophon: „der erste Satz aus der IM Fell“), ohne
+   Trennung; breit, auf dem Tablet und quer drei Zeilen, auf dem Telefon (bis 40 rem) im Grad Überschrift vier oder fünf. Er
+   bricht wie Prosa (pretty; wer das nicht kennt, nimmt balance): ausgeglichen risse er auf 393 px mit Text +10 % und auf 360 px
+   „Jahrgang / 1995“ auseinander, so steht dort „Dominik Jäkel, Jahrgang 1995, / schreibt seit vielen Jahren / …“. 1 z bis
+   zum Text */
 .vita-text > p + p { margin-top: var(--z-dreiviertel); }
+.vita-text > p:first-child { font-family: var(--anzeige); font-variant-numeric: normal; font-size: var(--g-gross); line-height: var(--zh-ueber); hyphens: manual; -webkit-hyphens: manual; text-wrap: balance; text-wrap: pretty; }
+.vita-text > p:first-child + p { margin-top: var(--z); }
 
-/* Der erste Satz steht in der IM Fell im Grad groß, jedes Glied eine Zeile. Ist die Spalte zu schmal, wird er so klein, dass das
-   längste Glied hineinpasst */
-.vita-text > .einstieg { font-size: min(var(--g-gross), calc((var(--vb, 100vw) - 2 * var(--rand-l)) / 14.9)); line-height: var(--zh-ueber); }
-.vita-text > .einstieg .nw { display: block; }
-.vita-text > .einstieg + p { margin-top: var(--z); }
+/* Der Hinweis auf das berufliche Profil (Dominik, 6. November: „Davon abgetrennt … Kleiner und kursiv“): eine Stufe kleiner und
+   kursiv, 2 z unter der Bio, so näher am Text als an dem, was folgt (3 z), ausgeglichen gebrochen (breit zwei Zeilen von je rund
+   84 Zeichen statt 102 und 66). Klein und kursiv zugleich ist hier sein Wunsch; sonst hat Nebentext auf der Website ein Mittel
+   (stil.css). „hier“ ist mit dem Finger schwer zu treffen (ein Wort von 22 × 21 px): die Fläche reicht unsichtbar ¼ em nach oben
+   in den Zeilenabstand, 18 px nach unten in die Luft unter dem Absatz und ein wenig zu den Seiten (38 × 46 px auf Dominiks
+   Telefon), ohne dass sich die Zeile ändert; darüber und daneben steht kein anderer Verweis */
+.vita-text > .profil-hinweis { margin-top: var(--z-zwei); font-size: var(--g-klein); line-height: var(--zh-klein); font-style: italic; text-wrap: balance; }
+@media (pointer: coarse) {
+  .profil-hinweis a { position: relative; }
+  .profil-hinweis a::after { content: ""; position: absolute; left: -.4em; right: -.4em; top: -.25em; bottom: -18px; }
+}
 
-/* Das Foto oben in der rechten Spalte, 3 : 4, bis 24 em breit; die Legende klein darunter. Breit steht es mit der Legende ganz im
-   ersten Bildschirm: auf niedrigen Schirmen wird es schmaler (Kopf und Abstand darüber 7,5 z, Legende 1 z, Luft ½ z) */
-.bildnis { width: min(100%, 24em, calc((100svh - var(--z) * 9) * .75)); }
+/* Das Foto, 3 : 4: so breit wie die rechte Spalte, höchstens so hoch, dass es mit der Unterschrift beim Stehen 1 z unter dem
+   oberen Rand ganz ins Fenster passt (gerechnet mit 3,75 z für Rand, Unterschrift und Luft; seit die Unterschrift eine Zeile ist,
+   bleiben darunter 1¾ z) und nicht höher als die linke Spalte wird. Seine Oberkante steht auf der Versalhöhe von „Vita“
+   (Vollkorn: Oberlänge ,952, Versal ,676 em), die Zeile der Unterschrift am Ende auf der Grundlinie von „… auf dem Globus.“
+   (Unterlänge ,441 em). Die Unterschrift ist ein Satz in einer Zeile, nie gebrochen */
+.bildnis {
+  position: sticky; top: var(--z);
+  width: min(100%, calc((100svh - var(--z) * 3.75) * .75), calc((100cqh - var(--z) * 2.25) * .75));
+  margin-top: calc(var(--zh-gross) / 2 - var(--g-gross) * .4205);
+  margin-bottom: calc((var(--zh-text) - var(--zh-klein)) / 2 - (var(--g-text) - var(--g-klein)) * .2555);
+}
 .bildnis img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; background: var(--brett); }
-.bildnis figcaption { margin-top: var(--z-viertel); font-size: var(--g-klein); line-height: var(--zh-klein); }
+.bildnis figcaption { margin-top: var(--z-viertel); font-size: var(--g-klein); line-height: var(--zh-klein); text-wrap: balance; }
+.bildnis figcaption .satz { display: block; }
 
-/* Stationen: das Jahr hängt im Steg, rechtsbündig in Ziffern fester Breite; Ort und Tätigkeit im Grad Text, ohne Koordinaten
-   (Dominik, 21. Oktober). Wohnorte und längere Aufenthalte gleich groß und gleich dunkel */
+/* Stationen unter dem Text, in seiner Spalte, 3 z unter dem Hinweis (ein neuer Teil; auf dem Telefon 2 z unter dem Foto): das
+   Jahr steht in einer Spalte von 3 em an der Kante, in Ziffern fester Breite; Ort und Tätigkeit im Grad Text, ohne Koordinaten
+   (Dominik, 21. Oktober). Wohnorte und längere Aufenthalte gleich groß und gleich dunkel. Breit hingen die Jahre früher im Steg
+   vor der rechten Spalte; hier stünden sie im Rand, bei 1 024 px 9 px vom Fensterrand, und so stehen sie auf allen Breiten wie
+   auf dem Telefon */
 .daten { list-style: none; hyphens: manual; -webkit-hyphens: manual; }
-.daten li { position: relative; }
+.daten li { position: relative; padding-left: 3em; }
 .daten li + li { margin-top: var(--z-viertel); }
-/* Ein unsichtbares geschütztes Leerzeichen im Jahr trennt es beim Kopieren und Vorlesen vom Ort („2025 Sansibar“) */
-.daten .jahr { position: absolute; top: 0; right: calc(100% + .6em); white-space: nowrap; font-variant-numeric: oldstyle-nums tabular-nums; }
+/* Ein unsichtbares geschütztes Leerzeichen im Jahr trennt es beim Kopieren und Vorlesen vom Ort („2022 Berlin“) */
+.daten .jahr { position: absolute; top: 0; left: 0; white-space: nowrap; font-variant-numeric: oldstyle-nums tabular-nums; }
 /* Zeitspannen (Dominik, 25. Oktober: „Hier muss noch 2014 bis 2015 liberal arts stehen und 2015 bis 2018 HPI“): das Endjahr steht
-   in der Jahresspalte unter dem Anfangsjahr, Ziffer unter Ziffer. Der Halbgeviertstrich davor hängt aus der Spalte heraus (breit in
-   den Steg, schmal in den Rand), so bleibt die Spalte so breit wie bei allen anderen Einträgen, und keiner rückt oder bricht neu um.
-   Vorleseprogramme und Kopieren bekommen „2014 bis 2015 Freiburg …“ in einer Zeile: das Wort steht unsichtbar im Text, mit
-   geschützten Leerzeichen wie beim Jahr (normale fielen im unsichtbaren Kasten weg, die Kopie lautete „bis2015“), das Endjahr
-   absolut unter dem Anfangsjahr (als Block bräche es die Kopie in drei Zeilen), der Strich nur im Bild (ohne Ersatztext, ältere
-   Browser lesen ihn mit). Der Eintrag ist mindestens zwei Zeilen hoch, auch wenn sein Text in eine passt */
+   in der Jahresspalte unter dem Anfangsjahr, Ziffer unter Ziffer. Der Halbgeviertstrich davor hängt aus der Spalte heraus in den
+   Rand, so bleibt die Spalte so breit wie bei allen anderen Einträgen, und keiner rückt oder bricht neu um. Vorleseprogramme und
+   Kopieren bekommen „2014 bis 2015 Freiburg …“ in einer Zeile: das Wort steht unsichtbar im Text, mit geschützten Leerzeichen wie
+   beim Jahr (normale fielen im unsichtbaren Kasten weg, die Kopie lautete „bis2015“), das Endjahr absolut unter dem Anfangsjahr
+   (als Block bräche es die Kopie in drei Zeilen), der Strich nur im Bild (ohne Ersatztext, ältere Browser lesen ihn mit). Der
+   Eintrag ist mindestens zwei Zeilen hoch, auch wenn sein Text in eine passt. Ein offenes Ende steht wie ein Endjahr (Dominik,
+   6. November: „2025-Heute Senior Content Writer …“): „heute“ klein, linksbündig mit den Ziffern an der Kante der Spalte (es ist
+   ¼ em breiter als vier Ziffern; bis zum Text bleiben gut ½ em), sein Strich hängt wie die anderen; vorgelesen „2025 bis heute“ */
 .daten .spanne { min-height: calc(var(--zh-text) * 2); }
-.daten .bis { position: absolute; right: 0; top: 100%; }
+.daten .bis { position: absolute; left: 0; top: 100%; }
 .daten .bis::before { content: "\2013"; content: "\2013" / ""; position: absolute; right: 100%; }
-.werdegang { margin-top: var(--z-zwei); }
+.werdegang { margin-top: var(--z-drei); }
 .werdegang .weiter { margin-top: var(--z-dreiviertel); }
 
-/* ---------- Eine Spalte: Titel, Foto, erster Satz, Text, Stationen ---------- */
+/* ---------- Eine Spalte: Titel, Text, Hinweis, Foto, Stationen ---------- */
+/* Das Foto in der Breite der Textspalte, 3 z unter dem Hinweis (ein neuer Teil) und 2 z über den Stationen; es rollt mit. Quer
+   auf dem Telefon so klein, dass es ganz ins Fenster passt (844 × 390: 252 px breit). Der erste Absatz erst unter 40 rem im Grad
+   Überschrift: auf dem Tablet und quer bleibt er im Grad groß, in drei Zeilen */
 @media (max-width: 62rem) {
-  .vita-raster { display: flex; flex-direction: column; align-items: stretch; }
-  .vita-links, .vita-rechts { display: contents; }
-  .vita-raster .seitentitel { order: 1; }
-  .vita-raster .bildnis { order: 2; width: 100%; max-width: var(--mass); margin-bottom: var(--z); }
-  .vita-raster .vita-text { order: 3; }
-  .vita-raster .werdegang { order: 4; margin-top: var(--z-zwei); }
-  .vita-text, .werdegang { max-width: var(--mass); }
-  /* Die Jahre hängen innerhalb der Spalte */
-  .daten li { padding-left: 3em; }
-  .daten .jahr { right: auto; left: 0; }
+  .vita-raster { display: block; }
+  .vita-text, .werdegang, .vita-raster > .vita-bild { max-width: var(--mass); }
+  .vita-raster > .vita-bild { container-type: normal; margin-top: var(--z-drei); }
+  .werdegang { margin-top: var(--z-zwei); }
+  .bildnis { position: static; margin: 0; width: min(100%, calc((100svh - var(--z) * 2) * .75)); }
 }
+@media (max-width: 40rem) { .vita-text > p:first-child { font-size: var(--g-ueber); } }
 </style>
 </head>
 <body class="vita-seite">
 <a class="sprung" href="#inhalt" data-nur="website">Zum Inhalt</a>
 <!-- Zwei Ausgaben (27. Oktober; Markierungen wie auf satoshi.html erklärt): data-nur="website" steht nur in der vollen Website.
-     Im Platzhalter (werkzeuge/veroeffentlichen.py, AUSGABE) ist die Vita nur über das Exposé zu finden (Dominik: „Du sollst von
-     Satoshi auf meine Vita verweisen. Die Vita soll nicht tot sein. ABER .... man soll sie eben nur über Satoshi finden können. Nicht
-     über andere Seiten“). Dort fallen das Menü (mit ihm die Abschrift im Fuß) und der Sprung „Zum Inhalt“ weg, der Verweis auf die
-     Ursprungstrilogie, deren Seite es dort nicht gibt, wird Text (data-verweis="website"). Es bleiben der Name zur Startseite, „auf
-     dem Globus“ (dort stehen die Stationen auch im Platzhalter) und der Verweis auf Satoshi, das Exposé -->
+     Im Platzhalter (werkzeuge/veroeffentlichen.py, AUSGABE) ist die Vita seit dem 6. November öffentlich: / verweist mit
+     „Ausführlich in der Vita.“ auf sie, sie ist indiziert und steht in der Sitemap (Dominik zu einer Fassung seines Textes vom
+     selben Tag: „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“; bis dahin war sie nur über das Exposé zu
+     finden). Dort fallen das Menü (mit ihm die Abschrift im Fuß) und der Sprung „Zum Inhalt“ weg, und „Satoshi“ im letzten Absatz
+     wird Text (data-verweis="website"): von einer öffentlichen Seite führt kein Weg zum Exposé, den Link dorthin gibt der Autor
+     weiter. Es bleiben der Name zur Startseite und „auf dem Globus“ (dort stehen die Stationen auch im Platzhalter); das Exposé
+     verweist weiter auf die Vita -->
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller</span></p>
   <nav class="nav" aria-label="Website" data-nur="website">
@@ -95,45 +141,91 @@
 
 <main id="inhalt">
 <div class="abschnitt unterseite vita-raster">
-  <div class="vita-links">
-    <h1 class="seitentitel">Vita</h1>
+  <h1 class="seitentitel">Vita</h1>
 
-    <div class="vita-text">
-      <p class="einstieg leitsatz"><span class="nw">Dominik Jäkel schreibt tagsüber</span> <span class="nw">unter fremden Namen</span> <span class="nw">und abends unter seinem eigenen.</span></p>
-      <p>Er wurde 1995 in Dortmund geboren. In Freiburg studierte er Liberal Arts &amp; Sciences, danach in Potsdam IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span>.</p>
-      <p>2016 und 2018 ging er für Freiwilligen&shy;projekte mit AIESEC nach Colombo in Sri Lanka und nach Cotonou in Benin.</p>
-      <p>Vier Jahre lebte er in Kaohsiung auf Taiwan. Er arbeitete dort als Lektor und freier Autor, unter anderem für Sprach&shy;assistenten und Indie-Gaming-Studios. In Taiwan, das von den Kulturen seiner indigenen Völker geprägt ist, begann seine Beschäftigung mit der Früh&shy;geschichte des Menschen und die Arbeit an der Ursprungs&shy;trilogie der Zivili&shy;sation.</p>
-      <p>Seit 2022 lebt er in Berlin und schreibt beruflich für Unternehmen (vor allem für die Marketing- und Pricing&shy;beratung <a href="https://www.simon-kucher.com/de" rel="noopener">Simon-Kucher</a>). Auf der Werkstatt&shy;bühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autoren&shy;forums Berlin e.&#8239;V.</a> hat er viele seiner Geschichten vorgetragen; seit einigen Jahren ist er fester Bestandteil des Moderatoren&shy;teams. Längere Aufenthalte führten ihn zudem nach Mallorca, Kapstadt, Sansibar und Buenos Aires.</p>
-      <p>2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debüt&shy;roman <a href="satoshi.html"><i>Satoshi</i></a> ab. Das Manuskript liegt vollständig vor. Der Roman erzählt die Gründungs&shy;legende von Bitcoin als Liebes&shy;geschichte dreier Menschen&nbsp;– und beschäftigt sich vor allem mit der Frage, was passiert, wenn das Vertrauen in Institutionen zerbricht.</p>
-      <p>Daneben arbeitet er an der <a href="ursprung.html" data-verweis="website">Ursprungs&shy;trilogie</a>, drei Romanen über die Anfänge der Zivili&shy;sation. Sie erzählen von der Geburt der organi&shy;sierten Religion, der Literatur und der Heiligen Schrift, von Göbekli Tepe um 8000&nbsp;v.&#8239;Chr. über Uruk bis Jerusalem um 940&nbsp;v.&#8239;Chr.</p>
-    </div>
+  <div class="vita-text">
+    <!-- Dominiks Bio vom 6. November, Wort für Wort (sie ersetzt alle Fassungen von früher am selben Tag; „/“ trennt hier seine
+         Absätze): „Okay sorry. Aber ... Alle mäkeln an der Bio rum. Wir müssen nochmal ändern. Hier ist jetzt die vollständige Bio
+         die auf die Website soll ... Puh. / Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie –
+         meist unter den Namen anderer Leute. / Er studierte IT-Systems Engineering am Hasso-Plattner-Institut (HPI) sowie Liberal
+         Arts & Sciences in Freiburg. Im Anschluss lebte er mehrere Jahre in Taiwan, lernte Mandarin und bereiste über 70 Länder
+         (darunter ein Großteil der Schauplätze von SATOSHI). / Heute verantwortet er den deutschsprachigen Content der
+         Strategieberatung Simon-Kucher. […] / Seine literarische Arbeit wurde mit dem A.-E.-Johann-Preis (2022) ausgezeichnet.
+         Dominik Jäkel lebt in Berlin, moderiert regelmäßig die Werkstattbühne des Autorenforums Berlin und besuchte zahlreiche
+         Seminare an der Bundesakademie für Kulturelle Bildung Wolfenbüttel. / Mit SATOSHI führt er alle Stränge seiner Vita
+         zusammen. Ein Ghostwriter der IT- und Finanzbranche schreibt über das eine Pseudonym, das die halbe Welt endlich aufdecken
+         will. / (Davon abgetrennt … Kleiner und kursiv und mit Link auf LinkedIn) Das vollständige berufliche Profil, u. a. mit
+         Projekten als Freelancer für Intel, einen marktführenden Smartspeaker-Hersteller und Indie-Gaming-Studios, finden Sie hier.“
+         Den ausgelassenen zweiten Satz des dritten Absatzes hat er danach neu gefasst und die Adresse seines Profils geschickt
+         (Nachricht 10): „Startseite so lassen, LinkedIn schicke ich gleich. Hier ist es: [die Adresse, auf die „hier“ unten
+         verweist] / (Eine winzige Ergänzung noch Sorry. Ich würde scheiben. Heute verantwortet er den deutschsprachigen Content der
+         Strategieberatung Simon-Kucher. Als Ghostwriter schreibt er für führende Köpfe aus IT und Banking – Texte, die unter deren
+         Namen u. a. in der FAZ erscheinen.“, gleich danach (Nachricht 11): „Und es muss erschienen /statt erscheinen (!!!) heißen.
+         Nochmal neu ausgeben ... Sorry“. Der Satz steht darum mit „aus IT und Banking“ und mit „erschienen“. Sein erster Absatz
+         sagt, was der Leitsatz sagte, und steht hier an dessen Stelle (die Startseite behält ihn als ersten Satz). Gesetzt wie die
+         übrige Website: der Werktitel kursiv und in normaler Schreibung (am Schluss in der vollen Website ein Verweis auf das
+         Exposé, im Platzhalter Text), in u. a. ein schmales geschütztes Leerzeichen, vor den Gedankenstrichen ein geschütztes,
+         weiche Trennungen in Strategieberatung, Werkstattbühne, Bundesakademie und Finanzbranche (die in Autorenforums wirkt nicht:
+         in Verweisen trennt die Website nicht, stil.css), Hasso-Plattner-Institut ungetrennt. „hier“ verweist auf sein Profil bei
+         LinkedIn, die Adresse genau so, wie er sie geschickt hat (prozentkodiert; dieselbe steht in AUSSEN_ERLAUBT in
+         werkzeuge/veroeffentlichen.py). LinkedIn steht nur hier, nicht in PROFILE (seite.js) und nicht im Fuß. Intel darf er nennen
+         („da habe ich keine NDA gesigned“); den Hersteller der Smartspeaker nennt die Website nirgends, auch nicht in Kommentaren,
+         Bildtexten oder Daten. Ghostwriting und FAZ hat er selbst geschickt: für die Vita gilt V72 (V56) darin nicht mehr -->
+    <p>Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie&nbsp;– meist unter den Namen anderer Leute.</p>
+    <p>Er studierte IT-Systems Engineering am <span class="nw">Hasso-Plattner-Institut</span> (HPI) sowie Liberal Arts &amp; Sciences in Freiburg. Im Anschluss lebte er mehrere Jahre in Taiwan, lernte Mandarin und bereiste über 70 Länder (darunter ein Großteil der Schauplätze von <i>Satoshi</i>).</p>
+    <p>Heute verantwortet er den deutschsprachigen Content der Strategie&shy;beratung <a href="https://www.simon-kucher.com/de" rel="noopener">Simon-Kucher</a>. Als Ghostwriter schreibt er für führende Köpfe aus IT und Banking&nbsp;– Texte, die unter deren Namen u.&#8239;a. in der FAZ erschienen.</p>
+    <p>Seine literarische Arbeit wurde mit dem <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a> (2022) ausgezeichnet. Dominik Jäkel lebt in Berlin, moderiert regelmäßig die Werkstatt&shy;bühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autoren&shy;forums Berlin</a> und besuchte zahlreiche Seminare an der Bundes&shy;akademie für Kulturelle Bildung Wolfenbüttel.</p>
+    <p>Mit <a href="satoshi.html" data-verweis="website"><i>Satoshi</i></a> führt er alle Stränge seiner Vita zusammen. Ein Ghostwriter der IT- und Finanz&shy;branche schreibt über das eine Pseudonym, das die halbe Welt endlich aufdecken will.</p>
+    <!-- Vorleseprogramme nennen den Verweis „hier: das berufliche Profil auf LinkedIn“: sein Name beginnt mit dem sichtbaren
+         Wort, wer mit der Stimme bedient, trifft ihn mit „hier“ (WCAG 2.5.3; Prüfung vom 6. November) -->
+    <p class="profil-hinweis">Das vollständige berufliche Profil, u.&#8239;a. mit Projekten als Freelancer für Intel, einen marktführenden Smartspeaker-Hersteller und Indie-Gaming-Studios, finden Sie <a href="https://www.linkedin.com/in/dominik-j%C3%A4kel-3b861615a/" rel="noopener" aria-label="hier: das berufliche Profil auf LinkedIn">hier</a>.</p>
   </div>
 
-  <div class="vita-rechts">
+  <div class="vita-bild">
     <figure class="bildnis">
-      <img src="bilder/dominik-jaekel-boot.jpg" alt="Dominik Jäkel liest an Deck eines Segelboots, im Hintergrund Berge im Abendlicht" width="1200" height="1600" decoding="async">
-      <figcaption>Mit <i>Picknick am Wegesrand</i> der Brüder Strugatzki.</figcaption>
+      <!-- Das Bild in drei Breiten (6. November): 480 und 800 px aus der Datei mit 1200 px gerechnet (Lanczos, leicht nachgeschärft,
+           JPEG 82, progressiv, ohne Metadaten), 1200 px ist die Datei selbst. sizes nach dem Stil oben, mit calc, ohne min() (das
+           kennt nicht jeder Browser in sizes), die Fälle in dieser Folge: eine Spalte quer so hoch, wie das Fenster erlaubt
+           (75 vh abzüglich 1,5 z des Telefons); schmal die Spalte (100 % abzüglich zweimal 7 vw Rand, 86 vw); bis 62 rem höchstens
+           --mass (31 em im Grad Text des Telefons, 34,875 rem); breit bis 75 rem die rechte Spalte (90 vw zwischen den Rändern
+           abzüglich 29 em Satz und 2 z Steg, 38 rem); breiter auf flachen Schirmen die Höhe (75 vh abzüglich 2,8125 z), sonst wieder
+           die Spalte. So lädt jede Breite eine Datei, die reicht und höchstens doppelt so groß ist wie nötig. width und height
+           halten den Platz vom ersten Bild an. Breit steht es im ersten Bildschirm, darum nicht lazy; auf dem Telefon steht es unter
+           dem Text, darum ohne Vorrang vor den Schriften -->
+      <img src="bilder/dominik-jaekel-boot-800.jpg" srcset="bilder/dominik-jaekel-boot-480.jpg 480w, bilder/dominik-jaekel-boot-800.jpg 800w, bilder/dominik-jaekel-boot.jpg 1200w" sizes="(max-width: 62rem) and (orientation: landscape) calc(75vh - 2.53rem), (max-width: 40.5rem) 86vw, (max-width: 62rem) 34.875rem, (max-width: 75rem) calc(90vw - 38rem), (min-aspect-ratio: 3/2) calc(75vh - 5rem), calc(90vw - 38rem)" alt="Dominik Jäkel liest an Deck eines Segelboots, im Hintergrund Berge im Abendlicht" width="1200" height="1600" decoding="async">
+      <!-- Dominik, 6. November: „Mit Picknick am Wegesrand der Brüder Strugatzki. Törn Sardinien–Korsika, 2025. / Bitte das als
+           Bildunterschrift auch noch aufnehmen, weil das Bild kritisiert wurde“; danach (Nachricht 13): „"Mit Picknick am Wegesrand
+           der Brüder Strugatzki." kann raus. Törn Sardinien–Korsika, 2025. (Reicht!)“. Es bleibt der zweite Satz, eine Zeile,
+           ungebrochen, auch nicht nach „Sardinien–“ (span.satz) -->
+      <figcaption><span class="satz nw">Törn Sardinien–Korsika, 2025.</span></figcaption>
     </figure>
-
-    <section class="werdegang" aria-labelledby="stationen-titel">
-      <h2 class="titel" id="stationen-titel">Stationen</h2>
-      <ul class="daten">
-        <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren</li>
-        <li class="spanne"><span class="jahr">2014<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2015</span><span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span></li>
-        <li class="spanne"><span class="jahr">2015<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2018</span><span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span></li>
-        <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit AIESEC</li>
-        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit AIESEC</li>
-        <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor</li>
-        <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> Berlin, seitdem Wohnort</li>
-        <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> <span class="nw">A.-E.-Johann-Preis</span></li>
-        <li><span class="jahr">2023<span class="unsichtbar">&nbsp;</span></span> Mallorca, längerer Aufenthalt</li>
-        <li><span class="jahr">2024<span class="unsichtbar">&nbsp;</span></span> Kapstadt, Südafrika, längerer Aufenthalt</li>
-        <li><span class="jahr">2025<span class="unsichtbar">&nbsp;</span></span> Sansibar, Tansania, längerer Aufenthalt</li>
-        <li><span class="jahr">2026<span class="unsichtbar">&nbsp;</span></span> Buenos Aires, Argentinien, längerer Aufenthalt</li>
-      </ul>
-      <p class="weiter">Die Wohnorte und die ersten längeren Aufenthalte <a class="nw" href="index.html#globus">auf dem Globus</a>.</p>
-    </section>
   </div>
+
+  <section class="werdegang" aria-labelledby="stationen-titel">
+    <h2 class="titel" id="stationen-titel">Stationen</h2>
+    <ul class="daten">
+      <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren</li>
+      <li class="spanne"><span class="jahr">2014<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2015</span><span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span></li>
+      <li class="spanne"><span class="jahr">2015<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2018</span><span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span></li>
+      <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit AIESEC</li>
+      <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit AIESEC</li>
+      <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor</li>
+      <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> Berlin, seitdem Wohnort</li>
+      <li><span class="jahr">2022<span class="unsichtbar">&nbsp;</span></span> <span class="nw">A.-E.-Johann-Preis</span></li>
+      <!-- Dominik, 6. November: „Bei den Stationen ... Bitte nimm das hier raus: 2023 Mallorca, längerer Aufenthalt / 2024 Kapstadt,
+           Südafrika, längerer Aufenthalt / 2025 Sansibar, Tansania, längerer Aufenthalt / 2026 Buenos Aires, Argentinien, längerer
+           Aufenthalt / Schreib da: 2023 ... Content Writer Simon-Kucher (EN/DE) / 2025 Senior Content Writer (Leitung
+           deutschsprachiger Contentabteilung)“; danach die ganze Liste (Nachricht 12), Eintrag für Eintrag wie hier bis auf die
+           Schreibung der beiden letzten: „… * 2022 A.-E.-Johann-Preis * 2022-24 Content Writer bei Simon-Kucher (EN/DE) * 2025-Heute
+           Senior Content Writer (Leitung deutschsprachiger Contentabteilung) / Oder wie auch immer man heute gut ausschreibt?“.
+           Beide sind Zeitspannen wie 2014–2015 und 2015–2018: volle Jahreszahlen, das zweite Glied unter dem ersten, der
+           Halbgeviertstrich hängt; das offene Ende ist „heute“, klein, vorgelesen „2025 bis heute“. Mallorca bleibt auf dem Globus,
+           sein Zweitwohnsitz („nein Mallorca nicht vom Globus nehmen“; die Tafel sagt „längerer Aufenthalt, zweiter Wohnsitz“) -->
+      <li class="spanne"><span class="jahr">2022<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2024</span><span class="unsichtbar">&nbsp;</span></span> Content Writer bei <span class="nw">Simon-Kucher (EN/DE)</span></li>
+      <li class="spanne"><span class="jahr">2025<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>heute</span><span class="unsichtbar">&nbsp;</span></span> Senior Content Writer (Leitung deutsch&shy;sprachiger Content&shy;abteilung)</li>
+    </ul>
+    <p class="weiter">Die Wohnorte und die ersten längeren Aufenthalte <a class="nw" href="index.html#globus">auf dem Globus</a>.</p>
+  </section>
 </div>
 </main>
 

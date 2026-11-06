@@ -31,11 +31,12 @@ Elemente. Vita. Globus. Das Regal mit den Projekten und dem Schreibtisch“.
   - 'platzhalter': nur sechs Seiten. Unter / steht die Startseite selbst (index.html) ohne Menü, Werkverzeichnis und Bücherregal;
     darunter kommt beim Rollen der Schluss „Seite im Aufbau.“ (Fassung nach SCHLUSS, am html als data-schluss; dazu
     data-ausgabe="platzhalter", nach dem sich Stil und Skript der Seite richten). Unter /satoshi das digitale Exposé, unter /vita
-    die Vita (Dominik: „man soll sie eben nur über Satoshi finden können. Nicht über andere Seiten“), dazu /impressum,
-    /datenschutz und 404.html. Indiziert und in der Sitemap ist nur /; Exposé, Vita, Impressum und Datenschutz tragen noindex
-    (auch als X-Robots-Tag in vercel.json). Alle übrigen Adressen der elf Seiten, mit und ohne .html, leitet vercel.json mit 307
-    (nicht dauerhaft, damit ein späterer Neustart ohne Altlasten geht) auf / weiter. Strukturierte Daten nur auf /: die Person wie
-    in der vollen Website (Name, Adresse, Beruf, Kurzvita, Preis, Verein), ohne Werke. Meta-Beschreibung und Open Graph wie auf der
+    die Vita, dazu /impressum, /datenschutz und 404.html. Indiziert und in der Sitemap sind / und seit dem 6. November /vita
+    (Dominik zu seinem neuen Text der Vita: „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“; vorher
+    sollte man sie „eben nur über Satoshi finden können“); Exposé, Impressum und Datenschutz tragen noindex (auch als X-Robots-Tag
+    in vercel.json). Alle übrigen Adressen der elf Seiten, mit und ohne .html, leitet vercel.json mit 307 (nicht dauerhaft, damit
+    ein späterer Neustart ohne Altlasten geht) auf / weiter. Strukturierte Daten auf / und /vita: die Person wie in der vollen
+    Website (Name, Adresse, Beruf, Kurzvita, Preis, Verein), ohne Werke. Meta-Beschreibung und Open Graph wie auf der
     Startseite. Aus daten/ und bilder/ geht nur mit, worauf eine ausgelieferte Seite, ein Stil oder ein eigenes Skript verweist
     (ohne Kommentare gelesen); Schriften mit Lizenzen, Bibliotheken, Kern und Icons gehen ganz mit. daten/buecher.js geht nur mit
     den Büchern vom Nachttisch mit, mehr braucht das Regal nicht (artefakt.buecher_platzhalter; Dominik, 29. Oktober: „Das mit der
@@ -43,11 +44,12 @@ Elemente. Vita. Globus. Das Regal mit den Projekten und dem Schreibtisch“.
     Bibliothek nur, was diese Bücher brauchen (artefakt.buch_tabellen_platzhalter).
     Verweise (Dominik: „ohne Verlinkungen“; Impressum und Datenschutz bleiben, § 5 DDG und DSGVO): Der Bau prüft je Seite, wohin
     ihre Verweise führen dürfen (VERWEISE_PLATZHALTER; ein Anker auf der Seite selbst ist immer erlaubt, wenn es sein Ziel gibt):
-    / nur auf Impressum, Datenschutz, die Adresse für Anfragen und nach außen; das Exposé dazu auf die Vita; die Vita auf das
-    Exposé, / (der Name im Kopf, „auf dem Globus“), Impressum, Datenschutz, Anfragen und nach außen; Impressum, Datenschutz und
-    404.html nur auf /, Impressum, Datenschutz, Anfragen und nach außen. Auf /satoshi verweist so nur die Vita, auf /vita nur das
-    Exposé: den Link zum Exposé gibt der Autor weiter. Verweise, die erst ein Skript im Browser setzt, sieht der Bau nicht (auf /
-    macht das Skript des Platzhalters jeden Verweis auf eine andere eigene Seite zu Text); darum vor jedem Livegang auch das
+    / auf die Vita („Ausführlich in der Vita.“), Impressum, Datenschutz, die Adresse für Anfragen und nach außen; das Exposé auf die
+    Vita, Impressum, Datenschutz, Anfragen und nach außen; die Vita auf / (der Name im Kopf, „auf dem Globus“), Impressum,
+    Datenschutz, Anfragen und nach außen, nicht auf das Exposé („Satoshi“ ist dort Text); Impressum, Datenschutz und 404.html nur
+    auf /, Impressum, Datenschutz, Anfragen und nach außen. Auf /satoshi verweist so keine Seite, auch nicht über mehrere Schritte:
+    den Link zum Exposé gibt der Autor weiter. Verweise, die erst ein Skript im Browser setzt, sieht der Bau nicht (auf / macht das
+    Skript des Platzhalters jeden Verweis auf eine andere eigene Seite außer der Vita zu Text); darum vor jedem Livegang auch das
     Prüfprogramm im Browser laufen lassen (docs/todo.md).
   - In beiden setzt der Bau die Markierungen in den Seiten um (artefakt.ausgabe_umsetzen; erklärt auf satoshi.html):
     data-nur="website" nur in der vollen Website, data-nur="expose" und data-nur="platzhalter" nur im Platzhalter,
@@ -130,18 +132,21 @@ TARIF = 'hobby'
 # Bau ohne Zusatz nicht aus Versehen die volle Website zurück. Zurück zur vollen Website: hier 'website' eintragen und neu bauen
 AUSGABE = 'platzhalter'
 SEITEN_PLATZHALTER = ['index.html', 'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html']
-NOINDEX_PLATZHALTER = {'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html'}
-LD_PLATZHALTER = {'index.html': 'Person'}
+# Seit dem 6. November ist die Vita öffentlich (Dominik zu seinem neuen Text der Vita: „den kannst du auch auf der Startseite
+# verlinken, der ist sehr bescheiden“): indiziert, in der Sitemap, mit der Person in den strukturierten Daten wie in der vollen Website
+NOINDEX_PLATZHALTER = {'satoshi.html', 'impressum.html', 'datenschutz.html'}
+LD_PLATZHALTER = {'index.html': 'Person', 'vita.html': 'Person'}
 # Wohin im Platzhalter jede Seite verweisen darf (<a href>, <area href>, <form action>): die eigenen Seiten und ob dazu mailto: und
 # Verweise nach außen (AUSSEN_ERLAUBT) sein dürfen; ein Anker auf der Seite selbst (#globus) ist immer erlaubt. Dominik: „Einfach
-# eine einzelne indizierte Seite ohne Verlinkungen.“ Impressum und Datenschutz bleiben (§ 5 DDG, DSGVO). Auf das Exposé
-# (satoshi.html) verweist nur die Vita, auf die Vita nur das Exposé (Dominik: „Du sollst von Satoshi auf meine Vita verweisen. Die
-# Vita soll nicht tot sein. ABER .... man soll sie eben nur über Satoshi finden können. Nicht über andere Seiten“); die übrigen
-# Seiten führen zurück auf / (der Name im Kopf, „Zur Startseite“), / selbst auf keine eigene Seite außer Impressum und Datenschutz
+# eine einzelne indizierte Seite ohne Verlinkungen.“ Impressum und Datenschutz bleiben (§ 5 DDG, DSGVO). Die Vita ist seit dem
+# 6. November öffentlich: / verweist mit „Ausführlich in der Vita.“ auf sie, das Exposé weiter mit „Dominik Jäkel“ in den Eckdaten
+# (Dominik, 27. Oktober: „Du sollst von Satoshi auf meine Vita verweisen. Die Vita soll nicht tot sein.“). Auf das Exposé
+# (satoshi.html) verweist keine Seite mehr, auch die Vita nicht: so ist es von / aus auch über mehrere Schritte nicht zu erreichen,
+# den Link gibt der Autor weiter. Die übrigen Seiten führen zurück auf / (der Name im Kopf, „Zur Startseite“)
 VERWEISE_PLATZHALTER = {
-    'index.html': ({'impressum.html', 'datenschutz.html'}, True),
+    'index.html': ({'vita.html', 'impressum.html', 'datenschutz.html'}, True),
     'satoshi.html': ({'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html'}, True),
-    'vita.html': ({'index.html', 'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html'}, True),
+    'vita.html': ({'index.html', 'vita.html', 'impressum.html', 'datenschutz.html'}, True),
     'impressum.html': ({'index.html', 'impressum.html', 'datenschutz.html'}, True),
     'datenschutz.html': ({'index.html', 'impressum.html', 'datenschutz.html'}, True),
     '404.html': ({'index.html', 'impressum.html', 'datenschutz.html'}, True),
@@ -177,7 +182,10 @@ TESTSYSTEM = re.compile(r'Testsystem|Testseite|Testphase|claude\.ai|Anthropic', 
 # href: '…' und wird von FSeite.textMitVerweis gesetzt. Ein neuer Verweis nach außen kommt zuerst hier hinein
 AUSSEN_ERLAUBT = {
     'https://autorenforum-berlin.de/',
+    # Die Vita (Dominiks Bio vom 6. November): die Strategieberatung, für die er arbeitet, und sein berufliches Profil (die Adresse
+    # genau so, wie er sie geschickt hat, prozentkodiert; nur im Hinweis auf das Profil, nicht in PROFILE in seite.js)
     'https://www.simon-kucher.com/de',
+    'https://www.linkedin.com/in/dominik-j%C3%A4kel-3b861615a/',
     'https://www.a-e-johann.de/der-a-e-johann-preis',
     'https://de.wikipedia.org/wiki/Byzantinischer_Fehler',
     'https://satoshi.nakamotoinstitute.org/',
@@ -194,7 +202,8 @@ CSP_SOLL = {
 }
 # Strukturierte Daten (Runde 6, S5). Was nicht aus den Seiten kommt, steht hier: Name, Beruf, Preis, Verein (höchstens das
 # Autorenforum, mit seiner Adresse aus AUSSEN_ERLAUBT). Keine Geburtsdaten, keine Anschrift, kein Verlag, kein Datum (Satoshi ist
-# noch nicht erschienen). sameAs kommt aus PROFILE in seite.js, sobald dort Instagram und LinkedIn stehen
+# noch nicht erschienen). sameAs kommt aus PROFILE in seite.js, sobald dort Profile stehen (LinkedIn nicht: das steht seit dem
+# 6. November nur im Hinweis auf das Profil in der Vita)
 PERSON_NAME = 'Dominik Jäkel'
 PERSON_BERUF = 'Schriftsteller'
 PERSON_PREIS = 'A.-E.-Johann-Preis (2022)'
@@ -411,8 +420,8 @@ def profile_lesen(seite_js):
 
 
 def person_daten(texte):
-    """Die Person (Startseite und Vita der vollen Website, / im Platzhalter): Name, Adresse der Startseite, Beruf, Kurzvita, Preis,
-    Verein; sameAs aus PROFILE, sobald es dort steht. Keine Werke, keine Adresse der Vita."""
+    """Die Person (Startseite und Vita, in beiden Ausgaben): Name, Adresse der Startseite, Beruf, Kurzvita, Preis, Verein; sameAs
+    aus PROFILE, sobald es dort steht. Keine Werke, keine Adresse der Vita."""
     person = {'@context': 'https://schema.org', '@type': 'Person', '@id': BASIS_URL + '/#person', 'name': PERSON_NAME,
               'url': url_fuer('index.html'), 'jobTitle': PERSON_BERUF, 'description': kurzvita(texte[Path('index.html')]),
               'award': PERSON_PREIS, 'affiliation': PERSON_VEREIN}
@@ -453,12 +462,15 @@ def verwiesen(dateien, texte, immer):
     """Für den Platzhalter: alle Dateien außer daten/ und bilder/, dazu immer (die Pflichtdateien) und aus daten/ und bilder/ nur,
     worauf eine schon gewählte Datei verweist, bis nichts mehr dazukommt. Ein Verweis ist der Pfad als ganze Zeichenkette in ihrem
     Text ohne Kommentare: in Anführungszeichen oder url( ), auch mit / oder ./ davor und mit Anker oder Abfrage danach (eine
-    Meldung wie 'daten/texte.js: Eintrag übersprungen' in seite.js zählt nicht)."""
+    Meldung wie 'daten/texte.js: Eintrag übersprungen' in seite.js zählt nicht), oder als Kandidat in einem srcset (das Bild der
+    Vita in drei Breiten, 6. November)."""
     drin = {p for p in dateien if p.parts[0] not in ('daten', 'bilder')} | {Path(p) for p in immer}
     while True:
         alles = ''.join(texte[p] for p in drin if p in texte)
+        kandidaten = {k.strip().split()[0].lstrip('/').removeprefix('./') for wert in re.findall(r'\ssrcset="([^"]*)"', alles)
+                      for k in wert.split(',') if k.strip()}
         neu = {p for p in dateien if p not in drin
-               and re.search(r'[\'"`(/]' + re.escape(p.as_posix()) + r'[\'"`)#?]', alles)}
+               and (re.search(r'[\'"`(/]' + re.escape(p.as_posix()) + r'[\'"`)#?]', alles) or p.as_posix() in kandidaten)}
         if not neu:
             return drin
         drin |= neu
@@ -645,7 +657,7 @@ def alte_lastmods(ziel):
 
 def sitemap(neu, ziel, heute, ohne, seiten=SEITEN):
     """sitemap.xml und robots.txt. Seiten aus ohne (im Entwurf die mit noindex) stehen nicht in der Sitemap: Suchmaschinen sollen
-    keine Adresse gemeldet bekommen, die sie nicht aufnehmen dürfen. seiten: die Seiten der Ausgabe (im Platzhalter nur vier)."""
+    keine Adresse gemeldet bekommen, die sie nicht aufnehmen dürfen. seiten: die Seiten der Ausgabe (im Platzhalter nur fünf)."""
     alt = alte_lastmods(ziel)
     eintraege = []
     for seite in seiten:
@@ -741,16 +753,19 @@ def verweise_platzhalter(seite, text, probleme):
 def platzhalter_seite_pruefen(text, schluss, probleme):
     """Platzhalter, /: die Startseite ohne Menü, Werkverzeichnis und Bücherregal, mit genau einem Schluss „Seite im Aufbau.“, ihrem
     Stil und ihrem Skript (text ohne den Text der Skripte). Dominik: „Halte von der Startseite die drei Elemente. Vita. Globus. Das
-    Regal mit den Projekten und dem Schreibtisch“"""
+    Regal mit den Projekten und dem Schreibtisch“. Am Ende der Kurzvita genau einmal „Ausführlich in der Vita.“ mit dem Verweis auf
+    die Vita (seit dem 6. November; mit vita.html vor dem Umschreiben der Verweise, /vita danach)"""
     if schluss not in artefakt.SCHLUESSE:
         probleme.append(f'index.html: Schluss {schluss!r}; erlaubt sind {", ".join(artefakt.SCHLUESSE)}')
     if text.count('<p class="aufbau">Seite im Aufbau.</p>') != 1 or text.count('id="schluss"') != 1:
         probleme.append('index.html: „Seite im Aufbau.“ (p.aufbau in #schluss) steht nicht genau einmal da')
     for was, muster in (('ein Menü', r'<nav\b'), ('das Werkverzeichnis', r'class="verzeichnis"'), ('das Bücherregal', r'id="gelesen"'),
-                        ('„Was ich schreibe“', r'id="schreiben-titel"'), ('der Sprung „Zum Inhalt“', r'class="sprung"'),
-                        ('„Ausführlich in der Vita“', r'Ausführlich in der')):
+                        ('„Was ich schreibe“', r'id="schreiben-titel"'), ('der Sprung „Zum Inhalt“', r'class="sprung"')):
         if re.search(muster, text):
             probleme.append(f'index.html: im Platzhalter steht noch {was}')
+    if len(re.findall(r'<p class="vita">[^<]*(?:<(?!/p>)[^<]*)*Ausführlich in der <a href="(?:vita\.html|/vita)">Vita</a>\.</p>', text)) != 1 \
+            or text.count('Ausführlich in der') != 1:
+        probleme.append('index.html: „Ausführlich in der Vita.“ mit dem Verweis auf die Vita steht nicht genau einmal am Ende der Kurzvita')
     for was, muster in (('der Kopf', r'<h1 class="briefkopf">'), ('der erste Satz', r'id="einstieg"'), ('die Kurzvita', r'<p class="vita">'),
                         ('der Globus', r'id="globus"'), ('das Regal', r'id="regalbild"'), ('die Tafel', r'id="tafel"')):
         if not re.search(muster, text):
@@ -965,10 +980,13 @@ def main():
     seiten = [p.as_posix() for p in dateien if p.suffix == '.html']
     offen = {s for s in seiten if MARKER.search(texte[Path(s)])}
     if platz:
-        # Im Platzhalter ist nur / indiziert: Exposé, Vita, Impressum und Datenschutz tragen noindex; die übrigen Seiten leitet
-        # vercel.json auf / weiter. Strukturierte Daten nur auf /: die Person wie in der vollen Website
+        # Im Platzhalter sind / und die Vita indiziert: Exposé, Impressum und Datenschutz tragen noindex; die übrigen Seiten leitet
+        # vercel.json auf / weiter. Strukturierte Daten auf / und der Vita: die Person wie in der vollen Website
         noindex = (offen if entwurf else set()) | NOINDEX_PLATZHALTER
-        ld_seiten, ld = LD_PLATZHALTER, {'index.html': person_daten(texte)}
+        person = person_daten(texte)
+        ld_seiten, ld = LD_PLATZHALTER, {s: person for s, typ in LD_PLATZHALTER.items() if typ == 'Person'}
+        if set(ld) != set(LD_PLATZHALTER):
+            fehler(f'LD_PLATZHALTER: nur Person kennt der Platzhalter, nicht {sorted(set(LD_PLATZHALTER) - set(ld))}')
         umleiten = [s for s in SEITEN if s not in seiten_liste]
     else:
         # noindex und nicht in der Sitemap: im Entwurf die Seiten mit offenen Stellen; lesen.html, solange es keinen Text gibt;

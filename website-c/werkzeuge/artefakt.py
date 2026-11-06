@@ -35,8 +35,9 @@ Zwei Ausgaben (27. Oktober), wie in der Veröffentlichung (werkzeuge/veroeffentl
                                                                         offline ist)
   python3 website-c/werkzeuge/artefakt.py --platzhalter <zielordner>   der Platzhalter: index.html mit den Markierungen der
                                                                         Platzhalter-Ausgabe als Hauptseite, dazu satoshi.html als
-                                                                        digitales Exposé, vita.html (nur von dort aus verwiesen),
-                                                                        Impressum, Datenschutz
+                                                                        digitales Exposé, vita.html (seit dem 6. November
+                                                                        öffentlich, von der Hauptseite und vom Exposé aus
+                                                                        verwiesen), Impressum, Datenschutz
   python3 website-c/werkzeuge/artefakt.py --website <zielordner>       die volle Website, gleich, was AUSGABE sagt
   … --schluss v1|v2                                                     im Platzhalter die Fassung des Schlusses „Seite im
                                                                         Aufbau.“ am Desktop für diesen Bau, gleich, was SCHLUSS in
@@ -47,8 +48,8 @@ wie die Sprache); danach richten sich die Skripte und Stile der Seite. Im Platzh
 bilder/, worauf keine ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht mitgeht; daten/buecher.js geht
 nur mit den Büchern vom Nachttisch mit (buecher_platzhalter unten), und in seite.js behalten die Tabellen NACHNAMEN und BERICHTIGT
 nur, was diese Bücher brauchen (buch_tabellen_platzhalter). Wohin jede Seite dort verweisen darf, steht in
-VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf Impressum, Datenschutz, Anker, die Adresse für Anfragen und
-nach außen; auf die Vita nur das Exposé); auch das prüft der Bau.
+VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf die Vita, Impressum, Datenschutz, Anker, die Adresse für Anfragen
+und nach außen; auf das Exposé keine Seite, auch die Vita nicht); auch das prüft der Bau, die Kandidaten eines srcset eingeschlossen.
 
 Zum Schluss prüft der Bau, dass jede unveränderte Kopie der Quelle gleicht, dass in keiner ausgelieferten Text-Datei ein
 Kommentar übrig ist, und nennt Zahl und Größe der Dateien.
@@ -573,10 +574,10 @@ def dateien_sammeln(v, ausgabe='website'):
 
 
 def verweise_pruefen(texte, dateien, regeln):
-    """Platzhalter: jeder lokale Verweis einer Seite (href, src) zeigt auf eine Datei, die mitgeht; nach außen nur https. Dazu
-    führen die Verweise jeder Seite (<a href>, <area href>, <form action>) nur dorthin, wohin regeln (VERWEISE_PLATZHALTER in
-    veroeffentlichen.py) es erlauben: eigene Seiten und, wenn erlaubt, mailto: und nach außen. Ein Anker allein (#globus) bleibt auf
-    der Seite selbst und ist immer erlaubt, wenn es sein Ziel gibt."""
+    """Platzhalter: jeder lokale Verweis einer Seite (href, src, jeder Kandidat eines srcset) zeigt auf eine Datei, die mitgeht;
+    nach außen nur https. Dazu führen die Verweise jeder Seite (<a href>, <area href>, <form action>) nur dorthin, wohin regeln
+    (VERWEISE_PLATZHALTER in veroeffentlichen.py) es erlauben: eigene Seiten und, wenn erlaubt, mailto: und nach außen. Ein Anker
+    allein (#globus) bleibt auf der Seite selbst und ist immer erlaubt, wenn es sein Ziel gibt."""
     namen = {p.as_posix() for p in dateien}
     probleme = []
     for p, text in texte.items():
@@ -587,7 +588,9 @@ def verweise_pruefen(texte, dateien, regeln):
         erlaubt, auch_aussen = regeln.get(p.as_posix(), (set(), False))
         html = re.sub(r'(<(script|style)\b[^>]*>).*?(</\2>)', r'\1\3', text, flags=re.S | re.I)
         for tag, attr in re.findall(r'<(a|area|link|script|img|source|iframe|form)\b([^>]*)>', html, re.I):
-            for name, ref in re.findall(r'\b(href|src|action)="([^"]*)"', attr):
+            paare = re.findall(r'\b(href|src|action)="([^"]*)"', attr)
+            paare += [('srcset', k.strip().split()[0]) for w in re.findall(r'\bsrcset="([^"]*)"', attr) for k in w.split(',') if k.strip()]
+            for name, ref in paare:
                 verweis = tag.lower() in ('a', 'area', 'form')
                 if re.match(r'(?:https:)?//|mailto:', ref):
                     if verweis and not auch_aussen:

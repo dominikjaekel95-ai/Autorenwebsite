@@ -21,7 +21,10 @@ window.INHALT = {
   ansichten: { FR: [2.5, 46.6, 5.5], NL: [5.3, 52.2, 12], US: [-98, 39, 2.1], RU: [70, 60, 1.5], PT: [-8.1, 39.7, 9], ES: [-3.7, 40.2, 6], CN: [104, 35, 2.4], CA: [-96, 58, 1.8], DK: [10, 56, 10] },
 
   // Lebensstationen in zeitlicher Reihenfolge (Chronik der Startseite; Koordinaten für den Globus, sie stehen nicht mehr als Text da).
-  // neben: ein längerer Aufenthalt, während der Wohnort woanders war
+  // neben: ein längerer Aufenthalt, während der Wohnort woanders war; projekt: der Vermerk hinter der Art auf der Tafel. Mallorca ist
+  // sein Zweitwohnsitz und bleibt (Dominik, 6. November: „nein Mallorca nicht vom Globus nehmen. Das ist mein Zweitwohnungsitz. Man
+  // könnte allerhöchsten noch (Längerer Aufenthalt, zweiter Wohnsitzt) schreiben“); die Tafel sagt „längerer Aufenthalt, zweiter
+  // Wohnsitz“. Die Vita nennt Mallorca nicht mehr unter den Stationen
   leben: [
     { name: 'Dortmund', jahr: 'bis 2014', projekt: 'geboren 1995', lat: 51.51, lon: 7.47 },
     { name: 'Freiburg', jahr: '2014', projekt: 'Studium Liberal Arts & Sciences', lat: 47.99, lon: 7.85 },
@@ -30,15 +33,11 @@ window.INHALT = {
     { name: 'Cotonou', land: 'Benin', jahr: '2018', neben: true, projekt: 'Freiwilligenprojekt mit AIESEC', lat: 6.37, lon: 2.43 },
     { name: 'Kaohsiung', land: 'Taiwan', jahr: '2018', projekt: 'vier Jahre als Lektor und freier Autor', lat: 22.63, lon: 120.3 },
     { name: 'Berlin', jahr: '2022', lat: 52.52, lon: 13.4 },
-    { name: 'Mallorca', jahr: '2023', neben: true, lat: 39.57, lon: 2.65 }
+    { name: 'Mallorca', jahr: '2023', neben: true, projekt: 'zweiter Wohnsitz', lat: 39.57, lon: 2.65 }
   ],
 
-  // Weitere längere Aufenthalte (in der Vita; auf dem Globus wäre es zu voll). Die Vita nennt seit dem 21. Oktober keine Koordinaten
-  aufenthalte: [
-    { name: 'Kapstadt', land: 'Südafrika', jahr: '2024', lat: -33.92, lon: 18.42 },
-    { name: 'Sansibar', land: 'Tansania', jahr: '2025', lat: -6.16, lon: 39.19 },
-    { name: 'Buenos Aires', land: 'Argentinien', jahr: '2026', lat: -34.6, lon: -58.38 }
-  ],
+  // Die Liste aufenthalte (Kapstadt, Sansibar, Buenos Aires) ist am 6. November entfallen: Dominik hat die drei Aufenthalte aus den
+  // Stationen der Vita genommen, und keine Seite las sie sonst (auf dem Globus standen sie nie)
 
   // Satoshi: Schauplätze, die Szenen der Reihe nach (ohne das Ende zu verraten), der erste Satz, Eckdaten und das Pseudonym
   // für die Karteikarte. Klappentext, Bau, Figuren und Frage stehen als Text in satoshi.html

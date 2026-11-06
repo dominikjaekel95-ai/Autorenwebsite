@@ -605,7 +605,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
     }
   })();
   </script>
-  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u.&nbsp;a. die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation.<span data-nur="website"> Ausführlich in der <a href="vita.html">Vita</a>.</span></p>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u.&nbsp;a. die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>
 
   <p class="ebenen" role="group" aria-label="Globus"><button type="button" class="wort" data-ebene="leben" aria-pressed="true">Leben</button> <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">Reisen</button> <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false"><i>Satoshi</i></button> <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false"><i>Ursprünge</i></button></p>
 
@@ -722,10 +722,12 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
    BERICHTIGT, und daten/buecher.js, was das Regal braucht, die Bücher vom Nachttisch (Dominik, 29. Oktober: „Das mit der Bibliothek
    soll auch alles raus.“).
    Verweise. Dominik: „Einfach eine einzelne indizierte Seite ohne Verlinkungen … Es soll neugierig machen. Aber ohne zu viel
-   preiszugeben.“ Von hier führt kein Verweis auf eine andere eigene Seite, auch keiner, den ein Skript erst setzt (die Buchzeile nach
-   einem Tipp auf ein eigenes Werk im Regal, die Texte der verborgenen Ebenen Satoshi und Ursprünge): er wird ein span mit denselben
-   Klassen, der Text bleibt, ohne Strich. Es bleiben die Verweise nach außen, die Adresse für Anfragen, Impressum, Datenschutz und
-   Anker. Der Wächter steht vor dem Skript der Seite: was es beim Laden setzt, wird Text, bevor der Browser es zeichnet.
+   preiszugeben.“ Von hier führt kein Verweis auf eine andere eigene Seite außer der Vita, auch keiner, den ein Skript erst setzt (die
+   Buchzeile nach einem Tipp auf ein eigenes Werk im Regal, die Texte der verborgenen Ebenen Satoshi und Ursprünge): er wird ein span
+   mit denselben Klassen, der Text bleibt, ohne Strich. Es bleiben die Verweise nach außen, die Adresse für Anfragen, Impressum,
+   Datenschutz, Anker und seit dem 6. November „Ausführlich in der Vita.“ am Ende der Kurzvita (Dominik zu seinem neuen Text der Vita:
+   „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“); die Vita selbst führt nicht zum Exposé. Der Wächter
+   steht vor dem Skript der Seite: was es beim Laden setzt, wird Text, bevor der Browser es zeichnet.
    Das Zeitband. Das Skript der Seite hängt an #zeitband-roll das Rollen des Bands an; im Platzhalter fehlt das Bücherregal
    (data-nur="website"), und ohne Band bräche es dort ab (Regal, Größenänderung und Schriften liefen nicht weiter). Ein leeres,
    verborgenes Element an seiner Stelle lässt es weiterlaufen: verborgen hat es keine Breite, das Band wird nicht gebaut.
@@ -735,7 +737,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
 (function () {
   'use strict';
   if (document.documentElement.getAttribute('data-ausgabe') !== 'platzhalter') return;
-  const BLEIBT = /^(?:https:\/\/|mailto:|#)|^(?:\.?\/)?(?:impressum|datenschutz)(?:\.html)?(?:#.*)?$/i;
+  const BLEIBT = /^(?:https:\/\/|mailto:|#)|^(?:\.?\/)?(?:impressum|datenschutz|vita)(?:\.html)?(?:#.*)?$/i;
   const OHNE = ['href', 'rel', 'target', 'hreflang', 'aria-current', 'download', 'ping', 'referrerpolicy', 'type'];
   function alsText(a) {
     const s = document.createElement('span');

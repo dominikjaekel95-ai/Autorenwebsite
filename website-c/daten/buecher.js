@@ -5,6 +5,7 @@
    Nur die Regale gelesen, kindheit (Kindheit und Jugend), gerade (Nachttisch) und abgebrochen; was noch wartet, steht in leseliste.js.
    25. Oktober 2026 (Dominik): CHERUB, Alex Rider, Twilight, Harry Potter, Eragon und Panem stammen aus der Schulzeit und stehen ganz
    unter kindheit; ebenso die Bände von Percy Jackson und His Dark Materials, die vorher halb unter gelesen standen.
+   6. November 2026: bei The Call of Cthulhu (E-Book) kein Verlag mehr (V90).
    t Titel, u Untertitel, a Autor, r Regal, s 5 = eines der liebsten (sonst 0), j Jahr der Erstveröffentlichung, p Seiten,
    w wiedergelesen, b Bindung (p Paperback, h Hardcover, m Mass Market, e sonst), v Verlag. Ohne Notizen und Rezensionen. */
 window.BUECHER = [
@@ -44,7 +45,7 @@ window.BUECHER = [
 {"t":"The Name of the Rose","u":"","a":"Umberto Eco","r":"gelesen","s":5,"j":1980,"p":552,"w":0,"b":"p","v":"Houghton Mifflin Harcourt"},
 {"t":"Sommerhaus, später","u":"","a":"Judith Hermann","r":"gelesen","s":5,"j":1998,"p":187,"w":0,"b":"p","v":"Fischer Taschenbuch Verlag"},
 {"t":"Eine Nacht im Juli, eine Nacht im Dezember","u":"","a":"Christoph Haas","r":"gelesen","s":0,"j":null,"p":0,"w":0,"b":"h","v":""},
-{"t":"The Call of Cthulhu","u":"","a":"H.P. Lovecraft","r":"gelesen","s":0,"j":1928,"p":43,"w":0,"b":"e","v":"Amazon Digital Services, Inc."},
+{"t":"The Call of Cthulhu","u":"","a":"H.P. Lovecraft","r":"gelesen","s":0,"j":1928,"p":43,"w":0,"b":"e","v":""},
 {"t":"The Doors of Perception","u":"","a":"Aldous Huxley","r":"gelesen","s":5,"j":1956,"p":208,"w":0,"b":"h","v":"Chatto & Windus"},
 {"t":"Jeder stirbt für sich allein","u":"","a":"Hans Fallada","r":"gelesen","s":5,"j":1947,"p":704,"w":0,"b":"h","v":"Aufbau"},
 {"t":"Untenrum frei","u":"","a":"Margarete Stokowski","r":"gelesen","s":0,"j":2016,"p":252,"w":0,"b":"h","v":"Rowohlt, Reinbek"},

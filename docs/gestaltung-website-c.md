@@ -39,10 +39,10 @@ Claudes Texte ändern sich nur bei deutlicher Verbesserung, und jede Änderung s
 ### Fakten, die feststehen
 
 - Kein Hinweis auf das Ende von *Satoshi* (V37). Fort Meade bleibt draußen (V31).
-- Keine Einzelheiten zum Ghostwriting, kein *Wall Street Journal*, keine FAZ, kein *Harvard Business Manager*, kein Perry Rhodan, kein Capsule, keine Döblin-Bewerbung (V72).
+- Kein *Wall Street Journal*, kein *Harvard Business Manager*, kein Perry Rhodan, kein Capsule, keine Döblin-Bewerbung (V72). Ghostwriting und die FAZ nur in der Vita und nur in Dominiks Wortlaut (V90). Den Hersteller der Smartspeaker, für den er gearbeitet hat, nennt die Website nirgends, auch nicht in Kommentaren, Ersatztexten und Daten (Verschwiegenheitsvereinbarung, V90); Intel darf stehen.
 - Simon-Kucher nur in der Vita (V56). Die Trilogie heißt nur „in Arbeit“ (V38).
 - Keine privaten Lesenotizen, keine Buchzahlen, keine Zahl 67, kein „Untertagebuch“, keine neuen persönlichen Fakten (V46, V48, V21, V11, V70).
-- Anschrift und E-Mail genau wie in A (V67). Buenos Aires 2026, Sansibar 2025, Kapstadt 2024 (V28).
+- Anschrift und E-Mail genau wie in A (V67). Kapstadt, Sansibar und Buenos Aires stehen seit V90 nirgends mehr (nach V28 ohnehin auf keinem Globus). Mallorca bleibt auf dem Globus: „längerer Aufenthalt, zweiter Wohnsitz“ (V90).
 
 ### Spielraum beim Bau
 
@@ -113,7 +113,7 @@ Fett in der Spalte „Quelle“ heißt: Dominiks Vorgabe geht hier der Empfehlun
 - Der Globus wartet nie auf den Satz (11).
 - Bei jedem Laden der Startseite. Bei reduzierter Bewegung steht der Satz sofort.
 - Vorleseprogramme lesen den Satz einmal als Ganzes (die Vorlesekopie aus A bleibt).
-- Vita: derselbe Satz steht ohne Bewegung in der IM Fell, im Grad groß (28,5 px).
+- Vita: bis zum 6. November stand dort derselbe Satz ohne Bewegung. Seit V90 steht dort der erste Absatz von Dominiks Bio als Einstieg, ohne Bewegung in der IM Fell, im Grad groß (28,5 px; auf dem Telefon bis 40 rem im Grad Überschrift).
 
 **Grund:** V13 und Claudes Zusage: Der Satz fliegt weiter ein, kürzer, ohne den Globus zu blockieren. Die Größe folgt Nachtrag 2 („größere, selbstbewusste Typografie im ersten Bildschirm“, M9). R1 hatte 28,5 px vorgeschlagen. Rang 25 bleibt bewusst, abgemildert durch die kurze Dauer und den freien Globus.
 
@@ -447,6 +447,7 @@ Bleibt wie A: angeschnitten am rechten Fensterrand, Größe aus der Fensterhöhe
 - Foto größer und weiter oben (F26, M9): am Desktop oben in der rechten Spalte, bis 24 em breit (456 px), auf dem Telefon direkt unter dem Titel. Bildlegende „Mit *Picknick am Wegesrand* der Brüder Strugatzki.“ im Grad klein, aufrecht. Kein Bildnachweis (M8).
 - Stationen unter dem Foto: Jahreszahl hängt im Steg wie A, Ort aufrecht, Nebenorte gleich groß und dunkel, Koordinaten Grad klein, Tinte.
 - `h2` „Stationen“ als ruhige Überschrift (04).
+- Seit 6. November (V90) gelten 6.16 und 9.5 in der neuen Fassung: Bio nach Nachricht 9, der erste Absatz als Einstieg, darunter der Hinweis auf das berufliche Profil, Stationen nach Nachricht 12, unter dem Foto nur „Törn Sardinien–Korsika, 2025.“
 
 **Grund:** V29, V55 bis V59, M8, M9 („ein Foto von Dominik früher und größer“).
 
@@ -684,7 +685,7 @@ Alles steht links. Zentriert ist nur der Szenenwechsel der Leseseite.
 ### 5.5 Zeilenmaß
 
 - Lesetext 55 bis 75 Zeichen bei 1280 bis 1920 px, 35 bis 45 auf dem Telefon (R2).
-- Die Textspalte der Vita fällt bei 1280 px nicht unter 55 Zeichen (heute 49). Ihre Spalte ist `minmax(29em, 31em)` breit, die rechte Spalte nimmt den Rest.
+- Die Textspalte der Vita fällt bei 1280 px nicht unter 55 Zeichen. Seit V90 (Fassung A) ist sie ab 1280 px 31 em breit (62 bis 71 Zeichen je Zeile), darunter bis 29 em bei 1024 px (55 bis 67); die rechte Spalte nimmt den Rest.
 - Keine waagrechte Bildlaufleiste der Seite bei 360 px. Nur das Zeitband scrollt in seinem eigenen Rahmen.
 
 ### 5.6 Trefferflächen
@@ -894,10 +895,12 @@ Zwischen den Bänden 2 z. Unter Band III der Satz zur Bibliothek (V44), die Tite
 
 ### 6.16 Stationen der Vita und Bild
 
-- Bild: oben in der rechten Spalte, `width: min(100%, 24em)`, Seitenverhältnis 3 : 4, ohne Rahmen. Darunter ¼ z die Legende im Grad klein.
-- Stationen: `h2` „Stationen“, darunter die Liste von A. Die Jahreszahl hängt im Steg zwischen den Spalten (rechtsbündig, Mediävalziffern mit fester Breite), dann Ort, Komma, Tätigkeit im Grad Text, in der nächsten Zeile die Koordinaten im Grad klein. Einträge ¼ z auseinander. Nebenorte gleich groß und gleich dunkel.
-- Zeitspannen (seit 25. Oktober, V86: Freiburg 2014–2015, Potsdam 2015–2018): das Endjahr in der Jahresspalte unter dem Anfangsjahr, Ziffer unter Ziffer, rechtsbündig wie das Jahr; der Halbgeviertstrich ohne Leerzeichen hängt davor aus der Spalte (breit in den Steg, schmal in den Rand), damit die Spalte nicht breiter wird. Der Eintrag ist mindestens zwei Zeilen hoch (`li.spanne`). Für Vorleseprogramme und beim Kopieren „2014 bis 2015“ (unsichtbares „bis“ mit geschützten Leerzeichen, das Endjahr absolut gesetzt).
-- Darunter der Verweis von A „… auf dem Globus“.
+Seit 6. November (V90) in Fassung A „Zwei Spalten, im Gleichgewicht“ (Claudes Empfehlung; die Wahl unter A, B und C liegt bei Dominik, 9.5).
+
+- Bild: das Bootsfoto, 3 : 4, ohne Rahmen, in drei Breiten (480, 800 und 1200 px, `srcset` und `sizes`; `width` und `height` halten den Platz). Breit füllt es die rechte Spalte, höchstens so hoch, dass es mit der Unterschrift 1 z unter dem oberen Rand ganz ins Fenster passt, und nicht höher als die linke Spalte. Seine Oberkante steht auf der Versalhöhe von „Vita“. Es bleibt beim Rollen stehen (`position: sticky`, wie der Globus der Startseite, V78), bis die Zeile der Unterschrift auf der Grundlinie von „… auf dem Globus.“ steht. Schmal steht es in der Breite der Textspalte, 3 z unter dem Hinweis und 2 z über den Stationen. Darunter ¼ z die Unterschrift „Törn Sardinien–Korsika, 2025.“ im Grad klein, eine Zeile, nie gebrochen.
+- Stationen: `h2` „Stationen“ in der Textspalte, breit 3 z unter dem Hinweis. Die Jahreszahl steht auf allen Breiten in einer Spalte von 3 em an der Kante (Mediävalziffern mit fester Breite), dann Ort, Komma, Tätigkeit im Grad Text, ohne Koordinaten (Dominik, 21. Oktober). Einträge ¼ z auseinander. Zehn Einträge nach Nachricht 12.
+- Zeitspannen (V86, V90: 2014–2015, 2015–2018, 2022–2024, 2025–heute): das zweite Glied eine Zeile tiefer in der Jahresspalte, linksbündig mit den Ziffern, „heute“ klein; der Halbgeviertstrich ohne Leerzeichen hängt davor in den Rand, damit die Spalte nicht breiter wird. Der Eintrag ist mindestens zwei Zeilen hoch (`li.spanne`). Für Vorleseprogramme und beim Kopieren „2014 bis 2015“, „2025 bis heute“ (unsichtbares „bis“ mit geschützten Leerzeichen, das zweite Glied absolut gesetzt).
+- Darunter ¾ z „Die Wohnorte und die ersten längeren Aufenthalte auf dem Globus.“ mit dem Verweis.
 
 ### 6.17 Leseseite
 
@@ -1175,9 +1178,13 @@ Figuren: `h3` mit dem Namen in Kapitälchen, Komma, die Rolle im Grad Text, daru
 
 ### 9.5 Vita (`vita.html`)
 
-**Desktop.** Zwei Spalten. Links (`minmax(29em, 31em)`): `h1` „Vita“, der erste Satz in IM Fell (groß, stehend), sein Vita-Text. Rechts: das Bootsfoto oben (bis 24 em), die Legende, darunter „Stationen“ mit den zwölf Einträgen und dem Verweis auf den Globus. Bei 1440 × 900 stehen Titel, erster Satz, der Anfang des Texts und das Foto im ersten Bildschirm.
+Seit 6. November (V90): Dominiks Bio in fünf Absätzen, der erste als Einstieg in der IM Fell; der Hinweis auf das berufliche Profil (Grad klein, kursiv, „hier“ auf LinkedIn); die zehn Stationen; unter dem Foto „Törn Sardinien–Korsika, 2025.“ Drei Fassungen mit demselben Inhalt (Nachricht 5); im Repository steht A. Maß aus Nachricht 13: am Desktop enden die Spalten höchstens 2 z auseinander, oder es gibt nur eine.
 
-**Telefon.** `h1`, Foto in voller Breite mit Legende, erster Satz, Text, Stationen.
+**Desktop (Fassung A).** Zwei Spalten: links `--vita-satz` (31 em ab 1280 px, darunter bis 29 em bei 1024 px), rechts der Rest; der Steg hält die Kante des Globus der Startseite, mindestens 2 z. Links `h1` „Vita“, der Einstieg (Grad groß, drei Zeilen, wie Prosa gebrochen), vier Absätze Grundtext (¾ z), 2 z darunter der Hinweis, 3 z darunter die Stationen (6.16). Rechts nur das Foto mit der Unterschrift, mitwandernd; ganz unten gerollt enden beide Spalten auf einer Linie (gemessen 1,5 px auf 1024 bis 2560 px). Bei 1440 × 900 stehen Titel, Einstieg, die ganze Bio und das Foto im ersten Bildschirm.
+
+**Telefon (Fassung A).** Eine Spalte in der Folge des Quelltexts: `h1`, Einstieg (bis 40 rem im Grad Überschrift, vier oder fünf Zeilen; auf dem Tablet und quer im Grad groß), Bio, Hinweis, das Foto in der Breite der Spalte, die Stationen, der Verweis auf den Globus. Quer passt das Foto ganz ins Fenster.
+
+**Die anderen Fassungen** (nur `vita.html` ist anders): B „Das Bild zurückgenommen“: rechts „Stationen“ auf der Grundlinie von „Vita“, darunter das Foto 13 em breit mit der Unterschrift daneben; schmal steht das Foto klein am Schluss. Am Desktop endet die linke Spalte 190 bis 360 px über der rechten. C „Ein Blatt“: eine Spalte in `--mass` am linken Rand, das Foto als Ausschnitt 4 : 3 nach der Bio, dann die Stationen; am Desktop bleibt rechts daneben Weiß.
 
 ### 9.6 Länder (`laender.html`)
 
@@ -1201,7 +1208,7 @@ Kopf, dann eine Spalte nach 6.18, Fuß. Gleich auf allen Breiten.
 
 Solange die Website offline ist, liefert der Bau (`AUSGABE = 'platzhalter'`) fünf Seiten und 404 aus: `/`, `/satoshi`, `/vita`, `/impressum`, `/datenschutz`; die volle Website bleibt in `website-c/` und kommt mit `AUSGABE = 'website'` Byte für Byte zurück. Was nur in einer Ausgabe steht, ist markiert (`data-nur`, `data-verweis`; erklärt auf `satoshi.html`); am `<html>` von `/` stehen im Platzhalter `data-ausgabe="platzhalter"` und `data-schluss` (v1 oder v2), danach richten sich Stil und Skript.
 
-**Platzhalter (`index.html`, unter `/`).** Die Startseite wie 9.1 ohne Menü (mit ihm fällt die Abschrift im Fuß weg), ohne Sprung „Zum Inhalt“, „Was ich schreibe“, Werkverzeichnis und Bücherregal. Es bleiben Kopf mit Name und Rolle, der erste Satz mit Einflug, die Kurzvita (ohne „Ausführlich in der Vita.“), der Globus mit Ebenen, Tafel, Steuerzeile und Ablauf, breit klebend und mitwandernd, das Regalbild mit Unterschrift und Buchzeile, die Folge „Globus zuletzt“, „gelassen“. Breit behält der Kopf seine Höhe (`--kopf-h`): der erste Bildschirm ist bis auf das Menü der der Startseite, der Satz bleibt bei 214 px, die Unterschrift des Regals fluchtet mit der Tafel. Schmal schließt sich die Lücke des Menüs (Satz und Vita rücken rund 88 px höher). Verweise auf eigene Seiten, auch die, die Skripte setzen (Buchzeile, Ebenen), stehen als `span` in derselben Klasse da, ohne Strich; es bleiben die Verweise nach außen, die Adresse für Anfragen, Impressum, Datenschutz und Anker. Von der Bibliothek geht nichts mit (V89): `daten/buecher.js` nur mit den zehn Büchern vom Nachttisch, in `seite.js` die Tabellen `NACHNAMEN` und `BERICHTIGT` nur mit dem, was diese brauchen (der Bau kürzt beides); das Regal bleibt, wie es war.
+**Platzhalter (`index.html`, unter `/`).** Die Startseite wie 9.1 ohne Menü (mit ihm fällt die Abschrift im Fuß weg), ohne Sprung „Zum Inhalt“, „Was ich schreibe“, Werkverzeichnis und Bücherregal. Es bleiben Kopf mit Name und Rolle, der erste Satz mit Einflug, die Kurzvita (seit V90 wieder mit „Ausführlich in der Vita.“: neben Impressum und Datenschutz der einzige Verweis auf eine andere eigene Seite; das Skript des Platzhalters lässt genau diese stehen), der Globus mit Ebenen, Tafel, Steuerzeile und Ablauf, breit klebend und mitwandernd, das Regalbild mit Unterschrift und Buchzeile, die Folge „Globus zuletzt“, „gelassen“. Breit behält der Kopf seine Höhe (`--kopf-h`): der erste Bildschirm ist bis auf das Menü der der Startseite, der Satz bleibt bei 214 px, die Unterschrift des Regals fluchtet mit der Tafel. Schmal schließt sich die Lücke des Menüs (Satz und Vita rücken rund 88 px höher). Verweise auf eigene Seiten, auch die, die Skripte setzen (Buchzeile, Ebenen), stehen als `span` in derselben Klasse da, ohne Strich; es bleiben die Verweise nach außen, die Adresse für Anfragen, Impressum, Datenschutz und Anker. Von der Bibliothek geht nichts mit (V89): `daten/buecher.js` nur mit den zehn Büchern vom Nachttisch, in `seite.js` die Tabellen `NACHNAMEN` und `BERICHTIGT` nur mit dem, was diese brauchen (der Bau kürzt beides); das Regal bleibt, wie es war.
 
 **Der Schluss** (`#schluss`, `p.aufbau` „Seite im Aufbau.“, im Grad Text, in Tinte, aufrecht, in der Textspalte; breit in Spalte 2, Zeilen 8 und 9 von `main`, so klebt der Globus weiter). Der Weg beginnt, wenn das Ende des Inhalts (breit die Oberkante des leeren „Was ich schreibe“, schmal die Unterkante des Regals) den unteren Fensterrand erreicht, und endet, wenn die Mitte der Zeile bei 44 % der Fensterhöhe steht. Davor max(3 z, 19 svh), darunter so viel, dass der Fuß ganz ins Bild passt (svh und lvh: die Leiste des Browsers verschiebt nichts). Weg 0,72 bis 0,77 Fenster (1440 × 900: 648 px, 393 +10 %: 628 px). Deckkraft 1 bis 0,16 nach smoothstep, je Bild aus `scrollY` (passive Hörer, ein `requestAnimationFrame`), umkehrbar, ohne Federn, ohne Einrasten; die Zeile selbst wird nie eingeblendet. Am Ende sind die Rücken blass zu ahnen, „Satoshi“ und „Ursprünge“ gerade noch lesbar; der Fuß steht klar darunter. Verblasst: schmal und in v1 der Kopf, die Globusseite und „Was ich schreibe“; breit in v2 alles außer dem Globus. In v2 reicht der Schluss so weit hinunter, dass der Globus am Ende des Wegs ganz klebt (1440: 14 bis 886 px), sein Rand unten (2 z zum Zeitband) entfällt; der Fuß folgt nach weiteren rund 290 px. Ab halbem Weg nimmt das Blasse keinen Klick und Tipp an (`.fern`). Tastatur: der sichtbare Fokus holt einen blassen Teil ganz zurück (`:has(:focus-visible)`), kein `inert`. Reduzierte Bewegung und ohne Skript: nichts verblasst, die Zeile steht 3 z unter dem Inhalt und 3 z über dem Fuß. Kein Countdown, kein Feld, kein Fortschritt, kein Pfeil (`docs/ki-merkmale.md`, Nr. 6 und 56).
 
@@ -1209,11 +1216,11 @@ Solange die Website offline ist, liefert der Bau (`AUSGABE = 'platzhalter'`) fü
 
 **Digitales Exposé (`satoshi.html`, unter `/satoshi`).** Die Seite wie 9.2, ohne Navigation zu anderen eigenen Seiten: kein Menü oben und im Fuß, der Name im Kopf ohne Verweis. In „Wie er gemacht ist“ fällt der Satz „*Ficciones* steht in der Bibliothek, ebenso …“ ganz weg (V89: „Das mit der Bibliothek soll auch alles raus.“; bis dahin stand „Bibliothek“ als Text da), der Absatz zur Erzähltradition davor bleibt. „Dominik Jäkel“ in den Eckdaten führt zur Vita (V88). An der Stelle des Menüs „Digitales Exposé“ im Lesegrad, 1 z unter der Rolle, darunter eine Stufe kleiner (Nebentext, in Tinte, ausgeglichen gebrochen) „Bitte den Link nur mit Zustimmung des Autors teilen.“; kein Label über dem Titel. Alles darunter steht wie in der vollen Website.
 
-**Vita (`vita.html`, unter `/vita`).** Wie 9.5, ohne Menü oben und im Fuß, ohne „Zum Inhalt“; „Ursprungstrilogie“ als Text. Es bleiben der Name im Kopf zur Startseite, „auf dem Globus“, der Verweis auf *Satoshi* (das Exposé), die Verweise nach außen, Anfragen, Impressum und Datenschutz. Nur das Exposé verweist auf sie.
+**Vita (`vita.html`, unter `/vita`).** Wie 9.5, ohne Menü oben und im Fuß, ohne „Zum Inhalt“; *Satoshi* im letzten Absatz als Text. Es bleiben der Name im Kopf zur Startseite, „auf dem Globus“, die Verweise nach außen (Simon-Kucher, Preis, Autorenforum, LinkedIn), Anfragen, Impressum und Datenschutz. Seit V90 öffentlich: Die Startseite verweist mit „Ausführlich in der Vita.“ auf sie, das Exposé mit „Dominik Jäkel“ in den Eckdaten; von ihr führt kein Weg zum Exposé.
 
 **Impressum, Datenschutz, 404:** wie 9.9, ohne Menü und ohne „Zum Inhalt“; der Name im Kopf führt auf `/`.
 
-**Suchmaschinen:** nur `/` ist indiziert und steht in der Sitemap; Exposé, Vita, Impressum und Datenschutz tragen `noindex` (auch als `X-Robots-Tag`); die übrigen Adressen leiten mit 307 auf `/`.
+**Suchmaschinen:** `/` und seit V90 `/vita` sind indiziert und stehen in der Sitemap, beide mit der Person in den strukturierten Daten; Exposé, Impressum und Datenschutz tragen `noindex` (auch als `X-Robots-Tag`); die übrigen Adressen leiten mit 307 auf `/`.
 
 ---
 
@@ -1249,7 +1256,7 @@ Hier steht alles, was ich für dich entschieden habe, wo du vielleicht etwas and
 26. **Buchzeile als Satz statt Karteikarte.** Alternative: eine schlichte weiße Karte mit „schließen“.
 27. **Zeitband auf dem Telefon startet am rechten Ende** (das Neueste und deine Werke). Alternative: am linken Ende bei Gilgamesch; am 23. Oktober kurz so gebaut (passend zur Ruhe beim ältesten, V73) und zurückgenommen, weil dann die zwei Reihen darunter beim Laden leer im Bild sind.
 28. **Schuber bleibt und öffnet in 300 ms.** Alternative: drei einzelne Rücken ohne Schuber.
-29. **Vita: Foto größer (bis 456 px) oben rechts, Stationen darunter.** Alternative: Foto unter den Stationen wie A.
+29. **Vita: Foto größer (bis 456 px) oben rechts, Stationen darunter.** Alternative: Foto unter den Stationen wie A. Seit V90 (Fassung A): Das Foto füllt die rechte Spalte und wandert mit, die Stationen stehen links unter dem Text; die Alternativen B und C in 9.5.
 30. **Kein Foto auf der Startseite.** Alternative: das Bootsfoto klein neben der Kurzvita.
 31. **Bandüberschrift „Band I  Kreise ohne Wiederkehr“, aufrecht.** Alternative: nur die Ziffer, oder der Titel kursiv.
 32. **Die Zeile aus dem Exposé bei Band I aufrecht.** Alternative: kursiv wie A.

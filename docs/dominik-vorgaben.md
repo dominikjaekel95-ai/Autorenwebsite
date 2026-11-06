@@ -1,6 +1,6 @@
 # Dominiks Vorgaben für die Website
 
-Stand: 30. Oktober 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V89.
+Stand: 6. November 2026. Angelegt am 21. Oktober nach Dominiks Auftrag für Version C, seither ergänzt um V73 bis V90.
 
 Diese Liste sammelt alles, was Dominik im Chat zur Website vorgegeben, gewünscht, entschieden oder korrigiert hat und was heute noch gilt. Sie ist für den Bau von Version C verbindlich. Sie steht über den Empfehlungen in `aenderungen-website-b.md`, über den Referenzen und über der Liste der KI-Merkmale.
 
@@ -185,7 +185,7 @@ Für den Bau:
 - **Digitales Exposé** (`website-c/satoshi.html`, unter /satoshi): Inhalt unverändert; ohne Menü oben und im Fuß, der Name im Kopf ohne Verweis, Verweise im Text auf andere eigene Seiten als Text („Dominik Jäkel“ in den Eckdaten, „Bibliothek“ in „Wie er gemacht ist“). Es bleiben die Anker der Seite, die Adresse für Anfragen, Impressum, Datenschutz und die Verweise nach außen. An der Stelle des Menüs „Digitales Exposé“ und eine Stufe kleiner „Bitte den Link nur mit Zustimmung des Autors teilen.“ (nach seinem Wortlaut; er wollte selbst noch etwas schreiben, Übersicht 3, Punkt 20). `noindex`, nicht in der Sitemap, von keiner anderen Seite verlinkt.
 - **Werkzeug:** Der Schalter `AUSGABE` in `website-c/werkzeuge/veroeffentlichen.py` steht auf `'platzhalter'`; `'website'` bringt die volle Website unverändert zurück. Die volle Fassung bleibt in `website-c/` erhalten.
 Ort in C: `website-c/platzhalter.html`, `website-c/satoshi.html` (`data-nur`, `data-verweis`, `.expose-kopf`), `website-c/impressum.html`, `website-c/datenschutz.html`, `website-c/404.html` (Menü mit `data-nur="website"`), `website-c/werkzeuge/veroeffentlichen.py` (`AUSGABE`, `VERWEISE_PLATZHALTER`), `website-c/werkzeuge/artefakt.py`; Änderungsprotokoll, 27. Oktober („Platzhalter und digitales Exposé“).
-Später geändert: ja, V88 (der Platzhalter ist die Startseite selbst, `platzhalter.html` entfällt; die Vita steht wieder unter /vita und ist nur vom Exposé aus verwiesen, „Dominik Jäkel“ in den Eckdaten führt zu ihr). Der Platzhalter aus V87 ging nicht live. Dazu V89 (der Satz „*Ficciones* steht in der Bibliothek, ebenso …“ fällt im Exposé ganz weg, statt als Text zu bleiben; die Rolle ist nur noch „Schriftsteller“).
+Später geändert: ja, V88 (der Platzhalter ist die Startseite selbst, `platzhalter.html` entfällt; die Vita steht wieder unter /vita und ist nur vom Exposé aus verwiesen, „Dominik Jäkel“ in den Eckdaten führt zu ihr). Der Platzhalter aus V87 ging nicht live. Dazu V89 (der Satz „*Ficciones* steht in der Bibliothek, ebenso …“ fällt im Exposé ganz weg, statt als Text zu bleiben; die Rolle ist nur noch „Schriftsteller“). Dazu V90 (6.11.): Neben / ist auch /vita indiziert und steht in der Sitemap; / verweist mit „Ausführlich in der Vita.“ auf sie.
 
 **V88. Der Platzhalter ist die Startseite selbst: Kopf, erster Satz, Kurzvita, Globus und Regal bleiben; beim Rollen verblasst alles, dann „Seite im Aufbau.“; die Vita nur über das Exposé.**
 „Mal wieder viel zu radikal. Pass auf. Halte von der Startseite die drei Elemente. Vita. Globus. Das Regal mit den Projekten und dem Schreibtisch ... Aber wenn man runterzoomt soll auf dem Handy alles verblassen und dann Seite im Aufbau. Es so neugierig machen. Auf dem Desktop soll der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite im Aufbau. Über Satoshi kann man übrigens auch noch auf die Vita zugreifen“ (27.10.). Und dazu: „Ich meine was anderes. Du sollst von Satoshi auf meine Vita verweisen. Die Vita soll nicht tot sein. ABER .... man soll sie eben nur über Satoshi finden können. Nicht über andere Seiten“, „Bitte Satoshi nur aus der Search Console rausnehmen. Aktuell findet man die Seite halt über Google“ und „Bisher verschickte Links sind kein Grund zu Sorge“ (27.10.).
@@ -198,7 +198,7 @@ Für den Bau:
 - **Adresse /satoshi bleibt** („Bisher verschickte Links sind kein Grund zu Sorge“). Aus Google nimmt er /satoshi selbst über die Search Console (`noindex` ist live; Schritte in `docs/todo.md`).
 Ort in C: `website-c/index.html` (`data-nur="website"`, `data-verweis="website"`, `data-nur="platzhalter"`: Stil, `#schluss`, zwei Skripte), `website-c/vita.html`, `website-c/satoshi.html` (Eckdaten), `website-c/werkzeuge/veroeffentlichen.py` (`SCHLUSS`, `VERWEISE_PLATZHALTER`, `SEITEN_PLATZHALTER`), `website-c/werkzeuge/artefakt.py`; Änderungsprotokoll, 27. Oktober („Platzhalter mit dem Startbildschirm“); `docs/gestaltung-website-c.md` 9.10.
 Abnahme am 29. Oktober: „‚moderiert u.a. die Werkstattbühne‘ das fehlt. Sonst kann es gerne so bleiben ... Schalte mal live.“ Eingesetzt „moderiert u.&nbsp;a. die Werkstattbühne“ in der Kurzvita (`index.html`, `p.vita`) und gleichlautend in den Eckdaten des Exposés (`satoshi.html`). Fassung am Desktop: v1 „Alles verblasst“ (Vorgabe im Schalter, ohne Einwand übernommen).
-Später geändert: ja, V89 (Rolle nur noch „Schriftsteller“; im Platzhalter fällt alles zur Bibliothek weg, im Exposé der Satz zu ihr, aus den Daten alles außer dem Nachttisch; beim Neuladen beginnt die Seite oben, nicht am Globus). Live seit 29. Oktober (Bau mit `AUSGABE = 'platzhalter'`, `SCHLUSS = 'v1'`).
+Später geändert: ja, V89 (Rolle nur noch „Schriftsteller“; im Platzhalter fällt alles zur Bibliothek weg, im Exposé der Satz zu ihr, aus den Daten alles außer dem Nachttisch; beim Neuladen beginnt die Seite oben, nicht am Globus). Live seit 29. Oktober (Bau mit `AUSGABE = 'platzhalter'`, `SCHLUSS = 'v1'`). Dazu V90 (6.11.): Die Vita ist nicht mehr nur über das Exposé zu finden. „Ausführlich in der Vita.“ steht wieder in der Kurzvita der Startseite (Nachricht 2: „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“; Nachricht 10: „Startseite so lassen“), /vita ist indiziert und steht in der Sitemap; das Exposé bleibt von dort aus unerreichbar.
 
 ---
 
@@ -254,7 +254,7 @@ Später geändert: ja. 64 und 67 sind durch 65 ersetzt. Vor dem Livegang bestät
 „Längere Aufenthalte. Wir können 2024 noch Kapstadt […] mit aufnehmen. Aber das mehr in der Vita. Im Globus auf der Startseite wäre das überladen.“ (20.10., 03:57). Jahre korrigiert: „Sansibar, Tansania, längerer Aufenthalt 6° 10′ S, 39° 11′ O“ (20.10., 04:47) und „Sorry. Der Fehler ist: 2026 Buenos Aires. Nicht Kapstadt … 2025 Tanzania/Sansibar (das richtigziehen)“ (20.10., 05:00)
 Für den Bau: Kapstadt 2024, Sansibar 2025, Buenos Aires 2026 stehen in der Vita mit Koordinaten. Auf dem Globus der Startseite erscheinen sie nicht. Claudes Annahme, sie als Abstecher von Berlin zu zeichnen, betrifft nur eine Karte, auf der sie überhaupt vorkommen; die Startseite gehört nicht dazu.
 Ort in A: `daten/inhalt.js`, `aufenthalte`; `vita.html`, letzte drei `li.neben` in `ul.daten`.
-Später geändert: ja. Seine erste Fassung (2024 Kapstadt, 2024 Sansibar, 2026 Kapstadt) gilt nicht mehr.
+Später geändert: ja. Seine erste Fassung (2024 Kapstadt, 2024 Sansibar, 2026 Kapstadt) gilt nicht mehr. Seit V90 (6.11., Nachricht 3) stehen Kapstadt, Sansibar und Buenos Aires auch nicht mehr in der Vita; `aufenthalte` in `daten/inhalt.js` ist entfernt.
 
 **V29. Die Koordinaten bleiben.**
 „Die Koordinaten sind gut. Aber der Look und Feel noch nicht ganz.“ (19.10., 03:58). „Klappentexte, gerne noch um Koordinaten ergänzen.“ (19.10., 20:12). Er hat die Koordinaten von Sansibar selbst korrigiert (20.10., 04:47).
@@ -483,34 +483,64 @@ Später geändert: nein.
 „Ich denke, ich kann Simon-Kucher ruhig in der Vita nennen. Was sagst du? Hier die angepasste Vita: Er wurde 1995 in Dortmund geboren. In Freiburg studierte er Liberal Arts & Sciences, danach in Potsdam IT-Systems Engineering am Hasso-Plattner-Institut. Vier Jahre lebte er in Kaohsiung auf Taiwan. […]“ (20.10., 04:02)
 Für den Bau: Sein Text bleibt, wie er heute in A steht. Claude hat dort nur Tippfehler und Grammatik korrigiert: „Indie-Gaming-Studios“, „Zivilisation“, „Marketing- und Pricingberatung“, „Vertrauen in Institutionen“, das Komma vor „was“, der Gedankenstrich statt des Bindestrichs. Geglättet hat Claude „gehört er zum festen Bestandteil des Moderatorenteams“ zu „ist er fester Bestandteil des Moderatorenteams“. „Aboriginer-Kultur“ ist sein Wort und bleibt, bis er anders entscheidet (Text-Flaggen, „Nebenbei“).
 Ort in A: `vita.html`, `div.vita-text`, zweiter Absatz (Geburt, Studium), vierter (Taiwan), fünfter (Berlin, Simon-Kucher, Werkstattbühne), sechster (Preis, *Satoshi*) und siebter (Ursprungstrilogie).
-Später geändert: ja. Seine kürzere Fassung vom 20.10., 03:53, war für die Startseite gedacht und ist dort durch V15 ersetzt.
+Später geändert: ja. Seine kürzere Fassung vom 20.10., 03:53, war für die Startseite gedacht und ist dort durch V15 ersetzt. Seit V90 (6.11.) steht auf der Vita-Seite sein neuer Text (Nachricht 9 mit 10 und 11) statt dieses Textes.
 
 **V56. Simon-Kucher nur in der Vita.**
 „Ich denke, ich kann Simon-Kucher ruhig in der Vita nennen.“ (20.10., 04:02). Vorher hatte er beim Ghostwriting „Nur allgemein“ gewählt, also „schreibt beruflich für Unternehmen“ ohne Ghostwriting und ohne Medien (Antwort 19.10., 20:16).
 Für den Bau: Simon-Kucher steht genau einmal, in `vita.html`. Sonst bleibt der Beruf allgemein. Ghostwriting, Auftraggeber und Medien werden nicht genannt.
-Später geändert: ja, für Simon-Kucher. Die spätere Aussage erlaubt den Namen in der Vita. Für alles andere gilt weiter „Nur allgemein“. Vor dem Livegang bestätigt: „Simon-Kucher ja.“ (24.10.)
+Später geändert: ja, für Simon-Kucher. Die spätere Aussage erlaubt den Namen in der Vita. Für alles andere gilt weiter „Nur allgemein“. Vor dem Livegang bestätigt: „Simon-Kucher ja.“ (24.10.) Dazu V90 (6.11.): In der Vita stehen, in seinem Wortlaut, Ghostwriting und die FAZ; Simon-Kucher steht dort im Text (mit Verweis) und in zwei Stationen, sonst weiter nirgends.
 
 **V57. AIESEC bei Colombo und Cotonou.**
 „Bei Benin und Sri Lanka, es waren Freiwilligenprojekte mit AIESEC, das könnten wir noch erwähnen.“ (20.10., 03:57)
 Für den Bau: In der Vita ein Satz dazu, in den Stationen und auf der Tafel der Startseite der Vermerk „Freiwilligenprojekt mit AIESEC“.
 Ort in A: `vita.html`, dritter Absatz der `div.vita-text`, und die beiden ersten `li.neben` in `ul.daten`; `daten/inhalt.js`, `leben`, Feld `projekt`.
-Später geändert: nein.
+Später geändert: ja, V90 (6.11.): Der Satz in der Vita entfällt mit seinem neuen Text; in den Stationen und auf der Tafel der Startseite bleibt „Freiwilligenprojekt mit AIESEC“.
 
 **V58. Die längeren Aufenthalte seit Berlin.**
 Siehe V28. Claude hat daraus den Satz „Längere Aufenthalte führten ihn seitdem nach Mallorca, Kapstadt, Sansibar und Buenos Aires.“ gebildet; seine Fassung vom 20.10. beruhte auf einer älteren Datei, in der der Satz fehlte.
 Für den Bau: Satz und Stationen bleiben.
 Ort in A: `vita.html`, Ende des fünften Absatzes der `div.vita-text`, und `ul.daten`.
-Später geändert: ja, die Jahre (V28).
+Später geändert: ja, die Jahre (V28). Seit V90 (6.11.) entfallen Satz und Stationen (Nachricht 3); Mallorca bleibt auf dem Globus, „längerer Aufenthalt, zweiter Wohnsitz“ (Nachricht 4).
 
 **V59. Das Bootsfoto in der Vita.**
 „Zur Vita. Bitte dieses Bild …“ (20.10., 03:57). „Hier nochmal das Bild. Passt das jetzt?“ (20.10., 04:05). Das Foto kam am 20.10. um 04:12 als PDF.
 Für den Bau: Das Foto vom Boot steht auf der Vita-Seite. Nach Claudes Annahme vom 21.10. steht kein Bildnachweis darunter, bis er den Namen nennt. Die Bildunterschrift zu *Picknick am Wegesrand* ist Claudes Text.
 Ort in A: `vita.html`, `figure.bildnis`; `bilder/dominik-jaekel-boot.jpg`.
-Später geändert: ja. Das Studioporträt ist durch das Bootsfoto ersetzt.
+Später geändert: ja. Das Studioporträt ist durch das Bootsfoto ersetzt. Seit V90 (6.11.) steht unter dem Foto nur sein „Törn Sardinien–Korsika, 2025.“ (Nachricht 4, gekürzt mit Nachricht 13); das Foto bleibt, in drei Breiten.
 
 **V60. Keine Zeile zu Förderung und Mentoren.**
 Seine Vita vom 20.10., 04:02, enthält sie nicht. Claude hat sie daraufhin entfernt (20.10., 04:07).
 Für den Bau: Keine Mentoren, keine Seminare in der Vita.
+Später geändert: ja, V90 (6.11.): Sein neuer Text nennt die Seminare an der Bundesakademie für Kulturelle Bildung Wolfenbüttel; Mentoren weiter nicht.
+
+**V90. Neue Vita: seine Bio (Nachricht 9 mit 10 und 11), die Stationen nach Nachricht 12, unter dem Foto nur „Törn Sardinien–Korsika, 2025.“; Mallorca bleibt als Zweitwohnsitz; die Vita ist öffentlich und von der Startseite verlinkt; LinkedIn nur im Hinweis auf sein Profil; den Hersteller der Smartspeaker nennt die Website nirgends.**
+Seine Nachrichten vom 6. November, in dieser Folge. Die erste („Bitte die Vita seite, da die Vita gegen folgende Vita austauschen. Dominik Jäkel, Jahrgang 1995, bewegt sich als Autor […]“) ist durch die zweite überholt.
+- **Nachricht 2:** „Nein. Weißt du was ... Sorry ... Bitte nimm diesen Text: Dominik Jäkel, geboren 1995, studierte IT-Systems Engineering am Hasso-Plattner-Institut und Liberal Arts & Sciences in Freiburg i. Br., lebte mehrere Jahre in Taiwan und arbeitet derzeit in Berlin als Ghostwriter für Führungskräfte aus FinTech und Bankwesen; seine Texte erschienen unter dem Namen seiner Auftraggeber u. a. im Wall Street Journal und in der FAZ. Gewinner des A.-E.-Johann-Preises 2022; Moderator der Werkstattbühne des Autorenforums Berlin. SATOSHI ist sein Debüt – der Roman handelt von dem, was sein Autor beruflich kennt: Coding, Finanzsysteme und das Schreiben unter fremdem Namen. (den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden)“
+- **Nachricht 3:** „Bei den Stationen ... Bitte nimm das hier raus: 2023 Mallorca, längerer Aufenthalt / 2024 Kapstadt, Südafrika, längerer Aufenthalt / 2025 Sansibar, Tansania, längerer Aufenthalt / 2026 Buenos Aires, Argentinien, längerer Aufenthalt / Schreib da: 2023 ... Content Writer Simon-Kucher (EN/DE) / 2025 Senior Content Writer (Leitung deutschsprachiger Contentabteilung)“
+- **Nachricht 4:** „nein Mallorca nicht vom Globus nehmen. Das ist mein Zweitwohnungsitz. Man könnte allerhöchsten noch (Längerer Aufenthalt, zweiter Wohnsitzt) schreiben ... Mit Picknick am Wegesrand der Brüder Strugatzki. Törn Sardinien–Korsika, 2025. / Bitte das als Bildunterschrift auch noch aufnehmen, weil das Bild kritisiert wurde“
+- **Nachricht 5:** „Schau bitte das du es optisch alles so gut wie möglich sowohl mobil als auch desktop technisch darstellest. Mach wieder drei Varianten und wähle die beste. Dann leg mir die Varianten nochmal vor ...“
+- **Nachricht 6** (zum Satz nach dem Semikolon in Nachricht 2): „Ändere es nochmal mit dem WSJ. Den Satz umschreiben in ... „… seine Texte erschienen unter dem Namen seiner Auftraggeber in der FAZ, im Industriemagazin und in zahlreichen Branchenmagazinen.“ / Es ist halt öffentlich. Und mein Anteil war eher klein beim WSJ. Daher würde ich es umformulieren“
+- **Nachricht 7:** „Findest du diese Variante für die Vita? Findest du die besser? Dann nehmen wir gerne die hier: Dominik Jäkel, geboren 1995, studierte IT-Systems Engineering am Hasso-Plattner-Institut und Liberal Arts & Sciences in Freiburg i. Br., lebte mehrere Jahre in Taiwan und arbeitet derzeit in Berlin als Ghostwriter für Führungskräfte aus FinTech und Bankwesen; seine Texte erschienen unter dem Namen seiner Auftraggeber u. a. in der FAZ, im österreichischen INDUSTRIEMAGAZIN und in zahlreichen Branchen- und Fachpublikationen. Gewinner des A.-E.-Johann-Preises 2022; Projekte als Freelancer u. a. für Intel, einen der weltmarktführenden Smartspeaker und Indie-Gaming-Studios; Moderator der Werkstattbühne des Autorenforums Berlin. SATOSHI ist sein Debüt – der Roman handelt von dem, was sein Autor beruflich kennt: Coding, Finanzsysteme und das Schreiben unter fremdem Namen.“
+- **Nachricht 8** (auf Claudes Vorschlag, die Projekte vor den Preis zu stellen; so in den Kommentaren der Vita festgehalten): „Okay setz das gerne noch so um“ und „Intel darf ich öffentlich nennen, da habe ich keine NDA gesigned.“ [Den Hersteller der Smartspeaker nennt diese Liste nicht: dort hat er eine Verschwiegenheitsvereinbarung.]
+- **Nachricht 9:** „Okay sorry. Aber ... Alle mäkeln an der Bio rum. Wir müssen nochmal ändern. Hier ist jetzt die vollständige Bio die auf die Website soll ... Puh. / Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie – meist unter den Namen anderer Leute. // Er studierte IT-Systems Engineering am Hasso-Plattner-Institut (HPI) sowie Liberal Arts & Sciences in Freiburg. Im Anschluss lebte er mehrere Jahre in Taiwan, lernte Mandarin und bereiste über 70 Länder (darunter ein Großteil der Schauplätze von SATOSHI). // Heute verantwortet er den deutschsprachigen Content der Strategieberatung Simon-Kucher. Als Ghostwriter schreibt er für führende Köpfe der FinTech- und Bankenwelt – Texte, die unter deren Namen u. a. in der FAZ erscheinen. // Seine literarische Arbeit wurde mit dem A.-E.-Johann-Preis (2022) ausgezeichnet. Dominik Jäkel lebt in Berlin, moderiert regelmäßig die Werkstattbühne des Autorenforums Berlin und besuchte zahlreiche Seminare an der Bundesakademie für Kulturelle Bildung Wolfenbüttel. // Mit SATOSHI führt er alle Stränge seiner Vita zusammen. Ein Ghostwriter der IT- und Finanzbranche schreibt über das eine Pseudonym, das die halbe Welt endlich aufdecken will. // (Davon abgetrennt … Kleiner und kursiv und mit Link auf LinkedIn) Das vollständige berufliche Profil, u. a. mit Projekten als Freelancer für Intel, einen marktführenden Smartspeaker-Hersteller und Indie-Gaming-Studios, finden Sie hier.“ („//“ trennt seine Absätze.)
+- **Nachricht 10:** „Startseite so lassen, LinkedIn schicke ich gleich. Hier ist es: https://www.linkedin.com/in/dominik-j%C3%A4kel-3b861615a/ / (Eine winzige Ergänzung noch Sorry. Ich würde scheiben. Heute verantwortet er den deutschsprachigen Content der Strategieberatung Simon-Kucher. Als Ghostwriter schreibt er für führende Köpfe aus IT und Banking – Texte, die unter deren Namen u. a. in der FAZ erscheinen.“
+- **Nachricht 11:** „Und es muss erschienen /statt erscheinen (!!!) heißen. Nochmal neu ausgeben ... Sorry“
+- **Nachricht 12** (die Stationen): „* 1995 Dortmund, geboren * 2014–2015 Freiburg, Studium Liberal Arts & Sciences * 2015–2018 Potsdam, Studium IT-Systems Engineering am Hasso-Plattner-Institut * 2016 Colombo, Sri Lanka, Freiwilligenprojekt mit AIESEC * 2018 Cotonou, Benin, Freiwilligenprojekt mit AIESEC * 2018 Kaohsiung, Taiwan, vier Jahre als Lektor und freier Autor * 2022 Berlin, seitdem Wohnort * 2022 A.-E.-Johann-Preis * 2022-24 Content Writer bei Simon-Kucher (EN/DE) * 2025-Heute Senior Content Writer (Leitung deutschsprachiger Contentabteilung) / Oder wie auch immer man heute gut ausschreibt?“
+- **Nachricht 13** (zur ersten Fassung, die er gesehen hatte): „Schick mir dann den Vergleich der drei Fassungen. Bei dem was du geschickt hast, haben wir schon wieder dieses Platzproblem unter dem Vita Text. Also so geht es nicht wirklich [Smiley] / Auf Desktop. "Mit Picknick am Wegesrand der Brüder Strugatzki." kann raus. Törn Sardinien–Korsika, 2025. (Reicht!)“
+
+Es gilt: für die Bio Nachricht 9, ihr zweiter Satz im dritten Absatz nach Nachricht 10 und 11; für die Stationen Nachricht 12; für die Bildunterschrift Nachricht 13; für Mallorca Nachricht 4; für die Startseite Nachricht 2 und 10; aus Nachricht 8 gilt weiter: Intel darf genannt werden, der Hersteller der Smartspeaker nicht. Die Nachrichten 2, 6 und 7 sind als Text der Vita überholt.
+Für den Bau:
+- **Bio** (`vita.html`, `div.vita-text`): seine fünf Absätze Wort für Wort, im dritten der zweite Satz „Als Ghostwriter schreibt er für führende Köpfe aus IT und Banking – Texte, die unter deren Namen u. a. in der FAZ erschienen.“ Gesetzt wie die übrige Website: SATOSHI als Werktitel *Satoshi* (kursiv, in normaler Schreibung; im letzten Absatz in der vollen Website ein Verweis auf das Exposé, im Platzhalter Text), vor den Gedankenstrichen ein geschütztes Leerzeichen, in „u. a.“ ein schmales, weiche Trennungen in langen Wörtern, „Hasso-Plattner-Institut“ ungetrennt; Verweise nach außen auf Simon-Kucher, den A.-E.-Johann-Preis und das Autorenforum Berlin. Der Leitsatz „Dominik Jäkel schreibt tagsüber unter fremden Namen …“ steht nicht mehr auf der Vita, sein erster Absatz sagt dasselbe und ist dort der Einstieg (in der IM Fell, im Grad groß); auf der Startseite bleibt der Leitsatz der erste Satz.
+- **Hinweis auf das berufliche Profil** („Davon abgetrennt … Kleiner und kursiv und mit Link auf LinkedIn“): ein eigener Absatz unter der Bio, 2 z abgesetzt, im Grad klein und kursiv (aus dem Stil), in Tinte. „hier“ führt auf genau die Adresse aus Nachricht 10 (prozentkodiert, wie er sie geschickt hat); Vorleseprogramme nennen den Verweis „hier: das berufliche Profil auf LinkedIn“. LinkedIn steht nur dort, nicht im Fuß und nicht in `PROFILE` (`seite.js`).
+- **Stationen:** zehn Einträge in der Folge von Nachricht 12, ohne Mallorca, Kapstadt, Sansibar und Buenos Aires (Nachricht 3). Die beiden letzten als Zeitspannen wie 2014–2015 und 2015–2018: „2022–2024 Content Writer bei Simon-Kucher (EN/DE)“ und „2025–heute Senior Content Writer (Leitung deutschsprachiger Contentabteilung)“; das zweite Glied steht unter dem ersten, „heute“ klein, vorgelesen und kopiert „2025 bis heute“. Der Satz „Die Wohnorte und die ersten längeren Aufenthalte auf dem Globus.“ bleibt.
+- **Foto:** das Bootsfoto bleibt (in drei Breiten, 480, 800 und 1200 px). Darunter nur „Törn Sardinien–Korsika, 2025.“ (Nachricht 13). Der Ersatztext nennt das Buch nicht und bleibt.
+- **Globus:** Mallorca bleibt (Zweitwohnsitz), die Tafel sagt „längerer Aufenthalt, zweiter Wohnsitz“ (`daten/inhalt.js`, `projekt`). Die Liste `aufenthalte` (Kapstadt, Sansibar, Buenos Aires) ist entfernt; keine Seite las sie.
+- **Vita öffentlich** (Platzhalter, `AUSGABE = 'platzhalter'`): Auf der Startseite steht in der Kurzvita wieder „Ausführlich in der Vita.“ mit dem Verweis; er ist im Platzhalter der einzige Verweis auf eine andere eigene Seite außer Impressum und Datenschutz. /vita ist indiziert, steht in der Sitemap und trägt die Person in den strukturierten Daten. Von der Vita führt kein Weg zum Exposé (*Satoshi* ist dort Text); das Exposé verweist weiter auf die Vita. „Startseite so lassen“ (Nachricht 10): sonst bleibt die Startseite, wie sie ist.
+- **Verschwiegenheit** (Nachricht 8): Intel darf stehen. Den Hersteller der Smartspeaker nennt die Website nirgends, in keiner Datei, keinem Kommentar, keinem Ersatztext und keinen Daten; das gilt auch für seine Geräte. Deshalb ist in `daten/buecher.js` (volle Website) beim E-Book von *The Call of Cthulhu* das Feld Verlag leer. Das *Wall Street Journal* steht nirgends (Nachricht 6).
+- **Gestaltung** (Nachricht 5 und 13): drei Fassungen mit demselben Inhalt, Vergleich „Vita: drei Fassungen“. A „Zwei Spalten, im Gleichgewicht“: links Bio, Hinweis und Stationen, rechts das Foto groß, es bleibt beim Rollen stehen und endet mit den Stationen; auf dem Telefon Text, Foto, Stationen (Claudes Empfehlung, im Repository). B „Das Bild zurückgenommen“: rechts die Stationen, darunter das Foto klein. C „Ein Blatt“: eine Spalte, das Foto als Querformat nach der Bio. Maß für Nachricht 13: Am Desktop endet die linke Spalte höchstens 2 z über oder unter der rechten, oder es gibt nur eine Spalte. A und C erfüllen es, B nicht (190 bis 360 px).
+- Für die Vita gilt V72 nicht mehr für Ghostwriting und FAZ, in seinem Wortlaut; ebenso V60 (die Seminare in Wolfenbüttel) und der Punkt Chinesisch (er schreibt „lernte Mandarin“).
+Ort in C: `website-c/vita.html` (`div.vita-text`, `p.profil-hinweis`, `figure.bildnis`, `ul.daten`), `website-c/index.html` (`p.vita`; das Skript des Platzhalters, `BLEIBT`), `website-c/daten/inhalt.js` (`leben`, Mallorca), `website-c/daten/buecher.js`, `website-c/bilder/dominik-jaekel-boot-480.jpg` und `-800.jpg`, `website-c/werkzeuge/veroeffentlichen.py` (`NOINDEX_PLATZHALTER`, `LD_PLATZHALTER`, `VERWEISE_PLATZHALTER`, `AUSSEN_ERLAUBT`), `website-c/werkzeuge/artefakt.py`; Änderungsprotokoll, 6. November („Neue Vita, drei Fassungen“); `docs/gestaltung-website-c.md` 6.16, 9.5, 9.10.
+Offen: Welche Fassung der Vita (Übersicht 3, Punkt 25). Bis dahin steht A im Repository, live ist noch die Vita vom 29. Oktober.
 Später geändert: nein.
 
 ---
@@ -585,7 +615,7 @@ Später geändert: ja. „sehr dezent“ ergänzt die erste Nachricht.
 „Und ich werde dann später noch mein Instagram und auch mein LinkedIn hinzufügen. Unten drunter.“ (20.10., 19:09)
 Für den Bau: Im Fuß ist ein Platz vorbereitet und verborgen. Keine toten Links, bis er die Adressen schickt.
 Ort in A: alle Seiten, `p.profile[hidden]`.
-Später geändert: ja, ergänzt (24.10., 22:45): „Instagram ist angelegt: instagram.com/dominikjaekel (aber noch nicht. Ich will das noch füllen)“. Eingetragen wird die Adresse erst, wenn er es gefüllt hat (`docs/todo.md`); LinkedIn ist offen.
+Später geändert: ja, ergänzt (24.10., 22:45): „Instagram ist angelegt: instagram.com/dominikjaekel (aber noch nicht. Ich will das noch füllen)“. Eingetragen wird die Adresse erst, wenn er es gefüllt hat (`docs/todo.md`); LinkedIn ist offen. Seit V90 (6.11., Nachricht 10) ist die Adresse von LinkedIn bekannt; sie steht nur im Hinweis auf das berufliche Profil in der Vita („hier“), im Fuß und in `PROFILE` (`seite.js`) bewusst noch nicht.
 
 ---
 
@@ -634,6 +664,8 @@ Hier stehen nur die Themen. Einzelheiten werden nicht abgeschrieben.
 - **Neue persönliche Fakten** über ihn (V70).
 - **Superlative** und Vergleiche mit anderen Menschen (V07).
 
+Später geändert: ja, V90 (6.11.), nur für die Vita und nur in seinem Wortlaut: Ghostwriting („Als Ghostwriter schreibt er für führende Köpfe aus IT und Banking …“), die FAZ und „lernte Mandarin“ stehen dort. Das *Wall Street Journal* bleibt draußen (Nachricht 6). Neu dazu: Den Hersteller der Smartspeaker, für den er gearbeitet hat, und seine Geräte nennt die Website nirgends, auch nicht in Kommentaren, Ersatztexten und Daten (Verschwiegenheitsvereinbarung, Nachricht 8); Intel darf stehen.
+
 ---
 
 ## Übersicht 1: Seine Texte und wo sie in A stehen
@@ -642,14 +674,16 @@ Hier stehen nur die Themen. Einzelheiten werden nicht abgeschrieben.
 
 | Text | Herkunft | Ort in `website/` |
 |---|---|---|
-| Erster Satz „Dominik Jäkel schreibt tagsüber …“ | Claudes Vorschlag, von ihm gewählt (19.10., 20:16) | `index.html` `p#einstieg`; `vita.html` `p.einstieg` |
+| Erster Satz „Dominik Jäkel schreibt tagsüber …“ | Claudes Vorschlag, von ihm gewählt (19.10., 20:16) | `index.html` `p#einstieg`; bis V90 auch `vita.html` `p.einstieg` |
 | „Schriftsteller und Reisender“, seit 29.10. nur „Schriftsteller“ (V89) | sein Wunsch (19.10., 04:00; 29.10.) | alle Seiten, `.briefkopf .rolle` |
 | Kurzvita der Startseite mit Werkstattbühne | Claudes Kürzung, von ihm freigegeben (20.10., 04:47) | `index.html` `p.vita` |
 | „Was ich schreibe“, „Was ich gelesen habe“ | seine Wörter (19.10., 20:12) | `index.html` `h2#schreiben-titel`, `h2#gelesen-titel` |
 | „die wichtigsten aus Kindheit und Jugend“, „was noch wartet“ | seine Wörter (19.10., 04:07 und 20:12) | `index.html`, `p.bandname` im Zeitband; `bibliothek.html`, Bretter |
-| Vita-Text | von ihm (20.10., 04:02), Tippfehler korrigiert | `vita.html` `div.vita-text`, Absätze 2 und 4 bis 7 |
-| AIESEC-Satz, Satz zu den Aufenthalten | Claude nach seinen Angaben (20.10., 03:57, 04:47, 05:00) | `vita.html` `div.vita-text`, Absatz 3 und Ende von Absatz 5 |
-| Stationen mit Jahren und Koordinaten | seine Angaben | `vita.html` `ul.daten`; `daten/inhalt.js` `leben`, `aufenthalte` |
+| Vita-Text | von ihm (20.10., 04:02), Tippfehler korrigiert; seit V90 seine Bio vom 6.11. (Nachricht 9 mit 10 und 11) | `vita.html` `div.vita-text`, Absätze 2 und 4 bis 7; C seit V90: die fünf Absätze von `div.vita-text` |
+| Hinweis auf das berufliche Profil, mit LinkedIn | von ihm (6.11., Nachricht 9 und 10, V90) | C: `vita.html` `p.profil-hinweis` |
+| AIESEC-Satz, Satz zu den Aufenthalten | Claude nach seinen Angaben (20.10., 03:57, 04:47, 05:00); seit V90 entfallen | `vita.html` `div.vita-text`, Absatz 3 und Ende von Absatz 5 |
+| Stationen mit Jahren und Koordinaten | seine Angaben; seit V90 nach Nachricht 12 (6.11.), ohne Koordinaten | `vita.html` `ul.daten`; `daten/inhalt.js` `leben`, `aufenthalte` (seit V90 entfernt) |
+| Bildunterschrift „Törn Sardinien–Korsika, 2025.“ | von ihm (6.11., Nachricht 4 und 13, V90) | C: `vita.html` `.bildnis figcaption` |
 | Auftakt „Am 31. Oktober 2008 …“ | sein Exposé | `satoshi.html` `p.anfang`; `daten/inhalt.js` `satoshi.hook`, `werke[0].text` |
 | Klappentext ohne das Ende | sein Exposé | `satoshi.html`, Abschnitt `h2#klapp-titel` |
 | Szene London 2007 | von ihm (20.10., 04:23) | `daten/inhalt.js` `satoshi.szenen[1]`; `satoshi.html`, zweites `li.szene` |
@@ -702,11 +736,11 @@ Ohne Konflikt, aber durch ihn entschieden: Frage 6 (V17), Frage 9 (V22), Frage 1
 7. **Bootsfoto:** Wer hat es gemacht, und soll die Person genannt werden (V59)?
 8. **Abstecher:** von Potsdam nach Colombo und Cotonou, von Berlin nach Mallorca, jeweils hin und zurück (V24)?
 9. ~~**Simon-Kucher:** Ist geklärt, dass die Firma genannt werden darf? Claude hatte am 20.10. um 04:07 dazu geraten (V56).~~ Beantwortet am 24. Oktober: „Simon-Kucher ja.“ Bleibt in der Vita, nur dort (V56).
-10. **„Aboriginer-Kultur“** in der Vita: lassen oder „indigene Völker“ (V55)?
-11. **Chinesisch:** in die Vita, und wie gut (V72)?
+10. ~~**„Aboriginer-Kultur“** in der Vita: lassen oder „indigene Völker“ (V55)?~~ Erledigt mit V90: Sein neuer Text vom 6. November enthält den Satz nicht.
+11. ~~**Chinesisch:** in die Vita, und wie gut (V72)?~~ Beantwortet mit seiner Bio vom 6. November: „lernte Mandarin“ (V90).
 12. **Bücher im Regal:** Bleiben *Ghostwritten* von David Mitchell, *Das kleine Gespenst* und die Bücher von Wulf Dorn und Ursula Poznanski? Claude fragte am 20.10. um 06:57.
 13. **Newsletter:** Wortlaut der Zeile freigeben, auch Journal-Einträge ankündigen, Anbieter wählen (V68)?
-14. **Instagram und LinkedIn:** die Adressen (V69). Instagram ist angelegt (instagram.com/dominikjaekel) und kommt auf die Seite, sobald er es gefüllt hat; LinkedIn ist offen.
+14. **Instagram und LinkedIn:** die Adressen (V69). Instagram ist angelegt (instagram.com/dominikjaekel) und kommt auf die Seite, sobald er es gefüllt hat. LinkedIn: am 6. November geschickt (V90), verlinkt nur im Hinweis auf das berufliche Profil der Vita; offen ist, ob es auch in den Fuß und in die strukturierten Daten soll.
 15. **Impressum:** ein zweiter schneller Kontaktweg neben der Mail, etwa ein Formular?
 16. **Szenentexte von *Satoshi*:** Text-Flagge 25 durchsehen. In C bleiben sie bis dahin wie in A (V36).
 17. **Einblenden (V83):** Auf *Satoshi* am Telefon den Globus früher zeigen (ohne Bindung ans Lesen, rund 2,1 statt 3,1 s)? Soll ein Klick auf das Buch die Bewegung der Kugel nicht freigeben? Auf *Ursprünge* den Halt an Göbekli Tepe schon mit der Blende beginnen lassen (erstes Gleiten nach rund 8,8 statt 11,8 s)?
@@ -718,5 +752,6 @@ Ohne Konflikt, aber durch ihn entschieden: Frage 6 (V17), Frage 9 (V22), Frage 1
 22. ~~**Adresse des Exposés:** /satoshi behalten (geteilte Links bleiben gültig) oder für neue Weitergaben eine weniger erratbare Adresse (etwa /satoshi-expose-7k4q)?~~ Beantwortet am 27. Oktober: „Bisher verschickte Links sind kein Grund zu Sorge“; /satoshi bleibt. Aus Google nimmt er die Seite über die Search Console (V88, `docs/todo.md`).
 23. ~~**Satz zur Bibliothek im Exposé:** „*Ficciones* steht in der Bibliothek, ebenso …“ steht dort als Text und meint eine Seite, die man vom Exposé aus nicht erreicht. Lassen oder im Exposé weglassen?~~ Beantwortet am 29. Oktober: „Das mit der Bibliothek soll auch alles raus.“ Der Satz fällt im Exposé weg, in der vollen Website bleibt er (V89).
 24. **Sprung zum Globus (V89):** Passiert es noch, wenn er den Link frisch aus dem Chat in einem neuen Tab öffnet, oder nur beim Zurückkehren in den Tab oder beim Neuladen? Tippt er vorher in der Vita auf „auf dem Globus“? Behoben ist nur das Neuladen; kehrt das Telefon über den Verlauf zurück, stellt der Browser die Stelle weiter her.
+25. **Vita (V90):** welche der drei Fassungen? A „Zwei Spalten, im Gleichgewicht“ (Claudes Empfehlung, im Repository), B „Das Bild zurückgenommen“ oder C „Ein Blatt“; Vergleich „Vita: drei Fassungen“. Live ist bis dahin die Vita vom 29. Oktober.
 
 Beantwortet am 24. Oktober vor dem Livegang (Dominik: „Vercel Hobby … 65 Länder bleiben. Simon-Kucher ja. Impressum und Datenschutz von mir freigegeben“), standen nicht als eigene Nummer in dieser Liste, sondern in `docs/todo.md`: **65 Länder** bleiben (V27); **Tarif bei Vercel:** Hobby (`TARIF = 'hobby'` in `website-c/werkzeuge/veroeffentlichen.py`, im Datenschutz die Fassung ohne Vertrag zur Auftragsverarbeitung); **Impressum und Datenschutz** freigegeben, die beiden Vermerke `[[ZU PRÜFEN: … freigegeben?]]` sind gelöscht. Die Angaben zu Vercel im Datenschutz stammen aus der Zwischenmeldung 2 der Vercel-Sitzung vom 24. Oktober (live gelesen).

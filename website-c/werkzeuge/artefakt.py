@@ -45,9 +45,10 @@ Zwei Ausgaben (27. Oktober), wie in der Veröffentlichung (werkzeuge/veroeffentl
 In beiden Ausgaben setzt der Bau die Markierungen data-nur und data-verweis um (ausgabe_umsetzen unten) und lässt keine stehen.
 Im Platzhalter trägt das <html> der Hauptseite dazu data-ausgabe="platzhalter" und data-schluss (das Skript ganz oben setzt beides,
 wie die Sprache); danach richten sich die Skripte und Stile der Seite. Im Platzhalter fehlen die übrigen Seiten und aus daten/ und
-bilder/, worauf keine ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht mitgeht; daten/buecher.js geht
-nur mit den Büchern vom Nachttisch mit (buecher_platzhalter unten), und in seite.js behalten die Tabellen NACHNAMEN und BERICHTIGT
-nur, was diese Bücher brauchen (buch_tabellen_platzhalter). Wohin jede Seite dort verweisen darf, steht in
+bilder/, worauf keine ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht mitgeht; daten/buecher.js
+und daten/leseliste.js gehen nur mit den Büchern mit, die Zeitband und Regal der Startseite zeigen (buecher_platzhalter unten; seit
+dem 6. November steht das Bücherregal wieder auf der Startseite, ohne „Die ganze Bibliothek“), und in seite.js behalten die Tabellen
+NACHNAMEN und BERICHTIGT nur, was diese Bücher brauchen (buch_tabellen_platzhalter). Wohin jede Seite dort verweisen darf, steht in
 VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf die Vita, Impressum, Datenschutz, Anker, die Adresse für Anfragen
 und nach außen; auf das Exposé keine Seite, auch die Vita nicht); auch das prüft der Bau, die Kandidaten eines srcset eingeschlossen.
 
@@ -380,77 +381,172 @@ def tarif_waehlen(text):
     return v.tarif_waehlen(text, v.TARIF)
 
 
-def buecher_platzhalter(text, seite='daten/buecher.js'):
-    """daten/buecher.js (schon ohne Kommentare) für den Platzhalter: nur die Bücher vom Nachttisch (r 'gerade'), mehr braucht das
-    Regal der Startseite nicht; die Bibliothek bleibt in der vollen Website (Dominik, 29. Oktober: „Das mit der Bibliothek soll
-    auch alles raus.“). Jede Zeile bleibt, wie sie war. Ergibt die Liste neu geschrieben nicht Zeichen für Zeichen die Datei
-    (ein anderes Format) oder steht kein Buch auf dem Nachttisch, baut er nicht."""
-    m = re.fullmatch(r'\s*window\.BUECHER = (\[.*\]);\s*', text, re.S)
+# ---------- Die Bücher im Platzhalter (29. Oktober, 6. November) ----------
+# Was Regal und Zeitband der Startseite lesen, und nur das (Dominik, 29. Oktober: „Das mit der Bibliothek soll auch alles raus.“; am
+# 6. November, mit dem Bücherregal wieder auf der Startseite: „NUR AUF DER STARTSEITE(!) Nicht die Bibliothek.“). FSeite.buch.alle()
+# in seite.js nimmt aus daten/buecher.js die Regale REGALE ohne DRAUSSEN und aus daten/leseliste.js, was noch wartet, ohne was schon
+# im Regal steht (titelSchluessel); BERICHTIGT berichtigt Jahr, Untertitel und Verfasser. index.html liest davon im Zeitband die
+# Bücher mit Jahr (ZEITBAND, so steht es dort) und im Regal die vom Nachttisch. Was nur die Bibliothek zeigt (Bücher ohne Jahr, was
+# wartet und schon im Regal steht), geht nicht mit. Ändert sich, was die Startseite liest, oder die Form der Tabellen und Listen,
+# baut der Platzhalter nicht, bis der Filter hier angepasst ist (das Prüfprogramm vergleicht dazu das Zeitband mit der vollen Website)
+ZEITBAND = ("const HAUPT = BUECHER.filter(b => (b.r === 'gelesen' || b.r === 'abgebrochen') && b.j != null).sort(ordnung);",
+            "const GERADE = BUECHER.filter(b => b.r === 'gerade' && b.j != null).sort(ordnung);",
+            "const KIND = BUECHER.filter(b => b.r === 'kindheit' && b.j != null).sort(ordnung);",
+            "const WARTE = BUECHER.filter(b => b.r === 'leseliste' && b.j != null).sort(ordnung);",
+            "const NACHTTISCH = BUECHER.filter(b => b.r === 'gerade');")
+BUCH_REGALE = ['gelesen', 'kindheit', 'gerade', 'abgebrochen']   # REGALE in seite.js; im Zeitband mit Jahr, alle vom Nachttisch im Regal
+_S = r"'((?:[^'\\]|\\.)*)'"   # eine Zeichenkette in '…' in seite.js und daten/leseliste.js
+
+
+def _js(x):
+    return re.sub(r'\\(.)', r'\1', x)
+
+
+def _sauber(x):
+    # wie sauber() in seite.js, das Namen und Titel vor dem Vergleich bereinigt
+    return re.sub(r'&amp;(amp;)*', '&', '' if x is None else str(x)).replace('‎', '').replace('‏', '').strip()
+
+
+def _tabelle(text, name, auf, zu, seite):
+    """Die Tabelle „const name = auf … zu;“ in seite.js, genau einmal, mit dem Rumpf in group(2)."""
+    treffer = list(re.finditer(r'^( *)const ' + name + ' = ' + re.escape(auf) + r'\n(.*?)\n\1' + re.escape(zu) + ';$', text, re.M | re.S))
+    if len(treffer) != 1:
+        fehler(f'{seite}: „const {name} = {auf} … {zu};“ {len(treffer)}-mal statt einmal')
+    return treffer[0]
+
+
+def _nachnamen_paare(rumpf, seite):
+    paar = re.compile(_S + ': ' + _S)
+    if not re.fullmatch(r'[\s,]*', paar.sub('', rumpf)):
+        fehler(f'{seite}: NACHNAMEN nicht nur aus Paaren \'Name\': \'Nachname\'')
+    return paar
+
+
+_BERICHTIGT_ZEILE = re.compile(r'( *\{ a: ' + _S + ', t: ' + _S + r'(?:, (.*))? \}),?')
+
+
+def _berichtigt_zeilen(rumpf, seite):
+    """Je Zeile von BERICHTIGT: (Zeile, a, t, Jahr oder None, ob die Zeile ein Jahr setzt). Eine Zeile, die nach dem Verlag fragt
+    (v: /…/) und das Jahr setzt, kennt der Filter nicht."""
+    aus = []
+    for z in rumpf.split('\n'):
+        m = _BERICHTIGT_ZEILE.fullmatch(z)
+        if not m:
+            fehler(f'{seite}: BERICHTIGT, Zeile nicht lesbar: {z.strip()}')
+        rest = m.group(4) or ''
+        j = re.search(r'(?:^|, )j: (null|-?[0-9]+)(?:,|$)', rest)
+        if j and re.search(r'(?:^|, )v: /', rest):
+            fehler(f'{seite}: BERICHTIGT, Zeile setzt das Jahr nur für einen Verlag; das kennt buecher_platzhalter nicht: {z.strip()}')
+        aus.append((m.group(1), _js(m.group(2)), _js(m.group(3)), None if not j or j.group(1) == 'null' else int(j.group(1)), bool(j)))
+    return aus
+
+
+def _satz(s):
+    # wie satz() in FSeite.buch: Halbgeviertstrich in Spannen, typografische Anführungszeichen und Apostrophe
+    s = re.sub(r'([0-9])-([0-9])', r'\1–\2', s)
+    s = re.sub(r'"([^"]*)"', r'“\1”', s)
+    return s.replace("'", '’')
+
+
+def _titel_schluessel(a, t, nachnamen):
+    """Wie titelSchluessel in FSeite.buch: Nachname | Titel ohne Artikel, nur Buchstaben und Ziffern."""
+    a = _sauber(a)
+    if a in nachnamen:
+        nn = nachnamen[a]
+    elif re.match(r'Die [0-9]', a):
+        nn = ''
+    else:
+        teile = re.sub(r',?\s+(Jr\.|Sr\.)$', '', a).split()
+        nn = teile[-1] if teile else ''
+    t = re.sub(r'^(der|die|das|the|a|an|ein|eine)\s+', '', _satz(_sauber(t)).lower())
+    return _satz(nn) + '|' + ''.join(c for c in t if c.isalpha() or c.isnumeric())
+
+
+_LESELISTE_ZEILE = re.compile(r"  \{ t: " + _S + ", a: " + _S + r", j: (null|-?[0-9]+), p: [0-9]+(?:, k: true)? \},?")
+
+
+def buecher_zahl(text):
+    """Wie viele Bücher daten/buecher.js oder daten/leseliste.js (ohne Kommentare) nennt: je Buch eine Zeile, die mit { beginnt."""
+    return len(re.findall(r'^ *\{', text, re.M))
+
+
+def buecher_platzhalter(texte, seite='daten/buecher.js', liste_seite='daten/leseliste.js'):
+    """daten/buecher.js und daten/leseliste.js (schon ohne Kommentare) für den Platzhalter, zurück als (buecher, leseliste): nur
+    die Bücher, die auf der Startseite stehen, im Zeitband (mit Jahr) oder im Regal (vom Nachttisch); aus der Leseliste nur, was im
+    Zeitband wartet (mit Jahr und noch nicht im Regal). Jede Zeile bleibt, wie sie war. Ergibt eine Liste neu geschrieben nicht
+    Zeichen für Zeichen ihre Datei (ein anderes Format), liest index.html anderes als ZEITBAND, sind REGALE oder DRAUSSEN in seite.js
+    anders als hier angenommen oder steht kein Buch auf dem Nachttisch, baut er nicht."""
+    index, seite_js = texte[Path(HAUPTSEITE)], texte[Path('seite.js')]
+    for z in ZEITBAND:
+        if index.count(z) != 1:
+            fehler(f'{HAUPTSEITE}: „{z}“ steht nicht genau einmal da; was die Startseite aus den Büchern liest, hat sich geändert '
+                   f'(buecher_platzhalter in werkzeuge/artefakt.py anpassen)')
+    if seite_js.count("const REGALE = ['gelesen', 'kindheit', 'gerade', 'abgebrochen'];") != 1 or seite_js.count('const DRAUSSEN = [];') != 1:
+        fehler('seite.js: REGALE oder DRAUSSEN in FSeite.buch sind nicht mehr, was buecher_platzhalter annimmt')
+    m = re.fullmatch(r'\s*window\.BUECHER = (\[.*\]);\s*', texte[Path(seite)], re.S)
     if not m:
         fehler(f'{seite}: „window.BUECHER = [ … ];“ nicht gefunden')
     liste = json.loads(m.group(1))
     zeile = lambda e: json.dumps(e, ensure_ascii=False, separators=(',', ':'))  # noqa: E731
-    if 'window.BUECHER = [\n' + ',\n'.join(map(zeile, liste)) + '\n];\n' != text:
+    if 'window.BUECHER = [\n' + ',\n'.join(map(zeile, liste)) + '\n];\n' != texte[Path(seite)]:
         fehler(f'{seite}: neu geschrieben nicht Zeichen für Zeichen gleich')
-    nacht = [e for e in liste if e.get('r') == 'gerade']
-    if not nacht:
+    lm = re.fullmatch(r'window\.LESELISTE = \[\n(.*)\n\];\n', texte[Path(liste_seite)], re.S)
+    if not lm:
+        fehler(f'{liste_seite}: „window.LESELISTE = [ … ];“ nicht gefunden')
+    lzeilen = lm.group(1).split('\n')
+    lesen = []
+    for i, z in enumerate(lzeilen):
+        lz = _LESELISTE_ZEILE.fullmatch(z)
+        if not lz or z.endswith(',') != (i < len(lzeilen) - 1):
+            fehler(f'{liste_seite}: Zeile nicht lesbar: {z.strip()}')
+        lesen.append((z.rstrip(','), _js(lz.group(2)), _js(lz.group(1)), None if lz.group(3) == 'null' else int(lz.group(3))))   # Zeile, a, t, j
+    rumpf = _tabelle(seite_js, 'NACHNAMEN', '{', '}', 'seite.js').group(2)
+    nachnamen = {_js(p.group(1)): _js(p.group(2)) for p in _nachnamen_paare(rumpf, 'seite.js').finditer(rumpf)}
+    rumpf = _tabelle(seite_js, 'BERICHTIGT', '[', ']', 'seite.js').group(2)
+    jahr_neu = {(a, t): j for _, a, t, j, setzt in _berichtigt_zeilen(rumpf, 'seite.js') if setzt}
+
+    def jahr(a, t, j):
+        return jahr_neu.get((_sauber(a), _sauber(t)), j)
+
+    regal = [e for e in liste if e.get('r') in BUCH_REGALE]
+    buecher = [e for e in regal if e.get('r') == 'gerade' or jahr(e.get('a'), e.get('t'), e.get('j')) is not None]
+    if not any(e.get('r') == 'gerade' for e in buecher):
         fehler(f'{seite}: kein Buch auf dem Nachttisch (r „gerade“)')
-    return 'window.BUECHER = [\n' + ',\n'.join(map(zeile, nacht)) + '\n];\n'
+    im_regal = {_titel_schluessel(e.get('a'), e.get('t'), nachnamen) for e in regal}
+    warte = [z for z, a, t, j in lesen if jahr(a, t, j) is not None and _titel_schluessel(a, t, nachnamen) not in im_regal]
+    return ('window.BUECHER = [\n' + ',\n'.join(map(zeile, buecher)) + '\n];\n',
+            'window.LESELISTE = [\n' + ',\n'.join(warte) + '\n];\n' if warte else 'window.LESELISTE = [];\n')
 
 
 def buch_tabellen_platzhalter(texte, seite='seite.js'):
     """seite.js für den Platzhalter (aus texte, den Texten des Baus ohne Kommentare, nach buecher_platzhalter): die zwei Tabellen
     in FSeite.buch mit Namen und Titeln aus der Bibliothek, NACHNAMEN und BERICHTIGT, behalten nur, was ein Buch braucht, das
-    mitgeht (aus daten/buecher.js, also vom Nachttisch; derzeit nichts). Das Regal sieht so aus und verhält sich, wie es war;
-    sonst bleibt seite.js Zeichen für Zeichen, wie in der vollen Website (Dominik, 29. Oktober: „Das mit der Bibliothek soll auch
-    alles raus.“). Lädt eine Seite des Platzhalters daten/leseliste.js (deren Bücher bräuchten die Tabellen auch), steht eine
-    Tabelle nicht genau einmal da oder eine Zeile nicht in der Form, die er lesen kann, baut er nicht."""
+    mitgeht (aus daten/buecher.js und daten/leseliste.js, also aus Zeitband und Regal). Regal und Zeitband sehen so aus und
+    verhalten sich, wie sie in der vollen Website sind; sonst bleibt seite.js Zeichen für Zeichen, wie dort (Dominik, 29. Oktober:
+    „Das mit der Bibliothek soll auch alles raus.“). Steht eine Tabelle nicht genau einmal da oder eine Zeile nicht in der Form, die
+    er lesen kann, baut er nicht."""
     text = texte[Path(seite)]
-    for p, t in texte.items():
-        if p.suffix == '.html' and re.search(r'<script\b[^>]*\bsrc="[^"]*daten/leseliste\.js"', t):
-            fehler(f'{p} lädt im Platzhalter daten/leseliste.js; {seite}: NACHNAMEN und BERICHTIGT wären zu kurz')
-    buecher = texte[Path('daten/buecher.js')]
-    s = r"'((?:[^'\\]|\\.)*)'"
-    js = lambda x: re.sub(r'\\(.)', r'\1', x)  # noqa: E731
-
-    def sauber(x):
-        # wie sauber() in seite.js, das Namen und Titel vor dem Vergleich bereinigt
-        return re.sub(r'&amp;(amp;)*', '&', '' if x is None else str(x)).replace('\u200e', '').replace('\u200f', '').strip()
-
-    liste = json.loads(re.fullmatch(r'\s*window\.BUECHER = (\[.*\]);\s*', buecher, re.S).group(1))
-    autoren = {sauber(e.get('a')) for e in liste}
-    titel = {(sauber(e.get('a')), sauber(e.get('t'))) for e in liste}
+    liste = json.loads(re.fullmatch(r'\s*window\.BUECHER = (\[.*\]);\s*', texte[Path('daten/buecher.js')], re.S).group(1))
+    paare = [(e.get('a'), e.get('t')) for e in liste]
+    paare += [(_js(m.group(2)), _js(m.group(1))) for m in re.finditer(r"^  \{ t: " + _S + ", a: " + _S, texte[Path('daten/leseliste.js')], re.M)]
+    autoren = {_sauber(a) for a, _ in paare}
+    titel = {(_sauber(a), _sauber(t)) for a, t in paare}
 
     def tabelle(name, auf, zu, umbauen):
         nonlocal text
-        treffer = list(re.finditer(r'^( *)const ' + name + ' = ' + re.escape(auf) + r'\n(.*?)\n\1' + re.escape(zu) + ';$',
-                                   text, re.M | re.S))
-        if len(treffer) != 1:
-            fehler(f'{seite}: „const {name} = {auf} … {zu};“ {len(treffer)}-mal statt einmal')
-        m = treffer[0]
+        m = _tabelle(text, name, auf, zu, seite)
         rumpf = umbauen(m.group(2))
         neu = (m.group(1) + 'const ' + name + ' = ' + auf + '\n' + rumpf + '\n' + m.group(1) + zu + ';' if rumpf
                else m.group(1) + 'const ' + name + ' = ' + auf + zu + ';')
         text = text[:m.start()] + neu + text[m.end():]
 
     def nachnamen(rumpf):
-        paar = re.compile(s + ': ' + s)
-        if not re.fullmatch(r'[\s,]*', paar.sub('', rumpf)):
-            fehler(f'{seite}: NACHNAMEN nicht nur aus Paaren \'Name\': \'Nachname\'')
         einzug = re.match(r' *', rumpf).group(0)
-        behalten = [m.group(0) for m in paar.finditer(rumpf) if js(m.group(1)) in autoren]
+        behalten = [m.group(0) for m in _nachnamen_paare(rumpf, seite).finditer(rumpf) if _js(m.group(1)) in autoren]
         return einzug + ', '.join(behalten) if behalten else ''
 
     def berichtigt(rumpf):
-        form = re.compile(r'( *\{ a: ' + s + ', t: ' + s + r'(?:, .*)? \}),?')
-        zeilen = []
-        for z in rumpf.split('\n'):
-            m = form.fullmatch(z)
-            if not m:
-                fehler(f'{seite}: BERICHTIGT, Zeile nicht lesbar: {z.strip()}')
-            if (js(m.group(2)), js(m.group(3))) in titel:
-                zeilen.append(m.group(1))
-        return ',\n'.join(zeilen)
+        return ',\n'.join(z for z, a, t, _, _ in _berichtigt_zeilen(rumpf, seite) if (a, t) in titel)
 
     tabelle('NACHNAMEN', '{', '}', nachnamen)
     tabelle('BERICHTIGT', '[', ']', berichtigt)
@@ -678,7 +774,8 @@ def main():
         if neu is not None:
             texte[p] = neu
     if platz:
-        texte[Path('daten/buecher.js')] = buecher_platzhalter(texte[Path('daten/buecher.js')])
+        buecher_vorher = {p: buecher_zahl(texte[Path(p)]) for p in ('daten/buecher.js', 'daten/leseliste.js')}
+        texte[Path('daten/buecher.js')], texte[Path('daten/leseliste.js')] = buecher_platzhalter(texte)
         texte[Path('seite.js')] = buch_tabellen_platzhalter(texte)
         # Aus daten/ und bilder/ nur, worauf eine ausgelieferte Datei verweist; kein Verweis ins Leere
         drin = v.verwiesen(dateien, texte, [])
@@ -715,6 +812,9 @@ def main():
     print(f'Ohne Kommentare: {len(bereinigt)} Dateien')
     seiten_weg = sorted(s for s in v.SEITEN if s not in v.SEITEN_PLATZHALTER) if platz else []
     print('Ausgelassen: ' + ', '.join(sorted(AUSLASSEN) + seiten_weg + [str(p) + ' (nirgends verwiesen)' for p in weg]))
+    if platz:
+        print('Bücher für Zeitband und Regal: ' + ', '.join(f'{p} {buecher_zahl(texte[Path(p)])} von {n} Einträgen'
+                                                             for p, n in buecher_vorher.items()))
 
 
 if __name__ == '__main__':

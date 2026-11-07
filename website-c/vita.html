@@ -20,7 +20,8 @@
    Breit zwei Spalten: links Titel, Dominiks Text mit dem Hinweis auf sein berufliches Profil, darunter die Stationen; rechts nur
    das Foto mit der Unterschrift, oben bündig mit dem Titel. Die rechte Spalte steht, wo Platz ist, an der Kante des Globus der
    Startseite; das Foto füllt sie, soweit die Höhe des Fensters reicht. Beide Spalten enden auf einer Linie: Titel, Text und
-   Stationen sind breit rund 1 450 px hoch, so hoch wird ein Foto im Format 3 : 4 erst bei rund 1 100 px Breite. Es bleibt darum
+   Stationen sind breit rund 1 400 px hoch (bis zum 6. November abends, mit „… auf dem Globus.“ darunter, 1 450 px), so hoch wird
+   ein Foto im Format 3 : 4 erst bei rund 1 050 px Breite. Es bleibt darum
    beim Rollen stehen (wie der Globus der Startseite, V78), bis sein Ende mit dem Ende der Stationen zusammenfällt; neben dem Text
    steht nie eine leere Spalte.
    Auf dem Telefon eine Spalte in der Folge des Quelltexts: Titel, Text, Hinweis, Foto, Stationen. Der Text kommt zuerst, das
@@ -40,8 +41,10 @@
    linke Spalte, und das Foto darin richtet sich nach ihr (100cqh) */
 .vita-raster > .vita-bild { grid-column: 2; grid-row: 1 / span 3; min-width: 0; container-type: size; }
 
-/* Der Text: Absätze ¾ z auseinander. Der erste Absatz ist ein Satz, er sagt, was auf der Startseite der erste Satz sagt, und
-   steht wie früher der Leitsatz der Vita in der IM Fell im Grad groß (das Kolophon: „der erste Satz aus der IM Fell“), ohne
+/* Der Text: Absätze ¾ z auseinander. Der erste Absatz ist ein Satz, der erste seiner Bio (bis zum 6. November abends auch der erste
+   Satz der Startseite; dort steht seitdem „Dominik Jäkel schreibt seit Jahren unter fremden Namen. Sein Debütroman trägt den
+   berühmtesten.“, hier bleibt die Bio, wie sie ist), und steht wie früher der Leitsatz der Vita in der IM Fell im Grad groß (das
+   Kolophon: „der erste Satz aus der IM Fell“), ohne
    Trennung; breit, auf dem Tablet und quer drei Zeilen, auf dem Telefon (bis 40 rem) im Grad Überschrift vier oder fünf. Er
    bricht wie Prosa (pretty; wer das nicht kennt, nimmt balance): ausgeglichen risse er auf 393 px mit Text +10 % und auf 360 px
    „Jahrgang / 1995“ auseinander, so steht dort „Dominik Jäkel, Jahrgang 1995, / schreibt seit vielen Jahren / …“. 1 z bis
@@ -65,8 +68,9 @@
 /* Das Foto, 3 : 4: so breit wie die rechte Spalte, höchstens so hoch, dass es mit der Unterschrift beim Stehen 1 z unter dem
    oberen Rand ganz ins Fenster passt (gerechnet mit 3,75 z für Rand, Unterschrift und Luft; seit die Unterschrift eine Zeile ist,
    bleiben darunter 1¾ z) und nicht höher als die linke Spalte wird. Seine Oberkante steht auf der Versalhöhe von „Vita“
-   (Vollkorn: Oberlänge ,952, Versal ,676 em), die Zeile der Unterschrift am Ende auf der Grundlinie von „… auf dem Globus.“
-   (Unterlänge ,441 em). Die Unterschrift ist ein Satz in einer Zeile, nie gebrochen */
+   (Vollkorn: Oberlänge ,952, Versal ,676 em), die Zeile der Unterschrift am Ende auf der Grundlinie der letzten Zeile der Stationen
+   („heute“ unter 2025; bis zum 6. November abends „… auf dem Globus.“) (Unterlänge ,441 em). Die Unterschrift ist ein Satz in einer
+   Zeile, nie gebrochen */
 .bildnis {
   position: sticky; top: var(--z);
   width: min(100%, calc((100svh - var(--z) * 3.75) * .75), calc((100cqh - var(--z) * 2.25) * .75));
@@ -97,10 +101,15 @@
    6. November: „2025-Heute Senior Content Writer …“): „heute“ klein, linksbündig mit den Ziffern an der Kante der Spalte (es ist
    ¼ em breiter als vier Ziffern; bis zum Text bleiben gut ½ em), sein Strich hängt wie die anderen; vorgelesen „2025 bis heute“ */
 .daten .spanne { min-height: calc(var(--zh-text) * 2); }
+/* Die Hochschule der Station 2014–2015 („am University College Freiburg“, 6. November) bleibt in einer Zeile, wo sie hineinpasst,
+   wie „am Hasso-Plattner-Institut“ darunter: breit und auf dem Telefon ab 360 px steht sie so ganz in der letzten Zeile des
+   Eintrags. Als Block in der Zeile statt ungebrochen (.nw): bei 320 px ist sie breiter als die Spalte und bricht dann in sich
+   („am University / College Freiburg“), statt 22 px über den Rand bis an die Kante des Schirms zu laufen. „College Freiburg“ mit
+   festem Leerzeichen (7. November): mit 10 % größerer Schrift stand bei 320 px sonst „Freiburg“ allein in der letzten Zeile */
+.daten .hochschule { display: inline-block; }
 .daten .bis { position: absolute; left: 0; top: 100%; }
 .daten .bis::before { content: "\2013"; content: "\2013" / ""; position: absolute; right: 100%; }
 .werdegang { margin-top: var(--z-drei); }
-.werdegang .weiter { margin-top: var(--z-dreiviertel); }
 
 /* ---------- Eine Spalte: Titel, Text, Hinweis, Foto, Stationen ---------- */
 /* Das Foto in der Breite der Textspalte, 3 z unter dem Hinweis (ein neuer Teil) und 2 z über den Stationen; es rollt mit. Quer
@@ -124,8 +133,9 @@
      selben Tag: „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“; bis dahin war sie nur über das Exposé zu
      finden). Dort fallen das Menü (mit ihm die Abschrift im Fuß) und der Sprung „Zum Inhalt“ weg, und „Satoshi“ im letzten Absatz
      wird Text (data-verweis="website"): von einer öffentlichen Seite führt kein Weg zum Exposé, den Link dorthin gibt der Autor
-     weiter. Es bleiben der Name zur Startseite und „auf dem Globus“ (dort stehen die Stationen auch im Platzhalter); das Exposé
-     verweist weiter auf die Vita -->
+     weiter. Es bleibt der Name zur Startseite (bis zum 6. November abends dazu „auf dem Globus“ unter den Stationen, Dominik: „Nimm
+     den Satz in der Vita nochmal raus: Die Wohnorte und die ersten längeren Aufenthalte auf dem Globus.“); das Exposé verweist
+     weiter auf die Vita -->
 <header class="kopf">
   <p class="briefkopf"><a class="name" href="index.html">Dominik Jäkel</a> <span class="rolle">Schriftsteller</span></p>
   <nav class="nav" aria-label="Website" data-nur="website">
@@ -205,7 +215,7 @@
     <h2 class="titel" id="stationen-titel">Stationen</h2>
     <ul class="daten">
       <li><span class="jahr">1995<span class="unsichtbar">&nbsp;</span></span> Dortmund, geboren</li>
-      <li class="spanne"><span class="jahr">2014<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2015</span><span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span></li>
+      <li class="spanne"><span class="jahr">2014<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2015</span><span class="unsichtbar">&nbsp;</span></span> Freiburg, Studium <span class="nw">Liberal Arts &amp; Sciences</span> <span class="hochschule">am University College&nbsp;Freiburg</span></li>
       <li class="spanne"><span class="jahr">2015<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2018</span><span class="unsichtbar">&nbsp;</span></span> Potsdam, Studium <span class="nw">IT-Systems Engineering</span> <span class="nw">am Hasso-Plattner-Institut</span></li>
       <li><span class="jahr">2016<span class="unsichtbar">&nbsp;</span></span> Colombo, Sri Lanka, Freiwilligen&shy;projekt mit AIESEC</li>
       <li><span class="jahr">2018<span class="unsichtbar">&nbsp;</span></span> Cotonou, Benin, Freiwilligen&shy;projekt mit AIESEC</li>
@@ -220,11 +230,18 @@
            Senior Content Writer (Leitung deutschsprachiger Contentabteilung) / Oder wie auch immer man heute gut ausschreibt?“.
            Beide sind Zeitspannen wie 2014–2015 und 2015–2018: volle Jahreszahlen, das zweite Glied unter dem ersten, der
            Halbgeviertstrich hängt; das offene Ende ist „heute“, klein, vorgelesen „2025 bis heute“. Mallorca bleibt auf dem Globus,
-           sein Zweitwohnsitz („nein Mallorca nicht vom Globus nehmen“; die Tafel sagt „längerer Aufenthalt, zweiter Wohnsitz“) -->
+           sein Zweitwohnsitz („nein Mallorca nicht vom Globus nehmen“; die Tafel sagt „längerer Aufenthalt, zweiter Wohnsitz“).
+           Am Abend (6. November): „Und in der Vita bei beiden Content Writer bei Simon-Kucher (EN/DE) / * 2025 bis heute Senior
+           Content Writer (DE/EN) / (Bitte bei beiden (EN/DE) das hatte ich nicht beantwortet !)“, also bei beiden (EN/DE), vorher
+           „Senior Content Writer (DE/EN)“. Und zur Station 2014–2015: „(Freiburg, Studium Liberal Arts & Sciences, am University
+           College Freiburg) nur weil dann HPI kommt ...“; gebaut wie die Station darunter, „… Studium IT-Systems Engineering am
+           Hasso-Plattner-Institut“, ohne Komma vor „am“, die Hochschule in einer Zeile (.hochschule, Stil oben).
+           Unter den Stationen stand bis dahin „Die Wohnorte und die ersten längeren Aufenthalte auf dem Globus.“ mit dem Verweis
+           auf den Globus der Startseite; Dominik: „Nimm den Satz in der Vita nochmal raus: Die Wohnorte und die ersten längeren
+           Aufenthalte auf dem Globus.“ Seitdem enden die Stationen und mit ihnen die linke Spalte mit „Senior Content Writer“ -->
       <li class="spanne"><span class="jahr">2022<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>2024</span><span class="unsichtbar">&nbsp;</span></span> Content Writer bei <span class="nw">Simon-Kucher (EN/DE)</span></li>
-      <li class="spanne"><span class="jahr">2025<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>heute</span><span class="unsichtbar">&nbsp;</span></span> Senior Content Writer&nbsp;(DE/EN)</li>
+      <li class="spanne"><span class="jahr">2025<span class="bis"><span class="unsichtbar">&nbsp;bis&nbsp;</span>heute</span><span class="unsichtbar">&nbsp;</span></span> Senior Content Writer&nbsp;(EN/DE)</li>
     </ul>
-    <p class="weiter">Die Wohnorte und die ersten längeren Aufenthalte <a class="nw" href="index.html#globus">auf dem Globus</a>.</p>
   </section>
 </div>
 </main>

@@ -31,36 +31,27 @@
    nur aus den Token in stil.css. */
 
 /* ---------- Der erste Satz (02) ----------
-   IM Fell French Canon im Grad Einstieg, jedes Glied eine Zeile. Seit dem 6. November Dominiks Satz vom Anfang seiner Bio (Dominik:
-   „Nimm das auch als Slogan für die Startseite ... / Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und
-   Technologie – meist unter den Namen anderer Leute. / Ist besser als das mit dem tagsüber und abends ... Sonst okay.“), in fünf
-   Gliedern nach Sinneinheiten: „Dominik Jäkel, Jahrgang 1995, / schreibt seit vielen Jahren / über Geld und Technologie – / meist
-   unter den Namen / anderer Leute.“ Ab 1323 px Breite stehen die letzten beiden auf einer Zeile (.satzteil, unten), vier Zeilen wie
-   die vier Teile des Satzes: mit fünf Zeilen läge die Unterschrift des Regals bei 1440 × 900 unter dem Rand. Erst dort hat die
-   Zeile „meist unter den Namen anderer Leute.“ Platz, ohne unter 28,5 px zu kommen (Boden im Skript); schmaler bliebe sie zu klein
-   für die Zeilenhöhe von 1,5 z, darum dort fünf Zeilen im Grad, den das erste Glied erlaubt, wie auf dem Telefon. Auf dem Tablet
-   finden die letzten beiden von selbst auf eine Zeile, wo sie hinpassen. Der Platz für die Zeilen steht von Anfang an fest: fünf,
-   ab 1323 px und auf dem Tablet vier (bis zum 6. November drei für „Dominik Jäkel schreibt tagsüber / unter fremden Namen / und
-   abends unter seinem eigenen.“). */
-.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 5); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
+   IM Fell French Canon im Grad Einstieg, jedes Glied eine Zeile. Seit dem 6. November, abends, zwei Sätze in der dritten Person wie
+   die Kurzvita darunter (Dominik: „Pass auf. Auf der Startseite schreiben wir? Ich schreibe seit Jahren unter fremden Namen. Mein
+   Debüt trägt den berühmtesten.“, dann, nach dem Hinweis auf die dritte Person der Kurzvita: „Super, schick mir dann den Testlink.
+   Dominik Jäkel schreibt seit Jahren unter fremden Namen. Sein Debütroman trägt den berühmtesten.“), in vier Gliedern nach
+   Sinneinheiten: „Dominik Jäkel schreibt seit Jahren / unter fremden Namen. / Sein Debütroman trägt / den berühmtesten.“ Jeder
+   Satz bricht vor seiner Ergänzung, so stehen „unter fremden Namen.“ und „den berühmtesten.“ untereinander am Ende ihres Satzes;
+   nach der ersten Zeile sind die drei übrigen fast gleich lang (die Teilung „Dominik Jäkel schreibt / seit Jahren unter fremden
+   Namen. / Sein Debütroman / trägt den berühmtesten.“ stand im selben Grad, mit kurz, lang, kurz, mittel unruhiger). Die längste
+   Zeile ist so lang wie die längste des Satzes bis zum 6. November („und abends unter seinem eigenen.“): am Desktop wieder
+   dieselben Grade, 29,1 px bei 1024, 30,9 bei 1280, 37,4 bei 1440, 37,9 px bei 1920 px Breite (mit dem Satz vom 6. November
+   33,4 bis 35,4 px). Der Platz für die Zeilen steht von Anfang an fest: vier, auf dem Tablet drei (unten), auf dem Telefon vier,
+   unter 324 px fünf. Bis zum 6. November nachmittags „Dominik Jäkel schreibt tagsüber / unter fremden Namen / und abends unter
+   seinem eigenen.“ in drei Zeilen, dann „Dominik Jäkel, Jahrgang 1995, / schreibt seit vielen Jahren / über Geld und Technologie –
+   / meist unter den Namen / anderer Leute.“ in fünf, ab 1323 px vier (dafür stand der Satz am Desktop ¼ z statt 1 z unter dem
+   Kopf; mit vier Zeilen und der kürzeren Kurzvita braucht es das nicht mehr, bei 1440 × 900 bleiben unter der Unterschrift des
+   Regals 45 px Luft, und nach einem Klick auf ein Buch steht die erste Zeile seines Satzes im Bild). */
+.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 4); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
 /* Letzte Sicherung, falls das Skript den Satz nicht anpassen kann: nie breiter als die Spalte, ein zu langes Wort bricht eher, als
    über den Rand zu laufen (Dominik: „der Punkt von eigenes abgeschnitten“). Den Flug berührt das nicht, er verschiebt nur. */
 .globusseite > .einstieg { max-width: min(100%, var(--mass)); min-width: 0; overflow-wrap: break-word; }
 .einstieg.gesetzt .glied-satz, .einstieg .paar { white-space: nowrap; }
-/* Ab 82,6875 rem (1323 px; die Spalte ist dann mindestens 490 px breit, 62vw − 330 px) bleibt der letzte Satzteil, „meist unter den
-   Namen“ und „anderer Leute.“, auf einer Zeile, und das Skript passt den Grad an diese Zeile an, die längste: 633,7 px in 38 px,
-   bei 1440 px 32,7 px, ab 1451 px 33,1 px. Darunter bricht er zwischen den beiden Gliedern wie jedes andere Glied. Nur gesetzt:
-   bricht der Satz frei, bricht auch er (white-space am Leerzeichen allein hält Chromium nicht, darum die Klammer um beide Glieder) */
-@media (min-width: 82.6875rem) {
-  .einstieg { min-height: calc(var(--einstieg-zh) * 4); }
-  .einstieg.gesetzt .satzteil { white-space: nowrap; }
-}
-/* Am Desktop steht der Satz ¼ z unter dem Kopf statt 1 z (6. November, mit dem neuen Satz): ab 1323 px hat er eine Zeile mehr als
-   der alte, so rücken Kurzvita und Regal dort nur um ¾ z tiefer statt um 1½ z (darunter, mit zwei Zeilen mehr, um 2¼ z statt
-   3 z). Bei 1440 × 900 bleiben unter der Unterschrift des Regals 38 px Luft (ohne das 17 px, vorher 60), und nach einem Klick auf
-   ein Buch steht die erste Zeile seines Satzes noch im Bild, wie bisher. In der vollen Website steht darüber die Navigation, von
-   ihr bis zum Satz sind es dann 1¼ z (vorher 2 z) */
-@media (min-width: 62.0625rem) { .globusseite > .einstieg { margin-top: var(--z-viertel); } }
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
 .einstieg-satz .w { display: inline-block; }
@@ -70,7 +61,11 @@ html:not(.js) .einstieg .glied-satz { display: block; }
 .einstieg.wartet .einstieg-satz { opacity: 0; animation: einstieg-notfall 0s linear 2s forwards; }
 @keyframes einstieg-notfall { to { opacity: 1; } }
 
-/* ---------- Kurzvita, Wahl der Ebene, Text der Ebene ---------- */
+/* ---------- Kurzvita, Wahl der Ebene, Text der Ebene ----------
+   Die Kurzvita (p.vita) seit dem 6. November abends, Dominik: „Gerade schließt er seinen Roman Satoshi ab; daneben schreibt er an
+   einer Trilogie über die Ursprünge der Zivilisation. Ausführlich in der Vita. (WEIL SONST ROMAN ZU OFT GEDOPPELT!)“: „seinen Roman“
+   statt „seinen Debütroman“, das Debüt nennt der erste Satz darüber („Würde Debüt nicht doppeln ...“), und „Trilogie“ statt
+   „Romantrilogie“. Die strukturierten Daten nehmen die Kurzvita als Beschreibung der Person (veroeffentlichen.py, kurzvita) */
 .globusseite > .vita { margin-top: var(--z-dreiviertel); }
 /* Vier Wörter mit Abstand, unterstrichen; das gewählte halbfett ohne Strich. Die Wahl steht dicht über dem Text ihrer Ebene, damit
    beide als ein Bedienteil zu lesen sind und nicht als zweite Navigation */
@@ -132,7 +127,7 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
    Rasterfeld, darum hält er dort, wo die Legende endet. Die beiden Abschnitte liegen dabei über dem leeren Teil der Globusseite;
    sichtbar ist dort nur die Kugel, die über ihnen steht.
    Zeilen von main: 1 bis 6 die der Globusseite (Satz, Vita, Regalbild, zwei leer, 1fr), 7 „Was ich schreibe“, 8 Überschrift,
-   9 Legende, 10 Zeitband, 11 „Die ganze Bibliothek“.
+   9 Legende, 10 Zeitband, 11 „Die ganze Bibliothek“ (im Platzhalter leer; dort folgt in 12 der Schluss „Seite im Aufbau.“).
 
    Beim Laden sieht nichts anders aus: „Was ich schreibe“ beginnt wie bisher 3 z unter dem, was tiefer reicht, Regal oder Kugel.
    Dafür hält in der leeren Randspalte ein Platzhalter (::before) über den ersten sechs Zeilen die Höhe der ruhenden Kugel: Versatz
@@ -317,9 +312,10 @@ html.folge #regalbild[data-folge]:not(.da) { pointer-events: none; }
 html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 
 @media (max-width: 62rem) {
-  /* Tablet und Telefon quer: die Spalte ist so breit, dass die letzten beiden Glieder (oder mehr) auf eine Zeile finden; vier Zeilen
-     reichen (768 px vier, 844 px quer drei) */
-  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); min-height: calc(var(--einstieg-zh) * 4); }
+  /* Tablet und Telefon quer: die Spalte ist so breit, dass die beiden Glieder des zweiten Satzes auf eine Zeile finden; drei Zeilen
+     reichen (641 bis rund 860 px „… seit Jahren / unter fremden Namen. / Sein Debütroman trägt den berühmtesten.“; breiter zwei,
+     ein Satz je Zeile) */
+  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); min-height: calc(var(--einstieg-zh) * 3); }
   /* Einspaltig folgt die Kugel direkt auf die Kurzvita, mit 1 z Abstand aus stil.css (ohne Wahl der Ebene darüber) */
   .globusseite > .ebenentext { order: 1; margin-top: var(--z); }
   .schreiben-raster { grid-template-columns: minmax(0, var(--mass)); }
@@ -327,8 +323,10 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 2; margin-top: var(--z); }
 }
 @media (max-width: 40rem) {
-  /* Auf dem Telefon steht der erste Satz in fünf Zeilen, je Glied eine (oben; 320 bis 412 px in 21 bis 27 px) */
-  .einstieg { min-height: calc(var(--einstieg-zh) * 5); }
+  /* Auf dem Telefon steht der erste Satz in vier Zeilen, je Glied eine (oben; 324 bis 412 px in 19 bis 23,5 px). Schmaler passt die
+     erste nicht mehr in die Spalte (sie bräuchte unter 19 px), dort bricht der Satz frei, in der Ausgangsgröße in fünf Zeilen
+     („Dominik Jäkel / schreibt seit Jahren / unter fremden Namen. / Sein Debütroman / trägt den berühmtesten.“, PAARE im Skript) */
+  .einstieg { min-height: calc(var(--einstieg-zh) * 4); }
   /* Das Band ist breiter als der Schirm und rollt in seinem eigenen Rahmen, nur unter dem Finger */
   .zeitband-roll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; overscroll-behavior-x: contain; padding-bottom: var(--z-viertel); margin: 0 calc(var(--rand-l) * -1); padding-left: var(--rand-l); padding-right: var(--rand-l); scroll-padding: 0 var(--rand-l); }
   .bandzeile > span { text-wrap: balance; hyphens: manual; -webkit-hyphens: manual; }
@@ -340,6 +338,8 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   .zeitband { margin-top: 0; }
   .zeitband-roll { padding-top: var(--z); }
 }
+/* Unter 324 px die fünf Zeilen des frei brechenden Satzes (oben), damit beim Ankommen der Schrift nichts darunter rückt */
+@media (max-width: 20.1875rem) { .einstieg { min-height: calc(var(--einstieg-zh) * 5); } }
 /* Telefon: Regler mit Jahreszahlen 44 px hoch, mit ½ z Abstand zum Band darüber, damit er nicht wie dessen Achse aussieht. Unter
    den Reglern ohne Jahreszahlen ist die Fläche leer; der Name der nächsten Reihe rückt dafür auf ½ z heran */
 @media (max-width: 40rem) {
@@ -355,46 +355,61 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 /* Der Platzhalter ist diese Seite selbst (27. Oktober). Dominik: „Halte von der Startseite die drei Elemente. Vita. Globus. Das Regal
    mit den Projekten und dem Schreibtisch ... Aber wenn man runterzoomt soll auf dem Handy alles verblassen und dann Seite im Aufbau.
    Es so neugierig machen. Auf dem Desktop soll der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite
-   im Aufbau.“ Was nur in der vollen Website steht (Menü, Werkverzeichnis, Bücherregal), trägt data-nur="website"; dieser Block, der
-   Schluss „Seite im Aufbau.“ und sein Skript tragen data-nur="platzhalter" und stehen nur in der Platzhalter-Ausgabe der Werkzeuge
-   (Markierungen erklärt auf satoshi.html). In der Quelle verbirgt die erste Regel den Schluss; alles andere gilt nur, wenn der Bau
-   am html data-ausgabe="platzhalter" setzt, dazu data-schluss, die Fassung am Desktop (v1 „Alles verblasst“, v2 „Der Globus bleibt“).
-   Der Kopf behält breit seine Höhe (--kopf-h), der erste Satz bleibt an seiner Stelle; schmal schließt sich die Lücke des Menüs */
+   im Aufbau.“ Was nur in der vollen Website steht (Menü, Werkverzeichnis, „Die ganze Bibliothek“), trägt data-nur="website"; dieser
+   Block, der Schluss „Seite im Aufbau.“ und sein Skript tragen data-nur="platzhalter" und stehen nur in der Platzhalter-Ausgabe der
+   Werkzeuge (Markierungen erklärt auf satoshi.html). In der Quelle verbirgt die erste Regel den Schluss; alles andere gilt nur, wenn
+   der Bau am html data-ausgabe="platzhalter" setzt, dazu data-schluss, die Fassung am Desktop (v1 „Alles verblasst“, v2 „Der Globus
+   bleibt“). Der Kopf behält breit seine Höhe (--kopf-h), der erste Satz bleibt an seiner Stelle; schmal schließt sich die Lücke des
+   Menüs.
+   Seit dem 6. November steht hier wieder das Bücherregal, das Zeitband mit seinen drei Reglern (Dominik: „Und ich würde die gelesenen
+   bücher auf der Startseite wieder reinnehmen. NUR AUF DER STARTSEITE(!) Nicht die Bibliothek. Nicht die Länder ... Also von der
+   Startseite kann man nur zur Vita navigieren. Nicht mehr. Und dann ist die Seite im Aufbau ...“ und „Und das Seite im Aufbau kann
+   trotzdem unten kommen wenn man scrollt. Also wenn man nach den Büchern ist ... Kommt trotzdem nochmal das Seite im Aufbau“), ohne
+   „Die ganze Bibliothek“. Der Schluss folgt nach ihm */
 [data-nur="platzhalter"] { display: none !important; }
 /* „Seite im Aufbau.“ im Grad Text, in Tinte, aufrecht, in der Textspalte; ohne Skript und bei reduzierter Bewegung steht die Zeile
-   3 z unter dem, was über ihr bleibt (breit und ohne Skript gibt der leere Abschnitt „Was ich schreibe“ die 3 z), und 3 z über dem
-   Fuß, damit sie nicht an „Anfragen“ hängt */
+   3 z unter dem, was über ihr bleibt (mit Skript dem Zeitband; ohne Skript gibt der leere Abschnitt „Was ich schreibe“ die 3 z), und
+   3 z über dem Fuß, damit sie nicht an „Anfragen“ hängt. Ohne Skript gibt es kein Zeitband, und die Überschrift des Bücherregals
+   stünde allein: dann fehlt der ganze Abschnitt */
 html[data-ausgabe="platzhalter"] .schluss { padding: var(--z-drei) var(--rand-r) var(--z-drei) var(--rand-l); }
 html[data-ausgabe="platzhalter"]:not(.js) .schluss { padding-top: 0; }
+html[data-ausgabe="platzhalter"]:not(.js) #gelesen { display: none; }
 html[data-ausgabe="platzhalter"] .aufbau { max-width: var(--mass); }
 @media (max-width: 62rem) { html[data-ausgabe="platzhalter"] .schluss { padding-right: var(--rand-l); } }
-/* Mit Bewegung (Skript unten setzt .mit-weg): zwischen dem Inhalt und der Zeile knapp ein Fünftel des Fensters (19 svh), mindestens
-   3 z; darunter so viel, dass die Zeile am Ende des Wegs etwas über der Mitte des Fensters steht (ihre Mitte bei 44 % der Höhe) und
-   der Fuß darunter ganz zu sehen ist (--schluss-rest: halbe Zeile und Fuß, vom Skript gemessen). So steht sie am Telefon zwischen dem
-   blassen Regal und dem Fuß, nicht dicht über „Anfragen“. svh und lvh, damit die Leiste des Browsers auf dem Telefon beim Rollen
-   nichts verschiebt */
+/* Mit Bewegung (Skript unten setzt .mit-weg): zwischen dem Zeitband und der Zeile knapp ein Fünftel des Fensters (19 svh),
+   mindestens 3 z; darunter so viel, dass die Zeile am Ende des Wegs etwas über der Mitte des Fensters steht (ihre Mitte bei 44 % der
+   Höhe) und der Fuß darunter ganz zu sehen ist (--schluss-rest: halbe Zeile und Fuß, vom Skript gemessen). So steht sie zwischen dem
+   blassen Bücherregal und dem Fuß, nicht dicht über „Anfragen“. svh und lvh, damit die Leiste des Browsers auf dem Telefon beim
+   Rollen nichts verschiebt */
 html[data-ausgabe="platzhalter"] .schluss.mit-weg {
   padding-top: max(var(--z-drei), 19vh); padding-top: max(var(--z-drei), 19svh);
   padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px))); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)));
 }
-/* Breit steht der Schluss in der Textspalte, in den Zeilen von main, durch die der Globus mitwandert (8 und 9; in der vollen Website
-   Überschrift und Legende des Bücherregals): so klebt der Globus weiter, bis der Fuß kommt. Die 3 z darüber gibt „Was ich schreibe“.
-   In v2 reicht der Schluss dazu so weit hinunter, dass der Globus am Ende des Wegs noch ganz klebt, neben der Zeile
-   (--schluss-globus, vom Skript gemessen); der Fuß folgt beim Weiterrollen. Den Rand unter dem Globus (2 z bis zum Zeitband, das
-   hier fehlt) braucht v2 nicht: ohne ihn kommt der Fuß 2 z früher, und die Zeile bleibt am Ende der Seite im Bild */
+/* Breit wie in der vollen Website: der Globus wandert mit, bis vor das Zeitband (Zeilen 1 bis 9 von main, Stil oben), und hält dort
+   3 z darüber; nichts überdeckt sich. „Was ich schreibe“ ist hier leer (das Regal steht neben der Kugel, Überschrift und
+   Werkverzeichnis fehlen) und gibt keinen eigenen Abstand: zwischen Regal oder Kugel und der Überschrift des Bücherregals bleiben
+   die 3 z des Bücherregals, nicht zweimal 3 z. Der Schluss steht in der Textspalte unter dem Zeitband, in der Zeile von main nach
+   der von „Die ganze Bibliothek“ (12; die 11 bleibt hier leer). Bis zum 6. November stand er in den Zeilen 8 und 9 neben dem
+   wandernden Globus, und in v2 reichte er so weit hinunter, dass der Globus am Ende des Wegs neben der Zeile klebte; mit dem
+   Zeitband dazwischen geht das nicht mehr: in v2 bleibt der Globus klar, hält aber wie in v1 vor dem Zeitband */
 @supports (grid-template-rows: subgrid) {
   @media (min-width: 62.0625rem) {
-    html[data-ausgabe="platzhalter"].js .schluss { grid-column: 2; grid-row: 8 / 10; width: var(--neben-globus); padding: 0 0 var(--z-drei); }
-    html[data-ausgabe="platzhalter"][data-schluss="v2"].js .globusseite > .globus { margin-bottom: 0; }
-    html[data-ausgabe="platzhalter"].js .schluss.mit-weg { padding-top: max(0px, 19vh - var(--z-drei)); padding-top: max(0px, 19svh - var(--z-drei)); padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px)), var(--schluss-globus, 0px)); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)), var(--schluss-globus, 0px)); }
+    html[data-ausgabe="platzhalter"].js #schreiben { padding-top: 0; }
+    html[data-ausgabe="platzhalter"].js .schluss { grid-column: 2; grid-row: 12; padding-right: 0; padding-left: 0; }
   }
 }
 /* Was verblasst, bleibt mit der Tastatur bedienbar und erreichbar (kein inert: das nähme den Inhalt auch Vorleseprogrammen). Steht
    der Fokus der Tastatur darin, ist es wieder ganz da; nur der sichtbare Fokus (:focus-visible), denn ein Klick oder Tipp auf Globus
-   oder Regal lässt den Fokus dort, und dann verblasste beim Weiterrollen nichts mehr. Ab halbem Weg (.fern) nimmt das Blasse keinen
-   Klick und keinen Tipp mehr an: ein Tipp auf ein blasses Buch öffnete sonst eine blasse Buchzeile, und die Seite würde länger */
+   oder Regal lässt den Fokus dort, und dann verblasste beim Weiterrollen nichts mehr. Und nur, solange die letzte Eingabe kein
+   Zeiger war (html.zeiger: das Skript des Schlusses setzt es bei jedem Druck von Maus, Finger oder Stift und nimmt es mit der
+   Tabulatortaste wieder weg; seit dem 7. November). Denn sichtbar wird der Fokus auch ohne die Tastatur: der Regler nimmt ihn beim
+   Druck der Maus selbst (für die Pfeiltasten), und einen Fokus, den ein Skript setzt, zeigt Chromium als sichtbar; nach einem Klick
+   auf einen Strich, auf „früher“, „später“ oder ein Buch im Regal machen ihn Bild ab und Leertaste sichtbar. Am Desktop blieb dann
+   beim Weiterrollen das Bücherregal (nach einem Buch im Regal Regal und Globus) ganz da, während alles andere verblasste. Ab halbem
+   Weg (.fern) nimmt das Blasse keinen Klick und keinen Tipp mehr an: ein Tipp auf ein blasses Buch öffnete sonst eine blasse
+   Buchzeile, und die Seite würde länger */
 html[data-ausgabe="platzhalter"] .blass.fern { pointer-events: none; }
-html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !important; pointer-events: auto; }
+html[data-ausgabe="platzhalter"]:not(.zeiger) .blass:has(:focus-visible) { opacity: 1 !important; pointer-events: auto; }
 </style>
 </head>
 <body class="mit-globus">
@@ -419,10 +434,11 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
 
 <main id="inhalt">
 <section class="globusseite" aria-label="Vita und Globus">
-  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel, Jahrgang 1995,</span> <span class="glied-satz">schreibt seit vielen Jahren</span> <span class="glied-satz">über Geld und Technologie&nbsp;–</span> <span class="satzteil"><span class="glied-satz">meist unter den Namen</span> <span class="glied-satz">anderer Leute.</span></span></p>
+  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt seit Jahren</span> <span class="glied-satz">unter fremden Namen.</span> <span class="glied-satz">Sein Debütroman trägt</span> <span class="glied-satz">den berühmtesten.</span></p>
   <script>
-  /* Der erste Satz fliegt bei jedem Laden einmal ein, Wort für Wort von rechts, in rund 2,7 s (02; Tempo T2 „gelassen“; mit dem Satz
-     bis zum 6. November, zwölf Wörter in drei Gliedern, waren es rund 2 s, das Tempo ist dasselbe). Er wartet höchstens
+  /* Der erste Satz fliegt bei jedem Laden einmal ein, Wort für Wort von rechts, in rund 2,1 s (02; Tempo T2 „gelassen“, wie bisher:
+     mit dem Satz vom 6. November nachmittags, 18 Wörter in fünf Gliedern, waren es rund 2,7 s, davor mit zwölf Wörtern in drei
+     Gliedern rund 1,9 s). Er wartet höchstens
      1200 ms auf die IM Fell (bis zum 23. Oktober 600 ms, wie FSeite.schriftEinstieg; seite.js ist an dieser Stelle noch nicht
      geladen). Auf dem Telefon im Mobilnetz und im Fenster der Claude-App kam sie oft später, dann stand der Satz ohne Flug (Dominik,
      23. Oktober: „Beim Handy. Hatten wir uns entschieden, dass die Buchstaben nicht einfliegen. Finde das schon ganz schick
@@ -451,29 +467,32 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
     satz.setAttribute('aria-hidden', 'true');
     while (el.firstChild) satz.appendChild(el.firstChild);
     var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
-    // Was nie getrennt wird, auch wenn der Satz frei bricht: der Name, „Jahrgang 1995,“ und „anderer Leute.“ (so steht in der letzten
-    // Zeile nie ein Wort allein). Getrennt wird nur an gewöhnlichem Leerraum, nicht am festen Leerzeichen: „Technologie –“ ist ein
-    // Wortkasten, der Gedankenstrich steht nie am Anfang einer Zeile und fliegt mit seinem Wort ein
-    var PAARE = ['Dominik Jäkel,', 'Jahrgang 1995,', 'anderer Leute.'];
+    // Was nie getrennt wird, auch wenn der Satz frei bricht (unter 324 px, Stil oben): der Name, „seit Jahren“, „unter fremden Namen.“
+    // und „den berühmtesten.“. So bricht er auch dort nach dem Sinn („Dominik Jäkel / schreibt seit Jahren / unter fremden Namen. /
+    // Sein Debütroman / trägt den berühmtesten.“ bei 320 px), und in der letzten Zeile steht nie ein Wort allein. „seit Jahren“ seit
+    // dem 7. November: zeichnet das Telefon die Schrift selbst rund 30 % größer, bricht der Satz auch bei 412 px frei, und dort stand
+    // sonst „Dominik Jäkel schreibt seit / Jahren unter fremden Namen.“. Ein Paar sind zwei oder mehr Wörter eines Glieds; getrennt
+    // wird nur an gewöhnlichem Leerraum, nicht an einem festen Leerzeichen
+    var PAARE = ['Dominik Jäkel', 'seit Jahren', 'unter fremden Namen.', 'den berühmtesten.'];
     glieder.forEach(function (g) {
       var woerter = g.textContent.trim().split(/[ \t\n\r\f]+/);
       g.textContent = '';
-      var paar = null;
+      var paar = null, noch = 0;
       woerter.forEach(function (w, i) {
         var s = document.createElement('span');
         s.className = 'w';
         s.textContent = w;
-        var beginnt = PAARE.some(function (p) { return p.split(' ')[0] === w && p.split(' ')[1] === woerter[i + 1]; });
-        if (beginnt) {
-          if (i) g.appendChild(document.createTextNode(' '));
+        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); if (!--noch) paar = null; return; }
+        var p = PAARE.map(function (x) { return x.split(' '); }).filter(function (x) { return x.every(function (y, k) { return woerter[i + k] === y; }); })[0];
+        if (i) g.appendChild(document.createTextNode(' '));
+        if (p) {
           paar = document.createElement('span');
           paar.className = 'paar';
           paar.appendChild(s);
           g.appendChild(paar);
+          noch = p.length - 1;
           return;
         }
-        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); paar = null; return; }
-        if (i) g.appendChild(document.createTextNode(' '));
         g.appendChild(s);
       });
     });
@@ -485,9 +504,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
     var woerter = Array.prototype.slice.call(satz.querySelectorAll('.w'));
 
     /* Jedes Glied eine Zeile. Passt das längste nicht mit Luft in die Spalte, wird die Schrift kleiner, bis es passt, am Desktop
-       nicht unter 28,5 px, sonst nicht unter 20,7 px. Reicht auch das nicht, bricht der Satz frei; über den Rand läuft er nie. Ab
-       1323 px ist die längste Zeile die mit den beiden letzten Gliedern (.satzteil, Stil oben): laengstes() misst das rechte Ende
-       jedes Glieds, das zweite steht dort am Ende der Zeile.
+       nicht unter 28,5 px, sonst nicht unter 20,7 px. Reicht auch das nicht, bricht der Satz frei; über den Rand läuft er nie.
        Dominik am 23. Oktober, mit einem Bildschirmfoto: „Bei mir auf dem eigenen Handy ist der Punkt von eigenes abgeschnitten.“
        Auf seinem Telefon stand der Satz rund 10 % größer, als die Anpassung ihn in Chromium setzt. Darum:
        - Luft: das längste Glied nimmt höchstens 97 % der Spalte ein, mindestens 6 px bleiben frei (Stufen in anpassen());
@@ -502,12 +519,9 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
       glieder.forEach(function (g) { rechts = Math.max(rechts, g.getBoundingClientRect().right); });
       return rechts - links;
     }
-    // Was beim letzten Setzen galt: Breite der Spalte, ob der letzte Satzteil auf einer Zeile steht (ab 82,6875 rem, wie im Stil oben;
-    // an der Grenze ändert sich die gerundete Breite der Spalte oft nicht, sonst bliebe nach einem Größenwechsel der Grad der anderen
-    // Seite stehen) und Breite jedes Worts. Ändert sich eins davon, wird neu gesetzt (unten)
+    // Was beim letzten Setzen galt: Breite der Spalte und Breite jedes Worts. Ändert sich eins davon, wird neu gesetzt (unten)
     var masse = '';
-    var zusammen = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 82.6875rem)').matches); };
-    function mass() { return el.clientWidth + ':' + zusammen() + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
+    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
     function setzen() {
       anpassen();
       masse = mass();
@@ -570,8 +584,8 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
        Kurve (.22,.7,.28,1), und getrennt davon die Deckkraft in DECKKRAFT ms (ease), so dass man jedes Wort satt werden sieht;
        VERSATZ ms von Wort zu Wort, ATEM ms zwischen den Gliedern, kein Nachfedern, keine Unschärfe (bis zum 24. Oktober lag über
        jedem Wort eine unscharfe Kopie, die ins scharfe überblendete; im Tempo „gelassen“, das Dominik am 24. Oktober gewählt hat,
-       entfällt sie). Ganz: 13 × VERSATZ + 4 × ATEM + WEG, rund 2,7 s (18 Wortkästen in fünf Gliedern; wo die letzten beiden auf
-       einer Zeile stehen, liegt ein Atem mitten in ihr, vor „anderer Leute.“). Textmoment: das letzte Wort steht zu 95 % (Beginn +
+       entfällt sie). Ganz: 9 × VERSATZ + 3 × ATEM + WEG, rund 2,1 s (13 Wortkästen in vier Gliedern; wo zwei Glieder auf einer
+       Zeile stehen, auf dem Tablet, liegt ein Atem mitten in ihr). Textmoment: das letzte Wort steht zu 95 % (Beginn +
        max(DECKKRAFT, 0,6 × WEG)). Beides sind Animationen von Deckkraft und Verschiebung, die der Browser ohne den Hauptfaden
        weiterführt: baut die Seite in dieser Zeit die Kugel auf, stockt nichts */
     var WEG = 800, DECKKRAFT = 420, VERSATZ = 75, ATEM = 220;
@@ -642,7 +656,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
     }
   })();
   </script>
-  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u.&nbsp;a. die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u.&nbsp;a. die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Roman <i>Satoshi</i> ab; daneben schreibt er an einer Trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="vita.html">Vita</a>.</p>
 
   <p class="ebenen" role="group" aria-label="Globus"><button type="button" class="wort" data-ebene="leben" aria-pressed="true">Leben</button> <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">Reisen</button> <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false"><i>Satoshi</i></button> <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false"><i>Ursprünge</i></button></p>
 
@@ -704,7 +718,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
   </div>
 </section>
 
-<section class="abschnitt" id="gelesen" aria-labelledby="gelesen-titel" data-nur="website">
+<section class="abschnitt" id="gelesen" aria-labelledby="gelesen-titel">
   <h2 class="titel" id="gelesen-titel">Mein digitales Bücherregal</h2>
   <p class="gelesen-vorwort">Von Gilgamesch bis Labatut, geordnet nach dem Jahr, in dem ein Buch zuerst erschien. Jeder Strich ist so breit wie der Rücken des Buchs. Dunkel stehen die liebsten, halb so hoch, was ich nicht zu Ende gelesen habe. Ein kleiner Strich darüber zeigt, dass ich ein Buch wieder gelesen habe. Quer darauf liegt, was ich gerade lese.</p>
   <div class="zeitband" id="zeitband">
@@ -727,7 +741,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
       </div>
     </div>
   </div>
-  <p class="ganze"><a href="bibliothek.html">Die ganze Bibliothek</a></p>
+  <p class="ganze" data-nur="website"><a href="bibliothek.html">Die ganze Bibliothek</a></p>
 </section>
 <div class="schluss" id="schluss" data-nur="platzhalter"><p class="aufbau">Seite im Aufbau.</p></div>
 </main>
@@ -750,27 +764,28 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
 <script src="globus/kern.js"></script>
 <script src="daten/inhalt.js"></script>
 <script src="daten/buecher.js"></script>
-<script src="daten/leseliste.js" data-nur="website"></script>
+<script src="daten/leseliste.js"></script>
 <script src="seite.js"></script>
 <script data-nur="platzhalter">
 /* Nur im Platzhalter, vor dem Skript der Seite (der Schluss folgt im Skript ganz unten; Stil oben): ohne data-ausgabe="platzhalter"
    am html, also in der Quelle, tut es nichts, und aus der vollen Website nehmen die Werkzeuge es heraus. So bleiben seite.js und das
    Skript der Seite, wie sie in der vollen Website sind, Zeichen für Zeichen; nur behalten in seite.js die Tabellen NACHNAMEN und
-   BERICHTIGT, und daten/buecher.js, was das Regal braucht, die Bücher vom Nachttisch (Dominik, 29. Oktober: „Das mit der Bibliothek
-   soll auch alles raus.“).
+   BERICHTIGT, und daten/buecher.js und daten/leseliste.js, was Regal und Zeitband brauchen: die Bücher, die im Zeitband stehen
+   (gelesen, nicht zu Ende gelesen, Nachttisch, Kindheit und Jugend, was noch wartet, je mit Jahr; was wartet, aber schon im Regal
+   steht, nicht noch einmal) und die vom Nachttisch. Was nur die Bibliothek zeigt, bleibt draußen (Dominik, 29. Oktober: „Das mit
+   der Bibliothek soll auch alles raus.“, und am 6. November: „NUR AUF DER STARTSEITE(!) Nicht die Bibliothek.“).
    Verweise. Dominik: „Einfach eine einzelne indizierte Seite ohne Verlinkungen … Es soll neugierig machen. Aber ohne zu viel
-   preiszugeben.“ Von hier führt kein Verweis auf eine andere eigene Seite außer der Vita, auch keiner, den ein Skript erst setzt (die
-   Buchzeile nach einem Tipp auf ein eigenes Werk im Regal, die Texte der verborgenen Ebenen Satoshi und Ursprünge): er wird ein span
+   preiszugeben.“, und am 6. November: „Also von der Startseite kann man nur zur Vita navigieren. Nicht mehr.“ Von hier führt kein
+   Verweis auf eine andere eigene Seite außer der Vita, auch keiner, den ein Skript erst setzt (die Buchzeile nach einem Tipp auf ein
+   eigenes Werk im Regal, die Texte der verborgenen Ebenen Satoshi und Ursprünge; das Zeitband setzt heute keinen): er wird ein span
    mit denselben Klassen, der Text bleibt, ohne Strich. Es bleiben die Verweise nach außen, die Adresse für Anfragen, Impressum,
    Datenschutz, Anker und seit dem 6. November „Ausführlich in der Vita.“ am Ende der Kurzvita (Dominik zu seinem neuen Text der Vita:
    „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“); die Vita selbst führt nicht zum Exposé. Der Wächter
    steht vor dem Skript der Seite: was es beim Laden setzt, wird Text, bevor der Browser es zeichnet.
-   Das Zeitband. Das Skript der Seite hängt an #zeitband-roll das Rollen des Bands an; im Platzhalter fehlt das Bücherregal
-   (data-nur="website"), und ohne Band bräche es dort ab (Regal, Größenänderung und Schriften liefen nicht weiter). Ein leeres,
-   verborgenes Element an seiner Stelle lässt es weiterlaufen: verborgen hat es keine Breite, das Band wird nicht gebaut.
-   Ankunft über „auf dem Globus“ (die Vita verweist auf index.html#globus). Breit klebt der Globus, und einem klebenden Ziel rollt
-   der Browser beim Laden immer weiter nach (bei 1024 px bis 357 px, mitten in den Weg des Schlusses, der Globus schon blass). Breit
-   steht er im ersten Bildschirm ganz oben: dort bleibt die Seite; der Anker kommt nach dem Laden zurück in die Adresse */
+   Ankunft über den Anker #globus (bis zum 6. November verwies die Vita mit „auf dem Globus“ darauf; ein alter Verweis kann noch so
+   ankommen). Breit klebt der Globus, und einem klebenden Ziel rollt der Browser beim Laden immer weiter nach (bei 1024 px bis
+   357 px, mitten in den Weg des Schlusses, der Globus schon blass). Breit steht er im ersten Bildschirm ganz oben: dort bleibt die
+   Seite; der Anker kommt nach dem Laden zurück in die Adresse */
 (function () {
   'use strict';
   if (document.documentElement.getAttribute('data-ausgabe') !== 'platzhalter') return;
@@ -791,13 +806,6 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
   new MutationObserver(liste => liste.forEach(m => {
     if (m.type === 'attributes') verweise(m.target); else m.addedNodes.forEach(verweise);
   })).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
-  if (!document.getElementById('zeitband-roll')) {
-    const leer = document.createElement('div');
-    leer.id = 'zeitband-roll';
-    leer.hidden = true;
-    leer.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(leer);
-  }
   const ziel = location.hash === '#globus' && document.getElementById('globus');
   if (ziel && getComputedStyle(ziel).position === 'sticky') {
     const adresse = location.href;
@@ -2337,24 +2345,31 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
 /* Nur im Platzhalter (Stil oben; die Verweise setzt das Skript vor dem der Seite um): ohne data-ausgabe="platzhalter" am html, also
    in der Quelle, tut dieses Skript nichts, und aus der vollen Website nehmen die Werkzeuge es heraus.
    Der Schluss. Dominik: „wenn man runterzoomt soll auf dem Handy alles verblassen und dann Seite im Aufbau. […] Auf dem Desktop soll
-   der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite im Aufbau.“ Ist der Inhalt ganz zu sehen
-   (sein Ende am unteren Fensterrand), verblasst er mit jedem Pixel Weg weiter, bis „Seite im Aufbau.“ etwas über der Mitte des
-   Fensters steht (ihre Mitte bei HOEHE, 44 % seiner Höhe); zurückrollen holt ihn zurück. Nur die Deckkraft folgt dem Weg, stetig
-   (smoothstep), ohne Federn; die Zeile selbst wird nicht eingeblendet, das Scrollen bleibt frei, nichts rastet ein. Am Ende bleibt
-   das Blasse sichtbar (BLASS: die Rücken als Formen, „Satoshi“ und „Ursprünge“ gerade noch zu entziffern), der Fuß darunter ganz.
-   Verblasst: schmal und in v1 der Kopf, die Globusseite (mit dem Globus) und „Was ich schreibe“ (dort steht schmal das Regal); breit
-   in v2 alles außer dem Globus, der weiter mitwandert und klar bleibt, am Ende des Wegs ganz neben der Zeile (--schluss-globus, Stil
-   oben). Ab halbem Weg nimmt das Blasse keinen Klick und Tipp mehr an (.fern, Stil oben). Auf die Elemente mit data-folge (Regal,
-   Globus) schreibt das Skript nicht selbst, ihre Blende führt FSeite.folge. Bei reduzierter Bewegung verblasst nichts, die Zeile
-   steht 3 z unter dem Inhalt (Stil oben) */
+   der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite im Aufbau.“, und am 6. November mit dem
+   Bücherregal: „Und das Seite im Aufbau kann trotzdem unten kommen wenn man scrollt. Also wenn man nach den Büchern ist ... Kommt
+   trotzdem nochmal das Seite im Aufbau“. Erst wenn das Bücherregal ganz zu sehen war (sein Ende, das des Zeitbands, am unteren
+   Fensterrand; bis dahin bleibt alles ganz da und das Zeitband bedienbar), verblasst der Inhalt mit jedem Pixel Weg weiter, bis
+   „Seite im Aufbau.“ etwas über der Mitte des Fensters steht (ihre Mitte bei HOEHE, 44 % seiner Höhe); zurückrollen holt ihn
+   zurück. Nur die Deckkraft folgt dem Weg, stetig (smoothstep), ohne Federn; die Zeile selbst wird nicht eingeblendet, das Scrollen
+   bleibt frei, nichts rastet ein. Nur das Rollen der Seite zählt: rollt das Band am Telefon in seinem Rahmen waagrecht, ändert sich
+   nichts. Am Ende bleibt das Blasse sichtbar (BLASS: die Rücken als Formen, „Satoshi“ und „Ursprünge“ gerade noch zu entziffern),
+   der Fuß darunter ganz. Verblasst: schmal und in v1 der Kopf, die Globusseite (mit dem Globus), „Was ich schreibe“ (dort steht
+   schmal das Regal) und das Bücherregal; breit in v2 alles außer dem Globus, der klar bleibt (er hält wie in v1 vor dem Zeitband,
+   Stil oben). Ab halbem Weg nimmt das Blasse keinen Klick und Tipp mehr an (.fern, Stil oben), auch das Zeitband nicht. Auf die
+   Elemente mit data-folge (Regal, Globus) schreibt das Skript nicht selbst, ihre Blende führt FSeite.folge. Bei reduzierter
+   Bewegung verblasst nichts, die Zeile steht 3 z unter dem Zeitband (Stil oben) */
 (function () {
   'use strict';
   const html = document.documentElement;
   if (html.getAttribute('data-ausgabe') !== 'platzhalter') return;
   const F = window.FSeite, $ = s => document.querySelector(s);
   const schluss = $('#schluss'), zeile = $('#schluss .aufbau'), kopf = $('header.kopf'), seite = $('.globusseite'), schreiben = $('#schreiben');
-  const globus = $('.globusseite > .globus');
-  if (!F || !schluss || !zeile || !kopf || !seite || !schreiben) return;
+  const gelesen = $('#gelesen');
+  if (!F || !schluss || !zeile || !kopf || !seite || !schreiben || !gelesen) return;
+  // War die letzte Eingabe ein Zeiger (Maus, Finger, Stift), hält ein Fokus im Blassen es nicht ganz da (html.zeiger, Stil oben); die
+  // Tabulatortaste, mit der man den Fokus von Hand weitergibt, nimmt das wieder weg (7. November)
+  window.addEventListener('pointerdown', () => html.classList.add('zeiger'), { capture: true, passive: true });
+  window.addEventListener('keydown', e => { if (e.key === 'Tab') html.classList.remove('zeiger'); }, true);
   const BLASS = .16, HOEHE = .44, FERN = .5;
   const V2 = html.getAttribute('data-schluss') === 'v2';
   const mqRuhig = window.matchMedia('(prefers-reduced-motion: reduce)'), mqBreit = window.matchMedia('(min-width: 62.0625rem)');
@@ -2376,8 +2391,8 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
   function frei(e) { e.style.opacity = ''; e.classList.remove('blass', 'fern'); }
   function zieleSetzen() {
     const neu = V2 && mqBreit.matches
-      ? [kopf, schreiben].concat(Array.from(seite.children).filter(e => !e.matches('.globus, .regalbild, script')), Array.from(($('#regalbild') || {}).children || []))
-      : [kopf, seite, schreiben];
+      ? [kopf, schreiben, gelesen].concat(Array.from(seite.children).filter(e => !e.matches('.globus, .regalbild, script')), Array.from(($('#regalbild') || {}).children || []))
+      : [kopf, seite, schreiben, gelesen];
     ziele.forEach(e => { if (!neu.includes(e)) frei(e); });
     neu.forEach(e => e.classList.add('blass'));
     ziele = neu;
@@ -2386,21 +2401,15 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
   function messen() {
     messBild = 0;
     schluss.classList.toggle('mit-weg', !mqRuhig.matches);
-    if (mqRuhig.matches) { ziele.forEach(frei); ziele = []; weg = null; mass('--schluss-rest', null); mass('--schluss-globus', null); return; }
+    if (mqRuhig.matches) { ziele.forEach(frei); ziele = []; weg = null; mass('--schluss-rest', null); return; }
     zieleSetzen();
     const y = window.scrollY, H = probe.getBoundingClientRect().height || window.innerHeight;
     const z = zeile.getBoundingClientRect(), zh = z.height;
     // Unter der Zeile: die halbe Zeile und was unter dem Schluss bis zum Ende der Seite folgt (der Fuß mit seinem Abstand), aus den
     // gebrochenen Kanten beider gemessen, so hängt der Wert nicht vom eigenen Abstand ab
     mass('--schluss-rest', zh / 2 + html.getBoundingClientRect().bottom - schluss.getBoundingClientRect().bottom);
-    // v2 breit: so viel Raum unter der Zeile, dass der Globus (ruhend oben, mit Tafel und seinem Rand unten) noch ganz klebt, wenn
-    // die Zeile am Ende des Wegs steht
-    if (V2 && mqBreit.matches && globus) {
-      const s = getComputedStyle(globus);
-      mass('--schluss-globus', Math.max(0, (parseFloat(s.top) || 0) + globus.getBoundingClientRect().height + (parseFloat(s.marginBottom) || 0) - H * HOEHE - zh / 2));
-    } else mass('--schluss-globus', null);
-    // Das Ende des Inhalts: breit das der Zeilen mit Satz, Vita, Regal und Globus (die Oberkante des leeren „Was ich schreibe“), schmal das Regal
-    const ende = (mqBreit.matches ? schreiben.getBoundingClientRect().top : schreiben.getBoundingClientRect().bottom) + y;
+    // Das Ende des Inhalts: das des Bücherregals, also des Zeitbands mit der Buchzeile und den zwei Reihen darunter (breit wie schmal)
+    const ende = gelesen.getBoundingClientRect().bottom + y;
     weg = { s0: Math.max(0, ende - H), s1: z.top + y + zh / 2 - H * HOEHE };
     // Ein Weg unter 40 px (nur in Fenstern, die höher sind als die ganze Seite): nichts verblasst
     if (weg.s1 - weg.s0 < 40) { weg = null; ziele.forEach(e => { e.style.opacity = ''; e.classList.remove('fern'); }); zuletzt = null; fern = null; }

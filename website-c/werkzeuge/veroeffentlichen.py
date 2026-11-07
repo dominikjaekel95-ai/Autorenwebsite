@@ -21,15 +21,19 @@ wird. Er steht auf 'platzhalter', solange die Website offline ist (Dominik: „K
 ein Bau ohne Zusatz nicht aus Versehen die volle Website zurück. Zurück zur vollen Website: AUSGABE = 'website' und neu bauen;
 die volle Website bleibt dabei, wie sie vor dem Schalter war (alle Markierungen fallen dort weg). SCHLUSS ('v1' oder 'v2') wählt
 im Platzhalter, wie am Desktop der Schluss „Seite im Aufbau.“ kommt: v1 „Alles verblasst“ (wie auf dem Telefon, mit dem Globus),
-v2 „Der Globus bleibt“ (er wandert mit und bleibt klar, links verblasst alles). Auf dem Telefon sind beide gleich.
+v2 „Der Globus bleibt“ (er wandert mit und bleibt klar, links verblasst alles; seit dem 6. November hält er wie in v1 vor dem
+Zeitband und ist am Ende des Wegs schon aus dem Bild). Auf dem Telefon sind beide gleich.
 
 Zwei Ausgaben aus derselben Quelle (27. Oktober). Dominik: „Können wir sie wieder offline nehmen? Ich würde einfach einen
 Platzhalter auf der Startseite. […] Einfach eine einzelne indizierte Seite ohne Verlinkungen.“, „Dann brauche ich getrennt davon
 eine Seite für Satoshi. Das bleibt. Das ist das sogenannte digitale Exposé.“ und zum Platzhalter: „Halte von der Startseite die drei
 Elemente. Vita. Globus. Das Regal mit den Projekten und dem Schreibtisch“.
   - 'website': die volle Website mit den elf Seiten, wie unten beschrieben.
-  - 'platzhalter': nur sechs Seiten. Unter / steht die Startseite selbst (index.html) ohne Menü, Werkverzeichnis und Bücherregal;
-    darunter kommt beim Rollen der Schluss „Seite im Aufbau.“ (Fassung nach SCHLUSS, am html als data-schluss; dazu
+  - 'platzhalter': nur sechs Seiten. Unter / steht die Startseite selbst (index.html) ohne Menü, Werkverzeichnis und „Die ganze
+    Bibliothek“, seit dem 6. November mit dem Bücherregal, dem Zeitband (Dominik: „Und ich würde die gelesenen bücher auf der
+    Startseite wieder reinnehmen. NUR AUF DER STARTSEITE(!) Nicht die Bibliothek. Nicht die Länder ... Also von der Startseite kann
+    man nur zur Vita navigieren. Nicht mehr.“); nach ihm kommt beim Rollen der Schluss „Seite im Aufbau.“ (Fassung nach SCHLUSS, am
+    html als data-schluss; dazu
     data-ausgabe="platzhalter", nach dem sich Stil und Skript der Seite richten). Unter /satoshi das digitale Exposé, unter /vita
     die Vita, dazu /impressum, /datenschutz und 404.html. Indiziert und in der Sitemap sind / und seit dem 6. November /vita
     (Dominik zu seinem neuen Text der Vita: „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“; vorher
@@ -38,19 +42,21 @@ Elemente. Vita. Globus. Das Regal mit den Projekten und dem Schreibtisch“.
     ein späterer Neustart ohne Altlasten geht) auf / weiter. Strukturierte Daten auf / und /vita: die Person wie in der vollen
     Website (Name, Adresse, Beruf, Kurzvita, Preis, Verein), ohne Werke. Meta-Beschreibung und Open Graph wie auf der
     Startseite. Aus daten/ und bilder/ geht nur mit, worauf eine ausgelieferte Seite, ein Stil oder ein eigenes Skript verweist
-    (ohne Kommentare gelesen); Schriften mit Lizenzen, Bibliotheken, Kern und Icons gehen ganz mit. daten/buecher.js geht nur mit
-    den Büchern vom Nachttisch mit, mehr braucht das Regal nicht (artefakt.buecher_platzhalter; Dominik, 29. Oktober: „Das mit der
-    Bibliothek soll auch alles raus.“); in seite.js behalten die Tabellen NACHNAMEN und BERICHTIGT mit Namen und Titeln aus der
-    Bibliothek nur, was diese Bücher brauchen (artefakt.buch_tabellen_platzhalter).
+    (ohne Kommentare gelesen); Schriften mit Lizenzen, Bibliotheken, Kern und Icons gehen ganz mit. daten/buecher.js und
+    daten/leseliste.js gehen nur mit den Büchern mit, die Zeitband und Regal zeigen: im Zeitband die mit Jahr, aus der Leseliste
+    nur, was nicht schon im Regal steht, im Regal die vom Nachttisch; was nur die Bibliothek zeigt, bleibt draußen
+    (artefakt.buecher_platzhalter; Dominik, 29. Oktober: „Das mit der Bibliothek soll auch alles raus.“); in seite.js behalten die
+    Tabellen NACHNAMEN und BERICHTIGT mit Namen und Titeln aus der Bibliothek nur, was diese Bücher brauchen
+    (artefakt.buch_tabellen_platzhalter).
     Verweise (Dominik: „ohne Verlinkungen“; Impressum und Datenschutz bleiben, § 5 DDG und DSGVO): Der Bau prüft je Seite, wohin
     ihre Verweise führen dürfen (VERWEISE_PLATZHALTER; ein Anker auf der Seite selbst ist immer erlaubt, wenn es sein Ziel gibt):
     / auf die Vita („Ausführlich in der Vita.“), Impressum, Datenschutz, die Adresse für Anfragen und nach außen; das Exposé auf die
-    Vita, Impressum, Datenschutz, Anfragen und nach außen; die Vita auf / (der Name im Kopf, „auf dem Globus“), Impressum,
+    Vita, Impressum, Datenschutz, Anfragen und nach außen; die Vita auf / (der Name im Kopf), Impressum,
     Datenschutz, Anfragen und nach außen, nicht auf das Exposé („Satoshi“ ist dort Text); Impressum, Datenschutz und 404.html nur
     auf /, Impressum, Datenschutz, Anfragen und nach außen. Auf /satoshi verweist so keine Seite, auch nicht über mehrere Schritte:
     den Link zum Exposé gibt der Autor weiter. Verweise, die erst ein Skript im Browser setzt, sieht der Bau nicht (auf / macht das
-    Skript des Platzhalters jeden Verweis auf eine andere eigene Seite außer der Vita zu Text); darum vor jedem Livegang auch das
-    Prüfprogramm im Browser laufen lassen (docs/todo.md).
+    Skript des Platzhalters jeden Verweis auf eine andere eigene Seite außer der Vita zu Text, auch nach Tipps auf Regal und
+    Zeitband); darum vor jedem Livegang auch das Prüfprogramm im Browser laufen lassen (docs/todo.md).
   - In beiden setzt der Bau die Markierungen in den Seiten um (artefakt.ausgabe_umsetzen; erklärt auf satoshi.html):
     data-nur="website" nur in der vollen Website, data-nur="expose" und data-nur="platzhalter" nur im Platzhalter,
     data-verweis="website" ein Verweis, der im Platzhalter reiner Text wird. Danach steht keine Markierung mehr da (geprüft), und
@@ -139,10 +145,12 @@ LD_PLATZHALTER = {'index.html': 'Person', 'vita.html': 'Person'}
 # Wohin im Platzhalter jede Seite verweisen darf (<a href>, <area href>, <form action>): die eigenen Seiten und ob dazu mailto: und
 # Verweise nach außen (AUSSEN_ERLAUBT) sein dürfen; ein Anker auf der Seite selbst (#globus) ist immer erlaubt. Dominik: „Einfach
 # eine einzelne indizierte Seite ohne Verlinkungen.“ Impressum und Datenschutz bleiben (§ 5 DDG, DSGVO). Die Vita ist seit dem
-# 6. November öffentlich: / verweist mit „Ausführlich in der Vita.“ auf sie, das Exposé weiter mit „Dominik Jäkel“ in den Eckdaten
+# 6. November öffentlich: / verweist mit „Ausführlich in der Vita.“ auf sie, und nur auf sie (Dominik, 6. November: „Also von der
+# Startseite kann man nur zur Vita navigieren. Nicht mehr.“), das Exposé weiter mit „Dominik Jäkel“ in den Eckdaten
 # (Dominik, 27. Oktober: „Du sollst von Satoshi auf meine Vita verweisen. Die Vita soll nicht tot sein.“). Auf das Exposé
 # (satoshi.html) verweist keine Seite mehr, auch die Vita nicht: so ist es von / aus auch über mehrere Schritte nicht zu erreichen,
-# den Link gibt der Autor weiter. Die übrigen Seiten führen zurück auf / (der Name im Kopf, „Zur Startseite“)
+# den Link gibt der Autor weiter. Die übrigen Seiten führen zurück auf / (der Name im Kopf, „Zur Startseite“; die Vita bis zum
+# 6. November abends auch mit „auf dem Globus“, Dominik: „Nimm den Satz in der Vita nochmal raus“)
 VERWEISE_PLATZHALTER = {
     'index.html': ({'vita.html', 'impressum.html', 'datenschutz.html'}, True),
     'satoshi.html': ({'satoshi.html', 'vita.html', 'impressum.html', 'datenschutz.html'}, True),
@@ -154,9 +162,12 @@ VERWEISE_PLATZHALTER = {
 
 # ---------- Schalter: der Schluss des Platzhalters am Desktop (27. Oktober) ----------
 # Dominik: „Auf dem Desktop soll der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite im Aufbau.“
-# 'v1' „Alles verblasst“: wie auf dem Telefon verblasst beim Rollen der ganze Startbildschirm samt Globus. 'v2' „Der Globus bleibt“:
-# der Globus wandert mit und bleibt klar, links verblassen Satz, Vita und Regal; am Ende des Wegs steht er ganz neben der Zeile, der
-# Fuß folgt beim Weiterrollen. „Seite im Aufbau.“ steht am Ende in beiden etwas über der Mitte des Fensters, in der Textspalte.
+# 'v1' „Alles verblasst“: wie auf dem Telefon verblasst beim Rollen alles samt Globus (seit dem 6. November nach dem Bücherregal,
+# auch dieses). 'v2' „Der Globus bleibt“:
+# der Globus wandert mit und bleibt klar, links verblassen Satz, Vita, Regal und seit dem 6. November das Bücherregal. Bis dahin
+# stand er am Ende des Wegs ganz neben der Zeile; seit das Bücherregal davor steht, hält er wie in v1 vor dem Zeitband (index.html,
+# Stil des Platzhalters) und ist am Ende des Wegs schon aus dem Bild, v2 sieht dort aus wie v1. „Seite im Aufbau.“ steht am Ende in
+# beiden etwas über der Mitte des Fensters, in der Textspalte, der Fuß folgt beim Weiterrollen.
 # Vorgabe v1 (28. Oktober, nach dem Urteil: am Telefon und am Desktop dieselbe Geste; in v2 ist die klare Kugel am Ende der Seite
 # oben angeschnitten). Die Wahl liegt bei Dominik. --schluss v1|v2 im Aufruf gilt für einen Bau; artefakt.py folgt demselben Schalter
 SCHLUSS = 'v1'
@@ -168,11 +179,12 @@ TEXTDATEIEN = ('.html', '.css', '.js')
 FEHLERSEITE = '404.html'
 VORSCHAUBILD = 'bilder/vorschau.jpg'
 # Die Rolle wie im Kopf der Seiten und auf dem Bild (Dominik, 29. Oktober: „Und schreib nur noch schrifsteller. Nicht mehr
-# schrifsteller und Reisender“), dann der erste Satz der Startseite, wie er auf dem Bild steht (seit dem 6. November Dominiks Satz
-# vom Anfang seiner Bio: „Nimm das auch als Slogan für die Startseite ...“; vorher „Dominik Jäkel schreibt tagsüber unter fremden
-# Namen und abends unter seinem eigenen.“)
-VORSCHAU_ALT = ('Dominik Jäkel, Schriftsteller. Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und '
-                'Technologie – meist unter den Namen anderer Leute. Rechts ein Globus mit Europa und Afrika.')
+# schrifsteller und Reisender“), dann der erste Satz der Startseite, wie er auf dem Bild steht (seit dem 6. November abends:
+# „Dominik Jäkel schreibt seit Jahren unter fremden Namen. Sein Debütroman trägt den berühmtesten.“; am Nachmittag „Dominik Jäkel,
+# Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie – meist unter den Namen anderer Leute.“, davor „Dominik Jäkel
+# schreibt tagsüber unter fremden Namen und abends unter seinem eigenen.“)
+VORSCHAU_ALT = ('Dominik Jäkel, Schriftsteller. Dominik Jäkel schreibt seit Jahren unter fremden Namen. Sein Debütroman trägt den '
+                'berühmtesten. Rechts ein Globus mit Europa und Afrika.')
 # Die Seiten in der Reihenfolge von FSeite.SEITEN (seite.js); die Startseite steht unter „/“
 SEITEN = ['index.html', 'satoshi.html', 'ursprung.html', 'erzaehlungen.html', 'untertext.html', 'laender.html', 'bibliothek.html',
           'vita.html', 'lesen.html', 'impressum.html', 'datenschutz.html']
@@ -753,15 +765,17 @@ def verweise_platzhalter(seite, text, probleme):
 
 
 def platzhalter_seite_pruefen(text, schluss, probleme):
-    """Platzhalter, /: die Startseite ohne Menü, Werkverzeichnis und Bücherregal, mit genau einem Schluss „Seite im Aufbau.“, ihrem
+    """Platzhalter, /: die Startseite ohne Menü, Werkverzeichnis und „Die ganze Bibliothek“, mit dem Bücherregal (seit dem
+    6. November: das Zeitband mit seinen drei Reglern und daten/leseliste.js) und genau einem Schluss „Seite im Aufbau.“, ihrem
     Stil und ihrem Skript (text ohne den Text der Skripte). Dominik: „Halte von der Startseite die drei Elemente. Vita. Globus. Das
-    Regal mit den Projekten und dem Schreibtisch“. Am Ende der Kurzvita genau einmal „Ausführlich in der Vita.“ mit dem Verweis auf
-    die Vita (seit dem 6. November; mit vita.html vor dem Umschreiben der Verweise, /vita danach)"""
+    Regal mit den Projekten und dem Schreibtisch“, und am 6. November: „Und ich würde die gelesenen bücher auf der Startseite wieder
+    reinnehmen. NUR AUF DER STARTSEITE(!) Nicht die Bibliothek.“ Am Ende der Kurzvita genau einmal „Ausführlich in der Vita.“ mit
+    dem Verweis auf die Vita (seit dem 6. November; mit vita.html vor dem Umschreiben der Verweise, /vita danach)"""
     if schluss not in artefakt.SCHLUESSE:
         probleme.append(f'index.html: Schluss {schluss!r}; erlaubt sind {", ".join(artefakt.SCHLUESSE)}')
     if text.count('<p class="aufbau">Seite im Aufbau.</p>') != 1 or text.count('id="schluss"') != 1:
         probleme.append('index.html: „Seite im Aufbau.“ (p.aufbau in #schluss) steht nicht genau einmal da')
-    for was, muster in (('ein Menü', r'<nav\b'), ('das Werkverzeichnis', r'class="verzeichnis"'), ('das Bücherregal', r'id="gelesen"'),
+    for was, muster in (('ein Menü', r'<nav\b'), ('das Werkverzeichnis', r'class="verzeichnis"'), ('„Die ganze Bibliothek“', r'class="ganze"'),
                         ('„Was ich schreibe“', r'id="schreiben-titel"'), ('der Sprung „Zum Inhalt“', r'class="sprung"')):
         if re.search(muster, text):
             probleme.append(f'index.html: im Platzhalter steht noch {was}')
@@ -769,7 +783,10 @@ def platzhalter_seite_pruefen(text, schluss, probleme):
             or text.count('Ausführlich in der') != 1:
         probleme.append('index.html: „Ausführlich in der Vita.“ mit dem Verweis auf die Vita steht nicht genau einmal am Ende der Kurzvita')
     for was, muster in (('der Kopf', r'<h1 class="briefkopf">'), ('der erste Satz', r'id="einstieg"'), ('die Kurzvita', r'<p class="vita">'),
-                        ('der Globus', r'id="globus"'), ('das Regal', r'id="regalbild"'), ('die Tafel', r'id="tafel"')):
+                        ('der Globus', r'id="globus"'), ('das Regal', r'id="regalbild"'), ('die Tafel', r'id="tafel"'),
+                        ('das Bücherregal', r'<section class="abschnitt" id="gelesen"'), ('das Zeitband', r'id="zeitband"'),
+                        ('der Regler von „gelesen“', r'id="regler"'), ('der Regler „die wichtigsten aus Kindheit und Jugend“', r'id="regler-kind"'),
+                        ('der Regler „was noch wartet“', r'id="regler-warte"'), ('daten/leseliste.js', r'<script src="daten/leseliste\.js"></script>')):
         if not re.search(muster, text):
             probleme.append(f'index.html: im Platzhalter fehlt {was}')
 
@@ -974,7 +991,8 @@ def main():
                 texte[p] = artefakt.ausgabe_umsetzen(neu, ausgabe, p.as_posix()) if p.suffix == '.html' else neu
     if platz:
         texte[Path('index.html')] = artefakt.ausgabe_kennzeichnen(texte[Path('index.html')], schluss)
-        texte[Path('daten/buecher.js')] = artefakt.buecher_platzhalter(texte[Path('daten/buecher.js')])
+        buecher_vorher = {p: artefakt.buecher_zahl(texte[Path(p)]) for p in ('daten/buecher.js', 'daten/leseliste.js')}
+        texte[Path('daten/buecher.js')], texte[Path('daten/leseliste.js')] = artefakt.buecher_platzhalter(texte)
         texte[Path('seite.js')] = artefakt.buch_tabellen_platzhalter(texte)
     texte[Path('datenschutz.html')] = tarif_waehlen(texte[Path('datenschutz.html')], TARIF)
     for p in texte:
@@ -1068,6 +1086,9 @@ def main():
           + f'; Tarif bei Vercel: {TARIF or "offen (beide Fassungen und die Markierung stehen im Datenschutz)"}')
     print('Ausgelassen: ' + ', '.join(sorted(AUSLASSEN) + [p.as_posix() for p in weg_seiten]
                                       + [p.as_posix() + ' (nirgends verwiesen)' for p in weg]))
+    if platz:
+        print('Bücher für Zeitband und Regal: ' + ', '.join(f'{p} {artefakt.buecher_zahl(texte[Path(p)])} von {n} Einträgen'
+                                                             for p, n in buecher_vorher.items()))
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ Stand: 7. November 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es
 ## Ohne „Seite im Aufbau.“, sieben Bücher mehr (7. November, V93)
 
 - [x] **Claude:** Schluss „Seite im Aufbau.“ aus Quelle, Werkzeugen und Prüfprogramm entfernt (der Schalter `SCHLUSS` gibt es nicht mehr; Aufruf jetzt `node pruefen-platz.cjs <url> <bau> <aus> <volle-website>` ohne `SCHLUSS=…`); Beschreibung „Sein Roman Satoshi“; Profil-Hinweis „Dominik Jäkels …“; sieben Bücher unter „Gelesen“. Live seit 7. November, zusammen mit V92 (erster Satz, Kurzvita, Bücherregal im Platzhalter, Vita-Stationen).
-- [ ] **Dominik:** Ob eines der sieben neuen Bücher als liebstes dunkel stehen soll; ob Zevin wirklich die englische Ausgabe war.
+- [x] **Dominik:** „Zevin auf Englisch. Lieblingsbuch nur Serotonin“ (7. November) – Serotonin ist als liebstes markiert, live.
 
 ## Erster Satz „Sein Debütroman …“, Bücherregal im Platzhalter (6. November abends, V92)
 

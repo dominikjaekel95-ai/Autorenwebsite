@@ -786,3 +786,9 @@ Dominik: „Um ehrlich zu sein ist das Seite im Aufbau jetzt blöd und kann weg.
 - `daten/buecher.js`: sieben Einträge oben (gelesen, nicht als liebste): Botanik des Wahnsinns (Engler, 2025, 208 S., DuMont), Tomorrow, and Tomorrow, and Tomorrow (Zevin, 2022, 416 S., Knopf), Real Americans, Serotonin, Indignation, Mao II, Bestiarium (die letzten fünf aus der Leseliste, Jahr und Seiten von dort); `daten/leseliste.js`: diese fünf entfernt. Regler jetzt 444 / 121 / 68 (vorher 437 / 121 / 73).
 - Prüfprogramme ohne Schluss (Kopien vorher `*.vor-ohne8.cjs`). Geprüft (Ablage `scratchpad/ohne8/`): `pruefen-platz.cjs` und `pruefen.cjs` je 0 Fehler, Gegenprobe gegen den Stand mit Schluss meldet ihn; unabhängige Prüfung ohne Befund „muss“ (Deckkraft überall 1, Zeitband unten bedienbar, Fuß wie in der vollen Website, Globus wie vorher, Verweise nur zur Vita); der Live-Bau ist Byte für Byte der geprüfte.
 
+## 7. November 2026: Serotonin als Lieblingsbuch
+
+Dominik: „Zevin auf Englisch. Lieblingsbuch nur Serotonin“
+
+- `daten/buecher.js`: Serotonin `"s":5` (eines der liebsten), Kommentar am Kopf ergänzt; Zevin bleibt „Tomorrow, and Tomorrow, and Tomorrow“. Der Live-Bau ändert sich nur in dieser Zeile von `daten/buecher.js`. Geprüft: `pruefen-platz.cjs` und `pruefen.cjs` gegen die neuen Bauten, Serotonin im Zeitband mit s 5.
+

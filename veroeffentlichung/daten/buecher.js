@@ -2,7 +2,7 @@ window.BUECHER = [
 {"t":"Botanik des Wahnsinns","u":"","a":"Leon Engler","r":"gelesen","s":0,"j":2025,"p":208,"w":0,"b":"h","v":"DuMont"},
 {"t":"Tomorrow, and Tomorrow, and Tomorrow","u":"","a":"Gabrielle Zevin","r":"gelesen","s":0,"j":2022,"p":416,"w":0,"b":"h","v":"Knopf"},
 {"t":"Real Americans","u":"","a":"Rachel Khong","r":"gelesen","s":0,"j":2024,"p":416,"w":0,"b":"e","v":""},
-{"t":"Serotonin","u":"","a":"Michel Houellebecq","r":"gelesen","s":0,"j":2019,"p":336,"w":0,"b":"e","v":""},
+{"t":"Serotonin","u":"","a":"Michel Houellebecq","r":"gelesen","s":5,"j":2019,"p":336,"w":0,"b":"e","v":""},
 {"t":"Indignation","u":"","a":"Philip Roth","r":"gelesen","s":0,"j":2008,"p":233,"w":0,"b":"e","v":""},
 {"t":"Mao II","u":"","a":"Don DeLillo","r":"gelesen","s":0,"j":1991,"p":241,"w":0,"b":"e","v":""},
 {"t":"Bestiarium","u":"","a":"Julio Cortázar","r":"gelesen","s":0,"j":1951,"p":160,"w":0,"b":"e","v":""},

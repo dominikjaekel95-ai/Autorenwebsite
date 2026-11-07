@@ -1,19 +1,17 @@
 /* Was noch wartet: die eigene Leseliste (Stand Oktober 2026), nur Titel und Autor.
+   7. November 2026: Serotonin, Indignation, Bestiarium, Real Americans und Mao II hat Dominik gelesen; sie stehen jetzt in
+   buecher.js unter gelesen (mit Jahr und Seiten von hier).
    t Titel, a Autor, j Jahr der Erstveröffentlichung (negativ = v. Chr., null = unklar), p Seiten (ungefähr), k Kurzprosa oder Gedichte */
 window.LESELISTE = [
-  { t: 'Serotonin', a: 'Michel Houellebecq', j: 2019, p: 336 },
-  { t: 'Indignation', a: 'Philip Roth', j: 2008, p: 233 },
   { t: 'Sand', a: 'Wolfgang Herrndorf', j: 2011, p: 480 },
   { t: 'Der Widersacher', a: 'Emmanuel Carrère', j: 2000, p: 192 },
   { t: 'Limonow', a: 'Emmanuel Carrère', j: 2011, p: 480 },
   { t: 'The Passenger', a: 'Cormac McCarthy', j: 2022, p: 384 },
-  { t: 'Bestiarium', a: 'Julio Cortázar', j: 1951, p: 160, k: true },
   { t: 'Byzantine Empathy', a: 'Ken Liu', j: 2018, p: 30, k: true },
   { t: 'Neue Gedichte', a: 'Rainer Maria Rilke', j: 1907, p: 160, k: true },
   { t: 'Cryptonomicon', a: 'Neal Stephenson', j: 1999, p: 918 },
   { t: 'Das Gift', a: 'Samanta Schweblin', j: 2014, p: 128 },
   { t: 'Digital Gold', a: 'Nathaniel Popper', j: 2015, p: 432 },
-  { t: 'Real Americans', a: 'Rachel Khong', j: 2024, p: 416 },
   { t: 'Pnin', a: 'Vladimir Nabokov', j: 1957, p: 191 },
   { t: 'Die drei Sonnen', a: 'Liu Cixin', j: 2008, p: 416 },
   { t: 'The Remains of the Day', a: 'Kazuo Ishiguro', j: 1989, p: 258 },
@@ -33,7 +31,6 @@ window.LESELISTE = [
   { t: 'Erzählungen', a: 'Vladimir Nabokov', j: 1995, p: 690, k: true },
   { t: 'Der Schneemann', a: 'Jörg Fauser', j: 1981, p: 250 },
   { t: 'Der Spieler', a: 'Fjodor Dostojewski', j: 1866, p: 190 },
-  { t: 'Mao II', a: 'Don DeLillo', j: 1991, p: 241 },
   { t: 'Her Smoke Rose Up Forever', a: 'James Tiptree Jr.', j: 1990, p: 508, k: true },
   { t: 'Was wir im Feuer verloren', a: 'Mariana Enriquez', j: 2016, p: 200, k: true },
   { t: 'Pedro Páramo', a: 'Juan Rulfo', j: 1955, p: 124 },

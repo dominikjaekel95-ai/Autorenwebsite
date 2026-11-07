@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dominik Jäkel</title>
-<meta name="description" content="Dominik Jäkel, Schriftsteller, lebt in Berlin. Sein Debütroman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
+<meta name="description" content="Dominik Jäkel, Schriftsteller, lebt in Berlin. Sein Roman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
 <meta name="theme-color" content="#FFFEFC">
 <script>document.documentElement.classList.add('js');</script>
 <!-- Einblenden in Folge (FSeite.folge): Text zuerst, der Globus zuletzt. Schon hier gesetzt, damit vor dem ersten Bild nichts aufblitzt;
@@ -127,7 +127,8 @@ html:not(.js) .ebenen, html:not(.js) .globusseite > .globus { display: none; }
    Rasterfeld, darum hält er dort, wo die Legende endet. Die beiden Abschnitte liegen dabei über dem leeren Teil der Globusseite;
    sichtbar ist dort nur die Kugel, die über ihnen steht.
    Zeilen von main: 1 bis 6 die der Globusseite (Satz, Vita, Regalbild, zwei leer, 1fr), 7 „Was ich schreibe“, 8 Überschrift,
-   9 Legende, 10 Zeitband, 11 „Die ganze Bibliothek“ (im Platzhalter leer; dort folgt in 12 der Schluss „Seite im Aufbau.“).
+   9 Legende, 10 Zeitband, 11 „Die ganze Bibliothek“ (im Platzhalter leer: dort folgt der Fuß gleich auf das Zeitband; bis zum
+   7. November stand in 12 noch der Schluss „Seite im Aufbau.“, Stil des Platzhalters unten).
 
    Beim Laden sieht nichts anders aus: „Was ich schreibe“ beginnt wie bisher 3 z unter dem, was tiefer reicht, Regal oder Kugel.
    Dafür hält in der leeren Randspalte ein Platzhalter (::before) über den ersten sechs Zeilen die Höhe der ruhenden Kugel: Versatz
@@ -353,63 +354,37 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 </style>
 <style data-nur="platzhalter">
 /* Der Platzhalter ist diese Seite selbst (27. Oktober). Dominik: „Halte von der Startseite die drei Elemente. Vita. Globus. Das Regal
-   mit den Projekten und dem Schreibtisch ... Aber wenn man runterzoomt soll auf dem Handy alles verblassen und dann Seite im Aufbau.
-   Es so neugierig machen. Auf dem Desktop soll der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite
-   im Aufbau.“ Was nur in der vollen Website steht (Menü, Werkverzeichnis, „Die ganze Bibliothek“), trägt data-nur="website"; dieser
-   Block, der Schluss „Seite im Aufbau.“ und sein Skript tragen data-nur="platzhalter" und stehen nur in der Platzhalter-Ausgabe der
-   Werkzeuge (Markierungen erklärt auf satoshi.html). In der Quelle verbirgt die erste Regel den Schluss; alles andere gilt nur, wenn
-   der Bau am html data-ausgabe="platzhalter" setzt, dazu data-schluss, die Fassung am Desktop (v1 „Alles verblasst“, v2 „Der Globus
-   bleibt“). Der Kopf behält breit seine Höhe (--kopf-h), der erste Satz bleibt an seiner Stelle; schmal schließt sich die Lücke des
-   Menüs.
+   mit den Projekten und dem Schreibtisch“. Was nur in der vollen Website steht (Menü, Werkverzeichnis, „Die ganze Bibliothek“),
+   trägt data-nur="website"; dieser Block und das Skript des Platzhalters vor dem Skript der Seite (die Verweise) tragen
+   data-nur="platzhalter" und stehen nur in der Platzhalter-Ausgabe der Werkzeuge (Markierungen erklärt auf satoshi.html). Alles hier
+   gilt nur, wenn der Bau am html data-ausgabe="platzhalter" setzt; in der Quelle ändert der Block nichts. Der Kopf behält breit seine
+   Höhe (--kopf-h), der erste Satz bleibt an seiner Stelle; schmal schließt sich die Lücke des Menüs.
    Seit dem 6. November steht hier wieder das Bücherregal, das Zeitband mit seinen drei Reglern (Dominik: „Und ich würde die gelesenen
    bücher auf der Startseite wieder reinnehmen. NUR AUF DER STARTSEITE(!) Nicht die Bibliothek. Nicht die Länder ... Also von der
-   Startseite kann man nur zur Vita navigieren. Nicht mehr. Und dann ist die Seite im Aufbau ...“ und „Und das Seite im Aufbau kann
-   trotzdem unten kommen wenn man scrollt. Also wenn man nach den Büchern ist ... Kommt trotzdem nochmal das Seite im Aufbau“), ohne
-   „Die ganze Bibliothek“. Der Schluss folgt nach ihm */
-[data-nur="platzhalter"] { display: none !important; }
-/* „Seite im Aufbau.“ im Grad Text, in Tinte, aufrecht, in der Textspalte; ohne Skript und bei reduzierter Bewegung steht die Zeile
-   3 z unter dem, was über ihr bleibt (mit Skript dem Zeitband; ohne Skript gibt der leere Abschnitt „Was ich schreibe“ die 3 z), und
-   3 z über dem Fuß, damit sie nicht an „Anfragen“ hängt. Ohne Skript gibt es kein Zeitband, und die Überschrift des Bücherregals
-   stünde allein: dann fehlt der ganze Abschnitt */
-html[data-ausgabe="platzhalter"] .schluss { padding: var(--z-drei) var(--rand-r) var(--z-drei) var(--rand-l); }
-html[data-ausgabe="platzhalter"]:not(.js) .schluss { padding-top: 0; }
+   Startseite kann man nur zur Vita navigieren. Nicht mehr.“), ohne „Die ganze Bibliothek“. Gleich nach ihm kommt der Fuß, mit seinem
+   Abstand aus stil.css: 3 z über „Anfragen“, wie in der vollen Website unter „Die ganze Bibliothek“.
+   Bis zum 7. November folgte nach dem Bücherregal der Schluss: beim Weiterrollen verblasste der Inhalt, und „Seite im Aufbau.“ stand
+   etwas über der Mitte des Fensters (Dominik, 27. Oktober: „Aber wenn man runterzoomt soll auf dem Handy alles verblassen und dann
+   Seite im Aufbau. Es so neugierig machen. Auf dem Desktop soll der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt
+   sowas wie Seite im Aufbau.“; am Desktop wahlweise mit klarem Globus, Schalter SCHLUSS in werkzeuge/veroeffentlichen.py). Am
+   7. November schrieb er zum Testlink: „Um ehrlich zu sein ist das Seite im Aufbau jetzt blöd und kann weg. Sonst okay.“ Seitdem
+   verblasst nichts mehr, und das Zeitband bleibt bis zum Ende der Seite bedienbar. Die Fassung mit dem Schluss (die Zeile, ihr Stil,
+   ihr Skript, der Schalter und die Prüfungen in den Werkzeugen): Commit a782659 */
+/* Ohne Skript gibt es kein Zeitband, und die Überschrift des Bücherregals stünde allein: dann fehlt der ganze Abschnitt. Auch „Was ich
+   schreibe“ ist dann leer (das Regal braucht das Skript, Überschrift und Werkverzeichnis fehlen) und gibt keinen eigenen Abstand: so
+   steht der Fuß 3 z unter der Kurzvita, nicht 6 z (bis zum 7. November gab der leere Abschnitt dem Schluss seine 3 z) */
 html[data-ausgabe="platzhalter"]:not(.js) #gelesen { display: none; }
-html[data-ausgabe="platzhalter"] .aufbau { max-width: var(--mass); }
-@media (max-width: 62rem) { html[data-ausgabe="platzhalter"] .schluss { padding-right: var(--rand-l); } }
-/* Mit Bewegung (Skript unten setzt .mit-weg): zwischen dem Zeitband und der Zeile knapp ein Fünftel des Fensters (19 svh),
-   mindestens 3 z; darunter so viel, dass die Zeile am Ende des Wegs etwas über der Mitte des Fensters steht (ihre Mitte bei 44 % der
-   Höhe) und der Fuß darunter ganz zu sehen ist (--schluss-rest: halbe Zeile und Fuß, vom Skript gemessen). So steht sie zwischen dem
-   blassen Bücherregal und dem Fuß, nicht dicht über „Anfragen“. svh und lvh, damit die Leiste des Browsers auf dem Telefon beim
-   Rollen nichts verschiebt */
-html[data-ausgabe="platzhalter"] .schluss.mit-weg {
-  padding-top: max(var(--z-drei), 19vh); padding-top: max(var(--z-drei), 19svh);
-  padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px))); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)));
-}
+html[data-ausgabe="platzhalter"]:not(.js) #schreiben { padding-top: 0; }
 /* Breit wie in der vollen Website: der Globus wandert mit, bis vor das Zeitband (Zeilen 1 bis 9 von main, Stil oben), und hält dort
    3 z darüber; nichts überdeckt sich. „Was ich schreibe“ ist hier leer (das Regal steht neben der Kugel, Überschrift und
    Werkverzeichnis fehlen) und gibt keinen eigenen Abstand: zwischen Regal oder Kugel und der Überschrift des Bücherregals bleiben
-   die 3 z des Bücherregals, nicht zweimal 3 z. Der Schluss steht in der Textspalte unter dem Zeitband, in der Zeile von main nach
-   der von „Die ganze Bibliothek“ (12; die 11 bleibt hier leer). Bis zum 6. November stand er in den Zeilen 8 und 9 neben dem
-   wandernden Globus, und in v2 reichte er so weit hinunter, dass der Globus am Ende des Wegs neben der Zeile klebte; mit dem
-   Zeitband dazwischen geht das nicht mehr: in v2 bleibt der Globus klar, hält aber wie in v1 vor dem Zeitband */
+   die 3 z des Bücherregals, nicht zweimal 3 z. Die Zeile von „Die ganze Bibliothek“ (11) bleibt hier leer, und main endet mit dem
+   Zeitband (bis zum 7. November stand in der Zeile danach der Schluss) */
 @supports (grid-template-rows: subgrid) {
   @media (min-width: 62.0625rem) {
     html[data-ausgabe="platzhalter"].js #schreiben { padding-top: 0; }
-    html[data-ausgabe="platzhalter"].js .schluss { grid-column: 2; grid-row: 12; padding-right: 0; padding-left: 0; }
   }
 }
-/* Was verblasst, bleibt mit der Tastatur bedienbar und erreichbar (kein inert: das nähme den Inhalt auch Vorleseprogrammen). Steht
-   der Fokus der Tastatur darin, ist es wieder ganz da; nur der sichtbare Fokus (:focus-visible), denn ein Klick oder Tipp auf Globus
-   oder Regal lässt den Fokus dort, und dann verblasste beim Weiterrollen nichts mehr. Und nur, solange die letzte Eingabe kein
-   Zeiger war (html.zeiger: das Skript des Schlusses setzt es bei jedem Druck von Maus, Finger oder Stift und nimmt es mit der
-   Tabulatortaste wieder weg; seit dem 7. November). Denn sichtbar wird der Fokus auch ohne die Tastatur: der Regler nimmt ihn beim
-   Druck der Maus selbst (für die Pfeiltasten), und einen Fokus, den ein Skript setzt, zeigt Chromium als sichtbar; nach einem Klick
-   auf einen Strich, auf „früher“, „später“ oder ein Buch im Regal machen ihn Bild ab und Leertaste sichtbar. Am Desktop blieb dann
-   beim Weiterrollen das Bücherregal (nach einem Buch im Regal Regal und Globus) ganz da, während alles andere verblasste. Ab halbem
-   Weg (.fern) nimmt das Blasse keinen Klick und keinen Tipp mehr an: ein Tipp auf ein blasses Buch öffnete sonst eine blasse
-   Buchzeile, und die Seite würde länger */
-html[data-ausgabe="platzhalter"] .blass.fern { pointer-events: none; }
-html[data-ausgabe="platzhalter"]:not(.zeiger) .blass:has(:focus-visible) { opacity: 1 !important; pointer-events: auto; }
 </style>
 </head>
 <body class="mit-globus">
@@ -743,7 +718,6 @@ html[data-ausgabe="platzhalter"]:not(.zeiger) .blass:has(:focus-visible) { opaci
   </div>
   <p class="ganze" data-nur="website"><a href="bibliothek.html">Die ganze Bibliothek</a></p>
 </section>
-<div class="schluss" id="schluss" data-nur="platzhalter"><p class="aufbau">Seite im Aufbau.</p></div>
 </main>
 
 <footer class="fuss" id="kontakt" aria-label="Kontakt">
@@ -767,13 +741,14 @@ html[data-ausgabe="platzhalter"]:not(.zeiger) .blass:has(:focus-visible) { opaci
 <script src="daten/leseliste.js"></script>
 <script src="seite.js"></script>
 <script data-nur="platzhalter">
-/* Nur im Platzhalter, vor dem Skript der Seite (der Schluss folgt im Skript ganz unten; Stil oben): ohne data-ausgabe="platzhalter"
-   am html, also in der Quelle, tut es nichts, und aus der vollen Website nehmen die Werkzeuge es heraus. So bleiben seite.js und das
-   Skript der Seite, wie sie in der vollen Website sind, Zeichen für Zeichen; nur behalten in seite.js die Tabellen NACHNAMEN und
-   BERICHTIGT, und daten/buecher.js und daten/leseliste.js, was Regal und Zeitband brauchen: die Bücher, die im Zeitband stehen
-   (gelesen, nicht zu Ende gelesen, Nachttisch, Kindheit und Jugend, was noch wartet, je mit Jahr; was wartet, aber schon im Regal
-   steht, nicht noch einmal) und die vom Nachttisch. Was nur die Bibliothek zeigt, bleibt draußen (Dominik, 29. Oktober: „Das mit
-   der Bibliothek soll auch alles raus.“, und am 6. November: „NUR AUF DER STARTSEITE(!) Nicht die Bibliothek.“).
+/* Nur im Platzhalter, vor dem Skript der Seite (Stil oben; bis zum 7. November folgte ganz unten noch das Skript des Schlusses):
+   ohne data-ausgabe="platzhalter" am html, also in der Quelle, tut es nichts, und aus der vollen Website nehmen die Werkzeuge es
+   heraus. So bleiben seite.js und das Skript der Seite, wie sie in der vollen Website sind, Zeichen für Zeichen; nur behalten in
+   seite.js die Tabellen NACHNAMEN und BERICHTIGT, und daten/buecher.js und daten/leseliste.js, was Regal und Zeitband brauchen: die
+   Bücher, die im Zeitband stehen (gelesen, nicht zu Ende gelesen, Nachttisch, Kindheit und Jugend, was noch wartet, je mit Jahr;
+   was wartet, aber schon im Regal steht, nicht noch einmal) und die vom Nachttisch. Was nur die Bibliothek zeigt, bleibt draußen
+   (Dominik, 29. Oktober: „Das mit der Bibliothek soll auch alles raus.“, und am 6. November: „NUR AUF DER STARTSEITE(!) Nicht die
+   Bibliothek.“).
    Verweise. Dominik: „Einfach eine einzelne indizierte Seite ohne Verlinkungen … Es soll neugierig machen. Aber ohne zu viel
    preiszugeben.“, und am 6. November: „Also von der Startseite kann man nur zur Vita navigieren. Nicht mehr.“ Von hier führt kein
    Verweis auf eine andere eigene Seite außer der Vita, auch keiner, den ein Skript erst setzt (die Buchzeile nach einem Tipp auf ein
@@ -783,9 +758,11 @@ html[data-ausgabe="platzhalter"]:not(.zeiger) .blass:has(:focus-visible) { opaci
    „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“); die Vita selbst führt nicht zum Exposé. Der Wächter
    steht vor dem Skript der Seite: was es beim Laden setzt, wird Text, bevor der Browser es zeichnet.
    Ankunft über den Anker #globus (bis zum 6. November verwies die Vita mit „auf dem Globus“ darauf; ein alter Verweis kann noch so
-   ankommen). Breit klebt der Globus, und einem klebenden Ziel rollt der Browser beim Laden immer weiter nach (bei 1024 px bis
-   357 px, mitten in den Weg des Schlusses, der Globus schon blass). Breit steht er im ersten Bildschirm ganz oben: dort bleibt die
-   Seite; der Anker kommt nach dem Laden zurück in die Adresse */
+   ankommen). Breit klebt der Globus, und einem klebenden Ziel rollt der Browser beim Laden immer weiter nach: ohne den Wächter bei
+   1024 px bis 472 px (der erste Satz ganz über dem Fenster, die Kurzvita oben angeschnitten), bei 1440 px bis 240 px (der erste Satz
+   oben angeschnitten; gemessen am 7. November, ohne den Schluss, und mit ihm in a782659 ebenso; am 28. Oktober, als der Schluss noch
+   gleich nach dem Regal stand, rollte er bei 1024 px bis 357 px, mitten in dessen Weg, der Globus schon blass). Breit steht er im
+   ersten Bildschirm ganz oben: dort bleibt die Seite; der Anker kommt nach dem Laden zurück in die Adresse */
 (function () {
   'use strict';
   if (document.documentElement.getAttribute('data-ausgabe') !== 'platzhalter') return;
@@ -2339,102 +2316,6 @@ html[data-ausgabe="platzhalter"]:not(.zeiger) .blass:has(:focus-visible) { opaci
       regalZeichnen(); bandBauen(); ankerSetzen();
     }, 140);
   });
-})();
-</script>
-<script data-nur="platzhalter">
-/* Nur im Platzhalter (Stil oben; die Verweise setzt das Skript vor dem der Seite um): ohne data-ausgabe="platzhalter" am html, also
-   in der Quelle, tut dieses Skript nichts, und aus der vollen Website nehmen die Werkzeuge es heraus.
-   Der Schluss. Dominik: „wenn man runterzoomt soll auf dem Handy alles verblassen und dann Seite im Aufbau. […] Auf dem Desktop soll
-   der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite im Aufbau.“, und am 6. November mit dem
-   Bücherregal: „Und das Seite im Aufbau kann trotzdem unten kommen wenn man scrollt. Also wenn man nach den Büchern ist ... Kommt
-   trotzdem nochmal das Seite im Aufbau“. Erst wenn das Bücherregal ganz zu sehen war (sein Ende, das des Zeitbands, am unteren
-   Fensterrand; bis dahin bleibt alles ganz da und das Zeitband bedienbar), verblasst der Inhalt mit jedem Pixel Weg weiter, bis
-   „Seite im Aufbau.“ etwas über der Mitte des Fensters steht (ihre Mitte bei HOEHE, 44 % seiner Höhe); zurückrollen holt ihn
-   zurück. Nur die Deckkraft folgt dem Weg, stetig (smoothstep), ohne Federn; die Zeile selbst wird nicht eingeblendet, das Scrollen
-   bleibt frei, nichts rastet ein. Nur das Rollen der Seite zählt: rollt das Band am Telefon in seinem Rahmen waagrecht, ändert sich
-   nichts. Am Ende bleibt das Blasse sichtbar (BLASS: die Rücken als Formen, „Satoshi“ und „Ursprünge“ gerade noch zu entziffern),
-   der Fuß darunter ganz. Verblasst: schmal und in v1 der Kopf, die Globusseite (mit dem Globus), „Was ich schreibe“ (dort steht
-   schmal das Regal) und das Bücherregal; breit in v2 alles außer dem Globus, der klar bleibt (er hält wie in v1 vor dem Zeitband,
-   Stil oben). Ab halbem Weg nimmt das Blasse keinen Klick und Tipp mehr an (.fern, Stil oben), auch das Zeitband nicht. Auf die
-   Elemente mit data-folge (Regal, Globus) schreibt das Skript nicht selbst, ihre Blende führt FSeite.folge. Bei reduzierter
-   Bewegung verblasst nichts, die Zeile steht 3 z unter dem Zeitband (Stil oben) */
-(function () {
-  'use strict';
-  const html = document.documentElement;
-  if (html.getAttribute('data-ausgabe') !== 'platzhalter') return;
-  const F = window.FSeite, $ = s => document.querySelector(s);
-  const schluss = $('#schluss'), zeile = $('#schluss .aufbau'), kopf = $('header.kopf'), seite = $('.globusseite'), schreiben = $('#schreiben');
-  const gelesen = $('#gelesen');
-  if (!F || !schluss || !zeile || !kopf || !seite || !schreiben || !gelesen) return;
-  // War die letzte Eingabe ein Zeiger (Maus, Finger, Stift), hält ein Fokus im Blassen es nicht ganz da (html.zeiger, Stil oben); die
-  // Tabulatortaste, mit der man den Fokus von Hand weitergibt, nimmt das wieder weg (7. November)
-  window.addEventListener('pointerdown', () => html.classList.add('zeiger'), { capture: true, passive: true });
-  window.addEventListener('keydown', e => { if (e.key === 'Tab') html.classList.remove('zeiger'); }, true);
-  const BLASS = .16, HOEHE = .44, FERN = .5;
-  const V2 = html.getAttribute('data-schluss') === 'v2';
-  const mqRuhig = window.matchMedia('(prefers-reduced-motion: reduce)'), mqBreit = window.matchMedia('(min-width: 62.0625rem)');
-  // Die kleine Höhe des Fensters (svh): ändert sich nicht, wenn die Leiste des Browsers auf dem Telefon beim Rollen kommt und geht
-  const probe = document.createElement('div');
-  probe.setAttribute('aria-hidden', 'true');
-  probe.style.cssText = 'position:absolute;left:0;top:0;width:0;height:100vh;height:100svh;visibility:hidden;pointer-events:none';
-  document.body.appendChild(probe);
-  let ziele = [], weg = null, zuletzt = null, fern = null, bild = 0, messBild = 0;
-  const masse = {};
-  // Ein gemessenes Maß als Eigenschaft am Schluss (null: entfernen); geschrieben wird erst ab ½ px Unterschied, damit sich der Stil,
-  // der Seitenhöhe und ResizeObserver nicht gegenseitig in Gang halten (sonst maß sich das Skript in jedem Bild neu, und der Fuß zitterte)
-  function mass(name, px) {
-    if (px == null) { if (masse[name] != null) { schluss.style.removeProperty(name); masse[name] = null; } return; }
-    if (masse[name] != null && Math.abs(masse[name] - px) < .5) return;
-    masse[name] = px;
-    schluss.style.setProperty(name, px.toFixed(1) + 'px');
-  }
-  function frei(e) { e.style.opacity = ''; e.classList.remove('blass', 'fern'); }
-  function zieleSetzen() {
-    const neu = V2 && mqBreit.matches
-      ? [kopf, schreiben, gelesen].concat(Array.from(seite.children).filter(e => !e.matches('.globus, .regalbild, script')), Array.from(($('#regalbild') || {}).children || []))
-      : [kopf, seite, schreiben, gelesen];
-    ziele.forEach(e => { if (!neu.includes(e)) frei(e); });
-    neu.forEach(e => e.classList.add('blass'));
-    ziele = neu;
-    zuletzt = null; fern = null;
-  }
-  function messen() {
-    messBild = 0;
-    schluss.classList.toggle('mit-weg', !mqRuhig.matches);
-    if (mqRuhig.matches) { ziele.forEach(frei); ziele = []; weg = null; mass('--schluss-rest', null); return; }
-    zieleSetzen();
-    const y = window.scrollY, H = probe.getBoundingClientRect().height || window.innerHeight;
-    const z = zeile.getBoundingClientRect(), zh = z.height;
-    // Unter der Zeile: die halbe Zeile und was unter dem Schluss bis zum Ende der Seite folgt (der Fuß mit seinem Abstand), aus den
-    // gebrochenen Kanten beider gemessen, so hängt der Wert nicht vom eigenen Abstand ab
-    mass('--schluss-rest', zh / 2 + html.getBoundingClientRect().bottom - schluss.getBoundingClientRect().bottom);
-    // Das Ende des Inhalts: das des Bücherregals, also des Zeitbands mit der Buchzeile und den zwei Reihen darunter (breit wie schmal)
-    const ende = gelesen.getBoundingClientRect().bottom + y;
-    weg = { s0: Math.max(0, ende - H), s1: z.top + y + zh / 2 - H * HOEHE };
-    // Ein Weg unter 40 px (nur in Fenstern, die höher sind als die ganze Seite): nichts verblasst
-    if (weg.s1 - weg.s0 < 40) { weg = null; ziele.forEach(e => { e.style.opacity = ''; e.classList.remove('fern'); }); zuletzt = null; fern = null; }
-    zeichnen();
-  }
-  function zeichnen() {
-    bild = 0;
-    if (!weg) return;
-    let p = (window.scrollY - weg.s0) / (weg.s1 - weg.s0);
-    p = p <= 0 ? 0 : p >= 1 ? 1 : p;
-    const d = p > 0 ? (1 - (1 - BLASS) * p * p * (3 - 2 * p)).toFixed(3) : '';
-    if (d !== zuletzt) { zuletzt = d; ziele.forEach(e => { e.style.opacity = d; }); }
-    const f = p > FERN;
-    if (f !== fern) { fern = f; ziele.forEach(e => e.classList.toggle('fern', f)); }
-  }
-  const anstossen = () => { if (!bild) bild = requestAnimationFrame(zeichnen); };
-  const neuMessen = () => { if (!messBild) messBild = requestAnimationFrame(messen); };
-  window.addEventListener('scroll', anstossen, { passive: true });
-  window.addEventListener('resize', neuMessen, { passive: true });
-  window.addEventListener('load', neuMessen);
-  if (window.ResizeObserver) new ResizeObserver(neuMessen).observe(document.body);
-  mqRuhig.addEventListener('change', neuMessen);
-  mqBreit.addEventListener('change', neuMessen);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(neuMessen);
-  messen();
 })();
 </script>
 </body>

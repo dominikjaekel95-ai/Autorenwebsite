@@ -9,8 +9,6 @@ Aufruf (aus einem beliebigen Ordner):
   … --ziel <ordner>                                             woanders hin bauen, etwa zum Ausprobieren
   … --platzhalter                                               für diesen Bau die Platzhalter-Ausgabe, gleich, was AUSGABE sagt
   … --website                                                   für diesen Bau die volle Website, gleich, was AUSGABE sagt
-  … --schluss v1|v2                                             im Platzhalter für diesen Bau diese Fassung des Schlusses am
-                                                                Desktop, gleich, was SCHLUSS sagt
 
 Die Adresse der Website steht an genau einer Stelle: BASIS_URL unten. Aus ihr entstehen Canonical, Open Graph, die
 strukturierten Daten, sitemap.xml und robots.txt. Ändert sich die Domain, nur BASIS_URL ändern und neu bauen.
@@ -19,10 +17,10 @@ Schalter oben im Werkzeug: TARIF (Tarif bei Vercel, 'pro' oder 'hobby'; None, so
 Auftragsverarbeitung im Datenschutz (Runde 6, S8). AUSGABE ('website' oder 'platzhalter', 27. Oktober) wählt, was ausgeliefert
 wird. Er steht auf 'platzhalter', solange die Website offline ist (Dominik: „Können wir sie wieder offline nehmen?“): so bringt
 ein Bau ohne Zusatz nicht aus Versehen die volle Website zurück. Zurück zur vollen Website: AUSGABE = 'website' und neu bauen;
-die volle Website bleibt dabei, wie sie vor dem Schalter war (alle Markierungen fallen dort weg). SCHLUSS ('v1' oder 'v2') wählt
-im Platzhalter, wie am Desktop der Schluss „Seite im Aufbau.“ kommt: v1 „Alles verblasst“ (wie auf dem Telefon, mit dem Globus),
-v2 „Der Globus bleibt“ (er wandert mit und bleibt klar, links verblasst alles; seit dem 6. November hält er wie in v1 vor dem
-Zeitband und ist am Ende des Wegs schon aus dem Bild). Auf dem Telefon sind beide gleich.
+die volle Website bleibt dabei, wie sie vor dem Schalter war (alle Markierungen fallen dort weg). Den Schalter SCHLUSS ('v1' oder
+'v2': wie am Desktop der Schluss „Seite im Aufbau.“ kam) gibt es seit dem 7. November nicht mehr, mit dem Schluss selbst (Dominik
+zum Testlink: „Um ehrlich zu sein ist das Seite im Aufbau jetzt blöd und kann weg. Sonst okay.“); die Fassung mit beiden, auch mit
+--schluss im Aufruf und den Prüfungen dazu: Commit a782659.
 
 Zwei Ausgaben aus derselben Quelle (27. Oktober). Dominik: „Können wir sie wieder offline nehmen? Ich würde einfach einen
 Platzhalter auf der Startseite. […] Einfach eine einzelne indizierte Seite ohne Verlinkungen.“, „Dann brauche ich getrennt davon
@@ -32,10 +30,10 @@ Elemente. Vita. Globus. Das Regal mit den Projekten und dem Schreibtisch“.
   - 'platzhalter': nur sechs Seiten. Unter / steht die Startseite selbst (index.html) ohne Menü, Werkverzeichnis und „Die ganze
     Bibliothek“, seit dem 6. November mit dem Bücherregal, dem Zeitband (Dominik: „Und ich würde die gelesenen bücher auf der
     Startseite wieder reinnehmen. NUR AUF DER STARTSEITE(!) Nicht die Bibliothek. Nicht die Länder ... Also von der Startseite kann
-    man nur zur Vita navigieren. Nicht mehr.“); nach ihm kommt beim Rollen der Schluss „Seite im Aufbau.“ (Fassung nach SCHLUSS, am
-    html als data-schluss; dazu
-    data-ausgabe="platzhalter", nach dem sich Stil und Skript der Seite richten). Unter /satoshi das digitale Exposé, unter /vita
-    die Vita, dazu /impressum, /datenschutz und 404.html. Indiziert und in der Sitemap sind / und seit dem 6. November /vita
+    man nur zur Vita navigieren. Nicht mehr.“); nach ihm kommt gleich der Fuß (seit dem 7. November ohne den Schluss „Seite im
+    Aufbau.“, oben). Das html von / trägt data-ausgabe="platzhalter", nach dem sich Stil und Skript der Seite richten (bis zum
+    7. November dazu data-schluss). Unter /satoshi das digitale Exposé, unter /vita die Vita, dazu /impressum, /datenschutz und
+    404.html. Indiziert und in der Sitemap sind / und seit dem 6. November /vita
     (Dominik zu seinem neuen Text der Vita: „den kannst du auch auf der Startseite verlinken, der ist sehr bescheiden“; vorher
     sollte man sie „eben nur über Satoshi finden können“); Exposé, Impressum und Datenschutz tragen noindex (auch als X-Robots-Tag
     in vercel.json). Alle übrigen Adressen der elf Seiten, mit und ohne .html, leitet vercel.json mit 307 (nicht dauerhaft, damit
@@ -160,17 +158,11 @@ VERWEISE_PLATZHALTER = {
     '404.html': ({'index.html', 'impressum.html', 'datenschutz.html'}, True),
 }
 
-# ---------- Schalter: der Schluss des Platzhalters am Desktop (27. Oktober) ----------
-# Dominik: „Auf dem Desktop soll der Startbildschirm erhalten bleiben und dann wenn man scrollt kommt sowas wie Seite im Aufbau.“
-# 'v1' „Alles verblasst“: wie auf dem Telefon verblasst beim Rollen alles samt Globus (seit dem 6. November nach dem Bücherregal,
-# auch dieses). 'v2' „Der Globus bleibt“:
-# der Globus wandert mit und bleibt klar, links verblassen Satz, Vita, Regal und seit dem 6. November das Bücherregal. Bis dahin
-# stand er am Ende des Wegs ganz neben der Zeile; seit das Bücherregal davor steht, hält er wie in v1 vor dem Zeitband (index.html,
-# Stil des Platzhalters) und ist am Ende des Wegs schon aus dem Bild, v2 sieht dort aus wie v1. „Seite im Aufbau.“ steht am Ende in
-# beiden etwas über der Mitte des Fensters, in der Textspalte, der Fuß folgt beim Weiterrollen.
-# Vorgabe v1 (28. Oktober, nach dem Urteil: am Telefon und am Desktop dieselbe Geste; in v2 ist die klare Kugel am Ende der Seite
-# oben angeschnitten). Die Wahl liegt bei Dominik. --schluss v1|v2 im Aufruf gilt für einen Bau; artefakt.py folgt demselben Schalter
-SCHLUSS = 'v1'
+# ---------- Der Schalter für den Schluss des Platzhalters ist weg (7. November) ----------
+# SCHLUSS wählte vom 27. Oktober an, wie am Desktop nach dem Rollen „Seite im Aufbau.“ kam: 'v1' „Alles verblasst“ (die Vorgabe) oder
+# 'v2' „Der Globus bleibt“; --schluss v1|v2 im Aufruf galt für einen Bau, artefakt.py folgte ihm. Dominik am 7. November zum Testlink:
+# „Um ehrlich zu sein ist das Seite im Aufbau jetzt blöd und kann weg. Sonst okay.“ Seitdem gibt es weder den Schluss noch den
+# Schalter; nach dem Bücherregal folgt der Fuß. Die Fassung mit beiden: Commit a782659
 
 QUELLE = Path(__file__).resolve().parents[1]
 ZIEL = QUELLE.parent / 'veroeffentlichung'
@@ -764,17 +756,16 @@ def verweise_platzhalter(seite, text, probleme):
                                 f'{", ".join(sorted(adresse(s) for s in erlaubt))}{", mailto: und nach außen" if auch_aussen else ""})')
 
 
-def platzhalter_seite_pruefen(text, schluss, probleme):
+def platzhalter_seite_pruefen(text, probleme):
     """Platzhalter, /: die Startseite ohne Menü, Werkverzeichnis und „Die ganze Bibliothek“, mit dem Bücherregal (seit dem
-    6. November: das Zeitband mit seinen drei Reglern und daten/leseliste.js) und genau einem Schluss „Seite im Aufbau.“, ihrem
-    Stil und ihrem Skript (text ohne den Text der Skripte). Dominik: „Halte von der Startseite die drei Elemente. Vita. Globus. Das
-    Regal mit den Projekten und dem Schreibtisch“, und am 6. November: „Und ich würde die gelesenen bücher auf der Startseite wieder
-    reinnehmen. NUR AUF DER STARTSEITE(!) Nicht die Bibliothek.“ Am Ende der Kurzvita genau einmal „Ausführlich in der Vita.“ mit
-    dem Verweis auf die Vita (seit dem 6. November; mit vita.html vor dem Umschreiben der Verweise, /vita danach)"""
-    if schluss not in artefakt.SCHLUESSE:
-        probleme.append(f'index.html: Schluss {schluss!r}; erlaubt sind {", ".join(artefakt.SCHLUESSE)}')
-    if text.count('<p class="aufbau">Seite im Aufbau.</p>') != 1 or text.count('id="schluss"') != 1:
-        probleme.append('index.html: „Seite im Aufbau.“ (p.aufbau in #schluss) steht nicht genau einmal da')
+    6. November: das Zeitband mit seinen drei Reglern und daten/leseliste.js) und seit dem 7. November ohne den Schluss „Seite im
+    Aufbau.“ (text ohne den Text der Skripte). Dominik: „Halte von der Startseite die drei Elemente. Vita. Globus. Das Regal mit den
+    Projekten und dem Schreibtisch“, am 6. November: „Und ich würde die gelesenen bücher auf der Startseite wieder reinnehmen. NUR
+    AUF DER STARTSEITE(!) Nicht die Bibliothek.“, und am 7. November: „Um ehrlich zu sein ist das Seite im Aufbau jetzt blöd und kann
+    weg.“ (bis dahin verlangte die Prüfung den Schluss genau einmal, Commit a782659). Am Ende der Kurzvita genau einmal „Ausführlich
+    in der Vita.“ mit dem Verweis auf die Vita (seit dem 6. November; mit vita.html vor dem Umschreiben der Verweise, /vita danach)"""
+    if re.search(r'Seite im Aufbau|id="schluss"|class="schluss"|class="aufbau"', text):
+        probleme.append('index.html: im Platzhalter steht noch der Schluss „Seite im Aufbau.“ (p.aufbau in #schluss)')
     for was, muster in (('ein Menü', r'<nav\b'), ('das Werkverzeichnis', r'class="verzeichnis"'), ('„Die ganze Bibliothek“', r'class="ganze"'),
                         ('„Was ich schreibe“', r'id="schreiben-titel"'), ('der Sprung „Zum Inhalt“', r'class="sprung"')):
         if re.search(muster, text):
@@ -821,9 +812,8 @@ def vercel_pruefen(konfig, hashes, probleme):
             probleme.append(f'vercel.json: Cache-Control für {quelle} ist „{cache.get(quelle)}“')
 
 
-def pruefen(neu, dateien, seiten, noindex, ld_seiten=LD_SEITEN, umleiten=None, schluss=None):
-    """Prüft den Bau in neu; umleiten: im Platzhalter die Seiten, die vercel.json auf / weiterleitet (sonst None, keine); schluss:
-    im Platzhalter die Fassung des Schlusses, die das html von / tragen muss."""
+def pruefen(neu, dateien, seiten, noindex, ld_seiten=LD_SEITEN, umleiten=None):
+    """Prüft den Bau in neu; umleiten: im Platzhalter die Seiten, die vercel.json auf / weiterleitet (sonst None, keine)."""
     namen = {p.as_posix() for p in dateien}
     probleme, hashes = [], set()
     for p in dateien:
@@ -871,7 +861,7 @@ def pruefen(neu, dateien, seiten, noindex, ld_seiten=LD_SEITEN, umleiten=None, s
         if umleiten is not None:
             verweise_platzhalter(seite, text, probleme)
             if seite == 'index.html':
-                platzhalter_seite_pruefen(text, schluss, probleme)
+                platzhalter_seite_pruefen(text, probleme)
         sichtbar = re.sub(r'<(script|style)\b.*?</\1>', '', text, flags=re.S | re.I)
         if TESTSYSTEM.search(sichtbar):
             probleme.append(f'{seite}: „{TESTSYSTEM.search(sichtbar).group(0)}“ in der Seite')
@@ -911,8 +901,7 @@ def pruefen(neu, dateien, seiten, noindex, ld_seiten=LD_SEITEN, umleiten=None, s
         for teil in pflicht:
             if teil not in kopf:
                 probleme.append(f'{seite}: im Kopf fehlt {teil}')
-        html_soll = (f'<html lang="de" data-ausgabe="platzhalter" data-schluss="{schluss}">' if umleiten is not None and seite == 'index.html'
-                     else '<html lang="de">')
+        html_soll = '<html lang="de" data-ausgabe="platzhalter">' if umleiten is not None and seite == 'index.html' else '<html lang="de">'
         if not re.match(r'<!doctype html>\s*' + re.escape(html_soll) + r'\s*<head>', text, re.I) or not text.rstrip().endswith('</html>'):
             probleme.append(f'{seite}: Gerüst unvollständig (erwartet {html_soll})')
     for css in [p for p in dateien if p.suffix == '.css']:
@@ -951,21 +940,11 @@ def main():
         fehler('--platzhalter und --website schließen einander aus')
     ausgabe = 'platzhalter' if '--platzhalter' in argumente else 'website' if '--website' in argumente else AUSGABE
     argumente = [a for a in argumente if a not in ('--entwurf', '--platzhalter', '--website')]
-    schluss = SCHLUSS
-    if '--schluss' in argumente:
-        i = argumente.index('--schluss')
-        if i + 1 >= len(argumente):
-            fehler('--schluss braucht v1 oder v2')
-        schluss = argumente[i + 1]
-        del argumente[i:i + 2]
     ziel = ZIEL
     if argumente[:1] == ['--ziel'] and len(argumente) == 2:
         ziel = Path(argumente[1]).expanduser().resolve()
     elif argumente:
-        fehler('Aufruf: python3 website-c/werkzeuge/veroeffentlichen.py [--entwurf] [--platzhalter | --website] [--schluss v1|v2] '
-               '[--ziel <ordner>]')
-    if schluss not in artefakt.SCHLUESSE:
-        fehler(f'SCHLUSS ist {schluss!r}; erlaubt sind {", ".join(artefakt.SCHLUESSE)}')
+        fehler('Aufruf: python3 website-c/werkzeuge/veroeffentlichen.py [--entwurf] [--platzhalter | --website] [--ziel <ordner>]')
     ziel_pruefen(ziel)
     platz = ausgabe == 'platzhalter'
 
@@ -982,7 +961,7 @@ def main():
     dateien = [p for p in dateien if p not in weg_seiten]
 
     # Die Seiten und eigenen Texte ohne Kommentare und mit umgesetzten Markierungen der Ausgabe, die Seiten mit Canonical und
-    # Vorschau-Angaben; im Platzhalter trägt das html von / die Schalter für seine Skripte und Stile (data-ausgabe, data-schluss)
+    # Vorschau-Angaben; im Platzhalter trägt das html von / den Schalter für seine Skripte und Stile (data-ausgabe)
     texte = {}
     for p in dateien:
         if p.suffix in TEXTDATEIEN:
@@ -990,7 +969,7 @@ def main():
             if neu is not None:
                 texte[p] = artefakt.ausgabe_umsetzen(neu, ausgabe, p.as_posix()) if p.suffix == '.html' else neu
     if platz:
-        texte[Path('index.html')] = artefakt.ausgabe_kennzeichnen(texte[Path('index.html')], schluss)
+        texte[Path('index.html')] = artefakt.ausgabe_kennzeichnen(texte[Path('index.html')])
         buecher_vorher = {p: artefakt.buecher_zahl(texte[Path(p)]) for p in ('daten/buecher.js', 'daten/leseliste.js')}
         texte[Path('daten/buecher.js')], texte[Path('daten/leseliste.js')] = artefakt.buecher_platzhalter(texte)
         texte[Path('seite.js')] = artefakt.buch_tabellen_platzhalter(texte)
@@ -1048,7 +1027,7 @@ def main():
         eintraege = sitemap(neu, ziel, heute, noindex, seiten_liste)
         if [u for u, _ in eintraege] != [url_fuer(s) for s in seiten_liste if s not in noindex]:
             fehler('sitemap.xml: die Seiten passen nicht zu den Seiten ohne noindex')
-        if pruefen(neu, ausgeliefert, seiten, noindex, ld_seiten, umleiten, schluss if platz else None) != set(hashes):
+        if pruefen(neu, ausgeliefert, seiten, noindex, ld_seiten, umleiten) != set(hashes):
             fehler('Die Hashes in vercel.json passen nicht zu den Skripten in den Seiten')
 
         marker = marker_suchen(neu, ausgeliefert)
@@ -1072,7 +1051,7 @@ def main():
 
     groesse = sum((ziel / p).stat().st_size for p in ausgeliefert)
     print(f'{"Entwurf" if entwurf else "Veröffentlichung"} in {ziel}, Adresse {BASIS_URL}')
-    print(f'Ausgabe: {ausgabe}' + (f' (unter / die Startseite als Platzhalter, Schluss {schluss}; dazu {", ".join(seiten_liste[1:])} und '
+    print(f'Ausgabe: {ausgabe}' + (f' (unter / die Startseite als Platzhalter; dazu {", ".join(seiten_liste[1:])} und '
                                    f'{FEHLERSEITE}; {len(umleiten) * 2} Weiterleitungen mit 307 auf /)' if platz else ' (die volle Website)'))
     print(f'{len(ausgeliefert)} Dateien, {groesse / 1024:.1f} KB; {len(hashes)} Skripte in den Seiten, je mit Hash in script-src')
     print('Sitemap: ' + ', '.join(f'{u.removeprefix(BASIS_URL) or "/"} {d}' for u, d in eintraege))

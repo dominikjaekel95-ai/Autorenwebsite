@@ -2,6 +2,11 @@
 
 Stand: 7. November 2026. Was bis zum Livegang und danach noch zu tun ist. Wer es tut, steht dabei: **Dominik** (Anmelden, Bezahlen, Entscheiden, alles im Browser) oder **Claude** (Code im Repository).
 
+## Ohne „Seite im Aufbau.“, sieben Bücher mehr (7. November, V93)
+
+- [x] **Claude:** Schluss „Seite im Aufbau.“ aus Quelle, Werkzeugen und Prüfprogramm entfernt (der Schalter `SCHLUSS` gibt es nicht mehr; Aufruf jetzt `node pruefen-platz.cjs <url> <bau> <aus> <volle-website>` ohne `SCHLUSS=…`); Beschreibung „Sein Roman Satoshi“; Profil-Hinweis „Dominik Jäkels …“; sieben Bücher unter „Gelesen“. Live seit 7. November, zusammen mit V92 (erster Satz, Kurzvita, Bücherregal im Platzhalter, Vita-Stationen).
+- [ ] **Dominik:** Ob eines der sieben neuen Bücher als liebstes dunkel stehen soll; ob Zevin wirklich die englische Ausgabe war.
+
 ## Erster Satz „Sein Debütroman …“, Bücherregal im Platzhalter (6. November abends, V92)
 
 Dominik: „Dominik Jäkel schreibt seit Jahren unter fremden Namen. Sein Debütroman trägt den berühmtesten.“, „Und ich würde die gelesenen bücher auf der Startseite wieder reinnehmen. NUR AUF DER STARTSEITE(!) Nicht die Bibliothek. Nicht die Länder ... Also von der Startseite kann man nur zur Vita navigieren. Nicht mehr.“ und „Super, schick mir dann den Testlink.“ (alle Nachrichten im Wortlaut in `docs/dominik-vorgaben.md`, V92).

@@ -39,18 +39,19 @@ Zwei Ausgaben (27. Oktober), wie in der Veröffentlichung (werkzeuge/veroeffentl
                                                                         öffentlich, von der Hauptseite und vom Exposé aus
                                                                         verwiesen), Impressum, Datenschutz
   python3 website-c/werkzeuge/artefakt.py --website <zielordner>       die volle Website, gleich, was AUSGABE sagt
-  … --schluss v1|v2                                                     im Platzhalter die Fassung des Schlusses „Seite im
-                                                                        Aufbau.“ am Desktop für diesen Bau, gleich, was SCHLUSS in
-                                                                        veroeffentlichen.py sagt
+Den Zusatz --schluss v1|v2 (die Fassung des Schlusses „Seite im Aufbau.“ am Desktop, nach SCHLUSS in veroeffentlichen.py) gibt es
+seit dem 7. November nicht mehr, mit dem Schluss selbst (Dominik: „Um ehrlich zu sein ist das Seite im Aufbau jetzt blöd und kann
+weg.“); die Fassung mit beiden: Commit a782659.
 In beiden Ausgaben setzt der Bau die Markierungen data-nur und data-verweis um (ausgabe_umsetzen unten) und lässt keine stehen.
-Im Platzhalter trägt das <html> der Hauptseite dazu data-ausgabe="platzhalter" und data-schluss (das Skript ganz oben setzt beides,
-wie die Sprache); danach richten sich die Skripte und Stile der Seite. Im Platzhalter fehlen die übrigen Seiten und aus daten/ und
-bilder/, worauf keine ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht mitgeht; daten/buecher.js
-und daten/leseliste.js gehen nur mit den Büchern mit, die Zeitband und Regal der Startseite zeigen (buecher_platzhalter unten; seit
-dem 6. November steht das Bücherregal wieder auf der Startseite, ohne „Die ganze Bibliothek“), und in seite.js behalten die Tabellen
-NACHNAMEN und BERICHTIGT nur, was diese Bücher brauchen (buch_tabellen_platzhalter). Wohin jede Seite dort verweisen darf, steht in
-VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf die Vita, Impressum, Datenschutz, Anker, die Adresse für Anfragen
-und nach außen; auf das Exposé keine Seite, auch die Vita nicht); auch das prüft der Bau, die Kandidaten eines srcset eingeschlossen.
+Im Platzhalter trägt das <html> der Hauptseite dazu data-ausgabe="platzhalter" (das Skript ganz oben setzt es, wie die Sprache;
+bis zum 7. November kam data-schluss dazu); danach richten sich die Skripte und Stile der Seite. Im Platzhalter fehlen die übrigen
+Seiten und aus daten/ und bilder/, worauf keine ausgelieferte Datei verweist, und kein Verweis zeigt auf eine Datei, die nicht
+mitgeht; daten/buecher.js und daten/leseliste.js gehen nur mit den Büchern mit, die Zeitband und Regal der Startseite zeigen
+(buecher_platzhalter unten; seit dem 6. November steht das Bücherregal wieder auf der Startseite, ohne „Die ganze Bibliothek“), und
+in seite.js behalten die Tabellen NACHNAMEN und BERICHTIGT nur, was diese Bücher brauchen (buch_tabellen_platzhalter). Wohin jede
+Seite dort verweisen darf, steht in VERWEISE_PLATZHALTER in veroeffentlichen.py (die Hauptseite nur auf die Vita, Impressum,
+Datenschutz, Anker, die Adresse für Anfragen und nach außen; auf das Exposé keine Seite, auch die Vita nicht); auch das prüft der
+Bau, die Kandidaten eines srcset eingeschlossen.
 
 Zum Schluss prüft der Bau, dass jede unveränderte Kopie der Quelle gleicht, dass in keiner ausgelieferten Text-Datei ein
 Kommentar übrig ist, und nennt Zahl und Größe der Dateien.
@@ -220,7 +221,8 @@ def html_ohne_kommentare(t):
 #   data-verweis="website"  ein Verweis, der nur in der vollen Website gilt; im Platzhalter wird das <a> ein <span> mit denselben
 #                           übrigen Attributen (href, rel, target, hreflang, aria-current fallen weg), der Text bleibt
 #   data-nur="expose"       nur im Platzhalter (dem digitalen Exposé); in der vollen Website fällt das Element weg
-#   data-nur="platzhalter"  ebenso, für die Startseite als Platzhalter (der Schluss „Seite im Aufbau.“, sein Stil und Skript)
+#   data-nur="platzhalter"  ebenso, für die Startseite als Platzhalter (ihr Stil und das Skript für die Verweise; bis zum
+#                           7. November auch der Schluss „Seite im Aufbau.“ mit Stil und Skript)
 # Was bleibt, verliert die Markierung; danach steht keine mehr da. Ein <span>, das nichts als die Markierung trägt, ist nur eine
 # Hülle (etwa um einen Satz, der im Platzhalter wegfällt): bleibt sein Inhalt, fallen Start- und Endmarke ganz weg, damit die
 # Seite dort Zeichen für Zeichen bleibt, wie sie ohne Hülle war. Zeigt danach ein aria-labelledby, aria-describedby oder
@@ -553,17 +555,13 @@ def buch_tabellen_platzhalter(texte, seite='seite.js'):
     return text
 
 
-SCHLUESSE = ('v1', 'v2')
-
-
-def ausgabe_kennzeichnen(text, schluss, seite=HAUPTSEITE):
-    """Die Startseite als Platzhalter: <html lang="de"> bekommt data-ausgabe="platzhalter" und data-schluss (v1 oder v2), den
-    Schalter, nach dem sich ihre Skripte und Stile richten (Stil und Skript mit data-nur="platzhalter" in index.html)."""
-    if schluss not in SCHLUESSE:
-        fehler(f'Schluss {schluss!r}; erlaubt sind {", ".join(SCHLUESSE)}')
+def ausgabe_kennzeichnen(text, seite=HAUPTSEITE):
+    """Die Startseite als Platzhalter: <html lang="de"> bekommt data-ausgabe="platzhalter", den Schalter, nach dem sich ihre Skripte
+    und Stile richten (Stil und Skript mit data-nur="platzhalter" in index.html). Bis zum 7. November kam data-schluss dazu (v1 oder
+    v2, die Fassung des Schlusses; Commit a782659)."""
     if len(re.findall(r'<html\b', text)) != 1 or text.count('<html lang="de">') != 1:
         fehler(f'{seite}: <html lang="de"> steht nicht genau einmal da (oder trägt schon weitere Attribute)')
-    return text.replace('<html lang="de">', f'<html lang="de" data-ausgabe="platzhalter" data-schluss="{schluss}">', 1)
+    return text.replace('<html lang="de">', '<html lang="de" data-ausgabe="platzhalter">', 1)
 
 
 def hauptseite_umbauen(text):
@@ -576,8 +574,8 @@ def hauptseite_umbauen(text):
     if not m:
         fehler(f'{HAUPTSEITE}: kein <html> nach dem Doctype')
     html_attr = attribute(m.group(1), 'html')
-    if set(html_attr) - {'lang', 'data-ausgabe', 'data-schluss'}:
-        fehler(f'<html> trägt mehr als lang, data-ausgabe und data-schluss: {html_attr}')
+    if set(html_attr) - {'lang', 'data-ausgabe'}:
+        fehler(f'<html> trägt mehr als lang und data-ausgabe: {html_attr}')
     text = text[m.end():]
 
     m = re.match(r'<head>[ \t]*\n?', text)
@@ -617,12 +615,12 @@ def hauptseite_umbauen(text):
 
     oben = []
     if html_attr.get('lang'):
-        # Dazu im Platzhalter die beiden Schalter am html (ausgabe_kennzeichnen), bevor ein Stil oder Skript nach ihnen fragt
+        # Dazu im Platzhalter der Schalter am html (ausgabe_kennzeichnen), bevor ein Stil oder Skript nach ihm fragt
         schalter = ''.join(f" document.documentElement.setAttribute({js_text(k)}, {js_text(html_attr[k])});"
-                           for k in ('data-ausgabe', 'data-schluss') if k in html_attr)
+                           for k in ('data-ausgabe',) if k in html_attr)
         oben.append(f"<script>document.documentElement.lang = {js_text(html_attr['lang'])};{schalter}</script>\n")
     elif set(html_attr) - {'lang'}:
-        fehler('<html> trägt data-ausgabe oder data-schluss, aber keine Sprache')
+        fehler('<html> trägt data-ausgabe, aber keine Sprache')
     klassen = body_attr.get('class', '').split()
     koerper = ''
     if klassen:
@@ -733,19 +731,10 @@ def main():
         fehler('--platzhalter und --website schließen einander aus')
     ausgabe = 'platzhalter' if '--platzhalter' in argumente else 'website' if '--website' in argumente else v.AUSGABE
     argumente = [a for a in argumente if a not in ('--platzhalter', '--website')]
-    schluss = v.SCHLUSS
-    if '--schluss' in argumente:
-        i = argumente.index('--schluss')
-        if i + 1 >= len(argumente):
-            fehler('--schluss braucht v1 oder v2')
-        schluss = argumente[i + 1]
-        del argumente[i:i + 2]
     if len(argumente) != 1 or argumente[0].startswith('-'):
-        fehler('Aufruf: python3 website-c/werkzeuge/artefakt.py [--platzhalter | --website] [--schluss v1|v2] <zielordner>')
+        fehler('Aufruf: python3 website-c/werkzeuge/artefakt.py [--platzhalter | --website] <zielordner>')
     if ausgabe not in AUSGABEN:
         fehler(f'AUSGABE in veroeffentlichen.py ist {ausgabe!r}; erlaubt sind {", ".join(AUSGABEN)}')
-    if schluss not in SCHLUESSE:
-        fehler(f'Schluss {schluss!r}; erlaubt sind {", ".join(SCHLUESSE)}')
     platz = ausgabe == 'platzhalter'
     ziel = Path(argumente[0]).expanduser().resolve()
     ziel_pruefen(ziel)
@@ -762,10 +751,10 @@ def main():
             neu = ausgabe_umsetzen(neu, ausgabe, p.as_posix())
         if p == Path(HAUPTSEITE):
             if platz:
-                neu = ausgabe_kennzeichnen(neu, schluss)
+                neu = ausgabe_kennzeichnen(neu)
                 # Dieselbe Prüfung der Startseite als Platzhalter wie in der Veröffentlichung (ohne den Text der Skripte)
                 probleme = []
-                v.platzhalter_seite_pruefen(re.sub(r'(<script\b[^>]*>).*?(</script>)', r'\1\2', neu, flags=re.S | re.I), schluss, probleme)
+                v.platzhalter_seite_pruefen(re.sub(r'(<script\b[^>]*>).*?(</script>)', r'\1\2', neu, flags=re.S | re.I), probleme)
                 if probleme:
                     fehler('Prüfung der Hauptseite fehlgeschlagen:\n  ' + '\n  '.join(probleme))
             neu = hauptseite_umbauen(neu)
@@ -805,7 +794,7 @@ def main():
 
     groesse = sum((ziel / p).stat().st_size for p in dateien)
     print(f'Bau in {ziel}')
-    print(f'Ausgabe: {ausgabe}' + (f' (Hauptseite: die Startseite als Platzhalter, Schluss {schluss}; dazu {", ".join(v.SEITEN_PLATZHALTER[1:])})'
+    print(f'Ausgabe: {ausgabe}' + (f' (Hauptseite: die Startseite als Platzhalter; dazu {", ".join(v.SEITEN_PLATZHALTER[1:])})'
                                    if platz else ' (die volle Website)'))
     print(f'{len(dateien)} Dateien, {groesse / 1024:.1f} KB')
     print(f'Hauptseite: {ziel / HAUPTSEITE} (ohne eigenes Gerüst)')

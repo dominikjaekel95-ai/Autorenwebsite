@@ -1,24 +1,24 @@
 <!doctype html>
-<html lang="de" data-ausgabe="platzhalter" data-schluss="v1">
+<html lang="de" data-ausgabe="platzhalter">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dominik Jäkel</title>
-<meta name="description" content="Dominik Jäkel, Schriftsteller, lebt in Berlin. Sein Debütroman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
+<meta name="description" content="Dominik Jäkel, Schriftsteller, lebt in Berlin. Sein Roman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
 <link rel="canonical" href="https://dominikjaekel.de/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dominik Jäkel">
 <meta property="og:locale" content="de_DE">
 <meta property="og:title" content="Dominik Jäkel">
-<meta property="og:description" content="Dominik Jäkel, Schriftsteller, lebt in Berlin. Sein Debütroman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
+<meta property="og:description" content="Dominik Jäkel, Schriftsteller, lebt in Berlin. Sein Roman Satoshi erzählt die Gründungslegende von Bitcoin, die Ursprungstrilogie von den Anfängen der Zivilisation.">
 <meta property="og:url" content="https://dominikjaekel.de/">
 <meta property="og:image" content="https://dominikjaekel.de/bilder/vorschau.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller. Dominik Jäkel, Jahrgang 1995, schreibt seit vielen Jahren über Geld und Technologie – meist unter den Namen anderer Leute. Rechts ein Globus mit Europa und Afrika.">
+<meta property="og:image:alt" content="Dominik Jäkel, Schriftsteller. Dominik Jäkel schreibt seit Jahren unter fremden Namen. Sein Debütroman trägt den berühmtesten. Rechts ein Globus mit Europa und Afrika.">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","@id":"https://dominikjaekel.de/#person","name":"Dominik Jäkel","url":"https://dominikjaekel.de/","jobTitle":"Schriftsteller","description":"Dominik Jäkel studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u. a. die Werkstattbühne des Autorenforums Berlin e. V. 2022 erhielt er den A.-E.-Johann-Preis. Gerade schließt er seinen Debütroman Satoshi ab; daneben schreibt er an einer Romantrilogie über die Ursprünge der Zivilisation.","award":"A.-E.-Johann-Preis (2022)","affiliation":{"@type":"Organization","name":"Autorenforum Berlin e. V.","url":"https://autorenforum-berlin.de/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","@id":"https://dominikjaekel.de/#person","name":"Dominik Jäkel","url":"https://dominikjaekel.de/","jobTitle":"Schriftsteller","description":"Dominik Jäkel studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u. a. die Werkstattbühne des Autorenforums Berlin e. V. 2022 erhielt er den A.-E.-Johann-Preis. Gerade schließt er seinen Roman Satoshi ab; daneben schreibt er an einer Trilogie über die Ursprünge der Zivilisation.","award":"A.-E.-Johann-Preis (2022)","affiliation":{"@type":"Organization","name":"Autorenforum Berlin e. V.","url":"https://autorenforum-berlin.de/"}}</script>
 <meta name="theme-color" content="#FFFEFC">
 <script>
 document.documentElement.classList.add('js');
@@ -36,14 +36,9 @@ document.documentElement.classList.add('js');
 
 <link rel="stylesheet" href="stil.css">
 <style>
-.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 5); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
+.einstieg { --einstieg-zh: var(--zh-gross); margin-top: var(--z); min-height: calc(var(--einstieg-zh) * 4); font-size: var(--g-einstieg); line-height: var(--einstieg-zh); }
 .globusseite > .einstieg { max-width: min(100%, var(--mass)); min-width: 0; overflow-wrap: break-word; }
 .einstieg.gesetzt .glied-satz, .einstieg .paar { white-space: nowrap; }
-@media (min-width: 82.6875rem) {
-  .einstieg { min-height: calc(var(--einstieg-zh) * 4); }
-  .einstieg.gesetzt .satzteil { white-space: nowrap; }
-}
-@media (min-width: 62.0625rem) { .globusseite > .einstieg { margin-top: var(--z-viertel); } }
 .einstieg-satz { display: inline; }
 html:not(.js) .einstieg .glied-satz { display: block; }
 .einstieg-satz .w { display: inline-block; }
@@ -182,14 +177,14 @@ html.folge #regalbild[data-folge]:not(.da) { pointer-events: none; }
 .ganze { margin-top: var(--z-dreiviertel); }
 html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 @media (max-width: 62rem) {
-  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); min-height: calc(var(--einstieg-zh) * 4); }
+  .einstieg { --einstieg-zh: calc(var(--z) * 1.25); min-height: calc(var(--einstieg-zh) * 3); }
   .globusseite > .ebenentext { order: 1; margin-top: var(--z); }
   .schreiben-raster { grid-template-columns: minmax(0, var(--mass)); }
   .schreiben-raster .regalbild { grid-column: 1; grid-row: 1; margin: 0; }
   .schreiben-raster .verzeichnis { grid-column: 1; grid-row: 2; margin-top: var(--z); }
 }
 @media (max-width: 40rem) {
-  .einstieg { min-height: calc(var(--einstieg-zh) * 5); }
+  .einstieg { min-height: calc(var(--einstieg-zh) * 4); }
   .zeitband-roll { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; overscroll-behavior-x: contain; padding-bottom: var(--z-viertel); margin: 0 calc(var(--rand-l) * -1); padding-left: var(--rand-l); padding-right: var(--rand-l); scroll-padding: 0 var(--rand-l); }
   .bandzeile > span { text-wrap: balance; hyphens: manual; -webkit-hyphens: manual; }
   .stueck.liegt > span { left: 4px; right: 4px; }
@@ -197,6 +192,7 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
   .zeitband { margin-top: 0; }
   .zeitband-roll { padding-top: var(--z); }
 }
+@media (max-width: 20.1875rem) { .einstieg { min-height: calc(var(--einstieg-zh) * 5); } }
 @media (max-width: 40rem) {
   .zb-regler { margin-top: var(--z-halb); }
   .zb-regler + .bandname { margin-top: var(--z-halb); }
@@ -206,24 +202,13 @@ html:not(.js) .gelesen-vorwort, html:not(.js) .zeitband { display: none; }
 }
 </style>
 <style>
-[data-nur="platzhalter"] { display: none !important; }
-html[data-ausgabe="platzhalter"] .schluss { padding: var(--z-drei) var(--rand-r) var(--z-drei) var(--rand-l); }
-html[data-ausgabe="platzhalter"]:not(.js) .schluss { padding-top: 0; }
-html[data-ausgabe="platzhalter"] .aufbau { max-width: var(--mass); }
-@media (max-width: 62rem) { html[data-ausgabe="platzhalter"] .schluss { padding-right: var(--rand-l); } }
-html[data-ausgabe="platzhalter"] .schluss.mit-weg {
-  padding-top: max(var(--z-drei), 19vh); padding-top: max(var(--z-drei), 19svh);
-  padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px))); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)));
-}
+html[data-ausgabe="platzhalter"]:not(.js) #gelesen { display: none; }
+html[data-ausgabe="platzhalter"]:not(.js) #schreiben { padding-top: 0; }
 @supports (grid-template-rows: subgrid) {
   @media (min-width: 62.0625rem) {
-    html[data-ausgabe="platzhalter"].js .schluss { grid-column: 2; grid-row: 8 / 10; width: var(--neben-globus); padding: 0 0 var(--z-drei); }
-    html[data-ausgabe="platzhalter"][data-schluss="v2"].js .globusseite > .globus { margin-bottom: 0; }
-    html[data-ausgabe="platzhalter"].js .schluss.mit-weg { padding-top: max(0px, 19vh - var(--z-drei)); padding-top: max(0px, 19svh - var(--z-drei)); padding-bottom: max(0px, calc(56vh - var(--schluss-rest, 0px)), var(--schluss-globus, 0px)); padding-bottom: max(0px, calc(100lvh - 44svh - var(--schluss-rest, 0px)), var(--schluss-globus, 0px)); }
+    html[data-ausgabe="platzhalter"].js #schreiben { padding-top: 0; }
   }
 }
-html[data-ausgabe="platzhalter"] .blass.fern { pointer-events: none; }
-html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !important; pointer-events: auto; }
 </style>
 </head>
 <body class="mit-globus">
@@ -234,7 +219,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
 
 <main id="inhalt">
 <section class="globusseite" aria-label="Vita und Globus">
-  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel, Jahrgang 1995,</span> <span class="glied-satz">schreibt seit vielen Jahren</span> <span class="glied-satz">über Geld und Technologie&nbsp;–</span> <span class="satzteil"><span class="glied-satz">meist unter den Namen</span> <span class="glied-satz">anderer Leute.</span></span></p>
+  <p class="einstieg leitsatz" id="einstieg"><span class="glied-satz">Dominik Jäkel schreibt seit Jahren</span> <span class="glied-satz">unter fremden Namen.</span> <span class="glied-satz">Sein Debütroman trägt</span> <span class="glied-satz">den berühmtesten.</span></p>
   <script>
   (function () {
     'use strict';
@@ -252,26 +237,26 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
     satz.setAttribute('aria-hidden', 'true');
     while (el.firstChild) satz.appendChild(el.firstChild);
     var glieder = Array.prototype.slice.call(satz.querySelectorAll('.glied-satz'));
-    var PAARE = ['Dominik Jäkel,', 'Jahrgang 1995,', 'anderer Leute.'];
+    var PAARE = ['Dominik Jäkel', 'seit Jahren', 'unter fremden Namen.', 'den berühmtesten.'];
     glieder.forEach(function (g) {
       var woerter = g.textContent.trim().split(/[ \t\n\r\f]+/);
       g.textContent = '';
-      var paar = null;
+      var paar = null, noch = 0;
       woerter.forEach(function (w, i) {
         var s = document.createElement('span');
         s.className = 'w';
         s.textContent = w;
-        var beginnt = PAARE.some(function (p) { return p.split(' ')[0] === w && p.split(' ')[1] === woerter[i + 1]; });
-        if (beginnt) {
-          if (i) g.appendChild(document.createTextNode(' '));
+        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); if (!--noch) paar = null; return; }
+        var p = PAARE.map(function (x) { return x.split(' '); }).filter(function (x) { return x.every(function (y, k) { return woerter[i + k] === y; }); })[0];
+        if (i) g.appendChild(document.createTextNode(' '));
+        if (p) {
           paar = document.createElement('span');
           paar.className = 'paar';
           paar.appendChild(s);
           g.appendChild(paar);
+          noch = p.length - 1;
           return;
         }
-        if (paar) { paar.appendChild(document.createTextNode(' ')); paar.appendChild(s); paar = null; return; }
-        if (i) g.appendChild(document.createTextNode(' '));
         g.appendChild(s);
       });
     });
@@ -288,8 +273,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
       return rechts - links;
     }
     var masse = '';
-    var zusammen = function () { return !!(window.matchMedia && window.matchMedia('(min-width: 82.6875rem)').matches); };
-    function mass() { return el.clientWidth + ':' + zusammen() + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
+    function mass() { return el.clientWidth + ':' + woerter.map(function (w) { return w.offsetWidth; }).join(','); }
     function setzen() {
       anpassen();
       masse = mass();
@@ -394,7 +378,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
     }
   })();
 </script>
-  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u.&nbsp;a. die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Debütroman <i>Satoshi</i> ab; daneben schreibt er an einer Roman&shy;trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="/vita">Vita</a>.</p>
+  <p class="vita">Er wurde 1995 in Dortmund geboren, studierte am Hasso-Plattner-Institut in Potsdam und lebte vier Jahre auf Taiwan; heute lebt er in Berlin und moderiert u.&nbsp;a. die Werkstattbühne des <a href="https://autorenforum-berlin.de/" rel="noopener">Autorenforums Berlin e.&nbsp;V.</a> 2022 erhielt er den <a class="nw" href="https://www.a-e-johann.de/der-a-e-johann-preis" rel="noopener">A.-E.-Johann-Preis</a>. Gerade schließt er seinen Roman <i>Satoshi</i> ab; daneben schreibt er an einer Trilogie über die Ursprünge der Zivilisation. Ausführlich in der <a href="/vita">Vita</a>.</p>
 
   <p class="ebenen" role="group" aria-label="Globus"><button type="button" class="wort" data-ebene="leben" aria-pressed="true">Leben</button> <button type="button" class="wort" data-ebene="reisen" aria-pressed="false">Reisen</button> <button type="button" class="wort" data-ebene="satoshi" aria-pressed="false"><i>Satoshi</i></button> <button type="button" class="wort" data-ebene="ursprung" aria-pressed="false"><i>Ursprünge</i></button></p>
 
@@ -436,7 +420,30 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
   </div>
 </section>
 
-<div class="schluss" id="schluss"><p class="aufbau">Seite im Aufbau.</p></div>
+<section class="abschnitt" id="gelesen" aria-labelledby="gelesen-titel">
+  <h2 class="titel" id="gelesen-titel">Mein digitales Bücherregal</h2>
+  <p class="gelesen-vorwort">Von Gilgamesch bis Labatut, geordnet nach dem Jahr, in dem ein Buch zuerst erschien. Jeder Strich ist so breit wie der Rücken des Buchs. Dunkel stehen die liebsten, halb so hoch, was ich nicht zu Ende gelesen habe. Ein kleiner Strich darüber zeigt, dass ich ein Buch wieder gelesen habe. Quer darauf liegt, was ich gerade lese.</p>
+  <div class="zeitband" id="zeitband">
+    <div class="zeitband-roll" id="zeitband-roll">
+      <div id="zb-haupt-ort"></div>
+      <div class="zb-regler" id="zb-regler">
+        <div class="regler" id="regler" role="slider" tabindex="0" aria-label="Gelesen"><svg class="regler-spur" aria-hidden="true" focusable="false"></svg><span class="regler-knopf" aria-hidden="true"></span><span class="regler-name" aria-hidden="true" hidden></span></div>
+        <p class="steuerzeile zb-schritte"><button type="button" class="wort" id="zb-frueher">früher</button><button type="button" class="wort" id="zb-spaeter">später</button></p>
+      </div>
+      <p class="bandzeile" id="bandzeile"><span class="zeile-ruhe" id="zeile-ruhe" aria-hidden="true"></span><span class="zeile-zeigen" id="zeile-zeigen" aria-hidden="true"></span><span class="zeile-offen" id="zeile-offen"></span></p>
+      <p class="bandname">die wichtigsten aus Kindheit und Jugend</p>
+      <div id="zb-kind-ort"></div>
+      <div class="zb-regler" id="zb-regler-kind">
+        <div class="regler ohne-jahre" id="regler-kind" role="slider" tabindex="0" aria-label="Die wichtigsten aus Kindheit und Jugend"><svg class="regler-spur" aria-hidden="true" focusable="false"></svg><span class="regler-knopf" aria-hidden="true"></span><span class="regler-name" aria-hidden="true" hidden></span></div>
+      </div>
+      <p class="bandname">was noch wartet</p>
+      <div id="zb-warte-ort"></div>
+      <div class="zb-regler" id="zb-regler-warte">
+        <div class="regler ohne-jahre" id="regler-warte" role="slider" tabindex="0" aria-label="Was noch wartet"><svg class="regler-spur" aria-hidden="true" focusable="false"></svg><span class="regler-knopf" aria-hidden="true"></span><span class="regler-name" aria-hidden="true" hidden></span></div>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
 
 <footer class="fuss" id="kontakt" aria-label="Kontakt">
@@ -457,6 +464,7 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
 <script src="globus/kern.js"></script>
 <script src="daten/inhalt.js"></script>
 <script src="daten/buecher.js"></script>
+<script src="daten/leseliste.js"></script>
 <script src="seite.js"></script>
 <script>
 (function () {
@@ -479,13 +487,6 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
   new MutationObserver(liste => liste.forEach(m => {
     if (m.type === 'attributes') verweise(m.target); else m.addedNodes.forEach(verweise);
   })).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
-  if (!document.getElementById('zeitband-roll')) {
-    const leer = document.createElement('div');
-    leer.id = 'zeitband-roll';
-    leer.hidden = true;
-    leer.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(leer);
-  }
   const ziel = location.hash === '#globus' && document.getElementById('globus');
   if (ziel && getComputedStyle(ziel).position === 'sticky') {
     const adresse = location.href;
@@ -1695,79 +1696,6 @@ html[data-ausgabe="platzhalter"] .blass:has(:focus-visible) { opacity: 1 !import
       regalZeichnen(); bandBauen(); ankerSetzen();
     }, 140);
   });
-})();
-</script>
-<script>
-(function () {
-  'use strict';
-  const html = document.documentElement;
-  if (html.getAttribute('data-ausgabe') !== 'platzhalter') return;
-  const F = window.FSeite, $ = s => document.querySelector(s);
-  const schluss = $('#schluss'), zeile = $('#schluss .aufbau'), kopf = $('header.kopf'), seite = $('.globusseite'), schreiben = $('#schreiben');
-  const globus = $('.globusseite > .globus');
-  if (!F || !schluss || !zeile || !kopf || !seite || !schreiben) return;
-  const BLASS = .16, HOEHE = .44, FERN = .5;
-  const V2 = html.getAttribute('data-schluss') === 'v2';
-  const mqRuhig = window.matchMedia('(prefers-reduced-motion: reduce)'), mqBreit = window.matchMedia('(min-width: 62.0625rem)');
-  const probe = document.createElement('div');
-  probe.setAttribute('aria-hidden', 'true');
-  probe.style.cssText = 'position:absolute;left:0;top:0;width:0;height:100vh;height:100svh;visibility:hidden;pointer-events:none';
-  document.body.appendChild(probe);
-  let ziele = [], weg = null, zuletzt = null, fern = null, bild = 0, messBild = 0;
-  const masse = {};
-  function mass(name, px) {
-    if (px == null) { if (masse[name] != null) { schluss.style.removeProperty(name); masse[name] = null; } return; }
-    if (masse[name] != null && Math.abs(masse[name] - px) < .5) return;
-    masse[name] = px;
-    schluss.style.setProperty(name, px.toFixed(1) + 'px');
-  }
-  function frei(e) { e.style.opacity = ''; e.classList.remove('blass', 'fern'); }
-  function zieleSetzen() {
-    const neu = V2 && mqBreit.matches
-      ? [kopf, schreiben].concat(Array.from(seite.children).filter(e => !e.matches('.globus, .regalbild, script')), Array.from(($('#regalbild') || {}).children || []))
-      : [kopf, seite, schreiben];
-    ziele.forEach(e => { if (!neu.includes(e)) frei(e); });
-    neu.forEach(e => e.classList.add('blass'));
-    ziele = neu;
-    zuletzt = null; fern = null;
-  }
-  function messen() {
-    messBild = 0;
-    schluss.classList.toggle('mit-weg', !mqRuhig.matches);
-    if (mqRuhig.matches) { ziele.forEach(frei); ziele = []; weg = null; mass('--schluss-rest', null); mass('--schluss-globus', null); return; }
-    zieleSetzen();
-    const y = window.scrollY, H = probe.getBoundingClientRect().height || window.innerHeight;
-    const z = zeile.getBoundingClientRect(), zh = z.height;
-    mass('--schluss-rest', zh / 2 + html.getBoundingClientRect().bottom - schluss.getBoundingClientRect().bottom);
-    if (V2 && mqBreit.matches && globus) {
-      const s = getComputedStyle(globus);
-      mass('--schluss-globus', Math.max(0, (parseFloat(s.top) || 0) + globus.getBoundingClientRect().height + (parseFloat(s.marginBottom) || 0) - H * HOEHE - zh / 2));
-    } else mass('--schluss-globus', null);
-    const ende = (mqBreit.matches ? schreiben.getBoundingClientRect().top : schreiben.getBoundingClientRect().bottom) + y;
-    weg = { s0: Math.max(0, ende - H), s1: z.top + y + zh / 2 - H * HOEHE };
-    if (weg.s1 - weg.s0 < 40) { weg = null; ziele.forEach(e => { e.style.opacity = ''; e.classList.remove('fern'); }); zuletzt = null; fern = null; }
-    zeichnen();
-  }
-  function zeichnen() {
-    bild = 0;
-    if (!weg) return;
-    let p = (window.scrollY - weg.s0) / (weg.s1 - weg.s0);
-    p = p <= 0 ? 0 : p >= 1 ? 1 : p;
-    const d = p > 0 ? (1 - (1 - BLASS) * p * p * (3 - 2 * p)).toFixed(3) : '';
-    if (d !== zuletzt) { zuletzt = d; ziele.forEach(e => { e.style.opacity = d; }); }
-    const f = p > FERN;
-    if (f !== fern) { fern = f; ziele.forEach(e => e.classList.toggle('fern', f)); }
-  }
-  const anstossen = () => { if (!bild) bild = requestAnimationFrame(zeichnen); };
-  const neuMessen = () => { if (!messBild) messBild = requestAnimationFrame(messen); };
-  window.addEventListener('scroll', anstossen, { passive: true });
-  window.addEventListener('resize', neuMessen, { passive: true });
-  window.addEventListener('load', neuMessen);
-  if (window.ResizeObserver) new ResizeObserver(neuMessen).observe(document.body);
-  mqRuhig.addEventListener('change', neuMessen);
-  mqBreit.addEventListener('change', neuMessen);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(neuMessen);
-  messen();
 })();
 </script>
 </body>

@@ -6,9 +6,23 @@
    25. Oktober 2026 (Dominik): CHERUB, Alex Rider, Twilight, Harry Potter, Eragon und Panem stammen aus der Schulzeit und stehen ganz
    unter kindheit; ebenso die Bände von Percy Jackson und His Dark Materials, die vorher halb unter gelesen standen.
    6. November 2026: bei The Call of Cthulhu (E-Book) kein Verlag mehr (V90).
+   7. November 2026 (Dominik: „Und bitte füge noch Bücher hinzu. Bestarium, Botanik des Wahnsinns, Morgen, Morgen und wieder Morgen,
+   Serotonin, Mao II, Real Americans, Indignation von Roth“): sieben gelesene Bücher ganz oben, vor Trust, alle s 0. Serotonin,
+   Indignation, Bestiarium (Cortázar), Real Americans und Mao II kommen aus der Leseliste, mit Jahr und Seiten von dort, Ausgabe
+   unbekannt (Bindung e, kein Verlag); Botanik des Wahnsinns von Leon Engler, DuMont 2025, Hardcover, 208 Seiten; Zevin in der
+   Ausgabe, die er nennt (Dominik: „Bbzw. Tomorrow, tomorrow and tomorrow (haben wir die Bücher immer auf deutsch oder Englisch im
+   Regal stehen?)“; im Regal steht jedes Buch in der Sprache der gelesenen Ausgabe): Tomorrow, and Tomorrow, and Tomorrow, Knopf
+   2022, Hardcover, 416 Seiten, statt der deutschen Ausgabe „Morgen, morgen und wieder morgen“.
    t Titel, u Untertitel, a Autor, r Regal, s 5 = eines der liebsten (sonst 0), j Jahr der Erstveröffentlichung, p Seiten,
    w wiedergelesen, b Bindung (p Paperback, h Hardcover, m Mass Market, e sonst), v Verlag. Ohne Notizen und Rezensionen. */
 window.BUECHER = [
+{"t":"Botanik des Wahnsinns","u":"","a":"Leon Engler","r":"gelesen","s":0,"j":2025,"p":208,"w":0,"b":"h","v":"DuMont"},
+{"t":"Tomorrow, and Tomorrow, and Tomorrow","u":"","a":"Gabrielle Zevin","r":"gelesen","s":0,"j":2022,"p":416,"w":0,"b":"h","v":"Knopf"},
+{"t":"Real Americans","u":"","a":"Rachel Khong","r":"gelesen","s":0,"j":2024,"p":416,"w":0,"b":"e","v":""},
+{"t":"Serotonin","u":"","a":"Michel Houellebecq","r":"gelesen","s":0,"j":2019,"p":336,"w":0,"b":"e","v":""},
+{"t":"Indignation","u":"","a":"Philip Roth","r":"gelesen","s":0,"j":2008,"p":233,"w":0,"b":"e","v":""},
+{"t":"Mao II","u":"","a":"Don DeLillo","r":"gelesen","s":0,"j":1991,"p":241,"w":0,"b":"e","v":""},
+{"t":"Bestiarium","u":"","a":"Julio Cortázar","r":"gelesen","s":0,"j":1951,"p":160,"w":0,"b":"e","v":""},
 {"t":"Trust","u":"","a":"Hernán Díaz","r":"gelesen","s":5,"j":2022,"p":402,"w":0,"b":"h","v":"Riverhead Books"},
 {"t":"Für immer die Alpen","u":"","a":"Benjamin Quaderer","r":"gelesen","s":0,"j":2020,"p":592,"w":0,"b":"h","v":"Luchterhand"},
 {"t":"The Maniac","u":"","a":"Benjamín Labatut","r":"gelesen","s":5,"j":2023,"p":368,"w":0,"b":"h","v":"Penguin Press"},

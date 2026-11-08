@@ -792,3 +792,11 @@ Dominik: „Zevin auf Englisch. Lieblingsbuch nur Serotonin“
 
 - `daten/buecher.js`: Serotonin `"s":5` (eines der liebsten), Kommentar am Kopf ergänzt; Zevin bleibt „Tomorrow, and Tomorrow, and Tomorrow“. Der Live-Bau ändert sich nur in dieser Zeile von `daten/buecher.js`. Geprüft: `pruefen-platz.cjs` und `pruefen.cjs` gegen die neuen Bauten, Serotonin im Zeitband mit s 5.
 
+## 8. November 2026: Absatz zum Ende im Exposé, Schlusssatz kursiv
+
+Dominik: „Der Absatz fehlt im digitalen Exposße. Da es jetzt aber nicht online ist ... Kann er gerne wieder rein. […] (Der Teil dahinter könnte gerne in kursiv)“
+
+- `satoshi.html`, Klappentext: nach „… Sie will nicht wissen, von wem.“ der Absatz „Als 2010 die Banken WikiLeaks die Konten sperren, … Und eine verschwindet&nbsp;– mit dem Kind.“ mit `data-nur="expose"` (nur im digitalen Exposé; die volle Website verrät das Ende weiter nicht, V37); der Schlusssatz „Die Erfindung von Bitcoin gelingt, …“ kursiv in beiden Ausgaben.
+- `pruefen-platz.cjs` (Kopie vorher `pruefen-platz.vor-klapp.cjs`): der Text des Exposés ist der der vollen Website plus genau dieser Absatz; im Exposé genau einmal, in der vollen Website nicht.
+- Der Live-Bau ändert sich nur in `satoshi.html`.
+

@@ -1,4 +1,5 @@
 window.LESELISTE = [
+  { t: 'Pflaumenregen', a: 'Stephan Thome', j: 2021, p: 526 },
   { t: 'Sand', a: 'Wolfgang Herrndorf', j: 2011, p: 480 },
   { t: 'Der Widersacher', a: 'Emmanuel Carrère', j: 2000, p: 192 },
   { t: 'Limonow', a: 'Emmanuel Carrère', j: 2011, p: 480 },

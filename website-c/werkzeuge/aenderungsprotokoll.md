@@ -800,3 +800,9 @@ Dominik: „Der Absatz fehlt im digitalen Exposße. Da es jetzt aber nicht onlin
 - `pruefen-platz.cjs` (Kopie vorher `pruefen-platz.vor-klapp.cjs`): der Text des Exposés ist der der vollen Website plus genau dieser Absatz; im Exposé genau einmal, in der vollen Website nicht.
 - Der Live-Bau ändert sich nur in `satoshi.html`.
 
+## 16. November 2026: Pflaumenregen in der Leseliste
+
+Dominik: „Nimm mal bitte Pflaumenregen von Stephan Thome mit in die Leseliste auf“
+
+- `daten/leseliste.js`: ganz oben `{ t: 'Pflaumenregen', a: 'Stephan Thome', j: 2021, p: 526 }` (Suhrkamp 2021, Hardcover, 526 Seiten laut Perlentaucher); steht im Zeitband unter „was noch wartet“ (jetzt 69). Der Live-Bau ändert sich nur in `daten/leseliste.js` (und im Datum der Sitemap).
+

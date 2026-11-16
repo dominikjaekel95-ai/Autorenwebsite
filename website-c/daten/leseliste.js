@@ -1,8 +1,11 @@
 /* Was noch wartet: die eigene Leseliste (Stand Oktober 2026), nur Titel und Autor.
    7. November 2026: Serotonin, Indignation, Bestiarium, Real Americans und Mao II hat Dominik gelesen; sie stehen jetzt in
    buecher.js unter gelesen (mit Jahr und Seiten von hier).
+   16. November 2026 (Dominik: „Nimm mal bitte Pflaumenregen von Stephan Thome mit in die Leseliste auf“): Pflaumenregen, Suhrkamp 2021,
+   Hardcover, 526 Seiten (Perlentaucher), ganz oben.
    t Titel, a Autor, j Jahr der Erstveröffentlichung (negativ = v. Chr., null = unklar), p Seiten (ungefähr), k Kurzprosa oder Gedichte */
 window.LESELISTE = [
+  { t: 'Pflaumenregen', a: 'Stephan Thome', j: 2021, p: 526 },
   { t: 'Sand', a: 'Wolfgang Herrndorf', j: 2011, p: 480 },
   { t: 'Der Widersacher', a: 'Emmanuel Carrère', j: 2000, p: 192 },
   { t: 'Limonow', a: 'Emmanuel Carrère', j: 2011, p: 480 },
